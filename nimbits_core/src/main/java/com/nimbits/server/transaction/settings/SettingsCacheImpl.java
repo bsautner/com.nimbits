@@ -13,10 +13,9 @@
 package com.nimbits.server.transaction.settings;
 
 import com.nimbits.client.enums.MemCacheKey;
+import com.nimbits.client.enums.SettingType;
 import com.nimbits.server.NimbitsEngine;
 import com.nimbits.server.transaction.cache.NimbitsCache;
-
-import java.util.Map;
 
 /**
  * Created by bsautner
@@ -38,15 +37,15 @@ public class SettingsCacheImpl implements SettingsService {
    
 
     @Override
-    public String getSetting(final String setting)  {
+    public String getSetting(final SettingType setting)  {
 
 
-        if (cache.containsKey((setting))) {
-            return (String) cache.get((setting));
+        if (cache.containsKey((setting.name()))) {
+            return (String) cache.get((setting.name()));
 
         } else {
             String storedVal = dao.getSetting(setting);
-            cache.put((setting), storedVal);
+            cache.put((setting.name()), storedVal);
             return storedVal;
         }
 
@@ -54,26 +53,18 @@ public class SettingsCacheImpl implements SettingsService {
     }
 
 
-    @Override
-    public Map<String, String> getSettings()  {
-
-
-        return dao.getSettings();
-
-
-    }
 
 
     @Override
-    public void addSetting(final String setting, final String value)  {
+    public void addSetting(final SettingType setting, final String value)  {
         dao.addSetting(setting, value);
 
 
         if (cache.containsKey(MemCacheKey.allSettings.getText())) {
             cache.remove(MemCacheKey.allSettings.getText());
         }
-        if (cache.containsKey((setting))) {
-            cache.remove((setting));
+        if (cache.containsKey((setting.name()))) {
+            cache.remove((setting.name()));
         }
 
 
@@ -81,14 +72,14 @@ public class SettingsCacheImpl implements SettingsService {
 
 
     @Override
-    public void updateSetting(final String setting, final String newValue)  {
+    public void updateSetting(final SettingType setting, final String newValue)  {
         dao.updateSetting(setting, newValue);
 
         if (cache.containsKey(MemCacheKey.allSettings.getText())) {
             cache.remove(MemCacheKey.allSettings.getText());
         }
-        if (cache.containsKey((setting))) {
-            cache.remove((setting));
+        if (cache.containsKey((setting.name()))) {
+            cache.remove((setting.name()));
         }
 
     }

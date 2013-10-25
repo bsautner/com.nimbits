@@ -57,7 +57,7 @@ public class IncomingMailTask extends ApiBase {
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException {
-        setup(req, resp, false);
+        setup(req, resp);
         valueService = ValueServiceFactory.getInstance(engine, taskService);
         final String fromAddress = req.getParameter(Parameters.fromAddress.getText());
         final String inContent = req.getParameter(Parameters.inContent.getText());

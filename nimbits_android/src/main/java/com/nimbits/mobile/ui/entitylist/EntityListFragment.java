@@ -47,13 +47,10 @@ public class EntityListFragment extends PointViewBaseFragment {
     public EntityListFragment(EntityListener listener) {
         super(listener);
         this.listener = listener;
+
     }
 
-//    @Override
-//    public void refresh() {
-//        super.refresh();
-//        //loadData();
-//    }
+
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -70,7 +67,7 @@ public class EntityListFragment extends PointViewBaseFragment {
     public void onResume() {
         super.onResume();
         Log.v(TAG, "onResume" + (context == null));
-        show();
+        showList();
 
 
     }
@@ -97,21 +94,21 @@ public class EntityListFragment extends PointViewBaseFragment {
 
     }
 
-    @Override
-    public void refreshData() {
-        super.refreshData();
-        Entity e = SessionSingleton.getInstance().getCurrentEntity();
-        Cursor cursor = dao.getChildren(e);
-        adapter.changeCursor(cursor);
 
+    public void refreshData() {
+
+        Entity e = SessionSingleton.getInstance().getCurrentEntity();
+        Cursor cursor = SessionSingleton.getInstance().getDao().getChildren(e);
+        adapter.changeCursor(cursor);
+        super.showTitle();
     }
 
 
-    public void show( ) {
-        super.showTitle();
+    private void showList() {
+        //super.showTitle();
         this.context = getActivity();
         Entity e = SessionSingleton.getInstance().getCurrentEntity();
-        Cursor cursor = dao.getChildren(e);
+        Cursor cursor = SessionSingleton.getInstance().getDao().getChildren(e);
 
         Log.v(TAG, "showEntity" + (context == null) + " " + cursor.getCount());
         String[] columns = new String[] {TreeTable.getType(), TreeTable.getName(), TreeTable.getState(), TreeTable.getValue(), TreeTable.getTimestamp() };

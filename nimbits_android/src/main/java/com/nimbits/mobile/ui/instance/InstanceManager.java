@@ -36,7 +36,7 @@ import com.nimbits.mobile.application.SessionSingleton;
 import com.nimbits.mobile.dao.ApplicationDaoFactory;
 import com.nimbits.mobile.dao.DBOpenHelper;
 import com.nimbits.mobile.dao.orm.InstanceTable;
-import com.nimbits.mobile.startup.async.StartupTask;
+import com.nimbits.mobile.startup.async.SessionTask;
 import com.nimbits.mobile.ui.dialog.SimpleEntryDialog;
 import com.nimbits.mobile.ui.entitylist.EntityListener;
 import org.apache.commons.lang3.StringUtils;
@@ -80,7 +80,7 @@ public class InstanceManager extends ListActivity implements EntityListener{
                 cursor.moveToPosition(position);
               //  final String url = cursor.getString(cursor.getColumnIndex(DBOpenHelper.KEY_URL));
                 ApplicationDaoFactory.getInstance().setDefaultInstanceUrl(id);
-                StartupTask.getInstance(new StartupTask.StartupListener() {
+                SessionTask.getInstance(new SessionTask.StartupListener() {
                     @Override
                     public void onLoginSuccess(List<User> response) {
                         SessionSingleton.getInstance().setSession((response.get(0)));

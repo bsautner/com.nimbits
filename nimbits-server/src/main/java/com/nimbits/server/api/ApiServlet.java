@@ -24,6 +24,7 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.server.ApplicationListener;
 import com.nimbits.server.NimbitsEngine;
 import com.nimbits.server.process.task.TaskService;
+import com.nimbits.server.process.task.TaskServiceFactory;
 import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.user.AuthenticationServiceFactory;
@@ -212,5 +213,10 @@ public class ApiServlet extends HttpServlet {
 
     }
 
-
+    public void setEngine(NimbitsEngine engine) {
+        this.engine = engine;
+        this.entityService = EntityServiceFactory.getInstance(engine);
+        this.taskService = TaskServiceFactory.getServiceInstance(engine);
+        this.valueService = ValueServiceFactory.getInstance(engine, taskService);
+    }
 }

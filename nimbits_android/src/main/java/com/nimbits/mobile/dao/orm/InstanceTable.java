@@ -12,14 +12,14 @@
 
 package com.nimbits.mobile.dao.orm;
 
-import com.nimbits.client.constants.Const;
-import com.nimbits.mobile.application.SessionSingleton;
-
 /**
  * Created by benjamin on 10/23/13.
  */
 public class InstanceTable extends TableBase {
     public static final String INSTANCES_TABLE_NAME = "SERVER_INSTANCES";
+    private static final String CLOUD_NIMBITS_COM = "cloud.nimbits.com";
+    private static final String PUBLIC_CLOUD = "Public Cloud";
+    private static final String DEFAULT_API_KEY = "ggdfg54t3456gsdfgjjdhsr6y5476udfhasergt5yrth";
     public static String[] url = {"URL", "TEXT"};
     public static String[] isDefault = {"IS_DEFAULT", "INTEGER"};
     public static String[] apikey = {"API_KEY", "TEXT"};
@@ -38,17 +38,11 @@ public class InstanceTable extends TableBase {
     }
 
     public static String getInitSQL() {
-        String defaultKey = null;
 
-
-
-        if (SessionSingleton.getInstance().getAppInfo().metaData != null) {
-            defaultKey = (String) SessionSingleton.getInstance().getAppInfo().metaData.get(Const.API_KEY_ID);
-        }
 
 
         return "insert into " + INSTANCES_TABLE_NAME + " (" + url[0] + ", " + isDefault[0] + "," + name[0] + "," + apikey[0] + ") " +
-                "VALUES ('cloud.nimbits.com', '1','Public Cloud', '" + defaultKey + "')";
+                "VALUES ('" + CLOUD_NIMBITS_COM + "', '1','" + PUBLIC_CLOUD + "', '" + DEFAULT_API_KEY + "')";
     }
 
     public static String getInstancesTableName() {

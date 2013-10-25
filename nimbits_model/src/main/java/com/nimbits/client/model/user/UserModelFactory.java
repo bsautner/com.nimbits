@@ -14,10 +14,6 @@ package com.nimbits.client.model.user;
 
 import com.nimbits.client.model.entity.Entity;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 /**
  * Created by bsautner
  * User: benjamin
@@ -29,15 +25,6 @@ public class UserModelFactory {
     private UserModelFactory() {
     }
 
-    public static List<User> createUserModels(final Collection<User> users)  {
-        List<User> retObj = new ArrayList<User>(users.size());
-
-        for (final User u : users) {
-            retObj.add(createUserModel(u));
-        }
-
-        return retObj;
-    }
 
     public static User createUserModel(final User u)  {
         return new UserModel(u);

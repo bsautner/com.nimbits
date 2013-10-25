@@ -13,20 +13,23 @@
 package com.nimbits.server.user;
 
 
+import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.server.ApplicationListener;
+import com.nimbits.server.transaction.settings.SettingServiceFactory;
+import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.user.service.AuthenticationMechanism;
 
 import java.util.Arrays;
 import java.util.List;
 
-/**
- * Created by benjamin on 10/20/13.
- */
+
 public class AuthenticationMechanismImpl implements AuthenticationMechanism {
-    private com.google.appengine.api.users.UserService googleUserService;
+
     @Override
     public List<EmailAddress> getCurrentUserEmail() {
-         return Arrays.asList(CommonFactory.createEmailAddress("admin@local.com"));//TODO should be server setting
+        SettingsService settings = SettingServiceFactory.getServiceInstance(ApplicationListener.createEngine());
+         return Arrays.asList(CommonFactory.createEmailAddress(settings.getSetting(SettingType.admin)));
     }
 }

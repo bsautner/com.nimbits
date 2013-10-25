@@ -17,7 +17,6 @@ package com.nimbits.server;
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.tools.development.testing.*;
 import com.nimbits.PMF;
-import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.model.accesskey.AccessKey;
@@ -31,6 +30,7 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
+import com.nimbits.server.cache.CacheFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.io.blob.BlobStore;
 import com.nimbits.server.io.blob.BlobStoreFactory;
@@ -41,14 +41,12 @@ import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.settings.SettingServiceFactory;
 import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.user.AuthenticationServiceFactory;
-import com.nimbits.server.cache.CacheFactory;
 import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.dao.ValueDao;
 import com.nimbits.server.transaction.value.dao.ValueDaoImpl;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
@@ -58,7 +56,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by Benjamin Sautner
@@ -68,7 +67,7 @@ import static org.junit.Assert.*;
  */
 
 public class NimbitsServletTest extends BaseTest {
-    public static final String email = Const.TEST_ACCOUNT;
+    public static final String email = SettingType.admin.getDefaultValue();
     public final LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig(),
             new LocalTaskQueueTestConfig(),
@@ -152,8 +151,8 @@ public class NimbitsServletTest extends BaseTest {
         helper.setUp();
 
 
-        settingsService.addSetting(SettingType.admin.getName(), email);
-        settingsService.addSetting(SettingType.serverIsDiscoverable.getName(), SettingType.serverIsDiscoverable.getDefaultValue());
+        settingsService.addSetting(SettingType.admin, email);
+        settingsService.addSetting(SettingType.serverIsDiscoverable, SettingType.serverIsDiscoverable.getDefaultValue());
 
         emailAddress = CommonFactory.createEmailAddress(email);
 
@@ -252,8 +251,4 @@ public class NimbitsServletTest extends BaseTest {
     }
 
 
-    @Test
-    public void makeSpringHappy() {
-        assertTrue(true);
-    }
 }

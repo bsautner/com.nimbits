@@ -38,7 +38,19 @@
             <artifactId>servlet-api</artifactId>
             <version>3.0-alpha-1</version>
         </dependency>
+        <dependency>
+            <groupId>com.extjs</groupId>
+            <artifactId>gxt</artifactId>
+            <version>2.3.0-gwt22</version>
+            <scope>compile</scope>
+        </dependency>
 
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <version>2.5.1</version>
+            <scope>compile</scope>
+        </dependency>
 
         <dependency>
             <groupId>javax.jdo</groupId>

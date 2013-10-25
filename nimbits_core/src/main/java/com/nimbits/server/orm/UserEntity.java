@@ -32,7 +32,6 @@ import java.util.List;
 @PersistenceCapable
 public class UserEntity extends EntityStore implements User {
 
-
     @Persistent
     private Date lastLoggedIn;
 
@@ -62,7 +61,7 @@ public class UserEntity extends EntityStore implements User {
 
     @Override
     public Date getLastLoggedIn() {
-        return (Date) this.lastLoggedIn.clone();
+        return new Date(this.lastLoggedIn.getTime());
     }
 
     @Override

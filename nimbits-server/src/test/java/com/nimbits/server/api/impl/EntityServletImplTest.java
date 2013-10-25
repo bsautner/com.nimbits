@@ -13,9 +13,9 @@
 
 package com.nimbits.server.api.impl;
 
-import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.model.common.impl.CommonFactory;
@@ -77,7 +77,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
     public void testPostCreatePoint() throws IOException, ServletException, Exception {
         req.removeAllParameters();
         //  req.addParameter("id", point.getKey());
-        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
+        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + SettingType.admin.getDefaultValue() + "\",\"owner\":\"" + SettingType.admin.getDefaultValue() + "\"}");
         req.addParameter("action", "create");
         req.setMethod("POST");
         entityServlet.doPost(req, resp);
@@ -92,7 +92,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
 
         req.removeAllParameters();
         //  req.addParameter("id", point.getKey());
-        req.addParameter("json", "{\"inferLocation\":true,\"filterType\":4,\"name\":\"Schedule-B2EC1DC4\",\"entityType\":1,\"protectionLevel\":2,\"description\":\"Daily\",\"parent\":\"test@example.com/Medication-B2EC1DC4\",\"owner\":\"test@example.com\"}");
+        req.addParameter("json", "{\"inferLocation\":true,\"filterType\":4,\"name\":\"Schedule-B2EC1DC4\",\"entityType\":1,\"protectionLevel\":2,\"description\":\"Daily\",\"parent\":\"" + SettingType.admin.getDefaultValue() + "/Medication-B2EC1DC4\",\"owner\":\"" + SettingType.admin.getDefaultValue() + "\"}");
         req.addParameter("action", "create");
         req.setMethod("POST");
         entityServlet.doPost(req, resp);
@@ -110,7 +110,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
 
 
         //  req.addParameter("id", point.getKey());
-        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
+        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + SettingType.admin.getDefaultValue() + "\",\"owner\":\"" + SettingType.admin.getDefaultValue() + "\"}");
         req.addParameter("action", "create");
         req.setMethod("POST");
         entityServlet.handleRequest(req, resp);
@@ -133,7 +133,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
     @Test
     public void testMin() throws IOException, ServletException {
         req.removeAllParameters();
-        String json = "{\"filterType\":4,\"name\":\"bug2\",\"entityType\":1,\"protectionLevel\":2,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}";
+        String json = "{\"filterType\":4,\"name\":\"bug2\",\"entityType\":1,\"protectionLevel\":2,\"parent\":\"" + SettingType.admin.getDefaultValue() + "\",\"owner\":\"" + SettingType.admin.getDefaultValue() + "\"}";
         req.addParameter("json",json);
         req.addParameter("action", "create");
         entityServlet.handleRequest(req, resp);
@@ -150,7 +150,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
 
 
         //  req.addParameter("id", point.getKey());
-        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
+        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + SettingType.admin.getDefaultValue() + "\",\"owner\":\"" + SettingType.admin.getDefaultValue() + "\"}");
         req.addParameter("action", "create");
         req.setMethod("POST");
         entityServlet.handleRequest(req, resp);
@@ -159,7 +159,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
         assertEquals(190, px.getExpire());
         req.removeAllParameters();
-        req.addParameter("json", "{\"key\":\"" + px.getKey() + "\",\"highAlarm\":0.0,\"expire\":55,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
+        req.addParameter("json", "{\"key\":\"" + px.getKey() + "\",\"highAlarm\":0.0,\"expire\":55,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + SettingType.admin.getDefaultValue() + "\",\"owner\":\"" + SettingType.admin.getDefaultValue() + "\"}");
         req.addParameter("action", "update");
         entityServlet.handleRequest(req, resp1);
 
@@ -176,7 +176,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
 
 
         //  req.addParameter("id", point.getKey());
-        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":600,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
+        req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":600,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + SettingType.admin.getDefaultValue() + "\",\"owner\":\"" + SettingType.admin.getDefaultValue() + "\"}");
         req.addParameter("action", "create");
         req.setMethod("POST");
         entityServlet.handleRequest(req, resp);
@@ -185,7 +185,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
         assertEquals(190, px.getExpire());
         req.removeAllParameters();
-        req.addParameter("json", "{\"key\":\"" + px.getKey() + "\",\"entityType\":1,\"expire\":55,\"name\":\"jquery test\",\"parent\":\"" + Const.TEST_ACCOUNT + "\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
+        req.addParameter("json", "{\"key\":\"" + px.getKey() + "\",\"entityType\":1,\"expire\":55,\"name\":\"jquery test\",\"parent\":\"" + SettingType.admin.getDefaultValue() + "\",\"owner\":\"" + SettingType.admin.getDefaultValue() + "\"}");
         req.addParameter("action", "update");
         entityServlet.handleRequest(req, resp1);
 
@@ -203,7 +203,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
 
 
         //  req.addParameter("id", point.getKey());
-        req.addParameter("json", "{\"subscribedEntity\":\"" + Const.TEST_ACCOUNT + "/TempF\",\"notifyMethod\":0,\"subscriptionType\":4,\"maxRepeat\":15.0,\"lastSent\":\"2012-05-20T23:59:37 +0000\",\"notifyFormatJson\":false,\"enabled\":true,\"name\":\"TempF idle alert\",\"key\":\"b9ba6396-b3c8-4455-8744-334f3a2633b0\",\"description\":\"\",\"entityType\":5,\"protectionLevel\":0,\"alertType\":1,\"parent\":\"" + Const.TEST_ACCOUNT + "/TempF\",\"owner\":\"" + Const.TEST_ACCOUNT + "\"}");
+        req.addParameter("json", "{\"subscribedEntity\":\"" + SettingType.admin.getDefaultValue() + "/TempF\",\"notifyMethod\":0,\"subscriptionType\":4,\"maxRepeat\":15.0,\"lastSent\":\"2012-05-20T23:59:37 +0000\",\"notifyFormatJson\":false,\"enabled\":true,\"name\":\"TempF idle alert\",\"key\":\"b9ba6396-b3c8-4455-8744-334f3a2633b0\",\"description\":\"\",\"entityType\":5,\"protectionLevel\":0,\"alertType\":1,\"parent\":\"" + SettingType.admin.getDefaultValue() + "/TempF\",\"owner\":\"" + SettingType.admin.getDefaultValue() + "\"}");
         req.addParameter("action", "create");
         req.setMethod("POST");
         entityServlet.handleRequest(req, resp);

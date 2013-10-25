@@ -33,24 +33,27 @@ import javax.jdo.annotations.*;
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class ServerSetting implements Setting {
 
-    private static final long serialVersionUID = 8358325780044920423L;
+
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
     private Long id;
-
-    private ServerSetting() {
-    }
-
-    public ServerSetting(final String value, final String setting) {
-        this.value = value;
-        this.name = setting;
-    }
 
     @Persistent
     private String name;
 
     @Persistent
     private String value;
+
+    private ServerSetting() {
+    }
+
+    public ServerSetting(final SettingType setting, final String s) {
+
+        this.value = s;
+        this.name = setting.getName();
+    }
+
+
 
 
     @Override

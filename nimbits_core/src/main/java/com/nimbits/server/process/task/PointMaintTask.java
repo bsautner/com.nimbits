@@ -33,7 +33,7 @@ public class PointMaintTask extends ApiBase {
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException, ServletException {
-        setup(req, resp, false);
+        setup(req, resp);
         valueService  = ValueServiceFactory.getInstance(engine, taskService);
         processPost(req);
 

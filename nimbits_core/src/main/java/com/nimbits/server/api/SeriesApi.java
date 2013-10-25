@@ -46,7 +46,7 @@ public class SeriesApi extends ApiBase {
     @Override
     public void doGet(final HttpServletRequest req,
                       final HttpServletResponse resp) throws ServletException {
-        setup(req, resp, false);
+        setup(req, resp);
         final Type valueListType = new TypeToken<List<ValueModel>>() { }.getType();
         ValueService valueService = ValueServiceFactory.getInstance(engine, taskService);
 

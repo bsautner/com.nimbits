@@ -45,7 +45,7 @@ import static org.junit.Assert.assertTrue;
 
 })
 public class NimbitsServletNotLoggedInTest {
-    public static final String email = Const.TEST_ACCOUNT;
+    public static final String email = SettingType.admin.getDefaultValue();
 
     public final LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig(),

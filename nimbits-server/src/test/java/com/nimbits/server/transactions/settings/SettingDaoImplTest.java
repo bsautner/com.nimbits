@@ -12,13 +12,12 @@
 
 package com.nimbits.server.transactions.settings;
 
+import com.nimbits.client.enums.SettingType;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.transaction.settings.SettingServiceFactory;
 import org.junit.Test;
 
-import java.util.Map;
-
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 
 
 public class SettingDaoImplTest extends NimbitsServletTest {
@@ -30,8 +29,10 @@ public class SettingDaoImplTest extends NimbitsServletTest {
     public void getSettingsTest() throws  Exception {
 
         Thread.sleep(2000);
-        Map<String, String> settings = SettingServiceFactory.getServiceInstance(engine).getSettings();
-        assertTrue(settings.size() > 0);
+        for (SettingType types : SettingType.values()) {
+        String settings = SettingServiceFactory.getServiceInstance(engine).getSetting(types);
+        assertNotNull(settings);
+        }
 
     }
 }

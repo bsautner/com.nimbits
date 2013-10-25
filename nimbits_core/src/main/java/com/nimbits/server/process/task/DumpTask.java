@@ -52,7 +52,7 @@ public class DumpTask extends ApiBase {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        setup(request, response, false);
+        setup(request, response);
         valueService = ValueServiceFactory.getInstance(engine, taskService);
         final String json =  request.getParameter(Parameters.entity.getText());
         final String sd =  request.getParameter(Parameters.sd.getText());

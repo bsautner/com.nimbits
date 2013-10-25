@@ -23,7 +23,7 @@ import com.nimbits.mobile.dao.orm.TreeTable;
  */
 public class DBOpenHelper  extends SQLiteOpenHelper {
 
-    private static final int DATABASE_VERSION = 511;
+    private static final int DATABASE_VERSION = 513;
     private static final String DATABASE_NAME = "NDB" + DATABASE_VERSION;
     public DBOpenHelper(Context context) {
         super(context, DATABASE_NAME, null,   DATABASE_VERSION);

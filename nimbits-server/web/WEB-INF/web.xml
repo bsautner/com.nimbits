@@ -35,6 +35,13 @@
     <listener>
         <listener-class>com.nimbits.server.ApplicationListener</listener-class>
     </listener>
+
+    <listener>
+        <listener-class>
+            org.springframework.web.context.ContextLoaderListener
+        </listener-class>
+    </listener>
+
     <servlet>
         <servlet-name>searchApi</servlet-name>
         <servlet-class>com.nimbits.server.api.SearchApi</servlet-class>
@@ -120,16 +127,12 @@
 
 
 
-    <listener>
-        <listener-class>
-            org.springframework.web.context.ContextLoaderListener
-        </listener-class>
-    </listener>
+
 
 
     <servlet>
         <servlet-name>xmpp</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.api.impl.XMPPReceiverServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -440,7 +443,7 @@
     </servlet>
     <servlet>
         <servlet-name>com.nimbits UserService</servlet-name>
-        <servlet-class>com.nimbits.server.transactions.user.UserRpcServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.server.transactions.UserRpcServiceImpl</servlet-class>
     </servlet>
 
 

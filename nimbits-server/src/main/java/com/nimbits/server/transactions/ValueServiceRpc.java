@@ -23,17 +23,16 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.server.ApplicationListener;
 import com.nimbits.server.NimbitsEngine;
 import com.nimbits.server.process.task.TaskService;
+import com.nimbits.server.transaction.calculation.CalculationServiceFactory;
 import com.nimbits.server.transaction.user.UserHelper;
 import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.service.ValueService;
-import com.nimbits.server.transaction.calculation.CalculationServiceFactory;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Service("valueService")
+
 public class ValueServiceRpc extends RemoteServiceServlet implements com.nimbits.client.service.value.ValueServiceRpc {
 
     NimbitsEngine engine = ApplicationListener.createEngine();

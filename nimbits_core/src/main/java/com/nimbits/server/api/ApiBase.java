@@ -59,12 +59,13 @@ public class ApiBase extends HttpServlet {
         super.init();
     }
 
-    protected void setup(HttpServletRequest req, HttpServletResponse resp, boolean readBody)   {
+    protected void setup(HttpServletRequest req, HttpServletResponse resp)   {
         setupEngine();
         entityService = EntityServiceFactory.getInstance(engine);
 
         try {
             getUser(req, resp);
+            json = req.getParameter(Parameters.json.getText());
         }
         catch (IllegalArgumentException rx) {
 
@@ -72,9 +73,7 @@ public class ApiBase extends HttpServlet {
 
         }
         addHeaders(resp);
-        if (readBody) {
-            readJson(req);
-        }
+
     }
 
     private void setupEngine() {
@@ -106,12 +105,7 @@ public class ApiBase extends HttpServlet {
 
 
     }
-    protected void readJson(HttpServletRequest req) {
-        json = req.getParameter(Parameters.json.getText());
-        if (Utils.isEmptyString(json)) {
-            json = getContent(req);
-        }
-    }
+
 
 
     protected String getContent(final HttpServletRequest req)  {

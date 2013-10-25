@@ -13,17 +13,15 @@
 package com.nimbits.server.transaction.settings;
 
 
-import java.util.Map;
+import com.nimbits.client.enums.SettingType;
 
 public interface SettingsService   {
 
-    Map<String, String> getSettings();
+    String getSetting(SettingType paramName);
 
-    String getSetting(String paramName);
+    void updateSetting(SettingType setting, String newValue);
 
-    void updateSetting(String setting, String newValue);
-
-    void addSetting(String setting, String value);
+    void addSetting(SettingType setting, String value);
 
 
 

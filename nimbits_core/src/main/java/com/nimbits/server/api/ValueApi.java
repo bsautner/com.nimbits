@@ -40,7 +40,7 @@ public class ValueApi extends ApiBase {
 
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
-        setup(req, resp, true);
+        setup(req, resp);
         valueService = ValueServiceFactory.getInstance(engine, taskService);
 
 
@@ -71,7 +71,7 @@ public class ValueApi extends ApiBase {
                       final HttpServletResponse resp) throws ServletException {
 
 
-        setup(req, resp, false);
+        setup(req, resp);
         valueService = ValueServiceFactory.getInstance(engine, taskService);
         if (user != null) {
 

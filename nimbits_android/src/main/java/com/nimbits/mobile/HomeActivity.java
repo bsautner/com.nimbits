@@ -18,6 +18,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,10 +40,9 @@ import com.nimbits.client.model.simple.SimpleValue;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.mobile.application.SessionSingleton;
-import com.nimbits.mobile.main.async.AddUpdateEntityTask;
-import com.nimbits.mobile.main.async.DownloadTreeTask;
-import com.nimbits.mobile.main.async.PostValueTask;
-import com.nimbits.mobile.main.async.SeriesTask;
+import com.nimbits.mobile.dao.ApplicationDao;
+import com.nimbits.mobile.dao.orm.TreeTable;
+import com.nimbits.mobile.main.async.*;
 import com.nimbits.mobile.startup.async.LoadControlTask;
 import com.nimbits.mobile.ui.chart.ChartFragment;
 import com.nimbits.mobile.ui.dialog.SimpleEntryDialog;
@@ -60,14 +60,14 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
     private EntityListFragment entityFragment;
     private ChartFragment chartFragment;
     private AsyncTask<Void, Void, Void> mRegisterTask;
-
+    private ApplicationDao dao;
     private static final String TAG = "HomeActivity";
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.v(TAG, "onCreate");
         setContentView(R.layout.home_activity_layout);
-
+        this.dao = SessionSingleton.getInstance().getDao();
 
 
 
@@ -77,7 +77,7 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
             LoadControlTask loadControlTask = new LoadControlTask();
             loadControlTask.execute();
             showEntityFragment();
-            int c = SessionSingleton.getInstance().getDao().getCount(SessionSingleton.getInstance().getServer().getId());
+            int c = dao.getCount(SessionSingleton.getInstance().getServer().getId());
             Log.v(TAG, "Entries in store: " + c );
             if (c == 0) {
                 refresh();
@@ -85,7 +85,7 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
             else {
                 ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
                 progressBar.setVisibility(View.GONE);
-                //entityFragment.show();
+
             }
 
         }
@@ -102,12 +102,6 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
         Log.v(TAG, "resume");
         super.onResume();
         startGcm();
-
-
-//        if (chartFragment != null && SessionSingleton.getInstance().getCurrentEntityPK().getEntityType().equals(EntityType.point)) {
-//            showChartFragment();
-//        }
-
     }
 
     private void showPointFragment() {
@@ -119,10 +113,8 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
     }
 
     private void showEntityFragment() {
-        // FrameLayout frame = (FrameLayout) findViewById(R.id.main_frame);
         entityFragment = new EntityListFragment(this);
         entityFragment.setArguments(getIntent().getExtras());
-
         getFragmentManager().beginTransaction().replace(R.id.main_frame, entityFragment, EntityListFragment.TAG).commit();
 
     }
@@ -137,7 +129,8 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
                 Log.v(TAG, "downloaded : " + results);
                 ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
                 progressBar.setVisibility(View.GONE);
-                // entityFragment.refresh();
+                entityFragment.refreshData();
+                refreshValues();
 
 
             }
@@ -160,7 +153,6 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
         chartFragment.setArguments(getIntent().getExtras());
         getFragmentManager().beginTransaction().replace(R.id.data_frame, chartFragment, ChartFragment.TAG).commit();
 
-        //chartFragment.getSeries(entity);
     }
 
 
@@ -222,45 +214,59 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
         if (entity.getEntityType().equals(EntityType.point)) {
             showChartFragment();
         }
+        refreshValues();
 
-        // SessionSingleton.getInstance().setCurrentEntity(entity);
-
-//        List<Entity> children;
-//
-////        if (checkChildren) {
-////            children = SessionSingleton.getInstance().getChildEntities();
-////        } else {
-//          children = Collections.emptyList();
-////        }
-//
-//        switch (entity.getEntityType()) {
-//
-//            case user:
-//                break;
-//            case point:
-//                if (children.isEmpty()) {
-//                    Log.v(TAG, "onSingleEntitySelected");
-//                    showPointFragment();
-//                } else {
-//                    //showEntity();
-//                }
-//                showChartFragment();
-//                break;
-//            case category:
-//
-//              //  showEntity();
-//                break;
-//            case subscription:
-//                break;
-//            case calculation:
-//                break;
-//            case summary:
-//                break;
-//            case accessKey:
-//                break;
-//        }
     }
+    public void refreshValues() {
 
+        Entity entity = SessionSingleton.getInstance().getCurrentEntity();
+
+
+        Cursor cursor = null;
+
+        try {
+            cursor = dao.getChildren(entity);
+
+            int type;
+
+            while (cursor.moveToNext()) {
+
+                final long id = cursor.getLong(cursor.getColumnIndex(TreeTable.getId()));
+                type =  cursor.getInt(cursor.getColumnIndex(TreeTable.getType()));
+                EntityType entityType = EntityType.get(type);
+
+                if (entityType != null && entityType.recordsData()) {
+                    final Entity e = dao.getEntity(id);
+                    LoadValueTask.getInstance(new LoadValueTask.LoadValueTaskListener() {
+                        @Override
+                        public void onSuccess(Value response) {
+                            dao.updateValue(id, response);
+
+                        }
+                    }).execute(e);
+                }
+
+
+                //  Log.v(TAG, cursor.getString(0));
+
+            }
+            if (entity.getEntityType().recordsData()) {
+                LoadValueTask.getInstance(new LoadValueTask.LoadValueTaskListener() {
+                    @Override
+                    public void onSuccess(Value response) {
+                        dao.updateValue(SessionSingleton.getInstance().getCurrentEntityPK(), response);
+
+                    }
+                }).execute(entity);
+            }
+
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        entityFragment.refreshData();
+    }
 
     @Override
     public void onNewEntity(String parent, EntityType type, EntityName name) {
@@ -275,7 +281,7 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
                 if (response.isEmpty()) {
                     ToastHelper.show(getApplicationContext(), "something went wrong...");
                 } else {
-                    SessionSingleton.getInstance().getDao().storeTree(SessionSingleton.getInstance().getServer().getId(), response, false);
+                    dao.storeTree(SessionSingleton.getInstance().getServer().getId(), response, false);
                     getEntityFragment().refreshData();
                     // entityFragment.refresh();
                     //  SessionSingleton.getInstance().addEntities(response);
@@ -354,9 +360,10 @@ public class HomeActivity extends Activity implements EntityListener, SeriesTask
         if (e.getEntityType().equals(EntityType.user)) {
             finish();
         } else {
-            long id = SessionSingleton.getInstance().getDao().getParentId(SessionSingleton.getInstance().getCurrentEntityPK());
+            long id = dao.getParentId(SessionSingleton.getInstance().getCurrentEntityPK());
             SessionSingleton.getInstance().setCurrentEntity(id);
-            getEntityFragment().show();
+            getEntityFragment().refreshData();
+            refreshValues();
         }
 
 

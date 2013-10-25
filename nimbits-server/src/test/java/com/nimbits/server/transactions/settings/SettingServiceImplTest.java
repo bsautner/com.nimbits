@@ -14,13 +14,11 @@ package com.nimbits.server.transactions.settings;
 
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.transaction.settings.SettingServiceFactory;
-import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.cache.CacheFactory;
 import com.nimbits.server.transaction.cache.NimbitsCache;
+import com.nimbits.server.transaction.settings.SettingServiceFactory;
+import com.nimbits.server.transaction.settings.SettingsService;
 import org.junit.Test;
-
-import java.util.Map;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -36,9 +34,8 @@ public class SettingServiceImplTest  extends NimbitsServletTest {
     public void getSettingsTest() throws  Exception {
 
         Thread.sleep(2000);
-        Map<String, String> settings = service.getSettings();
-        assertTrue(settings.size() > 0);
-        String admin = service.getSetting(SettingType.admin.getName());
+
+        String admin = service.getSetting(SettingType.admin );
         assertNotNull(admin);
         System.out.println(admin);
         NimbitsCache cache = CacheFactory.getInstance();

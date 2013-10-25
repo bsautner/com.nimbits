@@ -13,11 +13,10 @@
 package com.nimbits.server.transactions;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.service.settings.SettingsServiceRpc;
 import com.nimbits.server.ApplicationListener;
 import com.nimbits.server.transaction.settings.SettingServiceFactory;
-
-import java.util.Map;
 
 /**
  * Created by benjamin on 10/17/13.
@@ -25,8 +24,10 @@ import java.util.Map;
 public class SettingServiceRpcImpl extends RemoteServiceServlet implements SettingsServiceRpc {
 
 
+
+
     @Override
-    public Map<String, String> getSettingsRpc() {
-        return SettingServiceFactory.getServiceInstance(ApplicationListener.createEngine()).getSettings();
+    public String getSetting(SettingType setting) {
+        return SettingServiceFactory.getServiceInstance(ApplicationListener.createEngine()).getSetting(setting);
     }
 }

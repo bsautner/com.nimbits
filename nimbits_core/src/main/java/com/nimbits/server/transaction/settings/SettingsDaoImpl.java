@@ -22,39 +22,30 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class SettingsDaoImpl implements SettingsService {
 
     private PersistenceManagerFactory pmf;
-    private final NimbitsEngine engine;
+
 
     public SettingsDaoImpl(NimbitsEngine engine) {
         this.pmf = engine.getPmf();
-        this.engine = engine;
-
     }
 
-    public String getSetting(final String setting)  {
+    @Override
+    public String getSetting(final SettingType setting)  {
         final PersistenceManager pm = pmf.getPersistenceManager();
         String retVal;
         try {
             final Query q = pm.newQuery(ServerSetting.class, "name == n");
             q.setRange(0, 1);
             q.declareParameters("String n");
-            final List<ServerSetting> a = (List<ServerSetting>) q.execute(setting);
+            final List<ServerSetting> a = (List<ServerSetting>) q.execute(setting.getName());
             if (a.isEmpty()) {
-                initSettings();
-                SettingType defaultSetting = SettingType.get(setting);
-                if (defaultSetting != null) {
-                    return defaultSetting.getDefaultValue();
-                }
-                else {
-                    throw new RuntimeException("Setting not found");
-                }
+               return setting.getDefaultValue();
+
             } else {
                 final Setting s = a.get(0);
                 retVal = s.getValue();
@@ -65,24 +56,15 @@ public class SettingsDaoImpl implements SettingsService {
 
         return retVal;
     }
-
-    private void initSettings() {
-        for (SettingType s : SettingType.values()) {
-            addSetting(s.getName(), s.getDefaultValue());
-        }
-
-
-     }
-
-
-    public void updateSetting(final String name, final String newValue) {
+    @Override
+    public void updateSetting(final SettingType name, final String newValue) {
         final PersistenceManager pm = pmf.getPersistenceManager();
         try {
 
             final Query q = pm.newQuery(ServerSetting.class, "name == n");
             q.setRange(0, 1);
             q.declareParameters("String n");
-            final List<Setting> a = (List<Setting>) q.execute(name );
+            final List<Setting> a = (List<Setting>) q.execute(name.getName() );
             if (!a.isEmpty()) {
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
@@ -94,39 +76,15 @@ public class SettingsDaoImpl implements SettingsService {
         } finally {
             pm.close();
         }
-
-
     }
 
 
-    public Map<String, String> getSettings() {
 
+    @Override
+    public void addSetting(final SettingType name, final String value) {
         final PersistenceManager pm = pmf.getPersistenceManager();
         try {
-            final Query q = pm.newQuery(ServerSetting.class);
-            final Iterable<ServerSetting> l = (Iterable<ServerSetting>) q.execute();
-            final HashMap<String, String> settings = new HashMap<String, String>(SettingType.values().length);
-            if (settings.isEmpty()) {
-                initSettings();
-            }
-            for (final Setting s : l) {
-                final SettingType type = s.getSetting();
-                if (type != null) { //this can happen if an old setting in the db isn't in the enum anymore
-                    settings.put(s.getSetting().getName(), s.getValue());
-                }
-            }
-            return settings;
-        }finally {
-            pm.close();
-        }
-
-    }
-
-
-    public void addSetting(final String name, final String value) {
-        final PersistenceManager pm = pmf.getPersistenceManager();
-        try {
-            final Setting s = new ServerSetting(value, name);
+            final Setting s = new ServerSetting(name, value);
             pm.makePersistent(s);
         } finally {
             pm.close();

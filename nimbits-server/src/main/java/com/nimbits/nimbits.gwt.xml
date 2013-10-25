@@ -27,6 +27,7 @@
     <inherits name="com.google.gwt.json.JSON"/>
     <inherits name='com.extjs.gxt.ui.GXT'/>
     <inherits name="com.nimbits.NimbitsModel"/>
+    <inherits name="com.nimbits.NimbitsCore"/>
     <inherits name="com.google.gwt.http.HTTP"/>
     <script src="feed.js"/>
     <script src="jquery-1.7.1.js"/>

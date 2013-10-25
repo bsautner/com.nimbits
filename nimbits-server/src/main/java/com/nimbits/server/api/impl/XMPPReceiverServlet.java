@@ -35,6 +35,7 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueDataModel;
 import com.nimbits.client.model.value.impl.ValueFactory;
+import com.nimbits.server.ApplicationListener;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.json.JsonHelper;
@@ -53,7 +54,7 @@ import java.util.regex.Pattern;
 
 @SuppressWarnings("serial")
 @Service("xmpp")
-public class XMPPReceiverServlet extends ApiServlet implements org.springframework.web.HttpRequestHandler {
+public class XMPPReceiverServlet extends ApiServlet  {
 
 
     private static final Pattern COMPILE = Pattern.compile("/");
@@ -61,11 +62,14 @@ public class XMPPReceiverServlet extends ApiServlet implements org.springframewo
 
 
     @Override
-    public void handleRequest(final HttpServletRequest req, final HttpServletResponse resp) throws  IOException {
+    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws  IOException {
         User u = null;
         String body = null;
-        doInit(req, resp, ExportType.json);
-        try {
+
+        setEngine(ApplicationListener.createEngine());
+
+
+//            doInit(req, resp, ExportType.json);
             final XMPPService xmpp = XMPPServiceFactory.getXMPPService();
             final Message message = xmpp.parseMessage(req);
             final JID fromJid = message.getFromJid();
@@ -102,20 +106,12 @@ public class XMPPReceiverServlet extends ApiServlet implements org.springframewo
                     engine.getXmppService().sendMessage(":( I don't understand you - try ? ", u.getEmail());
                 }
             }
-        } catch (Exception e) {
 
-            if (u != null) {
-
-                engine.getXmppService().sendMessage(":-o I don't understand " + body + " try ? :: " + e.getMessage(), u.getEmail() );
-
-            }
-
-        }
 
         // ...
     }
 
-    private void processJson(final User u, final String body) throws Exception {
+    private void processJson(final User u, final String body)  {
 
 
         Gson gson = GsonFactory.getInstance();
@@ -152,7 +148,7 @@ public class XMPPReceiverServlet extends ApiServlet implements org.springframewo
         engine.getXmppService().sendMessage("pointname=Foo Bar | record a text value to that point", u.getEmail());
     }
 
-    private void createPoint(final String body, final User u) throws Exception {
+    private void createPoint(final String body, final User u)  {
 
 
         EntityName pointName = CommonFactory.createName(body.substring(1).trim(), EntityType.point);
@@ -194,7 +190,7 @@ public class XMPPReceiverServlet extends ApiServlet implements org.springframewo
 
 
 
-    private void sendCurrentValue(final String body, final User u) throws Exception {
+    private void sendCurrentValue(final String body, final User u)  {
         if (!Utils.isEmptyString(body) && !body.isEmpty() && body.charAt(body.length() - 1) == '?') {
             final EntityName pointName = CommonFactory.createName(body.replace("?", ""), EntityType.point);
 

@@ -26,10 +26,6 @@
 
     </bean>
 
-    <bean id="xmpp" class="com.nimbits.server.api.impl.XMPPReceiverServlet">
-
-
-    </bean>
 
 
     <bean id="chart" class="com.nimbits.server.api.impl.ChartApiServletImpl">

@@ -35,7 +35,7 @@ public class DeleteRecordedValuesTask extends ApiBase {
     private ValueService valueService;
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException {
-        setup(req, resp, false);
+        setup(req, resp);
         valueService = ValueServiceFactory.getInstance(engine, taskService);
         final String pointJson = req.getParameter(Parameters.json.getText());
         Point point = GsonFactory.getInstance().fromJson(pointJson, PointModel.class);

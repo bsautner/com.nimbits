@@ -32,19 +32,6 @@ public class HttpHelper {
         this.email = email;
         this.apiKey = apiKey;
     }
-    private String buildCode(final UrlContainer postUrl,
-                                    final List<BasicNameValuePair> parameters
-    ) {
-        StringBuilder sb = new StringBuilder();
-
-        sb.append(postUrl.getUrl().hashCode());
-        for (BasicNameValuePair pair : parameters) {
-            sb.append(pair.getName().hashCode()).append(pair.getValue().hashCode());
-
-        }
-        return  sb.toString();
-
-    }
 
 
 
@@ -56,8 +43,8 @@ public class HttpHelper {
 
     ) {
         List<T> result;
-        String code = buildCode(postUrl, parameters);
-        result = doHttpGet(clz, postUrl, parameters, type, expectList, code);
+
+        result = doHttpGet(clz, postUrl, parameters, type, expectList);
 
 
         return result;
@@ -65,7 +52,7 @@ public class HttpHelper {
 
     }
 
-    private <T, K> List<T> doHttpGet(Class<K> clz, UrlContainer postUrl, List<BasicNameValuePair> parameters, Type type, boolean expectList, String code) {
+    private <T, K> List<T> doHttpGet(Class<K> clz, UrlContainer postUrl, List<BasicNameValuePair> parameters, Type type, boolean expectList) {
         List<T> response = new HttpTransaction(email, apiKey).doGet(clz, postUrl, parameters, type, expectList);
         return response;
     }

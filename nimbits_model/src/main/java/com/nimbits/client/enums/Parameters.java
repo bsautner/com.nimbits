@@ -138,7 +138,7 @@ public enum Parameters {
     }
 
     private static class ParamConstants {
-        private static final String PARAM_API_KEY = "API_KEY";
+        private static final String PARAM_API_KEY = SettingType.apiKey.getName();
         private static final String PARAM_ACTION = "action";
         private static final String PARAM_AUTO_SCALE = "autoscale";
         private static final String PARAM_BLOB_KEY = "blob-key";

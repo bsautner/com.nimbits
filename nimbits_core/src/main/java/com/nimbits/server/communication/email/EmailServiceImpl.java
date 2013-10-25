@@ -141,10 +141,10 @@ public class EmailServiceImpl implements EmailService {
     private InternetAddress getFromEmail() throws UnsupportedEncodingException {
         final String fromEmail;
         try {
-            fromEmail = SettingServiceFactory.getServiceInstance(engine).getSetting(SettingType.admin.getName());
+            fromEmail = SettingServiceFactory.getServiceInstance(engine).getSetting(SettingType.admin );
             return new InternetAddress(fromEmail, Words.WORD_NIMBITS);
         } catch (Exception e) {
-          return  new InternetAddress(Const.TEST_ACCOUNT, Words.WORD_NIMBITS);
+          return  new InternetAddress(SettingType.admin.getDefaultValue(), Words.WORD_NIMBITS);
         }
 
     }

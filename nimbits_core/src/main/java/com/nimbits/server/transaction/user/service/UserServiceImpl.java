@@ -138,7 +138,7 @@ public class UserServiceImpl implements UserService {
     }
     private boolean validApiKey(final HttpServletRequest request) {
 
-        String apiKey = SettingServiceFactory.getServiceInstance(engine).getSetting(Parameters.apikey.getText());
+        String apiKey = SettingServiceFactory.getServiceInstance(engine).getSetting(SettingType.apiKey);
         String providedApiKey = request.getHeader(Parameters.apikey.getText());
         if (StringUtils.isNotEmpty(apiKey) && StringUtils.isNotEmpty(providedApiKey)) {
             if (apiKey.equals(providedApiKey)) {
@@ -184,7 +184,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getAdmin()   {
-        final String adminStr = SettingServiceFactory.getServiceInstance(engine).getSetting(SettingType.admin.getName());
+        final String adminStr = SettingServiceFactory.getServiceInstance(engine).getSetting(SettingType.admin);
         if (Utils.isEmptyString(adminStr)) {
             throw new IllegalArgumentException("Server is missing admin setting!");
         } else {

@@ -29,7 +29,7 @@ public class SessionApi extends ApiBase {
                       final HttpServletResponse resp) throws ServletException {
 
 
-        setup(req, resp, false);
+        setup(req, resp);
 
 
         if (user != null && !user.isRestricted()) {

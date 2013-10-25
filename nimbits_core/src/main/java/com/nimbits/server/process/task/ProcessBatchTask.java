@@ -76,7 +76,7 @@ public class ProcessBatchTask extends ApiBase  {
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException {
-        setup(req, resp, false);
+        setup(req, resp);
         valueService = ValueServiceFactory.getInstance(engine, taskService);
         processBatch(req, resp);
 

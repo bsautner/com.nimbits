@@ -34,7 +34,7 @@ import com.nimbits.mobile.HomeActivity;
 import com.nimbits.mobile.R;
 import com.nimbits.mobile.application.NimbitsApplication;
 import com.nimbits.mobile.application.SessionSingleton;
-import com.nimbits.mobile.startup.async.StartupTask;
+import com.nimbits.mobile.startup.async.SessionTask;
 import com.nimbits.mobile.ui.instance.InstanceManager;
 
 import java.util.ArrayList;
@@ -132,7 +132,7 @@ public class StartupActivity extends Activity implements LoaderManager.LoaderCal
 
         if (!emails.isEmpty()) {
             SessionSingleton.getInstance().setEmail(emails.get(0));
-            StartupTask.getInstance(new StartupTask.StartupListener() {
+            SessionTask.getInstance(new SessionTask.StartupListener() {
                 @Override
                 public void onLoginSuccess(List<User> response) {
                     SessionSingleton.getInstance().setSession(response.get(0));

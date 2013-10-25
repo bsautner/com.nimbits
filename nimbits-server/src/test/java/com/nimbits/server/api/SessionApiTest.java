@@ -1,6 +1,7 @@
 package com.nimbits.server.api;
 
 import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.SettingType;
 import com.nimbits.server.NimbitsServletTest;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +29,7 @@ public class SessionApiTest extends NimbitsServletTest {
 
     @Test
     public void testDoGet() throws Exception {
-         req1.addParameter("email", "test@example.com");
+         req1.addParameter("email", SettingType.admin.getDefaultValue());
          req1.addHeader(Parameters.apikey.getText(), "some key");
          sessionApi.doGet(req1, resp1);
          assertEquals(HttpServletResponse.SC_OK, resp1.getStatus());

@@ -37,7 +37,7 @@ final Logger log = Logger.getLogger(ValueApi.class.getName());
 
             PrintWriter out = resp.getWriter();
             setup(req, resp, false);
-            out.print(SettingServiceFactory.getServiceInstance(engine).getSetting(SettingType.serverVersion.getName()));
+            out.print(SettingServiceFactory.getServiceInstance(engine).getSetting(SettingType.serverVersion));
             out.close();
 
         }

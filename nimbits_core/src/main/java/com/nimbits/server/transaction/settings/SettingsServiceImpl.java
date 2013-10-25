@@ -13,9 +13,8 @@
 package com.nimbits.server.transaction.settings;
 
 
+import com.nimbits.client.enums.SettingType;
 import com.nimbits.server.NimbitsEngine;
-
-import java.util.Map;
 
 
 public class SettingsServiceImpl implements SettingsService {
@@ -27,20 +26,16 @@ public class SettingsServiceImpl implements SettingsService {
     }
 
     @Override
-    public Map<String, String> getSettings() {
-        return settingsCache.getSettings();
-    }
-    @Override
-    public String getSetting(final String paramName)  {
+    public String getSetting(final SettingType paramName)  {
         return settingsCache.getSetting(paramName);
     }
 
     @Override
-    public void updateSetting(final String setting, final String newValue) {
+    public void updateSetting(final SettingType setting, final String newValue) {
         settingsCache.updateSetting(setting, newValue);
     }
     @Override
-    public void addSetting(final String setting, final String value) {
+    public void addSetting(final SettingType setting, final String value) {
         settingsCache.addSetting(setting, value);
     }
 

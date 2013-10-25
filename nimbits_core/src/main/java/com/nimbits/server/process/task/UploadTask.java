@@ -53,7 +53,7 @@ public class UploadTask extends ApiBase {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        setup(request, response, false);
+        setup(request, response);
         valueService = ValueServiceFactory.getInstance(engine, taskService);
         final String key = request.getParameter(Parameters.blobkey.getText());
         final String json = request.getParameter(Parameters.entity.getText());

@@ -59,8 +59,6 @@ public class UserModel extends EntityModel implements Serializable, User {
             this.accessKeys = u.getAccessKeys();
             this.emailAddress = u.getEmail().getValue();
 
-        } else {
-
         }
     }
 
@@ -74,7 +72,7 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     @Override
     public Date getLastLoggedIn() {
-        return (Date) this.lastLoggedIn.clone();
+        return   new Date(lastLoggedIn.getTime());
     }
 
     @Override

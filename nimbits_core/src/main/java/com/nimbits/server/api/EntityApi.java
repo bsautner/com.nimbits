@@ -49,7 +49,7 @@ public class EntityApi extends ApiBase {
                       final HttpServletResponse resp) throws ServletException {
 
 
-        setup(req, resp, false);
+        setup(req, resp);
 
         if (user != null) {
 
@@ -68,7 +68,7 @@ public class EntityApi extends ApiBase {
     @Override
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
 
-        setup(req, resp, true);
+        setup(req, resp);
 
 
 

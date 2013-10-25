@@ -12,6 +12,7 @@
 
 package com.nimbits.client.model.value.impl;
 
+import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.simple.SimpleValue;
 import com.nimbits.client.model.value.Value;
@@ -31,7 +32,7 @@ public class ValueFactoryTest {
         Value value = ValueFactory.createValueModel(3.12);
 
         ValueContainer container = ValueFactory.createValueContainer(
-                CommonFactory.createEmailAddress("test@example.com"),
+                CommonFactory.createEmailAddress(SettingType.admin.getDefaultValue()),
                 SimpleValue.getInstance("foo"),
                 SimpleValue.getInstance("bar"),
                 value);

@@ -34,7 +34,7 @@ public class TreeApi extends ApiBase {
         final Type entityListType = new TypeToken<List<EntityModel>>() {
         }.getType();
 
-        setup(req, resp, false);
+        setup(req, resp);
 
 
         if (user != null && ! user.isRestricted()) {

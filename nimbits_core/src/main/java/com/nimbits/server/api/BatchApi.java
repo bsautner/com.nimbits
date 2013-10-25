@@ -49,7 +49,7 @@ public class BatchApi extends ApiBase {
     public void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
 
 
-        setup(req, resp, true);
+        setup(req, resp);
         ValueService valueService = ValueServiceFactory.getInstance(engine, taskService);
 
         if (user != null && !user.isRestricted()) {

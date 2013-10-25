@@ -13,64 +13,45 @@
 package com.nimbits;
 
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Date;
+import java.util.Random;
+
 /**
  * Author: Benjamin Sautner
  * Date: 1/16/13
  * Time: 11:31 AM
  */
 public class Program {
-    private static final String base = "http://localhost:8080";
-    private static final String email = "test@example.com";
-    private final static String key = "key";
-    // private final static String point = "P2";
 
-    public static void main(String[] args) {
-//        Nimbits.setLoginListener(new Nimbits.LoginListener() {
-//            @Override
-//            public void loginSuccess(User session) {
-//                System.out.println("Logged in With Key");
-//
-//                Random r = new Random();
-//                for (int i = -10; i < 0; i++) {
-//
-//                    Calendar c = Calendar.getInstance();
-//                    c.add(Calendar.MINUTE, i);
-//
-//                    ValueHelper.recordValue("dd", i, c.getTime());
-//                    System.out.println(i);
-//
-//                }
-//
-//
-////                //     Random r = new Random();
-////                while (true) {
-////
-//////                    Value v = null;
-//////                    try {
-//////                        v = ValueHelper.recordValue(point, r.nextDouble());
-//////                    } catch (Exception e) {
-//////                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-//////                    }
-//////                    System.out.println(v.getDoubleValue());
-////                    try {
-////                        testSummary();
-////                        Thread.sleep(1000);
-////                    } catch (RuntimeException e) {
-////
-////                    } catch (InterruptedException e) {
-////
-////                    }
-////
-////                }
-//            }
-//
-//            @Override
-//            public void loginFail(String reason) {
-//                System.out.println(reason);
-//            }
-//        });
-//        Nimbits.loginWithKey(base, email, key);
 
+    public static void main(String[] args) throws IOException, InterruptedException {
+        while (true) {
+        Random r = new Random();
+        String urlParameters = "email=support@nimbits.com&key=mysecretkey&point=foo&value=" + r.nextDouble();
+        String request = "http://localhost:8080/service/v2/value";
+        URL url = new URL(request);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setDoOutput(true);
+        connection.setDoInput(true);
+        connection.setInstanceFollowRedirects(false);
+        connection.setRequestMethod("POST");
+        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+        connection.setRequestProperty("charset", "utf-8");
+        connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
+        connection.setUseCaches (false);
+
+        DataOutputStream wr = new DataOutputStream(connection.getOutputStream ());
+        wr.writeBytes(urlParameters);
+        wr.flush();
+        wr.close();
+        connection.disconnect();
+        Thread.sleep(1000);
+         System.out.println("wrote test" + new Date().getTime());
+        }
     }
 
     public static void testSummary() {

@@ -80,7 +80,7 @@
     <string name="connect">Connect</string>
     <string name="add_instance">Add Instance</string>
     <string name="delete"/><string name="instance_editor_title">Nimbits Instance Connection</string>
-    <string name="instance_editor_help">Connect to an instance of Nimbits Server.  If you setup a new server, you'll need to set the API KEY server setting and enter that key here.</string>
+    <string name="instance_editor_help">Connect to an instance of Nimbits Server.  If you setup a new server you\'ll need to set the API KEY server setting and enter that key here.</string>
 
     <string name="server_url">Sever URL (eg yournimbits.appspot.com  192.168.1.101:8080)</string>
 

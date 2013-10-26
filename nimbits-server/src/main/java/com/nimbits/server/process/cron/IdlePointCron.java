@@ -45,7 +45,7 @@ public class IdlePointCron extends ApiBase  {
         // out = resp.getWriter();
 
         try {
-            setup(req, resp, false);
+            setup(req, resp);
             valueService =  ValueServiceFactory.getInstance(engine, taskService);
             userService = AuthenticationServiceFactory.getInstance(engine);
             processGet();

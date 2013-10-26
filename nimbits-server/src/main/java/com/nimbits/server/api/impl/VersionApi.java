@@ -36,7 +36,7 @@ final Logger log = Logger.getLogger(ValueApi.class.getName());
         public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
             PrintWriter out = resp.getWriter();
-            setup(req, resp, false);
+            setup(req, resp);
             out.print(SettingServiceFactory.getServiceInstance(engine).getSetting(SettingType.serverVersion));
             out.close();
 

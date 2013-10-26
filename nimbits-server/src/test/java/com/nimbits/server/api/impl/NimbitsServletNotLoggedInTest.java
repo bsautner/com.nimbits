@@ -15,7 +15,6 @@ package com.nimbits.server.api.impl;
 
 
 import com.google.appengine.tools.development.testing.*;
-import com.nimbits.client.constants.Const;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,7 +44,7 @@ import static org.junit.Assert.assertTrue;
 
 })
 public class NimbitsServletNotLoggedInTest {
-    public static final String email = SettingType.admin.getDefaultValue();
+
 
     public final LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig(),

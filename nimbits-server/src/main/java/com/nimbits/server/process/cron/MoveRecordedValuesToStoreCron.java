@@ -35,7 +35,7 @@ public class MoveRecordedValuesToStoreCron extends ApiBase  {
     @SuppressWarnings("unchecked")
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
-        setup(req, resp, false);
+        setup(req, resp);
         final Map<String, Point> points = entityService.getActivePoints();
 
         for (final Point point : points.values()) {

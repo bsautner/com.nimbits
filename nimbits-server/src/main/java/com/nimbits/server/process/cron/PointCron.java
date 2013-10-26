@@ -30,7 +30,7 @@ public class PointCron extends ApiBase  {
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException, ServletException {
 
-                setup(req, resp, false);
+                setup(req, resp);
                 final User admin = AuthenticationServiceFactory.getInstance(engine).getAdmin();
                 final Map<String,Entity> e = entityService.getSystemWideEntityMap(admin, EntityType.point);
 

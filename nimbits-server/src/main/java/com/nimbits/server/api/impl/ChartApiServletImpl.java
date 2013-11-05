@@ -15,7 +15,6 @@ package com.nimbits.server.api.impl;
 import com.google.common.collect.Range;
 import com.nimbits.client.common.Utils;
 import com.nimbits.client.constants.Const;
-import com.nimbits.client.constants.Path;
 import com.nimbits.client.constants.Words;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ExportType;
@@ -31,9 +30,7 @@ import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.time.TimespanService;
 import com.nimbits.server.time.TimespanServiceFactory;
-import org.springframework.stereotype.Service;
 
-import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
@@ -52,8 +49,8 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 @Deprecated
-@Service("chart")
-public class ChartApiServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
+
+public class ChartApiServletImpl extends ApiServlet  {
     private static final Logger log = Logger.getLogger(ChartApiServletImpl.class.getName());
     /**
      *
@@ -63,20 +60,10 @@ public class ChartApiServletImpl extends ApiServlet implements org.springframewo
     private static final String chartDateCode = "&chd=t:";
     private static final int INT = 512;
     private static final Pattern COMPILE = Pattern.compile(",");
+    private static final String PATH_GOOGLE_CHART_API = "http://chart.apis.google.com/chart";
 
 
-    @Override
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        if (isPost(req)) {
-
-            doPost(req, resp);
-        }
-        else {
-            doGet(req, resp);
-        }
-
-    }
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
         final String formatParam = req.getParameter(Parameters.format.getText());
@@ -93,10 +80,9 @@ public class ChartApiServletImpl extends ApiServlet implements org.springframewo
 
             final boolean doScale = !Utils.isEmptyString(getParam(Parameters.autoscale)) && getParam(Parameters.autoscale).equals(Words.WORD_TRUE);
 
-            if (user==null)  {
+            if (user == null) {
                 log.severe("Null user in chart api");
-            }
-            else {
+            } else {
                 final List<EntityName> pointList = createPointList(getParam(Parameters.points), getParam(Parameters.point));
                 final int count = Utils.isEmptyString(getParam(Parameters.count)) ? 10 : Integer.valueOf(getParam(Parameters.count));
 
@@ -125,13 +111,12 @@ public class ChartApiServletImpl extends ApiServlet implements org.springframewo
     }
 
 
-
     private String generateImageChartParams(final HttpServletRequest req,
-                                                   final Timespan timespan,
-                                                   final int valueCount,
-                                                   final boolean doScale,
-                                                   final User u,
-                                                   final Iterable<EntityName> pointList) throws Exception {
+                                            final Timespan timespan,
+                                            final int valueCount,
+                                            final boolean doScale,
+                                            final User u,
+                                            final Iterable<EntityName> pointList) throws Exception {
 
         final StringBuilder params = new StringBuilder(INT);
         params.append(req.getQueryString());
@@ -141,7 +126,7 @@ public class ChartApiServletImpl extends ApiServlet implements org.springframewo
             for (final EntityName pointName : pointList) {
 
 
-                final List<Entity> list =entityService.getEntityByName(u, pointName, EntityType.point);
+                final List<Entity> list = entityService.getEntityByName(u, pointName, EntityType.point);
                 if (list.isEmpty()) {
                     log.info("Couldn't find a point in the chart request.");
                 } else {
@@ -183,7 +168,7 @@ public class ChartApiServletImpl extends ApiServlet implements org.springframewo
     }
 
     private static void sendChartImage(final ServletResponse resp, final String params) throws IOException {
-        final URL url = new URL(Path.PATH_GOOGLE_CHART_API);
+        final URL url = new URL(PATH_GOOGLE_CHART_API);
         final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoOutput(true);
         connection.setRequestMethod(Const.METHOD_POST);
@@ -206,7 +191,7 @@ public class ChartApiServletImpl extends ApiServlet implements org.springframewo
     }
 
 
-    private static List<EntityName> createPointList(final String pointsListParam, final String pointParamName)  {
+    private static List<EntityName> createPointList(final String pointsListParam, final String pointParamName) {
         final List<EntityName> pointList = new ArrayList<EntityName>(10);
         if (!Utils.isEmptyString(pointParamName)) {
             pointList.add(CommonFactory.createName(pointParamName, EntityType.point));

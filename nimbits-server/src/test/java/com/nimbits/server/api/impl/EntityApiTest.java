@@ -35,9 +35,6 @@ import static org.junit.Assert.*;
 public class EntityApiTest extends NimbitsServletTest {
 
 
-
-
-
     public MockHttpServletRequest req1;
     public MockHttpServletResponse resp1;
 
@@ -82,6 +79,7 @@ public class EntityApiTest extends NimbitsServletTest {
 
 
     }
+
     @Test
     public void testCreateFolderIfMissing() throws IOException, ServletException, Exception {
         req.removeAllParameters();
@@ -122,6 +120,7 @@ public class EntityApiTest extends NimbitsServletTest {
 
 
     }
+
     @Test
     public void testPostCreatePoint() throws IOException, ServletException, Exception {
         req.removeAllParameters();

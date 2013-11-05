@@ -24,22 +24,21 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Map;
 
-public class PointCron extends ApiBase  {
+public class PointCron extends ApiBase {
 
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException, ServletException {
 
-                setup(req, resp);
-                final User admin = AuthenticationServiceFactory.getInstance(engine).getAdmin();
-                final Map<String,Entity> e = entityService.getSystemWideEntityMap(admin, EntityType.point);
+        setup(req, resp);
+        final User admin = AuthenticationServiceFactory.getInstance(engine).getAdmin();
+        final Map<String, Entity> e = entityService.getSystemWideEntityMap(admin, EntityType.point);
 
-                for (final Entity en : e.values()) {
-                    taskService.startPointMaintTask(en);
-                }
-
+        for (final Entity en : e.values()) {
+            taskService.startPointMaintTask(en);
         }
 
+    }
 
 
     @Override

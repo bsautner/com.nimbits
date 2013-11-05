@@ -12,7 +12,7 @@
 package com.nimbits.server.api;
 
 
-
+import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.server.gcm.*;
 
@@ -35,7 +35,7 @@ public class SendMessageServlet extends BaseServlet {
 
     private static final String HEADER_QUEUE_COUNT = "X-AppEngine-TaskRetryCount";
     private static final String HEADER_QUEUE_NAME = "X-AppEngine-QueueName";
-    private static final int MAX_RETRY = 3;
+    private static final int MAX_RETRY = 1;
 
     static final String PARAMETER_DEVICE = "device";
     static final String PARAMETER_MULTICAST = "multicastKey";
@@ -94,14 +94,18 @@ public class SendMessageServlet extends BaseServlet {
         String regId = req.getParameter(PARAMETER_DEVICE);
         String email = req.getParameter(Parameters.email.getText());
         String json = req.getParameter(Parameters.json.getText());
-
+        String a = req.getParameter(Parameters.action.getText());
+        Action action = Action.get(a);
+        if (action == null) {
+            action = Action.update;
+        }
         if (regId != null) {
-            sendSingleMessage(regId, resp, email, json);
+            sendSingleMessage(regId, resp, email, json, action);
             return;
         }
         String multicastKey = req.getParameter(PARAMETER_MULTICAST);
         if (multicastKey != null) {
-            sendMulticastMessage(multicastKey, resp, email, json);
+            sendMulticastMessage(multicastKey, resp, email, json, action);
             return;
         }
         logger.severe("Invalid request!");
@@ -109,16 +113,18 @@ public class SendMessageServlet extends BaseServlet {
         return;
     }
 
-    private Message createMessage(String json) {
-        Message message = new Message.Builder().addData(Parameters.json.getText(), json).build();
+    private Message createMessage(String json, Action action) {
+        Message message = new Message.Builder().addData(Parameters.json.getText(), json)
+                .addData(Parameters.action.getText(), action.getCode()).build();
         return message;
     }
 
-    private void sendSingleMessage(String regId, HttpServletResponse resp, String email, String json) {
+    private void sendSingleMessage(String regId, HttpServletResponse resp, String email, String json, Action action) {
         logger.info("Sending message to device " + regId);
         logger.info(email);
         logger.info(json);
-        Message message = createMessage(json);
+        logger.info(action.getCode());
+        Message message = createMessage(json, action);
 
         Result result;
         try {
@@ -153,10 +159,10 @@ public class SendMessageServlet extends BaseServlet {
     }
 
     private void sendMulticastMessage(String multicastKey,
-                                      HttpServletResponse resp, String email, String json) {
+                                      HttpServletResponse resp, String email, String json, Action action) {
         // Recover registration ids from datastore
         List<String> regIds = Datastore.getMulticast(multicastKey);
-        Message message = createMessage(json);
+        Message message = createMessage(json, action);
         MulticastResult multicastResult;
         try {
             multicastResult = sender.sendNoRetry(message, regIds);

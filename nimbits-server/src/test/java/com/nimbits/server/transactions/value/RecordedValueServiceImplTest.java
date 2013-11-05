@@ -43,7 +43,6 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
     private static final double VALUE = 0.1;
 
 
- 
     @Test
     public void ignoreByCompressionTest() throws Exception {
         point.setFilterValue(VALUE);
@@ -107,6 +106,7 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
         assertEquals(2, series.size());
 
     }
+
     @Test
     public void ignoreByCompressionTest3() throws Exception {
 

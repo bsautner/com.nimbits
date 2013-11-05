@@ -41,8 +41,8 @@ public class ExportServiceImpl extends ApiServlet {
             blobstoreService.serve(blobKey, resp);
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (Exception e) {
-             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-             resp.addHeader("ERROR", e.getMessage());
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+            resp.addHeader("ERROR", e.getMessage());
         }
 
     }

@@ -14,42 +14,29 @@ package com.nimbits.server.api.impl;
 
 import com.nimbits.client.enums.ExportType;
 import com.nimbits.server.api.ApiServlet;
-import org.springframework.stereotype.Service;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-@Service("batch")
-public class BatchServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
+
+public class BatchServletImpl extends ApiServlet   {
 
 
-    @Override
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) {
-
-        if (isPost(req)) {
-
-            doPost(req, resp);
-        }
-        else {
-            doGet(req, resp);
-        }
-
-    }
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
 
-            doInit(req, resp, ExportType.plain);
+        doInit(req, resp, ExportType.plain);
 
 
-            taskService.startProcessBatchTask(user, req, resp);
+        taskService.startProcessBatchTask(user, req, resp);
 
 
-            resp.setContentLength(0);
-            resp.setStatus(HttpServletResponse.SC_OK);
-
+        resp.setContentLength(0);
+        resp.setStatus(HttpServletResponse.SC_OK);
 
 
     }
@@ -60,7 +47,7 @@ public class BatchServletImpl extends ApiServlet implements org.springframework.
 
         try {
             doInit(req, resp, ExportType.plain);
-           taskService.startProcessBatchTask(user, req, resp);
+            taskService.startProcessBatchTask(user, req, resp);
 
             resp.flushBuffer();
             resp.setContentLength(0);
@@ -70,7 +57,6 @@ public class BatchServletImpl extends ApiServlet implements org.springframework.
             resp.addHeader("ERROR", e.getMessage());
         }
     }
-
 
 
 }

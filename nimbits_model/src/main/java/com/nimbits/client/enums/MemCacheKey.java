@@ -26,25 +26,25 @@ import java.util.Map;
  */
 public enum MemCacheKey {
 
-    activePoints(0, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_ACTIVE_POINTS),
-    hotPoints(0, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_HOT_POINTS),
-    valueCache(1,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_VALUE),
-    allSettings(2, SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_ALL_SETTINGS),
-    setting(3,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_SETTING),
-    userNamespace(4, SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_USER_NAMESPACE),
-    defaultNamespace(5, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_DEFAULT_NAMESPACE),
-    entityMap(6, SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_ENTITY_MAP),
-    userPointNamespace(7, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_USER_POINT_NAMESPACE),
-    preload(10, SettingType.serverVersion.getDefaultValue() + KeyConstants.PRE_LOAD),
-    allUsers(11, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_ALL_USERS),
-    users(12, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_USER),
-    triggers(13,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_TRIGGERS),
-    userEntityTree(15,SettingType.serverVersion.getDefaultValue()  + KeyConstants.KEY_USER_ENTITY_TREE),
-    subscribedEntity(17, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_SUBSCRIBED_ENTITY),
-    entityNameCache(18, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_ENTITY_NAME),
-    docService(20, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_DOC_SERVICE),
-    userTempCacheKey(21, SettingType.serverVersion.getDefaultValue() + KeyConstants.KEY_USER_TEMP_CACHE_KEY),
-    userReport(22, SettingType.serverVersion.getDefaultValue() + KeyConstants.USER_REPORT_STATUS_GRID_KEY)
+    activePoints(0, SettingType.version.getDefaultValue() + KeyConstants.KEY_ACTIVE_POINTS),
+    hotPoints(0, SettingType.version.getDefaultValue() + KeyConstants.KEY_HOT_POINTS),
+    valueCache(1,SettingType.version.getDefaultValue()  + KeyConstants.KEY_VALUE),
+    allSettings(2, SettingType.version.getDefaultValue()  + KeyConstants.KEY_ALL_SETTINGS),
+    setting(3,SettingType.version.getDefaultValue()  + KeyConstants.KEY_SETTING),
+    userNamespace(4, SettingType.version.getDefaultValue()  + KeyConstants.KEY_USER_NAMESPACE),
+    defaultNamespace(5, SettingType.version.getDefaultValue() + KeyConstants.KEY_DEFAULT_NAMESPACE),
+    entityMap(6, SettingType.version.getDefaultValue()  + KeyConstants.KEY_ENTITY_MAP),
+    userPointNamespace(7, SettingType.version.getDefaultValue() + KeyConstants.KEY_USER_POINT_NAMESPACE),
+    preload(10, SettingType.version.getDefaultValue() + KeyConstants.PRE_LOAD),
+    allUsers(11, SettingType.version.getDefaultValue() + KeyConstants.KEY_ALL_USERS),
+    users(12, SettingType.version.getDefaultValue() + KeyConstants.KEY_USER),
+    triggers(13,SettingType.version.getDefaultValue()  + KeyConstants.KEY_TRIGGERS),
+    userEntityTree(15,SettingType.version.getDefaultValue()  + KeyConstants.KEY_USER_ENTITY_TREE),
+    subscribedEntity(17, SettingType.version.getDefaultValue() + KeyConstants.KEY_SUBSCRIBED_ENTITY),
+    entityNameCache(18, SettingType.version.getDefaultValue() + KeyConstants.KEY_ENTITY_NAME),
+    docService(20, SettingType.version.getDefaultValue() + KeyConstants.KEY_DOC_SERVICE),
+    userTempCacheKey(21, SettingType.version.getDefaultValue() + KeyConstants.KEY_USER_TEMP_CACHE_KEY),
+    userReport(22, SettingType.version.getDefaultValue() + KeyConstants.USER_REPORT_STATUS_GRID_KEY)
 
     ;
 

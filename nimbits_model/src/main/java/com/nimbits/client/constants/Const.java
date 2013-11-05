@@ -18,6 +18,7 @@ package com.nimbits.client.constants;
  * Date: 6/25/11
  * Time: 10:35 AM
  */
+@Deprecated
 public class Const {
 
 
@@ -40,7 +41,7 @@ public class Const {
     public static final String CONTENT_TYPE_PLAIN = "text/plain";
 
     public static final int CONST_QUERY_CHUNK_SIZE = 50;
-    public static final int CONST_MAX_CACHED_VALUE_SIZE = 10;
+
     public static final double CONST_IGNORED_NUMBER_VALUE = -9999999.9999999;
 
     public static final int CONST_MAX_NAME_LENGTH = 50;

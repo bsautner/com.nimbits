@@ -14,9 +14,7 @@ package com.nimbits.server.process.cron;
 
 import com.google.appengine.api.datastore.*;
 import com.nimbits.client.constants.Const;
-import org.springframework.stereotype.Service;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,21 +23,15 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.logging.Logger;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 12/19/11
- * Time: 7:38 PM
- */
-@Service("sessionCron")
 
-public class SessionMaint extends HttpServlet implements org.springframework.web.HttpRequestHandler{
+public class SessionMaint extends HttpServlet  {
     /**
      *
      */
-    private static final long serialVersionUID =1L;
+    private static final long serialVersionUID = 1L;
 
     private static final Logger log = Logger.getLogger(SessionMaint.class.getName());
+
     @SuppressWarnings(Const.WARNING_UNCHECKED)
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -48,7 +40,7 @@ public class SessionMaint extends HttpServlet implements org.springframework.web
         final Collection<Key> keys = new HashSet<Key>(1000);
         final DatastoreService store = DatastoreServiceFactory.getDatastoreService();
         final Query q = new Query("_ah_SESSION").setKeysOnly();
-        int count=0;
+        int count = 0;
         for (final Entity e : store.prepare(q).asList(FetchOptions.Builder.withLimit(1000))) {
             count++;
             keys.add(e.getKey());
@@ -59,12 +51,7 @@ public class SessionMaint extends HttpServlet implements org.springframework.web
         log.info("Deleted " + count + " sessions");
 
 
-
-
     }
 
-    @Override
-    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
-    }
+
 }

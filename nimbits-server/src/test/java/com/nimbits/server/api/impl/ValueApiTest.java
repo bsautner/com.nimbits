@@ -30,8 +30,6 @@ import static junit.framework.Assert.assertFalse;
 public class ValueApiTest extends NimbitsServletTest {
 
 
-
-
     public MockHttpServletRequest req1;
     public MockHttpServletResponse resp1;
 
@@ -64,7 +62,7 @@ public class ValueApiTest extends NimbitsServletTest {
     }
 
     @Test
-    public void testPostValueCummulative()     {
+    public void testPostValueCummulative() {
 
         point.setPointType(PointType.cumulative);
         point.setFilterType(FilterType.none);

@@ -24,10 +24,17 @@ import com.nimbits.server.transaction.settings.SettingServiceFactory;
 public class SettingServiceRpcImpl extends RemoteServiceServlet implements SettingsServiceRpc {
 
 
-
+    @Override
+    public String getSetting(String setting) {
+        SettingType s = SettingType.get(setting);
+        return SettingServiceFactory.getServiceInstance(ApplicationListener.createEngine()).getSetting(s);
+    }
 
     @Override
-    public String getSetting(SettingType setting) {
-        return SettingServiceFactory.getServiceInstance(ApplicationListener.createEngine()).getSetting(setting);
+    public void updateSetting(String setting, String value) {
+        SettingType s = SettingType.get(setting);
+        if (s != null) {
+            SettingServiceFactory.getServiceInstance(ApplicationListener.createEngine()).updateSetting(s, value);
+        }
     }
 }

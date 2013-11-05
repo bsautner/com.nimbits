@@ -22,7 +22,7 @@ import static junit.framework.Assert.assertEquals;
 /**
  * Created by benjamin on 9/1/13.
  */
-public class UserTransactionImplTest extends NimbitsServletTest{
+public class UserTransactionImplTest extends NimbitsServletTest {
     @Test
     public void testGetHttpRequestUser() throws Exception {
         UserService t = AuthenticationServiceFactory.getInstance(engine);
@@ -31,7 +31,6 @@ public class UserTransactionImplTest extends NimbitsServletTest{
 
 
     }
-
 
 
     @Test

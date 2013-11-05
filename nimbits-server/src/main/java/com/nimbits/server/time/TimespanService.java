@@ -16,7 +16,6 @@ package com.nimbits.server.time;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.timespan.TimespanModelFactory;
-import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -24,15 +23,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
-/**
- * Created by Benjamin Sautner
- * User: benjamin
- * Date: 5/3/11
- * Time: 7:55 PM
- */
-@Service("timespanService")
+
 @Deprecated
-public class TimespanService extends RemoteServiceServlet   {
+public class TimespanService extends RemoteServiceServlet {
     private static final long serialVersionUID = 1L;
 
 
@@ -59,17 +52,17 @@ public class TimespanService extends RemoteServiceServlet   {
         return interpretTimespan(start, end);
     }
 
-    public static Timespan createTimespan(final String start, final String end,final int offset) throws Exception {
-       Timespan ts = interpretTimespan(start, end);
-       int offMs = offset * 60 * 1000 ;
+    public static Timespan createTimespan(final String start, final String end, final int offset) throws Exception {
+        Timespan ts = interpretTimespan(start, end);
+        int offMs = offset * 60 * 1000;
 
-        Date sx = ts.isStartRequiresOffset() ?  new Date(ts.getStart().getTime() + offMs) : ts.getStart();
+        Date sx = ts.isStartRequiresOffset() ? new Date(ts.getStart().getTime() + offMs) : ts.getStart();
 
-       Date ex = ts.isEndRequiresOffset() ?  new Date(ts.getEnd().getTime() + offMs) : ts.getEnd();
+        Date ex = ts.isEndRequiresOffset() ? new Date(ts.getEnd().getTime() + offMs) : ts.getEnd();
 
 
-       return TimespanModelFactory.createTimespan(sx, ex);
-     }
+        return TimespanModelFactory.createTimespan(sx, ex);
+    }
 
     /*
     Description
@@ -112,6 +105,7 @@ public class TimespanService extends RemoteServiceServlet   {
         return retVal;
 
     }
+
     //TODO replace with regex
     private static boolean isMil(final String s) {
         SimpleDateFormat dtf = new SimpleDateFormat("MM/dd/yyyy kk:mm:ss");
@@ -126,16 +120,19 @@ public class TimespanService extends RemoteServiceServlet   {
         return retVal;
 
     }
+
     private static Date parseLongDateStr(final String s) throws ParseException {
         SimpleDateFormat dtf = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss aaa");
 
         return dtf.parse(s);
     }
+
     private static Date parseMilDateStr(final String s) throws ParseException {
         SimpleDateFormat dtf = new SimpleDateFormat("MM/dd/yyyy kk:mm:ss");
 
         return dtf.parse(s);
     }
+
     private static Date parseLongEurpeanStr(final String s) throws ParseException {
         SimpleDateFormat dtf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         return dtf.parse(s);
@@ -179,8 +176,8 @@ public class TimespanService extends RemoteServiceServlet   {
                     end = parseLongDateStr(endSample);
                     endRequiresOffset = true;
                 } else if (isMil(endSample)) {
-                   end = parseMilDateStr(endSample);
-                   endRequiresOffset = true;
+                    end = parseMilDateStr(endSample);
+                    endRequiresOffset = true;
                 } else
 
                 {
@@ -286,6 +283,6 @@ public class TimespanService extends RemoteServiceServlet   {
     }
 
     public Timespan createTimespan(Date startSample, Date endSample) {
-        return  TimespanModelFactory.createTimespan(startSample, endSample);
+        return TimespanModelFactory.createTimespan(startSample, endSample);
     }
 }

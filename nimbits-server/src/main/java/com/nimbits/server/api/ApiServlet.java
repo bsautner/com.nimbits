@@ -30,7 +30,6 @@ import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.user.AuthenticationServiceFactory;
 import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.service.ValueService;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +46,7 @@ import java.util.Map;
  * Time: 12:58 PM
  */
 @Deprecated
-@Service("apiServlet")
+
 public class ApiServlet extends HttpServlet {
 
     protected static User user;
@@ -59,6 +58,7 @@ public class ApiServlet extends HttpServlet {
     protected ValueService valueService;
     protected NimbitsEngine engine;
     public TaskService taskService;
+
     protected static boolean okToReport(final User u, final Entity c) {
 
         return c.getProtectionLevel().equals(ProtectionLevel.everyone) || (u != null && !u.isRestricted());
@@ -69,11 +69,8 @@ public class ApiServlet extends HttpServlet {
         return (u != null && c.isOwner(u));
     }
 
-    protected boolean isPost(final HttpServletRequest req) {
-        return req.getMethod().equals(POST);
-    }
 
-    protected String getContent(HttpServletRequest req)  {
+    protected String getContent(HttpServletRequest req) {
 
         BufferedReader reader;
         try {
@@ -87,8 +84,7 @@ public class ApiServlet extends HttpServlet {
 
 
                 return jb.toString();
-            }
-            else {
+            } else {
                 return null;
             }
         } catch (IOException e) {
@@ -96,7 +92,7 @@ public class ApiServlet extends HttpServlet {
         }
     }
 
-    public void doInit(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type)   {
+    public void doInit(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type) {
 
         try {
             engine = (NimbitsEngine) getServletContext().getAttribute("engine");
@@ -154,9 +150,9 @@ public class ApiServlet extends HttpServlet {
 
 
         for (final Parameters s : items) {
-            String v =  req.getParameter(s.getText());
-            if (! Utils.isEmptyString(v)) {
-                paramMap.put(s,v);
+            String v = req.getParameter(s.getText());
+            if (!Utils.isEmptyString(v)) {
+                paramMap.put(s, v);
 
             }
 

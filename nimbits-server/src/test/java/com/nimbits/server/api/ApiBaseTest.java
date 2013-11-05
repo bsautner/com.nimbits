@@ -12,12 +12,12 @@ public class ApiBaseTest {
     public MockHttpServletRequest req1;
     public MockHttpServletResponse resp1;
     ApiBase impl = new ApiBase();
+
     @Before
     public void setup() {
         req1 = new MockHttpServletRequest();
         resp1 = new MockHttpServletResponse();
     }
-
 
 
     @Test

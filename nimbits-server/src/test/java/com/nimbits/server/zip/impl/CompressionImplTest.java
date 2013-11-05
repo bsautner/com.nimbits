@@ -31,7 +31,7 @@ import java.util.Random;
  */
 public class CompressionImplTest {
 
-    private  List<Value> loadSomeData() {
+    private List<Value> loadSomeData() {
         List<Value> values = new ArrayList<Value>();
         Random r = new Random();
 
@@ -41,7 +41,6 @@ public class CompressionImplTest {
         }
         return values;
     }
-
 
 
     @Test

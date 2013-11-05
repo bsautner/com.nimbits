@@ -18,6 +18,7 @@ package com.nimbits.client.enums;
 import java.util.*;
 
 public enum Action {
+    admin(ActionConstants.ACTION_ADMIN),
     calculation(ActionConstants.ACTION_CALC),
     record(ActionConstants.ACTION_RECORD),
     read(ActionConstants.ACTION_READ),
@@ -79,7 +80,7 @@ public enum Action {
     }
 
     private static class ActionConstants {
-
+        protected static final String ACTION_ADMIN = "admin";
         protected static final String ACTION_CALC = "calc";
         protected static final String ACTION_ALERT = "alert";
         protected static final String ACTION_CREATE = "create";

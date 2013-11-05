@@ -19,7 +19,7 @@ import com.nimbits.server.NimbitsEngine;
  */
 public class TaskServiceFactory {
 
-    public static TaskService getServiceInstance(NimbitsEngine engine){
+    public static TaskService getServiceInstance(NimbitsEngine engine) {
         return new TaskServiceImpl();
 
     }

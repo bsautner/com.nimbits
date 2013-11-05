@@ -20,11 +20,8 @@ import com.nimbits.client.enums.ClientType;
 import com.nimbits.client.enums.Parameters;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
@@ -39,24 +36,13 @@ import static org.junit.Assert.*;
  * Time: 10:00 AM
  * To change this template use File | Settings | File Templates.
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={
-        "classpath:META-INF/applicationContext.xml",
-        "classpath:META-INF/applicationContext-api.xml",
-        "classpath:META-INF/applicationContext-cache.xml",
-        "classpath:META-INF/applicationContext-cron.xml",
-        "classpath:META-INF/applicationContext-dao.xml",
-        "classpath:META-INF/applicationContext-service.xml",
-        "classpath:META-INF/applicationContext-factory.xml"
 
-})
 public class TimeServletImplTest {
     public MockHttpServletRequest req;
     public MockHttpServletResponse resp;
 
     public final LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalUserServiceTestConfig()).setEnvIsLoggedIn(false);
-
 
 
     @Before
@@ -78,8 +64,8 @@ public class TimeServletImplTest {
         assertEquals(new Date().getTime() / 1000, l / 1000);//fails if things are slow
 
 
-
     }
+
     @Test
     public void testGetTimeArduino() throws IOException, ServletException {
         TimeServletImpl t = new TimeServletImpl();

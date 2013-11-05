@@ -12,31 +12,18 @@
 
 package com.nimbits.server.process.cron;
 
-import org.springframework.stereotype.Service;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Created with IntelliJ IDEA.
- * User: benjamin
- * Date: 10/16/12
- * Time: 10:55 AM
- */
 
-    @Service("coreReportInstanceCron")
-
-    public class CoreReportInstanceCron extends HttpServlet  {
+public class CoreReportInstanceCron extends HttpServlet {
 
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
-
-
 
 
         //To change body of implemented methods use File | Settings | File Templates.

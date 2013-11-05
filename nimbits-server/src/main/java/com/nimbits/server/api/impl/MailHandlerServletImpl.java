@@ -17,7 +17,6 @@ import com.nimbits.client.enums.ExportType;
 import com.nimbits.server.admin.logging.LogHelper;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.process.task.TaskService;
-import org.springframework.stereotype.Service;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
@@ -28,15 +27,13 @@ import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Properties;
 
 
-@Service("mailhandler")
-public class MailHandlerServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
+public class MailHandlerServletImpl extends ApiServlet {
     /**
      *
      */
@@ -94,17 +91,6 @@ public class MailHandlerServletImpl extends ApiServlet implements org.springfram
     }
 
 
-    @Override
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        if (isPost(req)) {
-
-            doPost(req, resp);
-        }
-        else {
-            doGet(req, resp);
-        }
-    }
 
     public void setTaskImpl(TaskService TaskImpl) {
         this.TaskImpl = TaskImpl;

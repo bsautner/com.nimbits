@@ -27,10 +27,9 @@ import static org.junit.Assert.assertTrue;
 public class UserMemCacheImplTest extends NimbitsServletTest {
 
     @Test
-    public void testCache()  {
+    public void testCache() {
 
         assertTrue(true);
-
 
 
     }

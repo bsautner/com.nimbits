@@ -20,8 +20,8 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
-  <head><title>redirecting...</title></head>
+<head><title>redirecting...</title></head>
 
-  <jsp:forward page="nimbits.html"/>
-  <body> </body>
+<jsp:forward page="nimbits.html"/>
+<body></body>
 </html>

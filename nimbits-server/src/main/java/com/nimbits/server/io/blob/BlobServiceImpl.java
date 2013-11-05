@@ -16,16 +16,12 @@ import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.service.blob.BlobService;
-import org.springframework.stereotype.Service;
 
 
-@Service("blobService")
-
-public class BlobServiceImpl  extends RemoteServiceServlet implements BlobService{
+public class BlobServiceImpl extends RemoteServiceServlet implements BlobService {
 
 
     private final BlobstoreService blobstoreService;
-
 
 
     public BlobServiceImpl() {
@@ -36,8 +32,6 @@ public class BlobServiceImpl  extends RemoteServiceServlet implements BlobServic
     public String getBlobStoreUrl(final String url) {
         return blobstoreService.createUploadUrl(url);
     }
-
-
 
 
 }

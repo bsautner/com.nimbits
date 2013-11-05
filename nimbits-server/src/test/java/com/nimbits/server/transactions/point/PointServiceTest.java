@@ -41,16 +41,15 @@ import static org.junit.Assert.assertNotNull;
 public class PointServiceTest extends NimbitsServletTest {
 
 
-
     private Point addPoint(EntityName name) throws Exception {
-        Entity e =  new EntityModel(name,
+        Entity e = new EntityModel(name,
                 "",
                 EntityType.point,
                 ProtectionLevel.everyone,
                 user.getKey(),
                 user.getKey(),
                 UUID.randomUUID().toString());
-        Point p =   PointModelFactory.createPointModel(
+        Point p = PointModelFactory.createPointModel(
                 e,
                 0.0,
                 90,
@@ -64,14 +63,15 @@ public class PointServiceTest extends NimbitsServletTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0 );
-        return (Point)entityService.addUpdateEntity(user, p).get(0);
+                PointType.basic, 0, false, 0.0);
+        return (Point) entityService.addUpdateEntity(user, p).get(0);
     }
+
     @Test
     public void addPointTest() throws Exception {
 
         EntityName name = CommonFactory.createName("FOO", EntityType.point);
-        Point p =  addPoint(name);
+        Point p = addPoint(name);
         assertNotNull(p);
         List<Entity> x = entityService.getEntityByKey(user, p.getKey(), EntityType.point);
         assertNotNull(x);

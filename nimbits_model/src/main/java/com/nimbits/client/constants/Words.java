@@ -21,15 +21,12 @@ package com.nimbits.client.constants;
 @Deprecated
 public class Words {
 
-    public static final String WORD_ANNOTATION = "Current Value";
-    public static final String WORD_DOUBLE = "double";
-    public static final String WORD_FALSE = "false";
-    public static final String WORD_NIMBITS = "Nimbits";
-    public static final String WORD_TIMESTAMP = "Timestamp";
+
+
+
     public static final String WORD_TRUE = "true";
-    public static final String WORD_YES = "Yes";
+
     public static final String WORD_COOKIE = "Cookie";
     public static final String WORD_MULTI_PART = "multipart";
-    public static final String WORD_PROPERTIES = "Properties";
-    public static final String WORD_DATA = "Data";
+
 }

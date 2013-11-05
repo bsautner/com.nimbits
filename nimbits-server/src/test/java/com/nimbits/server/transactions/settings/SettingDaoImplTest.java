@@ -23,15 +23,13 @@ import static org.junit.Assert.assertNotNull;
 public class SettingDaoImplTest extends NimbitsServletTest {
 
 
-
-
     @Test
-    public void getSettingsTest() throws  Exception {
+    public void getSettingsTest() throws Exception {
 
         Thread.sleep(2000);
         for (SettingType types : SettingType.values()) {
-        String settings = SettingServiceFactory.getServiceInstance(engine).getSetting(types);
-        assertNotNull(settings);
+            String settings = SettingServiceFactory.getServiceInstance(engine).getSetting(types);
+            assertNotNull(settings);
         }
 
     }

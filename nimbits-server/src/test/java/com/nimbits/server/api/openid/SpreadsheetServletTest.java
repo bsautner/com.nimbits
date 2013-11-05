@@ -25,7 +25,7 @@ import org.junit.Test;
 public class SpreadsheetServletTest {
     @Test
     public void testSetup() throws Exception {
-      //  SpreadsheetServlet servlet = new SpreadsheetServlet();
-       // servlet.initDocService();
+        //  SpreadsheetServlet servlet = new SpreadsheetServlet();
+        // servlet.initDocService();
     }
 }

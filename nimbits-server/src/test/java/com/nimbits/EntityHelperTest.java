@@ -16,11 +16,6 @@ package com.nimbits;
 import com.nimbits.client.helper.EntityHelper;
 import com.nimbits.client.model.point.Point;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import javax.annotation.Resource;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -31,21 +26,11 @@ import static org.junit.Assert.assertNotNull;
  * Time: 4:19 PM
  */
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={
-        "classpath:META-INF/applicationContext.xml",
-        "classpath:META-INF/applicationContext-api.xml",
-        "classpath:META-INF/applicationContext-cache.xml",
-        "classpath:META-INF/applicationContext-cron.xml",
-        "classpath:META-INF/applicationContext-dao.xml",
-        "classpath:META-INF/applicationContext-service.xml",
-        "classpath:META-INF/applicationContext-factory.xml"
 
-})
 public class EntityHelperTest {
 
-        @Resource(name="entityHelper")
-    private EntityHelper entityHelper;
+
+    private EntityHelper entityHelper = new EntityHelper();
 
     @Test
     public void testCreatePointWithName() throws Exception {

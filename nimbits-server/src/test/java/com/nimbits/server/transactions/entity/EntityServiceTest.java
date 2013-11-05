@@ -40,7 +40,7 @@ import static org.junit.Assert.*;
  */
 
 public class EntityServiceTest extends NimbitsServletTest {
- 
+
 
     @Test
     public void addUpdateEntity() throws Exception {
@@ -55,7 +55,7 @@ public class EntityServiceTest extends NimbitsServletTest {
     @Test
     public void deleteEntityTest() throws Exception {
 
-        final List<Entity> entities =  entityService.getEntities(user);
+        final List<Entity> entities = entityService.getEntities(user);
         assertTrue(!entities.isEmpty());
         Entity e = entityService.getEntityByKey(user, point.getKey(), EntityType.point).get(0);
         assertNotNull(e);
@@ -64,14 +64,13 @@ public class EntityServiceTest extends NimbitsServletTest {
 
         assertNotNull(c);
         assertNotNull(g);
-        final List<Entity> children =  entityService.getChildren(user, g);
+        final List<Entity> children = entityService.getChildren(user, g);
         assertTrue(!children.isEmpty());
 
         entityService.deleteEntity(user, g);
         assertTrue(entityService.getEntityByKey(user, point.getKey(), EntityType.point).isEmpty());
         assertTrue(entityService.getEntityByKey(user, pointChild.getKey(), EntityType.point).isEmpty());
         assertTrue(entityService.getEntityByKey(user, group.getKey(), EntityType.point).isEmpty());
-
 
 
     }
@@ -88,17 +87,17 @@ public class EntityServiceTest extends NimbitsServletTest {
 //TODO can't seem to logout to test readonly        assertTrue(r.get(0).isReadOnly());
         List<Entity> r2 = entityService.findEntityByKey(user, point.getUUID());
         assertFalse(r2.isEmpty());
-  //      assertTrue(r2.get(0).isReadOnly());
+        //      assertTrue(r2.get(0).isReadOnly());
         List<Entity> r3 = entityService.findEntityByKey(user, group.getUUID());
         assertFalse(r3.isEmpty());
-  //      assertTrue(r3.get(0).isReadOnly());
+        //      assertTrue(r3.get(0).isReadOnly());
         List<Entity> r4 = entityService.findEntityByKey(user, group.getKey());
         assertFalse(r4.isEmpty());
-  //      assertTrue(r4.get(0).isReadOnly());
+        //      assertTrue(r4.get(0).isReadOnly());
 
     }
 
-    @Test(expected=Exception.class)
+    @Test(expected = Exception.class)
     public void duplicateNameTest() throws Exception {
 
         EntityName name = CommonFactory.createName("TWICE", EntityType.point);
@@ -109,7 +108,7 @@ public class EntityServiceTest extends NimbitsServletTest {
         Entity model2 = EntityModelFactory.createEntity(name, "", EntityType.point, ProtectionLevel.everyone,
                 user.getKey(), user.getKey());
         ///Entity e2 = serviceImpl.addUpdateSingleEntity(model2);
-        Point p1 =   PointModelFactory.createPointModel(
+        Point p1 = PointModelFactory.createPointModel(
                 model,
                 0.0,
                 90,
@@ -125,7 +124,7 @@ public class EntityServiceTest extends NimbitsServletTest {
                 false,
                 PointType.basic, 0, false, 0.0);
         entityService.addUpdateSingleEntity(p1);
-        Point p2 =   PointModelFactory.createPointModel(
+        Point p2 = PointModelFactory.createPointModel(
                 model2,
                 0.0,
                 90,
@@ -139,12 +138,13 @@ public class EntityServiceTest extends NimbitsServletTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic , 0, false, 0.0);
+                PointType.basic, 0, false, 0.0);
         entityService.addUpdateSingleEntity(p2);
 
     }
+
     @Test
-    public void duplicateNameGroupsOKTest()  {
+    public void duplicateNameGroupsOKTest() {
         try {
             EntityName name = CommonFactory.createName("TWICE", EntityType.category);
             Entity model = EntityModelFactory.createEntity(name, "", EntityType.category, ProtectionLevel.everyone,
@@ -164,7 +164,7 @@ public class EntityServiceTest extends NimbitsServletTest {
     @Test
     public void getEntitiesTest() throws Exception {
 
-        List<Entity> entities =  entityService.getEntities(user);
+        List<Entity> entities = entityService.getEntities(user);
         assertTrue(!entities.isEmpty());
         int last = 0;
         for (Entity e : entities) {
@@ -175,7 +175,7 @@ public class EntityServiceTest extends NimbitsServletTest {
 
     @Test
     public void getEntityByNameTest() throws Exception {
-        Point  r = (Point) entityService.getEntityByName(user, pointName, EntityType.point).get(0);
+        Point r = (Point) entityService.getEntityByName(user, pointName, EntityType.point).get(0);
         assertNotNull(r);
 
     }
@@ -216,10 +216,9 @@ public class EntityServiceTest extends NimbitsServletTest {
         Map<String, Entity> map = entityService.getEntityModelMap(user, EntityType.point, 1000);
         List<Entity> sample = new ArrayList<Entity>(1);
         sample.add(point);
-        List<Entity> result =  entityService.getChildren(user, sample);
+        List<Entity> result = entityService.getChildren(user, sample);
         assertNotNull(result);
-        assertTrue(! result.isEmpty());
-
+        assertTrue(!result.isEmpty());
 
 
         assertEquals(8, result.size());
@@ -228,11 +227,10 @@ public class EntityServiceTest extends NimbitsServletTest {
     }
 
 
-
     private Entity createChild(Entity parent, String name) throws Exception {
         EntityName n = CommonFactory.createName(name, EntityType.point);
         Entity pointChildEntity = EntityModelFactory.createEntity(n, "", EntityType.point, ProtectionLevel.everyone, parent.getKey(), user.getKey(), UUID.randomUUID().toString());
-        Point newChild =  PointModelFactory.createPointModel(
+        Point newChild = PointModelFactory.createPointModel(
                 pointChildEntity,
                 0.0,
                 90,
@@ -246,11 +244,10 @@ public class EntityServiceTest extends NimbitsServletTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0 );
-        return   entityService.addUpdateEntity(user, Arrays.<Entity>asList(newChild)).get(0);
+                PointType.basic, 0, false, 0.0);
+        return entityService.addUpdateEntity(user, Arrays.<Entity>asList(newChild)).get(0);
 
     }
-
 
 
 }

@@ -45,7 +45,7 @@ public class SummaryServiceTest extends NimbitsServletTest {
     private static final int SUMMARY_INTERVAL_MS = 60000;
     private static final double DELTA = 0.001;
     private static final int INT = 50;
-    double[] v ={1,2,3};
+    double[] v = {1, 2, 3};
 
 
     SummaryService summaryService = SummaryServiceFactory.getServiceInstance(engine, taskService);
@@ -56,8 +56,8 @@ public class SummaryServiceTest extends NimbitsServletTest {
 
         EntityName n = CommonFactory.createName("summary test", EntityType.summary);
         Entity e = EntityModelFactory.createEntity(n, EntityType.summary);
-        Summary summary = SummaryModelFactory.createSummary(e,EntityModelFactory.createTrigger(point.getKey()),
-                EntityModelFactory.createTarget(pointChild.getKey()),true, SummaryType.average, SUMMARY_INTERVAL_MS, new Date(0));
+        Summary summary = SummaryModelFactory.createSummary(e, EntityModelFactory.createTrigger(point.getKey()),
+                EntityModelFactory.createTarget(pointChild.getKey()), true, SummaryType.average, SUMMARY_INTERVAL_MS, new Date(0));
         point.setFilterValue(0.0);
         entityService.addUpdateSingleEntity(point);
         entityService.addUpdateSingleEntity(summary);
@@ -67,9 +67,9 @@ public class SummaryServiceTest extends NimbitsServletTest {
         Assert.assertFalse(r.isEmpty());
 
         int c = 100;
-        double[]  d = new double[c];
+        double[] d = new double[c];
         Random rand = new Random();
-        for (int i = 0; i < c; i++){
+        for (int i = 0; i < c; i++) {
             double dx = rand.nextDouble() * 100;
             Value value = ValueFactory.createValueModel(dx);
             Value vr = valueService.recordValue(user, point, value);
@@ -87,9 +87,6 @@ public class SummaryServiceTest extends NimbitsServletTest {
         Assert.assertEquals(com, result.get(0).getDoubleValue(), DELTA);
 
 
-
-
-
     }
 
 
@@ -97,40 +94,42 @@ public class SummaryServiceTest extends NimbitsServletTest {
     public void testAverage() {
 
 
-        Assert.assertEquals(2,  summaryService.getValue(SummaryType.average, v), 0.0);
+        Assert.assertEquals(2, summaryService.getValue(SummaryType.average, v), 0.0);
     }
 
     @Test
     public void testMax() {
 
-        Assert.assertEquals(3,  summaryService.getValue(SummaryType.max, v), 0.0);
+        Assert.assertEquals(3, summaryService.getValue(SummaryType.max, v), 0.0);
     }
 
     @Test
     public void testMin() {
 
-        Assert.assertEquals(1,  summaryService.getValue(SummaryType.min, v), 0.0);
+        Assert.assertEquals(1, summaryService.getValue(SummaryType.min, v), 0.0);
     }
 
     @Test
     public void testVariance() {
 
-        Assert.assertEquals(1,  summaryService.getValue(SummaryType.variance, v), 0.0);
+        Assert.assertEquals(1, summaryService.getValue(SummaryType.variance, v), 0.0);
     }
+
     @Test
     public void testStDev() {
 
-        Assert.assertEquals(1,  summaryService.getValue(SummaryType.standardDeviation, v), 0.0);
+        Assert.assertEquals(1, summaryService.getValue(SummaryType.standardDeviation, v), 0.0);
     }
+
     @Test
     public void testSum() {
 
-        Assert.assertEquals(6,  summaryService.getValue(SummaryType.sum, v), 0.0);
+        Assert.assertEquals(6, summaryService.getValue(SummaryType.sum, v), 0.0);
     }
 
     @Test
     public void testSkewness() {
 
-        Assert.assertEquals(0,  summaryService.getValue(SummaryType.skewness, v), 0.0);
+        Assert.assertEquals(0, summaryService.getValue(SummaryType.skewness, v), 0.0);
     }
 }

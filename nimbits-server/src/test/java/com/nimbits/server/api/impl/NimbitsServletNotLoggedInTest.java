@@ -18,31 +18,12 @@ import com.google.appengine.tools.development.testing.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/29/12
- * Time: 9:27 AM
- */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-        "classpath:META-INF/applicationContext.xml",
-        "classpath:META-INF/applicationContext-api.xml",
-        "classpath:META-INF/applicationContext-cache.xml",
-        "classpath:META-INF/applicationContext-cron.xml",
-        "classpath:META-INF/applicationContext-dao.xml",
-        "classpath:META-INF/applicationContext-service.xml",
-        "classpath:META-INF/applicationContext-factory.xml"
 
-})
 public class NimbitsServletNotLoggedInTest {
 
 
@@ -58,17 +39,12 @@ public class NimbitsServletNotLoggedInTest {
     public MockHttpServletResponse resp;
 
 
-
-
     @Before
     public void setUp() throws Exception {
         req = new MockHttpServletRequest();
         resp = new MockHttpServletResponse();
 
         helper.setUp();
-
-
-
 
 
     }

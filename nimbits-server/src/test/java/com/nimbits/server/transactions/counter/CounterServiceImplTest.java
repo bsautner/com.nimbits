@@ -14,8 +14,7 @@
 package com.nimbits.server.transactions.counter;
 
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.transaction.counter.CounterService;
-import com.nimbits.server.transaction.counter.CounterServiceFactory;
+import com.nimbits.server.counter.CounterService;
 import junit.framework.Assert;
 import org.junit.Test;
 
@@ -46,7 +45,7 @@ public class CounterServiceImplTest extends NimbitsServletTest {
         Date t = null;
         for (int i = 0; i < 10; i++) {
 
-             t = counterService.updateDateCounter("foo");
+            t = counterService.updateDateCounter("foo");
 
         }
         assertNotNull(t);

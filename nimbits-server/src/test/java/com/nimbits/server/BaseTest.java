@@ -35,6 +35,7 @@ public class BaseTest {
     public ValueTask valueTask;
     public IdlePointCron idleCron;
     public PointMaintTask pointTask;
+
     public void setup() {
         final MockServletContext context = new MockServletContext();
         NimbitsEngine engine = ApplicationListener.createEngine();

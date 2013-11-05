@@ -26,34 +26,15 @@ import com.nimbits.server.orm.CalcEntity;
 import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import com.nimbits.server.transaction.entity.cache.EntityCache;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
 import static org.junit.Assert.assertFalse;
 
-/**
- * Created with IntelliJ IDEA.
- * User: benjamin
- * Date: 8/8/12
- * Time: 10:21 AM
- */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={
-        "classpath:META-INF/applicationContext.xml",
-        "classpath:META-INF/applicationContext-api.xml",
-        "classpath:META-INF/applicationContext-cache.xml",
-        "classpath:META-INF/applicationContext-cron.xml",
-        "classpath:META-INF/applicationContext-dao.xml",
-        "classpath:META-INF/applicationContext-service.xml",
 
-})
 public class EntityCacheImplTest extends NimbitsServletTest {
 
     EntityCache cache = EntityServiceFactory.getCacheInstance(engine);
-
 
 
     @Test

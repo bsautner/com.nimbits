@@ -26,7 +26,6 @@ import java.util.*;
 import static org.junit.Assert.*;
 
 
-
 /**
  * Created by Benjamin Sautner
  * User: bsautner
@@ -43,7 +42,7 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
     @Test
     public void testBuildID() {
 
-        Date now =  new Date();
+        Date now = new Date();
 
         long v = pointEntity.hashCode() + now.getTime();
         long r = v - pointEntity.hashCode();
@@ -69,9 +68,8 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
             if (x != randomSpot) { //random spot put now
                 value = ValueFactory.createValueModel(r.nextDouble(), c.getTime());
 
-            }
-            else {
-                value = ValueFactory.createValueModel(r.nextDouble(),now);
+            } else {
+                value = ValueFactory.createValueModel(r.nextDouble(), now);
 
             }
             values.add(value);
@@ -80,18 +78,18 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
 
         List<Value> result = valueService.getClosestMatchToTimestamp(values, now);
         assertFalse(result.isEmpty());
-        assertEquals(result.get(0).getTimestamp(),now );
+        assertEquals(result.get(0).getTimestamp(), now);
 
         Value sample = values.get(r.nextInt(99));
         List<Value> result2 = valueService.getClosestMatchToTimestamp(values, new Date(sample.getTimestamp().getTime() + 1000));
         assertFalse(result2.isEmpty());
-        assertEquals(sample.getTimestamp() , result2.get(0).getTimestamp());
+        assertEquals(sample.getTimestamp(), result2.get(0).getTimestamp());
 
     }
 
 
     @Test
-    public void splitListTest()  {
+    public void splitListTest() {
 
         Random random = new Random();
         int size = 1000007;
@@ -99,7 +97,7 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
         double sum = 0.0;
 
         List<Value> list = new ArrayList<Value>(size);
-        for (int i = 0; i < size; i ++) {
+        for (int i = 0; i < size; i++) {
             double v = random.nextDouble();
             sum += v;
             list.add(ValueFactory.createValueModel(v));
@@ -108,18 +106,14 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
         assertEquals(list.size(), size);
         List<List<Value>> split = valueService.splitUpList(list);
         int expectedSize = list.size() / Const.CONST_QUERY_CHUNK_SIZE;
-        if ( list.size()  % Const.CONST_QUERY_CHUNK_SIZE > 0) {
+        if (list.size() % Const.CONST_QUERY_CHUNK_SIZE > 0) {
             expectedSize++;
         }
 
         assertEquals(expectedSize, split.size());
 
 
-
-
-
     }
-
 
 
     @Test
@@ -167,7 +161,7 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
         assertEquals(4, cache.getValueBuffer(point).size());
         Thread.sleep(100);
 
-        List<Value> buffer1 =cache.getValueBuffer(point);
+        List<Value> buffer1 = cache.getValueBuffer(point);
         Collections.sort(buffer1);
         Value top = buffer1.get(0);
         Value bottom = buffer1.get(3);

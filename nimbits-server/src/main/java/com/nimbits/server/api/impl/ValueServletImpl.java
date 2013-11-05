@@ -15,7 +15,6 @@ package com.nimbits.server.api.impl;
 import com.nimbits.client.common.Utils;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.constants.UserMessages;
-import com.nimbits.client.constants.Words;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
@@ -32,9 +31,7 @@ import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
-import org.springframework.stereotype.Service;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -44,104 +41,88 @@ import java.util.List;
 import java.util.logging.Logger;
 
 
-@Service("value")
 @Deprecated
-public class ValueServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
+public class ValueServletImpl extends ApiServlet {
     final private static Logger log = Logger.getLogger(ValueServletImpl.class.getName());
+    final private static String WORD_DOUBLE = "double";
 
-    @Override
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        if (isPost(req)) {
-
-            doPost(req, resp);
-        }
-        else {
-            doGet(req, resp);
-        }
-
-    }
 
 
     @Override
-    protected  void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
+    protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 
-            doInit(req, resp, ExportType.plain);
+        doInit(req, resp, ExportType.plain);
 
-            log.info("recording post");
+        log.info("recording post");
 
-            if (user != null && ! user.isRestricted()) {
-                String name = getParam(Parameters.point);
-                if (Utils.isEmptyString(name)) {
-                    resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                    resp.setHeader("Error", "Missing point name - you are using a deprecated service, please use /v2/value - see manual");
+        if (user != null && !user.isRestricted()) {
+            String name = getParam(Parameters.point);
+            if (Utils.isEmptyString(name)) {
+                resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+                resp.setHeader("Error", "Missing point name - you are using a deprecated service, please use /v2/value - see manual");
+                return;
+            }
+            final EntityName pointName = CommonFactory.createName(getParam(Parameters.point), EntityType.point);
+            final List<Entity> points = entityService.getEntityByName(user, pointName, EntityType.point);
+
+            if (points.isEmpty()) {
+                resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Point Not Found");
+
+            } else {
+                final Value v;
+                final Point point = (Point) points.get(0);
+                if (Utils.isEmptyString(getParam(Parameters.json))) {
+                    v = createValueFromRequest(point.inferLocation());
+                } else {
+                    final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
+                    Location l = vx.getLocation();
+//                    log.info(point.getName().getValue() + " " + point.inferLocation());
+                    if (point.inferLocation() && vx.getLocation().isEmpty()) {
+                        l = location;
+                    }
+//                    log.info(location.toString());
+                    v = ValueFactory.createValueModel(l, vx.getDoubleValue(), vx.getTimestamp(),
+                            vx.getNote(), vx.getData(), AlertType.OK);
+                }
+
+
+                //reportLocation(point, location);
+
+                final PrintWriter out;
+                try {
+                    final Value result = valueService.recordValue(user, point, v);
+                    out = resp.getWriter();
+                    final String j = GsonFactory.getInstance().toJson(result);
+                    out.print(j);
+                } catch (IllegalArgumentException ex) {
+                    resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                    return;
+                } catch (IOException e) {
+                    resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                     return;
                 }
-                final EntityName pointName = CommonFactory.createName(getParam(Parameters.point), EntityType.point);
-                final List<Entity> points =  entityService.getEntityByName(user, pointName, EntityType.point);
-
-                if (points.isEmpty()) {
-                    resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Point Not Found");
-
-                } else {
-                    final Value v;
-                    final Point point = (Point) points.get(0);
-                    if (Utils.isEmptyString(getParam(Parameters.json))) {
-                        v = createValueFromRequest(point.inferLocation());
-                    } else {
-                        final Value vx = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
-                        Location l = vx.getLocation();
-//                    log.info(point.getName().getValue() + " " + point.inferLocation());
-                        if (point.inferLocation() && vx.getLocation().isEmpty()) {
-                            l = location;
-                        }
-//                    log.info(location.toString());
-                        v = ValueFactory.createValueModel(l, vx.getDoubleValue(), vx.getTimestamp(),
-                                vx.getNote(), vx.getData(), AlertType.OK);
-                    }
 
 
-
-
-                    //reportLocation(point, location);
-
-                    final PrintWriter out;
-                    try {
-                        final Value result = valueService.recordValue(user, point, v);
-                        out = resp.getWriter();
-                        final String j = GsonFactory.getInstance().toJson(result);
-                        out.print(j);
-                    } catch (IllegalArgumentException ex) {
-                        resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                        return;
-                    } catch (IOException e) {
-                       resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                        return;
-                    }
-
-
-                }
-                resp.setStatus(Const.HTTP_STATUS_OK);
             }
-            else {
-                resp.setStatus(Const.HTTP_STATUS_UNAUTHORISED);
-            }
+            resp.setStatus(Const.HTTP_STATUS_OK);
+        } else {
+            resp.setStatus(Const.HTTP_STATUS_UNAUTHORISED);
+        }
 
     }
 
 
-
     @Override
-    public void doGet(final HttpServletRequest req, final HttpServletResponse resp)   {
+    public void doGet(final HttpServletRequest req, final HttpServletResponse resp) {
         try {
             doInit(req, resp, ExportType.plain);
             final PrintWriter out = resp.getWriter();
             Value nv = null;
-            final String format = getParam(Parameters.format)==null ? Words.WORD_DOUBLE : getParam(Parameters.format);
+            final String format = getParam(Parameters.format) == null ?  WORD_DOUBLE : getParam(Parameters.format);
 
             if (format.equals(Parameters.json.getText()) && !Utils.isEmptyString(getParam(Parameters.json))) {
                 nv = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
-            } else if (format.equals(Words.WORD_DOUBLE) && !Utils.isEmptyString(getParam(Parameters.value))) {
+            } else if (format.equals(WORD_DOUBLE) && !Utils.isEmptyString(getParam(Parameters.value))) {
 
                 nv = createValueFromRequest(false);
 
@@ -161,7 +142,7 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
         final double latitude = getDoubleFromParam(getParam(Parameters.lat));
         final double longitude = getDoubleFromParam(getParam(Parameters.lng));
         final double value = getDoubleFromParam(getParam(Parameters.value));
-        final String data =  getParam(Parameters.data);
+        final String data = getParam(Parameters.data);
         final ValueData vd = ValueDataModel.getInstance(SimpleValue.getInstance(data));// ValueFactory.createValueData(data);
         final Date timestamp = getParam(Parameters.timestamp) != null ? new Date(Long.parseLong(getParam(Parameters.timestamp))) : new Date();
         Location location1 = LocationFactory.createLocation(latitude, longitude);
@@ -170,7 +151,7 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
         }
 
 
-        nv  = ValueFactory.createValueModel(location1, value, timestamp, getParam(Parameters.note), vd, AlertType.OK);
+        nv = ValueFactory.createValueModel(location1, value, timestamp, getParam(Parameters.note), vd, AlertType.OK);
         return nv;
     }
 
@@ -194,20 +175,17 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
         final List<Entity> result;
         if (!Utils.isEmptyString(uuid)) {
             result = entityService.getEntityByKey(u, uuid, EntityType.point);
-        }
-        else if (!Utils.isEmptyString(pointNameParam)) {
-            final EntityName pointName =  CommonFactory.createName(pointNameParam, EntityType.point);
+        } else if (!Utils.isEmptyString(pointNameParam)) {
+            final EntityName pointName = CommonFactory.createName(pointNameParam, EntityType.point);
 
             result = entityService.getEntityByName(u, pointName, EntityType.point);
-        }
-        else {
+        } else {
             throw new Exception(UserMessages.ERROR_POINT_NOT_FOUND);
         }
 
         if (result.isEmpty()) {
             throw new Exception(UserMessages.ERROR_POINT_NOT_FOUND);
-        }
-        else {
+        } else {
 
             final Entity p = result.get(0);
             if ((u == null || u.isRestricted()) && !p.getProtectionLevel().equals(ProtectionLevel.everyone)) {
@@ -219,23 +197,22 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
                 // request
                 final Value newValue = ValueFactory.createValueModel(
                         nv.getLocation(), nv.getDoubleValue(),
-                        nv.getTimestamp(),nv.getNote(),  nv.getData(), AlertType.OK);
+                        nv.getTimestamp(), nv.getNote(), nv.getData(), AlertType.OK);
 
 
                 value = valueService.recordValue(u, p, newValue);
                 if (nv.getLocation().isEmpty()) {
                     //reportLocation(p, location);
-                }
-                else {
-                  //  reportLocation(p,nv.getLocation());
+                } else {
+                    //  reportLocation(p,nv.getLocation());
                 }
             } else {
                 List<Value> values = valueService.getCurrentValue(p);
-                if (! values.isEmpty()) {
+                if (!values.isEmpty()) {
                     value = values.get(0);
                 }
             }
-            String r =  value != null ? format.equals(Parameters.json.getText()) ? GsonFactory.getInstance().toJson(value) : String.valueOf(value.getDoubleValue()) : "";
+            String r = value != null ? format.equals(Parameters.json.getText()) ? GsonFactory.getInstance().toJson(value) : String.valueOf(value.getDoubleValue()) : "";
 
             if (containsParam(Parameters.client) && getParam(Parameters.client).equals(ClientType.arduino.getCode())) {
                 r = Const.CONST_ARDUINO_DATA_SEPARATOR + r + Const.CONST_ARDUINO_DATA_SEPARATOR;
@@ -246,7 +223,6 @@ public class ValueServletImpl extends ApiServlet implements org.springframework.
         }
 
     }
-
 
 
 }

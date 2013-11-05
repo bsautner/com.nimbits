@@ -31,15 +31,16 @@ import java.util.logging.Logger;
  */
 
 public class VersionApi extends ApiBase {
-final Logger log = Logger.getLogger(ValueApi.class.getName());
-        @Override
-        public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    final Logger log = Logger.getLogger(ValueApi.class.getName());
 
-            PrintWriter out = resp.getWriter();
-            setup(req, resp);
-            out.print(SettingServiceFactory.getServiceInstance(engine).getSetting(SettingType.serverVersion));
-            out.close();
+    @Override
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        }
+        PrintWriter out = resp.getWriter();
+        setup(req, resp);
+        out.print(SettingServiceFactory.getServiceInstance(engine).getSetting(SettingType.version));
+        out.close();
+
+    }
 
 }

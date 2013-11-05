@@ -18,7 +18,7 @@ package com.nimbits.server.time;
  * Date: 5/6/11
  * Time: 12:55 PM
  */
- @Deprecated
+@Deprecated
 public class TimespanServiceFactory {
     private static TimespanService instance;
 

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
   ~ Copyright (c) 2010 Nimbits Inc.
   ~
   ~ http://www.nimbits.com
@@ -46,7 +45,7 @@
         <name>move</name>
         <rate>30/s</rate>
     </queue>
-     <queue>
+    <queue>
         <name>incommingmail</name>
         <rate>5/s</rate>
     </queue>

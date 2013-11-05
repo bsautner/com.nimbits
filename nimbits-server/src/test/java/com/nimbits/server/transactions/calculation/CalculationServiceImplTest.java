@@ -38,15 +38,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 4/1/12
- * Time: 7:14 PM
- */
 
 public class CalculationServiceImplTest extends NimbitsServletTest {
- 
 
 
     private static final double DELTA = 0.0001;
@@ -68,7 +61,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Point trigger = addPoint(triggerName);
         final Point target = addPoint(targetName);
 
-        final Point y =addPoint(yName);
+        final Point y = addPoint(yName);
         final Point z = addPoint(zName);
 
         org.junit.Assert.assertNotNull(y);
@@ -109,22 +102,22 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
 
         org.junit.Assert.assertEquals(vt.getDoubleValue(), r2, DELTA);
 
-        final  List<Value> vy = valueService.getCurrentValue(y);// ClientHelper.client().getCurrentRecordedValue(yName);
+        final List<Value> vy = valueService.getCurrentValue(y);// ClientHelper.client().getCurrentRecordedValue(yName);
         org.junit.Assert.assertEquals(vy.get(0).getDoubleValue(), ry, DELTA);
 
-        final  List<Value> vz = valueService.getCurrentValue(z);
+        final List<Value> vz = valueService.getCurrentValue(z);
         org.junit.Assert.assertEquals(vz.get(0).getDoubleValue(), rz, DELTA);
 
         Thread.sleep(1000);
         CalculationServiceFactory.getInstance(engine, taskService).processCalculations(user, trigger);
         Thread.sleep(1000);
-        final  List<Value> endResult = valueService.getCurrentValue(target);
+        final List<Value> endResult = valueService.getCurrentValue(target);
         org.junit.Assert.assertNotNull(endResult);
         org.junit.Assert.assertEquals(r1 + r2 + ry + rz, endResult.get(0).getDoubleValue(), DELTA);
 
     }
 
-    @Test(expected=Exception.class)
+    @Test(expected = Exception.class)
     public void testCalcLoop() throws Exception {
 
         final EntityName targetName = CommonFactory.createName("TARGET" + UUID.randomUUID().toString(), EntityType.point);
@@ -139,7 +132,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Point trigger = addPoint(triggerName);
         final Point target = addPoint(targetName);
 
-        final Point y =addPoint(yName);
+        final Point y = addPoint(yName);
         final Point z = addPoint(zName);
 
         org.junit.Assert.assertNotNull(y);
@@ -170,8 +163,8 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
     }
 
 
-   @Test
-    public void testCalcRecursion()   {
+    @Test
+    public void testCalcRecursion() {
 
         final EntityName targetName = CommonFactory.createName("TARGET", EntityType.point);
         final EntityName targetName2 = CommonFactory.createName("TARGET2", EntityType.point);
@@ -194,7 +187,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
                 user.getKey());
 
         final Calculation calculation = CalculationModelFactory.createCalculation(en, EntityModelFactory.createTrigger(trigger.getKey()),
-                true, "1+1",EntityModelFactory.createTarget(target.getKey()),"","", "");
+                true, "1+1", EntityModelFactory.createTarget(target.getKey()), "", "", "");
 
         entityService.addUpdateSingleEntity(calculation);
 
@@ -210,22 +203,22 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         Entity en3 = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, user.getKey(),
                 user.getKey());
 
-        final Calculation calculation3 = CalculationModelFactory.createCalculation(en3,  EntityModelFactory.createTrigger(target2.getKey()),
+        final Calculation calculation3 = CalculationModelFactory.createCalculation(en3, EntityModelFactory.createTrigger(target2.getKey()),
                 true, "1+1", EntityModelFactory.createTarget(trigger.getKey()), "", "", "");
 
         entityService.addUpdateSingleEntity(calculation3);
 
     }
 
-    private Point addPoint(EntityName name)  {
-        Entity e =  new EntityModel(name,
+    private Point addPoint(EntityName name) {
+        Entity e = new EntityModel(name,
                 "",
                 EntityType.point,
                 ProtectionLevel.everyone,
                 user.getKey(),
                 user.getKey(),
                 UUID.randomUUID().toString());
-        Point p =    PointModelFactory.createPointModel(
+        Point p = PointModelFactory.createPointModel(
                 e,
                 0.0,
                 90,
@@ -243,7 +236,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         return (Point) entityService.addUpdateEntity(user, Arrays.<Entity>asList(p)).get(0);
     }
 
-    @Test(expected=Exception.class)
+    @Test(expected = Exception.class)
     public void testBadCalc1() throws Exception {
 
 
@@ -271,7 +264,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
 
     }
 
-    @Test(expected=Exception.class)
+    @Test(expected = Exception.class)
     public void testBadCalcY() throws Exception {
 
 
@@ -283,7 +276,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Point trigger = addPoint(triggerName);
         final Point target = addPoint(targetName);
 
-        final Point y =addPoint(yName);
+        final Point y = addPoint(yName);
         final Point z = addPoint(zName);
 
 
@@ -298,7 +291,8 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
 
 
     }
-    @Test(expected=Exception.class)
+
+    @Test(expected = Exception.class)
     public void testBadCalcZ() throws Exception {
 
 
@@ -310,7 +304,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Point trigger = addPoint(triggerName);
         final Point target = addPoint(targetName);
 
-        final Point y =addPoint(yName);
+        final Point y = addPoint(yName);
         final Point z = addPoint(zName);
 
 
@@ -325,7 +319,8 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
 
 
     }
-    @Test(expected=Exception.class)
+
+    @Test(expected = Exception.class)
     public void testBadCalcMissingZ() throws Exception {
 
 
@@ -336,8 +331,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Point trigger = addPoint(triggerName);
         final Point target = addPoint(targetName);
 
-        final Point y =addPoint(yName);
-
+        final Point y = addPoint(yName);
 
 
         EntityName name = CommonFactory.createName("Calc 1", EntityType.calculation);
@@ -345,14 +339,14 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
                 user.getKey());
 
         final Calculation calculation = CalculationModelFactory.createCalculation(en, EntityModelFactory.createTrigger(trigger.getKey()),
-                true, "x+y+z", EntityModelFactory.createTarget(target.getKey()), trigger.getKey(), y.getKey(),"");
+                true, "x+y+z", EntityModelFactory.createTarget(target.getKey()), trigger.getKey(), y.getKey(), "");
 
         entityService.addUpdateSingleEntity(calculation);
 
 
     }
 
-    @Test(expected=Exception.class)
+    @Test(expected = Exception.class)
     public void testBadCalcMissingX() throws Exception {
 
 
@@ -364,7 +358,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Point trigger = addPoint(triggerName);
         final Point target = addPoint(targetName);
 
-        final Point y =addPoint(yName);
+        final Point y = addPoint(yName);
         final Point z = addPoint(zName);
 
 
@@ -373,7 +367,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
                 user.getKey());
 
         final Calculation calculation = CalculationModelFactory.createCalculation(en, EntityModelFactory.createTrigger(trigger.getKey()),
-                true, "x+y+z", EntityModelFactory.createTarget(target.getKey()), "", y.getKey(),z.getKey());
+                true, "x+y+z", EntityModelFactory.createTarget(target.getKey()), "", y.getKey(), z.getKey());
 
         entityService.addUpdateSingleEntity(calculation);
 

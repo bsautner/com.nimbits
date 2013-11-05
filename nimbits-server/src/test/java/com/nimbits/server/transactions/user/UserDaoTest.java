@@ -24,9 +24,6 @@ import com.nimbits.server.transaction.user.AuthenticationServiceFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 
@@ -34,33 +31,18 @@ import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 4/7/12
- * Time: 4:52 PM
- */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={
-        "classpath:META-INF/applicationContext.xml",
-        "classpath:META-INF/applicationContext-api.xml",
-        "classpath:META-INF/applicationContext-cache.xml",
-        "classpath:META-INF/applicationContext-cron.xml",
-        "classpath:META-INF/applicationContext-dao.xml",
-        "classpath:META-INF/applicationContext-service.xml",
-
-})
 public class UserDaoTest extends NimbitsServletTest {
     public final LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig());
-            //new LocalTaskQueueTestConfig(),
-            //new LocalUserServiceTestConfig()).setEnvIsLoggedIn(true).setEnvEmail(email).setEnvAuthDomain("example.com");
+    //new LocalTaskQueueTestConfig(),
+    //new LocalUserServiceTestConfig()).setEnvIsLoggedIn(true).setEnvEmail(email).setEnvAuthDomain("example.com");
 
     @Before
-    public void setup()  {
+    public void setup() {
 
         helper.setUp();
     }
+
     @After
     public void tearDown() {
         helper.tearDown();
@@ -73,16 +55,16 @@ public class UserDaoTest extends NimbitsServletTest {
         User u = AuthenticationServiceFactory.getInstance(engine).createUserRecord(e);
         assertNotNull(u);
         assertEquals(e.getValue(), u.getEmail().getValue());
-            List<Entity> result = entityService.getEntityByKey(u, e.getValue(), EntityType.user);
-            assertFalse(result.isEmpty());
+        List<Entity> result = entityService.getEntityByKey(u, e.getValue(), EntityType.user);
+        assertFalse(result.isEmpty());
 
 
-            User r = (User) result.get(0);
+        User r = (User) result.get(0);
 
 
-            assertNotNull(r);
-            assertEquals(e.getValue(), r.getEmail().getValue());
-            assertNotNull(r.getDateCreated());
+        assertNotNull(r);
+        assertEquals(e.getValue(), r.getEmail().getValue());
+        assertNotNull(r.getDateCreated());
 
 
     }

@@ -8,6 +8,14 @@
     <listener>
         <listener-class>com.nimbits.server.ApplicationListener</listener-class>
     </listener>
+    <servlet>
+        <servlet-name>heartbeatApi</servlet-name>
+        <servlet-class>com.nimbits.server.api.HeartbeatApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>heartbeatApi</servlet-name>
+        <url-pattern>/service/v2/hb</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>timeApi</servlet-name>

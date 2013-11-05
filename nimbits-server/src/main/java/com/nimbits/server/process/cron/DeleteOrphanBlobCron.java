@@ -12,23 +12,14 @@
 
 package com.nimbits.server.process.cron;
 
-import org.springframework.stereotype.Service;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Created by Benjamin Sautner
- * User: BSautner
- * Date: 4/23/12
- * Time: 2:00 PM
- */
-@Service("deleteOrphanCron")
 
-public class DeleteOrphanBlobCron extends HttpServlet implements org.springframework.web.HttpRequestHandler{
+public class DeleteOrphanBlobCron extends HttpServlet  {
 
     private static final long serialVersionUID = 1L;
 
@@ -36,10 +27,10 @@ public class DeleteOrphanBlobCron extends HttpServlet implements org.springframe
     @Override
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
-            processRequest();
+        processRequest();
     }
 
-    protected  static void processRequest() throws IOException {
+    protected static void processRequest() throws IOException {
 //        Iterator<BlobInfo> iterator = new BlobInfoFactory().queryBlobInfos();
 //
 //        if  (iterator.hasNext()){
@@ -51,8 +42,5 @@ public class DeleteOrphanBlobCron extends HttpServlet implements org.springframe
 
     }
 
-    @Override
-    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
-    }
+
 }

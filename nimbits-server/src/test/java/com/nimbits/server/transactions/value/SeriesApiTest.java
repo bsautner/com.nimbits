@@ -27,9 +27,6 @@ import static junit.framework.Assert.assertFalse;
 public class SeriesApiTest extends NimbitsServletTest {
 
 
-
-
-
     @Test
     public void testGetApi() throws Exception {
         Calendar c = Calendar.getInstance();

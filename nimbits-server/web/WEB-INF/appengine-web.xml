@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
     <threadsafe>true</threadsafe>
+
+    <!--change this to -->
     <application>nimbits-02</application>
 
-    <version>720</version>
+    <version>736</version>
 
     <precompilation-enabled>false</precompilation-enabled>
 
-    <!--You can edit these properties to customise your instance. Set the API KEY below to access the API from other apps.-->
     <system-properties>
-       <!--<property name="com.nimbits.ApiKey" value=""/>-->
     </system-properties>
     <static-files>
         <include path="/bootstrap/css/**.css" />

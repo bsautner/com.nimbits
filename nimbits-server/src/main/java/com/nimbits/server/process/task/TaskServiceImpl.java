@@ -31,19 +31,18 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 
-
 public class TaskServiceImpl implements TaskService {
 
     private static final String IN_CONTENT = "inContent";
-    private static final String QUEUE_DELETE_BLOB= "blob";
+    private static final String QUEUE_DELETE_BLOB = "blob";
 
     private static final String DEFAULT = "default";
     private static final String PATH_DELETE_BLOB_TASK = "/task/deleteBlobTask";
     private static final String PATH_POINT_MAINT_TASK = "/task/pointTask";
     private static final String PATH_MOVE_TASK = "/task/moveTask";
     private static final String PATH_TASK_RECORD_VALUE = "/task/valueTask";
-    private static final String PATH_TASK_DUMP_TASK= "/task/dumpTask";
-    private static final String PATH_TASK_UPLOAD_TASK= "/task/uploadTask";
+    private static final String PATH_TASK_DUMP_TASK = "/task/dumpTask";
+    private static final String PATH_TASK_UPLOAD_TASK = "/task/uploadTask";
     private static final String PATH_TASK_PROCESS_BATCH = "/task/batchTask";
     private static final String PATH_INCOMING_MAIL_QUEUE = "/task/mailTask";
     private static final String PATH_DELETE_DATA_TASK = "/task/deleteTask";
@@ -54,60 +53,54 @@ public class TaskServiceImpl implements TaskService {
     public TaskServiceImpl() {
 
 
-
-
     }
 
-    
+
     @Override
     public void startDeleteDataTask(final Entity point,
                                     final boolean onlyExpired,
                                     final int exp) {
 
 
+        final Queue queue = QueueFactory.getQueue(DEFAULT);
+        if (onlyExpired) {
+            queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_DATA_TASK)
+                    .param(Parameters.json.getText(), GsonFactory.getInstance().toJson(point))
+                    .param(Parameters.exp.getText(), Long.toString(exp))
 
-            final Queue queue =  QueueFactory.getQueue(DEFAULT);
-            if (onlyExpired) {
-                queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_DATA_TASK)
-                        .param(Parameters.json.getText(),  GsonFactory.getInstance().toJson(point))
-                        .param(Parameters.exp.getText(), Long.toString(exp))
-
-                );
-            } else {
-                queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_DATA_TASK)
-                        .param(Parameters.json.getText(),  GsonFactory.getInstance().toJson(point))
-                );
-            }
-
+            );
+        } else {
+            queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_DATA_TASK)
+                    .param(Parameters.json.getText(), GsonFactory.getInstance().toJson(point))
+            );
+        }
 
 
     }
 
-    
+
     @Override
-    public  void startDeleteBlobTask(final String key) {
+    public void startDeleteBlobTask(final String key) {
 
         try {
-            final Queue queue =  QueueFactory.getQueue( QUEUE_DELETE_BLOB  );
+            final Queue queue = QueueFactory.getQueue(QUEUE_DELETE_BLOB);
 
             queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_BLOB_TASK)
-                    .param(Parameters.key.getText(), key )
+                    .param(Parameters.key.getText(), key)
             );
         } catch (IllegalStateException e) {
-            final Queue queue =  QueueFactory.getQueue( DEFAULT  );
+            final Queue queue = QueueFactory.getQueue(DEFAULT);
 
             queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_BLOB_TASK)
-                    .param(Parameters.key.getText(), key )
+                    .param(Parameters.key.getText(), key)
             );
         }
     }
 
 
-
-    
     @Override
     public void startDataDumpTask(final Entity entity, final Timespan timespan) {
-        final Queue queue =  QueueFactory.getQueue(DUMP);
+        final Queue queue = QueueFactory.getQueue(DUMP);
         final String json = GsonFactory.getInstance().toJson(entity);
         queue.add(TaskOptions.Builder.withUrl(PATH_TASK_DUMP_TASK)
                 .param(Parameters.entity.getText(), json)
@@ -118,76 +111,74 @@ public class TaskServiceImpl implements TaskService {
         );
     }
 
-    
+
     @Override
     public void startUploadTask(final User user, final Point entity, final String blobKey) {
-        final Queue queue =  QueueFactory.getQueue(DUMP);
+        final Queue queue = QueueFactory.getQueue(DUMP);
         final String json = GsonFactory.getInstance().toJson(entity);
         final String userJson = GsonFactory.getInstance().toJson(user);
         queue.add(TaskOptions.Builder.withUrl(PATH_TASK_UPLOAD_TASK)
                 .param(Parameters.entity.getText(), json)
                 .param(Parameters.user.getText(), userJson)
-                .param(Parameters.blobkey.getText(), blobKey )
+                .param(Parameters.blobkey.getText(), blobKey)
         );
     }
 
-    
+
     @Override
-    public void startProcessBatchTask(final User user, final HttpServletRequest req, final HttpServletResponse resp)  {
+    public void startProcessBatchTask(final User user, final HttpServletRequest req, final HttpServletResponse resp) {
 
 
-            final Queue queue =  QueueFactory.getQueue(DEFAULT);
+        final Queue queue = QueueFactory.getQueue(DEFAULT);
 
 
+        final String userJson = GsonFactory.getInstance().toJson(user);
 
-            final String userJson = GsonFactory.getInstance().toJson(user);
+        log.info(userJson);
 
-            log.info(userJson);
+        final TaskOptions options = TaskOptions.Builder.withUrl(PATH_TASK_PROCESS_BATCH);
 
-            final TaskOptions options = TaskOptions.Builder.withUrl(PATH_TASK_PROCESS_BATCH);
+        final Enumeration enumeration = req.getParameterNames();
+        final Map m = req.getParameterMap();
 
-            final Enumeration enumeration = req.getParameterNames();
-            final Map m = req.getParameterMap();
+        while (enumeration.hasMoreElements()) {
+            final String param = enumeration.nextElement().toString();
+            final String value = ((String[]) m.get(param))[0];
+            options.param(param, value);
+        }
 
-            while (enumeration.hasMoreElements()) {
-                final String param = enumeration.nextElement().toString();
-                final String value = ((String[]) m.get(param))[0];
-                options.param(param, value);
-            }
+        options.param(Parameters.pointUser.getText(), userJson);
 
-            options.param(Parameters.pointUser.getText(), userJson);
-
-            queue.add(options);
-
+        queue.add(options);
 
 
     }
 
-    
+
     @Override
     public void startRecordValueTask(final User u, final Entity point, final Value value) {
 
-            if (Double.valueOf(value.getDoubleValue()).isInfinite()) {
-                return;
-            }
-            final Queue queue =  QueueFactory.getQueue(DEFAULT);
-            final String userJson = GsonFactory.getInstance().toJson(u);
-            final String pointJson = GsonFactory.getInstance().toJson(point);
-            final String valueJson = GsonFactory.getInstance().toJson(value);
+        if (Double.valueOf(value.getDoubleValue()).isInfinite()) {
+            return;
+        }
+        final Queue queue = QueueFactory.getQueue(DEFAULT);
+        final String userJson = GsonFactory.getInstance().toJson(u);
+        final String pointJson = GsonFactory.getInstance().toJson(point);
+        final String valueJson = GsonFactory.getInstance().toJson(value);
 
-            queue.add(TaskOptions.Builder
-                    .withUrl(PATH_TASK_RECORD_VALUE).taskName(UUID.randomUUID().toString())
-                    .param(Parameters.pointUser.getText(), userJson)
-                    .param(Parameters.pointJson.getText(), pointJson)
-                    .param(Parameters.valueJson.getText(), valueJson));
+        queue.add(TaskOptions.Builder
+                .withUrl(PATH_TASK_RECORD_VALUE).taskName(UUID.randomUUID().toString())
+                .param(Parameters.pointUser.getText(), userJson)
+                .param(Parameters.pointJson.getText(), pointJson)
+                .param(Parameters.valueJson.getText(), valueJson));
 
     }
 
-    
+
     @Override
     public void startIncomingMailTask(final String fromAddress, final String inContent) {
 
-        final Queue queue =  QueueFactory.getQueue(DEFAULT);
+        final Queue queue = QueueFactory.getQueue(DEFAULT);
         queue.add(TaskOptions.Builder.withUrl(PATH_INCOMING_MAIL_QUEUE)
                 .param(Parameters.fromAddress.getText(), fromAddress)
                 .param(IN_CONTENT, inContent));
@@ -195,13 +186,13 @@ public class TaskServiceImpl implements TaskService {
 
     }
 
-    
+
     @Override
     public void startPointMaintTask(final Entity e) {
 
         final String json = GsonFactory.getInstance().toJson(e);
 
-        final Queue queue =  QueueFactory.getQueue( DEFAULT);
+        final Queue queue = QueueFactory.getQueue(DEFAULT);
 
         queue.add(TaskOptions.Builder.withUrl(PATH_POINT_MAINT_TASK)
                 .param(Parameters.json.getText(), json));
@@ -209,12 +200,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
 
-
     @Override
     public void startMoveCachedValuesToStoreTask(final Entity point) {
         final String json = GsonFactory.getInstance().toJson(point);
 
-        final Queue queue =  QueueFactory.getQueue(DEFAULT);
+        final Queue queue = QueueFactory.getQueue(DEFAULT);
 
         queue.add(TaskOptions.Builder.withUrl(PATH_MOVE_TASK)
                 .param(Parameters.point.getText(), json));

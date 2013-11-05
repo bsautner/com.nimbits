@@ -52,4 +52,6 @@ public interface Transaction {
     <T, K> List<T> getEntity(SimpleValue<String> entityId, EntityType type, Class<K> clz);
 
     List<AndroidControl> getControl();
+
+    void doHeartbeat();
 }

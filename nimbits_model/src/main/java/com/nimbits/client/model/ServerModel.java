@@ -12,24 +12,41 @@
 
 package com.nimbits.client.model;
 
+import java.io.Serializable;
+
 /**
  * Created by benjamin on 10/20/13.
  */
-public class ServerModel implements Server {
+public class ServerModel implements Server, Serializable {
 
-    private final String url;
-    private final long id;
-    private final String apiKey;
+    private String url;
+    private long id;
+    private String apiKey;
+    private boolean isDefault;
 
-    public ServerModel(String url, long id, String apiKey) {
+    public ServerModel(final String url, final long id, final String apiKey, boolean isDefault) {
         this.url = url;
         this.id = id;
         this.apiKey = apiKey;
+        this.isDefault = isDefault;
     }
+
+    public ServerModel() {
+    }
+
     @Override
-    public String getUrl() {
-        return url;
+    public String getUrl(boolean includeProtocol) {
+        if (includeProtocol) {
+            return url.startsWith("http") ? url : "http://" + url;
+        }
+        else {
+            return url;
+        }
+
     }
+
+
+
     @Override
     public long getId() {
         return id;
@@ -37,5 +54,10 @@ public class ServerModel implements Server {
     @Override
     public String getApiKey() {
         return apiKey;
+    }
+
+    @Override
+    public boolean isDefault() {
+        return isDefault;
     }
 }

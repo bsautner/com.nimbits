@@ -30,7 +30,7 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
-import org.springframework.stereotype.Service;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,9 +43,9 @@ import java.util.List;
 import java.util.UUID;
 
 
-@Service("point")
+
 @Deprecated
-public class PointServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
+public class PointServletImpl extends ApiServlet  {
 
     private static final long serialVersionUID = 1L;
     private static final int INT = 1024;
@@ -53,17 +53,6 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
     private static final double FILTER_VALUE = 0.1;
 
 
-    @Override
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) {
-
-        if (isPost(req)) {
-
-            doPost(req, resp);
-        } else {
-            doGet(req, resp);
-        }
-
-    }
 
 
     @Override
@@ -110,7 +99,6 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
                             } else {
                                 parentType = EntityType.user;
                             }
-
 
 
                             if (!Utils.isEmptyString(pointNameParam) && Utils.isEmptyString(getParam(Parameters.json))) {
@@ -163,7 +151,7 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
     }
 
 
-    private void validateExistence(final User user, final EntityName name, final StringBuilder sb)  {
+    private void validateExistence(final User user, final EntityName name, final StringBuilder sb) {
 
         List<Entity> result = entityService.getEntityByName(user, name, EntityType.point);
 
@@ -183,58 +171,58 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
         StringBuilder sb = new StringBuilder(INT);
 
 
-            doInit(req, resp, ExportType.plain);
+        doInit(req, resp, ExportType.plain);
 
-            final String actionParam = req.getParameter(Parameters.action.getText());
-            final Action action = Utils.isEmptyString(actionParam) ? Action.read : Action.get(actionParam);
-            final String startParam = req.getParameter(Parameters.sd.getText());
-            final String endParam = req.getParameter(Parameters.ed.getText());
-            final String offsetParam = req.getParameter(Parameters.offset.getText());
+        final String actionParam = req.getParameter(Parameters.action.getText());
+        final Action action = Utils.isEmptyString(actionParam) ? Action.read : Action.get(actionParam);
+        final String startParam = req.getParameter(Parameters.sd.getText());
+        final String endParam = req.getParameter(Parameters.ed.getText());
+        final String offsetParam = req.getParameter(Parameters.offset.getText());
 
-            //final String format;
+        //final String format;
 
-            final String pointNameParam = Utils.isEmptyString(getParam(Parameters.name)) ?
-                    getParam(Parameters.point) : getParam(Parameters.name);
-            if (getClientType().equals(ClientType.arduino)) {
-                sb.append(Const.CONST_ARDUINO_DATA_SEPARATOR);
-            }
+        final String pointNameParam = Utils.isEmptyString(getParam(Parameters.name)) ?
+                getParam(Parameters.point) : getParam(Parameters.name);
+        if (getClientType().equals(ClientType.arduino)) {
+            sb.append(Const.CONST_ARDUINO_DATA_SEPARATOR);
+        }
 
 
-            switch (action) {
-                case read:
-                    processGetRead(sb, startParam, endParam, offsetParam, pointNameParam);
-                    break;
-                case validateExists:
-                    EntityName pointName = CommonFactory.createName(pointNameParam, EntityType.point);
-                    validateExistence(user, pointName, sb);
-                    break;
-                case list:
+        switch (action) {
+            case read:
+                processGetRead(sb, startParam, endParam, offsetParam, pointNameParam);
+                break;
+            case validateExists:
+                EntityName pointName = CommonFactory.createName(pointNameParam, EntityType.point);
+                validateExistence(user, pointName, sb);
+                break;
+            case list:
 
-                    EntityName parentName = CommonFactory.createName(pointNameParam, EntityType.point);
-                    List<Entity> result = entityService.getEntityByName(user, parentName, EntityType.point);
-                    if (!result.isEmpty()) {
-                        List<Entity> children = entityService.getChildren(user, result);
+                EntityName parentName = CommonFactory.createName(pointNameParam, EntityType.point);
+                List<Entity> result = entityService.getEntityByName(user, parentName, EntityType.point);
+                if (!result.isEmpty()) {
+                    List<Entity> children = entityService.getChildren(user, result);
 
-                        for (Entity e : children) {
-                            if (okToReport(user, e)) {
+                    for (Entity e : children) {
+                        if (okToReport(user, e)) {
 
-                                sb.append(e.getName().getValue())
-                                        .append(",");
-                            }
+                            sb.append(e.getName().getValue())
+                                    .append(",");
                         }
-                        if (sb.toString().endsWith(",")) {
-                            sb.deleteCharAt(sb.length() - 1);
-                        }
-
-                    } else {
-
+                    }
+                    if (sb.toString().endsWith(",")) {
+                        sb.deleteCharAt(sb.length() - 1);
                     }
 
-                    break;
-            }
-            if (getClientType().equals(ClientType.arduino)) {
-                sb.append(Const.CONST_ARDUINO_DATA_SEPARATOR);
-            }
+                } else {
+
+                }
+
+                break;
+        }
+        if (getClientType().equals(ClientType.arduino)) {
+            sb.append(Const.CONST_ARDUINO_DATA_SEPARATOR);
+        }
 
 
         resp.setStatus(Const.HTTP_STATUS_OK);
@@ -400,7 +388,7 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
 
         } else if (!Utils.isEmptyString(start) && !Utils.isEmptyString(end) && !Utils.isEmptyString(end)) {
             final int offset = Integer.valueOf(offsetParam);
-          //  final Timespan ts = TimespanServiceFactory.getInstance().createTimespan(start, end, offset);
+            //  final Timespan ts = TimespanServiceFactory.getInstance().createTimespan(start, end, offset);
             Range ts = Range.closed(start, end);
             return valueService.getDataSegment(point, ts);
 
@@ -410,7 +398,7 @@ public class PointServletImpl extends ApiServlet implements org.springframework.
 
     }
 
-    protected String getPointObjects(final String categoryNameParam, final String pointNameParam)  {
+    protected String getPointObjects(final String categoryNameParam, final String pointNameParam) {
 
         if (user != null) {
             Type pointListType = new TypeToken<List<PointModel>>() {

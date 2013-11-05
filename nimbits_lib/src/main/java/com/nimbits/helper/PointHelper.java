@@ -45,7 +45,7 @@ public class PointHelper {
     private final String email;
     private final Transaction transaction;
     public PointHelper(Server server, String email) {
-        this.baseUrl = server.getUrl();
+        this.baseUrl = server.getUrl(true);
         this.email = email;
         transaction = new TransactionImpl(server, email);
     }

@@ -34,7 +34,6 @@ import static org.junit.Assert.assertEquals;
 public class PointDaoImplTest extends NimbitsServletTest {
 
 
-
     @Test
     public void getPointsTest() throws Exception {
 
@@ -42,7 +41,7 @@ public class PointDaoImplTest extends NimbitsServletTest {
 
         e.put(point.getKey(), (Point) entityService.getEntityByKey(user, point.getKey(), EntityType.point).get(0));
         e.put(pointChild.getKey(), (Point) entityService.getEntityByKey(user, pointChild.getKey(), EntityType.point).get(0));
-        Map<String, Entity> result =valueService.getCurrentValues(e);
+        Map<String, Entity> result = valueService.getCurrentValues(e);
         assertEquals(2, result.size());
 
 

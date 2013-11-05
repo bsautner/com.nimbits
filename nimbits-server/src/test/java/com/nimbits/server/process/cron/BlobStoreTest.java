@@ -16,20 +16,8 @@ package com.nimbits.server.process.cron;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.nimbits.server.NimbitsServletTest;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={
-        "classpath:META-INF/applicationContext.xml",
-        "classpath:META-INF/applicationContext-api.xml",
-        "classpath:META-INF/applicationContext-cache.xml",
-        "classpath:META-INF/applicationContext-cron.xml",
-        "classpath:META-INF/applicationContext-dao.xml",
-        "classpath:META-INF/applicationContext-service.xml",
 
-})
 public class BlobStoreTest extends NimbitsServletTest {
 
     @Test(expected = IllegalArgumentException.class)
@@ -71,7 +59,7 @@ public class BlobStoreTest extends NimbitsServletTest {
 //          DeleteBlobTask.processRequest(req);
 //        }
 //      //  int r2 = DeleteOrphanBlobCron.processRequest();
-      //  assertEquals(1, r2);
+    //  assertEquals(1, r2);
 
 //       // BlobKey r = BlobStoreFactory.getInstance().deleteOrphans(null);
 //

@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 
-public class MoveRecordedValuesToStoreCron extends ApiBase  {
+public class MoveRecordedValuesToStoreCron extends ApiBase {
     /**
      *
      */

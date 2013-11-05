@@ -40,6 +40,8 @@ import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.settings.SettingServiceFactory;
 import com.nimbits.server.transaction.settings.SettingsService;
+import com.nimbits.server.transaction.subscription.SubscriptionService;
+import com.nimbits.server.transaction.subscription.SubscriptionServiceFactory;
 import com.nimbits.server.transaction.user.AuthenticationServiceFactory;
 import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.dao.ValueDao;
@@ -105,7 +107,7 @@ public class NimbitsServletTest extends BaseTest {
     public EntityService entityService = EntityServiceFactory.getInstance(engine);
     public ValueService valueService = ValueServiceFactory.getInstance(engine, taskService);
     public BlobStore blobStore = BlobStoreFactory.getInstance(engine.getPmf());
-
+    public SubscriptionService subscriptionService = SubscriptionServiceFactory.getServiceInstance(engine, taskService);
     public Point createRandomPoint() {
         Point point;
         EntityName pointName;
@@ -133,7 +135,7 @@ public class NimbitsServletTest extends BaseTest {
 
 
     @Before
-    public void setup()  {
+    public void setup() {
         super.setup();
         SystemProperty.environment.set(SystemProperty.Environment.Value.Development);
         req = new MockHttpServletRequest();
@@ -142,17 +144,11 @@ public class NimbitsServletTest extends BaseTest {
         context = new MockServletContext();
 
 
-
-
-
-
-
-
         helper.setUp();
 
 
         settingsService.addSetting(SettingType.admin, email);
-        settingsService.addSetting(SettingType.serverIsDiscoverable, SettingType.serverIsDiscoverable.getDefaultValue());
+
 
         emailAddress = CommonFactory.createEmailAddress(email);
 
@@ -162,8 +158,8 @@ public class NimbitsServletTest extends BaseTest {
         groupName = CommonFactory.createName("group1", EntityType.point);
 
 
-        User r = AuthenticationServiceFactory.getInstance(engine).createUserRecord(emailAddress);
-        assertNotNull(r);
+        user = AuthenticationServiceFactory.getInstance(engine).createUserRecord(emailAddress);
+        assertNotNull(user);
 
 
         List<Entity> result = entityService.getEntityByKey(user, emailAddress.getValue(), EntityType.user);

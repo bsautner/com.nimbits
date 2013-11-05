@@ -30,7 +30,6 @@ import static org.junit.Assert.*;
 public class IdlePointCronTest extends NimbitsServletTest {
 
 
-
     @Test
     public void processGetTest() throws IOException {
 
@@ -39,10 +38,8 @@ public class IdlePointCronTest extends NimbitsServletTest {
 
         entityService.addUpdateEntity(user, Arrays.<Entity>asList(point));
         idleCron.doGet(req, resp);
-        final int c =  idleCron.processGet();
+        final int c = idleCron.processGet();
         assertEquals(1, c);
-
-
 
 
     }

@@ -29,7 +29,6 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueModel;
-import com.nimbits.http.FlushType;
 import com.nimbits.http.HttpHelper;
 import com.nimbits.http.UrlContainer;
 import com.nimbits.server.gson.GsonFactory;
@@ -55,6 +54,7 @@ public class TransactionImpl implements Transaction {
     private static final UrlContainer SERIES_SERVICE = UrlContainer.getInstance("/service/v2/series");
     private static final UrlContainer TREE_SERVICE = UrlContainer.getInstance("/service/v2/tree");
     private static final UrlContainer ENTITY_SERVICE = UrlContainer.getInstance("/service/v2/entity");
+    private static final UrlContainer HB_SERVICE = UrlContainer.getInstance("/service/v2/hb");
     public static final String HTTP_NIMBITS_GCM_APPSPOT_COM_ANDROID = "http://nimbits-gcm.appspot.com/android";
     private final HttpHelper helper;
     public final static Type valueListType = new TypeToken<List<ValueModel>>() {
@@ -65,7 +65,7 @@ public class TransactionImpl implements Transaction {
     private final UrlContainer instanceUrl;
     private final Server server;
     public TransactionImpl(Server server, String email) {
-        this.instanceUrl = UrlContainer.getInstance(server.getUrl());
+        this.instanceUrl = UrlContainer.getInstance(server.getUrl(true));
         this.email = email;
         helper = new HttpHelper(email, server.getApiKey());
         this.server = server;
@@ -139,7 +139,7 @@ public class TransactionImpl implements Transaction {
         params.add((new BasicNameValuePair(Parameters.id.getText(), entity.getKey())));
         params.add((new BasicNameValuePair(Parameters.json.getText(), content)));
         params.add((new BasicNameValuePair(Parameters.email.getText(), email)));
-        return helper.doPost(ValueModel.class, path, params, null, FlushType.none, false);
+        return helper.doPost(ValueModel.class, path, params, null, false);
 
 
     }
@@ -176,7 +176,7 @@ public class TransactionImpl implements Transaction {
         params.add((new BasicNameValuePair(Parameters.id.getText(), entity.getKey())));
         params.add((new BasicNameValuePair(Parameters.type.getText(), entity.getEntityType().toString())));
         params.add((new BasicNameValuePair(Parameters.action.getText(), Action.delete.getCode())));
-        helper.doPost(EntityModel.class, path, params, entityListType, FlushType.complete, false);
+        helper.doPost(EntityModel.class, path, params, entityListType, false);
 
     }
 
@@ -187,7 +187,7 @@ public class TransactionImpl implements Transaction {
         String json = GsonFactory.getInstance().toJson(entity);
         params.add((new BasicNameValuePair(Parameters.json.getText(), json)));
         params.add((new BasicNameValuePair(Parameters.action.getText(), Action.create.getCode())));
-        return helper.doPost(clz, path, params, entityListType, FlushType.complete, false);
+        return helper.doPost(clz, path, params, entityListType, false);
 
     }
 
@@ -199,7 +199,7 @@ public class TransactionImpl implements Transaction {
         String json = GsonFactory.getInstance().toJson(entity);
         params.add((new BasicNameValuePair(Parameters.json.getText(), json)));
         params.add((new BasicNameValuePair(Parameters.action.getText(), Action.update.getCode())));
-        return helper.doPost(clz, path, params, entityListType, FlushType.complete, true);
+        return helper.doPost(clz, path, params, entityListType,true);
 
 
     }
@@ -254,5 +254,13 @@ public class TransactionImpl implements Transaction {
         return result;
 
 
+    }
+
+    @Override
+    public void doHeartbeat() {
+        UrlContainer path = UrlContainer.combine(instanceUrl, HB_SERVICE);
+        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(0);
+
+        helper.doPost(String.class, path, params, entityListType, false);
     }
 }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
   ~ Copyright (c) 2010 Nimbits Inc.
   ~
   ~ http://www.nimbits.com
@@ -43,7 +42,6 @@
         <schedule>every 5 minutes</schedule>
         <timezone>America/New_York</timezone>
     </cron>
-
 
 
 </cronentries>

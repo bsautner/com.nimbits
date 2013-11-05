@@ -14,7 +14,6 @@ package com.nimbits.server.io.storage;
 
 import com.google.appengine.api.files.*;
 import com.google.appengine.api.files.GSFileOptions.GSFileOptionsBuilder;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -25,6 +24,7 @@ import java.io.PrintWriter;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
 import java.util.Date;
+
 /**
  * Created by Benjamin Sautner
  * User: bsautner
@@ -33,9 +33,8 @@ import java.util.Date;
  */
 @SuppressWarnings("serial")
 
-@Service("storage")
 
-public class StorageServlet  extends HttpServlet {
+public class StorageServlet extends HttpServlet {
     public static final String BUCKETNAME = "nimbits_value_store";
     public static final String FILENAME = "testfile1";
 
@@ -124,7 +123,7 @@ public class StorageServlet  extends HttpServlet {
         out.close();
         String path = writableFile.getFullPath();
         // Write more to the file in a separate request:
-       // writableFile = new AppEngineFile(path);
+        // writableFile = new AppEngineFile(path);
 
         writeChannel.close();
 

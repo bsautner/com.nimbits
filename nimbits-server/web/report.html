@@ -3,25 +3,25 @@
 <html lang="en">
 
 <head>
-<meta charset="utf-8" />
+<meta charset="utf-8"/>
 <title>nimbits.com</title>
 <meta name="description" content="">
 <meta name="author" content="">
 
 
 <script type="text/javascript" src="assets/js/dygraph-combined.js"></script>
-<script type="text/javascript" src="assets/js/jquery-1.10.2.min.js" ></script>
+<script type="text/javascript" src="assets/js/jquery-1.10.2.min.js"></script>
 <script type="text/javascript" src="assets/bootstrap/js/bootstrap.min.js"></script>
 <link href="assets/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">
-<link rel="stylesheet" href="assets/jquery-ui.css" />
+<link rel="stylesheet" href="assets/jquery-ui.css"/>
 <script src="assets/js/jquery-1.9.1.js"></script>
 <script src="assets/js/jquery-ui.js"></script>
 
 
 <script>
-    $(function() {
-        $(function() {
-            $( "#from" ).datepicker({
+    $(function () {
+        $(function () {
+            $("#from").datepicker({
                 showOtherMonths: true,
                 selectOtherMonths: true,
                 changeMonth: true,
@@ -29,7 +29,7 @@
 
 
             });
-            $( "#to" ).datepicker({
+            $("#to").datepicker({
                 showOtherMonths: true,
                 selectOtherMonths: true,
                 changeMonth: true,
@@ -40,8 +40,6 @@
 </script>
 
 <script type="text/javascript">
-
-
 
 
     var alertState = ["Low", "High", "Idle", "OK"];
@@ -82,7 +80,7 @@
     });
 
     $.ajaxSetup({
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             alert("An AJAX error occured: " + status + "\nError: " + error + "\nError detail: " + xhr.responseText);
         }
     });
@@ -96,9 +94,11 @@
 
         $.get(server + "/service/v2/entity",
                 { uuid: uuid, type: type})
-                .fail(function() {updateProgress("The server returned an error loading this data point, the point may no longer exist.")})
+                .fail(function () {
+                    updateProgress("The server returned an error loading this data point, the point may no longer exist.")
+                })
                 .done(
-                function(data){
+                function (data) {
 
                     var obj = eval(data);
                     if (obj.unit == undefined) {
@@ -128,8 +128,6 @@
     function updateGraph(url) {
 
 
-
-
         if (graph == null) {
             graph = new Dygraph(document.getElementById("div_g"), url,
                     {
@@ -138,8 +136,8 @@
                         //showRangeSelector: true,
                         connectSeparated: true,
                         // customBars: true,
-                        animatedZooms:true,
-                        drawCallback: function(g) {
+                        animatedZooms: true,
+                        drawCallback: function (g) {
                             updateProgress("Done");
                             document.getElementById("update").disabled = false;
                         }
@@ -147,7 +145,7 @@
         }
         else {
 
-            graph.updateOptions( { 'file': url } );
+            graph.updateOptions({ 'file': url });
         }
 
     }
@@ -156,10 +154,11 @@
         updateProgress("Loading data please wait...");
         document.getElementById("update").disabled = true;
         var sd = new Date(document.getElementById("from").value).getTime();
-        var ed =  new Date(document.getElementById("to").value).getTime();
+        var ed = new Date(document.getElementById("to").value).getTime();
 
-        var url = server + "/service/v2/series?format=csv&uuid=" + uuid + "&type=" + type;;
-        if (! isNaN(sd) && ! isNaN(ed) && sd < ed) {
+        var url = server + "/service/v2/series?format=csv&uuid=" + uuid + "&type=" + type;
+        ;
+        if (!isNaN(sd) && !isNaN(ed) && sd < ed) {
 
             url += "&sd=" + sd + "&ed=" + ed;
 
@@ -173,7 +172,7 @@
 
         $.get(server + "/service/v2/value",
                 { uuid: uuid },
-                function(data){
+                function (data) {
                     var value = eval(data);
                     document.getElementById("status").innerHTML =
                             "<span class='" + alertLabel[value.st] + "'>"
@@ -186,7 +185,9 @@
 
 
                 }
-        ).fail(function() {updateProgress("The server returned an error loading the current value of this point")});
+        ).fail(function () {
+                    updateProgress("The server returned an error loading the current value of this point")
+                });
     }
 
     function updateProgress(text) {
@@ -196,7 +197,7 @@
     function setStep() {
 
         graph.updateOptions({
-            stepPlot:document.getElementById("stepOption").checked
+            stepPlot: document.getElementById("stepOption").checked
         });
     }
 
@@ -204,10 +205,13 @@
 
 
 <script type="text/javascript">
-    (function() {
-        var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+    (function () {
+        var po = document.createElement('script');
+        po.type = 'text/javascript';
+        po.async = true;
         po.src = 'https://apis.google.com/js/plusone.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+        var s = document.getElementsByTagName('script')[0];
+        s.parentNode.insertBefore(po, s);
     })();
 </script>
 
@@ -223,8 +227,9 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-            <a class="brand" href="http://www.nimbits.com">nimbits.com<g:plusone size="small" ></g:plusone></a>
-
+            <a class="brand" href="http://www.nimbits.com">nimbits.com
+                <g:plusone size="small"></g:plusone>
+            </a>
 
 
             <ul class="nav">
@@ -237,6 +242,7 @@
 
 </div>
 <br>
+
 <div id="all" style="display: none;">
 
     <div class="container">
@@ -302,10 +308,10 @@
             <div class="span3">
                 <label for="from">From</label>
 
-                <input type="text" id="from" name="from" />
+                <input type="text" id="from" name="from"/>
             </div>
             <div class="span3">
-                <label for="to">To</label><input type="text" id="to" name="to" />
+                <label for="to">To</label><input type="text" id="to" name="to"/>
 
             </div>
             <div class="span1">
@@ -332,7 +338,6 @@
 
 
         <BR/>
-
 
 
     </div>

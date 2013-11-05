@@ -29,34 +29,16 @@ import com.nimbits.server.orm.PointEntity;
 import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 4/1/12
- * Time: 3:21 PM
- */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {
-        "classpath:META-INF/applicationContext.xml",
-        "classpath:META-INF/applicationContext-api.xml",
-        "classpath:META-INF/applicationContext-cache.xml",
-        "classpath:META-INF/applicationContext-cron.xml",
-        "classpath:META-INF/applicationContext-dao.xml",
-        "classpath:META-INF/applicationContext-service.xml",
-
-})
 public class EntityDaoImplTest extends NimbitsServletTest {
 
     EntityDao dao = EntityServiceFactory.getDaoInstance(engine);
+
     @Test
     public void addUpdateEntityTest() throws Exception {
 

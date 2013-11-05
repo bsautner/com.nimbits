@@ -61,7 +61,6 @@ public class HttpHelper {
                                          final UrlContainer postUrl,
                                          final List<BasicNameValuePair> parameters,
                                          final Type type,
-                                         final FlushType flushType,
                                          final boolean expectList) {
 
         return new HttpTransaction(email, apiKey).doPost(clz, postUrl, parameters, type, expectList);

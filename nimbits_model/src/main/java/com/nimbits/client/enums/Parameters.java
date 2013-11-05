@@ -106,7 +106,8 @@ public enum Parameters {
     protocol(ParamConstants.PROTOCOL),
     keys(ParamConstants.PARAM_KEYS),
     lastUpdate(ParamConstants.LAST_UPDATED),
-    refresh(ParamConstants.REFRESH), preferedValue(ParamConstants.PREFERRED_VALUE), owner(ParamConstants.OWNER),
+    refresh(ParamConstants.REFRESH), preferedValue(ParamConstants.PREFERRED_VALUE),
+    owner(ParamConstants.OWNER),
     session(ParamConstants.SESSION);
 
     private static final Map<String, Parameters> lookup = new HashMap<String, Parameters>(100);

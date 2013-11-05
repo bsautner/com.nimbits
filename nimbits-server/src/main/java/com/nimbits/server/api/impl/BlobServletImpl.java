@@ -22,9 +22,7 @@ import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.server.api.ApiServlet;
-import org.springframework.stereotype.Service;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -40,10 +38,9 @@ import java.util.Map;
  * Time: 3:43 PM
  */
 
-@Service("blob")
-public class BlobServletImpl extends ApiServlet implements org.springframework.web.HttpRequestHandler {
-    private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
+public class BlobServletImpl extends ApiServlet {
+    private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
 
     @Override
@@ -53,7 +50,7 @@ public class BlobServletImpl extends ApiServlet implements org.springframework.w
             doInit(req, res, ExportType.plain);
 
 
-            final Map<String,List<BlobKey>> blobs = blobstoreService.getUploads(req);
+            final Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(req);
             final BlobKey blobKey = blobs.get(Parameters.myFile.getText()).get(0);
             final String entityId = req.getParameter(Parameters.fileId.getText());
             final String uploadType = req.getParameter(Parameters.uploadTypeHiddenField.getText());
@@ -61,14 +58,13 @@ public class BlobServletImpl extends ApiServlet implements org.springframework.w
             final HttpSession session = req.getSession();
             session.setAttribute(Parameters.email.getText(), CommonFactory.createEmailAddress(email));
 
-             //data upload
+            //data upload
             if (uploadType.equals(EntityType.point.name())) {
                 List<Entity> result = entityService.getEntityByKey(user, entityId, EntityType.point);
-                if (! result.isEmpty()) {
-                    Entity point =  result.get(0);
+                if (!result.isEmpty()) {
+                    Entity point = result.get(0);
                     taskService.startUploadTask(user, (Point) point, blobKey.getKeyString());
                 }
-
 
 
             }
@@ -81,7 +77,6 @@ public class BlobServletImpl extends ApiServlet implements org.springframework.w
         }
 
 
-
     }
 
     @Override
@@ -91,19 +86,6 @@ public class BlobServletImpl extends ApiServlet implements org.springframework.w
     }
 
 
-    @Override
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-
-        if (isPost(req)) {
-
-            doPost(req, resp);
-        }
-        else {
-            doGet(req, resp);
-        }
-
-
-    }
 
 }

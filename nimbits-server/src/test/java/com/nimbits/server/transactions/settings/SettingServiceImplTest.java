@@ -26,16 +26,17 @@ import static org.junit.Assert.assertTrue;
 /**
  * Created by benjamin on 10/9/13.
  */
-public class SettingServiceImplTest  extends NimbitsServletTest {
+public class SettingServiceImplTest extends NimbitsServletTest {
 
 
     SettingsService service = SettingServiceFactory.getServiceInstance(engine);
+
     @Test
-    public void getSettingsTest() throws  Exception {
+    public void getSettingsTest() throws Exception {
 
         Thread.sleep(2000);
 
-        String admin = service.getSetting(SettingType.admin );
+        String admin = service.getSetting(SettingType.admin);
         assertNotNull(admin);
         System.out.println(admin);
         NimbitsCache cache = CacheFactory.getInstance();

@@ -42,7 +42,7 @@ import static org.junit.Assert.assertFalse;
  */
 
 public class ValueTaskTest extends NimbitsServletTest {
-    
+
 
     private void addAuth() {
         String userJson = GsonFactory.getInstance().toJson(user);
@@ -50,6 +50,7 @@ public class ValueTaskTest extends NimbitsServletTest {
         String keyJson = GsonFactory.getInstance().toJson(user.getAccessKeys());
         req.addParameter(Parameters.key.getText(), keyJson);
     }
+
     @Test
     public void testPostWithCalcs() throws Exception {
 
@@ -62,7 +63,7 @@ public class ValueTaskTest extends NimbitsServletTest {
                 null, null);
         entityService.addUpdateEntity(Arrays.<Entity>asList(c));
         Value v = ValueFactory.createValueModel(1.12);
-       valueService.recordValue(user, point, v);
+        valueService.recordValue(user, point, v);
         List<Value> vr = valueService.getCurrentValue(point);
         assertFalse(vr.isEmpty());
         assertEquals(v.getDoubleValue(), vr.get(0).getDoubleValue(), 0.001);
@@ -73,7 +74,6 @@ public class ValueTaskTest extends NimbitsServletTest {
 
         List<Value> vx = valueService.getCurrentValue(pointChild);
         assertEquals(vx.get(0).getDoubleValue(), v.getDoubleValue() + 1, 0.001);
-
 
 
     }

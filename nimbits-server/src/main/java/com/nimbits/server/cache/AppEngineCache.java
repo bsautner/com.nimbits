@@ -36,8 +36,7 @@ public class AppEngineCache extends BaseCache implements NimbitsCache {
     public boolean containsKey(String key) {
         try {
             return cache.containsKey(generateKey(key));
-        }
-        catch (NullPointerException e) {
+        } catch (NullPointerException e) {
             return false;
         }
     }
@@ -58,10 +57,8 @@ public class AppEngineCache extends BaseCache implements NimbitsCache {
     }
 
 
-
-
     @Override
-    public void reloadCache()  {
+    public void reloadCache() {
         cache.clear();
 
     }

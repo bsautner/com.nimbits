@@ -73,7 +73,7 @@ public class BatchApiTest extends NimbitsServletTest {
         req.addParameter("id", point.getKey());
         //req.addParameter("json", GsonFactory.getInstance().toJson(v));
 
-         Type listType = new TypeToken<Map<String, List<ValueModel>>>() {
+        Type listType = new TypeToken<Map<String, List<ValueModel>>>() {
         }.getType();
 
         String json = GsonFactory.getInstance().toJson(map, listType);
@@ -100,7 +100,6 @@ public class BatchApiTest extends NimbitsServletTest {
             r2 += value.getDoubleValue();
         }
         assertEquals(c2, r2, .001);
-
 
 
 //        assertFalse(vr.isEmpty());

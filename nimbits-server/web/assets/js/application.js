@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-$(document).ready(function() {
+$(document).ready(function () {
 
     // Google code prettify
     // ====================
@@ -74,14 +74,14 @@ $(document).ready(function() {
     // ==================
 
     $("#sortTableExample").tablesorter({sortList: [
-        [1,0]
+        [1, 0]
     ]});
 
 
     // add on logic
     // ============
 
-    $('.add-on :checkbox').click(function() {
+    $('.add-on :checkbox').click(function () {
         if ($(this).attr('checked')) {
             $(this).parents('.add-on').addClass('active');
         } else {
@@ -93,12 +93,12 @@ $(document).ready(function() {
     // Disable certain links in docs
     // =============================
 
-    $('ul.tabs a, ul.pills a, .pagination a, .well .btn, .actions .btn, .alert-message .btn, a.close').click(function(e) {
+    $('ul.tabs a, ul.pills a, .pagination a, .well .btn, .actions .btn, .alert-message .btn, a.close').click(function (e) {
         e.preventDefault();
     });
 
     // Copy code blocks in docs
-    $(".copy-code").focus(function() {
+    $(".copy-code").focus(function () {
         var el = this;
         // push select to event loop for chrome :{o
         setTimeout(function () {
@@ -116,34 +116,24 @@ $(document).ready(function() {
             , $twipsy = $('.twipsy.' + type)
 
             , twipsy = {
-            width: $twipsy.width() + 10
-            , height: $twipsy.height() + 10
-        }
+                width: $twipsy.width() + 10, height: $twipsy.height() + 10
+            }
 
             , anchor = {
-            position: $anchor.position()
-            , width: $anchor.width()
-            , height: $anchor.height()
-        }
+                position: $anchor.position(), width: $anchor.width(), height: $anchor.height()
+            }
 
             , offset = {
-            above: {
-                top: anchor.position.top - twipsy.height
-                , left: anchor.position.left + (anchor.width / 2) - (twipsy.width / 2)
+                above: {
+                    top: anchor.position.top - twipsy.height, left: anchor.position.left + (anchor.width / 2) - (twipsy.width / 2)
+                }, below: {
+                    top: anchor.position.top + anchor.height, left: anchor.position.left + (anchor.width / 2) - (twipsy.width / 2)
+                }, left: {
+                    top: anchor.position.top + (anchor.height / 2) - (twipsy.height / 2), left: anchor.position.left - twipsy.width - 5
+                }, right: {
+                    top: anchor.position.top + (anchor.height / 2) - (twipsy.height / 2), left: anchor.position.left + anchor.width + 5
+                }
             }
-            , below: {
-                top: anchor.position.top + anchor.height
-                , left: anchor.position.left + (anchor.width / 2) - (twipsy.width / 2)
-            }
-            , left: {
-                top: anchor.position.top + (anchor.height / 2) - (twipsy.height / 2)
-                , left: anchor.position.left - twipsy.width - 5
-            }
-            , right: {
-                top: anchor.position.top + (anchor.height / 2) - (twipsy.height / 2)
-                , left: anchor.position.left + anchor.width + 5
-            }
-        }
 
         $twipsy.css(offset[type])
 

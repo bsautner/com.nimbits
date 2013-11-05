@@ -47,7 +47,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
                 s = c.getTime();
 
             }
-            if (c.getTimeInMillis() > e.getTime() ) {
+            if (c.getTimeInMillis() > e.getTime()) {
                 e = c.getTime();
 
             }
@@ -68,7 +68,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
                 s = c.getTime();
 
             }
-            if (c.getTimeInMillis() > e.getTime() ) {
+            if (c.getTimeInMillis() > e.getTime()) {
                 e = c.getTime();
 
             }
@@ -83,7 +83,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         valuesCombined.addAll(values);
         valuesCombined.addAll(values2);
 
-        List<Value> sample = valueDao.getTopDataSeries(point, INT*2);
+        List<Value> sample = valueDao.getTopDataSeries(point, INT * 2);
         Collections.sort(valuesCombined);
         Collections.sort(sample);
         TestCase.assertEquals(valuesCombined.size(), sample.size());
@@ -112,8 +112,6 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         Collections.sort(values);
         assertTrue(range.lowerEndpoint().equals(values.get(9).getTimestamp()));
         assertTrue(range.upperEndpoint().equals(values.get(0).getTimestamp()));
-
-
 
 
     }

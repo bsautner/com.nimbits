@@ -318,8 +318,6 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     }
 
 
-
-
     @SuppressWarnings({"NonFinalFieldReferenceInEquals", "CastToConcreteClass"})
     @Override
     public boolean equals(Object o) {

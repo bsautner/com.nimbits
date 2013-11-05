@@ -41,11 +41,7 @@ import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 
-
-
 public class EntityServletImplTest extends NimbitsServletTest {
-
-
 
 
     public MockHttpServletRequest req1;
@@ -57,6 +53,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         req1 = new MockHttpServletRequest();
         resp1 = new MockHttpServletResponse();
     }
+
     @Test
     public void testPost() throws IOException, ServletException, Exception {
         req.removeAllParameters();
@@ -66,7 +63,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
 
 
         entityServlet.doGet(req, resp);
-        String g1= resp.getContentAsString();
+        String g1 = resp.getContentAsString();
         assertNotNull(g1);
         Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
         assertEquals(point.getExpire(), px.getExpire());
@@ -81,12 +78,13 @@ public class EntityServletImplTest extends NimbitsServletTest {
         req.addParameter("action", "create");
         req.setMethod("POST");
         entityServlet.doPost(req, resp);
-        String g1= resp.getContentAsString();
+        String g1 = resp.getContentAsString();
         assertNotNull(g1);
         Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
         assertEquals(190, px.getExpire());
 
     }
+
     @Test
     public void testChris1() throws IOException, ServletException {
 
@@ -96,7 +94,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         req.addParameter("action", "create");
         req.setMethod("POST");
         entityServlet.doPost(req, resp);
-        String g1= resp.getContentAsString();
+        String g1 = resp.getContentAsString();
         assertNotNull(g1);
         Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
         assertEquals(4, px.getFilterType().getCode());
@@ -113,8 +111,8 @@ public class EntityServletImplTest extends NimbitsServletTest {
         req.addParameter("json", "{\"highAlarm\":0.0,\"expire\":190,\"unit\":null,\"lowAlarm\":0.0,\"highAlarmOn\":false,\"lowAlarmOn\":true,\"idleAlarmOn\":false,\"idleSeconds\":60,\"idleAlarmSent\":false,\"filterType\":0,\"filterValue\":0.1,\"name\":\"jquery test\",\"description\":\"hello world\",\"entityType\":1,\"protectionLevel\":2,\"alertType\":0,\"parent\":\"" + SettingType.admin.getDefaultValue() + "\",\"owner\":\"" + SettingType.admin.getDefaultValue() + "\"}");
         req.addParameter("action", "create");
         req.setMethod("POST");
-        entityServlet.handleRequest(req, resp);
-        String g1= resp.getContentAsString();
+        entityServlet.doPost(req, resp);
+        String g1 = resp.getContentAsString();
         assertNotNull(g1);
         Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
         assertEquals(190, px.getExpire());
@@ -124,7 +122,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         req.removeAllParameters();
         req.addParameter("json", j2);
         req.addParameter("action", "delete");
-        entityServlet.handleRequest(req, resp);
+        entityServlet.doPost(req, resp);
 
 
     }
@@ -134,10 +132,10 @@ public class EntityServletImplTest extends NimbitsServletTest {
     public void testMin() throws IOException, ServletException {
         req.removeAllParameters();
         String json = "{\"filterType\":4,\"name\":\"bug2\",\"entityType\":1,\"protectionLevel\":2,\"parent\":\"" + SettingType.admin.getDefaultValue() + "\",\"owner\":\"" + SettingType.admin.getDefaultValue() + "\"}";
-        req.addParameter("json",json);
+        req.addParameter("json", json);
         req.addParameter("action", "create");
         entityServlet.handleRequest(req, resp);
-        String g1= resp.getContentAsString();
+        String g1 = resp.getContentAsString();
         assertNotNull(g1);
         Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
 
@@ -154,7 +152,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         req.addParameter("action", "create");
         req.setMethod("POST");
         entityServlet.handleRequest(req, resp);
-        String g1= resp.getContentAsString();
+        String g1 = resp.getContentAsString();
         assertNotNull(g1);
         Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
         assertEquals(190, px.getExpire());
@@ -163,7 +161,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         req.addParameter("action", "update");
         entityServlet.handleRequest(req, resp1);
 
-        String g2= resp1.getContentAsString();
+        String g2 = resp1.getContentAsString();
         assertNotNull(g2);
         Point p2 = GsonFactory.getInstance().fromJson(g2, PointModel.class);
         assertEquals(55, p2.getExpire());
@@ -180,7 +178,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         req.addParameter("action", "create");
         req.setMethod("POST");
         entityServlet.handleRequest(req, resp);
-        String g1= resp.getContentAsString();
+        String g1 = resp.getContentAsString();
         assertNotNull(g1);
         Point px = GsonFactory.getInstance().fromJson(g1, PointModel.class);
         assertEquals(190, px.getExpire());
@@ -189,7 +187,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         req.addParameter("action", "update");
         entityServlet.handleRequest(req, resp1);
 
-        String g2= resp1.getContentAsString();
+        String g2 = resp1.getContentAsString();
         assertNotNull(g2);
         Point p2 = GsonFactory.getInstance().fromJson(g2, PointModel.class);
         assertEquals(55, p2.getExpire());
@@ -198,7 +196,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
 
 
     @Test
-    public void testPostCreateSubscription() throws  Exception {
+    public void testPostCreateSubscription() throws Exception {
         req.removeAllParameters();
 
 
@@ -207,7 +205,7 @@ public class EntityServletImplTest extends NimbitsServletTest {
         req.addParameter("action", "create");
         req.setMethod("POST");
         entityServlet.handleRequest(req, resp);
-        String g1= resp.getContentAsString();
+        String g1 = resp.getContentAsString();
         assertNotNull(g1);
         Subscription px = GsonFactory.getInstance().fromJson(g1, SubscriptionModel.class);
         //  assertEquals(px.getSubscriptionType(), SubscriptionType.idle.getCode());
@@ -247,7 +245,6 @@ public class EntityServletImplTest extends NimbitsServletTest {
         assertEquals(s.getName(), sr.getName());
 
 
-
     }
 
     @Test
@@ -278,9 +275,9 @@ public class EntityServletImplTest extends NimbitsServletTest {
         assertNotNull(xpr);
         assertEquals("foo", xpr.getDescription());
     }
+
     @Test
     public void testUpdate2() throws IOException, ServletException, Exception {
-
 
 
         point.setDescription("foo");
@@ -294,7 +291,6 @@ public class EntityServletImplTest extends NimbitsServletTest {
         Point xp = GsonFactory.getInstance().fromJson(x, PointModel.class);
         assertNotNull(xp);
         assertEquals("foo", xp.getDescription());
-
 
 
     }

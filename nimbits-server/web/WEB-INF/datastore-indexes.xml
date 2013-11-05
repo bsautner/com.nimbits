@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
- <!--
+<?xml version="1.0" encoding="UTF-8"?><!--
   ~ Copyright (c) 2010 Nimbits Inc.
   ~
   ~ http://www.nimbits.com
@@ -14,18 +13,18 @@
 
 <datastore-indexes autoGenerate="true">
     <datastore-index kind="ValueBlobStoreEntity" ancestor="false" source="manual">
-        <property name="entity" direction="asc"/>
-        <property name="timestamp" direction="desc"/>
-    </datastore-index>
-
-    <datastore-index kind="ValueBlobStoreEntity" ancestor="false"  source="manual">
-        <property name="entity" direction="asc"/>
-        <property name="minTimestamp" direction="desc"/>
+        <property name="entity" direction="asc" />
+        <property name="timestamp" direction="desc" />
     </datastore-index>
 
     <datastore-index kind="ValueBlobStoreEntity" ancestor="false" source="manual">
-        <property name="entity" direction="asc"/>
-        <property name="maxTimestamp" direction="asc"/>
+        <property name="entity" direction="asc" />
+        <property name="minTimestamp" direction="desc" />
+    </datastore-index>
+
+    <datastore-index kind="ValueBlobStoreEntity" ancestor="false" source="manual">
+        <property name="entity" direction="asc" />
+        <property name="maxTimestamp" direction="asc" />
     </datastore-index>
 
 

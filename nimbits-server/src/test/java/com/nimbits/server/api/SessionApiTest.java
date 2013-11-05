@@ -29,10 +29,10 @@ public class SessionApiTest extends NimbitsServletTest {
 
     @Test
     public void testDoGet() throws Exception {
-         req1.addParameter("email", SettingType.admin.getDefaultValue());
-         req1.addHeader(Parameters.apikey.getText(), "some key");
-         sessionApi.doGet(req1, resp1);
-         assertEquals(HttpServletResponse.SC_OK, resp1.getStatus());
+        req1.addParameter("email", SettingType.admin.getDefaultValue());
+        req1.addHeader(Parameters.apikey.getText(), "some key");
+        sessionApi.doGet(req1, resp1);
+        assertEquals(HttpServletResponse.SC_OK, resp1.getStatus());
 
 
     }

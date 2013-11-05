@@ -24,7 +24,14 @@ public class SettingServiceRpcImpl extends RemoteServiceServlet implements Setti
 
 
     @Override
-    public String getSetting(SettingType setting) {
-        return SettingServiceFactory.getServiceInstance(ApplicationListener.createEngine()).getSetting(setting);
+    public String getSetting(String setting) {
+        SettingType s = SettingType.get(setting);
+        return SettingServiceFactory.getServiceInstance(ApplicationListener.createEngine()).getSetting(s);
+    }
+
+    @Override
+    public void updateSetting(String setting, String value) {
+        SettingType s = SettingType.get(setting);
+        SettingServiceFactory.getServiceInstance(ApplicationListener.createEngine()).updateSetting(s, value);
     }
 }

@@ -15,6 +15,7 @@ import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
 import com.google.appengine.api.taskqueue.TaskOptions.Method;
+import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.Parameters;
 
 import javax.servlet.ServletException;
@@ -45,7 +46,11 @@ public class SendAllMessagesServlet extends BaseServlet {
         StringBuilder status = new StringBuilder();
         String email = req.getParameter(Parameters.email.getText());
         String json = req.getParameter(Parameters.json.getText());
-
+        String a = req.getParameter(Parameters.action.getText());
+        Action action = Action.get(a);
+        if (action == null) {
+            action = Action.update;
+        }
         List<String> devices = Datastore.getDevices(email);
         if (email != null) {
             status.append(email);
@@ -74,6 +79,7 @@ public class SendAllMessagesServlet extends BaseServlet {
                         .param(SendMessageServlet.PARAMETER_DEVICE, device)
                         .param(Parameters.json.getText(), json)
                         .param(Parameters.email.getText(), email)
+                        .param(Parameters.action.getText(), action.getCode())
                 );
                 status.append("Single message queued for registration id " + device);
             } else {
@@ -96,6 +102,7 @@ public class SendAllMessagesServlet extends BaseServlet {
                                 .param(SendMessageServlet.PARAMETER_MULTICAST, multicastKey)
                                 .param(Parameters.json.getText(), json)
                                 .param(Parameters.email.getText(), email)
+                                .param(Parameters.action.getText(), action.getCode())
                                 .method(Method.POST);
                         queue.add(taskOptions);
                         partialDevices.clear();

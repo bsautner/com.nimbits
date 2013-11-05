@@ -12,13 +12,18 @@
 
 package com.nimbits.client.model;
 
+import java.io.Serializable;
+
 /**
  * Created by benjamin on 10/20/13.
  */
-public interface Server {
+public interface Server extends Serializable {
+
     long getId();
 
-    String getUrl();
+    String getUrl(boolean includeProtocol);
 
     String getApiKey();
+
+    boolean isDefault();
 }

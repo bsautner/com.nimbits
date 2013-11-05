@@ -26,6 +26,7 @@ public class LogHelper {
 
     private LogHelper() {
     }
+
     @Deprecated
     public static void logException(final Class<?> c, final Throwable ex) {
         final Logger log = Logger.getLogger(c.getName());
@@ -33,6 +34,7 @@ public class LogHelper {
 
 
     }
+
     @Deprecated
     public static void log(final Class<?> c, final String ex) {
         final Logger log = Logger.getLogger(c.getName());

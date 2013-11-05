@@ -23,27 +23,13 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.subscription.SubscriptionFactory;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.transaction.counter.CounterServiceFactory;
+import com.nimbits.server.transactions.counter.CounterServiceFactory;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={
-        "classpath:META-INF/applicationContext.xml",
-        "classpath:META-INF/applicationContext-api.xml",
-        "classpath:META-INF/applicationContext-cache.xml",
-        "classpath:META-INF/applicationContext-cron.xml",
-        "classpath:META-INF/applicationContext-dao.xml",
-        "classpath:META-INF/applicationContext-service.xml",
-
-})
 public class SubscriptionServiceImplTest extends NimbitsServletTest {
-
 
 
     @Test
@@ -53,12 +39,10 @@ public class SubscriptionServiceImplTest extends NimbitsServletTest {
         EntityName name = CommonFactory.createName("sub1", EntityType.subscription);
         Entity entity = EntityModelFactory.createEntity(name, EntityType.subscription);
         Subscription s = SubscriptionFactory.createSubscription(entity, point.getKey(), SubscriptionType.newValue,
-                SubscriptionNotifyMethod.email, 2,false, true);
+                SubscriptionNotifyMethod.email, 2, false, true);
         Subscription result = (Subscription) entityService.addUpdateSingleEntity(s);
         Thread.sleep(3000);
-        assertTrue(SubscriptionServiceImpl.okToProcess(result));
-
-
+        assertTrue(subscriptionService.okToProcess(result));
 
 
     }
@@ -70,13 +54,11 @@ public class SubscriptionServiceImplTest extends NimbitsServletTest {
         EntityName name = CommonFactory.createName("sub1", EntityType.subscription);
         Entity entity = EntityModelFactory.createEntity(name, EntityType.subscription);
         Subscription s = SubscriptionFactory.createSubscription(entity, point.getKey(), SubscriptionType.newValue,
-                SubscriptionNotifyMethod.email, 100,false, true);
-        Subscription result = (Subscription)entityService.addUpdateSingleEntity(s);
+                SubscriptionNotifyMethod.email, 100, false, true);
+        Subscription result = (Subscription) entityService.addUpdateSingleEntity(s);
         CounterServiceFactory.getInstance().updateDateCounter(result.getKey());
 
-        assertFalse(SubscriptionServiceImpl.okToProcess(result));
-
-
+        assertFalse(subscriptionService.okToProcess(result));
 
 
     }
@@ -85,9 +67,7 @@ public class SubscriptionServiceImplTest extends NimbitsServletTest {
     public void testLastSentCaching() {
 
 
-
     }
-
 
 
 }

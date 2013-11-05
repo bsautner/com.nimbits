@@ -33,11 +33,11 @@ public class EntityTypeTest {
         for (EntityType type : EntityType.values()) {
 
 
-           Class cls = null;
+            Class cls = null;
             try {
                 cls = Class.forName(type.getClassName());
             } catch (Exception e) {
-              fail();
+                fail();
             }
             assertNotNull(cls);
 

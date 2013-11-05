@@ -15,22 +15,8 @@ package com.nimbits.server.orm;
 
 import com.nimbits.server.NimbitsServletTest;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
-
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={
-        "classpath:META-INF/applicationContext.xml",
-        "classpath:META-INF/applicationContext-api.xml",
-        "classpath:META-INF/applicationContext-cache.xml",
-        "classpath:META-INF/applicationContext-cron.xml",
-        "classpath:META-INF/applicationContext-dao.xml",
-        "classpath:META-INF/applicationContext-service.xml",
-
-})
 public class PointEntityTest extends NimbitsServletTest {
 
     @Test
@@ -40,7 +26,8 @@ public class PointEntityTest extends NimbitsServletTest {
         e.validate(user);
 
     }
-    @Test(expected=Exception.class)
+
+    @Test(expected = Exception.class)
     public void testValidation2() throws Exception {
         PointEntity e = new PointEntity(point);
         e.setIdleAlarmOn(true);
@@ -51,6 +38,7 @@ public class PointEntityTest extends NimbitsServletTest {
         e.validate(user);
 
     }
+
     @Test
     public void testValidation3() throws Exception {
         PointEntity e = new PointEntity(point);

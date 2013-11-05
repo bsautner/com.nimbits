@@ -20,7 +20,7 @@ import net.sf.jsr107cache.CacheException;
  */
 public class CacheFactory {
 
-    public static NimbitsCache getInstance()  {
+    public static NimbitsCache getInstance() {
 
         try {
             return new AppEngineCache();

@@ -38,9 +38,6 @@ import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.time.TimespanService;
 import com.nimbits.server.time.TimespanServiceFactory;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,30 +50,13 @@ import java.util.zip.DataFormatException;
 import static com.google.appengine.api.datastore.FetchOptions.Builder.withLimit;
 import static org.junit.Assert.*;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/22/12
- * Time: 12:00 PM
- */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations={
-        "classpath:META-INF/applicationContext.xml",
-        "classpath:META-INF/applicationContext-api.xml",
-        "classpath:META-INF/applicationContext-cache.xml",
-        "classpath:META-INF/applicationContext-cron.xml",
-        "classpath:META-INF/applicationContext-dao.xml",
-        "classpath:META-INF/applicationContext-service.xml",
-        "classpath:META-INF/applicationContext-factory.xml"
 
-})
 public class ValueDaoImplTest extends NimbitsServletTest {
 
 
-
-
     double total = 0.0;
-    private  List<Value> loadSomeData() {
+
+    private List<Value> loadSomeData() {
         List<Value> values = new ArrayList<Value>();
         Random r = new Random();
 
@@ -87,8 +67,6 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         }
         return values;
     }
-
-
 
 
     @Test
@@ -233,8 +211,9 @@ public class ValueDaoImplTest extends NimbitsServletTest {
 
 
         assertNotNull(blobKey);
-        assertEquals(line, "The woods are lovely dark and deep." );
+        assertEquals(line, "The woods are lovely dark and deep.");
     }
+
     @Test
     public void testBlobStoreWithCompression() throws IOException, DataFormatException {
 //        String sample =  "hello compression";
@@ -248,7 +227,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
 
 
     @Test
-    public void testGetTopDataSeries(){
+    public void testGetTopDataSeries() {
         List<Value> values = loadSomeDataOverDays();
 
 
@@ -264,8 +243,9 @@ public class ValueDaoImplTest extends NimbitsServletTest {
 
 
     }
+
     @Test
-    public void testStaticGetTopDataSeries(){
+    public void testStaticGetTopDataSeries() {
         List<Value> values = loadSomeDataOverDays();
 
 
@@ -275,7 +255,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
             c.add(Calendar.DATE, -10);
 
             List<Value> result = valueService.getDataSegment(point, Range.closed(c.getTime(), new Date()), Range.closed(0, 10));
-                       //valueDao.getTopDataSeries(point, 10);
+            //valueDao.getTopDataSeries(point, 10);
             assertEquals(10, result.size());
         } catch (Exception e) {
             e.printStackTrace();
@@ -314,12 +294,12 @@ public class ValueDaoImplTest extends NimbitsServletTest {
 
 
         List<Value> result = valueDao.getTopDataSeries(point, 10);
-            assertEquals(5, result.size());
+        assertEquals(5, result.size());
     }
+
     @Test
     public void testGetRecordedValuePrecedingTimestamp() {
         final List<Value> values = loadSomeDataOverDays();
-
 
 
         try {
@@ -341,9 +321,8 @@ public class ValueDaoImplTest extends NimbitsServletTest {
     }
 
 
-
     @Test
-    public void testGetRecordedValuePrecedingTimestampMultiplePoints()  {
+    public void testGetRecordedValuePrecedingTimestampMultiplePoints() {
         final List<Value> values = loadSomeDataOverDays();
         EntityName name1 = CommonFactory.createName("1", EntityType.point);
         EntityName name2 = CommonFactory.createName("1", EntityType.point);
@@ -353,7 +332,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         com.nimbits.client.model.entity.Entity entity3 = EntityModelFactory.createEntity(name3, "", EntityType.point, ProtectionLevel.everyone, "", "");
 
 
-        final Point point1 =   PointModelFactory.createPointModel(
+        final Point point1 = PointModelFactory.createPointModel(
                 entity1,
                 0.0,
                 90,
@@ -367,8 +346,8 @@ public class ValueDaoImplTest extends NimbitsServletTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0 );
-        final Point point2 =   PointModelFactory.createPointModel(
+                PointType.basic, 0, false, 0.0);
+        final Point point2 = PointModelFactory.createPointModel(
                 entity2,
                 0.0,
                 90,
@@ -382,8 +361,8 @@ public class ValueDaoImplTest extends NimbitsServletTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0 );
-        final Point point3 =   PointModelFactory.createPointModel(
+                PointType.basic, 0, false, 0.0);
+        final Point point3 = PointModelFactory.createPointModel(
                 entity3,
                 0.0,
                 90,
@@ -397,8 +376,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0 );
-
+                PointType.basic, 0, false, 0.0);
 
 
         try {
@@ -509,7 +487,6 @@ public class ValueDaoImplTest extends NimbitsServletTest {
     }
 
 
-
     @Test
     public void testInsert1() {
         doTest();
@@ -519,6 +496,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
     public void testInsert2() {
         doTest();
     }
+
     @Test
     public void testZeroOutDate() {
         Calendar now = Calendar.getInstance();
@@ -528,6 +506,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         Date zero = TimespanServiceFactory.getInstance().zeroOutDateToStart(now.getTime());
         assertEquals(midnightAm.getTime(), zero);
     }
+
     @Test
     public void testZeroOutDate2() {
         Calendar now = Calendar.getInstance();
@@ -536,11 +515,10 @@ public class ValueDaoImplTest extends NimbitsServletTest {
         midnightAm.add(Calendar.MILLISECOND, now.get(Calendar.MILLISECOND) * -1);
         Date zero = TimespanServiceFactory.getInstance().zeroOutDateToStart(now.getTime());
         Date tonight = TimespanServiceFactory.getInstance().zeroOutDateToEnd(now.getTime());
-        long diff =   tonight.getTime() - zero.getTime() ;
+        long diff = tonight.getTime() - zero.getTime();
         assertEquals(86400000, diff); //ms in a day
         assertEquals(midnightAm.getTime(), zero);
     }
-
 
 
 }

@@ -131,7 +131,7 @@ public class HttpTransaction {
     public <T, K> List<T> doPost(final Class<K> clz,
                                         final UrlContainer postUrl,
                                         final List<BasicNameValuePair> parameters,
-                                        final Type Type,
+                                        final Type type,
                                         final boolean expectList) {
         String result = null;
         HttpPost http = new HttpPost(postUrl.getUrl());
@@ -156,7 +156,7 @@ public class HttpTransaction {
 //            http.abort();
             HttpClientFactory.getInstance().getConnectionManager().closeExpiredConnections();
         }
-        return processResponse(clz, Type, result, expectList);
+        return processResponse(clz, type, result, expectList);
 
     }
 

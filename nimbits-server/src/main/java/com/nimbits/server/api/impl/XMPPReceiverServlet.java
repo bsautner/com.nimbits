@@ -40,7 +40,6 @@ import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.json.JsonHelper;
 import com.nimbits.server.transaction.user.AuthenticationServiceFactory;
-import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -53,8 +52,7 @@ import java.util.regex.Pattern;
 
 
 @SuppressWarnings("serial")
-@Service("xmpp")
-public class XMPPReceiverServlet extends ApiServlet  {
+public class XMPPReceiverServlet extends ApiServlet {
 
 
     private static final Pattern COMPILE = Pattern.compile("/");
@@ -62,56 +60,56 @@ public class XMPPReceiverServlet extends ApiServlet  {
 
 
     @Override
-    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws  IOException {
-        User u = null;
-        String body = null;
+    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
+        User u;
+        String body;
 
         setEngine(ApplicationListener.createEngine());
 
 
 //            doInit(req, resp, ExportType.json);
-            final XMPPService xmpp = XMPPServiceFactory.getXMPPService();
-            final Message message = xmpp.parseMessage(req);
-            final JID fromJid = message.getFromJid();
-            body = message.getBody();
-            final String j[] = COMPILE.split(fromJid.getId());
-            final String email = j[0].toLowerCase();
+        final XMPPService xmpp = XMPPServiceFactory.getXMPPService();
+        final Message message = xmpp.parseMessage(req);
+        final JID fromJid = message.getFromJid();
+        body = message.getBody();
+        final String j[] = COMPILE.split(fromJid.getId());
+        final String email = j[0].toLowerCase();
 
-            List<Entity> result = entityService.getEntityByKey(AuthenticationServiceFactory.getInstance(engine).getAdmin(), email, EntityType.user);
-            if (! result.isEmpty()) {
-                u =  (User) result.get(0);
-                u.addAccessKey(AuthenticationServiceFactory.getInstance(engine).authenticatedKey(u));
+        List<Entity> result = entityService.getEntityByKey(AuthenticationServiceFactory.getInstance(engine).getAdmin(), email, EntityType.user);
+        if (!result.isEmpty()) {
+            u = (User) result.get(0);
+            u.addAccessKey(AuthenticationServiceFactory.getInstance(engine).authenticatedKey(u));
 
-                if (body.toLowerCase().trim().equals("ls")) {
-                    //sendPointList(u);
-                } else if (body.indexOf('=') > 0) {
+            if (body.toLowerCase().trim().equals("ls")) {
+                //sendPointList(u);
+            } else if (body.indexOf('=') > 0) {
 
-                    recordNewValue(body, u);
+                recordNewValue(body, u);
 
-                } else if (!body.trim().equals("?") && !body.isEmpty() && body.charAt(body.length() - 1) == '?') {
+            } else if (!body.trim().equals("?") && !body.isEmpty() && body.charAt(body.length() - 1) == '?') {
 
-                    sendCurrentValue(body, u);
+                sendCurrentValue(body, u);
 
-                } else if (body.toLowerCase().startsWith("c ")) {
-                  engine.getXmppService().sendMessage("creating point...", u.getEmail());
+            } else if (body.toLowerCase().startsWith("c ")) {
+                engine.getXmppService().sendMessage("creating point...", u.getEmail());
 
-                    createPoint(body, u);
+                createPoint(body, u);
 
-                } else if (body.trim().equals("?") || body.toLowerCase().equals("help")) {
-                    sendHelp(u);
+            } else if (body.trim().equals("?") || body.toLowerCase().equals("help")) {
+                sendHelp(u);
 
-                } else if (JsonHelper.isJson(body)) { //it's json from the sdk
-                    processJson(u, body);
-                } else {
-                    engine.getXmppService().sendMessage(":( I don't understand you - try ? ", u.getEmail());
-                }
+            } else if (JsonHelper.isJson(body)) { //it's json from the sdk
+                processJson(u, body);
+            } else {
+                engine.getXmppService().sendMessage(":( I don't understand you - try ? ", u.getEmail());
             }
+        }
 
 
         // ...
     }
 
-    private void processJson(final User u, final String body)  {
+    private void processJson(final User u, final String body) {
 
 
         Gson gson = GsonFactory.getInstance();
@@ -139,7 +137,7 @@ public class XMPPReceiverServlet extends ApiServlet  {
         }
     }
 
-    private void sendHelp(User u)  {
+    private void sendHelp(User u) {
         engine.getXmppService().sendMessage("Usage:", u.getEmail());
         engine.getXmppService().sendMessage("? | Help", u.getEmail());
         engine.getXmppService().sendMessage("c pointname | Create a data point", u.getEmail());
@@ -148,23 +146,22 @@ public class XMPPReceiverServlet extends ApiServlet  {
         engine.getXmppService().sendMessage("pointname=Foo Bar | record a text value to that point", u.getEmail());
     }
 
-    private void createPoint(final String body, final User u)  {
+    private void createPoint(final String body, final User u) {
 
 
         EntityName pointName = CommonFactory.createName(body.substring(1).trim(), EntityType.point);
         Entity entity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,
                 u.getKey(), u.getKey(), UUID.randomUUID().toString());
-        Point p = PointModelFactory.createPointModel(entity,0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false, PointType.basic, 0, false, 0.0 );
+        Point p = PointModelFactory.createPointModel(entity, 0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false, PointType.basic, 0, false, 0.0);
 
         entityService.addUpdateEntity(u, Arrays.<Entity>asList(p));
         //PointServiceFactory.getInstance().addPoint(u, entity);
         engine.getXmppService().sendMessage(pointName.getValue() + " created", u.getEmail());
 
 
-
     }
 
-    private void recordNewValue(final CharSequence body, final User u)  {
+    private void recordNewValue(final CharSequence body, final User u) {
         String b[] = PATTERN.split(body);
         if (b.length == 2) {
 
@@ -189,33 +186,44 @@ public class XMPPReceiverServlet extends ApiServlet  {
     }
 
 
-
-    private void sendCurrentValue(final String body, final User u)  {
+    private void sendCurrentValue(final String body, final User u) {
+        String message = "";
         if (!Utils.isEmptyString(body) && !body.isEmpty() && body.charAt(body.length() - 1) == '?') {
             final EntityName pointName = CommonFactory.createName(body.replace("?", ""), EntityType.point);
 
-            Entity e = entityService.getEntityByName(u, pointName, EntityType.point).get(0);
-            // Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
-            Entity point = entityService.getEntityByKey(u, e.getKey(), EntityType.point).get(0);
+            List<Entity> eSample = entityService.getEntityByName(u, pointName, EntityType.point);
+            if (!eSample.isEmpty()) {
+                // Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
+                Entity e = eSample.get(0);
+                List<Entity> pointSample = entityService.getEntityByKey(u, e.getKey(), EntityType.point);
 
-            final List<Value> sample =valueService.getPrevValue(point, new Date());
-            if (! sample.isEmpty()) {
-                Value v = sample.get(0);
-                String t = "";
-                if (v.getNote() != null && !v.getNote().isEmpty()) {
-                    t = v.getNote();
+                if (!pointSample.isEmpty()) {
+                    Point point = (Point) pointSample.get(0);
+                    final List<Value> sample = valueService.getPrevValue(point, new Date());
+                    if (!sample.isEmpty()) {
+                        Value v = sample.get(0);
+                        String t = "";
+                        if (v.getNote() != null && !v.getNote().isEmpty()) {
+                            t = v.getNote();
+                        }
+                        engine.getXmppService().sendMessage(e.getName().getValue() + '='
+                                + v.getDoubleValue() + ' ' + t, u.getEmail());
+                    } else {
+                        engine.getXmppService().sendMessage(pointName.getValue() + " has no data", u.getEmail());
+
+                    }
+                } else {
+                    message = "was that a data point?";
                 }
-                engine.getXmppService().sendMessage(e.getName().getValue() + '='
-                        + v.getDoubleValue() + ' ' + t, u.getEmail());
-            } else {
-                engine.getXmppService().sendMessage(pointName.getValue() + " has no data", u.getEmail());
 
+            } else {
+                message = "Entity not found";
             }
         } else {
-            engine.getXmppService().sendMessage("I don't understand " + body, u.getEmail());
+            message = "I don't understand";
 
         }
-
+        engine.getXmppService().sendMessage(message + " " + body, u.getEmail());
 
     }
 

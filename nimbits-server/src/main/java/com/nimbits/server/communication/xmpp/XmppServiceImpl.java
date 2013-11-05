@@ -22,8 +22,9 @@ import com.nimbits.client.model.email.EmailAddress;
 public class XmppServiceImpl implements XmppService {
 
     private static final long serialVersionUID = 1L;
+
     @Override
-    public  void sendMessage(final String msgBody, final EmailAddress email) {
+    public void sendMessage(final String msgBody, final EmailAddress email) {
 
 
         final JID jid = new JID(email.getValue());
@@ -43,12 +44,6 @@ public class XmppServiceImpl implements XmppService {
 
         xmpp.sendMessage(msg);
     }
-
-
-
-
-
-
 
 
 }

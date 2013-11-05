@@ -13,34 +13,25 @@
   ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
   -->
 
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-         version="2.5">
+<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
 
-    <context-param>
-        <param-name>contextConfigLocation</param-name>
-        <param-value>
-            classpath:/META-INF/applicationContext.xml,
-            classpath:/META-INF/applicationContext-api.xml,
-            classpath:/META-INF/applicationContext-cache.xml,
-            classpath:/META-INF/applicationContext-dao.xml,
-            classpath:/META-INF/applicationContext-service.xml,
-            classpath:/META-INF/applicationContext-factory.xml
-        </param-value>
-    </context-param>
+
 
     <!--v2 services-->
     <listener>
         <listener-class>com.nimbits.server.ApplicationListener</listener-class>
     </listener>
 
-    <listener>
-        <listener-class>
-            org.springframework.web.context.ContextLoaderListener
-        </listener-class>
-    </listener>
+    <servlet>
+        <servlet-name>heartbeatApi</servlet-name>
+        <servlet-class>com.nimbits.server.api.HeartbeatApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>heartbeatApi</servlet-name>
+        <url-pattern>/service/v2/hb</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>searchApi</servlet-name>
@@ -75,7 +66,6 @@
         <servlet-name>timeApi</servlet-name>
         <url-pattern>/service/v2/time</url-pattern>
     </servlet-mapping>
-
 
 
     <servlet>
@@ -126,10 +116,6 @@
     <!--end v2 services-->
 
 
-
-
-
-
     <servlet>
         <servlet-name>xmpp</servlet-name>
         <servlet-class>com.nimbits.server.api.impl.XMPPReceiverServlet</servlet-class>
@@ -144,7 +130,7 @@
     <servlet>
         <servlet-name>entity</servlet-name>
 
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.api.impl.EntityServletImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>entity</servlet-name>
@@ -155,7 +141,7 @@
     <servlet>
         <servlet-name>blob</servlet-name>
 
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.api.impl.BlobServletImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>blob</servlet-name>
@@ -175,7 +161,7 @@
 
     <servlet>
         <servlet-name>mailhandler</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.api.impl.MailHandlerServletImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>mailhandler</servlet-name>
@@ -222,7 +208,6 @@
         <servlet-name>deleteBlobTask</servlet-name>
         <url-pattern>/task/deleteBlobTask</url-pattern>
     </servlet-mapping>
-
 
 
     <servlet>
@@ -326,7 +311,7 @@
 
     <servlet>
         <servlet-name>orphans</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.process.cron.DeleteOrphanBlobCron</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>orphans</servlet-name>
@@ -336,7 +321,7 @@
 
     <servlet>
         <servlet-name>value</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.api.impl.ValueServletImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>value</servlet-name>
@@ -350,7 +335,7 @@
     <servlet>
         <servlet-name>series</servlet-name>
 
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.api.impl.SeriesServletImpl</servlet-class>
 
     </servlet>
     <servlet-mapping>
@@ -362,7 +347,7 @@
     <servlet>
         <servlet-name>point</servlet-name>
 
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.api.impl.PointServletImpl</servlet-class>
 
     </servlet>
     <servlet-mapping>
@@ -382,7 +367,7 @@
 
     <servlet>
         <servlet-name>time</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.api.TimeApi</servlet-class>
 
     </servlet>
     <servlet-mapping>
@@ -393,7 +378,7 @@
 
     <servlet>
         <servlet-name>chart</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.api.impl.ChartApiServletImpl</servlet-class>
 
     </servlet>
     <servlet-mapping>
@@ -402,21 +387,13 @@
     </servlet-mapping>
 
 
-    <servlet>
-        <servlet-name>auth</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
 
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>auth</servlet-name>
-        <url-pattern>/service/auth</url-pattern>
-    </servlet-mapping>
 
 
     <servlet>
         <servlet-name>batch</servlet-name>
         <!--<servlet-class>BatchServletImpl</servlet-class>-->
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-class>com.nimbits.server.api.impl.BatchServletImpl</servlet-class>
 
     </servlet>
 
@@ -428,31 +405,13 @@
 
 
     <servlet>
-        <servlet-name>quota</servlet-name>
-        <!--<servlet-class>QuotaServletImpl</servlet-class>-->
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>quota</servlet-name>
-        <url-pattern>/admin/quota</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>userReportService</servlet-name>
-        <servlet-class>org.springframework.web.context.support.HttpRequestHandlerServlet</servlet-class>
+        <servlet-name>com.nimbits EntityService</servlet-name>
+        <servlet-class>com.nimbits.server.transactions.EntityServiceRpcImpl</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>com.nimbits UserService</servlet-name>
         <servlet-class>com.nimbits.server.transactions.UserRpcServiceImpl</servlet-class>
     </servlet>
-
-
-
-    <servlet>
-        <servlet-name>com.nimbits EntityService</servlet-name>
-        <servlet-class>com.nimbits.server.transactions.EntityServiceRpcImpl</servlet-class>
-    </servlet>
-
 
     <servlet>
         <servlet-name>com.nimbits SettingsService</servlet-name>
@@ -466,14 +425,6 @@
         <servlet-name>com.nimbits XmppService</servlet-name>
         <servlet-class>com.nimbits.server.communication.xmpp.XmppRpcServiceImpl</servlet-class>
     </servlet>
-    <servlet-mapping>
-        <servlet-name>userReportService</servlet-name>
-        <url-pattern>/admin/user_report</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>com.nimbits UserService</servlet-name>
-        <url-pattern>/nimbits/userService</url-pattern>
-    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>com.nimbits EntityService</servlet-name>
@@ -492,7 +443,10 @@
         <servlet-name>com.nimbits XmppService</servlet-name>
         <url-pattern>/nimbits/xmppService</url-pattern>
     </servlet-mapping>
-
+    <servlet-mapping>
+        <servlet-name>com.nimbits UserService</servlet-name>
+        <url-pattern>/nimbits/userService</url-pattern>
+    </servlet-mapping>
 
     <security-constraint>
         <web-resource-collection>

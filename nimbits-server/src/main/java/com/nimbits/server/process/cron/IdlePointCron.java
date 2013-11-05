@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class IdlePointCron extends ApiBase  {
+public class IdlePointCron extends ApiBase {
     /**
      *
      */
@@ -37,6 +37,7 @@ public class IdlePointCron extends ApiBase  {
     private static final Logger log = Logger.getLogger(IdlePointCron.class.getName());
     private ValueService valueService;
     private com.nimbits.server.transaction.user.service.UserService userService;
+
     @Override
     @SuppressWarnings(Const.WARNING_UNCHECKED)
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
@@ -46,7 +47,7 @@ public class IdlePointCron extends ApiBase  {
 
         try {
             setup(req, resp);
-            valueService =  ValueServiceFactory.getInstance(engine, taskService);
+            valueService = ValueServiceFactory.getInstance(engine, taskService);
             userService = AuthenticationServiceFactory.getInstance(engine);
             processGet();
         } catch (Exception e) {
@@ -57,7 +58,7 @@ public class IdlePointCron extends ApiBase  {
 
     }
 
-    public int processGet()  {
+    public int processGet() {
         final List<Entity> points = entityService.getIdleEntities();
         log.info("Processing " + points.size() + " potentially idle points");
         User admin = userService.getAdmin();
@@ -68,8 +69,6 @@ public class IdlePointCron extends ApiBase  {
         }
         return points.size();
     }
-
-
 
 
     @Override

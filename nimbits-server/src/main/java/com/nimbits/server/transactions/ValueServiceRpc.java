@@ -38,16 +38,17 @@ public class ValueServiceRpc extends RemoteServiceServlet implements com.nimbits
     NimbitsEngine engine = ApplicationListener.createEngine();
     TaskService task = ApplicationListener.getTaskService(engine);
     ValueService valueService = ValueServiceFactory.getInstance(engine, task);
+
     @Override
-    public List<Value> solveEquationRpc(final User user, final Calculation calculation)  {
-        List<Value> response =  CalculationServiceFactory.getInstance(engine, task).solveEquation(user, calculation);
+    public List<Value> solveEquationRpc(final User user, final Calculation calculation) {
+        List<Value> response = CalculationServiceFactory.getInstance(engine, task).solveEquation(user, calculation);
 
         return new ArrayList<Value>(response);
     }
 
     @Override
     public Value recordValueRpc(final Entity point,
-                                final Value value)  {
+                                final Value value) {
 
         User user = UserHelper.getUser(engine);
 
@@ -64,7 +65,7 @@ public class ValueServiceRpc extends RemoteServiceServlet implements com.nimbits
 
     @Override
     public void createDataDumpRpc(Entity entity, Timespan timespan) {
-       task.startDataDumpTask(entity, timespan);
+        task.startDataDumpTask(entity, timespan);
     }
 
 

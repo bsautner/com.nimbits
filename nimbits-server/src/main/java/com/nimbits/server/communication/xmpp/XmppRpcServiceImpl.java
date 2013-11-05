@@ -20,15 +20,14 @@ import com.nimbits.client.service.xmpp.XmppRpcService;
 import com.nimbits.server.ApplicationListener;
 import com.nimbits.server.NimbitsEngine;
 import com.nimbits.server.transaction.user.UserHelper;
-import org.springframework.stereotype.Service;
 
-@Service("xmppService")
-public class XmppRpcServiceImpl  extends RemoteServiceServlet implements XmppRpcService {
+
+public class XmppRpcServiceImpl extends RemoteServiceServlet implements XmppRpcService {
 
     @Override
-    public void sendInviteRpc()  {
+    public void sendInviteRpc() {
         NimbitsEngine engine = ApplicationListener.createEngine();
-        User user =  UserHelper.getUser(engine);
+        User user = UserHelper.getUser(engine);
 
 
         final JID jid = new JID(user.getEmail().getValue());

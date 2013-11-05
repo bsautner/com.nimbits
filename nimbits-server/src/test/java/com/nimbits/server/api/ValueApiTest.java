@@ -22,7 +22,6 @@ import org.junit.Test;
 public class ValueApiTest {
 
 
-
     @Before
     public void prepare() {
 

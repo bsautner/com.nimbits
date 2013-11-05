@@ -24,9 +24,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
-import org.springframework.stereotype.Service;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -34,8 +32,8 @@ import java.io.PrintWriter;
 import java.util.List;
 
 
-@Service("series")
-public class SeriesServletImpl extends ApiServlet  implements org.springframework.web.HttpRequestHandler {
+
+public class SeriesServletImpl extends ApiServlet  {
 
 
     private static final long serialVersionUID = 1L;
@@ -90,8 +88,8 @@ public class SeriesServletImpl extends ApiServlet  implements org.springframewor
 
                 final EntityName pointName = CommonFactory.createName(name, EntityType.point);
                 List<Entity> points = entityService.getEntityByName(user, pointName, EntityType.point);
-                if (! points.isEmpty()) {
-                     Point point = (Point) points.get(0);
+                if (!points.isEmpty()) {
+                    Point point = (Point) points.get(0);
 
                     // final Point point = (Point) EntityServiceImpl.getEntityByKey(e.getKey(), PointEntity.class.getName());
                     if (point == null) {
@@ -117,8 +115,7 @@ public class SeriesServletImpl extends ApiServlet  implements org.springframewor
                         resp.setStatus(HttpServletResponse.SC_OK);
                         out.close();
                     }
-                }
-                else {
+                } else {
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 }
             }
@@ -132,18 +129,4 @@ public class SeriesServletImpl extends ApiServlet  implements org.springframewor
     }
 
 
-
-
-    @Override
-    public void handleRequest(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
-        if (isPost(req)) {
-
-            doPost(req, resp);
-        }
-        else {
-            doGet(req, resp);
-        }
-
-    }
 }

@@ -187,7 +187,7 @@ html, body {
     background-position: 0 -252px;
 }
 
-#ux-taskbar .x-btn-over  .ux-taskbutton-right {
+#ux-taskbar .x-btn-over .ux-taskbutton-right {
     background-position: 0 -280px;
 }
 
@@ -199,7 +199,7 @@ html, body {
     background-position: 0 -168px;
 }
 
-#ux-taskbar .x-btn-click  .ux-taskbutton-right {
+#ux-taskbar .x-btn-click .ux-taskbutton-right {
     background-position: 0 -196px;
 }
 
@@ -211,7 +211,7 @@ html, body {
     background-position: 0 -84px;
 }
 
-#ux-taskbar .active-win  .ux-taskbutton-right {
+#ux-taskbar .active-win .ux-taskbutton-right {
     background: url(../images/taskbar/black/taskbutton.gif) no-repeat 0 -112px;
 }
 
@@ -452,7 +452,7 @@ td.ux-taskButtons-edge {
     background-position: -18px 0;
     opacity: .5;
     -moz-opacity: .5;
-    filter: alpha(opacity = 50);
+    filter: alpha(opacity=50);
     cursor: default;
 }
 
@@ -474,7 +474,7 @@ td.ux-taskButtons-edge {
     background-position: 0 0;
     opacity: .5;
     -moz-opacity: .5;
-    filter: alpha(opacity = 50);
+    filter: alpha(opacity=50);
     cursor: default;
 }
 
@@ -563,7 +563,7 @@ td.ux-taskButtons-edge {
     background-position: 0 -270px;
 }
 
-#ux-taskbar .x-btn-over  .ux-startbutton-right {
+#ux-taskbar .x-btn-over .ux-startbutton-right {
     background-position: 0 -300px;
 }
 
@@ -575,7 +575,7 @@ td.ux-taskButtons-edge {
     background-position: 0 -180px;
 }
 
-#ux-taskbar .x-btn-click  .ux-startbutton-right {
+#ux-taskbar .x-btn-click .ux-startbutton-right {
     background-position: 0 -210px;
 }
 
@@ -587,7 +587,7 @@ td.ux-taskButtons-edge {
     background-position: 0 -90px;
 }
 
-#ux-taskbar .active-win  .ux-startbutton-right {
+#ux-taskbar .active-win .ux-startbutton-right {
     background: url(../images/taskbar/black/startbutton.gif) no-repeat 0 -120px;
 }
 
@@ -606,7 +606,7 @@ td.ux-taskButtons-edge {
     background: #C7DFFC;
     opacity: .5;
     -moz-opacity: .5;
-    filter: alpha(opacity = 50);
+    filter: alpha(opacity=50);
     border: 1px solid #3b5a82;
 }
 

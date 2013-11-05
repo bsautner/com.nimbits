@@ -35,8 +35,8 @@ public class MathEvaluatorTest {
         assertEquals(2, r, .0001);
 
 
-
     }
+
     @Test
     public void testVar1() throws Exception {
 
@@ -60,6 +60,7 @@ public class MathEvaluatorTest {
         assertEquals(37.7777778, r, .0001);
 
     }
+
     @Test
     public void testRemove() throws Exception {
 

@@ -14,28 +14,28 @@
   -->
 
 <ApplicationManifest xmlns="http://schemas.google.com/ApplicationManifest/2009">
-  <Name>Nimbits</Name>
-  <Description>Nimbits Process Data Historian</Description>
-
-  <!-- Administrators and users will be sent to this URL for application support -->
-  <Support>
-    <Link rel="support" href="http://www.nimbits.com?content=domain" />
-  </Support>
-
-  <!-- Show this link in Google's universal navigation for all users -->
-  <Extension id="navLink" type="link">
     <Name>Nimbits</Name>
-    <Url>https://cloud.nimbits.com/openid?hd=${DOMAIN_NAME}</Url>
-      <Scope ref="docsFeed"/>
-      <Scope ref="calendarAPI"/>
-      <Scope ref="spreadsheetsFeed"/>
-      <Scope ref="contentFeed"/>
-  </Extension>
+    <Description>Nimbits Process Data Historian</Description>
 
-  <!-- Declare our OpenID realm so our app is white listed -->
-  <Extension id="realm" type="openIdRealm">
-    <Url>https://cloud.nimbits.com</Url>
-  </Extension>
+    <!-- Administrators and users will be sent to this URL for application support -->
+    <Support>
+        <Link rel="support" href="http://www.nimbits.com?content=domain" />
+    </Support>
+
+    <!-- Show this link in Google's universal navigation for all users -->
+    <Extension id="navLink" type="link">
+        <Name>Nimbits</Name>
+        <Url>https://cloud.nimbits.com/openid?hd=${DOMAIN_NAME}</Url>
+        <Scope ref="docsFeed" />
+        <Scope ref="calendarAPI" />
+        <Scope ref="spreadsheetsFeed" />
+        <Scope ref="contentFeed" />
+    </Extension>
+
+    <!-- Declare our OpenID realm so our app is white listed -->
+    <Extension id="realm" type="openIdRealm">
+        <Url>https://cloud.nimbits.com</Url>
+    </Extension>
 
     <Scope id="docsFeed">
 
@@ -58,12 +58,12 @@
     </Scope>
 
     <!--&lt;!&ndash; Need access to the Calendar API &ndash;&gt;-->
-  <Scope id="calendarAPI">
-    <Url>https://www.google.com/calendar/feeds/</Url>
-    <Reason>Nimbits can add reminders for idle points</Reason>
-  </Scope>
-  <!--<Edition id="free">-->
+    <Scope id="calendarAPI">
+        <Url>https://www.google.com/calendar/feeds/</Url>
+        <Reason>Nimbits can add reminders for idle points</Reason>
+    </Scope>
+    <!--<Edition id="free">-->
     <!--<Name>nimbits</Name>-->
     <!--<Extension ref="navLink"/>-->
-  <!--</Edition>-->
+    <!--</Edition>-->
 </ApplicationManifest>

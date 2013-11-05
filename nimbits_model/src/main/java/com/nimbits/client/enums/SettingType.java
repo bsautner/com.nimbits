@@ -13,7 +13,6 @@
 package com.nimbits.client.enums;
 
 
-import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,11 +25,10 @@ import java.util.Map;
  */
 public enum SettingType  {
 
-    lastChecked(SettingConstants.SETTING_LAST_CHECKED, new Date().toString(), true, true),
-    serverVersion(SettingConstants.SETTING_VERSION, SettingConstants.CONST_SERVER_VERSION, true, true),
-    serverIsDiscoverable(SettingConstants.SETTING_SERVER_IS_DISCOVERABLE, "1", false, true),
-    admin(SettingConstants.SETTING_ADMIN, SettingConstants.SETTING_ADMIN_DEFAULT, false, true),
-    apiKey(SettingConstants.API_KEY, SettingConstants.API_KEY_DEFAULT, false, true);  //TODO
+
+    version(SettingConstants.SETTING_VERSION, SettingConstants.CONST_SERVER_VERSION, true, true, true),
+    admin(SettingConstants.SETTING_ADMIN, SettingConstants.SETTING_ADMIN_DEFAULT, false, true, false),
+    apiKey(SettingConstants.API_KEY, SettingConstants.API_KEY_DEFAULT, false, true, false);
 
 
     private static final Map<String, SettingType> lookup = new HashMap<String, SettingType>();
@@ -46,12 +44,13 @@ public enum SettingType  {
     private final String defaultValue;
     private final boolean update;
     private final boolean create;
-
-    private SettingType(final String name, final String defaultValue, final boolean update, final boolean create) {
+    private final boolean readOnly;
+    private SettingType(final String name, final String defaultValue, final boolean update, final boolean create, final boolean readonly) {
         this.name = name;
         this.update = update;
         this.defaultValue = defaultValue;
         this.create = create;
+        this.readOnly = readonly;
     }
 
 
@@ -75,21 +74,22 @@ public enum SettingType  {
         return create;
     }
 
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
     @Override
     public String toString() {
         return name;
     }
 
     private static class SettingConstants {
-        static final String CONST_SERVER_VERSION = "3.5.3";
-        static final String SETTING_ENABLE_CONNECTIONS = "enableConnections";
+        static final String CONST_SERVER_VERSION = "3.5.4.5";
         static final String SETTING_ADMIN = "admin";
         static final String SETTING_ADMIN_DEFAULT = "support@nimbits.com";
-        static final String SETTING_LAST_CHECKED = "lastChecked";
-        static final String SETTING_SERVER_IS_DISCOVERABLE = "serverIsDiscoverable";
         static final String SETTING_VERSION = "version";
         static final String API_KEY = "API_KEY";
-        static final String API_KEY_DEFAULT = "API_KEY";
+        static final String API_KEY_DEFAULT = "API_KEY_DEFAULT";
         private SettingConstants() {
         }
     }

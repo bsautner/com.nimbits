@@ -38,8 +38,8 @@ public class AuthenticationMechanismImpl implements AuthenticationMechanism {
             this.googleUserService = UserServiceFactory.getUserService();
             com.google.appengine.api.users.User appUser = googleUserService.getCurrentUser();
             if (appUser != null) {
-                String email =  googleUserService.getCurrentUser().getEmail();
-                if (! StringUtils.isEmpty(email)) {
+                String email = googleUserService.getCurrentUser().getEmail();
+                if (!StringUtils.isEmpty(email)) {
                     return Arrays.asList(CommonFactory.createEmailAddress(email));
                 }
 

@@ -13,7 +13,6 @@
 package com.nimbits.server.transactions;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.PMF;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.common.impl.CommonFactory;
@@ -30,24 +29,16 @@ import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.user.AuthenticationServiceFactory;
 import com.nimbits.server.transaction.user.cache.UserCache;
-import org.springframework.stereotype.Service;
 
-import javax.jdo.PersistenceManagerFactory;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Author: Benjamin Sautner
- * Date: 1/2/13
- * Time: 6:27 PM
- */
-@Service("userService")
-public class UserRpcServiceImpl extends RemoteServiceServlet implements  UserService{
+public class UserRpcServiceImpl extends RemoteServiceServlet implements UserService {
 
     public static final String ANON_NIMBITS_COM = "anon@nimbits.com";
-    private PersistenceManagerFactory pmf = PMF.get();
+
     NimbitsEngine engine = ApplicationListener.createEngine();
     private final EntityService entityService = EntityServiceFactory.getInstance(engine);
     private final UserCache userCache = AuthenticationServiceFactory.getCacheInstance(engine);
@@ -61,16 +52,14 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements  UserSer
         boolean isAdmin = false;
 
 
-
         final com.google.appengine.api.users.UserService userService = com.google.appengine.api.users.UserServiceFactory.getUserService();
 
 
-
-            final com.google.appengine.api.users.User googleUser = userService.getCurrentUser();
-            if (googleUser != null) {
-                isAdmin = userService.isUserAdmin();
-                internetAddress = CommonFactory.createEmailAddress(googleUser.getEmail());
-            }
+        final com.google.appengine.api.users.User googleUser = userService.getCurrentUser();
+        if (googleUser != null) {
+            isAdmin = userService.isUserAdmin();
+            internetAddress = CommonFactory.createEmailAddress(googleUser.getEmail());
+        }
 
 
         if (internetAddress != null) {
@@ -116,10 +105,6 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements  UserSer
 
         return retObj;
     }
-
-
-
-
 
 
 }

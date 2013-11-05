@@ -19,7 +19,7 @@ import com.nimbits.client.enums.DateFormatType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
-import org.springframework.stereotype.Service;
+
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -28,15 +28,8 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/20/12
- * Time: 9:14 AM
- */
 
-@Service("time")
-public class TimeServletImpl extends ApiServlet  implements org.springframework.web.HttpRequestHandler {
+public class TimeServletImpl extends ApiServlet  {
 
 
     private static final long serialVersionUID = 6160961337851138572L;
@@ -45,51 +38,46 @@ public class TimeServletImpl extends ApiServlet  implements org.springframework.
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
 
 
+        final PrintWriter out = resp.getWriter();
+        DateFormatType type;
+        final String format = req.getParameter(Parameters.format.getText());
+        final String clientTypeParam = req.getParameter(Parameters.client.getText());
+        final ClientType clientType;
 
+        if (!Utils.isEmptyString(clientTypeParam)) {
+            clientType = ClientType.valueOf(clientTypeParam);
+        } else {
+            clientType = ClientType.other;
+        }
 
-            final PrintWriter out = resp.getWriter();
-            DateFormatType type;
-            final String format = req.getParameter(Parameters.format.getText());
-            final String clientTypeParam = req.getParameter(Parameters.client.getText());
-            final ClientType clientType;
+        if (Utils.isEmptyString(format)) {
+            type = DateFormatType.unixEpoch;
 
-            if (! Utils.isEmptyString(clientTypeParam)) {
-                clientType = ClientType.valueOf(clientTypeParam);
-            }
-            else {
-                clientType = ClientType.other;
-            }
+        } else {
+            type = DateFormatType.get(format);
+        }
+        if (type == null) {
+            type = DateFormatType.unixEpoch;
+        }
 
-            if (Utils.isEmptyString(format)) {
-                type = DateFormatType.unixEpoch;
+        if (clientType.equals(ClientType.arduino)) {
 
-            }
-            else {
-                type = DateFormatType.get(format);
-            }
-            if (type == null) {
-                type = DateFormatType.unixEpoch;
-            }
+            out.print(Const.CONST_ARDUINO_DATA_SEPARATOR);
+        }
+        switch (type) {
 
-            if (clientType.equals(ClientType.arduino)) {
-
-                out.print(Const.CONST_ARDUINO_DATA_SEPARATOR);
-            }
-            switch (type) {
-
-                case unixEpoch:
-                    if (clientType.equals(ClientType.arduino)) {
-                        out.print(new Date().getTime() / 1000);
-                    }
-                    else {
+            case unixEpoch:
+                if (clientType.equals(ClientType.arduino)) {
+                    out.print(new Date().getTime() / 1000);
+                } else {
                     out.print(new Date().getTime());
-                    }
-                    break;
+                }
+                break;
 
-                case json:
-                    out.print(GsonFactory.getInstance().toJson(new Date()));
-                    break;
-            }
+            case json:
+                out.print(GsonFactory.getInstance().toJson(new Date()));
+                break;
+        }
 
         if (clientType.equals(ClientType.arduino)) {
 
@@ -99,8 +87,5 @@ public class TimeServletImpl extends ApiServlet  implements org.springframework.
 
     }
 
-    @Override
-    public void handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
-    }
+
 }

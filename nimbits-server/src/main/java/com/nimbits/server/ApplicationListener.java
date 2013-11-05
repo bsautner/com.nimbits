@@ -14,14 +14,18 @@ package com.nimbits.server;
 
 import com.nimbits.PMF;
 import com.nimbits.server.cache.CacheFactory;
+import com.nimbits.server.communication.email.EmailService;
+import com.nimbits.server.communication.email.EmailServiceFactory;
 import com.nimbits.server.communication.xmpp.XmppService;
 import com.nimbits.server.communication.xmpp.XmppServiceFactory;
+import com.nimbits.server.counter.CounterService;
 import com.nimbits.server.io.blob.BlobStore;
 import com.nimbits.server.io.blob.BlobStoreFactory;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.process.task.TaskServiceFactory;
 import com.nimbits.server.transaction.cache.NimbitsCache;
 import com.nimbits.server.transaction.user.service.AuthenticationMechanism;
+import com.nimbits.server.transactions.counter.CounterServiceFactory;
 import com.nimbits.server.transactions.user.AuthenticationMechanismFactory;
 
 import javax.jdo.PersistenceManagerFactory;
@@ -40,6 +44,7 @@ public class ApplicationListener implements ServletContextListener {
         context.setAttribute("engine", createEngine());
         context.setAttribute("task", getTaskService(engine));
     }
+
     public static TaskService getTaskService(NimbitsEngine engine) {
         TaskService taskService = TaskServiceFactory.getServiceInstance(engine);
         return taskService;
@@ -50,16 +55,19 @@ public class ApplicationListener implements ServletContextListener {
         if (engine == null) {
             PersistenceManagerFactory persistenceManagerFactory = PMF.get();
             NimbitsCache cache = CacheFactory.getInstance();
-            TaskService taskService = TaskServiceFactory.getServiceInstance(engine);
             XmppService xmppService = XmppServiceFactory.getServiceInstance();
             BlobStore blobStore = BlobStoreFactory.getInstance(persistenceManagerFactory);
             AuthenticationMechanism userAuthenticationMechanism = AuthenticationMechanismFactory.getInstance();
+            EmailService emailService = EmailServiceFactory.getServiceInstance(persistenceManagerFactory);
+            CounterService counterService = CounterServiceFactory.getInstance();
             engine = new NimbitsEngine(
                     persistenceManagerFactory,
                     cache,
                     blobStore,
                     xmppService,
-                    userAuthenticationMechanism );
+                    userAuthenticationMechanism,
+                    counterService,
+                    emailService);
         }
         return engine;
     }

@@ -46,15 +46,15 @@ import java.util.Date;
 import java.util.List;
 
 
-public class UploadTask extends ApiBase {
+public class UploadTask extends TaskBase {
 
     private ValueService valueService;
 
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        setup(request, response);
-        valueService = ValueServiceFactory.getInstance(engine, taskService);
+        setup( );
+
         final String key = request.getParameter(Parameters.blobkey.getText());
         final String json = request.getParameter(Parameters.entity.getText());
         final String userJson= request.getParameter(Parameters.user.getText());

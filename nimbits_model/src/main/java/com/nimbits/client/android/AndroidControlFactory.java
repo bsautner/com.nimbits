@@ -19,13 +19,13 @@ public class AndroidControlFactory {
 
     public static final int SLOW_TIMER = 5000;
     public static final int SMALL_CHART_VALUES = 10;
-
-    public static AndroidControl getInstance(int timer, int chart) {
-        return new AndroidControlImpl(timer, chart);
+    public static final double CRAZY_VERSION = 1000.0;
+    public static AndroidControl getInstance(int timer, int chart, double minVersion) {
+        return new AndroidControlImpl(timer, chart, minVersion);
     }
 
     public static AndroidControl getConservativeInstance() {
-        return new AndroidControlImpl(SLOW_TIMER, SMALL_CHART_VALUES);
+        return new AndroidControlImpl(SLOW_TIMER, SMALL_CHART_VALUES, CRAZY_VERSION);
     }
 
 }

@@ -21,6 +21,8 @@ import com.google.appengine.api.files.FileService;
 import com.google.appengine.api.files.FileServiceFactory;
 import com.google.appengine.api.files.FileWriteChannel;
 import com.google.common.collect.Range;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.common.Utils;
 import com.nimbits.client.constants.Const;
@@ -30,7 +32,6 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.client.model.valueblobstore.ValueBlobStoreFactory;
-import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transaction.value.dao.ValueDayHolder;
 
 import javax.jdo.PersistenceManager;
@@ -45,7 +46,7 @@ import java.util.*;
 public class BlobStoreImpl implements BlobStore {
     //  private final Logger log = Logger.getLogger(BlobStoreImpl.class.getName());
     private final PersistenceManagerFactory pmf;
-
+    private Gson gson = new GsonBuilder().create();
     public BlobStoreImpl(PersistenceManagerFactory pmf) {
         this.pmf = pmf;
 
@@ -63,7 +64,7 @@ public class BlobStoreImpl implements BlobStore {
             q.setFilter("minTimestamp <= t && entity == k");
             q.declareParameters("String k, Long t");
             q.setOrdering("minTimestamp desc");
-            q.setRange(0, maxValues);
+
 
             final List<ValueBlobStoreEntity> result = (List<ValueBlobStoreEntity>) q.execute(entity.getKey(), endDate.getTime());
 
@@ -74,10 +75,13 @@ public class BlobStoreImpl implements BlobStore {
                     if (vx.getTimestamp().getTime() <= endDate.getTime()) {
                         retObj.add(vx);
                     }
-
                     if (retObj.size() >= maxValues) {
                         break;
                     }
+
+                }
+                if (retObj.size() >= maxValues) {
+                    break;
                 }
             }
             return retObj;
@@ -200,9 +204,9 @@ public class BlobStoreImpl implements BlobStore {
 
             String segment = new String(blobStoreService.fetchData(blobKey, 0, length));
             if (!Utils.isEmptyString(segment)) {
-                models = GsonFactory.getInstance().fromJson(segment, valueListType);
+                models = gson.fromJson(segment, valueListType);
                 if (models != null) {
-                    Collections.sort(models);
+                     Collections.sort(models);
                 } else {
                     models = Collections.emptyList();
                 }
@@ -236,7 +240,7 @@ public class BlobStoreImpl implements BlobStore {
         final PersistenceManager pm = pmf.getPersistenceManager();
 
         try {
-            final String json = GsonFactory.getInstance().toJson(holder.getValues());
+            final String json = gson.toJson(holder.getValues());
             final FileService fileService = FileServiceFactory.getFileService();
             final AppEngineFile file = fileService.createNewBlobFile(Const.CONTENT_TYPE_PLAIN);
             final FileWriteChannel writeChannel = fileService.openWriteChannel(file, true);
@@ -331,7 +335,7 @@ public class BlobStoreImpl implements BlobStore {
                 }
             }
 
-            String json = GsonFactory.getInstance().toJson(combined);
+            String json = gson.toJson(combined);
             // byte[] compressed = CompressionImpl.compressBytes(json);
             out.print(json);
             out.close();

@@ -23,4 +23,6 @@ public interface AndroidControl extends Serializable {
     int getTimer();
 
     int getChartValues();
+
+    double getMinVersion();
 }

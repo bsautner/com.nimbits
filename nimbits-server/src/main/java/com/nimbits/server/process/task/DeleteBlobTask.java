@@ -25,20 +25,14 @@ import javax.servlet.http.HttpServletResponse;
 
 
 
-public class DeleteBlobTask extends ApiBase {
+public class DeleteBlobTask extends TaskBase {
 
 
     private static final long serialVersionUID = 1L;
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
-
-
-            processRequest(req);
-
-    }
-
-    public static void processRequest(final ServletRequest req)  {
+        setup();
 
 
         final String key = req.getParameter(Parameters.key.getText());

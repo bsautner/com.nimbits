@@ -34,8 +34,8 @@ public class UnregisterServlet extends BaseServlet {
   protected void doPost(HttpServletRequest req, HttpServletResponse resp)
       throws ServletException {
     String regId = getParameter(req, PARAMETER_REG_ID);
-    String email = req.getParameter(Parameters.email.getText());
-    Datastore.unregister(regId, email);
+
+    Datastore.unregister(regId);
     setSuccess(resp);
   }
 

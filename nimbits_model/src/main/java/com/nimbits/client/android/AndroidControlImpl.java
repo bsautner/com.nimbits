@@ -22,15 +22,17 @@ public class AndroidControlImpl implements AndroidControl, Serializable{
 
     private int timer;
     private int chartValues;
+    private double minVersion;
 
     public AndroidControlImpl() {
 
     }
 
 
-    public AndroidControlImpl(int timer, int chartValues) {
+    public AndroidControlImpl(int timer, int chartValues, double minVersion) {
         this.timer = timer;
         this.chartValues = chartValues;
+        this.minVersion = minVersion;
     }
 
 
@@ -41,5 +43,9 @@ public class AndroidControlImpl implements AndroidControl, Serializable{
     @Override
     public int getChartValues() {
         return chartValues;
+    }
+    @Override
+    public double getMinVersion() {
+        return minVersion;
     }
 }

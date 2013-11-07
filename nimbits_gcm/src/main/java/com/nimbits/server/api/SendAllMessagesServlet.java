@@ -24,18 +24,14 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static com.google.appengine.api.taskqueue.TaskOptions.Builder.withUrl;
 
-/**
- * Servlet that adds a new message to all registered devices.
- * <p>
- * This servlet is used just by the browser (i.e., not device).
- */
 @SuppressWarnings("serial")
 public class SendAllMessagesServlet extends BaseServlet {
 
-
+    private final Logger log = Logger.getLogger(SendAllMessagesServlet.class.getName());
 
     /**
      * Processes the request to add a new message.
@@ -113,6 +109,7 @@ public class SendAllMessagesServlet extends BaseServlet {
                         total + " devices");
             }
         }
+        log.info(status.toString());
         req.setAttribute(HomeServlet.ATTRIBUTE_STATUS, status.toString());
         getServletContext().getRequestDispatcher("/home").forward(req, resp);
     }

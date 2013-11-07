@@ -167,7 +167,7 @@ public class TaskServiceImpl implements TaskService {
         final String valueJson = GsonFactory.getInstance().toJson(value);
 
         queue.add(TaskOptions.Builder
-                .withUrl(PATH_TASK_RECORD_VALUE).taskName(UUID.randomUUID().toString())
+                .withUrl(PATH_TASK_RECORD_VALUE)
                 .param(Parameters.pointUser.getText(), userJson)
                 .param(Parameters.pointJson.getText(), pointJson)
                 .param(Parameters.valueJson.getText(), valueJson));

@@ -144,13 +144,13 @@ public class SendMessageServlet extends BaseServlet {
             if (canonicalRegId != null) {
                 // same device has more than on registration id: update it
                 logger.finest("canonicalRegId " + canonicalRegId);
-                Datastore.updateRegistration(regId, canonicalRegId, email);
+                Datastore.updateRegistration(regId, canonicalRegId);
             }
         } else {
             String error = result.getErrorCodeName();
             if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
                 // application has been removed from device - unregister it
-                Datastore.unregister(regId, email);
+                Datastore.unregister(regId);
             } else {
                 logger.severe("Error sending message to device " + regId
                         + ": " + error);
@@ -179,7 +179,7 @@ public class SendMessageServlet extends BaseServlet {
                 String canonicalRegId = results.get(i).getCanonicalRegistrationId();
                 if (canonicalRegId != null) {
                     String regId = regIds.get(i);
-                    Datastore.updateRegistration(regId, canonicalRegId, email);
+                    Datastore.updateRegistration(regId, canonicalRegId);
                 }
             }
         }
@@ -194,7 +194,7 @@ public class SendMessageServlet extends BaseServlet {
                     logger.warning("Got error (" + error + ") for regId " + regId);
                     if (error.equals(Constants.ERROR_NOT_REGISTERED)) {
                         // application has been removed from device - unregister it
-                        Datastore.unregister(regId, email);
+                        Datastore.unregister(regId);
                     }
                     if (error.equals(Constants.ERROR_UNAVAILABLE)) {
                         retriableRegIds.add(regId);

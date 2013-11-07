@@ -14,6 +14,7 @@ package com.nimbits.server.api;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.logging.Logger;
 
 /**
  * Servlet that registers a device, whose registration id is identified by
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @SuppressWarnings("serial")
 public class RegisterServlet extends BaseServlet {
+    private final Logger log = Logger.getLogger(SendAllMessagesServlet.class.getName());
 
   private static final String PARAMETER_REG_ID = "regId";
     private static final String PARAMETER_EMAIL = "email";
@@ -34,6 +36,7 @@ public class RegisterServlet extends BaseServlet {
       throws ServletException {
     String regId = getParameter(req, PARAMETER_REG_ID);
     String email = getParameter(req, PARAMETER_EMAIL);
+      log.info("registering: " + regId + " " + email);
     Datastore.register(regId, email);
     setSuccess(resp);
   }

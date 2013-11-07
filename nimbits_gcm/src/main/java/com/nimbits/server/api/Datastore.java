@@ -56,7 +56,7 @@ public final class Datastore {
         logger.info("Registering " + regId);
         Transaction txn = datastore.beginTransaction();
         try {
-            Entity entity = findDeviceByRegId(regId, email);
+            Entity entity = findDeviceByRegId(regId);
             if (entity != null) {
                 logger.fine(regId + " is already registered; ignoring.");
                 return;
@@ -78,11 +78,11 @@ public final class Datastore {
      *
      * @param regId device's registration id.
      */
-    public static void unregister(String regId, String email) {
+    public static void unregister(String regId) {
         logger.info("Unregistering " + regId);
         Transaction txn = datastore.beginTransaction();
         try {
-            Entity entity = findDeviceByRegId(regId, email);
+            Entity entity = findDeviceByRegId(regId);
             if (entity == null) {
                 logger.warning("Device " + regId + " already unregistered");
             } else {
@@ -100,11 +100,11 @@ public final class Datastore {
     /**
      * Updates the registration id of a device.
      */
-    public static void updateRegistration(String oldId, String newId, String email) {
+    public static void updateRegistration(String oldId, String newId) {
         logger.info("Updating " + oldId + " to " + newId);
         Transaction txn = datastore.beginTransaction();
         try {
-            Entity entity = findDeviceByRegId(oldId, email);
+            Entity entity = findDeviceByRegId(oldId);
             if (entity == null) {
                 logger.warning("No device for registration id " + oldId);
                 return;
@@ -164,10 +164,10 @@ public final class Datastore {
         }
     }
 
-    private static Entity findDeviceByRegId(String regId, String email) {
+    private static Entity findDeviceByRegId(String regId) {
         Query query = new Query(DEVICE_TYPE)
-                .addFilter(DEVICE_REG_ID_PROPERTY, FilterOperator.EQUAL, regId)
-                .addFilter(DEVICE_OWNER_PROPERTY, FilterOperator.EQUAL, email);
+                .addFilter(DEVICE_REG_ID_PROPERTY, FilterOperator.EQUAL, regId);
+
         PreparedQuery preparedQuery = datastore.prepare(query);
         List<Entity> entities = preparedQuery.asList(DEFAULT_FETCH_OPTIONS);
         Entity entity = null;
@@ -176,7 +176,7 @@ public final class Datastore {
         }
         int size = entities.size();
         if (size > 0) {
-            logger.severe(
+            logger.info(
                     "Found " + size + " entities for regId " + regId + ": " + entities);
         }
         return entity;

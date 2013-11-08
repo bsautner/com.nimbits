@@ -29,7 +29,7 @@ public class PMF {
         properties.setProperty("javax.jdo.option.ConnectionDriverName","com.mysql.jdbc.Driver");
         properties.setProperty("javax.jdo.option.ConnectionUserName","root");
         properties.setProperty("datanucleus.autoCreateTables","true");
-        properties.setProperty("javax.jdo.option.ConnectionPassword","Cucumber2345");
+        properties.setProperty("javax.jdo.option.ConnectionPassword","password");
         properties.setProperty("datanucleus.autoCreateTables","true");
 
         PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(properties);

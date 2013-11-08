@@ -31,9 +31,12 @@ public class Program {
     public static void main(String[] args) throws IOException, InterruptedException {
         while (true) {
         Random r = new Random();
-        String urlParameters = "email=support@nimbits.com&key=mysecretkey&point=foo&value=" + r.nextDouble();
+       // String urlParameters = "email=support@nimbits.com&key=mysecretkey&point=foo&value=" + r.nextDouble();
         String request = "http://localhost:8080/service/v2/value";
-        URL url = new URL(request);
+            String urlParameters = "email=bsautner@gmail.com&key=key&id=P2&json={\"d\":" + r.nextDouble() + "}";
+        //    String request = "http://cloud.nimbits.com/service/v2/value";
+
+            URL url = new URL(request);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoOutput(true);
         connection.setDoInput(true);

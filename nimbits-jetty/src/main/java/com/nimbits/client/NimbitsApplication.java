@@ -38,14 +38,13 @@ import com.nimbits.client.ui.panels.NavigationEventProvider;
 public class NimbitsApplication extends NavigationEventProvider implements EntryPoint {
 
     private User loginInfo = null;
-    private UserServiceAsync userService;
 
 
     @Override
     public void onModuleLoad() {
 
 
-        userService = GWT.create(UserService.class);
+        UserServiceAsync userService = GWT.create(UserService.class);
         userService.loginRpc(GWT.getHostPageBaseURL(),
                 new LoginInfoAsyncCallback());
 
@@ -109,9 +108,6 @@ public class NimbitsApplication extends NavigationEventProvider implements Entry
             center.setHeadingText("Nimbits Admin Console" + ' ' + SettingType.version.getDefaultValue());
             center.setScrollMode(Style.Scroll.AUTOX);
 
-
-            final ContentPanel east = new ContentPanel();
-            // east.setHeading(Const.TEXT_DATA_FEED);
             final BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
             centerData.setMargins(new Margins(0, 0, 5, 0));
 

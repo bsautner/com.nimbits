@@ -34,32 +34,29 @@ import java.util.List;
 
 public class UserRpcServiceImpl extends RemoteServiceServlet implements  UserService{
 
-    public static final String ANON_NIMBITS_COM = "anon@nimbits.com";
 
     NimbitsEngine engine = ApplicationListener.createEngine();
     private final EntityService entityService = EntityServiceFactory.getInstance(engine);
-    private final UserCache userCache = AuthenticationServiceFactory.getCacheInstance(engine);
     private final SettingsService settingsService = SettingServiceFactory.getServiceInstance(engine);
-    private com.nimbits.server.transaction.user.service.UserService userService;
 
     @Override
     public User loginRpc(final String requestUri) {
 
         final User retObj;
-        EmailAddress internetAddress = null;
+        EmailAddress internetAddress;
         String admin = settingsService.getSetting(SettingType.admin);
         internetAddress = CommonFactory.createEmailAddress(admin);
 
 
-            this.userService = AuthenticationServiceFactory.getInstance(engine);
+        com.nimbits.server.transaction.user.service.UserService userService = AuthenticationServiceFactory.getInstance(engine);
             final List<Entity> list = entityService
                     .getEntityByKey(
-                            this.userService.getAnonUser(), internetAddress.getValue(), EntityType.user);
+                            userService.getAnonUser(), internetAddress.getValue(), EntityType.user);
 
 
             if (list.isEmpty()) {
 
-                retObj = this.userService.createUserRecord(internetAddress);
+                retObj = userService.createUserRecord(internetAddress);
 
             } else {
                 retObj = (User) list.get(0);
@@ -73,7 +70,7 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements  UserSer
 
             retObj.setLastLoggedIn(new Date());
             entityService.addUpdateEntity(retObj, Arrays.<Entity>asList(retObj));
-            retObj.addAccessKey(this.userService.authenticatedKey(retObj));
+            retObj.addAccessKey(userService.authenticatedKey(retObj));
 
 
 

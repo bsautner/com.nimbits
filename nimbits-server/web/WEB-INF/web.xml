@@ -25,6 +25,15 @@
     </listener>
 
     <servlet>
+        <servlet-name>userApi</servlet-name>
+        <servlet-class>com.nimbits.server.api.UserApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>userApi</servlet-name>
+        <url-pattern>/admin/user</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>heartbeatApi</servlet-name>
         <servlet-class>com.nimbits.server.api.HeartbeatApi</servlet-class>
     </servlet>
@@ -180,6 +189,17 @@
         <servlet-name>uploadTask</servlet-name>
         <url-pattern>/task/uploadTask</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>heartbeatTask</servlet-name>
+
+        <servlet-class>com.nimbits.server.process.task.HeartbeatTask</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>heartbeatTask</servlet-name>
+        <url-pattern>/task/hb</url-pattern>
+    </servlet-mapping>
+
 
     <servlet>
         <servlet-name>dumpTask</servlet-name>

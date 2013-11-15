@@ -13,6 +13,7 @@
 package com.nimbits.server.process.task;
 
 
+import com.nimbits.client.enums.Action;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.timespan.Timespan;
@@ -24,6 +25,7 @@ import com.nimbits.server.transaction.value.service.ValueService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -97,5 +99,10 @@ public class TaskServiceImpl implements TaskService {
     public void startMoveCachedValuesToStoreTask(Entity point) {
         ValueService valueService = ValueServiceFactory.getInstance(engine, this);
         valueService.moveValuesFromCacheToStore(point);
+    }
+
+    @Override
+    public void startHeartbeatTask(User user, List<Point> entities, Action update) {
+
     }
 }

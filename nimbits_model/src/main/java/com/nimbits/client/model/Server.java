@@ -21,7 +21,7 @@ public interface Server extends Serializable {
 
     long getId();
 
-    String getUrl(boolean includeProtocol);
+    String getUrl();
 
     String getApiKey();
 

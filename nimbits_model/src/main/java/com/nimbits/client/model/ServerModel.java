@@ -12,6 +12,8 @@
 
 package com.nimbits.client.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
 
 /**
@@ -25,23 +27,26 @@ public class ServerModel implements Server, Serializable {
     private boolean isDefault;
 
     public ServerModel(final String url, final long id, final String apiKey, boolean isDefault) {
-        this.url = url;
+        if (StringUtils.isEmpty(url)) {
+            throw new IllegalArgumentException("url was null");
+        }
+        this.url = removeProtocol(url);
+
         this.id = id;
         this.apiKey = apiKey;
         this.isDefault = isDefault;
     }
 
-    public ServerModel() {
+    protected String removeProtocol(String url) {
+        return url.replace("http://", "").replace("https://", "");
+    }
+
+    protected ServerModel() {
     }
 
     @Override
-    public String getUrl(boolean includeProtocol) {
-        if (includeProtocol) {
-            return url.startsWith("http") ? url : "http://" + url;
-        }
-        else {
-            return url;
-        }
+    public String getUrl() {
+        return removeProtocol(this.url);
 
     }
 

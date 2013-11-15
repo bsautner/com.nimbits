@@ -77,6 +77,7 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     @Override
     public void setLastLoggedIn(final Date lastLoggedIn) {
+
         this.lastLoggedIn = new Date(lastLoggedIn.getTime());
     }
 

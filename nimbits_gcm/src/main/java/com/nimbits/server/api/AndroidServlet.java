@@ -32,7 +32,7 @@ public class AndroidServlet extends HttpServlet {
 
     public static final int DEFAULT_CHART_VALUES = 1000;
     public static final int DEFAULT_TIMER_INTERVAL = 5000;
-    public static final double MIN_VERSION = 1.4;
+    public static final double MIN_VERSION = 1.01;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

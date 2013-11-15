@@ -54,7 +54,7 @@ public class ValueFactory {
         double d = 0;
         String note = null;
         String sample = valueAndNote.getValue().trim();
-        if (sample != null && !sample.isEmpty()) {
+        if (!sample.isEmpty()) {
 
             if (sample.contains(" ")) {
                 String a[] = sample.split(" ");

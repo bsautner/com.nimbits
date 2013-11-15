@@ -23,12 +23,7 @@
 
 
     <dependencies>
-        <dependency>
-            <groupId>com.nimbits</groupId>
-            <artifactId>nimbits_lib</artifactId>
-            <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
+
 
         <dependency>
             <groupId>com.nimbits</groupId>

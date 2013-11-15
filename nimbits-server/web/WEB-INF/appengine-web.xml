@@ -3,9 +3,9 @@
     <threadsafe>true</threadsafe>
 
     <!--change this to -->
-    <application>nimbits-02</application>
+    <application>nimbits-server-qa</application>
 
-    <version>742</version>
+    <version>749</version>
 
     <precompilation-enabled>false</precompilation-enabled>
 
@@ -23,8 +23,8 @@
     </static-files>
     <inbound-services>
         <service>xmpp_message</service>
-        <service>xmpp_presence</service>
-        <service>xmpp_subscribe</service>
-        <service>xmpp_error</service>
+        <!--<service>xmpp_presence</service>-->
+        <!--<service>xmpp_subscribe</service>-->
+        <!--<service>xmpp_error</service>-->
     </inbound-services>
 </appengine-web-app>

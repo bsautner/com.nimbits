@@ -22,6 +22,8 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 
+import java.util.Date;
+
 @Deprecated
 public enum GsonFactory {
     instance;
@@ -49,8 +51,8 @@ public enum GsonFactory {
                     .registerTypeAdapter(Calculation.class, new CalculationDeserializer())
                     .registerTypeAdapter(User.class, new UserSerializer())
                     .registerTypeAdapter(User.class, new UserDeserializer())
-                            // .registerTypeAdapter(Date.class, new DateDeserializer())
-                            //  .registerTypeAdapter(Date.class, new DateSerializer())
+//                     .registerTypeAdapter(Date.class, new DateDeserializer())
+//                      .registerTypeAdapter(Date.class, new DateSerializer())
                     .create();
 
         }

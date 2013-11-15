@@ -48,7 +48,6 @@ import java.util.List;
 
 public class UploadTask extends TaskBase {
 
-    private ValueService valueService;
 
 
     @Override

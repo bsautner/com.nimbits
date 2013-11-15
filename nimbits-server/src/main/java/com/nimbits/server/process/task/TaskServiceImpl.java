@@ -15,19 +15,23 @@ package com.nimbits.server.process.task;
 import com.google.appengine.api.taskqueue.Queue;
 import com.google.appengine.api.taskqueue.QueueFactory;
 import com.google.appengine.api.taskqueue.TaskOptions;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.gson.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Enumeration;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.logging.Logger;
 
 
@@ -46,6 +50,7 @@ public class TaskServiceImpl implements TaskService {
     private static final String PATH_TASK_PROCESS_BATCH = "/task/batchTask";
     private static final String PATH_INCOMING_MAIL_QUEUE = "/task/mailTask";
     private static final String PATH_DELETE_DATA_TASK = "/task/deleteTask";
+    private static final String PATH_HB_TASK = "/task/hb";
     private static final Logger log = Logger.getLogger(TaskServiceImpl.class.getName());
     private static final String DUMP = "dump";
 
@@ -208,6 +213,32 @@ public class TaskServiceImpl implements TaskService {
 
         queue.add(TaskOptions.Builder.withUrl(PATH_MOVE_TASK)
                 .param(Parameters.point.getText(), json));
+    }
+
+    @Override
+    public void startHeartbeatTask(User user, List<Point> entities, Action update) {
+        Gson gson = new GsonBuilder()
+                .setDateFormat(Const.GSON_DATE_FORMAT)
+                .serializeNulls()
+                .registerTypeAdapter(Value.class, new ValueSerializer())
+                .registerTypeAdapter(Point.class, new PointSerializer())
+                .registerTypeAdapter(Entity.class, new EntitySerializer())
+                .registerTypeAdapter(AccessKey.class, new AccessKeySerializer())
+                .registerTypeAdapter(User.class, new UserSerializer())
+                .registerTypeAdapter(Date.class, new DateSerializer())
+                .create();
+        final String json =  gson.toJson(entities);
+        final String userJson =  gson.toJson(user);
+        final String actionStr = update.getCode();
+
+        final Queue queue = QueueFactory.getQueue(DEFAULT);
+
+        queue.add(TaskOptions.Builder.withUrl(PATH_HB_TASK)
+                .param(Parameters.json.getText(), json)
+                .param(Parameters.user.getText(), userJson)
+                .param(Parameters.action.getText(), actionStr)
+        );
+
     }
 
 

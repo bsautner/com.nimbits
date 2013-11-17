@@ -56,11 +56,17 @@ public class SendAllMessagesServlet extends BaseServlet {
         }
         if (json != null) {
             status.append(json);
+            byte[] b = json.getBytes("UTF-8");
+            int bytes = b.length;
+            float kb = bytes / 1024;
+            if (kb > 4.0) {
+                status.append("message was too large");
+                devices.clear();
+            }
         }
         else {
             status.append("json was null");
         }
-
 
         if (devices.isEmpty()) {
             status.append("Message ignored as there is no device registered!");

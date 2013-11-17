@@ -20,6 +20,16 @@
 
         </retry-parameters>
     </queue>
+
+    <queue>
+        <name>hb</name>
+        <rate>10/s</rate>
+        <retry-parameters>
+            <task-retry-limit>3</task-retry-limit>
+
+        </retry-parameters>
+    </queue>
+
     <queue>
         <name>blob</name>
         <rate>1/s</rate>

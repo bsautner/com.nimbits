@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.001" errors="0" skipped="0" tests="1" name="com.nimbits.client.model.summary.SummaryModelTest">
+<testsuite failures="0" time="0" errors="0" skipped="0" tests="1" name="com.nimbits.client.model.summary.SummaryModelTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-7-oracle/jre/lib/amd64"/>
@@ -10,7 +10,7 @@
     <property name="guice.disable.misplaced.annotation.check" value="true"/>
     <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
     <property name="file.encoding.pkg" value="sun.io"/>
-    <property name="idea.launcher.port" value="7536"/>
+    <property name="idea.launcher.port" value="7541"/>
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.os.patch.level" value="unknown"/>
@@ -37,9 +37,9 @@
     <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
     <property name="java.specification.version" value="1.7"/>
     <property name="file.encoding" value="UTF-8"/>
-    <property name="idea.launcher.bin.path" value="/mnt/devel/IDE/idea.old/bin"/>
+    <property name="idea.launcher.bin.path" value="/mnt/devel/IDE/idea/bin"/>
     <property name="user.name" value="benjamin"/>
-    <property name="java.class.path" value="/mnt/devel/sdk/apache-maven-3.0.5/boot/plexus-classworlds-2.4.jar:/mnt/devel/IDE/idea.old/lib/idea_rt.jar"/>
+    <property name="java.class.path" value="/mnt/devel/sdk/apache-maven-3.0.5/boot/plexus-classworlds-2.4.jar:/mnt/devel/IDE/idea/lib/idea_rt.jar"/>
     <property name="java.vm.specification.version" value="1.7"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.home" value="/usr/lib/jvm/java-7-oracle/jre"/>

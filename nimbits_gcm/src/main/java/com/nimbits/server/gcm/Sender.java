@@ -15,7 +15,7 @@ package com.nimbits.server.gcm;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -430,9 +430,7 @@ public class Sender {
       }
       MulticastResult multicastResult = builder.build();
       return multicastResult;
-    } catch (ParseException e) {
-      throw newIoException(responseBody, e);
-    } catch (CustomParserException e) {
+    } catch (Exception e) {
       throw newIoException(responseBody, e);
     }
   }

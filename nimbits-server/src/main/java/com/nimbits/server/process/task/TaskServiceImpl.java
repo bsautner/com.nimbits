@@ -39,7 +39,7 @@ public class TaskServiceImpl implements TaskService {
 
     private static final String IN_CONTENT = "inContent";
     private static final String QUEUE_DELETE_BLOB = "blob";
-
+    private static final String HB_QUEUE = "hb";
     private static final String DEFAULT = "default";
     private static final String PATH_DELETE_BLOB_TASK = "/task/deleteBlobTask";
     private static final String PATH_POINT_MAINT_TASK = "/task/pointTask";
@@ -231,7 +231,7 @@ public class TaskServiceImpl implements TaskService {
         final String userJson =  gson.toJson(user);
         final String actionStr = update.getCode();
 
-        final Queue queue = QueueFactory.getQueue(DEFAULT);
+        final Queue queue = QueueFactory.getQueue(HB_QUEUE);
 
         queue.add(TaskOptions.Builder.withUrl(PATH_HB_TASK)
                 .param(Parameters.json.getText(), json)

@@ -3,9 +3,9 @@
     <threadsafe>true</threadsafe>
 
     <!--change this to -->
-    <application>nimbits-server-qa</application>
+    <application>nimbits-02</application>
 
-    <version>749</version>
+    <version>755</version>
 
     <precompilation-enabled>false</precompilation-enabled>
 

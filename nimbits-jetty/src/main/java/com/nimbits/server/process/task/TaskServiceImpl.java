@@ -13,27 +13,45 @@
 package com.nimbits.server.process.task;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.NimbitsEngine;
+import com.nimbits.server.gson.*;
 import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.service.ValueService;
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
 
 public class TaskServiceImpl implements TaskService {
-
+    private final Logger log = Logger.getLogger(TaskServiceImpl.class.getName());
     private static final String IN_CONTENT = "inContent";
     private static final String QUEUE_DELETE_BLOB= "blob";
-
+    private static final String PATH_HB_TASK = "/task/hb";
     private static final String DEFAULT = "default";
     private static final String PATH_DELETE_BLOB_TASK = "/task/deleteBlobTask";
     private static final String PATH_POINT_MAINT_TASK = "/task/pointTask";
@@ -44,7 +62,7 @@ public class TaskServiceImpl implements TaskService {
     private static final String PATH_TASK_PROCESS_BATCH = "/task/batchTask";
     private static final String PATH_INCOMING_MAIL_QUEUE = "/task/mailTask";
     private static final String PATH_DELETE_DATA_TASK = "/task/deleteTask";
-    private static final Logger log = Logger.getLogger(TaskServiceImpl.class.getName());
+    public static final String UTF_8 = "UTF-8";
     private static final String DUMP = "dump";
 
     private NimbitsEngine engine;
@@ -102,7 +120,71 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void startHeartbeatTask(User user, List<Point> entities, Action update) {
+    public void startHeartbeatTask(HttpServletRequest req, User user, List<Point> entities, Action update)   {
+        Gson gson = new GsonBuilder()
+                .setDateFormat(Const.GSON_DATE_FORMAT)
+                .serializeNulls()
+                .registerTypeAdapter(Value.class, new ValueSerializer())
+                .registerTypeAdapter(Point.class, new PointSerializer())
+                .registerTypeAdapter(Entity.class, new EntitySerializer())
+                .registerTypeAdapter(AccessKey.class, new AccessKeySerializer())
+                .registerTypeAdapter(User.class, new UserSerializer())
+                .registerTypeAdapter(Date.class, new DateSerializer())
+                .create();
+        final String json =  gson.toJson(entities);
+        final String userJson =  gson.toJson(user);
+        final String actionStr = update.getCode();
 
+        String request = req.getScheme() + "://" +
+                req.getServerName() +
+                ":" + req.getServerPort() +
+                "" + PATH_HB_TASK;
+
+
+        try {
+
+            URL url = new URL(request);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
+            List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+
+            params.add(new BasicNameValuePair(Parameters.json.getText(), json));
+            params.add(new BasicNameValuePair(Parameters.user.getText(), userJson));
+            params.add(new BasicNameValuePair(Parameters.action.getText(), actionStr));
+
+            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+            writer.write(getQuery(params));
+
+            writer.close();
+            int r = connection.getResponseCode();
+
+            log.info(request + " " + r);
+
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private String getQuery(final List<NameValuePair> params) throws UnsupportedEncodingException {
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+
+        for (NameValuePair pair : params)
+        {
+            if (first)
+                first = false;
+            else
+                result.append("&");
+
+            result.append(URLEncoder.encode(pair.getName(), UTF_8));
+            result.append("=");
+            result.append(URLEncoder.encode(pair.getValue(), UTF_8));
+        }
+
+        return result.toString();
     }
 }

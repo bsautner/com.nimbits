@@ -14,9 +14,7 @@ package com.nimbits.server.process.task;
 
 import com.nimbits.server.NimbitsEngine;
 
-/**
- * Created by benjamin on 10/18/13.
- */
+
 public class TaskServiceFactory {
 
     public static TaskService getServiceInstance(NimbitsEngine engine){

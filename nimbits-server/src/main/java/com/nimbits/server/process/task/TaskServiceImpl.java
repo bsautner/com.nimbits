@@ -21,7 +21,6 @@ import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.timespan.Timespan;
@@ -216,7 +215,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void startHeartbeatTask(User user, List<Point> entities, Action update) {
+    public void startHeartbeatTask(HttpServletRequest req, User user, List<Point> entities, Action update) {
         Gson gson = new GsonBuilder()
                 .setDateFormat(Const.GSON_DATE_FORMAT)
                 .serializeNulls()

@@ -31,6 +31,8 @@ import javax.jdo.PersistenceManagerFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 
 public class ApplicationListener implements ServletContextListener {
@@ -41,7 +43,9 @@ public class ApplicationListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         ServletContext context = servletContextEvent.getServletContext();
+
         NimbitsEngine engine = createEngine();
+
 
         context.setAttribute("engine", engine);
         context.setAttribute("task", getTaskService(engine));

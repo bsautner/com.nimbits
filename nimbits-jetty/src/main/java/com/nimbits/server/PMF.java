@@ -22,17 +22,21 @@ import java.util.Properties;
 public class PMF {
 
     public static PersistenceManagerFactory get() {
-        Properties properties = new Properties();
-        properties.setProperty("javax.jdo.PersistenceManagerFactoryClass",
-                "org.datanucleus.api.jdo.JDOPersistenceManagerFactory");
-        properties.setProperty("javax.jdo.option.ConnectionURL","jdbc:mysql://localhost/nimbits");
-        properties.setProperty("javax.jdo.option.ConnectionDriverName","com.mysql.jdbc.Driver");
-        properties.setProperty("javax.jdo.option.ConnectionUserName","root");
-        properties.setProperty("datanucleus.autoCreateTables","true");
-        properties.setProperty("javax.jdo.option.ConnectionPassword","password");
-        properties.setProperty("datanucleus.autoCreateTables","true");
+//        Properties properties = new Properties();
+//        properties.setProperty("javax.jdo.PersistenceManagerFactoryClass",
+//                "org.datanucleus.api.jdo.JDOPersistenceManagerFactory");
+//        properties.setProperty("javax.jdo.option.ConnectionURL","jdbc:mysql://localhost/nimbits");
+//        properties.setProperty("javax.jdo.option.ConnectionDriverName","com.mysql.jdbc.Driver");
+//        properties.setProperty("javax.jdo.option.ConnectionUserName","root");
+//        properties.setProperty("datanucleus.autoCreateTables","true");
+//        properties.setProperty("javax.jdo.option.ConnectionPassword","password");
+//        properties.setProperty("datanucleus.autoCreateTables","true");
 
-        PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(properties);
+        Properties props = new Properties();
+        props.put("datanucleus.PersistenceUnitName", "pmf");
+        PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory(props);
+
+      //  PersistenceManagerFactory pmf = JDOHelper.getPersistenceManagerFactory("datanucleus.properties");
         return pmf;
     }
 }

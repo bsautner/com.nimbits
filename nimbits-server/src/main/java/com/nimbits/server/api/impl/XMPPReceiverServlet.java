@@ -84,7 +84,7 @@ public class XMPPReceiverServlet extends ApiServlet {
                 //sendPointList(u);
             } else if (body.indexOf('=') > 0) {
 
-                recordNewValue(body, u);
+                recordNewValue(req, body, u);
 
             } else if (!body.trim().equals("?") && !body.isEmpty() && body.charAt(body.length() - 1) == '?') {
 
@@ -99,7 +99,7 @@ public class XMPPReceiverServlet extends ApiServlet {
                 sendHelp(u);
 
             } else if (JsonHelper.isJson(body)) { //it's json from the sdk
-                processJson(u, body);
+                processJson(req, u, body);
             } else {
                 engine.getXmppService().sendMessage(":( I don't understand you - try ? ", u.getEmail());
             }
@@ -109,7 +109,7 @@ public class XMPPReceiverServlet extends ApiServlet {
         // ...
     }
 
-    private void processJson(final User u, final String body) {
+    private void processJson(HttpServletRequest req, final User u, final String body) {
 
 
         Gson gson = GsonFactory.getInstance();
@@ -127,7 +127,7 @@ public class XMPPReceiverServlet extends ApiServlet {
 
                 if (point != null) {
 
-                    final Value v = valueService.recordValue(u, point, p.getValue());
+                    final Value v = valueService.recordValue(req, u, point, p.getValue());
                     point.setValue(v);
                     String result = gson.toJson(point);
                     engine.getXmppService().sendMessage(result, u.getEmail());
@@ -161,7 +161,7 @@ public class XMPPReceiverServlet extends ApiServlet {
 
     }
 
-    private void recordNewValue(final CharSequence body, final User u) {
+    private void recordNewValue(HttpServletRequest req, final CharSequence body, final User u) {
         String b[] = PATTERN.split(body);
         if (b.length == 2) {
 
@@ -174,7 +174,7 @@ public class XMPPReceiverServlet extends ApiServlet {
 
                 if (u != null) {
                     Value value = ValueFactory.createValueModel(LocationFactory.createLocation(), v, new Date(), "", ValueDataModel.getInstance(SimpleValue.getInstance("")), AlertType.OK);
-                    valueService.recordValue(u, pointName, value);
+                    valueService.recordValue(req, u, pointName, value);
                 }
             } catch (NumberFormatException ignored) {
 

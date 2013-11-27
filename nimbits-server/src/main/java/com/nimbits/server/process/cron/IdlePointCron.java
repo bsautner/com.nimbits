@@ -29,7 +29,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class IdlePointCron extends ApiBase {
+public class IdlePointCron extends CronBase {
     /**
      *
      */
@@ -42,17 +42,12 @@ public class IdlePointCron extends ApiBase {
     @SuppressWarnings(Const.WARNING_UNCHECKED)
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
-        // PrintWriter out;
-        // out = resp.getWriter();
 
-        try {
-            setup(req, resp);
-            valueService = ValueServiceFactory.getInstance(engine, taskService);
-            userService = AuthenticationServiceFactory.getInstance(engine);
-            processGet();
-        } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
+        setup( );
+        valueService = ValueServiceFactory.getInstance(engine, taskService);
+        userService = AuthenticationServiceFactory.getInstance(engine);
+        processGet();
+
         resp.setStatus(HttpServletResponse.SC_OK);
 
 

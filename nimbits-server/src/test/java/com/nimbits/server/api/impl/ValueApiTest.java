@@ -69,7 +69,7 @@ public class ValueApiTest extends NimbitsServletTest {
         EntityServiceFactory.getInstance(engine).addUpdateEntity(Arrays.<Entity>asList(pointChild));
         Value v = ValueFactory.createValueModel(1);
         for (int i = 0; i < 3; i++) {
-            valueService.recordValue(user, point, v);
+            valueService.recordValue(req, user, point, v);
             // Thread.sleep(1500);
 
         }

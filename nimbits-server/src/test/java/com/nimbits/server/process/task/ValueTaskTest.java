@@ -63,7 +63,7 @@ public class ValueTaskTest extends NimbitsServletTest {
                 null, null);
         entityService.addUpdateEntity(Arrays.<Entity>asList(c));
         Value v = ValueFactory.createValueModel(1.12);
-        valueService.recordValue(user, point, v);
+        valueService.recordValue(req, user, point, v);
         List<Value> vr = valueService.getCurrentValue(point);
         assertFalse(vr.isEmpty());
         assertEquals(v.getDoubleValue(), vr.get(0).getDoubleValue(), 0.001);

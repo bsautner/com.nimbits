@@ -72,14 +72,14 @@ public class SummaryServiceTest extends NimbitsServletTest {
         for (int i = 0; i < c; i++) {
             double dx = rand.nextDouble() * 100;
             Value value = ValueFactory.createValueModel(dx);
-            Value vr = valueService.recordValue(user, point, value);
+            Value vr = valueService.recordValue(req, user, point, value);
             Assert.assertNotNull(vr);
             Thread.sleep(INT);
             d[i] = dx;
         }
         double com = SummaryServiceFactory.getServiceInstance(engine, taskService).getValue(SummaryType.average, d);
 
-        summaryService.processSummaries(user, point);
+        summaryService.processSummaries(req, user, point);
 
         List<Value> result = valueService.getCurrentValue(pointChild);
         Thread.sleep(100);

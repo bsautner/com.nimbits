@@ -33,14 +33,18 @@ import javax.jdo.Query;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class BlobStoreImpl implements BlobStore {
-    //  private final Logger log = Logger.getLogger(BlobStoreImpl.class.getName());
+    private final Logger log = Logger.getLogger(BlobStoreImpl.class.getName());
     private final PersistenceManagerFactory pmf;
-
+    private final static String folder = "nimbits_data/";
     public BlobStoreImpl(PersistenceManagerFactory pmf) {
         this.pmf = pmf;
-
+        File file = new File(folder);
+        if (! file.exists()) {
+            file.mkdir();
+        }
     }
 
 
@@ -120,7 +124,7 @@ public class BlobStoreImpl implements BlobStore {
             q.setOrdering("timestamp descending");
 
             final Collection<ValueBlobStore> result = (Collection<ValueBlobStore>) q.execute(entity.getKey());
-
+            log.info("Got all stores for " + entity.getName().getValue() + " total::" + result.size());
             return ValueBlobStoreFactory.createValueBlobStores(result);
         } finally {
             pm.close();
@@ -181,7 +185,7 @@ public class BlobStoreImpl implements BlobStore {
         }
     }
     private String readFile(String fn) throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader(fn));
+        BufferedReader br = new BufferedReader(new FileReader(folder + fn));
         try {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
@@ -201,7 +205,7 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public List<Value> readValuesFromFile(final String key, final long length)  {
-        //TODO Delete file
+
         final Type valueListType = new TypeToken<List<ValueModel>>() {
         }.getType();
         List<Value> models;
@@ -235,7 +239,7 @@ public class BlobStoreImpl implements BlobStore {
     public void deleteBlobs(List<ValueBlobStore> result) {
         for (ValueBlobStore store : result) {
             final String blobKey =  store.getBlobKey();
-            File file = new File(blobKey);
+            File file = new File(folder + blobKey);
             file.delete();
 
         }
@@ -243,7 +247,7 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public void delete(final String key) {
-        File file = new File(key);
+        File file = new File(folder + key);
         file.delete();
 
     }
@@ -255,7 +259,7 @@ public class BlobStoreImpl implements BlobStore {
         try {
             final String json = GsonFactory.getInstance().toJson(holder.getValues());
             String fn = UUID.randomUUID().toString();
-            PrintWriter out = new PrintWriter(fn);
+            PrintWriter out = new PrintWriter(folder + fn);
             out.println(json);
             out.close();
 

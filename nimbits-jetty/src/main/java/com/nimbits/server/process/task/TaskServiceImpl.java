@@ -99,8 +99,35 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void startRecordValueTask(User u, Entity point, Value value) {
+    public void startRecordValueTask(HttpServletRequest req, User u, Entity point, Value value) {
+        if (Double.valueOf(value.getDoubleValue()).isInfinite()) {
+            return;
+        }
 
+        final String userJson = GsonFactory.getInstance().toJson(u);
+        final String pointJson = GsonFactory.getInstance().toJson(point);
+        final String valueJson = GsonFactory.getInstance().toJson(value);
+
+
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+
+        params.add(new BasicNameValuePair(Parameters.pointJson.getText(), pointJson));
+        params.add(new BasicNameValuePair(Parameters.pointUser.getText(), userJson));
+        params.add(new BasicNameValuePair(Parameters.valueJson.getText(), valueJson));
+
+        try {
+            postTask(req, params, PATH_TASK_RECORD_VALUE);
+        } catch (IOException e) {
+            log.severe(e.getMessage());
+        }
+
+//
+//        queue.add(TaskOptions.Builder
+//                .withUrl(PATH_TASK_RECORD_VALUE)
+//                .param(Parameters.pointUser.getText(), userJson)
+//                .param(Parameters.pointJson.getText(), pointJson)
+//                .param(Parameters.valueJson.getText(), valueJson));
     }
 
     @Override
@@ -109,7 +136,26 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void startPointMaintTask(Entity e) {
+    public void startPointMaintTask(HttpServletRequest req, Entity e) {
+        Gson gson = new GsonBuilder()
+                .setDateFormat(Const.GSON_DATE_FORMAT)
+                .serializeNulls()
+                .registerTypeAdapter(Value.class, new ValueSerializer())
+                .registerTypeAdapter(Point.class, new PointSerializer())
+                .registerTypeAdapter(Entity.class, new EntitySerializer())
+                .registerTypeAdapter(AccessKey.class, new AccessKeySerializer())
+                .registerTypeAdapter(User.class, new UserSerializer())
+                .registerTypeAdapter(Date.class, new DateSerializer())
+                .create();
+        final String json = gson.toJson(e);
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
+
+        params.add(new BasicNameValuePair(Parameters.json.getText(), json));
+        try {
+            postTask(req, params, PATH_POINT_MAINT_TASK);
+        } catch (IOException e1) {
+            e1.printStackTrace();
+        }
 
     }
 
@@ -135,18 +181,10 @@ public class TaskServiceImpl implements TaskService {
         final String userJson =  gson.toJson(user);
         final String actionStr = update.getCode();
 
-        String request = req.getScheme() + "://" +
-                req.getServerName() +
-                ":" + req.getServerPort() +
-                "" + PATH_HB_TASK;
+
 
 
         try {
-
-            URL url = new URL(request);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 
@@ -154,19 +192,33 @@ public class TaskServiceImpl implements TaskService {
             params.add(new BasicNameValuePair(Parameters.user.getText(), userJson));
             params.add(new BasicNameValuePair(Parameters.action.getText(), actionStr));
 
-            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-            writer.write(getQuery(params));
+            postTask(req, params, PATH_HB_TASK);
 
-            writer.close();
-            int r = connection.getResponseCode();
 
-            log.info(request + " " + r);
 
 
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    protected void postTask(HttpServletRequest req, List<NameValuePair> params, String path) throws IOException {
+        String request = req.getScheme() + "://" +
+                req.getServerName() +
+                ":" + req.getServerPort() +
+                "" + path;
+        URL url = new URL(request);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setDoOutput(true);
+        connection.setRequestMethod("POST");
+
+
+        OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+        writer.write(getQuery(params));
+
+        writer.close();
+        connection.getResponseCode();
     }
 
     private String getQuery(final List<NameValuePair> params) throws UnsupportedEncodingException {

@@ -90,7 +90,7 @@ public class ValueServletImpl extends ApiServlet {
 
                 final PrintWriter out;
                 try {
-                    final Value result = valueService.recordValue(user, point, v);
+                    final Value result = valueService.recordValue(req, user, point, v);
                     out = resp.getWriter();
                     final String j = GsonFactory.getInstance().toJson(result);
                     out.print(j);
@@ -127,7 +127,7 @@ public class ValueServletImpl extends ApiServlet {
                 nv = createValueFromRequest(false);
 
             }
-            out.print(processRequest(getParam(Parameters.point), getParam(Parameters.uuid), format, nv, user));
+            out.print(processRequest(req, getParam(Parameters.point), getParam(Parameters.uuid), format, nv, user));
             out.close();
             resp.setStatus(Const.HTTP_STATUS_OK);
 
@@ -166,6 +166,7 @@ public class ValueServletImpl extends ApiServlet {
     }
 
     public String processRequest(
+            final HttpServletRequest req,
             final String pointNameParam,
             final String uuid,
             final String format,
@@ -200,7 +201,7 @@ public class ValueServletImpl extends ApiServlet {
                         nv.getTimestamp(), nv.getNote(), nv.getData(), AlertType.OK);
 
 
-                value = valueService.recordValue(u, p, newValue);
+                value = valueService.recordValue(req, u, p, newValue);
                 if (nv.getLocation().isEmpty()) {
                     //reportLocation(p, location);
                 } else {

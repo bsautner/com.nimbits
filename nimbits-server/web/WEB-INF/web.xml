@@ -320,7 +320,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>moveCron</servlet-name>
-        <servlet-class>com.nimbits.server.process.cron.MoveRecordedValuesToStoreCron</servlet-class>
+        <servlet-class>com.nimbits.server.process.cron.MoveCron</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>moveCron</servlet-name>

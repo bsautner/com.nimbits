@@ -160,7 +160,7 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
-    public void startRecordValueTask(final User u, final Entity point, final Value value) {
+    public void startRecordValueTask(HttpServletRequest req, final User u, final Entity point, final Value value) {
 
         if (Double.valueOf(value.getDoubleValue()).isInfinite()) {
             return;
@@ -192,7 +192,7 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
-    public void startPointMaintTask(final Entity e) {
+    public void startPointMaintTask(HttpServletRequest req, final Entity e) {
 
         final String json = GsonFactory.getInstance().toJson(e);
 

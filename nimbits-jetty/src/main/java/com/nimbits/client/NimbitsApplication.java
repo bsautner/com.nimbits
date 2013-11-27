@@ -70,13 +70,13 @@ public class NimbitsApplication extends NavigationEventProvider implements Entry
         @Override
         public void onFailure(final Throwable caught) {
 
-            FeedbackHelper.showError(caught);
+
         }
 
         @Override
         public void onSuccess(final User result) {
             loginInfo = result;
-            try {
+
                 if (loginInfo.isLoggedIn()) {
 
                     loadPortalView(loginInfo);
@@ -85,9 +85,7 @@ public class NimbitsApplication extends NavigationEventProvider implements Entry
 
                     loadLogin();
                 }
-            } catch (Exception ex) {
-                FeedbackHelper.showError(ex);
-            }
+
         }
 
 

@@ -21,9 +21,7 @@ public class SettingEntityTest {
 
     @Test
     public void testSave() {
-        assertTrue(true);
-        ServiceTest test = new ServiceTest();
-        test.writeToDb();
+
     }
 
 }

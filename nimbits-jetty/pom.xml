@@ -114,20 +114,25 @@
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
-
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.2</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-maven-plugin</artifactId>
-                  <configuration>
-                      <webApp>
-                          <contextPath>/</contextPath>
-                          <descriptor>${basedir}/web/WEB-INF/web.xml</descriptor>
-                      </webApp>
-                  </configuration>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.eclipse.jetty</groupId>-->
+                <!--<artifactId>jetty-maven-plugin</artifactId>-->
+                  <!--<configuration>-->
+                      <!--<webApp>-->
+                          <!--<contextPath>/</contextPath>-->
+                          <!--<descriptor>${basedir}/web/WEB-INF/web.xml</descriptor>-->
+                      <!--</webApp>-->
+                  <!--</configuration>-->
+            <!--</plugin>-->
 
 
             <plugin>

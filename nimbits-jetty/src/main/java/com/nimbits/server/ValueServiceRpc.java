@@ -26,6 +26,7 @@ import com.nimbits.server.transaction.user.UserHelper;
 import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.service.ValueService;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -48,8 +49,8 @@ public class ValueServiceRpc extends RemoteServiceServlet implements com.nimbits
                                 final Value value)  {
 
         User user = UserHelper.getUser(engine);
-
-        return valueService.recordValue(user, point, value);
+        HttpServletRequest req = getThreadLocalRequest();
+        return valueService.recordValue(req, user, point, value);
 
 
     }

@@ -41,9 +41,11 @@ import java.util.*;
  * Time: 11:31 AM
  */
 public class Program {
-    public static String postUrl = "http://localhost:8080/service/v2/value";
-    public static String cronUrl = "http://localhost:8080/cron/pointCron";
-    public static String seriesUrl = "http://localhost:8080/service/v2/series";
+   // private static final String HOST = "nimbits";
+    private static final String HOST = "nimbits";
+    public static String postUrl = "http://" + HOST + ":8080/nimbits_jetty/service/v2/value";
+    public static String cronUrl = "http://" + HOST + ":8080/nimbits_jetty/cron/pointCron";
+    public static String seriesUrl = "http://" + HOST + ":8080/nimbits_jetty/service/v2/series";
     public static int errors;
     public static int runs;
     public static Gson gson = new GsonBuilder().create();
@@ -52,7 +54,7 @@ public class Program {
         int i = 0;
         errors = 0;
         runs = 0;
-
+        DefaultHttpClient client = null;
         while (true) {
             i++;
             runs++;
@@ -61,7 +63,7 @@ public class Program {
             HttpPost http = new HttpPost(postUrl);
             try {
                 List<BasicNameValuePair> parameters = new ArrayList<BasicNameValuePair>(2);
-
+                client = new DefaultHttpClient();
                 Value value = ValueFactory.createValueModel(i, new Date());
                 String j = gson.toJson(value);
                 parameters.add((new BasicNameValuePair(Parameters.email.getText(), "bsautner@gmail.com")));
@@ -72,7 +74,7 @@ public class Program {
 
                 http.addHeader(Parameters.apikey.getText(),"KEY");
 
-                HttpResponse response = HttpClientFactory.getInstance().execute(http);
+                HttpResponse response =client.execute(http);
 
                 HttpEntity entity = response.getEntity();
                 InputStream inputStream = entity.getContent();
@@ -96,7 +98,7 @@ public class Program {
                     i = 0;
 
                 }
-                Thread.sleep(100);
+                Thread.sleep(10);
 
 
             }  catch (SocketException ex) {
@@ -106,7 +108,7 @@ public class Program {
 
             } finally {
 
-                HttpClientFactory.getInstance().getConnectionManager().closeExpiredConnections();
+
             }
 
         }
@@ -153,6 +155,7 @@ public class Program {
         }.getType();
 
         List<Value> r = gson.fromJson(sb.toString(), valueListType);
+        client.getConnectionManager().shutdown();
         return r;
     }
 
@@ -184,8 +187,8 @@ public class Program {
         HttpResponse cronResponse = HttpClientFactory.getInstance().execute(cron);
         System.out.println("Cron Response: " + cronResponse.getStatusLine().getStatusCode());
         System.out.println("***********************************************");
-        Thread.sleep(1000);
-        cron.releaseConnection();
+        Thread.sleep(100);
+
     }
 
     private static void addParameters(List<BasicNameValuePair> parameters, HttpPost httppost) throws UnsupportedEncodingException {

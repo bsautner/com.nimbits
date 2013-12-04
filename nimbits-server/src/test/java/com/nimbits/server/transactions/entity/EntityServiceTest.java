@@ -25,6 +25,7 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.server.Datastore;
 import com.nimbits.server.NimbitsServletTest;
 import org.junit.Test;
 
@@ -32,12 +33,7 @@ import java.util.*;
 
 import static org.junit.Assert.*;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/29/12
- * Time: 2:27 PM
- */
+
 
 public class EntityServiceTest extends NimbitsServletTest {
 

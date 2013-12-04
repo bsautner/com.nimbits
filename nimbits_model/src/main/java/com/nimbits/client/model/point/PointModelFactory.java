@@ -12,9 +12,17 @@
 
 package com.nimbits.client.model.point;
 
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.point.PointType;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
+
+import java.util.UUID;
 
 
 /**
@@ -62,4 +70,30 @@ public class PointModelFactory {
     }
 
 
+    public static Point createPointModel(User user, String name) {
+
+        EntityName pointName;
+        pointName = CommonFactory.createName(name, EntityType.point);
+        Entity pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone, user.getKey(), user.getKey(), "");
+        Point newPoint = PointModelFactory.createPointModel(
+                pointEntity,
+                0.0,
+                90,
+                "",
+                0.0,
+                false,
+                false,
+                false,
+                0,
+                false,
+                FilterType.fixedHysteresis,
+                0.1,
+                false,
+                PointType.basic, 0, false, 0.0);
+        newPoint.setExpire(5);
+
+        return newPoint;
+
+
+    }
 }

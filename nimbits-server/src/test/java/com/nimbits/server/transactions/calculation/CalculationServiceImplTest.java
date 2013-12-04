@@ -163,7 +163,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
     }
 
 
-    @Test
+    @Test(expected = IllegalArgumentException.class)
     public void testCalcRecursion() {
 
         final EntityName targetName = CommonFactory.createName("TARGET", EntityType.point);

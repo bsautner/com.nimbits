@@ -12,6 +12,7 @@
 
 package com.nimbits.server.communication.email;
 
+import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
 /**
@@ -19,7 +20,7 @@ import javax.jdo.PersistenceManagerFactory;
  */
 public class EmailServiceFactory {
 
-    public static EmailService getServiceInstance(PersistenceManagerFactory pmf) {
+    public static EmailService getServiceInstance(PersistenceManager pmf) {
 
         return new EmailServiceImpl(pmf);
     }

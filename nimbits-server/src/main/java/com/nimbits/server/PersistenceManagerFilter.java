@@ -10,23 +10,29 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits;
+package com.nimbits.server;
 
-import javax.jdo.JDOHelper;
-import javax.jdo.PersistenceManagerFactory;
+import javax.servlet.*;
+import java.io.IOException;
 
+public class PersistenceManagerFilter implements Filter {
+     @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
 
-public final class PMF {
-
-    private static final PersistenceManagerFactory pmfInstance =
-            JDOHelper.getPersistenceManagerFactory("transactions-optional");
-
-    private PMF() {
     }
 
-    public static PersistenceManagerFactory get() {
-        return pmfInstance;
+    public void doFilter(ServletRequest request,
+                         ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        try {
+           chain.doFilter(request, response);
+        } finally {
+          Datastore.finishRequest();
+        }
     }
 
+    @Override
+    public void destroy() {
 
+    }
 }

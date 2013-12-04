@@ -14,6 +14,7 @@ package com.nimbits.server.transactions.settings;
 
 import com.nimbits.client.enums.SettingType;
 import com.nimbits.server.ApplicationListener;
+import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.cache.CacheFactory;
 import com.nimbits.server.transaction.cache.NimbitsCache;
 import com.nimbits.server.transaction.settings.SettingServiceFactory;
@@ -23,10 +24,8 @@ import org.junit.Test;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by benjamin on 10/9/13.
- */
-public class SettingServiceImplJettyTest {
+
+public class SettingServiceImplJettyTest extends NimbitsServletTest {
 
 
     SettingsService service = SettingServiceFactory.getServiceInstance(ApplicationListener.createEngine());

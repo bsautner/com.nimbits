@@ -26,6 +26,7 @@ import com.nimbits.server.NimbitsEngine;
 import com.nimbits.server.ServerInfo;
 import com.nimbits.server.transaction.settings.SettingServiceFactory;
 
+import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -45,9 +46,9 @@ public class EmailServiceImpl implements EmailService {
     private static final String WORD_NIMBITS = "Nimbits";
     private static final int INT = 128;
     private static final int SECONDS_IN_MINUTE = 60;
-     private final PersistenceManagerFactory pmf;
+     private final PersistenceManager pmf;
 
-    public EmailServiceImpl(PersistenceManagerFactory pmf) {
+    public EmailServiceImpl(PersistenceManager pmf) {
         this.pmf = pmf;
     }
 

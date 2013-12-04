@@ -12,23 +12,33 @@
 
 package com.nimbits.server;
 
-
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.server.orm.CategoryEntity;
-
-import javax.jdo.PersistenceManagerFactory;
+import javax.servlet.*;
+import java.io.IOException;
 
 /**
- * Created by benjamin on 10/11/13.
+ * Created by benjamin on 11/28/13.
  */
-public class ServiceTest {
+public class PersistenceManagerFilter  implements javax.servlet.Filter {
 
-    public void writeToDb() {
 
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
 
     }
 
+    public void doFilter(ServletRequest request,
+                         ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+        try {
+           chain.doFilter(request, response);
+        } finally {
+          Datastore.finishRequest();
+        }
+    }
+
+    @Override
+    public void destroy() {
+
+    }
 }

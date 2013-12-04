@@ -16,7 +16,6 @@ package com.nimbits.server;
 
 import com.google.appengine.api.utils.SystemProperty;
 import com.google.appengine.tools.development.testing.*;
-import com.nimbits.PMF;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.model.accesskey.AccessKey;
@@ -48,11 +47,14 @@ import com.nimbits.server.transaction.value.dao.ValueDao;
 import com.nimbits.server.transaction.value.dao.ValueDaoImpl;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 
+import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import java.util.List;
 import java.util.Map;
@@ -69,6 +71,15 @@ import static org.junit.Assert.assertNotNull;
  */
 
 public class NimbitsServletTest extends BaseTest {
+    public NimbitsEngine engine;
+    public TaskService taskService;
+    public SettingsService settingsService;
+    public EntityService entityService;
+    public ValueService valueService;
+    public BlobStore blobStore;
+    public SubscriptionService subscriptionService;
+
+
     public static final String email = SettingType.admin.getDefaultValue();
     public final LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig(),
@@ -78,8 +89,7 @@ public class NimbitsServletTest extends BaseTest {
             .setEnvIsLoggedIn(true).setEnvEmail(email).setEnvAuthDomain("nimbits.com");
 
 
-    public PersistenceManagerFactory pmf = PMF.get();
-    public NimbitsCache cache = CacheFactory.getInstance();
+
     public MockHttpServletRequest req;
     public MockHttpServletResponse resp;
     public MockServletContext context;
@@ -101,14 +111,7 @@ public class NimbitsServletTest extends BaseTest {
 
 
     public ValueDao valueDao;
-    public NimbitsEngine engine = ApplicationListener.createEngine();
-    public TaskService taskService = ApplicationListener.getTaskService(engine);
-    public SettingsService settingsService = SettingServiceFactory.getServiceInstance(engine);
-    public EntityService entityService = EntityServiceFactory.getInstance(engine);
-    public ValueService valueService = ValueServiceFactory.getInstance(engine, taskService);
-    public BlobStore blobStore = BlobStoreFactory.getInstance(engine.getPmf());
-    public SubscriptionService subscriptionService = SubscriptionServiceFactory.getServiceInstance(engine, taskService);
-    public Point createRandomPoint() {
+     public Point createRandomPoint() {
         Point point;
         EntityName pointName;
         pointName = CommonFactory.createName(UUID.randomUUID().toString(), EntityType.point);
@@ -136,7 +139,19 @@ public class NimbitsServletTest extends BaseTest {
 
     @Before
     public void setup() {
-        super.setup();
+
+
+
+        engine = ApplicationListener.createEngine();
+        taskService = ApplicationListener.getTaskService(engine);
+        settingsService = SettingServiceFactory.getServiceInstance(engine);
+        entityService = EntityServiceFactory.getInstance(engine);
+        valueService = ValueServiceFactory.getInstance(engine, taskService);
+        blobStore = BlobStoreFactory.getInstance(engine.getPmf());
+        subscriptionService = SubscriptionServiceFactory.getServiceInstance(engine, taskService);
+
+
+
         SystemProperty.environment.set(SystemProperty.Environment.Value.Development);
         req = new MockHttpServletRequest();
         resp = new MockHttpServletResponse();
@@ -233,18 +248,11 @@ public class NimbitsServletTest extends BaseTest {
 
     }
 
-    @After
-    public void tearDown() {
-//        EntitySearchService.deleteAll();
-//        if (helper != null) {
-//            try {
-//                helper.tearDown();
-//            } catch (Exception ignored) {
-//
-//            }
-//        }
+    @AfterClass
+    public static void afterClass() {
 
     }
+
 
 
 }

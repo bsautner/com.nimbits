@@ -25,7 +25,10 @@ import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.orm.CalcEntity;
 import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import com.nimbits.server.transaction.entity.cache.EntityCache;
+import org.junit.Before;
 import org.junit.Test;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.util.List;
 
@@ -34,8 +37,14 @@ import static org.junit.Assert.assertFalse;
 
 public class EntityCacheImplTest extends NimbitsServletTest {
 
-    EntityCache cache = EntityServiceFactory.getCacheInstance(engine);
+    EntityCache cache;
 
+    @Before
+    public void setup() {
+        super.setup();
+        cache = EntityServiceFactory.getCacheInstance(engine);
+
+    }
 
     @Test
     public void testGetEntityByName() throws Exception {

@@ -13,6 +13,7 @@
 package com.nimbits.server.io.blob;
 
 
+import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
 public class BlobStoreFactory {
@@ -20,7 +21,7 @@ public class BlobStoreFactory {
     private BlobStoreFactory() {
     }
 
-    public static BlobStore getInstance(PersistenceManagerFactory pmf) {
+    public static BlobStore getInstance(PersistenceManager pmf) {
         return new BlobStoreImpl(pmf);
     }
 

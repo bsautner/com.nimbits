@@ -16,8 +16,10 @@ import com.nimbits.client.enums.SettingType;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.cache.CacheFactory;
 import com.nimbits.server.transaction.cache.NimbitsCache;
+import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import com.nimbits.server.transaction.settings.SettingServiceFactory;
 import com.nimbits.server.transaction.settings.SettingsService;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
@@ -29,8 +31,13 @@ import static org.junit.Assert.assertTrue;
 public class SettingServiceImplTest extends NimbitsServletTest {
 
 
-    SettingsService service = SettingServiceFactory.getServiceInstance(engine);
+    SettingsService service;
+    @Before
+    public void setup() {
+        super.setup();
+        service = SettingServiceFactory.getServiceInstance(engine);
 
+    }
     @Test
     public void getSettingsTest() throws Exception {
 

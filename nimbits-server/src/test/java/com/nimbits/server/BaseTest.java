@@ -17,6 +17,10 @@ import com.nimbits.server.api.impl.EntityServletImpl;
 import com.nimbits.server.process.cron.IdlePointCron;
 import com.nimbits.server.process.task.PointMaintTask;
 import com.nimbits.server.process.task.ValueTask;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.springframework.mock.web.MockServletContext;
 
 import javax.servlet.ServletContext;
@@ -26,19 +30,39 @@ import javax.servlet.ServletContext;
  */
 public class BaseTest {
 
-    public BatchApi batchApi;
-    public ValueApi valueApi;
-    public SessionApi sessionApi;
-    public EntityApi entityApi;
-    public EntityServletImpl entityServlet;
-    public SeriesApi seriesApi;
-    public ValueTask valueTask;
-    public IdlePointCron idleCron;
-    public PointMaintTask pointTask;
+    public static BatchApi batchApi;
+    public  static ValueApi valueApi;
+    public static SessionApi sessionApi;
+    public static EntityApi entityApi;
+    public static EntityServletImpl entityServlet;
+    public static SeriesApi seriesApi;
+    public  static ValueTask valueTask;
+    public  static IdlePointCron idleCron;
+    public  static PointMaintTask pointTask;
 
-    public void setup() {
+    @AfterClass
+    public static void tearDown() {
+
+//        EntitySearchService.deleteAll();
+//        if (helper != null) {
+//            try {
+//                helper.tearDown();
+     //   Datastore.finishRequest();
+        Datastore.delete();
+//            } catch (Exception ignored) {
+//
+//            }
+//        }
+
+    }
+    @BeforeClass
+    public static void before() {
         final MockServletContext context = new MockServletContext();
+        System.setProperty("appengine.orm.disable.duplicate.pmf.exception", "false");
+        Datastore.initialize();
+
         NimbitsEngine engine = ApplicationListener.createEngine();
+
         context.setAttribute("engine", engine);
         context.setAttribute("task", ApplicationListener.getTaskService(engine));
 

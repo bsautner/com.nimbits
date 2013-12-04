@@ -19,16 +19,17 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.value.Value;
 
+import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
 
 public class EmailServiceImpl implements EmailService {
 
 
-     private final PersistenceManagerFactory pmf;
+     private final PersistenceManager pm;
 
-    public EmailServiceImpl(PersistenceManagerFactory pmf) {
-        this.pmf = pmf;
+    public EmailServiceImpl(PersistenceManager pmf) {
+        this.pm= pmf;
     }
 
 

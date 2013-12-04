@@ -24,9 +24,11 @@ import com.nimbits.client.model.summary.SummaryModelFactory;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import com.nimbits.server.transaction.summary.SummaryService;
 import com.nimbits.server.transaction.summary.SummaryServiceFactory;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Date;
@@ -48,8 +50,13 @@ public class SummaryServiceTest extends NimbitsServletTest {
     double[] v = {1, 2, 3};
 
 
-    SummaryService summaryService = SummaryServiceFactory.getServiceInstance(engine, taskService);
+    SummaryService summaryService;
+    @Before
+    public void setup() {
+        super.setup();
+        summaryService = SummaryServiceFactory.getServiceInstance(engine, taskService);
 
+    }
 
     @Test
     public void testProcessGet() throws Exception {

@@ -9,6 +9,7 @@ import com.nimbits.client.model.category.CategoryModel;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.api.EntityApi;
 import com.nimbits.server.gson.GsonFactory;
@@ -23,6 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static org.junit.Assert.*;
 
@@ -63,17 +65,17 @@ public class EntityApiTest extends NimbitsServletTest {
     }
 
     @Test
-    public void testPostCreatePointConflict() throws IOException, ServletException, Exception {
-        req.removeAllParameters();
+    public void testPostCreatePointConflict() throws IOException, ServletException {
+        req1.removeAllParameters();
         String pointJson = GsonFactory.getInstance().toJson(point);
 
 
-        req.addParameter("action", "create");
-        req.addParameter("json", pointJson);
-        req.setMethod("POST");
-        entityApi.doPost(req, resp);
+        req1.addParameter("action", "create");
+        req1.addParameter("json", pointJson);
+        req1.setMethod("POST");
+        entityApi.doPost(req1, resp1);
 
-        assertEquals(HttpServletResponse.SC_CONFLICT, resp.getStatus());
+        assertEquals(HttpServletResponse.SC_CONFLICT, resp1.getStatus());
 //        List<Entity> r =  EntityServiceImpl.getEntityByKey(user, point.getKey(), EntityType.point);
 //        assertTrue(r.isEmpty());
 
@@ -122,10 +124,10 @@ public class EntityApiTest extends NimbitsServletTest {
     }
 
     @Test
-    public void testPostCreatePoint() throws IOException, ServletException, Exception {
+    public void testPostCreatePoint() throws IOException, ServletException  {
         req.removeAllParameters();
-        String pointJson = GsonFactory.getInstance().toJson(point);
-        EntityServiceFactory.getInstance(engine).deleteEntity(user, Arrays.<Entity>asList(point));
+        Point point1 = PointModelFactory.createPointModel(user, UUID.randomUUID().toString());
+        String pointJson = GsonFactory.getInstance().toJson(point1);
         req.addParameter("action", "create");
         req.addParameter("json", pointJson);
         req.setMethod("POST");

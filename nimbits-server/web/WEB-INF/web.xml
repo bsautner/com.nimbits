@@ -23,7 +23,14 @@
     <listener>
         <listener-class>com.nimbits.server.ApplicationListener</listener-class>
     </listener>
-
+    <filter>
+        <filter-name>PersistenceManagerFilter</filter-name>
+        <filter-class>com.nimbits.server.PersistenceManagerFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>PersistenceManagerFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
     <servlet>
         <servlet-name>userApi</servlet-name>
         <servlet-class>com.nimbits.server.api.UserApi</servlet-class>

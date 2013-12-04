@@ -28,7 +28,6 @@ import com.nimbits.server.orm.store.ValueBlobStoreEntity;
 import com.nimbits.server.transaction.value.dao.ValueDayHolder;
 
 import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import java.io.*;
 import java.lang.reflect.Type;
@@ -37,10 +36,10 @@ import java.util.logging.Logger;
 
 public class BlobStoreImpl implements BlobStore {
     private final Logger log = Logger.getLogger(BlobStoreImpl.class.getName());
-    private final PersistenceManagerFactory pmf;
+    private final PersistenceManager pm;
     private final static String folder = "nimbits_data/";
-    public BlobStoreImpl(PersistenceManagerFactory pmf) {
-        this.pmf = pmf;
+    public BlobStoreImpl(PersistenceManager pmf) {
+        this.pm = pmf;
         File file = new File(folder);
         if (! file.exists()) {
             file.mkdir();
@@ -50,7 +49,7 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public List<Value> getTopDataSeries(final Entity entity, final int maxValues, final Date endDate)   {
-        final PersistenceManager pm = pmf.getPersistenceManager();
+
         try {
 
             final List<Value> retObj = new ArrayList<Value>(maxValues);
@@ -78,7 +77,7 @@ public class BlobStoreImpl implements BlobStore {
             }
             return retObj;
         } finally {
-            pm.close();
+
         }
     }
 
@@ -87,7 +86,7 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public List<Value> getDataSegment(final Entity entity, final Range<Date> timespan) {
-        final PersistenceManager pm = pmf.getPersistenceManager();
+
         try {
             final List<Value> retObj = new ArrayList<Value>();
             final Query q = pm.newQuery(ValueBlobStoreEntity.class);
@@ -107,14 +106,13 @@ public class BlobStoreImpl implements BlobStore {
             }
             return retObj;
         } finally {
-            pm.close();
+
         }
     }
 
 
     @Override
     public List<ValueBlobStore> getAllStores(final Entity entity) {
-        final PersistenceManager pm = pmf.getPersistenceManager();
 
         try {
 
@@ -127,7 +125,7 @@ public class BlobStoreImpl implements BlobStore {
             log.info("Got all stores for " + entity.getName().getValue() + " total::" + result.size());
             return ValueBlobStoreFactory.createValueBlobStores(result);
         } finally {
-            pm.close();
+
         }
     }
 
@@ -135,7 +133,7 @@ public class BlobStoreImpl implements BlobStore {
     public List<Value> consolidateDate(final Entity entity, final Date timestamp) {
 
 
-        final PersistenceManager pm = pmf.getPersistenceManager();
+
         try {
 
             final Query q = pm.newQuery(ValueBlobStoreEntity.class);
@@ -154,7 +152,7 @@ public class BlobStoreImpl implements BlobStore {
             return values;
 
         } finally {
-            pm.close();
+
         }
     }
 
@@ -163,7 +161,6 @@ public class BlobStoreImpl implements BlobStore {
     public void deleteExpiredData(final Entity entity) {
 
 
-        final PersistenceManager pm = pmf.getPersistenceManager();
 
         int exp = ((Point) entity).getExpire();
         if (exp > 0) {
@@ -179,7 +176,7 @@ public class BlobStoreImpl implements BlobStore {
                 delete(result);
                 pm.deletePersistentAll(result);
             } finally {
-                pm.close();
+
             }
 
         }
@@ -254,7 +251,6 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final ValueDayHolder holder)  {
-        final PersistenceManager pm = pmf.getPersistenceManager();
 
         try {
             final String json = GsonFactory.getInstance().toJson(holder.getValues());
@@ -291,14 +287,11 @@ public class BlobStoreImpl implements BlobStore {
             return Collections.emptyList();
         } finally {
 
-
-            pm.close();
         }
 
     }
     @Override
     public List<ValueBlobStore> mergeTimespan(final Entity entity, final Range<Date> timespan)   {
-        final PersistenceManager pm = pmf.getPersistenceManager();
 
 
         PrintWriter out = null;
@@ -372,7 +365,7 @@ public class BlobStoreImpl implements BlobStore {
             if (out != null) {
                 out.close();
             }
-            pm.close();
+
         }
 
     }

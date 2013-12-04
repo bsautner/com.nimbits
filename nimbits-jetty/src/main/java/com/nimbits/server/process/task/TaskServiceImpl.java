@@ -116,11 +116,11 @@ public class TaskServiceImpl implements TaskService {
         params.add(new BasicNameValuePair(Parameters.pointUser.getText(), userJson));
         params.add(new BasicNameValuePair(Parameters.valueJson.getText(), valueJson));
 
-        try {
-            postTask(req, params, PATH_TASK_RECORD_VALUE);
-        } catch (IOException e) {
-            log.severe(e.getMessage());
-        }
+//        try {
+//          //  postTask(req, params, PATH_TASK_RECORD_VALUE);
+//        } catch (IOException e) {
+//            log.severe(e.getMessage());
+//        }
 
 //
 //        queue.add(TaskOptions.Builder
@@ -207,7 +207,10 @@ public class TaskServiceImpl implements TaskService {
         String request = req.getScheme() + "://" +
                 req.getServerName() +
                 ":" + req.getServerPort() +
+                 req.getContextPath() +
                 "" + path;
+
+        log.info("Post Task: " + request);
         URL url = new URL(request);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         connection.setDoOutput(true);
@@ -218,7 +221,8 @@ public class TaskServiceImpl implements TaskService {
         writer.write(getQuery(params));
 
         writer.close();
-        connection.getResponseCode();
+        int r = connection.getResponseCode();
+        log.info("Post Task Respond" + r);
     }
 
     private String getQuery(final List<NameValuePair> params) throws UnsupportedEncodingException {

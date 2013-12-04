@@ -27,12 +27,11 @@ import com.nimbits.server.transaction.cache.NimbitsCache;
 import com.nimbits.server.transaction.user.service.AuthenticationMechanism;
 import com.nimbits.server.user.AuthenticationMechanismFactory;
 
+import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 
 public class ApplicationListener implements ServletContextListener {
@@ -43,7 +42,7 @@ public class ApplicationListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         ServletContext context = servletContextEvent.getServletContext();
-
+        Datastore.initialize();
         NimbitsEngine engine = createEngine();
 
 
@@ -57,7 +56,7 @@ public class ApplicationListener implements ServletContextListener {
     public static NimbitsEngine createEngine() {
 
         if (engine == null) {
-            PersistenceManagerFactory persistenceManagerFactory = PMF.get();
+            PersistenceManager persistenceManagerFactory = Datastore.getPersistenceManager();
             NimbitsCache cache = CacheFactory.getInstance();
             XmppService xmppService = XmppServiceFactory.getServiceInstance();
             BlobStore blobStore = BlobStoreFactory.getInstance(persistenceManagerFactory);

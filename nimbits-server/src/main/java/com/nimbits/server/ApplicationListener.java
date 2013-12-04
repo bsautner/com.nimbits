@@ -12,7 +12,6 @@
 
 package com.nimbits.server;
 
-import com.nimbits.PMF;
 import com.nimbits.server.cache.CacheFactory;
 import com.nimbits.server.communication.email.EmailService;
 import com.nimbits.server.communication.email.EmailServiceFactory;
@@ -28,6 +27,7 @@ import com.nimbits.server.transaction.user.service.AuthenticationMechanism;
 import com.nimbits.server.transactions.counter.CounterServiceFactory;
 import com.nimbits.server.transactions.user.AuthenticationMechanismFactory;
 
+import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -40,7 +40,7 @@ public class ApplicationListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         ServletContext context = servletContextEvent.getServletContext();
-
+        Datastore.initialize();
         context.setAttribute("engine", createEngine());
         context.setAttribute("task", getTaskService(engine));
     }
@@ -53,7 +53,7 @@ public class ApplicationListener implements ServletContextListener {
     public static NimbitsEngine createEngine() {
 
         if (engine == null) {
-            PersistenceManagerFactory persistenceManagerFactory = PMF.get();
+            PersistenceManager persistenceManagerFactory = Datastore.getPersistenceManager();
             NimbitsCache cache = CacheFactory.getInstance();
             XmppService xmppService = XmppServiceFactory.getServiceInstance();
             BlobStore blobStore = BlobStoreFactory.getInstance(persistenceManagerFactory);

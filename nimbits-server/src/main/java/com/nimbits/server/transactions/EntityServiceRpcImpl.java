@@ -13,7 +13,7 @@
 package com.nimbits.server.transactions;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.PMF;
+import com.nimbits.server.Datastore;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 public class EntityServiceRpcImpl extends RemoteServiceServlet implements EntityServiceRpc {
-    PersistenceManagerFactory pmf = PMF.get();
+
 
     NimbitsEngine engine = ApplicationListener.createEngine();
     EntityService service = EntityServiceFactory.getInstance(engine);

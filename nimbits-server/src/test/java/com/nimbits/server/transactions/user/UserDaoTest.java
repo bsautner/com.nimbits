@@ -39,12 +39,12 @@ public class UserDaoTest extends NimbitsServletTest {
 
     @Before
     public void setup() {
-
+        super.setup();
         helper.setUp();
     }
 
     @After
-    public void tearDown() {
+    public void after() {
         helper.tearDown();
 
     }

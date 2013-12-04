@@ -13,6 +13,7 @@
 package com.nimbits.server.process.task;
 
 import com.nimbits.server.NimbitsEngine;
+import com.nimbits.server.transaction.entity.service.EntityService;
 
 
 public class TaskServiceFactory {

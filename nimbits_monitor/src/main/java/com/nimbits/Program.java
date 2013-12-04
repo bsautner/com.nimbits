@@ -43,9 +43,9 @@ import java.util.*;
 public class Program {
    // private static final String HOST = "nimbits";
     private static final String HOST = "nimbits";
-    public static String postUrl = "http://" + HOST + ":8080/nimbits_jetty/service/v2/value";
-    public static String cronUrl = "http://" + HOST + ":8080/nimbits_jetty/cron/pointCron";
-    public static String seriesUrl = "http://" + HOST + ":8080/nimbits_jetty/service/v2/series";
+    public static String postUrl = "http://" + HOST + ":8080/nimbits/service/v2/value";
+    public static String cronUrl = "http://" + HOST + ":8080/nimbits/cron/pointCron";
+    public static String seriesUrl = "http://" + HOST + ":8080/nimbits/service/v2/series";
     public static int errors;
     public static int runs;
     public static Gson gson = new GsonBuilder().create();
@@ -98,7 +98,7 @@ public class Program {
                     i = 0;
 
                 }
-                Thread.sleep(10);
+              //  Thread.sleep(10);
 
 
             }  catch (SocketException ex) {

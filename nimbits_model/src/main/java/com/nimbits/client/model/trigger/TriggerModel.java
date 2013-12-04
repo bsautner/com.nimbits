@@ -42,7 +42,9 @@ public class TriggerModel extends EntityModel implements Serializable, Trigger {
 
     public TriggerModel(final Entity anEntity, final TriggerEntity trigger, final TargetEntity target, boolean enabled) {
         super(anEntity);
-        this.target = target.getValue();
+        if (target != null) {
+            this.target = target.getValue();
+        }
         this.trigger = trigger.getValue();
         this.enabled = enabled;
 

@@ -26,6 +26,9 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.NimbitsEngine;
 import com.nimbits.server.gson.*;
+import com.nimbits.server.process.task.impl.ValueTaskImpl;
+import com.nimbits.server.transaction.entity.EntityServiceFactory;
+import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.http.NameValuePair;
@@ -49,26 +52,22 @@ import java.util.logging.Logger;
 
 public class TaskServiceImpl implements TaskService {
     private final Logger log = Logger.getLogger(TaskServiceImpl.class.getName());
-    private static final String IN_CONTENT = "inContent";
-    private static final String QUEUE_DELETE_BLOB= "blob";
+
     private static final String PATH_HB_TASK = "/task/hb";
-    private static final String DEFAULT = "default";
-    private static final String PATH_DELETE_BLOB_TASK = "/task/deleteBlobTask";
+
     private static final String PATH_POINT_MAINT_TASK = "/task/pointTask";
-    private static final String PATH_MOVE_TASK = "/task/moveTask";
-    private static final String PATH_TASK_RECORD_VALUE = "/task/valueTask";
-    private static final String PATH_TASK_DUMP_TASK= "/task/dumpTask";
-    private static final String PATH_TASK_UPLOAD_TASK= "/task/uploadTask";
-    private static final String PATH_TASK_PROCESS_BATCH = "/task/batchTask";
-    private static final String PATH_INCOMING_MAIL_QUEUE = "/task/mailTask";
-    private static final String PATH_DELETE_DATA_TASK = "/task/deleteTask";
+
     public static final String UTF_8 = "UTF-8";
-    private static final String DUMP = "dump";
+
 
     private NimbitsEngine engine;
+    private EntityService entityService;
+
 
     public TaskServiceImpl(NimbitsEngine engine) {
         this.engine = engine;
+        this.entityService = EntityServiceFactory.getInstance(engine);
+
 
     }
 
@@ -99,35 +98,10 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void startRecordValueTask(HttpServletRequest req, User u, Entity point, Value value) {
-        if (Double.valueOf(value.getDoubleValue()).isInfinite()) {
-            return;
-        }
+    public void startRecordValueTask(HttpServletRequest req, User u, Entity entity, Value value) {
 
-        final String userJson = GsonFactory.getInstance().toJson(u);
-        final String pointJson = GsonFactory.getInstance().toJson(point);
-        final String valueJson = GsonFactory.getInstance().toJson(value);
+        ValueTaskImpl.processRequest(req, value, u, entity, entityService, engine, this);
 
-
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-
-        params.add(new BasicNameValuePair(Parameters.pointJson.getText(), pointJson));
-        params.add(new BasicNameValuePair(Parameters.pointUser.getText(), userJson));
-        params.add(new BasicNameValuePair(Parameters.valueJson.getText(), valueJson));
-
-//        try {
-//          //  postTask(req, params, PATH_TASK_RECORD_VALUE);
-//        } catch (IOException e) {
-//            log.severe(e.getMessage());
-//        }
-
-//
-//        queue.add(TaskOptions.Builder
-//                .withUrl(PATH_TASK_RECORD_VALUE)
-//                .param(Parameters.pointUser.getText(), userJson)
-//                .param(Parameters.pointJson.getText(), pointJson)
-//                .param(Parameters.valueJson.getText(), valueJson));
     }
 
     @Override
@@ -151,11 +125,9 @@ public class TaskServiceImpl implements TaskService {
         List<NameValuePair> params = new ArrayList<NameValuePair>();
 
         params.add(new BasicNameValuePair(Parameters.json.getText(), json));
-        try {
+
             postTask(req, params, PATH_POINT_MAINT_TASK);
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
+
 
     }
 
@@ -182,9 +154,6 @@ public class TaskServiceImpl implements TaskService {
         final String actionStr = update.getCode();
 
 
-
-
-        try {
             List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 
@@ -196,20 +165,16 @@ public class TaskServiceImpl implements TaskService {
 
 
 
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
-    protected void postTask(HttpServletRequest req, List<NameValuePair> params, String path) throws IOException {
+    protected void postTask(HttpServletRequest req, List<NameValuePair> params, String path)   {
         String request = req.getScheme() + "://" +
                 req.getServerName() +
                 ":" + req.getServerPort() +
                  req.getContextPath() +
                 "" + path;
 
+        try {
         log.info("Post Task: " + request);
         URL url = new URL(request);
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -223,6 +188,10 @@ public class TaskServiceImpl implements TaskService {
         writer.close();
         int r = connection.getResponseCode();
         log.info("Post Task Respond" + r);
+        }
+        catch (IOException ex) {
+            log.severe(ex.getMessage());
+        }
     }
 
     private String getQuery(final List<NameValuePair> params) throws UnsupportedEncodingException {

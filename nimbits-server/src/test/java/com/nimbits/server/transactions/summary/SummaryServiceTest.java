@@ -24,7 +24,6 @@ import com.nimbits.client.model.summary.SummaryModelFactory;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import com.nimbits.server.transaction.summary.SummaryService;
 import com.nimbits.server.transaction.summary.SummaryServiceFactory;
 import org.junit.Assert;
@@ -86,7 +85,7 @@ public class SummaryServiceTest extends NimbitsServletTest {
         }
         double com = SummaryServiceFactory.getServiceInstance(engine, taskService).getValue(SummaryType.average, d);
 
-        summaryService.processSummaries(req, user, point);
+        summaryService.process(req, user, point);
 
         List<Value> result = valueService.getCurrentValue(pointChild);
         Thread.sleep(100);

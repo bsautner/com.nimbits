@@ -50,61 +50,69 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements UserServ
         final User retObj;
         EmailAddress internetAddress = null;
         boolean isAdmin = false;
+        this.userService = AuthenticationServiceFactory.getInstance(engine);
 
-
-        final com.google.appengine.api.users.UserService userService = com.google.appengine.api.users.UserServiceFactory.getUserService();
-
-
-        final com.google.appengine.api.users.User googleUser = userService.getCurrentUser();
-        if (googleUser != null) {
-            isAdmin = userService.isUserAdmin();
-            internetAddress = CommonFactory.createEmailAddress(googleUser.getEmail());
+        final com.google.appengine.api.users.UserService gaeUserService = com.google.appengine.api.users.UserServiceFactory.getUserService();
+        if (gaeUserService == null) {
+            return userService.getAdmin();
         }
+        else {
+            try {
+                final com.google.appengine.api.users.User googleUser = gaeUserService.getCurrentUser();
+                if (googleUser != null) {
+                    isAdmin = gaeUserService.isUserAdmin();
+                    internetAddress = CommonFactory.createEmailAddress(googleUser.getEmail());
+                }
 
 
-        if (internetAddress != null) {
-
-            this.userService = AuthenticationServiceFactory.getInstance(engine);
-            final List<Entity> list = entityService
-                    .getEntityByKey(
-                            this.userService.getAnonUser(), internetAddress.getValue(), EntityType.user);
+                if (internetAddress != null) {
 
 
-            if (list.isEmpty()) {
+                    final List<Entity> list = entityService
+                            .getEntityByKey(
+                                    this.userService.getAnonUser(), internetAddress.getValue(), EntityType.user);
 
-                retObj = this.userService.createUserRecord(internetAddress);
 
-            } else {
-                retObj = (User) list.get(0);
+                    if (list.isEmpty()) {
+
+                        retObj = this.userService.createUserRecord(internetAddress);
+
+                    } else {
+                        retObj = (User) list.get(0);
+                    }
+
+                    retObj.setLoggedIn(true);
+
+                    retObj.setUserAdmin(isAdmin);
+
+                    retObj.setLogoutUrl(gaeUserService.createLogoutURL(requestUri));
+
+                    retObj.setLastLoggedIn(new Date());
+                    entityService.addUpdateEntity(retObj, Arrays.<Entity>asList(retObj));
+                    retObj.addAccessKey(this.userService.authenticatedKey(retObj));
+
+
+                } else {
+                    final EntityName name = CommonFactory.createName(ANON_NIMBITS_COM, EntityType.user);
+                    final Entity e = EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe, "", "");
+                    retObj = UserModelFactory.createUserModel(e);
+                    retObj.setLoggedIn(false);
+                    retObj.setLoginUrl(gaeUserService.createLoginURL(requestUri));
+                }
+
+                HttpSession session = getThreadLocalRequest().getSession();
+                if (session != null) {
+                    retObj.setSessionId(session.getId());
+                    userCache.cacheAuthenticatedUser(session.getId(), retObj);
+                }
+
+                return retObj;
             }
-
-            retObj.setLoggedIn(true);
-
-            retObj.setUserAdmin(isAdmin);
-
-            retObj.setLogoutUrl(userService.createLogoutURL(requestUri));
-
-            retObj.setLastLoggedIn(new Date());
-            entityService.addUpdateEntity(retObj, Arrays.<Entity>asList(retObj));
-            retObj.addAccessKey(this.userService.authenticatedKey(retObj));
-
-
-        } else {
-            final EntityName name = CommonFactory.createName(ANON_NIMBITS_COM, EntityType.user);
-            final Entity e = EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe, "", "");
-            retObj = UserModelFactory.createUserModel(e);
-            retObj.setLoggedIn(false);
-            retObj.setLoginUrl(userService.createLoginURL(requestUri));
+            catch (NullPointerException ex) {
+                return userService.getAdmin();
+            }
         }
-
-        HttpSession session = getThreadLocalRequest().getSession();
-        if (session != null) {
-            retObj.setSessionId(session.getId());
-            userCache.cacheAuthenticatedUser(session.getId(), retObj);
-        }
-
-        return retObj;
     }
 
-
 }
+

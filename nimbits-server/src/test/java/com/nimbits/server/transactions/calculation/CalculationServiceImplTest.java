@@ -109,7 +109,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         org.junit.Assert.assertEquals(vz.get(0).getDoubleValue(), rz, DELTA);
 
         Thread.sleep(1000);
-        CalculationServiceFactory.getInstance(engine, taskService).processCalculations(req, user, trigger);
+        CalculationServiceFactory.getInstance(engine, taskService).process(req, user, trigger);
         Thread.sleep(1000);
         final List<Value> endResult = valueService.getCurrentValue(target);
         org.junit.Assert.assertNotNull(endResult);

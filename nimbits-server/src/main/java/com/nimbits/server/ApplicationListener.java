@@ -32,17 +32,19 @@ import javax.jdo.PersistenceManagerFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.util.logging.Logger;
 
 
 public class ApplicationListener implements ServletContextListener {
     private static NimbitsEngine engine;
-
+    private static final Logger log = Logger.getLogger(ApplicationListener.class.getName());
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         ServletContext context = servletContextEvent.getServletContext();
         Datastore.initialize();
         context.setAttribute("engine", createEngine());
         context.setAttribute("task", getTaskService(engine));
+        log.info("contextInitialized");
     }
 
     public static TaskService getTaskService(NimbitsEngine engine) {
@@ -53,6 +55,10 @@ public class ApplicationListener implements ServletContextListener {
     public static NimbitsEngine createEngine() {
 
         if (engine == null) {
+            if (! Datastore.isInitialized()) {
+                log.info("Init Data Store in Create Engine");
+                Datastore.initialize();
+            }
             PersistenceManager persistenceManagerFactory = Datastore.getPersistenceManager();
             NimbitsCache cache = CacheFactory.getInstance();
             XmppService xmppService = XmppServiceFactory.getServiceInstance();
@@ -75,6 +81,6 @@ public class ApplicationListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-
+        log.info("contextDestroyed");
     }
 }

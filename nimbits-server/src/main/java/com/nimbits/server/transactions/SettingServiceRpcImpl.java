@@ -18,9 +18,7 @@ import com.nimbits.client.service.settings.SettingsServiceRpc;
 import com.nimbits.server.ApplicationListener;
 import com.nimbits.server.transaction.settings.SettingServiceFactory;
 
-/**
- * Created by benjamin on 10/17/13.
- */
+
 public class SettingServiceRpcImpl extends RemoteServiceServlet implements SettingsServiceRpc {
 
 

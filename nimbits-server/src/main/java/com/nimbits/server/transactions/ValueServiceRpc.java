@@ -36,9 +36,9 @@ import java.util.Map;
 
 public class ValueServiceRpc extends RemoteServiceServlet implements com.nimbits.client.service.value.ValueServiceRpc {
 
-    NimbitsEngine engine = ApplicationListener.createEngine();
-    TaskService task = ApplicationListener.getTaskService(engine);
-    ValueService valueService = ValueServiceFactory.getInstance(engine, task);
+    private final NimbitsEngine engine = ApplicationListener.createEngine();
+    private final TaskService task = ApplicationListener.getTaskService(engine);
+    private final ValueService valueService = ValueServiceFactory.getInstance(engine, task);
 
     @Override
     public List<Value> solveEquationRpc(final User user, final Calculation calculation) {

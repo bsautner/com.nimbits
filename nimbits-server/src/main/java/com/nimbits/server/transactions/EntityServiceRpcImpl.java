@@ -36,8 +36,8 @@ import java.util.Map;
 public class EntityServiceRpcImpl extends RemoteServiceServlet implements EntityServiceRpc {
 
 
-    NimbitsEngine engine = ApplicationListener.createEngine();
-    EntityService service = EntityServiceFactory.getInstance(engine);
+    private final NimbitsEngine engine = ApplicationListener.createEngine();
+    private final EntityService service = EntityServiceFactory.getInstance(engine);
 
     @Override
     public List<Entity> addUpdateEntityRpc(final List<Entity> entity) throws ClassNotFoundException {

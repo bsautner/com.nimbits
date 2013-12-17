@@ -12,6 +12,7 @@
 
 package com.nimbits.server;
 
+import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 import com.nimbits.server.communication.email.EmailService;
 import com.nimbits.server.communication.email.EmailServiceFactory;
 import com.nimbits.server.communication.xmpp.XmppService;
@@ -32,20 +33,25 @@ import javax.jdo.PersistenceManagerFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Enumeration;
+import java.util.logging.Logger;
 
 
 public class ApplicationListener implements ServletContextListener {
     private static NimbitsEngine engine;
+    private static final Logger log = Logger.getLogger(ApplicationListener.class.getName());
 
 
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
+        log.info("Context Initialised");
         ServletContext context = servletContextEvent.getServletContext();
         Datastore.initialize();
         NimbitsEngine engine = createEngine();
-
-
         context.setAttribute("engine", engine);
         context.setAttribute("task", getTaskService(engine));
     }
@@ -78,7 +84,25 @@ public class ApplicationListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
+        try {
+            AbandonedConnectionCleanupThread.shutdown();
+        } catch (InterruptedException e) {
+        }
 
+        ClassLoader applicationClassLoader = this.getClass().getClassLoader();
+        Enumeration<Driver> driverEnumeration = DriverManager.getDrivers();
+        while (driverEnumeration.hasMoreElements()) {
+            Driver driver = driverEnumeration.nextElement();
+            ClassLoader driverClassLoader = driver.getClass().getClassLoader();
+            if (driverClassLoader != null
+                    && driverClassLoader.equals(applicationClassLoader)){
+                try {
+                    DriverManager.deregisterDriver(driver);
+                } catch (SQLException e) {
+                    e.printStackTrace(); //TODO Replace with your exception handling
+                }
+            }
+        }
     }
 
 }

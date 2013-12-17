@@ -12,22 +12,33 @@
 
 package com.nimbits.server;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.servlet.*;
 import java.io.IOException;
 
 public class PersistenceManagerFilter implements Filter {
-     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
 
+    private boolean closeFlag;
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+        String closeFlagText = filterConfig.getInitParameter("closeFlag");
+        if (!StringUtils.isEmpty(closeFlagText) && closeFlagText.equals("true")) {
+            closeFlag = true;
+
+        }
     }
 
     public void doFilter(ServletRequest request,
                          ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
         try {
-           chain.doFilter(request, response);
+            chain.doFilter(request, response);
         } finally {
-          Datastore.finishRequest();
+           // if (closeFlag) {
+                Datastore.finishRequest();
+           // }
         }
     }
 

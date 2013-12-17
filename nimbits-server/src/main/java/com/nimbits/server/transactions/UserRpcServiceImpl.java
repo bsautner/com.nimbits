@@ -34,83 +34,83 @@ import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class UserRpcServiceImpl extends RemoteServiceServlet implements UserService {
 
     public static final String ANON_NIMBITS_COM = "anon@nimbits.com";
+    private static final Logger log = Logger.getLogger(UserRpcServiceImpl.class.getName());
 
-    NimbitsEngine engine = ApplicationListener.createEngine();
-    private final EntityService entityService = EntityServiceFactory.getInstance(engine);
-    private final UserCache userCache = AuthenticationServiceFactory.getCacheInstance(engine);
-    private com.nimbits.server.transaction.user.service.UserService userService;
 
     @Override
     public User loginRpc(final String requestUri) {
-
+        final NimbitsEngine engine = ApplicationListener.createEngine();
+        final EntityService entityService = EntityServiceFactory.getInstance(engine);
+        final UserCache userCache = AuthenticationServiceFactory.getCacheInstance(engine);
+        final com.nimbits.server.transaction.user.service.UserService  userService = AuthenticationServiceFactory.getInstance(engine);
         final User retObj;
         EmailAddress internetAddress = null;
         boolean isAdmin = false;
-        this.userService = AuthenticationServiceFactory.getInstance(engine);
+
+
 
         final com.google.appengine.api.users.UserService gaeUserService = com.google.appengine.api.users.UserServiceFactory.getUserService();
         if (gaeUserService == null) {
-            return userService.getAdmin();
+            throw new SecurityException("Google Login Service Unavailable");
         }
         else {
-            try {
-                final com.google.appengine.api.users.User googleUser = gaeUserService.getCurrentUser();
-                if (googleUser != null) {
-                    isAdmin = gaeUserService.isUserAdmin();
-                    internetAddress = CommonFactory.createEmailAddress(googleUser.getEmail());
-                }
 
+            final com.google.appengine.api.users.User googleUser = gaeUserService.getCurrentUser();
+            if (googleUser != null) {
+                isAdmin = gaeUserService.isUserAdmin();
+                internetAddress = CommonFactory.createEmailAddress(googleUser.getEmail());
+            }
 
-                if (internetAddress != null) {
+            log.info(String.valueOf("google user null check: " + (googleUser == null) + " " + (internetAddress == null)));
 
+            if (internetAddress != null) {
 
-                    final List<Entity> list = entityService
-                            .getEntityByKey(
-                                    this.userService.getAnonUser(), internetAddress.getValue(), EntityType.user);
+                log.info("getting user with address: " + internetAddress.getValue());
+                final List<Entity> list = entityService.getUserEntity(internetAddress);
 
-
-                    if (list.isEmpty()) {
-
-                        retObj = this.userService.createUserRecord(internetAddress);
-
-                    } else {
-                        retObj = (User) list.get(0);
-                    }
-
-                    retObj.setLoggedIn(true);
-
-                    retObj.setUserAdmin(isAdmin);
-
-                    retObj.setLogoutUrl(gaeUserService.createLogoutURL(requestUri));
-
-                    retObj.setLastLoggedIn(new Date());
-                    entityService.addUpdateEntity(retObj, Arrays.<Entity>asList(retObj));
-                    retObj.addAccessKey(this.userService.authenticatedKey(retObj));
-
+                if (list.isEmpty()) {
+                    log.info("user not found, creating record");
+                    retObj = userService.createUserRecord(internetAddress);
 
                 } else {
-                    final EntityName name = CommonFactory.createName(ANON_NIMBITS_COM, EntityType.user);
-                    final Entity e = EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe, "", "");
-                    retObj = UserModelFactory.createUserModel(e);
-                    retObj.setLoggedIn(false);
-                    retObj.setLoginUrl(gaeUserService.createLoginURL(requestUri));
+                    log.info("got user result");
+                    retObj = (User) list.get(0);
                 }
 
+                retObj.setLoggedIn(true);
+
+                retObj.setUserAdmin(isAdmin);
+
+                retObj.setLogoutUrl(gaeUserService.createLogoutURL(requestUri));
+
+                retObj.setLastLoggedIn(new Date());
+                entityService.addUpdateEntity(retObj, Arrays.<Entity>asList(retObj));
+                retObj.addAccessKey(userService.authenticatedKey(retObj));
+
+
+            } else {
+                final EntityName name = CommonFactory.createName(ANON_NIMBITS_COM, EntityType.user);
+                final Entity e = EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe, "", "");
+                retObj = UserModelFactory.createUserModel(e);
+                retObj.setLoggedIn(false);
+                retObj.setLoginUrl(gaeUserService.createLoginURL(requestUri));
+            }
+            if (getThreadLocalRequest() != null) {
                 HttpSession session = getThreadLocalRequest().getSession();
                 if (session != null) {
                     retObj.setSessionId(session.getId());
                     userCache.cacheAuthenticatedUser(session.getId(), retObj);
                 }
+            }
 
-                return retObj;
-            }
-            catch (NullPointerException ex) {
-                return userService.getAdmin();
-            }
+            return retObj;
+
+
         }
     }
 

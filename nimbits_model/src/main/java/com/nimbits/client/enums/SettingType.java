@@ -45,7 +45,11 @@ public enum SettingType  {
     private final boolean update;
     private final boolean create;
     private final boolean readOnly;
-    private SettingType(final String name, final String defaultValue, final boolean update, final boolean create, final boolean readonly) {
+    private SettingType(final String name,
+                        final String defaultValue,
+                        final boolean update,
+                        final boolean create,
+                        final boolean readonly) {
         this.name = name;
         this.update = update;
         this.defaultValue = defaultValue;
@@ -84,12 +88,13 @@ public enum SettingType  {
     }
 
     private static class SettingConstants {
-        static final String CONST_SERVER_VERSION = "3.5.4.10";
+        static final String CONST_SERVER_VERSION = "3.5.4.12";
         static final String SETTING_ADMIN = "admin";
         static final String SETTING_ADMIN_DEFAULT = "support@nimbits.com";
         static final String SETTING_VERSION = "version";
         static final String API_KEY = "API_KEY";
         static final String API_KEY_DEFAULT = "API_KEY_DEFAULT";
+
         private SettingConstants() {
         }
     }

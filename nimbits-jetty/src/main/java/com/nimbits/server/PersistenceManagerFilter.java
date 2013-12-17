@@ -15,9 +15,7 @@ package com.nimbits.server;
 import javax.servlet.*;
 import java.io.IOException;
 
-/**
- * Created by benjamin on 11/28/13.
- */
+
 public class PersistenceManagerFilter  implements javax.servlet.Filter {
 
 

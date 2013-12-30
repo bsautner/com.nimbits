@@ -43,23 +43,12 @@ public class BaseTest {
     @AfterClass
     public static void tearDown() {
 
-//        EntitySearchService.deleteAll();
-//        if (helper != null) {
-//            try {
-//                helper.tearDown();
-     //   Datastore.finishRequest();
-        Datastore.delete();
-//            } catch (Exception ignored) {
-//
-//            }
-//        }
-
     }
     @BeforeClass
     public static void before() {
         final MockServletContext context = new MockServletContext();
         System.setProperty("appengine.orm.disable.duplicate.pmf.exception", "false");
-        Datastore.initialize();
+
 
         NimbitsEngine engine = ApplicationListener.createEngine();
 

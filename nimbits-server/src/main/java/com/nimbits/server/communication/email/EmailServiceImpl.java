@@ -46,9 +46,9 @@ public class EmailServiceImpl implements EmailService {
     private static final String WORD_NIMBITS = "Nimbits";
     private static final int INT = 128;
     private static final int SECONDS_IN_MINUTE = 60;
-     private final PersistenceManager pmf;
+     private final PersistenceManagerFactory pmf;
 
-    public EmailServiceImpl(PersistenceManager pmf) {
+    public EmailServiceImpl(PersistenceManagerFactory pmf) {
         this.pmf = pmf;
     }
 

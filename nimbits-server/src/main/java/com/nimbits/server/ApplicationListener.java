@@ -41,7 +41,6 @@ public class ApplicationListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         ServletContext context = servletContextEvent.getServletContext();
-        Datastore.initialize();
         context.setAttribute("engine", createEngine());
         context.setAttribute("task", getTaskService(engine));
         log.info("contextInitialized");
@@ -55,11 +54,8 @@ public class ApplicationListener implements ServletContextListener {
     public static NimbitsEngine createEngine() {
 
         if (engine == null) {
-            if (! Datastore.isInitialized()) {
-                log.info("Init Data Store in Create Engine");
-                Datastore.initialize();
-            }
-            PersistenceManager persistenceManagerFactory = Datastore.getPersistenceManager();
+
+            PersistenceManagerFactory persistenceManagerFactory = Datastore.get();
             NimbitsCache cache = CacheFactory.getInstance();
             XmppService xmppService = XmppServiceFactory.getServiceInstance();
             BlobStore blobStore = BlobStoreFactory.getInstance(persistenceManagerFactory);

@@ -23,7 +23,7 @@ public class BlobStoreFactory {
     private BlobStoreFactory() {
     }
 
-    public static BlobStore getInstance(PersistenceManager pmf) {
+    public static BlobStore getInstance(PersistenceManagerFactory pmf) {
         return new BlobStoreImpl(pmf);
     }
 

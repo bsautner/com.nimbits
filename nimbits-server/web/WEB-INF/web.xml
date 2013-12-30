@@ -23,19 +23,7 @@
     <listener>
         <listener-class>com.nimbits.server.ApplicationListener</listener-class>
     </listener>
-    <filter>
-        <filter-name>PersistenceManagerFilter</filter-name>
-        <filter-class>com.nimbits.server.PersistenceManagerFilter</filter-class>
-        <!--fixes bug in closing pm too soon in GAE-->
-        <init-param>
-            <param-name>closeFlag</param-name>
-            <param-value>false</param-value>
-        </init-param>
-    </filter>
-    <filter-mapping>
-        <filter-name>PersistenceManagerFilter</filter-name>
-        <url-pattern>/*</url-pattern>
-    </filter-mapping>
+
     <servlet>
         <servlet-name>userApi</servlet-name>
         <servlet-class>com.nimbits.server.api.UserApi</servlet-class>

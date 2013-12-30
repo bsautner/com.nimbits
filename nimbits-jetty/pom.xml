@@ -161,30 +161,30 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>gwt-maven-plugin</artifactId>
-                <version>2.5.1</version>
-                <configuration>
-                    <runTarget>nimbits.html</runTarget>
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <!--<artifactId>gwt-maven-plugin</artifactId>-->
+                <!--<version>2.5.1</version>-->
+                <!--<configuration>-->
+                    <!--<runTarget>nimbits.html</runTarget>-->
 
-                </configuration>
-                <executions>
+                <!--</configuration>-->
+                <!--<executions>-->
 
-                    <execution>
-                        <configuration>
+                    <!--<execution>-->
+                        <!--<configuration>-->
 
-                            <module>com.nimbits.NimbitsModel</module>
-                            <module>com.nimbits.NimbitsCore</module>
-                            <module>com.nimbits.nimbits</module>
+                            <!--<module>com.nimbits.NimbitsModel</module>-->
+                            <!--<module>com.nimbits.NimbitsCore</module>-->
+                            <!--<module>com.nimbits.nimbits</module>-->
 
-                        </configuration>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+                        <!--</configuration>-->
+                        <!--<goals>-->
+                            <!--<goal>compile</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
             <plugin>
                 <groupId>org.datanucleus</groupId>
                 <artifactId>datanucleus-maven-plugin</artifactId>

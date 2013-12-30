@@ -20,7 +20,7 @@ import javax.jdo.PersistenceManagerFactory;
  */
 public class EmailServiceFactory {
 
-    public static EmailService getServiceInstance(PersistenceManager pmf) {
+    public static EmailService getServiceInstance(PersistenceManagerFactory pmf) {
 
         return new EmailServiceImpl(pmf);
     }

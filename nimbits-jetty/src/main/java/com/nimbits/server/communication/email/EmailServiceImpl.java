@@ -26,10 +26,10 @@ import javax.jdo.PersistenceManagerFactory;
 public class EmailServiceImpl implements EmailService {
 
 
-     private final PersistenceManager pm;
+     private final PersistenceManagerFactory pmf;
 
-    public EmailServiceImpl(PersistenceManager pmf) {
-        this.pm= pmf;
+    public EmailServiceImpl(PersistenceManagerFactory pmf) {
+        this.pmf = pmf;
     }
 
 

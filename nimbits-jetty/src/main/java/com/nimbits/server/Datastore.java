@@ -21,8 +21,7 @@ import java.util.logging.Logger;
 
 public class Datastore {
     private static PersistenceManagerFactory PMF;
-    private static final ThreadLocal<PersistenceManager> PER_THREAD_PM = new ThreadLocal<PersistenceManager>();
-    private static final Logger log = Logger.getLogger(Datastore.class.getName());
+
     public static void initialize() {
         if (PMF != null) {
             throw new IllegalStateException("initialize() already called");
@@ -34,25 +33,13 @@ public class Datastore {
         PMF = JDOHelper.getPersistenceManagerFactory(props);
 
     }
-    public static PersistenceManager getPersistenceManager() {
-        PersistenceManager pm = PER_THREAD_PM.get();
-        if (pm == null) {
-            pm = PMF.getPersistenceManager();
-            PER_THREAD_PM.set(pm);
+    public static PersistenceManagerFactory get() {
+        if (PMF == null) {
+            initialize();
         }
-        return pm;
+
+        return PMF;
     }
 
-    public static void finishRequest() {
-        PersistenceManager pm = PER_THREAD_PM.get();
-        if (pm != null) {
-            PER_THREAD_PM.remove();
-            Transaction tx = pm.currentTransaction();
-            if (tx.isActive()) {
-                tx.rollback();
-            }
-            log.info("Closing PM");
-            pm.close();
-        }
-    }
+
 }

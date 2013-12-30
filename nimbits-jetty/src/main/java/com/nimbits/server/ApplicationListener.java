@@ -62,7 +62,7 @@ public class ApplicationListener implements ServletContextListener {
     public static NimbitsEngine createEngine() {
 
         if (engine == null) {
-            PersistenceManager persistenceManagerFactory = Datastore.getPersistenceManager();
+            PersistenceManagerFactory persistenceManagerFactory = Datastore.get();
             NimbitsCache cache = CacheFactory.getInstance();
             XmppService xmppService = XmppServiceFactory.getServiceInstance();
             BlobStore blobStore = BlobStoreFactory.getInstance(persistenceManagerFactory);

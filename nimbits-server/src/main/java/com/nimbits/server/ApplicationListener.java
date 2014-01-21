@@ -18,6 +18,7 @@ import com.nimbits.server.communication.email.EmailServiceFactory;
 import com.nimbits.server.communication.xmpp.XmppService;
 import com.nimbits.server.communication.xmpp.XmppServiceFactory;
 import com.nimbits.server.counter.CounterService;
+
 import com.nimbits.server.io.blob.BlobStore;
 import com.nimbits.server.io.blob.BlobStoreFactory;
 import com.nimbits.server.process.task.TaskService;
@@ -43,6 +44,7 @@ public class ApplicationListener implements ServletContextListener {
         ServletContext context = servletContextEvent.getServletContext();
         context.setAttribute("engine", createEngine());
         context.setAttribute("task", getTaskService(engine));
+
         log.info("contextInitialized");
     }
 
@@ -70,6 +72,7 @@ public class ApplicationListener implements ServletContextListener {
                     userAuthenticationMechanism,
                     counterService,
                     emailService);
+
         }
         return engine;
     }

@@ -13,23 +13,60 @@
 package com.nimbits.server.gson;
 
 import com.google.gson.*;
+import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.model.common.impl.CommonFactory;
+import com.nimbits.client.model.location.Location;
+import com.nimbits.client.model.location.LocationFactory;
+import com.nimbits.client.model.simple.SimpleValue;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueData;
+import com.nimbits.client.model.value.impl.ValueDataModel;
+import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.value.impl.ValueModel;
 
 import java.lang.reflect.Type;
+import java.util.Date;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 11/10/11
- * Time: 7:11 PM
- */
+
 public class ValueDeserializer implements JsonDeserializer<Value> {
     @Override
     public Value deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-        final JsonPrimitive jsonPrimitive = (JsonPrimitive) jsonElement;
-        final String json = jsonPrimitive.getAsString();
+        Location location;
 
-        return GsonFactory.getSimpleInstance().fromJson(json, ValueModel.class);
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
+        JsonElement valueElement = jsonObject.get("d");
+        JsonElement noteElement = jsonObject.get("n");
+        JsonElement dataElement = jsonObject.get("dx");
+        JsonElement latElement = jsonObject.get("lt");
+        JsonElement lngElement = jsonObject.get("lg");
+        JsonElement timestampElement = jsonObject.get("t");
+        String note = noteElement == null ? null : noteElement.getAsString();
+        String data = dataElement == null ? null : dataElement.getAsString();
+        Double lat = latElement == null ? null : latElement.getAsDouble();
+        Double lng = lngElement == null ? null : lngElement.getAsDouble();
+        Double value =  valueElement == null ? null : valueElement.getAsDouble();
+        Long timestamp =  timestampElement == null ? 0 :  timestampElement.getAsLong();
+
+
+        if (lat != null && lng != null) {
+            location = LocationFactory.createLocation(lat, lng);
+        }
+        else {
+            location = LocationFactory.createLocation();
+        }
+
+
+
+        Date time = timestamp > 0 ? new Date(timestamp) : new Date();
+        ValueData valueData;
+        if (data != null && data.length() > 0) {
+            valueData = ValueDataModel.getInstance(SimpleValue.getInstance(data));
+        }
+        else {
+            valueData = ValueDataModel.getEmptyInstance();
+        }
+
+        return ValueFactory.createValueModel(location, value, time, note, valueData, AlertType.OK);
+
     }
 }

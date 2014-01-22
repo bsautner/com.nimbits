@@ -6,6 +6,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.client.exception.ValueException;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import org.junit.Before;
@@ -62,7 +63,7 @@ public class ValueApiTest extends NimbitsServletTest {
     }
 
     @Test
-    public void testPostValueCummulative() {
+    public void testPostValueCummulative() throws ValueException {
 
         point.setPointType(PointType.cumulative);
         point.setFilterType(FilterType.none);

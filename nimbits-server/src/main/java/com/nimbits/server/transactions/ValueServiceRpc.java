@@ -22,6 +22,7 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.ApplicationListener;
 import com.nimbits.server.NimbitsEngine;
+import com.nimbits.client.exception.ValueException;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.transaction.calculation.CalculationServiceFactory;
 import com.nimbits.server.transaction.user.UserHelper;
@@ -49,7 +50,7 @@ public class ValueServiceRpc extends RemoteServiceServlet implements com.nimbits
 
     @Override
     public Value recordValueRpc(final Entity point,
-                                final Value value) {
+                                final Value value) throws ValueException {
 
         User user = UserHelper.getUser(engine);
         HttpServletRequest req = getThreadLocalRequest();

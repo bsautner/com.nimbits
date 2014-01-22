@@ -25,9 +25,7 @@ import org.springframework.mock.web.MockServletContext;
 
 import javax.servlet.ServletContext;
 
-/**
- * Created by benjamin on 10/18/13.
- */
+
 public class BaseTest {
 
     public static BatchApi batchApi;

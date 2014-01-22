@@ -17,6 +17,7 @@ import com.nimbits.client.constants.Const;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.client.exception.ValueException;
 import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.cache.ValueCache;
 import org.junit.Test;
@@ -117,7 +118,7 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
 
 
     @Test
-    public void testGetPrevValue() throws InterruptedException {
+    public void testGetPrevValue() throws InterruptedException, ValueException {
 
         Value v = ValueFactory.createValueModel(D);
         valueService.recordValue(req, user, point, v);

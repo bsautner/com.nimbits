@@ -53,7 +53,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     private List<Point> children;
     private String instanceUrl;
     private boolean isCached = false;
-
+    private String id;
 
     public EntityModel(final CommonIdentifier name,
                        final String description,
@@ -75,11 +75,15 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     }
 
     public EntityModel() {
+        if (id != null && key == null) {
+            key = id;
+        }
     }
     public EntityModel(final Entity anEntity)  {
         if (anEntity != null) {
             this.dateCreated = new Date(anEntity.getDateCreated().getTime());
             this.key = anEntity.getKey();
+            this.id = this.key;
             this.name = anEntity.getName().getValue();
             this.description = anEntity.getDescription();
             this.entityType = anEntity.getEntityType().getCode();
@@ -98,6 +102,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     @Override
     public void setKey(final String key) {
         this.key = key;
+        this.id = key;
     }
 
     @Override
@@ -180,6 +185,9 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
     @Override
     public String getKey() {
+        if (id != null && key == null) {
+            key = id;
+        }
         return this.key;
     }
 

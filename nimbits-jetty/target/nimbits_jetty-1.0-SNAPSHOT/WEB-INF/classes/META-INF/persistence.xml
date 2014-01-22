@@ -28,7 +28,7 @@
             <property name="datanucleus.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
             <property name="datanucleus.ConnectionURL" value="jdbc:mysql://localhost/nimbits"/>
             <property name="datanucleus.ConnectionUserName" value="root"/>
-            <!--<property name="datanucleus.ConnectionPassword" value="password"/>-->
+            <property name="datanucleus.ConnectionPassword" value="password"/>
             <property name="datanucleus.autoCreateSchema" value="true"/>
             <property name="datanucleus.validateTables" value="false"/>
             <property name="datanucleus.validateConstraints" value="false"/>

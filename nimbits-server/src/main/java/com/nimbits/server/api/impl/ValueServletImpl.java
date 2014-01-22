@@ -30,6 +30,7 @@ import com.nimbits.client.model.value.impl.ValueDataModel;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.server.api.ApiServlet;
+import com.nimbits.client.exception.ValueException;
 import com.nimbits.server.gson.GsonFactory;
 
 import javax.servlet.http.HttpServletRequest;
@@ -100,6 +101,8 @@ public class ValueServletImpl extends ApiServlet {
                 } catch (IOException e) {
                     resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                     return;
+                } catch (ValueException e) {
+                    resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                 }
 
 

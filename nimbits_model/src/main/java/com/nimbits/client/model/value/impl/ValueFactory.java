@@ -104,7 +104,7 @@ public class ValueFactory {
     }
 
     public static ValueModel createValueModel(final Location location,
-                                              final double d,
+                                              final Double d,
                                               final Date timestamp,
                                               final String note,
                                               final ValueData data,

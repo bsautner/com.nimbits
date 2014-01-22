@@ -30,6 +30,7 @@ import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.client.exception.ValueException;
 import com.nimbits.server.transaction.calculation.CalculationServiceFactory;
 import org.junit.Test;
 
@@ -45,7 +46,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
     private static final double DELTA = 0.0001;
 
     @Test
-    public void testCalcs() throws InterruptedException {
+    public void testCalcs() throws InterruptedException, ValueException {
 
 
         final EntityName targetName = CommonFactory.createName("TARGET" + UUID.randomUUID().toString(), EntityType.point);

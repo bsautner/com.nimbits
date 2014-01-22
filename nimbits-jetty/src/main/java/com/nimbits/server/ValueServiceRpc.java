@@ -14,6 +14,7 @@ package com.nimbits.server;
 
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
@@ -46,7 +47,7 @@ public class ValueServiceRpc extends RemoteServiceServlet implements com.nimbits
 
     @Override
     public Value recordValueRpc(final Entity point,
-                                final Value value)  {
+                                final Value value) throws ValueException {
 
         User user = UserHelper.getUser(engine);
         HttpServletRequest req = getThreadLocalRequest();

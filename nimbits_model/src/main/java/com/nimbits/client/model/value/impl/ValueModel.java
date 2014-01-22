@@ -53,7 +53,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     }
     public static Value getInstance(final Value value, final Date timestamp) {
-       return new ValueModel(value.getLocation(), value.getDoubleValue(), timestamp, value.getNote(), value.getData(), value.getAlertState());
+        return new ValueModel(value.getLocation(), value.getDoubleValue(), timestamp, value.getNote(), value.getData(), value.getAlertState());
 
     }
     public static Value getInstance(Value value, double v) {
@@ -105,7 +105,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     }
 
     public ValueModel(final Location location,
-                      final double d,
+                      final Double d,
                       final Date timestamp,
                       final String note,
                       final ValueData data,
@@ -113,7 +113,9 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
         this.lt = location.getLat();
         this.lg = location.getLng();
-        this.d = d;
+        if (d != null) {
+            this.d = d;
+        }
         this.st = alert.getCode();
 
         this.t = timestamp.getTime();

@@ -37,6 +37,7 @@ import com.nimbits.client.model.value.impl.ValueDataModel;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.ApplicationListener;
 import com.nimbits.server.api.ApiServlet;
+import com.nimbits.client.exception.ValueException;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.json.JsonHelper;
 import com.nimbits.server.transaction.user.AuthenticationServiceFactory;
@@ -127,10 +128,16 @@ public class XMPPReceiverServlet extends ApiServlet {
 
                 if (point != null) {
 
-                    final Value v = valueService.recordValue(req, u, point, p.getValue());
+                    final Value v;
+                    try {
+                        v = valueService.recordValue(req, u, point, p.getValue());
+
                     point.setValue(v);
                     String result = gson.toJson(point);
                     engine.getXmppService().sendMessage(result, u.getEmail());
+                } catch (ValueException e) {
+                e.printStackTrace();
+            }
                 }
 
                 break;

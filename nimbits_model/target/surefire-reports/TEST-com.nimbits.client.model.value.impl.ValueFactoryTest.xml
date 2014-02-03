@@ -10,7 +10,7 @@
     <property name="guice.disable.misplaced.annotation.check" value="true"/>
     <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
     <property name="file.encoding.pkg" value="sun.io"/>
-    <property name="idea.launcher.port" value="7539"/>
+    <property name="idea.launcher.port" value="7538"/>
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.os.patch.level" value="unknown"/>
@@ -43,7 +43,7 @@
     <property name="java.vm.specification.version" value="1.7"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.home" value="/usr/lib/jvm/java-7-oracle/jre"/>
-    <property name="sun.java.command" value="com.intellij.rt.execution.application.AppMain org.codehaus.classworlds.Launcher install"/>
+    <property name="sun.java.command" value="com.intellij.rt.execution.application.AppMain org.codehaus.classworlds.Launcher deploy"/>
     <property name="java.specification.vendor" value="Oracle Corporation"/>
     <property name="user.language" value="en"/>
     <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
@@ -67,8 +67,8 @@
   <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel5"/>
   <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel6"/>
   <testcase time="0.001" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel7"/>
-  <testcase time="0.001" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel1"/>
+  <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel1"/>
   <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueFromString"/>
-  <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueContainer1"/>
+  <testcase time="0.001" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueContainer1"/>
   <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel"/>
 </testsuite>

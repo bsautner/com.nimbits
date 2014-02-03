@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.009" errors="0" skipped="0" tests="10" name="com.nimbits.client.model.value.impl.ValueFactoryTest">
+<testsuite failures="0" time="0.008" errors="0" skipped="0" tests="10" name="com.nimbits.client.model.value.impl.ValueFactoryTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-7-oracle/jre/lib/amd64"/>
@@ -66,7 +66,7 @@
   <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel6"/>
   <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel7"/>
   <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel1"/>
-  <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueFromString"/>
-  <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueContainer1"/>
-  <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel"/>
+  <testcase time="0.001" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueFromString"/>
+  <testcase time="0.001" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueContainer1"/>
+  <testcase time="0.001" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel"/>
 </testsuite>

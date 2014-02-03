@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<testsuite failures="0" time="0.13" errors="0" skipped="0" tests="11" name="com.nimbits.client.model.value.impl.ValueFactoryTest">
+<testsuite failures="0" time="0.006" errors="0" skipped="0" tests="10" name="com.nimbits.client.model.value.impl.ValueFactoryTest">
   <properties>
     <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
     <property name="sun.boot.library.path" value="/usr/lib/jvm/java-7-oracle/jre/lib/amd64"/>
@@ -10,12 +10,12 @@
     <property name="guice.disable.misplaced.annotation.check" value="true"/>
     <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
     <property name="file.encoding.pkg" value="sun.io"/>
-    <property name="idea.launcher.port" value="7534"/>
+    <property name="idea.launcher.port" value="7539"/>
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.os.patch.level" value="unknown"/>
     <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
-    <property name="user.dir" value="/mnt/devel/volatile/nimbits_inc/source/nimbits_model"/>
+    <property name="user.dir" value="/home/benjamin/source/nimbits/com.nimbits/nimbits_model"/>
     <property name="java.runtime.version" value="1.7.0_51-b13"/>
     <property name="java.awt.graphicsenv" value="sun.awt.X11GraphicsEnvironment"/>
     <property name="java.endorsed.dirs" value="/usr/lib/jvm/java-7-oracle/jre/lib/endorsed"/>
@@ -25,9 +25,9 @@
 "/>
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="os.name" value="Linux"/>
-    <property name="classworlds.conf" value="/mnt/devel/sdk/apache-maven-3.0.5/bin/m2.conf"/>
+    <property name="classworlds.conf" value="/usr/share/maven/bin/m2.conf"/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
-    <property name="java.library.path" value="/mnt/devel/IDE/idea/bin::/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib"/>
+    <property name="java.library.path" value=".:/usr/lib32:/usr/java/packages/lib/amd64:/usr/lib64:/lib64:/lib:/usr/lib"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.class.version" value="51.0"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
@@ -37,9 +37,9 @@
     <property name="java.awt.printerjob" value="sun.print.PSPrinterJob"/>
     <property name="java.specification.version" value="1.7"/>
     <property name="file.encoding" value="UTF-8"/>
-    <property name="idea.launcher.bin.path" value="/mnt/devel/IDE/idea/bin"/>
+    <property name="idea.launcher.bin.path" value="/home/benjamin/IDE/idea-IU-133.696/bin"/>
     <property name="user.name" value="benjamin"/>
-    <property name="java.class.path" value="/mnt/devel/sdk/apache-maven-3.0.5/boot/plexus-classworlds-2.4.jar:/mnt/devel/IDE/idea/lib/idea_rt.jar"/>
+    <property name="java.class.path" value="/usr/share/maven/boot/plexus-classworlds-2.x.jar:/home/benjamin/IDE/idea-IU-133.696/lib/idea_rt.jar"/>
     <property name="java.vm.specification.version" value="1.7"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.home" value="/usr/lib/jvm/java-7-oracle/jre"/>
@@ -53,7 +53,7 @@
     <property name="securerandom.source" value="file:/dev/./urandom"/>
     <property name="sun.boot.class.path" value="/usr/lib/jvm/java-7-oracle/jre/lib/resources.jar:/usr/lib/jvm/java-7-oracle/jre/lib/rt.jar:/usr/lib/jvm/java-7-oracle/jre/lib/sunrsasign.jar:/usr/lib/jvm/java-7-oracle/jre/lib/jsse.jar:/usr/lib/jvm/java-7-oracle/jre/lib/jce.jar:/usr/lib/jvm/java-7-oracle/jre/lib/charsets.jar:/usr/lib/jvm/java-7-oracle/jre/lib/jfr.jar:/usr/lib/jvm/java-7-oracle/jre/classes"/>
     <property name="java.vendor" value="Oracle Corporation"/>
-    <property name="maven.home" value="/mnt/devel/sdk/apache-maven-3.0.5"/>
+    <property name="maven.home" value="/usr/share/maven"/>
     <property name="file.separator" value="/"/>
     <property name="java.vendor.url.bug" value="http://bugreport.sun.com/bugreport/"/>
     <property name="sun.cpu.endian" value="little"/>
@@ -61,15 +61,14 @@
     <property name="sun.desktop" value="gnome"/>
     <property name="sun.cpu.isalist" value=""/>
   </properties>
-  <testcase time="0.089" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueContainer"/>
-  <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel"/>
-  <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel1"/>
   <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel2"/>
   <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel3"/>
-  <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel4"/>
-  <testcase time="0.001" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel5"/>
+  <testcase time="0.001" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel4"/>
+  <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel5"/>
   <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel6"/>
-  <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel7"/>
-  <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueContainer1"/>
+  <testcase time="0.001" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel7"/>
+  <testcase time="0.001" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel1"/>
   <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueFromString"/>
+  <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueContainer1"/>
+  <testcase time="0" classname="com.nimbits.client.model.value.impl.ValueFactoryTest" name="testCreateValueModel"/>
 </testsuite>

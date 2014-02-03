@@ -27,24 +27,7 @@ import static org.junit.Assert.assertNotNull;
  * Created by benjamin on 9/9/13.
  */
 public class ValueFactoryTest {
-    @Test
-    public void testCreateValueContainer() throws Exception {
-        Value value = ValueFactory.createValueModel(3.12);
 
-        ValueContainer container = ValueFactory.createValueContainer(
-                CommonFactory.createEmailAddress(SettingType.admin.getDefaultValue()),
-                SimpleValue.getInstance("foo"),
-                SimpleValue.getInstance("bar"),
-                value);
-        assertNotNull(container);
-        String j = GsonFactory.getInstance().toJson(container);
-        ValueContainer copy = GsonFactory.getInstance().fromJson(j, ValueContainerModel.class);
-        assertEquals(container, copy);
-
-        assertEquals(copy.getValue().getDoubleValue(), 3.12, 0.00001);
-        assertEquals(copy.getValue().getDoubleValue(), container.getValue().getDoubleValue(), 0.00001);
-
-    }
 
     @Test
     public void testCreateValueContainer1() throws Exception {

@@ -16,9 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 
-/**
- * Created by benjamin on 10/20/13.
- */
+
 public class ServerModel implements Server, Serializable {
 
     private String url;

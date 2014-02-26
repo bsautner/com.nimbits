@@ -22,9 +22,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Created by benjamin on 10/20/13.
- */
 public class AuthenticationMechanismImpl implements AuthenticationMechanism {
     private com.google.appengine.api.users.UserService googleUserService;
 

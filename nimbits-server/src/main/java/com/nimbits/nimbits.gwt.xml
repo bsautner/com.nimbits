@@ -15,19 +15,17 @@
 <module rename-to="nimbits">
 
 
-    <entry-point class='com.nimbits.client.nimbits' />
+    <entry-point class='com.nimbits.local.nimbits' />
 
     <inherits name="com.google.gwt.resources.Resources" />
     <inherits name='com.google.gwt.user.User' />
     <inherits name='com.google.gwt.user.theme.standard.Standard' />
     <inherits name="com.google.gwt.json.JSON" />
     <inherits name='com.extjs.gxt.ui.GXT' />
-    <inherits name="com.nimbits.NimbitsModel" />
-    <inherits name="com.nimbits.NimbitsCore" />
     <inherits name="com.google.gwt.http.HTTP" />
     <script src="feed.js" />
     <script src="jquery-1.7.1.js" />
+    <source path='local' />
     <source path='client' />
-
 
 </module>

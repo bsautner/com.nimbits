@@ -1,0 +1,170 @@
+<!doctype html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"/>
+    <title>nimbits.com</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+    <!--<script type="text/javascript" src="assets/bootstrap/js/bootstrap.min.js"></script>-->
+    <!--<link href="assets/bootstrap/css/bootstrap.css" rel="stylesheet" media="screen">-->
+    <link rel="stylesheet" href="assets/jquery-ui.css"/>
+
+    <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+
+
+
+
+
+
+
+</head>
+<body style="padding-top: 40px;">
+
+<div class="navbar-wrapper">
+    <div class="container">
+
+        <div class="navbar navbar-inverse navbar-static-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">nimbits.com</a>
+
+                </div>
+                <ul class="nav navbar-nav">
+
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Chart Options <b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#" onclick="setStep();">Step Chart</a></li>
+
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+
+
+        <div id="detailsRow" class="row">
+            <div class="col-md-3">
+
+                <img align="left" id="QR" width="100" height="100" alt="QR" src=""/>
+
+            </div>
+            <div class="col-md-5">
+
+                <strong>Name:</strong>
+                <span class="label label-default" id="name"></span>
+                <br/>
+                <strong>Description: </strong>
+                <span class="label label-default" id="desc"></span>
+
+
+
+            </div>
+            <div class="col-md-3">
+                <strong>Status: </strong>
+                <span id="status"></span>
+
+
+                <!--<div id="data">-->
+                <!--<h6 id="dataHeader"><label for="dataText">Data Channel</label></h6>-->
+
+                <!--<div style="width: 100%" class="input" id="dataBody">-->
+                <!--<textarea class="xlarge" name="textarea" id="dataText" rows="3" disabled cols="1"></textarea>-->
+                <!--</div>-->
+                <!--</div>-->
+
+
+            </div>
+
+        </div>
+
+        <div class="row">
+            <div id="labels" style="display: none"></div>
+        </div>
+        <div class="row">
+            <div class="span1">
+                &nbsp;
+            </div>
+            <div class="span10">
+                <div id="labelsF"></div>
+            </div>
+
+        </div>
+        <div class="row">
+            <div id="div_g" style="width:100%; height:300px; position:relative;border-left-width: 10px">
+                <!--<img alt="loading" src="resources/images/default/shared/blue-loading.gif" width="32" height="32"/>-->
+            </div>
+        </div>
+
+        <div class="row" style="margin-top: 25px; margin-bottom: 25px">
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="from">From</label>
+                    <input type="datetime" class="form-control" id="from" placeholder="start date">
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label for="to">To</label>
+                    <input type="datetime" class="form-control" id="to" placeholder="end date">
+                </div>
+
+            </div>
+
+            <div class="col-md-1">
+                <label for="update">&nbsp;</label>
+                <button class="btn btn-mini btn-primary" type="button" id="update" onclick="getSeries()">update</button>
+
+            </div>
+
+
+        </div>
+        <div class="row">
+            <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+            <!-- nimbits.com bottom -->
+            <ins class="adsbygoogle"
+                 style="display:inline-block;width:728px;height:90px"
+                 data-ad-client="ca-pub-6491049122047226"
+                 data-ad-slot="4257219629"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
+        <span class="label label-success" id="progress">Loading...</span>
+
+
+
+
+
+    </div>
+</div>
+
+
+
+
+
+</body>
+<script type="text/javascript" src="assets/js/dygraph-combined.js"></script>
+<script type="text/javascript" src="assets/js/jquery-1.10.2.min.js"></script>
+<script src="assets/js/jquery-1.9.1.js"></script>
+<script src="assets/js/jquery-ui.js"></script>
+<script src="assets/js/nimbits.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="bootstrap/docs-assets/js/holder.js"></script>
+</html>

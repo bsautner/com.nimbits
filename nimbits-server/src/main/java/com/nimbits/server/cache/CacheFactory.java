@@ -13,19 +13,22 @@
 package com.nimbits.server.cache;
 
 import com.nimbits.server.transaction.cache.NimbitsCache;
-import net.sf.jsr107cache.CacheException;
+
+import javax.cache.CacheException;
+
+import java.util.logging.Logger;
 
 
-/**
- * Created by benjamin on 10/9/13.
- */
 public class CacheFactory {
+    final static Logger logger = Logger.getLogger(CacheFactory.class.getName());
 
     public static NimbitsCache getInstance() {
 
         try {
             return new AppEngineCache();
         } catch (CacheException e) {
+            logger.severe("Cache Engine caught exception");
+            e.printStackTrace();
             return null;
         }
     }

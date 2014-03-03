@@ -32,9 +32,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class EntityServiceRpcImpl extends RemoteServiceServlet implements EntityServiceRpc {
-
+    final static Logger logger = Logger.getLogger(EntityServiceRpcImpl.class.getName());
 
     private final NimbitsEngine engine = ApplicationListener.createEngine();
     private final EntityService service = EntityServiceFactory.getInstance(engine);
@@ -91,7 +92,9 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
     @Override
     public List<Entity> getEntitiesRpc(final User user) {
 
-        return service.getEntities(user);
+        List<Entity> result =  service.getEntities(user);
+        logger.info("getEntitiesRpc:: " + result.size());
+        return result;
     }
 
     @Override

@@ -208,7 +208,7 @@
                 <version>2.5.1</version>
                 <configuration>
                     <extraJvmArgs>-XX:MaxPermSize=512m -Xmx1024m</extraJvmArgs>
-              
+
                     <compileSourcesArtifacts>
                         <compileSourcesArtifact>com.nimbits:nimbits_model</compileSourcesArtifact>
                         <compileSourcesArtifact>com.nimbits:nimbits_core</compileSourcesArtifact>

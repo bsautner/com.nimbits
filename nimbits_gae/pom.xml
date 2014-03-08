@@ -219,7 +219,7 @@
 
     <build>
         <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
-        <finalName>$\{project.artifactId}-$\{project.version}-r$\{buildNumber}</finalName>
+        <finalName>nimbits_gae_3.5.5</finalName>
         <plugins>
 
             <plugin>

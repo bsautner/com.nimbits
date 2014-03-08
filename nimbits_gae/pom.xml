@@ -7,7 +7,27 @@
     <groupId>com.nimbits</groupId>
     <artifactId>nimbits-gae</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
+    <scm>
+        <connection>scm:git:git@github.com:bsautner/com.nimbits.git</connection>
+        <developerConnection>scm:git:git@github.com:bsautner/com.nimbits.git</developerConnection>
+        <url>git@github.com:bsautner/com.nimbits.git</url>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>bsautner</id>
+            <name>Benjamin Sautner</name>
+            <email>bsautner@gmail.com</email>
+        </developer>
+    </developers>
     <properties>
         <appengine.app.version>1</appengine.app.version>
         <gwt.version>2.5.1</gwt.version>
@@ -199,7 +219,7 @@
 
     <build>
         <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
-
+        <finalName>$\{project.artifactId}-$\{project.version}-r$\{buildNumber}</finalName>
         <plugins>
 
             <plugin>
@@ -260,6 +280,24 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
+
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>buildnumber-maven-plugin</artifactId>
+                        <version>1.2</version>
+                        <executions>
+                            <execution>
+                                <phase>validate</phase>
+                                <goals>
+                                    <goal>create</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <doCheck>true</doCheck>
+                            <doUpdate>true</doUpdate>
+                        </configuration>
+                    </plugin>
 
         </plugins>
     </build>

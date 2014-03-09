@@ -137,17 +137,6 @@
 
 
     <servlet>
-        <servlet-name>entity</servlet-name>
-
-        <servlet-class>com.nimbits.server.api.impl.EntityServletImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>entity</servlet-name>
-        <url-pattern>/service/entity</url-pattern>
-    </servlet-mapping>
-
-
-    <servlet>
         <servlet-name>blob</servlet-name>
 
         <servlet-class>com.nimbits.server.api.impl.BlobServletImpl</servlet-class>

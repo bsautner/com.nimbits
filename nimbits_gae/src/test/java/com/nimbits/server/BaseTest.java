@@ -13,13 +13,10 @@
 package com.nimbits.server;
 
 import com.nimbits.server.api.*;
-import com.nimbits.server.api.impl.EntityServletImpl;
 import com.nimbits.server.process.cron.IdlePointCron;
 import com.nimbits.server.process.task.PointMaintTask;
 import com.nimbits.server.process.task.ValueTask;
-import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.springframework.mock.web.MockServletContext;
 
@@ -32,7 +29,7 @@ public class BaseTest {
     public  static ValueApi valueApi;
     public static SessionApi sessionApi;
     public static EntityApi entityApi;
-    public static EntityServletImpl entityServlet;
+
     public static SeriesApi seriesApi;
     public  static ValueTask valueTask;
     public  static IdlePointCron idleCron;
@@ -82,14 +79,6 @@ public class BaseTest {
             }
         };
 
-        entityServlet = new EntityServletImpl() {
-            @Override
-            public ServletContext getServletContext() {
-
-                return context;
-
-            }
-        };
 
 
         seriesApi = new SeriesApi() {

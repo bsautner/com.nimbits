@@ -88,7 +88,7 @@ public enum SettingType  {
     }
 
     private static class SettingConstants {
-        static final String CONST_SERVER_VERSION = "3.5.4.16";
+        static final String CONST_SERVER_VERSION = "3.5.5.0";
         static final String SETTING_ADMIN = "admin";
         static final String SETTING_ADMIN_DEFAULT = "support@nimbits.com";
         static final String SETTING_VERSION = "version";

@@ -4,7 +4,7 @@
 
     <groupId>com.nimbits</groupId>
     <artifactId>nimbits_model</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.5-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Nimbits Model</name>
     <description>Model Objects for Nimbits</description>
@@ -35,6 +35,10 @@
             <email>bsautner@gmail.com</email>
         </developer>
     </developers>
+
+
+
+
     <dependencies>
 
         <dependency>
@@ -72,6 +76,16 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.java</include>
+                    <include>**/*.gwt.xml</include>
+                </includes>
+            </resource>
+        </resources>
+
         <plugins>
           
             <plugin>

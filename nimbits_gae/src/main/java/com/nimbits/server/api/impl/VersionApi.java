@@ -37,7 +37,7 @@ public class VersionApi extends ApiBase {
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         PrintWriter out = resp.getWriter();
-        super.setup(req, resp);
+        super.setup(resp);
         out.print(SettingServiceFactory.getServiceInstance(engine).getSetting(SettingType.version));
         out.close();
 

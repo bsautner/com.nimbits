@@ -81,7 +81,7 @@
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_model</artifactId>
-            <version>1.4-SNAPSHOT</version>
+            <version>1.5-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
@@ -258,6 +258,7 @@
                 <groupId>org.datanucleus</groupId>
                 <artifactId>maven-datanucleus-plugin</artifactId>
                 <version>3.1.2</version>
+
                 <configuration>
                     <verbose>false</verbose>
                     <fork>false</fork>

@@ -130,16 +130,18 @@
             <version>2.2.2</version>
             <scope>compile</scope>
         </dependency>
+
         <dependency>
             <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>3.0-alpha-1</version>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.26</version>
+            <version>5.1.29</version>
         </dependency>
 
 

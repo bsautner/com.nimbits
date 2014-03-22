@@ -19,8 +19,10 @@
     <groupId>com.nimbits</groupId>
     <artifactId>nimbits_server</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>nimbits jetty</name>
+    <name>Nimbits Server</name>
     <url>http://nimbits.com</url>
+
+    <description>Nimbits Server for the J2EE Platform</description>
 
     <licenses>
         <license>
@@ -43,6 +45,7 @@
             <email>bsautner@gmail.com</email>
         </developer>
     </developers>
+
     <properties>
         <appengine.app.version>1</appengine.app.version>
         <gwt.version>2.5.1</gwt.version>
@@ -94,7 +97,7 @@
             <artifactId>nimbits_core</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
-         </dependency>
+        </dependency>
 
         <dependency>
             <groupId>javax.mail</groupId>
@@ -196,7 +199,7 @@
     </dependencies>
     <build>
         <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
-        <finalName>nimbits_3.5.5</finalName>
+        <finalName>app</finalName>
         <plugins>
 
             <plugin>
@@ -225,7 +228,7 @@
 
             </plugin>
 
-                      <plugin>
+            <plugin>
                 <groupId>org.datanucleus</groupId>
                 <artifactId>maven-datanucleus-plugin</artifactId>
                 <version>3.1.2</version>
@@ -249,6 +252,15 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <webappDirectory>/var/lib/tomcat7/webapps/</webappDirectory>
                 </configuration>
             </plugin>
 

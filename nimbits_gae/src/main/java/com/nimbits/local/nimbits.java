@@ -106,7 +106,7 @@ public class nimbits extends NavigationEventProvider implements EntryPoint {
 
 
             ContentPanel center = new ContentPanel();
-            center.setHeadingText("Nimbits Admin Console 3.5.5");
+            center.setHeadingText("Nimbits Console 3.5.5");
             center.setScrollMode(Style.Scroll.AUTOX);
 
 

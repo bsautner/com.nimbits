@@ -199,7 +199,7 @@
     </dependencies>
     <build>
         <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
-        <finalName>app</finalName>
+        <finalName>nimbits_server_3.5.5</finalName>
         <plugins>
 
             <plugin>
@@ -259,9 +259,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.4</version>
-                <configuration>
-                    <webappDirectory>/var/lib/tomcat7/webapps/app</webappDirectory>
-                </configuration>
+                <!--<configuration>-->
+                    <!--<webappDirectory>/var/lib/tomcat7/webapps/app</webappDirectory>-->
+                <!--</configuration>-->
             </plugin>
 
 

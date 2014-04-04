@@ -13,7 +13,7 @@
 <!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.0//EN"
         "http://google-web-toolkit.googlecode.com/svn/releases/2.0/distro-source/core/src/gwt-module.dtd">
 <module rename-to="nimbits">
-    <entry-point class='com.nimbits.client.NimbitsApplication' />
+    <entry-point class='com.nimbits.local.nimbits' />
 
     <inherits name="com.google.gwt.resources.Resources" />
     <inherits name='com.google.gwt.user.User' />
@@ -23,6 +23,7 @@
     <inherits name="com.google.gwt.http.HTTP" />
     <script src="feed.js" />
     <script src="jquery-1.7.1.js" />
+    <source path='local' />
     <source path='client' />
 
 

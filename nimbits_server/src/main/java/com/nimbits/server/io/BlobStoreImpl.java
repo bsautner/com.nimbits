@@ -16,6 +16,7 @@ package com.nimbits.server.io;
 import com.google.common.collect.Range;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.common.Utils;
+import com.nimbits.client.enums.SettingType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
@@ -25,6 +26,7 @@ import com.nimbits.client.model.valueblobstore.ValueBlobStoreFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.io.blob.BlobStore;
 import com.nimbits.server.orm.store.ValueBlobStoreEntity;
+import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.value.dao.ValueDayHolder;
 
 import javax.jdo.PersistenceManager;
@@ -38,13 +40,11 @@ import java.util.logging.Logger;
 public class BlobStoreImpl implements BlobStore {
     private final Logger log = Logger.getLogger(BlobStoreImpl.class.getName());
     private final PersistenceManagerFactory pmf;
-    private final static String folder = "nimbits_data/";
+    private SettingsService settingsService;
     public BlobStoreImpl(PersistenceManagerFactory pmf) {
         this.pmf = pmf;
-        File file = new File(folder);
-        if (! file.exists()) {
-            file.mkdir();
-        }
+
+
     }
 
 
@@ -183,8 +183,8 @@ public class BlobStoreImpl implements BlobStore {
         }
     }
     private String readFile(String fn) throws IOException {
-
-        try (BufferedReader br = new BufferedReader(new FileReader(folder + fn))) {
+        String folder = getFolder();
+        try (BufferedReader br = new BufferedReader(new FileReader(folder +  fn))) {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
@@ -196,6 +196,24 @@ public class BlobStoreImpl implements BlobStore {
             return sb.toString();
         }
 
+    }
+
+    private String getFolder() {
+        String failover = "/tmp/";
+        if (settingsService == null) {
+            return failover;
+        }
+        else {
+
+            String folder = settingsService.getSetting(SettingType.storeDirectory);
+            if (folder == null) {
+                folder =failover;
+            }
+            if (!folder.endsWith("/")) {
+                folder += "/";
+            }
+            return folder;
+        }
     }
 
     @Override
@@ -234,7 +252,7 @@ public class BlobStoreImpl implements BlobStore {
     public void deleteBlobs(List<ValueBlobStore> result) {
         for (ValueBlobStore store : result) {
             final String blobKey =  store.getBlobKey();
-            File file = new File(folder + blobKey);
+            File file = new File(getFolder() + blobKey);
             file.delete();
 
         }
@@ -242,7 +260,7 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public void delete(final String key) {
-        File file = new File(folder + key);
+        File file = new File(getFolder() + key);
         file.delete();
 
     }
@@ -253,7 +271,7 @@ public class BlobStoreImpl implements BlobStore {
         try {
             final String json = GsonFactory.getInstance().toJson(holder.getValues());
             String fn = UUID.randomUUID().toString();
-            PrintWriter out = new PrintWriter(folder + fn);
+            PrintWriter out = new PrintWriter(getFolder() + fn);
             out.println(json);
             out.close();
 
@@ -373,5 +391,10 @@ public class BlobStoreImpl implements BlobStore {
         for (ValueBlobStore store: result) {
             delete(store.getBlobKey());
         }
+    }
+
+    @Override
+    public void setSettingService(SettingsService settingsService) {
+        this.settingsService = settingsService;
     }
 }

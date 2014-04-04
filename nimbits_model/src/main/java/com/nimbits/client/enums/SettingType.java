@@ -27,6 +27,7 @@ public enum SettingType  {
 
 
     version(SettingConstants.SETTING_VERSION, SettingConstants.CONST_SERVER_VERSION, true, true, true),
+    storeDirectory(SettingConstants.SETTING_STORE_DIRECTORY, SettingConstants.STORE_DIRECTORY_DEFAULT, false, true, false),
     admin(SettingConstants.SETTING_ADMIN, SettingConstants.SETTING_ADMIN_DEFAULT, false, true, false),
     apiKey(SettingConstants.API_KEY, SettingConstants.API_KEY_DEFAULT, false, true, false);
 
@@ -88,13 +89,14 @@ public enum SettingType  {
     }
 
     private static class SettingConstants {
-        static final String CONST_SERVER_VERSION = "3.5.5.0";
+        static final String CONST_SERVER_VERSION = "3.5.5.1";
+        static final String STORE_DIRECTORY_DEFAULT = "/tmp";
         static final String SETTING_ADMIN = "admin";
         static final String SETTING_ADMIN_DEFAULT = "support@nimbits.com";
         static final String SETTING_VERSION = "version";
         static final String API_KEY = "API_KEY";
+        static final String SETTING_STORE_DIRECTORY = "blob dir";
         static final String API_KEY_DEFAULT = "API_KEY_DEFAULT";
-
         private SettingConstants() {
         }
     }

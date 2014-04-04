@@ -15,7 +15,6 @@ package com.nimbits.server.io;
 
 import com.nimbits.server.io.blob.BlobStore;
 
-import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
 public class BlobStoreFactory {

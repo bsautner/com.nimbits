@@ -32,6 +32,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.client.model.valueblobstore.ValueBlobStoreFactory;
+import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.value.dao.ValueDayHolder;
 
 import javax.jdo.PersistenceManager;
@@ -46,6 +47,7 @@ import java.util.*;
 public class BlobStoreImpl implements BlobStore {
     //  private final Logger log = Logger.getLogger(BlobStoreImpl.class.getName());
     private final PersistenceManagerFactory pmf;
+
     private Gson gson = new GsonBuilder().create();
     public BlobStoreImpl(PersistenceManagerFactory pmf) {
         this.pmf = pmf;
@@ -370,5 +372,10 @@ public class BlobStoreImpl implements BlobStore {
         for (ValueBlobStore store : result) {
             delete(store.getBlobKey());
         }
+    }
+
+    @Override
+    public void setSettingService(SettingsService settingsService) {
+        //not used
     }
 }

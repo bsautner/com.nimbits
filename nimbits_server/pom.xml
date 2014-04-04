@@ -88,7 +88,7 @@
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_model</artifactId>
-            <version>1.6-SNAPSHOT</version>
+            <version>1.7-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
@@ -260,7 +260,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.4</version>
                 <configuration>
-                    <webappDirectory>/var/lib/tomcat7/webapps/</webappDirectory>
+                    <webappDirectory>/var/lib/tomcat7/webapps/app</webappDirectory>
                 </configuration>
             </plugin>
 

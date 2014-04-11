@@ -27,6 +27,7 @@ import com.nimbits.client.model.user.User;
  * Date: 12/31/11
  * Time: 9:51 AM
  */
+@Deprecated
 public class EntityModelFactory {
 
 

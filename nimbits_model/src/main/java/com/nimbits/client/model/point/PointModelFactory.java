@@ -22,15 +22,8 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 
-import java.util.UUID;
 
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 4/16/11
- * Time: 12:06 PM
- */
 public class PointModelFactory {
 
 

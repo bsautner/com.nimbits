@@ -3,7 +3,7 @@
     <threadsafe>true</threadsafe>
 
     <!--change this to -->
-    <application>nimbits-02</application>
+    <application>nimbits-test01</application>
 
 
     <version>803</version>

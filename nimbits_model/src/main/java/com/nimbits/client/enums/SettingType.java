@@ -89,7 +89,7 @@ public enum SettingType  {
     }
 
     private static class SettingConstants {
-        static final String CONST_SERVER_VERSION = "3.5.5.1";
+        static final String CONST_SERVER_VERSION = "3.5.5.3";
         static final String STORE_DIRECTORY_DEFAULT = "/tmp";
         static final String SETTING_ADMIN = "admin";
         static final String SETTING_ADMIN_DEFAULT = "support@nimbits.com";

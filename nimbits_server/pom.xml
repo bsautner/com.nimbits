@@ -260,7 +260,7 @@
                 <artifactId>maven-war-plugin</artifactId>
                 <version>2.4</version>
                 <!--<configuration>-->
-                    <!--<webappDirectory>/var/lib/tomcat7/webapps/app</webappDirectory>-->
+                    <!--<webappDirectory>/var/lib/tomcat7/webapps</webappDirectory>-->
                 <!--</configuration>-->
             </plugin>
 

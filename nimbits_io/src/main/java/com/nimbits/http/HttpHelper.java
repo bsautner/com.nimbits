@@ -97,7 +97,10 @@ public class HttpHelper {
 
         HttpResponse response = httpClient.execute(httppost);
         if (response.getStatusLine().getStatusCode() != 200 && response.getStatusLine().getStatusCode() != 204) {
-
+            for (Header header : response.getAllHeaders()) {
+                System.out.println(header.getName() + "=" + header.getValue());
+            }
+            throw new RuntimeException("server returned an error: " + response.getStatusLine().getReasonPhrase());
         }
         HttpEntity entity = response.getEntity();
         InputStream inputStream = entity.getContent();

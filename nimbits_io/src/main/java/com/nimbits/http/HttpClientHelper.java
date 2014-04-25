@@ -1,7 +1,7 @@
 package com.nimbits.http;
 
 import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.enums.ServerSetting;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -37,7 +37,7 @@ public class HttpClientHelper {
 
         HttpGet http = new HttpGet(u);
 
-        httpClient = HttpClientFactory.getInstance(SettingType.apiKey.getDefaultValue());
+        httpClient = HttpClientFactory.getInstance(ServerSetting.apiKey.getDefaultValue());
 
         HttpResponse response = httpClient.execute(http);
 
@@ -70,9 +70,9 @@ public class HttpClientHelper {
         }
 
 
-        httpClient = HttpClientFactory.getInstance(SettingType.apiKey.getDefaultValue());
+        httpClient = HttpClientFactory.getInstance(ServerSetting.apiKey.getDefaultValue());
 //        if (userApiKey) {
-        httppost.setHeader(SettingType.apiKey.getName(), SettingType.apiKey.getDefaultValue());
+        httppost.setHeader(ServerSetting.apiKey.getName(), ServerSetting.apiKey.getDefaultValue());
 //        }
         httppost.setEntity(new UrlEncodedFormEntity(nameValuePairs));
 

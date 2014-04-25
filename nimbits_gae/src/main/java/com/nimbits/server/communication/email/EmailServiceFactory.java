@@ -12,12 +12,9 @@
 
 package com.nimbits.server.communication.email;
 
-import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 
-/**
- * Created by benjamin on 10/18/13.
- */
+
 public class EmailServiceFactory {
 
     public static EmailService getServiceInstance(PersistenceManagerFactory pmf) {

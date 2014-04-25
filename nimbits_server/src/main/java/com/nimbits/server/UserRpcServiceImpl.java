@@ -14,7 +14,7 @@ package com.nimbits.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
@@ -25,7 +25,6 @@ import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.settings.SettingServiceFactory;
 import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.user.AuthenticationServiceFactory;
-import com.nimbits.server.transaction.user.cache.UserCache;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -44,7 +43,7 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements  UserSer
 
         final User retObj;
         EmailAddress internetAddress;
-        String admin = settingsService.getSetting(SettingType.admin);
+        String admin = settingsService.getSetting(ServerSetting.admin);
         internetAddress = CommonFactory.createEmailAddress(admin);
 
 

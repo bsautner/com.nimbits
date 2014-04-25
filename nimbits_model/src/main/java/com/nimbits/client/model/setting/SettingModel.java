@@ -12,7 +12,7 @@
 
 package com.nimbits.client.model.setting;
 
-import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.enums.ServerSetting;
 
 /**
  * Created by Benjamin Sautner
@@ -34,8 +34,8 @@ public class SettingModel implements Setting {
     }
 
     @Override
-    public SettingType getSetting() {
-        return SettingType.get(this.name);
+    public ServerSetting getSetting() {
+        return ServerSetting.get(this.name);
     }
 
     @Override

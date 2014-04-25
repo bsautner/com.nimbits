@@ -12,7 +12,7 @@
 
 package com.nimbits.server.transactions.settings;
 
-import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.transaction.settings.SettingServiceFactory;
 import org.junit.Test;
@@ -27,7 +27,7 @@ public class SettingDaoImplTest extends NimbitsServletTest {
     public void getSettingsTest() throws Exception {
 
         Thread.sleep(2000);
-        for (SettingType types : SettingType.values()) {
+        for (ServerSetting types : ServerSetting.values()) {
             String settings = SettingServiceFactory.getServiceInstance(engine).getSetting(types);
             assertNotNull(settings);
         }

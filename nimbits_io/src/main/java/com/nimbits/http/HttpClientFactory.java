@@ -12,7 +12,7 @@
 
 package com.nimbits.http;
 
-import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.enums.ServerSetting;
 import org.apache.http.HttpVersion;
 import org.apache.http.client.params.ClientPNames;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -37,7 +37,7 @@ public enum HttpClientFactory {
             headerParams.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
             headerParams.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, true);
             if (apiKey != null) {
-                headerParams.setParameter(SettingType.apiKey.getName(), apiKey);
+                headerParams.setParameter(ServerSetting.apiKey.getName(), apiKey);
             }
             int timeoutConnection = 3000;
             HttpConnectionParams.setConnectionTimeout(headerParams, timeoutConnection);

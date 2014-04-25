@@ -16,7 +16,7 @@ package com.nimbits.server.io;
 import com.google.common.collect.Range;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.common.Utils;
-import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
@@ -205,7 +205,7 @@ public class BlobStoreImpl implements BlobStore {
         }
         else {
 
-            String folder = settingsService.getSetting(SettingType.storeDirectory);
+            String folder = settingsService.getSetting(ServerSetting.storeDirectory);
             if (folder == null) {
                 folder =failover;
             }

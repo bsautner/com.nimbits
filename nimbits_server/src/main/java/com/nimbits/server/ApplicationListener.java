@@ -14,7 +14,7 @@ package com.nimbits.server;
 
 import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 import com.nimbits.server.communication.email.EmailService;
-import com.nimbits.server.communication.email.EmailServiceFactory;
+import com.nimbits.server.communication.mail.EmailServiceFactory;
 import com.nimbits.server.communication.xmpp.XmppService;
 import com.nimbits.server.communication.xmpp.XmppServiceFactory;
 import com.nimbits.server.counter.CounterService;
@@ -28,7 +28,6 @@ import com.nimbits.server.transaction.cache.NimbitsCache;
 import com.nimbits.server.transaction.user.service.AuthenticationMechanism;
 import com.nimbits.server.user.AuthenticationMechanismFactory;
 
-import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
@@ -67,6 +66,7 @@ public class ApplicationListener implements ServletContextListener {
             XmppService xmppService = XmppServiceFactory.getServiceInstance();
             BlobStore blobStore = BlobStoreFactory.getInstance(persistenceManagerFactory);
             AuthenticationMechanism userAuthenticationMechanism = AuthenticationMechanismFactory.getInstance();
+
             EmailService emailService = EmailServiceFactory.getServiceInstance(persistenceManagerFactory);
             CounterService counterService = CounterServiceFactory.getInstance();
             engine = new NimbitsEngine(

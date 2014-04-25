@@ -15,18 +15,16 @@ package com.nimbits.server.communication.email;
 
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.constants.UserMessages;
-import com.nimbits.client.constants.Words;
-import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.NimbitsEngine;
 import com.nimbits.server.ServerInfo;
 import com.nimbits.server.transaction.settings.SettingServiceFactory;
+import com.nimbits.server.transaction.settings.SettingsService;
 
-import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -40,6 +38,7 @@ import java.util.Properties;
 import java.util.logging.Logger;
 
 public class EmailServiceImpl implements EmailService {
+
 
     private static final Logger log = Logger.getLogger(EmailServiceImpl.class.getName());
     private static final String DEFAULT_EMAIL_SUBJECT = "Nimbits Messaging";
@@ -72,6 +71,8 @@ public class EmailServiceImpl implements EmailService {
         final Session session = Session.getDefaultInstance(props, null);
         log.info(emailAddress + " " + message);
         try {
+
+
             final InternetAddress internetAddress = new InternetAddress(emailAddress.getValue());
             final Message msg = new MimeMessage(session);
             msg.setFrom(getFromEmail());
@@ -88,6 +89,8 @@ public class EmailServiceImpl implements EmailService {
 
         }
     }
+
+
 
 
     @Override
@@ -143,7 +146,7 @@ public class EmailServiceImpl implements EmailService {
     }
     private InternetAddress getFromEmail() throws UnsupportedEncodingException {
         final String fromEmail;
-      fromEmail = SettingServiceFactory.getDaoInstance(pmf).getSetting(SettingType.admin );
+      fromEmail = SettingServiceFactory.getDaoInstance(pmf).getSetting(ServerSetting.admin );
             return new InternetAddress(fromEmail, WORD_NIMBITS);
 
 
@@ -223,6 +226,11 @@ public class EmailServiceImpl implements EmailService {
         } catch (UnsupportedEncodingException e) {
 
         }
+    }
+
+    @Override
+    public void setSettingService(SettingsService settingService) {
+
     }
 
 

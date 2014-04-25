@@ -29,12 +29,10 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.cache.CacheFactory;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.io.blob.BlobStore;
 import com.nimbits.server.io.blob.BlobStoreFactory;
 import com.nimbits.server.process.task.TaskService;
-import com.nimbits.server.transaction.cache.NimbitsCache;
 import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.settings.SettingServiceFactory;
@@ -46,16 +44,12 @@ import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.dao.ValueDao;
 import com.nimbits.server.transaction.value.dao.ValueDaoImpl;
 import com.nimbits.server.transaction.value.service.ValueService;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 
-import javax.jdo.PersistenceManager;
-import javax.jdo.PersistenceManagerFactory;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -80,7 +74,7 @@ public class NimbitsServletTest extends BaseTest {
     public SubscriptionService subscriptionService;
 
 
-    public static final String email = SettingType.admin.getDefaultValue();
+    public static final String email = ServerSetting.admin.getDefaultValue();
     public final LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig(),
             new LocalTaskQueueTestConfig(),
@@ -162,7 +156,7 @@ public class NimbitsServletTest extends BaseTest {
         helper.setUp();
 
 
-        settingsService.addSetting(SettingType.admin, email);
+        settingsService.addSetting(ServerSetting.admin, email);
 
 
         emailAddress = CommonFactory.createEmailAddress(email);

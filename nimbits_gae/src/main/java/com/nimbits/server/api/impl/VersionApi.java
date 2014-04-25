@@ -12,9 +12,8 @@
 
 package com.nimbits.server.api.impl;
 
-import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.server.api.ApiBase;
-import com.nimbits.server.api.ValueApi;
 import com.nimbits.server.transaction.settings.SettingServiceFactory;
 
 import javax.servlet.ServletException;
@@ -22,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.logging.Logger;
 
 /**
  * Author: Benjamin Sautner
@@ -37,7 +35,7 @@ public class VersionApi extends ApiBase {
 
         PrintWriter out = resp.getWriter();
         super.setup(resp);
-        out.print(SettingServiceFactory.getServiceInstance(engine).getSetting(SettingType.version));
+        out.print(SettingServiceFactory.getServiceInstance(engine).getSetting(ServerSetting.version));
         out.close();
 
     }

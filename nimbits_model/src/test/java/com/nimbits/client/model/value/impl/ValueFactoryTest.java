@@ -12,12 +12,6 @@
 
 package com.nimbits.client.model.value.impl;
 
-import com.nimbits.client.enums.SettingType;
-import com.nimbits.client.model.common.impl.CommonFactory;
-import com.nimbits.client.model.simple.SimpleValue;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.ValueContainer;
-import com.nimbits.server.gson.GsonFactory;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

@@ -12,7 +12,7 @@
 
 package com.nimbits.client.model.setting;
 
-import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.enums.ServerSetting;
 
 import java.io.*;
 
@@ -24,7 +24,7 @@ import java.io.*;
  */
 public interface Setting extends Serializable {
 
-    SettingType getSetting();
+    ServerSetting getSetting();
 
     String getValue();
 

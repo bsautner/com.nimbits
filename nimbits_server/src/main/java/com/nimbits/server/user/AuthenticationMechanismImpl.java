@@ -13,7 +13,7 @@
 package com.nimbits.server.user;
 
 
-import com.nimbits.client.enums.SettingType;
+import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.server.ApplicationListener;
@@ -30,6 +30,6 @@ public class AuthenticationMechanismImpl implements AuthenticationMechanism {
     @Override
     public List<EmailAddress> getCurrentUserEmail() {
         SettingsService settings = SettingServiceFactory.getServiceInstance(ApplicationListener.createEngine());
-         return Arrays.asList(CommonFactory.createEmailAddress(settings.getSetting(SettingType.admin)));
+         return Arrays.asList(CommonFactory.createEmailAddress(settings.getSetting(ServerSetting.admin)));
     }
 }

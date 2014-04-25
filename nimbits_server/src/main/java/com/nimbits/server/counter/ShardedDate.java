@@ -20,13 +20,6 @@ import java.util.Random;
 public class ShardedDate {
 
 
-
-    private class Counter {
-
-        private static final String KIND = "LastDateShard";
-        private static final String SHARD_COUNT = "shard_date";
-    }
-
     /**
      * Convenience class which contains constants related to the counter shards.
      * The shard number (as a String) is used as the entity key.
@@ -94,7 +87,7 @@ public class ShardedDate {
      * @return Summed total of all shards' counts
      */
     public Date getMostRecent() {
-        return new Date();
+        return null;
     }
 
     /**

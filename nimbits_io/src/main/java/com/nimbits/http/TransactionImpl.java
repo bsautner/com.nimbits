@@ -45,7 +45,6 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -76,41 +75,17 @@ public class TransactionImpl implements Transaction {
 
     }
 
-
-
-
-
-
     @Override
-    public List<User> getSession() {
+    public List<User> getSession(List<BasicNameValuePair> params) {
 
         UrlContainer path = UrlContainer.combine(instanceUrl, SESSION_SERVICE);
-        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(2);
-        params.add((new BasicNameValuePair(Parameters.email.getText(), email)));
-        params.add((new BasicNameValuePair(Parameters.apikey.getText(), server.getApiKey())));
         return helper.doGet(UserModel.class,
                 path,
                 params,
                 UserModel.class, false);
-
-
     }
 
-    @Override
-    public List<User> getSession(String email, String key) {
-        Calendar expire = Calendar.getInstance();
-        expire.add(Calendar.HOUR, 1);
-        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(2);
-        UrlContainer path = UrlContainer.combine(instanceUrl, SESSION_SERVICE);
-        params.add((new BasicNameValuePair(Parameters.email.getText(), email)));
-        params.add((new BasicNameValuePair(Parameters.key.getText(), key)));
-        return helper.doGet(UserModel.class,
-                path,
-                params,
-                UserModel.class, false);
 
-
-    }
 
     @Override
     public List<Value> getValue(final Entity entity) {

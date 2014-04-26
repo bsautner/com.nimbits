@@ -19,19 +19,24 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.simple.SimpleValue;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import org.apache.http.message.BasicNameValuePair;
 
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by benjamin on 10/20/13.
- */
 public interface Transaction {
 
 
-    List<User> getSession();
-
-    List<User> getSession(String email, String key);
+    /**
+     * Returns the authenticated user for that session.  Response is a JSON formated User object in a list.
+     * @see com.nimbits.client.model.user.User
+     *
+     * @param params required authentication params with at least an email, user access key or server api key
+     *               key=some key
+     *               email=user's email
+     * @return A list with a valid user or an empty list if authentication fails.
+     */
+    List<User> getSession(List<BasicNameValuePair> params);
 
     List<Value> getValue(Entity entity);
 

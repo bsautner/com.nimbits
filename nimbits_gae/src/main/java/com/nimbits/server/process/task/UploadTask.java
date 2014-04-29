@@ -23,17 +23,14 @@ import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.location.LocationFactory;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.simple.SimpleValue;
+import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueData;
 import com.nimbits.client.model.value.impl.ValueDataModel;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.server.api.ApiBase;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transaction.value.ValueServiceFactory;
-import com.nimbits.server.transaction.value.service.ValueService;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

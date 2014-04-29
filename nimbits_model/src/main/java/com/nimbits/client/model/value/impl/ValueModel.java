@@ -17,7 +17,7 @@ import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.location.LocationFactory;
-import com.nimbits.client.model.simple.SimpleValue;
+import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueData;
 

@@ -13,12 +13,7 @@
 package com.nimbits.client.model.common.impl;
 import java.io.Serializable;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 8/6/11
- * Time: 11:07 AM
- */
+
 public class CommonIdentifier implements  Serializable{
 
     private String value;

@@ -12,6 +12,7 @@
 
 package com.nimbits.io.helper.impl;
 
+import com.google.common.collect.Range;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.server.Server;
@@ -67,5 +68,11 @@ public class ValueHelperImpl implements ValueHelper {
     public Value recordValue(String name, double v, Date time) {
         Value vx = ValueFactory.createValueModel(v, time);
         return doRecordValue(name, vx);
+    }
+
+    @Override
+    public List<Value> getSeries(String name, Range<Date> dateRange) {
+
+        return NimbitsClientFactory.getInstance(server, email, accessKey).getSeries(name, dateRange);
     }
 }

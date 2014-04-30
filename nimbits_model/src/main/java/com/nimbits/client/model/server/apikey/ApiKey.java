@@ -17,5 +17,11 @@ public class ApiKey extends SimpleValue<String> implements Serializable {
     }
 
 
+    public static ApiKey getInstance(final String aValue) {
+        return new ApiKey(aValue);
+    }
+
+
+
 
 }

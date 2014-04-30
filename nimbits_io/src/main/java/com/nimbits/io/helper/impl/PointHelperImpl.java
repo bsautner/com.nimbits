@@ -92,8 +92,14 @@ public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
 
     @Override
     public Point getPoint(final String name)   {
+        SimpleValue<String> id;
+        if (! name.startsWith(email.getValue())) {
+           id = SimpleValue.getInstance(email + "/" + name);
+        }
+        else {
+            id = SimpleValue.getInstance(name);
+        }
 
-        SimpleValue<String> id = SimpleValue.getInstance(email + "/" + name);
         List<Point> sample;
 
         sample = nimbitsClient.getEntity(id, EntityType.point, PointModel.class);

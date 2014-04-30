@@ -1,5 +1,6 @@
 package com.nimbits.io.helper;
 
+import com.google.common.collect.Range;
 import com.nimbits.client.model.value.Value;
 
 import java.util.Date;
@@ -38,5 +39,5 @@ public interface ValueHelper {
     Value recordValue(String name, double value, Date time);
 
 
-
+    List<Value> getSeries(String name, Range<Date> dateRange);
 }

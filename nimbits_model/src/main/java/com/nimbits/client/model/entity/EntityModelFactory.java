@@ -21,13 +21,7 @@ import com.nimbits.client.model.trigger.TriggerEntity;
 import com.nimbits.client.model.trigger.TriggerEntityImpl;
 import com.nimbits.client.model.user.User;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 12/31/11
- * Time: 9:51 AM
- */
-@Deprecated
+
 public class EntityModelFactory {
 
 

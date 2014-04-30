@@ -1,64 +1,42 @@
-/*
- * Copyright (c) 2013 Nimbits Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
- */
-
 package com.nimbits.io;
 
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.server.Server;
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.client.io.HttpClientImpl;
 
 import java.util.Date;
 import java.util.List;
 
 
-public class ValueHelper {
-    private final Server server;
-    private final EmailAddress email;
-    public ValueHelper(Server server, EmailAddress email) {
-        this.server = server;
-        this.email = email;
-    }
+/**
+ * Helper for working with the Value API REST Services on a Nimbits Server
+ * Records new values and downloads series of values
+ * @see com.nimbits.client.model.value.Value
+ */
+public interface ValueHelper extends EntityHelper{
 
-    public Value recordValue(String name, double value)  {
-        Value vx = ValueFactory.createValueModel(value);
-        return doRecordValue(name, vx);
+    /**
+     *
+     * @param pointName the name of the data point
+     * @param value any double value
+     * @return the newly recorded value pojo with a timestamp of the current time the value was recorded.
+     */
+    Value recordValue(String pointName, double value);
 
-    }
+    /**
+     *
+     * @param name the name of the data point
+     * @return a list of value objects
+     */
+    List<Value> getSeries(String name);
 
-    private Value doRecordValue(String name, Value vx) {
-        Point point = new PointHelper(server, email).getPoint(name);
+    /**
+     *
+     * @param name the name of the data point
+     * @param value any double value
+     * @param time the timestamp for this point
+     * @return
+     */
+    Value recordValue(String name, double value, Date time);
 
-        List<Value> response = new HttpClientImpl(server, email).postValue(point, vx);
-        if (response.isEmpty()) {
-            throw new RuntimeException("Record Value Failed");
 
-        }
-        else {
-            return response.get(0);
-        }
-    }
 
-    public List<Value> getSeries(String name)   {
-        Point point = new PointHelper(server, email).getPoint(name);
-
-            return new HttpClientImpl(server, email).getSeries(point.getKey());
-
-    }
-
-    public Value recordValue(String name, double v, Date time) {
-        Value vx = ValueFactory.createValueModel(v, time);
-        return doRecordValue(name, vx);
-    }
 }

@@ -67,14 +67,21 @@ public class HttpClientImpl implements NimbitsClient {
     }.getType();
     private final EmailAddress email;
     private final UrlContainer instanceUrl;
-    private final Server server;
-
+    private final String accessKey;
 
     public HttpClientImpl(Server server, EmailAddress email) {
         this.instanceUrl = UrlContainer.getInstance("http://" + server.getUrl());
         this.email = email;
         this.helper = new HttpHelper(email, server);
-        this.server = server;
+        this.accessKey = null;
+
+    }
+
+    public HttpClientImpl(Server server, EmailAddress email, String accessKey) {
+        this.instanceUrl = UrlContainer.getInstance("http://" + server.getUrl());
+        this.email = email;
+        this.helper = new HttpHelper(email, server);
+        this.accessKey = accessKey;
 
     }
 
@@ -82,6 +89,9 @@ public class HttpClientImpl implements NimbitsClient {
     public List<User> getSession(List<BasicNameValuePair> params) {
 
         UrlContainer path = UrlContainer.combine(instanceUrl, SESSION_SERVICE);
+        if (accessKey != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        }
         return helper.doGet(UserModel.class,
                 path,
                 params,
@@ -96,6 +106,9 @@ public class HttpClientImpl implements NimbitsClient {
 
         List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(1);
         params.add((new BasicNameValuePair(Parameters.id.getText(), entity.getKey())));
+        if (accessKey != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        }
         return helper.doGet(ValueModel.class, path, params, valueListType, false);
 
     }
@@ -105,7 +118,11 @@ public class HttpClientImpl implements NimbitsClient {
     public <T> List<T> getTree() {
 
         UrlContainer path = UrlContainer.combine(instanceUrl, TREE_SERVICE);
-        return helper.doGet(EntityModel.class, path, new ArrayList<BasicNameValuePair>(0),
+        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(1);
+        if (accessKey != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        }
+        return helper.doGet(EntityModel.class, path, params,
                 entityListType, true);
 
 
@@ -117,10 +134,12 @@ public class HttpClientImpl implements NimbitsClient {
 
         List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(4);
         String content = GsonFactory.getInstance().toJson(value);
-        addAuthenticationParameters(params);
         params.add((new BasicNameValuePair(Parameters.id.getText(), entity.getKey())));
         params.add((new BasicNameValuePair(Parameters.json.getText(), content)));
         params.add((new BasicNameValuePair(Parameters.email.getText(), email.getValue())));
+        if (accessKey != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        }
         return helper.doPost(ValueModel.class, path, params, null, false);
 
 
@@ -130,10 +149,11 @@ public class HttpClientImpl implements NimbitsClient {
     public List<Value> getSeries(final String entity) {
         UrlContainer path = UrlContainer.combine(instanceUrl, SERIES_SERVICE);
         List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(2);
-        addAuthenticationParameters(params);
         params.add((new BasicNameValuePair(Parameters.id.getText(), entity)));
         params.add((new BasicNameValuePair(Parameters.count.getText(), String.valueOf(MAX_COUNT))));
-
+        if (accessKey != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        }
         List<Value> sample = helper.doGet(ValueModel.class, path, params, valueListType, true);
         return sample;
 
@@ -142,10 +162,13 @@ public class HttpClientImpl implements NimbitsClient {
     public List<Value> getSeries(final String entity, final Range<Date> range) {
         UrlContainer path = UrlContainer.combine(instanceUrl, SERIES_SERVICE);
         List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(3);
-        addAuthenticationParameters(params);
+
         params.add((new BasicNameValuePair(Parameters.id.getText(), entity)));
         params.add((new BasicNameValuePair(Parameters.sd.getText(), String.valueOf(range.lowerEndpoint().getTime()))));
         params.add((new BasicNameValuePair(Parameters.ed.getText(), String.valueOf(range.upperEndpoint().getTime()))));
+        if (accessKey != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        }
         List<Value> sample =  helper.doGet(ValueModel.class, path, params, valueListType, true);
         return sample;
 
@@ -158,6 +181,9 @@ public class HttpClientImpl implements NimbitsClient {
         params.add((new BasicNameValuePair(Parameters.id.getText(), entity.getKey())));
         params.add((new BasicNameValuePair(Parameters.type.getText(), entity.getEntityType().toString())));
         params.add((new BasicNameValuePair(Parameters.action.getText(), Action.delete.getCode())));
+        if (accessKey != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        }
         helper.doPost(EntityModel.class, path, params, entityListType, false);
 
     }
@@ -170,6 +196,9 @@ public class HttpClientImpl implements NimbitsClient {
         params.add((new BasicNameValuePair(Parameters.json.getText(), json)));
         params.add((new BasicNameValuePair(Parameters.action.getText(), Action.create.getCode())));
         params.add((new BasicNameValuePair(Parameters.email.getText(), email.getValue())));
+        if (accessKey != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        }
         return helper.doPost(clz, path, params, entityListType, false);
 
     }
@@ -182,6 +211,9 @@ public class HttpClientImpl implements NimbitsClient {
         String json = GsonFactory.getInstance().toJson(entity);
         params.add((new BasicNameValuePair(Parameters.json.getText(), json)));
         params.add((new BasicNameValuePair(Parameters.action.getText(), Action.update.getCode())));
+        if (accessKey != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        }
         return helper.doPost(clz, path, params, entityListType,true);
 
 
@@ -191,20 +223,17 @@ public class HttpClientImpl implements NimbitsClient {
     public <T, K> List<T> getEntity(final SimpleValue<String> entityId, final EntityType type, final Class<K> clz) {
         UrlContainer path = UrlContainer.combine(instanceUrl, ENTITY_SERVICE);
         List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(4);
-        addAuthenticationParameters(params);
         params.add((new BasicNameValuePair(Parameters.id.getText(), entityId.getValue())));
         params.add((new BasicNameValuePair(Parameters.type.getText(), type.toString())));
+        if (accessKey != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        }
         return helper.doGet(clz, path, params, EntityModel.class, false);
 
 
     }
 
-    private void addAuthenticationParameters(List<BasicNameValuePair> params) {
-//        if (Nimbits.authKey != null && !Nimbits.authKey.isEmpty()) {
-//            params.add((new BasicNameValuePair(Parameters.key.getText(), Nimbits.authKey.get(0))));
-//        }
-//        params.add((new BasicNameValuePair(Parameters.email.getText(), email)));
-    }
+
 
 
     @Override
@@ -249,6 +278,9 @@ public class HttpClientImpl implements NimbitsClient {
         List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(2);
         params.add((new BasicNameValuePair(Parameters.id.getText(), parent.getKey())));
         params.add((new BasicNameValuePair(Parameters.type.getText(), String.valueOf(parent.getEntityType().getCode()))));
+        if (accessKey != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        }
         helper.doPost(String.class, path, params, entityListType, false);
     }
 }

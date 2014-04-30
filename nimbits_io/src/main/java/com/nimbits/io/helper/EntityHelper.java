@@ -1,4 +1,8 @@
 package com.nimbits.io.helper;
 
-public abstract interface EntityHelper {
+import com.nimbits.client.model.entity.Entity;
+
+public interface EntityHelper {
+
+    void deleteEntity(Entity entity);
 }

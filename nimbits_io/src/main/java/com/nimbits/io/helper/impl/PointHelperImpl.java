@@ -27,9 +27,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.server.Server;
-import com.nimbits.io.NimbitsClient;
 import com.nimbits.io.helper.PointHelper;
-import com.nimbits.io.http.NimbitsClientFactory;
 
 import java.util.List;
 
@@ -37,14 +35,12 @@ import java.util.List;
 
 public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
 
-    private final EmailAddress email;
-    private final NimbitsClient nimbitsClient;
+
 
 
     public PointHelperImpl(Server server, EmailAddress email, String accessKey) {
-        super();
-        this.email = email;
-        nimbitsClient = NimbitsClientFactory.getInstance(server, email, accessKey);
+        super(server, email, accessKey);
+
     }
 
 

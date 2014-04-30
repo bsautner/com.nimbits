@@ -18,7 +18,7 @@ import com.nimbits.client.model.server.Server;
 
 public class HttpClientFactory {
 
-    public static HttpClient getInstance(final Server server, final EmailAddress email)  {
+    public static NimbitsClient getInstance(final Server server, final EmailAddress email)  {
         return new HttpClientImpl(server, email);
     }
 }

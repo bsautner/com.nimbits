@@ -26,6 +26,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+@Deprecated
 public class HttpClientDirect {
 
 
@@ -36,7 +37,7 @@ public class HttpClientDirect {
 
 
         parameters.add((new BasicNameValuePair(Parameters.email.getText(), email)));
-        String u = base + path + "?";
+        String u = base + "/service/v2/" + path + "?";
         for (BasicNameValuePair p : parameters) {
             u += p.getName() + "=" + p.getValue() + "&";
 
@@ -45,7 +46,7 @@ public class HttpClientDirect {
 
         HttpGet http = new HttpGet(u);
 
-        httpClient = HttpClientFactory.getInstance(ApiKeyFactory.createApiKey(ServerSetting.apiKey.getDefaultValue()));
+        httpClient = getInstance(ApiKeyFactory.createApiKey(ServerSetting.apiKey.getDefaultValue()));
 
         HttpResponse response = httpClient.execute(http);
 
@@ -70,7 +71,7 @@ public class HttpClientDirect {
 
         DefaultHttpClient httpClient;
 
-        HttpPost httppost = new HttpPost(base + path);
+        HttpPost httppost = new HttpPost(base + "/service/v2/" + path);
         parameters.add((new BasicNameValuePair(Parameters.email.getText(), email)));
         List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(parameters.size());
         for (BasicNameValuePair value : parameters) {
@@ -78,7 +79,7 @@ public class HttpClientDirect {
         }
 
 
-        httpClient = HttpClientFactory.getInstance(ApiKeyFactory.createApiKey(ServerSetting.apiKey.getDefaultValue()));
+        httpClient =  getInstance(ApiKeyFactory.createApiKey(ServerSetting.apiKey.getDefaultValue()));
 
         httppost.setHeader(ServerSetting.apiKey.getName(), ServerSetting.apiKey.getDefaultValue());
 
@@ -96,20 +97,20 @@ public class HttpClientDirect {
     }
 
     public static DefaultHttpClient getInstance(final ApiKey apiKey) {
+        DefaultHttpClient httpClient;
+        HttpParams headerParams = new BasicHttpParams();
+        headerParams.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
+        headerParams.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, true);
+        if (! apiKey.isEmpty()) {
+            headerParams.setParameter(ServerSetting.apiKey.getName(), apiKey);
+        }
+        int timeoutConnection = 3000;
+        HttpConnectionParams.setConnectionTimeout(headerParams, timeoutConnection);
 
-            HttpParams headerParams = new BasicHttpParams();
-            headerParams.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
-            headerParams.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, true);
-            if (! apiKey.isEmpty()) {
-                headerParams.setParameter(ServerSetting.apiKey.getName(), apiKey);
-            }
-            int timeoutConnection = 3000;
-            HttpConnectionParams.setConnectionTimeout(headerParams, timeoutConnection);
+        int timeoutSocket = 5000;
+        HttpConnectionParams.setSoTimeout(headerParams, timeoutSocket);
 
-            int timeoutSocket = 5000;
-            HttpConnectionParams.setSoTimeout(headerParams, timeoutSocket);
-
-            httpClient = new DefaultHttpClient(headerParams);
+        httpClient = new DefaultHttpClient(headerParams);
 
 
 

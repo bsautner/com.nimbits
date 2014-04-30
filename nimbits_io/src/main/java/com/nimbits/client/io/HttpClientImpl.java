@@ -49,7 +49,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class HttpClientImpl implements HttpClient {
+public class HttpClientImpl implements NimbitsClient {
 
     private static final UrlContainer VALUE_SERVICE = UrlContainer.getInstance("/service/v2/value");
     private static final UrlContainer SESSION_SERVICE = UrlContainer.getInstance("/service/v2/session");
@@ -169,6 +169,7 @@ public class HttpClientImpl implements HttpClient {
         String json = GsonFactory.getInstance().toJson(entity);
         params.add((new BasicNameValuePair(Parameters.json.getText(), json)));
         params.add((new BasicNameValuePair(Parameters.action.getText(), Action.create.getCode())));
+        params.add((new BasicNameValuePair(Parameters.email.getText(), email.getValue())));
         return helper.doPost(clz, path, params, entityListType, false);
 
     }

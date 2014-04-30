@@ -10,14 +10,14 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.helper;
+package com.nimbits.io;
 
 
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.point.PointType;
-import com.nimbits.client.io.HttpClient;
+import com.nimbits.client.io.NimbitsClient;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.common.impl.CommonFactory;
@@ -37,7 +37,7 @@ import java.util.List;
 public class PointHelper {
 
     private final EmailAddress email;
-    private final HttpClient transaction;
+    private final NimbitsClient transaction;
     public PointHelper(Server server, EmailAddress email) {
 
         this.email = email;
@@ -57,19 +57,19 @@ public class PointHelper {
 
         List<Point> sample;
 
-            sample = transaction.addEntity(point, PointModel.class);
+        sample = transaction.addEntity(point, PointModel.class);
 
         if (sample.isEmpty()) {
-           if (pointExists(name)) {
-               throw new IllegalStateException("Creating point failed - point already exists");
-           }
-           else {
-           throw new IllegalStateException("Creating point failed");
-           }
-       }
-       else {
-           return sample.get(0);
-       }
+            if (pointExists(name)) {
+                throw new IllegalStateException("Creating point failed - point already exists");
+            }
+            else {
+                throw new IllegalStateException("Creating point failed");
+            }
+        }
+        else {
+            return sample.get(0);
+        }
 
 
     }
@@ -79,7 +79,7 @@ public class PointHelper {
         SimpleValue<String> id = SimpleValue.getInstance(email + "/" + name);
         List<Entity> sample;
 
-            sample = transaction.getEntity(id, EntityType.point, PointModel.class);
+        sample = transaction.getEntity(id, EntityType.point, PointModel.class);
 
         return ! sample.isEmpty();
 

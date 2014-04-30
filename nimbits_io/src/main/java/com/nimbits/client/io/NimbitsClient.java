@@ -29,7 +29,7 @@ import java.util.List;
  * @see com.nimbits.client.model package for the varios POJOs this api returns.
  */
 
-public interface HttpClient {
+public interface NimbitsClient {
 
 
     /**

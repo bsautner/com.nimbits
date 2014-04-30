@@ -10,7 +10,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.helper;
+package com.nimbits.io;
 
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.server.Server;
@@ -22,11 +22,7 @@ import com.nimbits.client.io.HttpClientImpl;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Author: Benjamin Sautner
- * Date: 1/16/13
- * Time: 7:30 PM
- */
+
 public class ValueHelper {
     private final Server server;
     private final EmailAddress email;

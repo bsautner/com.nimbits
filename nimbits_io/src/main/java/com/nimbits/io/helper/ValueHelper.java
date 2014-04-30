@@ -11,7 +11,7 @@ import java.util.List;
  * Records new values and downloads series of values
  * @see com.nimbits.client.model.value.Value
  */
-public interface ValueHelper extends EntityHelper{
+public interface ValueHelper {
 
     /**
      *

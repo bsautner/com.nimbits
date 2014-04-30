@@ -7,7 +7,7 @@ import com.nimbits.client.model.user.User;
  * Returns a User POJO if authentication was successful.
  * @see com.nimbits.client.model.user.User
  */
-public interface UserHelper extends EntityHelper {
+public interface UserHelper  {
 
     /**
      *

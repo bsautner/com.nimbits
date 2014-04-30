@@ -17,8 +17,6 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.point.PointType;
-import com.nimbits.io.http.HttpClientImpl;
-import com.nimbits.io.NimbitsClient;
 import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
@@ -29,7 +27,9 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.server.Server;
+import com.nimbits.io.NimbitsClient;
 import com.nimbits.io.helper.PointHelper;
+import com.nimbits.io.http.NimbitsClientFactory;
 
 import java.util.List;
 
@@ -44,7 +44,7 @@ public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
     public PointHelperImpl(Server server, EmailAddress email, String accessKey) {
         super();
         this.email = email;
-        nimbitsClient = new HttpClientImpl(server, email, accessKey);
+        nimbitsClient = NimbitsClientFactory.getInstance(server, email, accessKey);
     }
 
 

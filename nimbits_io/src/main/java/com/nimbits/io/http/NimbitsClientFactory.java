@@ -17,9 +17,9 @@ import com.nimbits.client.model.server.Server;
 import com.nimbits.io.NimbitsClient;
 
 
-public class HttpClientFactory {
+public class NimbitsClientFactory {
 
-    public static NimbitsClient getInstance(final Server server, final EmailAddress email)  {
-        return new HttpClientImpl(server, email);
+    public static NimbitsClient getInstance(final Server server, final EmailAddress email, final String accessKey)  {
+        return new NimbitsClientImpl(server, email, accessKey);
     }
 }

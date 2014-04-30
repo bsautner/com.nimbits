@@ -15,11 +15,10 @@ package com.nimbits.io;
 import com.google.common.collect.Range;
 import com.nimbits.client.android.AndroidControl;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.common.SimpleValue;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import org.apache.http.message.BasicNameValuePair;
 
 import java.util.Date;
 import java.util.List;
@@ -35,13 +34,10 @@ public interface NimbitsClient {
     /**
      * Returns the authenticated user for that session.  Response is a JSON formated User object in a list.
      * @see com.nimbits.client.model.user.User
-     *
-     * @param params required authentication params with at least an email, user access key or server api key
-     *               key=some key
-     *               email=user's email
+
      * @return A list with a valid user or an empty list if authentication fails.
      */
-    List<User> getSession(List<BasicNameValuePair> params);
+    List<User> getSession();
 
     List<Value> getValue(Entity entity);
 

@@ -12,7 +12,6 @@
 
 package com.nimbits.io.helper.impl;
 
-import com.nimbits.io.http.HttpClientImpl;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.server.Server;
@@ -20,6 +19,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.io.helper.HelperFactory;
 import com.nimbits.io.helper.ValueHelper;
+import com.nimbits.io.http.NimbitsClientFactory;
 
 import java.util.Date;
 import java.util.List;
@@ -45,7 +45,7 @@ public class ValueHelperImpl implements ValueHelper {
     private Value doRecordValue(String name, Value vx) {
         Point point = HelperFactory.getPointHelper(server, email, accessKey).getPoint(name);
 
-        List<Value> response = new HttpClientImpl(server, email, accessKey).postValue(point, vx);
+        List<Value> response = NimbitsClientFactory.getInstance(server, email, accessKey).postValue(point, vx);
         if (response.isEmpty()) {
             throw new RuntimeException("Record Value Failed");
 
@@ -59,7 +59,7 @@ public class ValueHelperImpl implements ValueHelper {
     public List<Value> getSeries(String name)   {
         Point point = HelperFactory.getPointHelper(server, email, accessKey).getPoint(name);
 
-            return new HttpClientImpl(server, email, accessKey).getSeries(point.getKey());
+            return NimbitsClientFactory.getInstance(server, email, accessKey).getSeries(point.getKey());
 
     }
 

@@ -50,7 +50,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class HttpClientImpl implements NimbitsClient {
+public class NimbitsClientImpl implements NimbitsClient {
 
     private static final UrlContainer VALUE_SERVICE = UrlContainer.getInstance("/service/v2/value");
     private static final UrlContainer SESSION_SERVICE = UrlContainer.getInstance("/service/v2/session");
@@ -70,7 +70,7 @@ public class HttpClientImpl implements NimbitsClient {
     private final UrlContainer instanceUrl;
     private final String accessKey;
 
-    public HttpClientImpl(Server server, EmailAddress email) {
+    public NimbitsClientImpl(Server server, EmailAddress email) {
         this.instanceUrl = UrlContainer.getInstance("http://" + server.getUrl());
         this.email = email;
         this.helper = new HttpHelper(email, server);
@@ -78,7 +78,7 @@ public class HttpClientImpl implements NimbitsClient {
 
     }
 
-    public HttpClientImpl(Server server, EmailAddress email, String accessKey) {
+    public NimbitsClientImpl(Server server, EmailAddress email, String accessKey) {
         this.instanceUrl = UrlContainer.getInstance("http://" + server.getUrl());
         this.email = email;
         this.helper = new HttpHelper(email, server);
@@ -87,9 +87,10 @@ public class HttpClientImpl implements NimbitsClient {
     }
 
     @Override
-    public List<User> getSession(List<BasicNameValuePair> params) {
+    public List<User> getSession() {
 
         UrlContainer path = UrlContainer.combine(instanceUrl, SESSION_SERVICE);
+        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(1);
         if (accessKey != null) {
             params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
         }

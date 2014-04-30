@@ -1,12 +1,11 @@
 package com.nimbits.io.helper.impl;
 
-import com.nimbits.io.NimbitsClient;
-import com.nimbits.io.http.HttpClientFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.user.User;
+import com.nimbits.io.NimbitsClient;
 import com.nimbits.io.helper.UserHelper;
-import org.apache.http.message.BasicNameValuePair;
+import com.nimbits.io.http.NimbitsClientFactory;
 
 import java.util.List;
 
@@ -23,13 +22,13 @@ public class UserHelperImpl implements UserHelper {
 
     public UserHelperImpl(Server server, EmailAddress emailAddress, String accessKey) {
 
-        this.client = HttpClientFactory.getInstance(server, emailAddress);
+        this.client = NimbitsClientFactory.getInstance(server, emailAddress, accessKey);
     }
 
 
     @Override
-    public User getSession(List<BasicNameValuePair> params) {
-        List<User> result = client.getSession(params);
+    public User getSession() {
+        List<User> result = client.getSession();
         if (result.isEmpty()) {
             throw new IllegalArgumentException("User not found or access denied.");
         }

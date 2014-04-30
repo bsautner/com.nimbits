@@ -428,7 +428,7 @@
     </servlet>
     <servlet>
         <servlet-name>com.nimbits ValueService</servlet-name>
-        <servlet-class>com.nimbits.server.transactions.ValueServiceRpc</servlet-class>
+        <servlet-class>com.nimbits.server.transactions.ValueServiceRpcImpl</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>com.nimbits XmppService</servlet-name>

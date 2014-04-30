@@ -24,7 +24,7 @@ public class SimpleValue<T> {
     }
 
     public static <T> SimpleValue<T> getInstance(final T aValue) {
-        return new SimpleValue<>(aValue);
+        return new SimpleValue<T>(aValue);
     }
 
 

@@ -85,7 +85,7 @@
     </servlet>
     <servlet>
         <servlet-name>com.nimbits ValueService</servlet-name>
-        <servlet-class>com.nimbits.server.ValueServiceRpc</servlet-class>
+        <servlet-class>com.nimbits.server.ValueServiceRpcImpl</servlet-class>
     </servlet>
 
     <servlet>

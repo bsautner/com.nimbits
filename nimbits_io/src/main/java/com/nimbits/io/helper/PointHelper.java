@@ -1,7 +1,12 @@
-package com.nimbits.io;
+package com.nimbits.io.helper;
 
 import com.nimbits.client.model.point.Point;
 
+/**
+ * Helper for working with the Entity API REST Services on a Nimbits Server
+ * Creates, Reads, Updates and deletes data points.
+ * @see com.nimbits.client.model.point.Point
+ */
 public interface PointHelper extends EntityHelper {
 
     /**

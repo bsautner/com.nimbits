@@ -1,4 +1,4 @@
-package com.nimbits.helper;
+package com.nimbits.io.http;
 
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.ServerSetting;

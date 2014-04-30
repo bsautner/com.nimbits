@@ -6,10 +6,10 @@ import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.io.HelperFactory;
-import com.nimbits.io.PointHelper;
-import com.nimbits.io.UserHelper;
-import com.nimbits.io.ValueHelper;
+import com.nimbits.io.helper.HelperFactory;
+import com.nimbits.io.helper.PointHelper;
+import com.nimbits.io.helper.UserHelper;
+import com.nimbits.io.helper.ValueHelper;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.util.ArrayList;
@@ -47,9 +47,7 @@ public class Program {
 
         UserHelper sessionHelper = HelperFactory.getUserHelper(SERVER, EMAIL_ADDRESS, ACCESS_KEY);
 
-        List<BasicNameValuePair> additionalParams = new ArrayList<BasicNameValuePair>();
-        additionalParams.add(new BasicNameValuePair(Parameters.key.name(), ACCESS_KEY));
-        User user = sessionHelper.getSession(additionalParams);
+        User user = sessionHelper.getSession();
 
 
         System.out.println("Hello " + user.getEmail());

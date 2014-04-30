@@ -1,4 +1,4 @@
-package com.nimbits.io;
+package com.nimbits.io.helper;
 
 import com.nimbits.client.model.value.Value;
 
@@ -33,7 +33,7 @@ public interface ValueHelper extends EntityHelper{
      * @param name the name of the data point
      * @param value any double value
      * @param time the timestamp for this point
-     * @return
+     * @return the recorded value
      */
     Value recordValue(String name, double value, Date time);
 

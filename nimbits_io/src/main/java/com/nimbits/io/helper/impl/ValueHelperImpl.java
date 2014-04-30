@@ -10,16 +10,16 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.io.impl;
+package com.nimbits.io.helper.impl;
 
-import com.nimbits.client.io.HttpClientImpl;
+import com.nimbits.io.http.HttpClientImpl;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.io.HelperFactory;
-import com.nimbits.io.ValueHelper;
+import com.nimbits.io.helper.HelperFactory;
+import com.nimbits.io.helper.ValueHelper;
 
 import java.util.Date;
 import java.util.List;

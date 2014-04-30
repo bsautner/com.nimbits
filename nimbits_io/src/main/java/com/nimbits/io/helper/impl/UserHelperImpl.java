@@ -1,11 +1,11 @@
-package com.nimbits.io.impl;
+package com.nimbits.io.helper.impl;
 
-import com.nimbits.client.io.NimbitsClient;
-import com.nimbits.client.io.HttpClientFactory;
+import com.nimbits.io.NimbitsClient;
+import com.nimbits.io.http.HttpClientFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.user.User;
-import com.nimbits.io.UserHelper;
+import com.nimbits.io.helper.UserHelper;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.util.List;

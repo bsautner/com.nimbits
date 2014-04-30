@@ -21,12 +21,6 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.entity.EntityNameImpl;
 
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 8/6/11
- * Time: 11:09 AM
- */
 public class CommonFactory {
 
 

@@ -12,7 +12,7 @@
 
 package com.nimbits.client.model.value.impl;
 
-import com.nimbits.client.model.simple.SimpleValue;
+import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.value.ValueData;
 
 import java.io.Serializable;

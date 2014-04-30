@@ -16,12 +16,7 @@ import com.nimbits.client.model.common.CommonIdentifier;
 
 import java.io.Serializable;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 8/6/11
- * Time: 11:07 AM
- */
+
 public abstract class CommonIdentifierImpl implements CommonIdentifier, Serializable {
 
     private String value;

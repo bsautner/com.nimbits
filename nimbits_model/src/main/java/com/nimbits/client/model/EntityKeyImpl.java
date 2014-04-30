@@ -12,12 +12,7 @@
 
 package com.nimbits.client.model;
 
-/**
- * Created with IntelliJ IDEA.
- * User: benjamin
- * Date: 10/15/12
- * Time: 3:14 PM
- */
+
 public class EntityKeyImpl implements EntityKey {
 
     private final String value;

@@ -14,15 +14,13 @@ package com.nimbits.server.gson;
 
 import com.google.gson.*;
 import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.location.LocationFactory;
-import com.nimbits.client.model.simple.SimpleValue;
+import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueData;
 import com.nimbits.client.model.value.impl.ValueDataModel;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.client.model.value.impl.ValueModel;
 
 import java.lang.reflect.Type;
 import java.util.Date;

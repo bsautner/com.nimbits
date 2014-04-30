@@ -22,7 +22,7 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.location.LocationFactory;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.simple.SimpleValue;
+import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueData;

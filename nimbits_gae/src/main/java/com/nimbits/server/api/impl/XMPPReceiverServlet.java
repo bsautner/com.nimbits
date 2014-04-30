@@ -30,7 +30,7 @@ import com.nimbits.client.model.location.LocationFactory;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.model.simple.SimpleValue;
+import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueDataModel;

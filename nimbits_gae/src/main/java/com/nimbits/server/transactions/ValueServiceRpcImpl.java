@@ -54,7 +54,7 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements com.nim
 
         User user = UserHelper.getUser(engine);
         HttpServletRequest req = getThreadLocalRequest();
-        return valueService.recordValue(req, user, point, value);
+        return valueService.recordValue(req, user, point, value, false);
 
 
     }

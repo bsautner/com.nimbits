@@ -2,11 +2,12 @@
 <appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
     <threadsafe>true</threadsafe>
 
-    <!--change this to -->
-    <application>nimbits-test01</application>
+    <!--change this to match your app id, note the version below, you'll want to set the current version
+    in the app engine admin console. -->
+    <application>nimbits-02</application>
 
 
-    <version>803</version>
+    <version>804</version>
 
 
     <precompilation-enabled>false</precompilation-enabled>

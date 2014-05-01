@@ -95,11 +95,11 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         entityService.addUpdateSingleEntity(trigger);
 
 
-        valueService.recordValue(req, user, yName, ValueFactory.createValueModel(ry));
+        valueService.recordValue(req, user, yName, ValueFactory.createValueModel(ry), false);
 
-        valueService.recordValue(req, user, zName, ValueFactory.createValueModel(rz));
+        valueService.recordValue(req, user, zName, ValueFactory.createValueModel(rz), false);
         Thread.sleep(200);
-        final Value vt = valueService.recordValue(req, user, triggerName, ValueFactory.createValueModel(r2));
+        final Value vt = valueService.recordValue(req, user, triggerName, ValueFactory.createValueModel(r2), false);
 
         org.junit.Assert.assertEquals(vt.getDoubleValue(), r2, DELTA);
 

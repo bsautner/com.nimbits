@@ -78,7 +78,7 @@ public class SummaryServiceTest extends NimbitsServletTest {
         for (int i = 0; i < c; i++) {
             double dx = rand.nextDouble() * 100;
             Value value = ValueFactory.createValueModel(dx);
-            Value vr = valueService.recordValue(req, user, point, value);
+            Value vr = valueService.recordValue(req, user, point, value, false);
             Assert.assertNotNull(vr);
             Thread.sleep(INT);
             d[i] = dx;

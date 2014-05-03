@@ -130,7 +130,7 @@ public class XMPPReceiverServlet extends ApiServlet {
 
                     final Value v;
                     try {
-                        v = valueService.recordValue(req, u, point, p.getValue());
+                        v = valueService.recordValue(req, u, point, p.getValue(), false);
 
                     point.setValue(v);
                     String result = gson.toJson(point);
@@ -181,7 +181,7 @@ public class XMPPReceiverServlet extends ApiServlet {
 
                 if (u != null) {
                     Value value = ValueFactory.createValueModel(LocationFactory.createLocation(), v, new Date(), "", ValueDataModel.getInstance(SimpleValue.getInstance("")), AlertType.OK);
-                    valueService.recordValue(req, u, pointName, value);
+                    valueService.recordValue(req, u, pointName, value, false);
                 }
             } catch (NumberFormatException ignored) {
 

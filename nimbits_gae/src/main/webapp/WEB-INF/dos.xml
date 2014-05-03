@@ -17,4 +17,10 @@
         <description>php setup attempt</description>
     </blacklist>
 
+    <blacklist>
+
+        <subnet>193.171.119.133</subnet>
+        <description>php setup attempt</description>
+    </blacklist>
+
 </blacklistentries>

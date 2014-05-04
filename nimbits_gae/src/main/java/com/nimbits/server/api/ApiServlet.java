@@ -39,12 +39,7 @@ import java.io.IOException;
 import java.util.EnumMap;
 import java.util.Map;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/20/12
- * Time: 12:58 PM
- */
+
 @Deprecated
 
 public class ApiServlet extends HttpServlet {

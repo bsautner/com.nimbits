@@ -285,8 +285,8 @@ public class BlobStoreImpl implements BlobStore {
                     mostRecentTimeForDay,
                     earliestForDay,
                     fn,
-                    json.length(),
-                    false
+                    json.length()
+
             );
 
             currentStoreEntity.validate();
@@ -368,7 +368,7 @@ public class BlobStoreImpl implements BlobStore {
                     new Date(max),
                     new Date(min),
                     fn,
-                    json.length(), false);
+                    json.length());
 
             currentStoreEntity.validate();
             pm.makePersistent(currentStoreEntity);

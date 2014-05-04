@@ -42,6 +42,4 @@ public interface ValueBlobStore extends Serializable, Comparable<ValueBlobStore>
     long getLength();
 
     void validate();
-
-    Boolean getCompressed();
 }

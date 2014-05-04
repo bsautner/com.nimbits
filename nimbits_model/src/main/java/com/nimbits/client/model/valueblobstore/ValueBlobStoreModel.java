@@ -17,12 +17,6 @@ package com.nimbits.client.model.valueblobstore;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 3/23/12
- * Time: 10:47 AM
- */
 public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobStore>, ValueBlobStore {
 
 
@@ -51,7 +45,6 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
         this.minTimestamp = store.getMinTimestamp().getTime();
         this.key = store.getBlobKey();
         this.length = store.getLength();
-        this.compressed = store.getCompressed();
     }
 
     public ValueBlobStoreModel() {
@@ -106,11 +99,6 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
     @Override
     public void validate()  {
 
-    }
-
-    @Override
-    public Boolean getCompressed() {
-        return this.compressed;
     }
 
     @Override

@@ -16,7 +16,14 @@
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
-
+    <filter>
+        <filter-name>usageFilter</filter-name>
+        <filter-class>com.nimbits.server.api.filter.ApiUsageFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>usageFilter</filter-name>
+        <url-pattern>/service/v2/*</url-pattern>
+    </filter-mapping>
 
 
     <!--v2 services-->

@@ -15,12 +15,7 @@ package com.nimbits.client.enums;
 import java.io.Serializable;
 import java.util.*;
 
-/**
- * Created by Benjamin Sautner
- * User: BSautner
- * Date: 12/29/11
- * Time: 1:36 PM
- */
+
 public enum EntityType implements Serializable {
     user(0, false, false, false, true, true, false, 0, "com.nimbits.server.orm.UserEntity"),
     point(1, true, false, true, true, true, true, 1, "com.nimbits.server.orm.PointEntity"),

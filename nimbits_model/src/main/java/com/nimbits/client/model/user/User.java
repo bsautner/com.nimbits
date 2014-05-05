@@ -61,4 +61,6 @@ public interface User extends Entity, Serializable {
     void setSessionId(String sessionId);
 
     String getSessionId();
+
+    void setEmail(EmailAddress emailAddress);
 }

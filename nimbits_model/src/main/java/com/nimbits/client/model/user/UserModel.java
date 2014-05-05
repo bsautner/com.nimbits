@@ -160,6 +160,11 @@ public class UserModel extends EntityModel implements Serializable, User {
         return sessionId;
     }
 
+    @Override
+    public void setEmail(EmailAddress emailAddress) {
+        this.emailAddress = emailAddress.getValue();
+    }
+
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
     }

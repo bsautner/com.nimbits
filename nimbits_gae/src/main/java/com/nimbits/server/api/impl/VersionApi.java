@@ -14,6 +14,7 @@ package com.nimbits.server.api.impl;
 
 import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.server.api.ApiBase;
+import com.nimbits.server.api.filter.FilteredRequest;
 import com.nimbits.server.transaction.settings.SettingServiceFactory;
 
 import javax.servlet.ServletException;
@@ -34,8 +35,8 @@ public class VersionApi extends ApiBase {
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         PrintWriter out = resp.getWriter();
-        super.setup(resp);
-        out.print(SettingServiceFactory.getServiceInstance(engine).getSetting(ServerSetting.version));
+        addHeaders(resp);
+        out.print(SettingServiceFactory.getServiceInstance(((FilteredRequest)req).getEngine()).getSetting(ServerSetting.version));
         out.close();
 
     }

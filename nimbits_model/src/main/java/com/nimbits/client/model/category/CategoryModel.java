@@ -12,8 +12,12 @@
 
 package com.nimbits.client.model.category;
 
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.user.User;
 
 import java.io.Serializable;
 
@@ -32,4 +36,13 @@ public class CategoryModel extends EntityModel implements Serializable, Category
     public CategoryModel(Entity entity)  {
         super(entity);
     }
+
+    public CategoryModel(User user, Entity parent, String categoryName)  {
+
+        super(CommonFactory.createName(categoryName, EntityType.category),
+                "", EntityType.category, ProtectionLevel.everyone, parent.getKey(), user.getEmail().getValue(), ""
+                );
+
+    }
+
 }

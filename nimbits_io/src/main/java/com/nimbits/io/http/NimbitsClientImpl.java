@@ -225,8 +225,8 @@ public class NimbitsClientImpl implements NimbitsClient {
     public <T, K> List<T> getEntity(final SimpleValue<String> entityId, final EntityType type, final Class<K> clz) {
         UrlContainer path = UrlContainer.combine(instanceUrl, ENTITY_SERVICE);
         List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(4);
-        params.add((new BasicNameValuePair(Parameters.id.getText(), entityId.getValue())));
-        params.add((new BasicNameValuePair(Parameters.type.getText(), type.toString())));
+        params.add(new BasicNameValuePair(Parameters.id.getText(), entityId.getValue()));
+        params.add(new BasicNameValuePair(Parameters.type.getText(), String.valueOf(type.getCode())));
         if (accessKey != null) {
             params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
         }

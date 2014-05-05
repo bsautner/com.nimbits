@@ -13,12 +13,11 @@
 package com.nimbits.client.model.category;
 
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.user.User;
+
 
 /**
- * Created by bsautner
- * User: benjamin
- * Date: 4/9/12
- * Time: 7:09 PM
+ * Creates a category entity
  */
 public class CategoryFactory {
 
@@ -28,7 +27,15 @@ public class CategoryFactory {
     public static Category createCategory(Category e)  {
         return new CategoryModel(e);
     }
+
+    public static Category createCategory(User user, Entity parent, String categoryName)  {
+        return new CategoryModel( user, parent, categoryName);
+    }
+
+    @Deprecated
     public static Category createCategory(Entity e)  {
         return new CategoryModel(e);
     }
+
+
 }

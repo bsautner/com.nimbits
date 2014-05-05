@@ -1,5 +1,9 @@
 package com.nimbits.io.helper.impl;
 
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.category.CategoryModel;
+import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.server.Server;
@@ -37,5 +41,31 @@ public class EntityHelperImpl implements EntityHelper {
     @Override
     public List<Entity> getTree() {
         return nimbitsClient.getTree();
+    }
+
+    @Override
+    public Category addCategory(Category category) {
+        List<Entity> sample = addEntity(category,  CategoryModel.class);
+        if (sample.isEmpty()) {
+            throw new RuntimeException("Couldn't create category");
+
+        }
+        else {
+            return (Category) sample.get(0);
+        }
+    }
+
+    @Override
+    public Entity getCategory(String key) {
+        List<Entity> sample = nimbitsClient.getEntity(
+                SimpleValue.getInstance(key), EntityType.category, CategoryModel.class);
+        if (sample.isEmpty()) {
+            throw new RuntimeException("Category not found");
+
+        }
+        else {
+            return  sample.get(0);
+        }
+
     }
 }

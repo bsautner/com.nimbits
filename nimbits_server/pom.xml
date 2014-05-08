@@ -51,6 +51,8 @@
         <gwt.version>2.5.1</gwt.version>
         <gxt.version>2.2.5</gxt.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jetty-version>9.1.4.v20140401</jetty-version>
+
     </properties>
 
     <repositories>
@@ -98,6 +100,29 @@
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-websocket</artifactId>
+            <version>8.1.15.v20140411</version>
+            <scope>compile</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-util</artifactId>
+            <version>8.1.15.v20140411</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>8.1.15.v20140411</version>
+            <optional>true</optional>
+        </dependency>
+
+
 
         <dependency>
             <groupId>javax.mail</groupId>

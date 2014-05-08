@@ -1,4 +1,3 @@
-import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
@@ -10,9 +9,7 @@ import com.nimbits.io.helper.HelperFactory;
 import com.nimbits.io.helper.PointHelper;
 import com.nimbits.io.helper.UserHelper;
 import com.nimbits.io.helper.ValueHelper;
-import org.apache.http.message.BasicNameValuePair;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -25,7 +22,7 @@ import java.util.UUID;
  * random values, then download the series and delete the point.
  *
  */
-public class Program {
+public class SimpleJavaSample {
     private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("bsautner@gmail.com");
     private static final String ACCESS_KEY = "key";
 

@@ -16,8 +16,11 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
-Defines what type of filter a point uses.  Filters will ignore a value if it falls within a range.
+/**
+ * Created by bsautner
+ * User: benjamin
+ * Date: 3/30/12
+ * Time: 9:02 AM
  */
 public enum FilterType {
 
@@ -27,7 +30,7 @@ public enum FilterType {
     floor(3, "Floor"),
     none(4, "None");
 
-    private static final Map<Integer, FilterType> lookup = new HashMap<>(5);
+    private static final Map<Integer, FilterType> lookup = new HashMap<Integer, FilterType>(4);
 
     static {
         for (FilterType s : EnumSet.allOf(FilterType.class))

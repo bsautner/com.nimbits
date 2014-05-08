@@ -121,6 +121,20 @@
             <version>14.0.1</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-websocket</artifactId>
+            <version>8.1.15.v20140411</version>
+            <scope>compile</scope>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-util</artifactId>
+            <version>8.1.15.v20140411</version>
+        </dependency>
     </dependencies>
 
 </project>

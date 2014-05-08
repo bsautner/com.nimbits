@@ -12,6 +12,7 @@
 
 package com.nimbits.client.model.entity;
 
+import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
@@ -22,12 +23,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Benjamin Sautner
- * User: BSautner
- * Date: 2/7/12
- * Time: 10:50 AM
- */
 public interface Entity  extends Serializable, Comparable<Entity> {
     EntityName getName();
 
@@ -91,5 +86,8 @@ public interface Entity  extends Serializable, Comparable<Entity> {
 
     void setIsCached(boolean isCached) ;
 
+    Action getAction();
+
+    void setAction(Action action);
 
 }

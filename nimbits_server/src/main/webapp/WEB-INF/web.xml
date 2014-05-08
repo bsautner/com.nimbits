@@ -17,7 +17,14 @@
         <listener-class>com.nimbits.server.ApplicationListener</listener-class>
     </listener>
 
-
+    <servlet>
+        <servlet-name>WebSocket</servlet-name>
+        <servlet-class>com.nimbits.server.socket.SocketEndpoint</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>WebSocket</servlet-name>
+        <url-pattern>/socket/*</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>heartbeatApi</servlet-name>

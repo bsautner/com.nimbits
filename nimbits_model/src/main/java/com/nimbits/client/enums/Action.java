@@ -76,7 +76,8 @@ public enum Action {
     }
 
     public static Action get(String code) {
-        return lookup.get(code);
+        Action action =  lookup.get(code);
+        return action == null ? none : action;
     }
 
     private static class ActionConstants {
@@ -115,10 +116,11 @@ public enum Action {
         protected static final String ACTION_ADD_CHART = "addchart";
         protected static final String ACTION_SAVE = "save";
         protected static final String CURRENT_VALUE = "currentvalue";
-        public static final String VALIDATE_EXISTS = "exists";
-        public static final String LIST = "list";
-        public static final String LISTEN = "listen";
-        public static final String NOTIFY = "notify";
+        protected static final String VALIDATE_EXISTS = "exists";
+        protected static final String LIST = "list";
+        protected static final String LISTEN = "listen";
+        protected static final String NOTIFY = "notify";
+
         private ActionConstants() {
         }
     }

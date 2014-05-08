@@ -18,12 +18,7 @@ import com.nimbits.client.model.entity.Entity;
 
 import java.io.Serializable;
 
-/**
- * Created by Benjamin Sautner
- * User: BSautner
- * Date: 1/17/12
- * Time: 3:01 PM
- */
+
 public interface Subscription extends Entity, Serializable {
 
     int getMaxRepeat();

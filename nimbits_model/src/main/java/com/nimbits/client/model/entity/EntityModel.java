@@ -14,10 +14,7 @@ package com.nimbits.client.model.entity;
 
 
 import com.nimbits.client.common.Utils;
-import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.enums.AuthLevel;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.enums.*;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
@@ -28,13 +25,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Benjamin Sautner
- * User: BSautner
- * Date: 2/7/12
- * Time: 11:06 AM
- */
-@SuppressWarnings("InstanceofInterfaces")
+
 public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
 
@@ -54,6 +45,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     private String instanceUrl;
     private boolean isCached = false;
     private String id;
+    private String action;
 
     public EntityModel(final CommonIdentifier name,
                        final String description,
@@ -119,6 +111,17 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     @Override
     public void setIsCached(boolean isCached) {
         this.isCached = isCached;
+    }
+
+    @Override
+    public Action getAction() {
+        Action a =   Action.get(this.action);
+        return a == null ? Action.none : a;
+    }
+
+    @Override
+    public void setAction(Action action) {
+       this.action = action.getCode();
     }
 
     @Override

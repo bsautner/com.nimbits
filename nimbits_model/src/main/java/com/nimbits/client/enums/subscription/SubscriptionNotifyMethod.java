@@ -16,19 +16,13 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 6/24/11
- * Time: 1:00 PM
- */
+
 public enum SubscriptionNotifyMethod {
     none(-1, "None", true),
     email(0, "Email", true),
-    facebook(1, "dep", false),
-    twitter(2, "dep", false),
     instantMessage(3, "Instant Message (XMPP)", true),
-    cloud(5, "Android Notification (GCM)", true);
+    cloud(5, "Android Notification (GCM)", true),
+    socket(6, "Web Socket Clients", true);
 
 
     private static final Map<Integer, SubscriptionNotifyMethod> lookup = new HashMap<Integer, SubscriptionNotifyMethod>(5);
@@ -61,7 +55,8 @@ public enum SubscriptionNotifyMethod {
     }
 
     public static SubscriptionNotifyMethod get(int code) {
-        return lookup.get(code);
+        SubscriptionNotifyMethod method =  lookup.get(code);
+        return method == null ? SubscriptionNotifyMethod.none : method;
     }
 
 }

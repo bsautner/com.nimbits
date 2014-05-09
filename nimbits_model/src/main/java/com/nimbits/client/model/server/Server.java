@@ -28,6 +28,8 @@ public interface Server extends Serializable {
 
     Protocol getProtocol();
 
+    boolean isSocketsEnabled();
+
 
 
 }

@@ -20,12 +20,7 @@ import com.nimbits.client.model.value.Value;
 
 import java.lang.reflect.Type;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 11/17/11
- * Time: 2:55 PM
- */
+
 public class ValueSerializer implements JsonSerializer<Value> {
 
     @Override

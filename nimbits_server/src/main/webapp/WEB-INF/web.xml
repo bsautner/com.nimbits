@@ -13,6 +13,15 @@
         <url-pattern>/service/v2/*</url-pattern>
     </filter-mapping>
 
+    <filter>
+        <filter-name>socketFilter</filter-name>
+        <filter-class>com.nimbits.server.api.filter.SocketFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>socketFilter</filter-name>
+        <url-pattern>/socket/*</url-pattern>
+    </filter-mapping>
+
     <listener>
         <listener-class>com.nimbits.server.ApplicationListener</listener-class>
     </listener>

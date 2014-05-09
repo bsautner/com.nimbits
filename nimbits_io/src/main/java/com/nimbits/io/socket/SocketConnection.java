@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.nimbits.client.SocketType;
 import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
@@ -23,6 +25,7 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -38,19 +41,28 @@ public class SocketConnection  {
     private SocketListener listener;
     private Server server;
     private EmailAddress email;
-    private String key;
 
-    public SocketConnection(Server aServer, EmailAddress email, String key, final SocketListener listener) throws Exception {
+
+    public SocketConnection(Server aServer, EmailAddress email, SocketType socketType, final SocketListener listener) throws Exception {
         this.factory = new WebSocketClientFactory();
         this.factory.start();
         this.client = factory.newWebSocketClient();
         this.listener = listener;
         this.server = aServer;
         this.email = email;
-        this.key = key;
 
 
-        connection = client.open(new URI("ws://" + server.getUrl() + "/socket?email=" + email.getValue()), new WebSocket.OnTextMessage()
+        String connectionid = UUID.randomUUID().toString();
+
+        connection = client.open(new URI("ws://" + server.getUrl() + "/socket?" +
+                Parameters.email + "=" + email.getValue() +
+                "&" + Parameters.cid +  "=" + connectionid +
+                "&" + Parameters.type + "=" + socketType.toString() +
+                "&" + Parameters.apikey + "=" + server.getApiKey().getValue()
+
+
+        ), new WebSocket.OnTextMessage()
+
         {
             public void onOpen(WebSocket.Connection connection)
             {

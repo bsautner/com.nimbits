@@ -102,6 +102,7 @@ public class HttpTransaction {
         HttpGet http = new HttpGet(path);
 
         try {
+
             http.addHeader(ACCEPT, APPLICATION_JSON);
             http.addHeader(CONTENT_TYPE, APPLICATION_JSON);
             if (server.getApiKey() != null && ! server.getApiKey().isEmpty()) {
@@ -203,10 +204,10 @@ public class HttpTransaction {
             if (apiKey != null && ! apiKey.isEmpty()) {
                 headerParams.setParameter(ServerSetting.apiKey.getName(), apiKey);
             }
-            int timeoutConnection = 3000;
+            int timeoutConnection = 15000;
             HttpConnectionParams.setConnectionTimeout(headerParams, timeoutConnection);
 
-            int timeoutSocket = 5000;
+            int timeoutSocket = 15000;
             HttpConnectionParams.setSoTimeout(headerParams, timeoutSocket);
 
             return new DefaultHttpClient(headerParams);

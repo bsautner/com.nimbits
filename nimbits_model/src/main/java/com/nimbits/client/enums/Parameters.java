@@ -16,12 +16,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/28/12
- * Time: 2:18 PM
- */
 public enum Parameters {
     apikey(ParamConstants.PARAM_API_KEY),
     action(ParamConstants.PARAM_ACTION),
@@ -67,7 +61,7 @@ public enum Parameters {
     html(ParamConstants.PARAM_HTML),
     no(ParamConstants.PARAM_NO),
     yes(ParamConstants.PARAM_YES),
-    entityType(ParamConstants.PARAM_ENTITY_TYPE),
+    entityType(ParamConstants.TYPE),
     url(ParamConstants.PARAM_URL),
     uuid(ParamConstants.PARAM_UUID),
     value(ParamConstants.PARAM_VALUE),
@@ -83,7 +77,6 @@ public enum Parameters {
     search(ParamConstants.PARAM_SEARCH),
     offset(ParamConstants.PARAM_OFFSET),
     entity(ParamConstants.PARAM_ENTITY),
-    type(ParamConstants.PARAM_ENTITY_TYPE),
     channel(ParamConstants.PARAM_CHANNEL),
     description(ParamConstants.PARAM_DESCRIPTION),
     fileName(ParamConstants.PARAM_FILE_NAME),
@@ -106,9 +99,13 @@ public enum Parameters {
     protocol(ParamConstants.PROTOCOL),
     keys(ParamConstants.PARAM_KEYS),
     lastUpdate(ParamConstants.LAST_UPDATED),
-    refresh(ParamConstants.REFRESH), preferedValue(ParamConstants.PREFERRED_VALUE),
+    refresh(ParamConstants.REFRESH),
+    preferedValue(ParamConstants.PREFERRED_VALUE),
     owner(ParamConstants.OWNER),
-    session(ParamConstants.SESSION);
+    session(ParamConstants.SESSION),
+    cid(ParamConstants.CID),
+    type(ParamConstants.TYPE)
+    ;
 
     private static final Map<String, Parameters> lookup = new HashMap<String, Parameters>(100);
 
@@ -198,7 +195,6 @@ public enum Parameters {
         private static final String PARAM_SEARCH = "search";
         private static final String PARAM_OFFSET = "offset";
         private static final String PARAM_ENTITY = "entity";
-        private static final String PARAM_ENTITY_TYPE = "type";
         private static final String PARAM_CHANNEL = "channel";
         private static final String PARAM_DESCRIPTION = "description";
         private static final String PARAM_FILE_NAME = "fn";
@@ -220,10 +216,12 @@ public enum Parameters {
         private static final String PROTOCOL = "protocol";
         private static final String PARAM_KEYS = "keys";
         private static final String LAST_UPDATED = "lastUpdated";
-        public static final String REFRESH = "refresh";
-        public static final String PREFERRED_VALUE = "PREFERRED_VALUE";
+        private static final String REFRESH = "refresh";
+        private static final String PREFERRED_VALUE = "PREFERRED_VALUE";
         private static final String OWNER = "owner";
         private static final String SESSION = "session";
+        private static final String CID = "cid";
+        private static final String TYPE = "type";
         private ParamConstants() {
         }
     }

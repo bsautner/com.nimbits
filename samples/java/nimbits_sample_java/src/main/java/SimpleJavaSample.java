@@ -24,11 +24,14 @@ import java.util.UUID;
  */
 public class SimpleJavaSample {
     private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("bsautner@gmail.com");
+
+    //this sample uses an access key, so you've logged into nimbits and right clicked on your account to create this read/write key with user scope.
+
     private static final String ACCESS_KEY = "key";
 
     //set this to your appid.appspot.com if on google app engine, cloud.nimbits.com for the public cloud,
-    //and localhost:8080 if that's your local instance.
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("cloud.nimbits.com");
+    //and localhost:8080/nimbits if that's your jetty local instance for example.
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080/nimbits");
     private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL);
 
 

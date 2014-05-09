@@ -1,9 +1,12 @@
+import com.nimbits.client.SocketType;
 import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
+import com.nimbits.client.model.server.apikey.ApiKey;
+import com.nimbits.client.model.server.apikey.ApiKeyFactory;
 import com.nimbits.io.socket.SocketConnection;
 import com.nimbits.io.socket.SocketListener;
 
@@ -18,15 +21,26 @@ public class SocketSample {
 
 
     private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("bsautner@gmail.com");
-    private static final String ACCESS_KEY = "key";
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080/app");
-    private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL);
+
+    //a running jetty server with nimbits installed (using nimbits.war)
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080/nimbits");
+
+    //you can create this server object with an API KEY you configured your server with to make authentication easy
+
+    private static final ApiKey API_KEY = ApiKeyFactory.createApiKey("KEY");
+    private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL, API_KEY);
 
 
     public static void main(String[] args) throws Exception {
 
+        //See the Nimbits Model Project for this enum.  You can tell nimbits what kind of socket to open.
+        //live will send all new values to the client
+        //basic will only send new values with a subscription set to sockets.
+        SocketType socketType = SocketType.live;
 
-        SocketConnection socketConnection = new SocketConnection(SERVER, EMAIL_ADDRESS, ACCESS_KEY,  new SocketListener() {
+
+
+        SocketConnection socketConnection = new SocketConnection(SERVER, EMAIL_ADDRESS, socketType,  new SocketListener() {
 
 
             public void onOpen(Connection connection)
@@ -56,6 +70,6 @@ public class SocketSample {
             }
         });
 
-        socketConnection.sendMessage("Hello World " + System.currentTimeMillis());
+        socketConnection.sendMessage("Hello Nimbits Socket! " + System.currentTimeMillis());
     }
 }

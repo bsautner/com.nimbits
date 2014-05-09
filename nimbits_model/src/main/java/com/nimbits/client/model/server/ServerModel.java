@@ -27,8 +27,11 @@ public class ServerModel implements Server, Serializable {
     private ApiKey apiKey;
     private boolean isDefault;
     private Protocol protocol;
+    private boolean socketsEnabled;
 
-    public ServerModel(final UrlContainer url, final long id, final ApiKey apiKey, boolean isDefault) {
+
+
+    public ServerModel(final UrlContainer url, final long id, final ApiKey apiKey, boolean socketsEnabled,  boolean isDefault) {
         if (StringUtils.isEmpty(url.getUrl())) {
             throw new IllegalArgumentException("url was null");
         }
@@ -38,7 +41,9 @@ public class ServerModel implements Server, Serializable {
         this.apiKey = apiKey;
         this.isDefault = isDefault;
         this.protocol = Protocol.http;
+        this.socketsEnabled = socketsEnabled;
     }
+
 
     public ServerModel(final UrlContainer url, final ApiKey apiKey) {
         if (StringUtils.isEmpty(url.getUrl())) {
@@ -97,5 +102,10 @@ public class ServerModel implements Server, Serializable {
     @Override
     public Protocol getProtocol() {
         return protocol;
+    }
+
+    @Override
+    public boolean isSocketsEnabled() {
+        return socketsEnabled;
     }
 }

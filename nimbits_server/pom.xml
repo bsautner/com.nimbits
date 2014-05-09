@@ -51,7 +51,7 @@
         <gwt.version>2.5.1</gwt.version>
         <gxt.version>2.2.5</gxt.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jetty-version>9.1.4.v20140401</jetty-version>
+
 
     </properties>
 

@@ -43,6 +43,28 @@ public class SocketConnection  {
     private EmailAddress email;
 
 
+    public SocketConnection(Server aServer, EmailAddress email, SocketType socketType) throws Exception {
+        this.factory = new WebSocketClientFactory();
+        this.factory.start();
+        this.client = factory.newWebSocketClient();
+        this.server = aServer;
+        this.email = email;
+
+
+        String connectionid = UUID.randomUUID().toString();
+
+        connection = client.open(new URI("ws://" + server.getUrl() + "/socket?" +
+                Parameters.email + "=" + email.getValue() +
+                "&" + Parameters.cid +  "=" + connectionid +
+                "&" + Parameters.type + "=" + socketType.toString() +
+                "&" + Parameters.apikey + "=" + server.getApiKey().getValue()
+
+
+        ), null).get(5, TimeUnit.SECONDS);
+
+    }
+
+
     public SocketConnection(Server aServer, EmailAddress email, SocketType socketType, final SocketListener listener) throws Exception {
         this.factory = new WebSocketClientFactory();
         this.factory.start();

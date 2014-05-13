@@ -20,12 +20,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Created by Benjamin Sautner
- * User: BSautner
- * Date: 1/17/12
- * Time: 3:06 PM
- */
 public class SubscriptionFactory {
 
     private SubscriptionFactory() {

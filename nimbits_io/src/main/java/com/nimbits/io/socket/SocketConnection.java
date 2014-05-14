@@ -38,18 +38,18 @@ public class SocketConnection  {
     private WebSocketClientFactory factory;
     private WebSocketClient client;
     private WebSocket.Connection connection;
-    private SocketListener listener;
+
     private Server server;
-    private EmailAddress email;
+
+
 
 
     public SocketConnection(Server aServer, EmailAddress email, SocketType socketType, final SocketListener listener) throws Exception {
         this.factory = new WebSocketClientFactory();
         this.factory.start();
         this.client = factory.newWebSocketClient();
-        this.listener = listener;
         this.server = aServer;
-        this.email = email;
+
 
 
         String connectionid = UUID.randomUUID().toString();
@@ -116,9 +116,11 @@ public class SocketConnection  {
     }
 
 
+    public WebSocket.Connection getConnection() {
+        return connection;
+    }
 
-
-
-
-
+    public Server getServer() {
+        return server;
+    }
 }

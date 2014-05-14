@@ -19,12 +19,7 @@ import com.nimbits.client.model.entity.EntityModel;
 
 import java.io.Serializable;
 
-/**
- * Created by Benjamin Sautner
- * User: BSautner
- * Date: 1/17/12
- * Time: 3:02 PM
- */
+
 public class SubscriptionModel extends EntityModel implements Serializable, Subscription  {
 
 

@@ -31,6 +31,8 @@ public class SocketEndpoint extends WebSocketServlet {
     public WebSocket doWebSocketConnect(HttpServletRequest request,
                                         String protocol) {
 
+       System.out.println("CONNECTION INCOMING!");
+
         String email = request.getParameter(Parameters.email.toString());
         String cid = request.getParameter(Parameters.cid.toString());
         String type = request.getParameter(Parameters.type.toString());

@@ -42,6 +42,8 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
     @Override
     public List<Entity> deleteEntityRpc(final List<Entity> entityList) {
         User u = UserHelper.getUser(engine);
+
+
         if (u != null && ! entityList.isEmpty())  {
 
             return  service.deleteEntity(u, entityList);

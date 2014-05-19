@@ -11,11 +11,9 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server;
+package com.nimbits;
 
 
-import com.google.appengine.api.utils.SystemProperty;
-import com.google.appengine.tools.development.testing.*;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.model.accesskey.AccessKey;
@@ -29,9 +27,11 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
+import com.nimbits.server.ApplicationListener;
+import com.nimbits.server.NimbitsEngine;
 import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.io.BlobStoreFactory;
 import com.nimbits.server.io.blob.BlobStore;
-import com.nimbits.server.io.blob.BlobStoreFactory;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import com.nimbits.server.transaction.entity.service.EntityService;
@@ -39,7 +39,6 @@ import com.nimbits.server.transaction.settings.SettingServiceFactory;
 import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.subscription.SubscriptionService;
 import com.nimbits.server.transaction.subscription.SubscriptionServiceFactory;
-import com.nimbits.server.transaction.user.AuthenticationServiceFactory;
 import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.dao.ValueDao;
 import com.nimbits.server.transaction.value.dao.ValueDaoImpl;
@@ -57,12 +56,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/29/12
- * Time: 9:27 AM
- */
+
 
 public class NimbitsServletTest extends BaseTest {
     public NimbitsEngine engine;
@@ -74,13 +68,7 @@ public class NimbitsServletTest extends BaseTest {
     public SubscriptionService subscriptionService;
 
 
-    public static final String email = ServerSetting.admin.getDefaultValue();
-    public final LocalServiceTestHelper helper = new LocalServiceTestHelper(
-           new LocalDatastoreServiceTestConfig(),
-           new LocalTaskQueueTestConfig(),
-            new LocalBlobstoreServiceTestConfig(),
-            new LocalUserServiceTestConfig())
-            .setEnvIsLoggedIn(true).setEnvEmail(email).setEnvAuthDomain("nimbits.com");
+    public static final String email =ServerSetting.admin.getDefaultValue();
 
 
 
@@ -146,14 +134,12 @@ public class NimbitsServletTest extends BaseTest {
 
 
 
-        SystemProperty.environment.set(SystemProperty.Environment.Value.Development);
+
         req = new MockHttpServletRequest();
         resp = new MockHttpServletResponse();
         valueDao = new ValueDaoImpl(engine);
         context = new MockServletContext();
 
-
-        helper.setUp();
 
 
         settingsService.addSetting(ServerSetting.admin, email);
@@ -167,8 +153,8 @@ public class NimbitsServletTest extends BaseTest {
         groupName = CommonFactory.createName("group1", EntityType.point);
 
 
-        user = AuthenticationServiceFactory.getInstance(engine).createUserRecord(emailAddress);
-        assertNotNull(user);
+       // user = AuthenticationServiceFactory.getInstance(engine).createUserRecord(emailAddress);
+       // assertNotNull(user);
 
 
         List<Entity> result = entityService.getEntityByKey(user, emailAddress.getValue(), EntityType.user);

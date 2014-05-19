@@ -11,7 +11,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.transactions.summary;
+package com.nimbits;
 
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.SummaryType;
@@ -23,7 +23,6 @@ import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.summary.SummaryModelFactory;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.transaction.summary.SummaryService;
 import com.nimbits.server.transaction.summary.SummaryServiceFactory;
 import org.junit.Assert;
@@ -34,12 +33,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/16/12
- * Time: 12:53 PM
- */
+
 
 public class SummaryServiceTest extends NimbitsServletTest {
 

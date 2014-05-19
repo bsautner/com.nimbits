@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import com.nimbits.client.SocketType;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.accesskey.AccessKey;
@@ -44,7 +43,7 @@ public class SocketConnection  {
 
 
 
-    public SocketConnection(Server aServer, EmailAddress email, SocketType socketType, final SocketListener listener) throws Exception {
+    public SocketConnection(Server aServer, EmailAddress email, final SocketListener listener) throws Exception {
         this.factory = new WebSocketClientFactory();
         this.factory.start();
         this.client = factory.newWebSocketClient();
@@ -54,10 +53,10 @@ public class SocketConnection  {
 
         String connectionid = UUID.randomUUID().toString();
 
+        //TODO - pass an array of point id's to limit the points this socket cares about
         connection = client.open(new URI("ws://" + server.getUrl() + "/socket?" +
                 Parameters.email + "=" + email.getValue() +
                 "&" + Parameters.cid +  "=" + connectionid +
-                "&" + Parameters.type + "=" + socketType.toString() +
                 "&" + Parameters.apikey + "=" + server.getApiKey().getValue()
 
 

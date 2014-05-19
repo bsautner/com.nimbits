@@ -1,7 +1,6 @@
 package com.nimbits.server.socket;
 
 
-import com.nimbits.client.SocketType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
@@ -35,15 +34,16 @@ public class SocketEndpoint extends WebSocketServlet {
 
         String email = request.getParameter(Parameters.email.toString());
         String cid = request.getParameter(Parameters.cid.toString());
-        String type = request.getParameter(Parameters.type.toString());
-        SocketType socketType =  SocketType.get(type);
+        String id = request.getParameter(Parameters.id.toString());
+
 
 
         EmailAddress emailAddress = CommonFactory.createEmailAddress(email);
 
         System.out.println("Connection from : "+ email);
         System.out.println("Connection cid : "+ cid);
-        return new SocketClient(emailAddress, socketType, cid);
+        System.out.println("Connection id : "+ id);
+        return new SocketClient(emailAddress, id, cid);
     }
 
 

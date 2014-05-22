@@ -44,10 +44,11 @@ public class SocketEndpoint extends WebSocketServlet {
         String cid = request.getParameter(Parameters.cid.toString());
         String ids = request.getParameter(Parameters.points.toString());
 
+        System.out.println("Connection ids : "+ ids);
         List<String> points;
         if (!Utils.isEmptyString(ids)) {
             Gson gson = new GsonBuilder().create();
-            Type type = new TypeToken<List<String[]>>() {}.getType();
+            Type type = new TypeToken<List<String>>() {}.getType();
              points = gson.fromJson(ids ,type );
 
         }
@@ -69,10 +70,13 @@ public class SocketEndpoint extends WebSocketServlet {
         System.out.println("Connection from : "+ email);
         System.out.println("Connection cid : "+ cid);
         System.out.println("Connection ids : "+ ids);
+
         for (String s : fixed) {
             System.out.println("Connection id : "+ s);
         }
-        return new SocketClient(emailAddress, fixed, cid);
+        SocketClient client = new SocketClient(emailAddress, fixed, cid);
+        ConnectedClients.add(client);
+        return client;
     }
 
 

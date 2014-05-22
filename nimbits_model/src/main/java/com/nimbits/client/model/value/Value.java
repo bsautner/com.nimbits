@@ -18,12 +18,7 @@ import com.nimbits.client.model.location.Location;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Created by Benjamin Sautner
- * User: benjamin
- * Date: 4/16/11
- * Time: 2:27 PM
- */
+ 
 public interface Value extends Serializable, Comparable<Value> {
 
 

@@ -29,6 +29,10 @@
     <servlet>
         <servlet-name>WebSocket</servlet-name>
         <servlet-class>com.nimbits.server.socket.SocketEndpoint</servlet-class>
+        <init-param>
+            <param-name>minVersion</param-name>
+            <param-value>-1</param-value>
+        </init-param>
     </servlet>
     <servlet-mapping>
         <servlet-name>WebSocket</servlet-name>

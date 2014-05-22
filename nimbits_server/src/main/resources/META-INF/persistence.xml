@@ -33,6 +33,7 @@
             <property name="datanucleus.validateTables" value="false"/>
             <property name="datanucleus.validateConstraints" value="false"/>
             <property name="datanucleus.autoCreateTables" value="true"/>
+
         </properties>
     </persistence-unit>
 

@@ -14,9 +14,7 @@ package com.nimbits.client.model.value;
 
 import java.io.Serializable;
 
-/**
- * Created by benjamin on 9/9/13.
- */
+
 public interface ValueContainer extends Serializable {
     String getAccessKey();
 

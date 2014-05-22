@@ -27,12 +27,7 @@ import com.nimbits.client.model.value.ValueData;
 
 import java.util.Date;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 4/16/11
- * Time: 2:27 PM
- */
+
 public class ValueFactory {
     private ValueFactory() {
     }

@@ -16,7 +16,7 @@ import java.util.UUID;
 
 /**
  * This program assumes you have logged into the target nimbits SERVER on the INSTANCE_URL used below, right clicked on
- * your user name and created a new global read/write key withthe value of "key"
+ * your user name and created a new global read/write key with the value of "key"
  *
  * When you run this program it will download your user session, create a data point with a random name, feed it some
  * random values, then download the series and delete the point.

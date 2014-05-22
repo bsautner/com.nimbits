@@ -1,4 +1,4 @@
-import com.nimbits.client.SocketType;
+
 import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
@@ -20,10 +20,10 @@ import com.nimbits.io.socket.SocketListener;
 public class SocketSample {
 
 
-    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("bsautner@gmail.com");
+    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("support@nimbits.com");
 
     //a running jetty server with nimbits installed (using nimbits.war)
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080/nimbits");
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("192.168.1.14:8080/nimbits");
 
     //you can create this server object with an API KEY you configured your server with to make authentication easy
 
@@ -36,11 +36,11 @@ public class SocketSample {
         //See the Nimbits Model Project for this enum.  You can tell nimbits what kind of socket to open.
         //live will send all new values to the client
         //basic will only send new values with a subscription set to sockets.
-        SocketType socketType = SocketType.live;
 
 
 
-        SocketConnection socketConnection = new SocketConnection(SERVER, EMAIL_ADDRESS, socketType,  new SocketListener() {
+
+        SocketConnection socketConnection = new SocketConnection(SERVER, EMAIL_ADDRESS, new SocketListener() {
 
 
             public void onOpen(Connection connection)

@@ -1,4 +1,6 @@
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
@@ -32,13 +34,9 @@ public class SocketSample {
 
 
     public static void main(String[] args) throws Exception {
-
-        //See the Nimbits Model Project for this enum.  You can tell nimbits what kind of socket to open.
-        //live will send all new values to the client
-        //basic will only send new values with a subscription set to sockets.
-
-
-
+        String[] strings = {"foo", "bar"};
+        Gson g = new GsonBuilder().create();
+        System.out.println(g.toJson(strings));
 
         SocketConnection socketConnection = new SocketConnection(SERVER, EMAIL_ADDRESS, new SocketListener() {
 

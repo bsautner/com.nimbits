@@ -31,8 +31,14 @@ public class SocketEndpoint extends WebSocketServlet {
 
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response) throws ServletException, IOException {
-        getServletContext().getNamedDispatcher("default").forward(request,
-                response);
+
+       try {
+           getServletContext().getNamedDispatcher("default").forward(request,
+                   response);
+       }
+       catch (Exception ex) {
+           System.out.println(ex.getMessage());
+       }
     }
 
     public WebSocket doWebSocketConnect(HttpServletRequest request,
@@ -50,7 +56,7 @@ public class SocketEndpoint extends WebSocketServlet {
         if (!Utils.isEmptyString(ids)) {
             Gson gson = new GsonBuilder().create();
             Type type = new TypeToken<List<String>>() {}.getType();
-             points = gson.fromJson(ids ,type );
+            points = gson.fromJson(ids ,type );
 
         }
         else {
@@ -58,11 +64,12 @@ public class SocketEndpoint extends WebSocketServlet {
         }
         List<String> fixed = new ArrayList<>(points.size());
         for (String p : points) {
-            if (! p.startsWith(email) ) {
-                fixed.add(email + "/" + p);
-            }
-            else {
-                fixed.add(p);
+            if (Utils.isNotEmpty(p)) {
+                if (!p.startsWith(email)) {
+                    fixed.add(email + "/" + p);
+                } else {
+                    fixed.add(p);
+                }
             }
         }
 

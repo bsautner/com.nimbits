@@ -29,7 +29,7 @@ public class SocketSample {
     private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("support@nimbits.com");
 
     //a running jetty server with nimbits installed (using nimbits.war)
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("192.168.1.42:8080/nimbits");
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("192.168.1.14:8080/nimbits");
 
     //you can create this server object with an API KEY you configured your server with to make authentication easy
 

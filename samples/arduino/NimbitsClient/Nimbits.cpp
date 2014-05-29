@@ -46,11 +46,10 @@ String Nimbits::getStringTableItem(int index) {
 
 bool Nimbits::connect(char hostname[], char email[], char apiKey[], char* points[], int port, char clientId[]) {
     bool result = false;
-    Serial.println("OK");
-    char path[1024];
+
+    char path[256];
     path[0] = '\0';
     byte uuidNumber[16];
-
 
 
      strcat(path, "/nimbits/socket?email=");
@@ -62,19 +61,29 @@ bool Nimbits::connect(char hostname[], char email[], char apiKey[], char* points
      strcat(path, "&format=");
      strcat(path, "simple");
      strcat(path, "&points=[");
-     for (int r = 0; r < sizeof(points); r++) {
-      strcat(path, "\"");
-       strcat(path, points[r]);
-        Serial.println(points[r]);
-        if (r < sizeof(points) -1) {
-         strcat(path, "\",");
-        }
-        else {
-         strcat(path, "\"");
-        }
 
-    }
-    strcat(path, "]");
+     if (sizeof(points) == 1) {
+         strcat(path, "\"");
+         strcat(path, points[0]);
+         strcat(path, "\"]");
+     }
+     else {
+       for (int r = 0; r < sizeof(points); r++) {
+           strcat(path, "\"");
+            strcat(path, points[r]);
+             Serial.println(points[r]);
+             if (r < sizeof(points) -1) {
+              strcat(path, "\",");
+             }
+             else {
+              strcat(path, "\"");
+             }
+
+         }
+         strcat(path, "]");
+     }
+
+
 
 
     Serial.println(path);

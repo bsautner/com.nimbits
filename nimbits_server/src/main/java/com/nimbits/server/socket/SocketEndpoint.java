@@ -38,11 +38,12 @@ public class SocketEndpoint extends WebSocketServlet {
     public WebSocket doWebSocketConnect(HttpServletRequest request,
                                         String protocol) {
 
-       System.out.println("CONNECTION INCOMING!");
+        System.out.println("CONNECTION INCOMING!");
 
         String email = request.getParameter(Parameters.email.toString());
         String cid = request.getParameter(Parameters.cid.toString());
         String ids = request.getParameter(Parameters.points.toString());
+        String format = request.getParameter(Parameters.format.toString());
 
         System.out.println("Connection ids : "+ ids);
         List<String> points;
@@ -71,10 +72,16 @@ public class SocketEndpoint extends WebSocketServlet {
         System.out.println("Connection cid : "+ cid);
         System.out.println("Connection ids : "+ ids);
 
+        if (format == null) {
+            format = "json";
+        }
+
         for (String s : fixed) {
             System.out.println("Connection id : "+ s);
         }
-        SocketClient client = new SocketClient(emailAddress, fixed, cid);
+        System.out.println("Connection format : "+ format);
+        SocketClient client = new SocketClient(emailAddress, fixed, cid, format);
+
         ConnectedClients.add(client);
         return client;
     }

@@ -57,6 +57,7 @@ public class SocketConnection  {
         connection = client.open(new URI("ws://" + server.getUrl() + "/socket?" +
                 Parameters.email + "=" + email.getValue() +
                 "&" + Parameters.cid +  "=" + connectionid +
+                "&" + Parameters.format +  "=" + "json" +
                 "&" + Parameters.apikey + "=" + server.getApiKey().getValue()
 
 

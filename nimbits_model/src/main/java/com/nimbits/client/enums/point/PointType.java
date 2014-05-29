@@ -17,17 +17,13 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Benjamin Sautner
- * User: BSautner
- * Date: 12/29/11
- * Time: 1:36 PM
- */
+
 public enum PointType implements Serializable {
     basic(0),
     backend(3),
     cumulative(4),
-    timespan(5);
+    timespan(5),
+    flag(6);
 
 
     private static final Map<Integer, PointType> lookup = new HashMap<Integer, PointType>(PointType.values().length);

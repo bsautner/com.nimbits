@@ -13,28 +13,26 @@
  THE SOFTWARE.
  */
 
-#ifndef _Nimbits_h
-#define _Nimbits_h
+#ifndef NIMBITS_H
+#define NIMBITS_H_
 
 #include <string.h>
 #include <stdlib.h>
 #include <WString.h>
 #include <Ethernet.h>
-
 #include "Arduino.h"
 
 
 
 class Nimbits {
 	public:
-		typedef void (*DataArrivedDelegate)(Nimbits client, String data, float value);
+		typedef void (*DataArrivedDelegate)(Nimbits client, String data);
 		bool connect(char hostname[], char email[], char apiKey[], char* points[], int port, char clientId[]);
         bool connected();
         void disconnect();
 		void monitor();
 		void setDataArrivedDelegate(DataArrivedDelegate dataArrivedDelegate);
 		void send(String data);
-
 	private:
         String getStringTableItem(int index);
         void sendHandshake(char hostname[], char path[]);
@@ -42,7 +40,6 @@ class Nimbits {
         DataArrivedDelegate _dataArrivedDelegate;
         bool readHandshake();
         String readLine();
-        char* parseJson(char *jsonString);
 };
 
 

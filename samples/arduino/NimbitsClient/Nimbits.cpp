@@ -1,18 +1,9 @@
 /*
- WebsocketClient, a websocket client for Arduino
- Copyright 2011 Kevin Rohling
- http://kevinrohling.com
- 
- Permission is hereby granted, free of charge, to any person obtaining a copy
- of this software and associated documentation files (the "Software"), to deal
- in the Software without restriction, including without limitation the rights
- to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- copies of the Software, and to permit persons to whom the Software is
- furnished to do so, subject to the following conditions:
- 
- The above copyright notice and this permission notice shall be included in
- all copies or substantial portions of the Software.
- 
+ Nimbits Client
+ Copyright 2014 nimbits inc.
+ http://nimbits.com
+
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -22,21 +13,21 @@
  THE SOFTWARE.
  */
 
-#include <WebSocketClient.h>
+
+#include <Nimbits.h>
 #include <WString.h>
 #include <string.h>
 #include <stdlib.h>
-
 
 prog_char stringVar[] PROGMEM = "{0}";
 prog_char clientHandshakeLine1[] PROGMEM = "GET {0} HTTP/1.1";
 prog_char clientHandshakeLine2[] PROGMEM = "Upgrade: WebSocket";
 prog_char clientHandshakeLine3[] PROGMEM = "Connection: Upgrade";
 prog_char clientHandshakeLine4[] PROGMEM = "Host: {0}";
-prog_char clientHandshakeLine5[] PROGMEM = "Origin: ArduinoWebSocketClient";
+prog_char clientHandshakeLine5[] PROGMEM = "Origin: ArduinoNimbits";
 prog_char serverHandshake[] PROGMEM = "HTTP/1.1 101";
 
-PROGMEM const char *WebSocketClientStringTable[] =
+PROGMEM const char *NimbitsStringTable[] =
 {   
     stringVar,
     clientHandshakeLine1,
@@ -47,13 +38,13 @@ PROGMEM const char *WebSocketClientStringTable[] =
     serverHandshake
 };
 
-String WebSocketClient::getStringTableItem(int index) {
+String Nimbits::getStringTableItem(int index) {
     char buffer[35];
-    strcpy_P(buffer, (char*)pgm_read_word(&(WebSocketClientStringTable[index])));
+    strcpy_P(buffer, (char*)pgm_read_word(&(NimbitsStringTable[index])));
     return String(buffer);
 }
 
-bool WebSocketClient::connect(char hostname[], char email[], char apiKey[], char* points[], int port, char clientId[]) {
+bool Nimbits::connect(char hostname[], char email[], char apiKey[], char* points[], int port, char clientId[]) {
     bool result = false;
     Serial.println("OK");
     char path[1024];
@@ -68,6 +59,8 @@ bool WebSocketClient::connect(char hostname[], char email[], char apiKey[], char
      strcat(path, apiKey);
      strcat(path, "&cid=");
      strcat(path, clientId);
+     strcat(path, "&format=");
+     strcat(path, "simple");
      strcat(path, "&points=[");
      for (int r = 0; r < sizeof(points); r++) {
       strcat(path, "\"");
@@ -94,43 +87,58 @@ bool WebSocketClient::connect(char hostname[], char email[], char apiKey[], char
 }
 
 
-bool WebSocketClient::connected() {
+bool Nimbits::connected() {
     return _client.connected();
 }
 
-void WebSocketClient::disconnect() {
+void Nimbits::disconnect() {
     _client.stop();
 }
 
-void WebSocketClient::monitor () {
+void Nimbits::monitor () {
     char character;
     
 	if (_client.available() > 0 && (character = _client.read()) == 0) {
-        String data = "";
+        String name = "";
+        String value = "";
+        char delim = ',';
         bool endReached = false;
         Serial.println("incoming data");
-
+        int index = 0;
         while (!endReached) {
             character = _client.read();
             endReached = character == -1;
 
             if (!endReached) {
-                data += character;
+                if (character == delim) {
+                  index++;
+                }
+                else if (index == 0) {
+                    name += character;
+                }
+                else if (index == 1) {
+                    value += character;
+                }
             }
         }
-        
+       char carray[value.length() + 1]; //determine size of the array
+       value.toCharArray(carray, sizeof(carray)); //put readStringinto an array
+       float n = atof(carray); //convert the array into an Integer
         if (_dataArrivedDelegate != NULL) {
-            _dataArrivedDelegate(*this, data);
-        }
+            _dataArrivedDelegate(*this, name, n);
+
+      }
     }
+
 }
 
-void WebSocketClient::setDataArrivedDelegate(DataArrivedDelegate dataArrivedDelegate) {
+
+void Nimbits::setDataArrivedDelegate(DataArrivedDelegate dataArrivedDelegate) {
 	  _dataArrivedDelegate = dataArrivedDelegate;
 }
 
 
-void WebSocketClient::sendHandshake(char hostname[], char path[]) {
+void Nimbits::sendHandshake(char hostname[], char path[]) {
     String stringVar = getStringTableItem(0);
     String line1 = getStringTableItem(1);
     String line2 = getStringTableItem(2);
@@ -155,7 +163,7 @@ void WebSocketClient::sendHandshake(char hostname[], char path[]) {
     _client.println();
 }
 
-bool WebSocketClient::readHandshake() {
+bool Nimbits::readHandshake() {
     bool result = false;
     char character;
     String handshake = "", line;
@@ -181,7 +189,7 @@ bool WebSocketClient::readHandshake() {
     return result;
 }
 
-String WebSocketClient::readLine() {
+String Nimbits::readLine() {
     String line = "";
     char character;
     
@@ -194,9 +202,8 @@ String WebSocketClient::readLine() {
     return line;
 }
 
-void WebSocketClient::send (String data) {
+void Nimbits::send (String data) {
     _client.print((char)0);
 	_client.print(data);
     _client.print((char)255);
 }
-

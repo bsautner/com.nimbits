@@ -21,8 +21,6 @@ import java.util.Date;
  
 public interface Value extends Serializable, Comparable<Value> {
 
-
-
     String getNote();
 
     double getDoubleValue();

@@ -26,7 +26,8 @@ public enum EntityType implements Serializable {
     summary(11, false, true, false, false, true, false, 11, "com.nimbits.server.orm.SummaryEntity"),
     accessKey(13, false, false, false, true, true, false, 13, "com.nimbits.server.orm.AccessKeyEntity"),
     server(14, true, false, false, true, false, false, 14, "com.nimbits.server.orm.ServerEntity"),
-    socket(16, false, false, false, true, true, false, 16, "com.nimbits.server.orm.SocketEntity");
+    socket(16, false, false, false, true, true, false, 16, "com.nimbits.server.orm.SocketEntity"),
+    connection(16, false, false, false, true, true, false, 17, "com.nimbits.server.orm.ConnectionEntity");
     static final long serialVersionUID = 43L;
 
     private static final Map<Integer, EntityType> lookup = new HashMap<Integer, EntityType>(EntityType.values().length);

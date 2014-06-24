@@ -16,10 +16,13 @@ package com.nimbits.server.communication.email;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.enums.ServerSetting;
+import com.nimbits.client.model.common.impl.CommonFactory;
+import com.nimbits.client.model.connection.Connection;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.ServerInfo;
 import com.nimbits.server.transaction.settings.SettingServiceFactory;
@@ -230,6 +233,34 @@ public class EmailServiceImpl implements EmailService {
 
     @Override
     public void setSettingService(SettingsService settingService) {
+
+    }
+
+    @Override
+    public void sendConnectionRequest(User user, Connection c) {
+        EmailAddress from = user.getEmail();
+        EmailAddress to = CommonFactory.createEmailAddress(c.getTargetEmail());
+
+        StringBuilder sb = new StringBuilder();
+        sb
+                .append("<P>" + user.getEmail().getValue() + " would like to connect nimbits accounts with you. </p>" +
+                        "<P>Click here to approve: </P>")
+
+                .append(ServerInfo.getFullServerURL(null))
+                .append("service/v2/connection?key=")
+                .append(c.getApprovalKey())
+
+                .append("<p> This will give ")
+                .append(from.getValue())
+                .append(" permission to read all of your nimbits data and modify your nimbits objects.  Also, you'll be able to read ")
+                .append("and write to all of their nimbits objects. Only do this if you know and trust the sender. <p>")
+                .append("<p>Learn more at http://www.nimbits.com</p>");
+        ;
+
+
+
+        String subject = "Nimbits Connection Request";
+        sendEmail(to, sb.toString(), subject);
 
     }
 

@@ -17,21 +17,42 @@ import com.nimbits.client.model.entity.EntityModel;
 
 import java.io.Serializable;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 4/9/12
- * Time: 2:17 PM
- */
+
 public class ConnectionModel extends EntityModel implements Serializable, Connection {
 
-    private static final long serialVersionUID = 943183302829417495L;
+    private String approvalKey;
+    private boolean approved;
+    private String targetEmail;
+
 
     protected ConnectionModel() {
 
     }
 
-    public ConnectionModel(final Entity entity)  {
-        super(entity);
+    public ConnectionModel(final Connection c)  {
+        super(c);
+        this.approvalKey = c.getApprovalKey();
+        this.approved = c.isApproved();
+        this.targetEmail = c.getTargetEmail();
+    }
+
+    public ConnectionModel(Entity en, String e) {
+        super(en);
+        this.targetEmail = e;
+        approved = false;
+    }
+
+
+    @Override
+    public String getApprovalKey() {
+        return approvalKey;
+    }
+    @Override
+    public boolean isApproved() {
+        return approved;
+    }
+    @Override
+    public String getTargetEmail() {
+        return targetEmail;
     }
 }

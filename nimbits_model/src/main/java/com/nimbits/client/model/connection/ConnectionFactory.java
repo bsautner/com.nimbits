@@ -14,21 +14,18 @@ package com.nimbits.client.model.connection;
 
 import com.nimbits.client.model.entity.Entity;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 4/9/12
- * Time: 7:09 PM
- */
 public class ConnectionFactory {
 
     private ConnectionFactory() {
     }
 
-    public static Connection createCreateConnection(final Connection e)  {
-        return new ConnectionModel(e);
+
+    public static Connection getInstance(Entity en, String e) {
+        return new ConnectionModel(en, e);
     }
-    public static Connection createCreateConnection(final Entity e)  {
-        return new ConnectionModel(e);
+    public static Connection getInstance(Connection socket) {
+
+        return new ConnectionModel(socket);
+
     }
 }

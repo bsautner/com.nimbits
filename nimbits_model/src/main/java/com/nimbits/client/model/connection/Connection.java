@@ -16,12 +16,12 @@ import com.nimbits.client.model.entity.Entity;
 
 import java.io.Serializable;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 4/9/12
- * Time: 2:18 PM
- */
+
 public interface Connection extends Entity, Serializable {
 
+    String getApprovalKey();
+
+    boolean isApproved();
+
+    String getTargetEmail();
 }

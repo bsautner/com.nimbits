@@ -78,7 +78,4 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements  UserSer
 
 
 
-
-
-
 }

@@ -114,5 +114,6 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements UserServ
         }
     }
 
+
 }
 

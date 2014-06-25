@@ -49,6 +49,8 @@ public interface NimbitsClient {
 
     List<Value> getSeries(String entity, Range<Date> range);
 
+    List<Value> getSeries(String entity, int count);
+
     void deleteEntity(Entity entity);
 
     <T, K> List<T> addEntity(Entity entity, Class<K> clz);

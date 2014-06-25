@@ -27,6 +27,7 @@ import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.gson.*;
+import org.apache.http.message.BasicNameValuePair;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -69,13 +70,13 @@ public class TaskServiceImpl implements TaskService {
         final Queue queue = QueueFactory.getQueue(DEFAULT);
         if (onlyExpired) {
             queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_DATA_TASK)
-                    .param(Parameters.json.getText(), GsonFactory.getInstance().toJson(point))
-                    .param(Parameters.exp.getText(), Long.toString(exp))
+                            .param(Parameters.json.getText(), GsonFactory.getInstance().toJson(point))
+                            .param(Parameters.exp.getText(), Long.toString(exp))
 
             );
         } else {
             queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_DATA_TASK)
-                    .param(Parameters.json.getText(), GsonFactory.getInstance().toJson(point))
+                            .param(Parameters.json.getText(), GsonFactory.getInstance().toJson(point))
             );
         }
 
@@ -90,13 +91,13 @@ public class TaskServiceImpl implements TaskService {
             final Queue queue = QueueFactory.getQueue(QUEUE_DELETE_BLOB);
 
             queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_BLOB_TASK)
-                    .param(Parameters.key.getText(), key)
+                            .param(Parameters.key.getText(), key)
             );
         } catch (IllegalStateException e) {
             final Queue queue = QueueFactory.getQueue(DEFAULT);
 
             queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_BLOB_TASK)
-                    .param(Parameters.key.getText(), key)
+                            .param(Parameters.key.getText(), key)
             );
         }
     }
@@ -107,11 +108,11 @@ public class TaskServiceImpl implements TaskService {
         final Queue queue = QueueFactory.getQueue(DUMP);
         final String json = GsonFactory.getInstance().toJson(entity);
         queue.add(TaskOptions.Builder.withUrl(PATH_TASK_DUMP_TASK)
-                .param(Parameters.entity.getText(), json)
-                .param(Parameters.sd.getText(),
-                        String.valueOf(timespan.getStart().getTime()))
-                .param(Parameters.ed.getText(),
-                        String.valueOf(timespan.getEnd().getTime()))
+                        .param(Parameters.entity.getText(), json)
+                        .param(Parameters.sd.getText(),
+                                String.valueOf(timespan.getStart().getTime()))
+                        .param(Parameters.ed.getText(),
+                                String.valueOf(timespan.getEnd().getTime()))
         );
     }
 
@@ -122,9 +123,9 @@ public class TaskServiceImpl implements TaskService {
         final String json = GsonFactory.getInstance().toJson(entity);
         final String userJson = GsonFactory.getInstance().toJson(user);
         queue.add(TaskOptions.Builder.withUrl(PATH_TASK_UPLOAD_TASK)
-                .param(Parameters.entity.getText(), json)
-                .param(Parameters.user.getText(), userJson)
-                .param(Parameters.blobkey.getText(), blobKey)
+                        .param(Parameters.entity.getText(), json)
+                        .param(Parameters.user.getText(), userJson)
+                        .param(Parameters.blobkey.getText(), blobKey)
         );
     }
 
@@ -233,9 +234,10 @@ public class TaskServiceImpl implements TaskService {
         final Queue queue = QueueFactory.getQueue(HB_QUEUE);
 
         queue.add(TaskOptions.Builder.withUrl(PATH_HB_TASK)
-                .param(Parameters.json.getText(), json)
-                .param(Parameters.user.getText(), userJson)
-                .param(Parameters.action.getText(), actionStr)
+                        .param(Parameters.json.getText(), json)
+                        .param(Parameters.user.getText(), userJson)
+                        .param(Parameters.action.getText(), actionStr)
+                        .param(Parameters.gae.getText(), "true")
         );
 
     }

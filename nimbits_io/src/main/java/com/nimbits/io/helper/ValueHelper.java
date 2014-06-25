@@ -40,4 +40,12 @@ public interface ValueHelper {
 
 
     List<Value> getSeries(String name, Range<Date> dateRange);
+
+    /**
+     *
+     * @param name the name of the data point
+     * @param count the number of values to return, starting from the most recent in time and going back.
+     * @return a list of values up to the count.  May be less than the count if that many values don't exist.
+     */
+    List<Value> getSeries(String name, int count);
 }

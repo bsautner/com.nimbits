@@ -55,6 +55,7 @@ public enum Action {
     validateExists(ActionConstants.VALIDATE_EXISTS),
     list(ActionConstants.LIST),
     listen(ActionConstants.LISTEN),
+    connect(ActionConstants.CONNECT),
     notify(ActionConstants.NOTIFY);
     private static final Map<String, Action> lookup = new HashMap<String, Action>(Action.values().length);
 
@@ -119,6 +120,7 @@ public enum Action {
         protected static final String VALIDATE_EXISTS = "exists";
         protected static final String LIST = "list";
         protected static final String LISTEN = "listen";
+        protected static final String CONNECT = "connect";
         protected static final String NOTIFY = "notify";
 
         private ActionConstants() {

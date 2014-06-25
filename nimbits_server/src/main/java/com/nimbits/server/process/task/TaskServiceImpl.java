@@ -165,7 +165,7 @@ public class TaskServiceImpl implements TaskService {
             params.add(new BasicNameValuePair(Parameters.json.getText(), json));
             params.add(new BasicNameValuePair(Parameters.user.getText(), userJson));
             params.add(new BasicNameValuePair(Parameters.action.getText(), actionStr));
-
+            params.add(new BasicNameValuePair(Parameters.gae.getText(), "false"));
             postTask(req, params, PATH_HB_TASK);
 
 

@@ -70,13 +70,6 @@ public class NimbitsClientImpl implements NimbitsClient {
     private final UrlContainer instanceUrl;
     private final String accessKey;
 
-    public NimbitsClientImpl(Server server, EmailAddress email) {
-        this.instanceUrl = UrlContainer.getInstance("http://" + server.getUrl());
-        this.email = email;
-        this.helper = new HttpHelper(email, server);
-        this.accessKey = null;
-
-    }
 
     public NimbitsClientImpl(Server server, EmailAddress email, String accessKey) {
         this.instanceUrl = UrlContainer.getInstance("http://" + server.getUrl());
@@ -153,6 +146,21 @@ public class NimbitsClientImpl implements NimbitsClient {
         List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(2);
         params.add((new BasicNameValuePair(Parameters.id.getText(), entity)));
         params.add((new BasicNameValuePair(Parameters.count.getText(), String.valueOf(MAX_COUNT))));
+        if (accessKey != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        }
+        List<Value> sample = helper.doGet(ValueModel.class, path, params, valueListType, true);
+        return sample;
+
+    }
+
+
+    @Override
+    public List<Value> getSeries(final String entity, final int count) {
+        UrlContainer path = UrlContainer.combine(instanceUrl, SERIES_SERVICE);
+        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(2);
+        params.add((new BasicNameValuePair(Parameters.id.getText(), entity)));
+        params.add((new BasicNameValuePair(Parameters.count.getText(), String.valueOf(count))));
         if (accessKey != null) {
             params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
         }

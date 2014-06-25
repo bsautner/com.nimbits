@@ -75,4 +75,10 @@ public class ValueHelperImpl implements ValueHelper {
 
         return NimbitsClientFactory.getInstance(server, email, accessKey).getSeries(name, dateRange);
     }
+
+    @Override
+    public List<Value> getSeries(String name, int count) {
+
+        return NimbitsClientFactory.getInstance(server, email, accessKey).getSeries(name, count);
+    }
 }

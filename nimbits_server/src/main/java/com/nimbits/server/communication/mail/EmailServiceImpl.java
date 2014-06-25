@@ -16,10 +16,12 @@ package com.nimbits.server.communication.mail;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.enums.ServerSetting;
+import com.nimbits.client.model.connection.Connection;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.ServerInfo;
 import com.nimbits.server.communication.email.EmailService;
@@ -270,6 +272,16 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void setSettingService(SettingsService settingService) {
         this.settingsService = settingService;
+    }
+
+    @Override
+    public void sendConnectionRequest(User user, Connection c) {
+
+    }
+
+    @Override
+    public void sendConnectionRequestConfirmation(Connection c) {
+
     }
 
 

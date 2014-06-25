@@ -36,10 +36,10 @@ public class ConnectionModel extends EntityModel implements Serializable, Connec
         this.targetEmail = c.getTargetEmail();
     }
 
-    public ConnectionModel(Entity en, String e) {
+    public ConnectionModel(Entity en, String targetEmail) {
         super(en);
-        this.targetEmail = e;
-        approved = false;
+        this.targetEmail = targetEmail;
+
     }
 
 
@@ -54,5 +54,10 @@ public class ConnectionModel extends EntityModel implements Serializable, Connec
     @Override
     public String getTargetEmail() {
         return targetEmail;
+    }
+
+    @Override
+    public void setApproved(boolean approved) {
+       this.approved = approved;
     }
 }

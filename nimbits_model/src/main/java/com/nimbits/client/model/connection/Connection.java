@@ -24,4 +24,6 @@ public interface Connection extends Entity, Serializable {
     boolean isApproved();
 
     String getTargetEmail();
+
+    void setApproved(boolean approved);
 }

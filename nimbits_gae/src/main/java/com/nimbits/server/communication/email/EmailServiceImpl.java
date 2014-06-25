@@ -252,9 +252,9 @@ public class EmailServiceImpl implements EmailService {
 
                 .append("<p> This will give ")
                 .append(from.getValue())
-                .append(" permission to read all of your nimbits data and modify your nimbits objects.  Also, you'll be able to read ")
-                .append("and write to all of their nimbits objects. Only do this if you know and trust the sender. <p>")
-                .append("<p>Learn more at http://www.nimbits.com</p>");
+                .append(" permission to read all of your nimbits data.  Also, you'll be able to read ")
+                .append("all of their nimbits objects. Only do this if you know and trust the sender. <p>")
+                .append("<p>Learn more at http://www.nimbits.com/howto_connections.jsp</p>");
         ;
 
 
@@ -262,6 +262,28 @@ public class EmailServiceImpl implements EmailService {
         String subject = "Nimbits Connection Request";
         sendEmail(to, sb.toString(), subject);
 
+    }
+
+    @Override
+    public void sendConnectionRequestConfirmation(Connection c) {
+        EmailAddress owner = CommonFactory.createEmailAddress(c.getOwner());
+        EmailAddress to = CommonFactory.createEmailAddress(c.getTargetEmail());
+
+        StringBuilder sb = new StringBuilder();
+        sb
+                .append("<P>" + to.getValue() + " has approved your connection request. You can now login to see their data points, and they can see yours." +  "</P>")
+
+                .append(ServerInfo.getFullServerURL(null))
+
+
+
+                .append("<p>Learn more at http://www.nimbits.com/howto_connections.jsp</p>");
+        ;
+
+
+
+        String subject = "Nimbits Connection Request Complete";
+        sendEmail(owner, sb.toString(), subject);
     }
 
 

@@ -21,12 +21,14 @@ import java.util.Map;
 public enum ServerSetting {
 
 
-    version(SettingConstants.SETTING_VERSION, SettingConstants.CONST_SERVER_VERSION, true, true, true, false),
-    storeDirectory(SettingConstants.SETTING_STORE_DIRECTORY, SettingConstants.STORE_DIRECTORY_DEFAULT, false, true, false, false),
-    admin(SettingConstants.SETTING_ADMIN, SettingConstants.SETTING_ADMIN_DEFAULT, false, true, false, false),
-    apiKey(SettingConstants.API_KEY, SettingConstants.API_KEY_DEFAULT, false, true, false, false),
-    smtp(SettingConstants.SETTING_SMTP, SettingConstants.SETTING_SMTP_DEFAULT, false, true, false, false),
-    smtpPassword(SettingConstants.SETTING_SMTP_PASSWORD, SettingConstants.SETTING_SMTP_PASSWORD_DEFAULT, false, true, false, true)
+    version(SettingConstants.SETTING_VERSION, SettingConstants.CONST_SERVER_VERSION, true, true, true, false, false),
+    uuid(SettingConstants.SETTING_UUID, SettingConstants.SETTING_UUID_DEFAULT, true, true, true, false, false),
+    storeDirectory(SettingConstants.SETTING_STORE_DIRECTORY, SettingConstants.STORE_DIRECTORY_DEFAULT, false, true, false, false, false),
+    admin(SettingConstants.SETTING_ADMIN, SettingConstants.SETTING_ADMIN_DEFAULT, false, true, false, false, false),
+    apiKey(SettingConstants.API_KEY, SettingConstants.API_KEY_DEFAULT, false, true, false, false, false),
+    smtp(SettingConstants.SETTING_SMTP, SettingConstants.SETTING_SMTP_DEFAULT, false, true, false, false, false),
+    smtpPassword(SettingConstants.SETTING_SMTP_PASSWORD, SettingConstants.SETTING_SMTP_PASSWORD_DEFAULT, false, true, false, true, false),
+    stats(SettingConstants.SETTING_STATS, SettingConstants.SETTING_STATS_DEFAULT, false, true, false, false, true)
 
     ;
 
@@ -46,13 +48,16 @@ public enum ServerSetting {
     private final boolean create;
     private final boolean readOnly;
     private final boolean encrypt;
+    private final boolean isFlag;
 
     private ServerSetting(final String name,
                           final String defaultValue,
                           final boolean update,
                           final boolean create,
                           final boolean readonly,
-                          final boolean encrypt
+                          final boolean encrypt,
+                          final boolean isFlag
+
     ) {
         this.name = name;
         this.update = update;
@@ -60,8 +65,12 @@ public enum ServerSetting {
         this.create = create;
         this.readOnly = readonly;
         this.encrypt = encrypt;
+        this.isFlag = isFlag;
     }
 
+    public boolean isFlag() {
+        return isFlag;
+    }
 
     public static ServerSetting get(final String name) {
         return lookup.get(name);
@@ -110,6 +119,10 @@ public enum ServerSetting {
         static final String API_KEY_DEFAULT = "API_KEY_DEFAULT";
         static final String SETTING_SMTP_DEFAULT = "smtp.gmail.com";
         static final String SETTING_SMTP_PASSWORD_DEFAULT = "";
+        static final String SETTING_STATS = "upload stats to nimbits.com";
+        static final String SETTING_STATS_DEFAULT = Boolean.TRUE.toString();
+        static final String SETTING_UUID= "uuid";
+        static final String SETTING_UUID_DEFAULT = "";
         private SettingConstants() {
         }
     }

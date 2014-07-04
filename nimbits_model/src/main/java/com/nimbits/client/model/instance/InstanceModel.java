@@ -12,65 +12,74 @@
 
 package com.nimbits.client.model.instance;
 
+import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.server.Protocol;
+import com.nimbits.client.model.server.apikey.ApiKey;
+import com.nimbits.client.model.server.apikey.ApiKeyFactory;
 
 import java.io.Serializable;
-import java.util.Date;
 
 
-/**
- * Created by Benjamin Sautner
- * User: BSautner
- * Date: 12/14/11
- * Time: 12:48 PM
- */
 public class InstanceModel extends EntityModel implements Serializable, Instance {
 
-    private int id;
+    private long serverId;
 
     private String baseUrl;
 
-    private String ownerEmail;
+    private String adminEmail;
 
     private String version;
 
-    private Date ts;
+    private String  apiKey;
+
+    private boolean isDefault;
+
+    private String protocol;
+
+    private boolean socketsEnabled;
+
 
     public InstanceModel(final Entity baseEntity, final String baseUrl, final EmailAddress ownerEmail, final String serverVersion)  {
         super(baseEntity);
         this.baseUrl = baseUrl;
-        this.ownerEmail = ownerEmail.getValue();
+        this.adminEmail = ownerEmail.getValue();
         this.version = serverVersion;
     }
 
     public InstanceModel(final Instance server)  {
         super(server);
-        this.id = server.getId();
-        this.baseUrl = server.getBaseUrl();
-        this.ownerEmail = server.getOwnerEmail().getValue();
+        this.serverId = server.getServerId();
+        this.baseUrl = server.getBaseUrl().getUrl();
+        this.adminEmail = server.getAdminEmail().getValue();
         this.version = server.getVersion();
-        this.ts = server.getTs();
+        this.apiKey = server.getApiKey().getValue();
+        this.isDefault = server.isDefault();
+        this.protocol = server.getProtocol().name();
+        this.socketsEnabled = server.isSocketsEnabled();
+
+
     }
 
     public InstanceModel() {
     }
 
     @Override
-    public int getId() {
-        return id;
+    public long getServerId() {
+        return serverId;
     }
 
     @Override
-    public String getBaseUrl() {
-        return baseUrl;
+    public UrlContainer getBaseUrl() {
+        return UrlContainer.getInstance(baseUrl);
     }
 
     @Override
-    public EmailAddress getOwnerEmail()  {
-        return CommonFactory.createEmailAddress(ownerEmail);
+    public EmailAddress getAdminEmail()  {
+        return CommonFactory.createEmailAddress(adminEmail);
     }
 
     @Override
@@ -79,7 +88,24 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
     }
 
     @Override
-    public  Date getTs() {
-        return ts;
+    public ApiKey getApiKey() {
+        return ApiKeyFactory.createApiKey(this.apiKey);
     }
+
+    @Override
+    public boolean isDefault() {
+        return this.isDefault;
+    }
+
+    @Override
+    public Protocol getProtocol() {
+
+        return (this.protocol == null || Protocol.valueOf(this.protocol) == null) ? Protocol.http : Protocol.valueOf(this.protocol);
+    }
+
+    @Override
+    public boolean isSocketsEnabled() {
+        return this.socketsEnabled;
+    }
+
 }

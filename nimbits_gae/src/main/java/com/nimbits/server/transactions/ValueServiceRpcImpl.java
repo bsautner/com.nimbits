@@ -52,7 +52,7 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements com.nim
     public Value recordValueRpc(final Entity point,
                                 final Value value) throws ValueException {
 
-        User user = UserHelper.getUser(engine);
+        User user = UserHelper.getUser(engine).get(0);
         HttpServletRequest req = getThreadLocalRequest();
         return valueService.recordValue(req, user, point, value, false);
 

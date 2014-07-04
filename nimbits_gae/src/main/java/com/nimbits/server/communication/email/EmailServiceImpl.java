@@ -247,7 +247,7 @@ public class EmailServiceImpl implements EmailService {
                         "<P>Click here to approve: </P>")
 
                 .append(ServerInfo.getFullServerURL(null))
-                .append("service/v2/connection?key=")
+                .append("service/v2/connection?anon=true&key=")
                 .append(c.getApprovalKey())
 
                 .append("<p> This will give ")

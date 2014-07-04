@@ -59,33 +59,7 @@ public class ApiServlet extends HttpServlet {
         return c.getProtectionLevel().equals(ProtectionLevel.everyone) || (u != null && !u.isRestricted());
     }
 
-    protected static boolean okToRead(final User u, final Entity c) {
 
-        return (u != null && c.isOwner(u));
-    }
-
-
-    protected String getContent(HttpServletRequest req) {
-
-        BufferedReader reader;
-        try {
-            reader = req.getReader();
-            if (req.getContentLength() > 0) {
-                StringBuilder jb = new StringBuilder(req.getContentLength());
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    jb.append(line);
-                }
-
-
-                return jb.toString();
-            } else {
-                return null;
-            }
-        } catch (IOException e) {
-            return null;
-        }
-    }
 
     public void doInit(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type) {
 
@@ -105,7 +79,7 @@ public class ApiServlet extends HttpServlet {
 
 
         entityService = EntityServiceFactory.getInstance(engine);
-        user = AuthenticationServiceFactory.getInstance(engine).getHttpRequestUser(req);
+        user = AuthenticationServiceFactory.getInstance(engine).getHttpRequestUser(req).get(0);
         valueService = ValueServiceFactory.getInstance(engine, taskService);
         getGPS(req);
         buildParamMap(req);

@@ -13,6 +13,7 @@
 package com.nimbits.server;
 
 import com.mysql.jdbc.AbandonedConnectionCleanupThread;
+import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.server.communication.email.EmailService;
 import com.nimbits.server.communication.mail.EmailServiceFactory;
 import com.nimbits.server.communication.xmpp.XmppService;
@@ -25,6 +26,8 @@ import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.process.task.TaskServiceFactory;
 import com.nimbits.server.transaction.cache.CacheFactory;
 import com.nimbits.server.transaction.cache.NimbitsCache;
+import com.nimbits.server.transaction.settings.SettingServiceFactory;
+import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.user.service.AuthenticationMechanism;
 import com.nimbits.server.user.AuthenticationMechanismFactory;
 
@@ -48,11 +51,24 @@ public class ApplicationListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         log.info("Context Initialised");
+
+
+
         ServletContext context = servletContextEvent.getServletContext();
         Datastore.initialize();
         NimbitsEngine engine = createEngine();
         context.setAttribute("engine", engine);
         context.setAttribute("task", getTaskService(engine));
+
+        SettingsService settingsService = SettingServiceFactory.getServiceInstance(engine);
+        boolean statsEnabled = Boolean.valueOf(settingsService.getSetting(ServerSetting.stats));
+        if (statsEnabled) {
+            log.info("Sending instance statistics to nimbits.com - you can disable this in the server settings menu.");
+            ServerInfo.report(engine);
+        }
+
+
+
     }
     public static TaskService getTaskService(NimbitsEngine engine) {
         TaskService taskService = TaskServiceFactory.getServiceInstance(engine);

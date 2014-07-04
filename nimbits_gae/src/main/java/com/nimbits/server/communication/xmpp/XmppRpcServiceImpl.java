@@ -27,7 +27,7 @@ public class XmppRpcServiceImpl extends RemoteServiceServlet implements XmppRpcS
     @Override
     public void sendInviteRpc() {
         NimbitsEngine engine = ApplicationListener.createEngine();
-        User user = UserHelper.getUser(engine);
+        User user = UserHelper.getUser(engine).get(0);
 
 
         final JID jid = new JID(user.getEmail().getValue());

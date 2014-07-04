@@ -15,12 +15,7 @@ package com.nimbits.client.model.instance;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 
-/**
- * Created by Benjamin Sautner
- * User: BSautner
- * Date: 12/14/11
- * Time: 12:57 PM
- */
+
 public class InstanceModelFactory {
 
     private InstanceModelFactory() {

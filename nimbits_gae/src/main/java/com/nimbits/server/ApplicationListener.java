@@ -12,6 +12,8 @@
 
 package com.nimbits.server;
 
+import com.nimbits.client.enums.ServerSetting;
+import com.nimbits.client.model.server.Server;
 import com.nimbits.server.cache.CacheFactory;
 import com.nimbits.server.communication.email.EmailService;
 import com.nimbits.server.communication.email.EmailServiceFactory;
@@ -24,6 +26,8 @@ import com.nimbits.server.io.blob.BlobStoreFactory;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.process.task.TaskServiceFactory;
 import com.nimbits.server.transaction.cache.NimbitsCache;
+import com.nimbits.server.transaction.settings.SettingServiceFactory;
+import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.user.service.AuthenticationMechanism;
 import com.nimbits.server.transactions.counter.CounterServiceFactory;
 import com.nimbits.server.transactions.user.AuthenticationMechanismFactory;
@@ -46,6 +50,13 @@ public class ApplicationListener implements ServletContextListener {
         context.setAttribute("task", getTaskService(engine));
 
         log.info("contextInitialized");
+
+        boolean statsEnabled = Boolean.valueOf(engine.getSettingsService().getSetting(ServerSetting.stats));
+        if (statsEnabled) {
+            log.info("Sending instance statistics to nimbits.com - you can disable this in the server settings menu.");
+            ServerInfo.report(engine);
+        }
+
     }
 
     public static TaskService getTaskService(NimbitsEngine engine) {

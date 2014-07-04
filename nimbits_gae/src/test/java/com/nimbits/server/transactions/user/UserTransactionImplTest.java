@@ -19,15 +19,13 @@ import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 
-/**
- * Created by benjamin on 9/1/13.
- */
+ 
 public class UserTransactionImplTest extends NimbitsServletTest {
     @Test
     public void testGetHttpRequestUser() throws Exception {
         UserService t = AuthenticationServiceFactory.getInstance(engine);
         t.getHttpRequestUser(req);
-        assertEquals(user.getEmail(), t.getHttpRequestUser(req).getEmail());
+        assertEquals(user.getEmail(), t.getHttpRequestUser(req).get(0).getEmail());
 
 
     }

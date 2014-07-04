@@ -219,6 +219,11 @@
             <version>1.9.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.google.appengine</groupId>
+            <artifactId>appengine-api-1.0-sdk</artifactId>
+            <version>1.9.6</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -268,6 +273,12 @@
                 <groupId>com.google.appengine</groupId>
                 <artifactId>appengine-maven-plugin</artifactId>
                 <version>${appengine.target.version}</version>
+                <configuration>
+                <jvmFlags>
+                    <jvmFlag>-Xdebug</jvmFlag>
+                    <jvmFlag>-agentlib:jdwp=transport=dt_socket,address=5005,server=y,suspend=n</jvmFlag>
+                </jvmFlags>
+                </configuration>
             </plugin>
 
             <plugin>

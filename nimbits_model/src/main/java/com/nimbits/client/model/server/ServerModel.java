@@ -19,7 +19,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 
-
+@Deprecated
 public class ServerModel implements Server, Serializable {
 
     private UrlContainer url;

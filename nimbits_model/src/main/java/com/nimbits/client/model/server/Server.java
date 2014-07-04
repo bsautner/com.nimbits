@@ -16,6 +16,7 @@ import com.nimbits.client.model.server.apikey.ApiKey;
 
 import java.io.Serializable;
 
+@Deprecated
 public interface Server extends Serializable {
 
     long getId();

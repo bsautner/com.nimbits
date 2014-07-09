@@ -38,8 +38,9 @@ public class SyncModelFactory {
             final Entity e,
             final TriggerEntity entity,
             final String targetInstance,
-            final String targetPoint )  {
-        return new SyncModel(e, entity, targetInstance, targetPoint);
+            final String targetPoint,
+            final String accessKey)  {
+        return new SyncModel(e, entity, targetInstance, targetPoint, accessKey);
 
     }
 

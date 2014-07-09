@@ -18,21 +18,23 @@ import com.nimbits.client.model.trigger.TriggerModel;
 
 import java.util.Date;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/16/12
- * Time: 9:59 AM
- */
+
 public class SyncModel extends TriggerModel implements Sync {
 
     private String targetInstance;
     private String targetPoint;
+    private String accessKey;
 
     @Override
     public String getTargetInstance() {
         return targetInstance;
     }
+
+    @Override
+    public String getAccessKey() {
+        return accessKey;
+    }
+
     @Override
     public void setTargetInstance(String targetInstance) {
         this.targetInstance = targetInstance;
@@ -50,10 +52,12 @@ public class SyncModel extends TriggerModel implements Sync {
             final Entity entity,
             final TriggerEntity trigger,
             final String targetInstance,
-            final String targetPoint)  {
+            final String targetPoint,
+            final String accessKey)  {
         super(entity, trigger, null, true);
         this.targetInstance = targetInstance;
         this.targetPoint = targetPoint;
+        this.accessKey = accessKey;
 
     }
 
@@ -61,6 +65,7 @@ public class SyncModel extends TriggerModel implements Sync {
        super(sync);
        this.targetPoint = sync.getTargetPoint();
        this.targetInstance = sync.getTargetInstance();
+        this.accessKey = sync.getAccessKey();
 
 
     }

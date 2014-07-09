@@ -30,6 +30,6 @@ public class AuthenticationMechanismImpl implements AuthenticationMechanism {
     @Override
     public List<EmailAddress> getCurrentUserEmail() {
         SettingsService settings = SettingServiceFactory.getServiceInstance(ApplicationListener.createEngine());
-         return Arrays.asList(CommonFactory.createEmailAddress(settings.getSetting(ServerSetting.admin)));
+        return Arrays.asList(CommonFactory.createEmailAddress(settings.getSetting(ServerSetting.admin)));
     }
 }

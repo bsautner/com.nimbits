@@ -1,13 +1,3 @@
-
-
-
-
-
-
-
-
-
-
 /*
  * Copyright (c) 2010 Nimbits Inc.
  *
@@ -20,10 +10,10 @@
  *
  * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
  */
-var swfobject = function() {
-    var b = "undefined",Q = "object",n = "Shockwave Flash",p = "ShockwaveFlash.ShockwaveFlash",P = "application/x-shockwave-flash",m = "SWFObjectExprInst",j = window,K = document,T = navigator,o = [],N = [],i = [],d = [],J,Z = null,M = null,l = null,e = false,A = false;
-    var h = function() {
-        var v = typeof K.getElementById != b && typeof K.getElementsByTagName != b && typeof K.createElement != b,AC = [0,0,0],x = null;
+var swfobject = function () {
+    var b = "undefined", Q = "object", n = "Shockwave Flash", p = "ShockwaveFlash.ShockwaveFlash", P = "application/x-shockwave-flash", m = "SWFObjectExprInst", j = window, K = document, T = navigator, o = [], N = [], i = [], d = [], J, Z = null, M = null, l = null, e = false, A = false;
+    var h = function () {
+        var v = typeof K.getElementById != b && typeof K.getElementsByTagName != b && typeof K.createElement != b, AC = [0, 0, 0], x = null;
         if (typeof T.plugins != b && typeof T.plugins[n] == Q) {
             x = T.plugins[n].description;
             if (x && !(typeof T.mimeTypes != b && T.mimeTypes[P] && !T.mimeTypes[P].enabledPlugin)) {
@@ -34,15 +24,15 @@ var swfobject = function() {
             }
         } else {
             if (typeof j.ActiveXObject != b) {
-                var y = null,AB = false;
+                var y = null, AB = false;
                 try {
                     y = new ActiveXObject(p + ".7")
-                } catch(t) {
+                } catch (t) {
                     try {
                         y = new ActiveXObject(p + ".6");
-                        AC = [6,0,21];
+                        AC = [6, 0, 21];
                         y.AllowScriptAccess = "always"
-                    } catch(t) {
+                    } catch (t) {
                         if (AC[0] == 6) {
                             AB = true
                         }
@@ -50,7 +40,7 @@ var swfobject = function() {
                     if (!AB) {
                         try {
                             y = new ActiveXObject(p)
-                        } catch(t) {
+                        } catch (t) {
                         }
                     }
                 }
@@ -59,18 +49,18 @@ var swfobject = function() {
                         x = y.GetVariable("$version");
                         if (x) {
                             x = x.split(" ")[1].split(",");
-                            AC = [parseInt(x[0], 10),parseInt(x[1], 10),parseInt(x[2], 10)]
+                            AC = [parseInt(x[0], 10), parseInt(x[1], 10), parseInt(x[2], 10)]
                         }
-                    } catch(t) {
+                    } catch (t) {
                     }
                 }
             }
         }
-        var AD = T.userAgent.toLowerCase(),r = T.platform.toLowerCase(),AA = /webkit/.test(AD) ? parseFloat(AD.replace(/^.*webkit\/(\d+(\.\d+)?).*$/, "$1")) : false,q = false,z = r ? /win/.test(r) : /win/.test(AD),w = r ? /mac/.test(r) : /mac/.test(AD);
+        var AD = T.userAgent.toLowerCase(), r = T.platform.toLowerCase(), AA = /webkit/.test(AD) ? parseFloat(AD.replace(/^.*webkit\/(\d+(\.\d+)?).*$/, "$1")) : false, q = false, z = r ? /win/.test(r) : /win/.test(AD), w = r ? /mac/.test(r) : /mac/.test(AD);
         /*@cc_on q=true;@if(@_win32)z=true;@elif(@_mac)w=true;@end@*/
-        return{w3cdom:v,pv:AC,webkit:AA,ie:q,win:z,mac:w}
+        return {w3cdom: v, pv: AC, webkit: AA, ie: q, win: z, mac: w}
     }();
-    var L = function() {
+    var L = function () {
         if (!h.w3cdom) {
             return
         }
@@ -82,11 +72,11 @@ var swfobject = function() {
                 if (J) {
                     I(J, "onreadystatechange", S)
                 }
-            } catch(q) {
+            } catch (q) {
             }
         }
         if (h.webkit && typeof K.readyState != b) {
-            Z = setInterval(function() {
+            Z = setInterval(function () {
                 if (/loaded|complete/.test(K.readyState)) {
                     E()
                 }
@@ -114,7 +104,7 @@ var swfobject = function() {
             try {
                 var u = K.getElementsByTagName("body")[0].appendChild(v);
                 u.parentNode.removeChild(u)
-            } catch(w) {
+            } catch (w) {
                 return
             }
         }
@@ -149,7 +139,7 @@ var swfobject = function() {
                 } else {
                     if (typeof j.onload == "function") {
                         var q = j.onload;
-                        j.onload = function() {
+                        j.onload = function () {
                             q();
                             r()
                         }
@@ -192,7 +182,7 @@ var swfobject = function() {
     function Y(t) {
         var q = t.getElementsByTagName(Q)[0];
         if (q) {
-            var w = a("embed"),y = q.attributes;
+            var w = a("embed"), y = q.attributes;
             if (y) {
                 var v = y.length;
                 for (var u = 0; u < v; u++) {
@@ -236,19 +226,19 @@ var swfobject = function() {
                 w.height = "137"
             }
             K.title = K.title.slice(0, 47) + " - Flash Player Installation";
-            var z = h.ie && h.win ? "ActiveX" : "PlugIn",q = K.title,r = "MMredirectURL=" + j.location + "&MMplayerType=" + z + "&MMdoctitle=" + q,x = w.id;
+            var z = h.ie && h.win ? "ActiveX" : "PlugIn", q = K.title, r = "MMredirectURL=" + j.location + "&MMplayerType=" + z + "&MMdoctitle=" + q, x = w.id;
             if (h.ie && h.win && u.readyState != 4) {
                 var t = a("div");
                 x += "SWFObjectNew";
                 t.setAttribute("id", x);
                 u.parentNode.insertBefore(t, u);
                 u.style.display = "none";
-                var v = function() {
+                var v = function () {
                     u.parentNode.removeChild(u)
                 };
                 I(j, "onload", v)
             }
-            U({data:w.expressInstall,id:m,width:w.width,height:w.height}, {flashvars:r}, x)
+            U({data: w.expressInstall, id: m, width: w.width, height: w.height}, {flashvars: r}, x)
         }
     }
 
@@ -258,7 +248,7 @@ var swfobject = function() {
             t.parentNode.insertBefore(r, t);
             r.parentNode.replaceChild(G(t), r);
             t.style.display = "none";
-            var q = function() {
+            var q = function () {
                 t.parentNode.removeChild(t)
             };
             I(j, "onload", q)
@@ -289,7 +279,7 @@ var swfobject = function() {
     }
 
     function U(AG, AE, t) {
-        var q,v = C(t);
+        var q, v = C(t);
         if (v) {
             if (typeof AG.id == b) {
                 AG.id = t
@@ -389,7 +379,7 @@ var swfobject = function() {
                 if (q.readyState == 4) {
                     B(r)
                 } else {
-                    j.attachEvent("onload", function() {
+                    j.attachEvent("onload", function () {
                         B(r)
                     })
                 }
@@ -415,7 +405,7 @@ var swfobject = function() {
         var q = null;
         try {
             q = K.getElementById(t)
-        } catch(r) {
+        } catch (r) {
         }
         return q
     }
@@ -426,22 +416,22 @@ var swfobject = function() {
 
     function I(t, q, r) {
         t.attachEvent(q, r);
-        d[d.length] = [t,q,r]
+        d[d.length] = [t, q, r]
     }
 
     function c(t) {
-        var r = h.pv,q = t.split(".");
+        var r = h.pv, q = t.split(".");
         q[0] = parseInt(q[0], 10);
         q[1] = parseInt(q[1], 10) || 0;
         q[2] = parseInt(q[2], 10) || 0;
-        return(r[0] > q[0] || (r[0] == q[0] && r[1] > q[1]) || (r[0] == q[0] && r[1] == q[1] && r[2] >= q[2])) ? true : false
+        return (r[0] > q[0] || (r[0] == q[0] && r[1] > q[1]) || (r[0] == q[0] && r[1] == q[1] && r[2] >= q[2])) ? true : false
     }
 
     function V(v, r) {
         if (h.ie && h.mac) {
             return
         }
-        var u = K.getElementsByTagName("head")[0],t = a("style");
+        var u = K.getElementsByTagName("head")[0], t = a("style");
         t.setAttribute("type", "text/css");
         t.setAttribute("media", "screen");
         if (!(h.ie && h.win) && typeof K.createTextNode != b) {
@@ -471,9 +461,9 @@ var swfobject = function() {
         return q ? encodeURIComponent(s) : s
     }
 
-    var D = function() {
+    var D = function () {
         if (h.ie && h.win) {
-            window.attachEvent("onunload", function() {
+            window.attachEvent("onunload", function () {
                 var w = d.length;
                 for (var v = 0; v < w; v++) {
                     d[v][0].detachEvent(d[v][1], d[v][2])
@@ -493,135 +483,137 @@ var swfobject = function() {
             })
         }
     }();
-    return{registerObject:function(u, q, t) {
-        if (!h.w3cdom || !u || !q) {
-            return
-        }
-        var r = {};
-        r.id = u;
-        r.swfVersion = q;
-        r.expressInstall = t ? t : false;
-        N[N.length] = r;
-        W(u, false)
-    },getObjectById:function(v) {
-        var q = null;
-        if (h.w3cdom) {
-            var t = C(v);
-            if (t) {
-                var u = t.getElementsByTagName(Q)[0];
-                if (!u || (u && typeof t.SetVariable != b)) {
-                    q = t
-                } else {
-                    if (typeof u.SetVariable != b) {
-                        q = u
-                    }
-                }
+    return {
+        registerObject: function (u, q, t) {
+            if (!h.w3cdom || !u || !q) {
+                return
             }
-        }
-        return q
-    },embedSWF:function(x, AE, AB, AD, q, w, r, z, AC) {
-        if (!h.w3cdom || !x || !AE || !AB || !AD || !q) {
-            return
-        }
-        AB += "";
-        AD += "";
-        if (c(q)) {
-            W(AE, false);
-            var AA = {};
-            if (AC && typeof AC === Q) {
-                for (var v in AC) {
-                    if (AC[v] != Object.prototype[v]) {
-                        AA[v] = AC[v]
-                    }
-                }
-            }
-            AA.data = x;
-            AA.width = AB;
-            AA.height = AD;
-            var y = {};
-            if (z && typeof z === Q) {
-                for (var u in z) {
-                    if (z[u] != Object.prototype[u]) {
-                        y[u] = z[u]
-                    }
-                }
-            }
-            if (r && typeof r === Q) {
-                for (var t in r) {
-                    if (r[t] != Object.prototype[t]) {
-                        if (typeof y.flashvars != b) {
-                            y.flashvars += "&" + t + "=" + r[t]
-                        } else {
-                            y.flashvars = t + "=" + r[t]
+            var r = {};
+            r.id = u;
+            r.swfVersion = q;
+            r.expressInstall = t ? t : false;
+            N[N.length] = r;
+            W(u, false)
+        }, getObjectById: function (v) {
+            var q = null;
+            if (h.w3cdom) {
+                var t = C(v);
+                if (t) {
+                    var u = t.getElementsByTagName(Q)[0];
+                    if (!u || (u && typeof t.SetVariable != b)) {
+                        q = t
+                    } else {
+                        if (typeof u.SetVariable != b) {
+                            q = u
                         }
                     }
                 }
             }
-            f(function() {
-                U(AA, y, AE);
-                if (AA.id == AE) {
-                    W(AE, true)
-                }
-            })
-        } else {
-            if (w && !A && c("6.0.65") && (h.win || h.mac)) {
-                A = true;
+            return q
+        }, embedSWF: function (x, AE, AB, AD, q, w, r, z, AC) {
+            if (!h.w3cdom || !x || !AE || !AB || !AD || !q) {
+                return
+            }
+            AB += "";
+            AD += "";
+            if (c(q)) {
                 W(AE, false);
-                f(function() {
-                    var AF = {};
-                    AF.id = AF.altContentId = AE;
-                    AF.width = AB;
-                    AF.height = AD;
-                    AF.expressInstall = w;
-                    k(AF)
-                })
-            }
-        }
-    },getFlashPlayerVersion:function() {
-        return{major:h.pv[0],minor:h.pv[1],release:h.pv[2]}
-    },hasFlashPlayerVersion:c,createSWF:function(t, r, q) {
-        if (h.w3cdom) {
-            return U(t, r, q)
-        } else {
-            return undefined
-        }
-    },removeSWF:function(q) {
-        if (h.w3cdom) {
-            X(q)
-        }
-    },createCSS:function(r, q) {
-        if (h.w3cdom) {
-            V(r, q)
-        }
-    },addDomLoadEvent:f,addLoadEvent:R,getQueryParamValue:function(v) {
-        var u = K.location.search || K.location.hash;
-        if (v == null) {
-            return g(u)
-        }
-        if (u) {
-            var t = u.substring(1).split("&");
-            for (var r = 0; r < t.length; r++) {
-                if (t[r].substring(0, t[r].indexOf("=")) == v) {
-                    return g(t[r].substring((t[r].indexOf("=") + 1)))
-                }
-            }
-        }
-        return""
-    },expressInstallCallback:function() {
-        if (A && M) {
-            var q = C(m);
-            if (q) {
-                q.parentNode.replaceChild(M, q);
-                if (l) {
-                    W(l, true);
-                    if (h.ie && h.win) {
-                        M.style.display = "block"
+                var AA = {};
+                if (AC && typeof AC === Q) {
+                    for (var v in AC) {
+                        if (AC[v] != Object.prototype[v]) {
+                            AA[v] = AC[v]
+                        }
                     }
                 }
-                M = null;
-                l = null;
-                A = false
+                AA.data = x;
+                AA.width = AB;
+                AA.height = AD;
+                var y = {};
+                if (z && typeof z === Q) {
+                    for (var u in z) {
+                        if (z[u] != Object.prototype[u]) {
+                            y[u] = z[u]
+                        }
+                    }
+                }
+                if (r && typeof r === Q) {
+                    for (var t in r) {
+                        if (r[t] != Object.prototype[t]) {
+                            if (typeof y.flashvars != b) {
+                                y.flashvars += "&" + t + "=" + r[t]
+                            } else {
+                                y.flashvars = t + "=" + r[t]
+                            }
+                        }
+                    }
+                }
+                f(function () {
+                    U(AA, y, AE);
+                    if (AA.id == AE) {
+                        W(AE, true)
+                    }
+                })
+            } else {
+                if (w && !A && c("6.0.65") && (h.win || h.mac)) {
+                    A = true;
+                    W(AE, false);
+                    f(function () {
+                        var AF = {};
+                        AF.id = AF.altContentId = AE;
+                        AF.width = AB;
+                        AF.height = AD;
+                        AF.expressInstall = w;
+                        k(AF)
+                    })
+                }
+            }
+        }, getFlashPlayerVersion: function () {
+            return {major: h.pv[0], minor: h.pv[1], release: h.pv[2]}
+        }, hasFlashPlayerVersion: c, createSWF: function (t, r, q) {
+            if (h.w3cdom) {
+                return U(t, r, q)
+            } else {
+                return undefined
+            }
+        }, removeSWF: function (q) {
+            if (h.w3cdom) {
+                X(q)
+            }
+        }, createCSS: function (r, q) {
+            if (h.w3cdom) {
+                V(r, q)
+            }
+        }, addDomLoadEvent: f, addLoadEvent: R, getQueryParamValue: function (v) {
+            var u = K.location.search || K.location.hash;
+            if (v == null) {
+                return g(u)
+            }
+            if (u) {
+                var t = u.substring(1).split("&");
+                for (var r = 0; r < t.length; r++) {
+                    if (t[r].substring(0, t[r].indexOf("=")) == v) {
+                        return g(t[r].substring((t[r].indexOf("=") + 1)))
+                    }
+                }
+            }
+            return ""
+        }, expressInstallCallback: function () {
+            if (A && M) {
+                var q = C(m);
+                if (q) {
+                    q.parentNode.replaceChild(M, q);
+                    if (l) {
+                        W(l, true);
+                        if (h.ie && h.win) {
+                            M.style.display = "block"
+                        }
+                    }
+                    M = null;
+                    l = null;
+                    A = false
+                }
             }
         }
-    }}
+    }
 }();

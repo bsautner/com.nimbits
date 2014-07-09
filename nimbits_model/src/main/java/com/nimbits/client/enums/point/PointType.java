@@ -18,12 +18,29 @@ import java.util.HashMap;
 import java.util.Map;
 
 
+/**
+ * Point types can be set in the point's property menu on the nimbits console.
+ * <ul>
+ *    <li>basic - stores values as they come in</li>
+ *     <li>backend - system point, do not use</li>
+ *     <li>cumulative - adds the new value to the last recorded value</li>
+ *     <li>timespan - deprecated, do not use<li>
+ *     <li>flag - has two possible values, 1 or 0 for on and off.  Any value not equal to 0 will result in a 1</li>
+ *     <li>high - only records a value if higher than the previous one</li>
+ *     <li>low - only records a value if lower than the previous one</li>
+ * </ul>
+ *
+ */
+
 public enum PointType implements Serializable {
     basic(0),
     backend(3),
     cumulative(4),
     timespan(5),
-    flag(6);
+    flag(6),
+    high(7),
+    low(8)
+    ;
 
 
     private static final Map<Integer, PointType> lookup = new HashMap<Integer, PointType>(PointType.values().length);

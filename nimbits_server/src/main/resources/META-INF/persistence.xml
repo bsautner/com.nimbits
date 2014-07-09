@@ -12,17 +12,12 @@
   -->
 
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://java.sun.com/xml/ns/persistence
         http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd" version="2.0">
 
-    <!-- Online Store -->
     <persistence-unit name="pmf">
-        <!--<class>com.nimbits.server.orm.UserEntity</class>-->
-        <!--<class>com.nimbits.server.orm.PointEntity</class>-->
-        <!--<class>com.nimbits.server.orm.AccessKeyEntity</class>-->
-        <!--<class>org.datanucleus.samples.metadata.store.Customer</class>-->
-        <!--<class>org.datanucleus.samples.metadata.store.Supplier</class>-->
+
         <exclude-unlisted-classes/>
         <properties>
             <property name="datanucleus.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
@@ -36,7 +31,6 @@
 
         </properties>
     </persistence-unit>
-
 
 
 </persistence>

@@ -57,7 +57,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 
-
 public class NimbitsServletTest extends BaseTest {
     public NimbitsEngine engine;
     public TaskService taskService;
@@ -68,8 +67,7 @@ public class NimbitsServletTest extends BaseTest {
     public SubscriptionService subscriptionService;
 
 
-    public static final String email =ServerSetting.admin.getDefaultValue();
-
+    public static final String email = ServerSetting.admin.getDefaultValue();
 
 
     public MockHttpServletRequest req;
@@ -93,7 +91,8 @@ public class NimbitsServletTest extends BaseTest {
 
 
     public ValueDao valueDao;
-     public Point createRandomPoint() {
+
+    public Point createRandomPoint() {
         Point point;
         EntityName pointName;
         pointName = CommonFactory.createName(UUID.randomUUID().toString(), EntityType.point);
@@ -123,7 +122,6 @@ public class NimbitsServletTest extends BaseTest {
     public void setup() {
 
 
-
         engine = ApplicationListener.createEngine();
         taskService = ApplicationListener.getTaskService(engine);
         settingsService = SettingServiceFactory.getServiceInstance(engine);
@@ -133,13 +131,10 @@ public class NimbitsServletTest extends BaseTest {
         subscriptionService = SubscriptionServiceFactory.getServiceInstance(engine, taskService);
 
 
-
-
         req = new MockHttpServletRequest();
         resp = new MockHttpServletResponse();
         valueDao = new ValueDaoImpl(engine);
         context = new MockServletContext();
-
 
 
         settingsService.addSetting(ServerSetting.admin, email);
@@ -153,8 +148,8 @@ public class NimbitsServletTest extends BaseTest {
         groupName = CommonFactory.createName("group1", EntityType.point);
 
 
-       // user = AuthenticationServiceFactory.getInstance(engine).createUserRecord(emailAddress);
-       // assertNotNull(user);
+        // user = AuthenticationServiceFactory.getInstance(engine).createUserRecord(emailAddress);
+        // assertNotNull(user);
 
 
         List<Entity> result = entityService.getEntityByKey(user, emailAddress.getValue(), EntityType.user);
@@ -232,7 +227,6 @@ public class NimbitsServletTest extends BaseTest {
     public static void afterClass() {
 
     }
-
 
 
 }

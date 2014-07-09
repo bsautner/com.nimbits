@@ -34,7 +34,7 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
 
     private String key;
 
-    private boolean compressed;
+    private Integer version;
 
 
     public ValueBlobStoreModel(ValueBlobStore store) {
@@ -45,6 +45,7 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
         this.minTimestamp = store.getMinTimestamp().getTime();
         this.key = store.getBlobKey();
         this.length = store.getLength();
+        this.version = store.getVersion();
     }
 
     public ValueBlobStoreModel() {
@@ -72,18 +73,8 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
     }
 
     @Override
-    public void setMaxTimestamp(Date maxTimestamp) {
-        this.maxTimestamp = maxTimestamp.getTime();
-    }
-
-    @Override
     public Date getMinTimestamp() {
         return new Date(minTimestamp);
-    }
-
-    @Override
-    public void setMinTimestamp(Date minTimestamp) {
-        this.minTimestamp = minTimestamp.getTime();
     }
 
     @Override
@@ -100,6 +91,10 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
     public void validate()  {
 
     }
+    @Override
+    public Integer getVersion() {
+        return version == null ? 0 : version;
+    }
 
     @Override
     public int compareTo(ValueBlobStore that) {
@@ -115,7 +110,7 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
 
         ValueBlobStoreModel that = (ValueBlobStoreModel) o;
 
-        if (compressed != that.compressed) return false;
+        if (version != that.version) return false;
         if (length != that.length) return false;
         if (maxTimestamp != that.maxTimestamp) return false;
         if (minTimestamp != that.minTimestamp) return false;
@@ -136,7 +131,7 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
         result = 31 * result + (int) (length ^ (length >>> 32));
        // result = 31 * result + (path != null ? path.hashCode() : 0);
         result = 31 * result + key.hashCode();
-        result = 31 * result + (compressed ? 1 : 0);
+        result = 31 * result + (version ^ (version >>> 32));
         return result;
     }
 }

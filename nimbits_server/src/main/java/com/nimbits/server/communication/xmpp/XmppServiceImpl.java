@@ -23,8 +23,6 @@ public class XmppServiceImpl implements XmppService {
     public void sendMessage(final String msgBody, final EmailAddress email) {
 
 
-
-
         send(msgBody, null);
 
 

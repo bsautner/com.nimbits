@@ -29,8 +29,5 @@ public class XmppRpcServiceImpl extends RemoteServiceServlet implements XmppRpcS
         User user = UserHelper.getUser(engine).get(0);
 
 
-
-
-
     }
 }

@@ -34,32 +34,34 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
 
     NimbitsEngine engine = ApplicationListener.createEngine();
     EntityService service = EntityServiceFactory.getInstance(engine);
+
     @Override
     public List<Entity> addUpdateEntityRpc(final List<Entity> entity) throws ClassNotFoundException {
         return service.addUpdateEntity(entity);
 
     }
+
     @Override
     public List<Entity> deleteEntityRpc(final List<Entity> entityList) {
         User u = UserHelper.getUser(engine).get(0);
 
 
-        if (u != null && ! entityList.isEmpty())  {
+        if (u != null && !entityList.isEmpty()) {
 
-            return  service.deleteEntity(u, entityList);
-        }
-        else {
+            return service.deleteEntity(u, entityList);
+        } else {
             return Collections.emptyList();
         }
 
     }
+
     @Override
     public Map<String, Entity> getEntityMapRpc(final User user, final int type, final int limit) {
         return service.getEntityModelMap(user, EntityType.get(type), limit);
     }
 
     @Override
-    public List<Entity> copyEntity(final Entity originalEntity, final EntityName newName)  {
+    public List<Entity> copyEntity(final Entity originalEntity, final EntityName newName) {
 
         switch (originalEntity.getEntityType()) {
 
@@ -85,13 +87,13 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
     }
 
     @Override
-    public List<Entity> getEntitiesRpc(final User user)  {
+    public List<Entity> getEntitiesRpc(final User user) {
         List<Entity> response = service.getEntities(user);
         return response;
     }
 
     @Override
-    public List<Entity> getEntityByKeyRpc(final User user, final String entityId, final EntityType type)  {
+    public List<Entity> getEntityByKeyRpc(final User user, final String entityId, final EntityType type) {
         return service.getEntityByKey(user, entityId, type);
     }
 }

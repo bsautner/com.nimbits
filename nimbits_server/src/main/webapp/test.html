@@ -1,117 +1,117 @@
 <html>
-	<head>
-		<title>Tail-based by Web Sockets</title>
-		<script type='text/javascript'>
-			if (!window.WebSocket)
-				alert("WebSocket not supported by this browser");
-		
-			function $() {
-				return document.getElementById(arguments[0]);
-			}
-			function $F() {
-				return document.getElementById(arguments[0]).value;
-			}
-		
-			function getKeyCode(ev) {
-				if (window.event)
-					return window.event.keyCode;
-				return ev.keyCode;
-			}
-		
-			var server = {
-				connect : function() {
-					var location = document.location.toString().replace('http://',
-							'ws://').replace('https://', 'wss://').replace('test.html','socket/WebSocket');
-							alert(location);
-					this._ws = new WebSocket(location);
-					this._ws.onopen = this._onopen;
-					this._ws.onmessage = this._onmessage;
-					this._ws.onclose = this._onclose;
-				},
-		
-				_onopen : function() {
-					server._send('websockets are open for communications!');
-				},
-		
-				_send : function(message) {
-					if (this._ws)
-						this._ws.send(message);
-				},
-		
-				send : function(text) {
-					if (text != null && text.length > 0)
-						server._send(text);
-				},
-		
-				_onmessage : function(m) {
-					if (m.data) {
-						var messageBox = $('messageBox');
-						var spanText = document.createElement('span');
-						spanText.className = 'text';
-						spanText.innerHTML = m.data;
-						var lineBreak = document.createElement('br');
-						messageBox.appendChild(spanText);
-						messageBox.appendChild(lineBreak);
-						messageBox.scrollTop = messageBox.scrollHeight
-								- messageBox.clientHeight;
-					}
-				},
-		
-				_onclose : function(m) {
-					this._ws = null;
-				}
-			};
-		</script>
-		<style type='text/css'>
-			div {
-				border: 0px solid black;
-			}
-			
-			div#messageBox {
-				clear: both;
-				width: 40em;
-				height: 20ex;
-				overflow: auto;
-				background-color: #f0f0f0;
-				padding: 4px;
-				border: 1px solid black;
-			}
-			
-			div#input {
-				clear: both;
-				width: 40em;
-				padding: 4px;
-				background-color: #e0e0e0;
-				border: 1px solid black;
-				border-top: 0px
-			}
-			
-			div.hidden {
-				display: none;
-			}
-			
-			span.alert {
-				font-style: italic;
-			}
-		</style>
-	</head>
-	<body>
-		<div id='messageBox'></div>
-		<div id='input'>
-			<div>
-				<input id='connect' class='button' type='submit' name='Connect'
-					value='Connect' />
-			</div>
-		</div>
-		<script type='text/javascript'>
-			$('connect').onclick = function(event) {
-				server.connect();
-				return false;
-			};
-		</script>
+<head>
+    <title>Tail-based by Web Sockets</title>
+    <script type='text/javascript'>
+        if (!window.WebSocket)
+            alert("WebSocket not supported by this browser");
 
-		<p>
-			This is a demonstration of the Jetty websocket server.
-		</p>
-	</body>
+        function $() {
+            return document.getElementById(arguments[0]);
+        }
+        function $F() {
+            return document.getElementById(arguments[0]).value;
+        }
+
+        function getKeyCode(ev) {
+            if (window.event)
+                return window.event.keyCode;
+            return ev.keyCode;
+        }
+
+        var server = {
+            connect: function () {
+                var location = document.location.toString().replace('http://',
+                        'ws://').replace('https://', 'wss://').replace('test.html', 'socket/WebSocket');
+                alert(location);
+                this._ws = new WebSocket(location);
+                this._ws.onopen = this._onopen;
+                this._ws.onmessage = this._onmessage;
+                this._ws.onclose = this._onclose;
+            },
+
+            _onopen: function () {
+                server._send('websockets are open for communications!');
+            },
+
+            _send: function (message) {
+                if (this._ws)
+                    this._ws.send(message);
+            },
+
+            send: function (text) {
+                if (text != null && text.length > 0)
+                    server._send(text);
+            },
+
+            _onmessage: function (m) {
+                if (m.data) {
+                    var messageBox = $('messageBox');
+                    var spanText = document.createElement('span');
+                    spanText.className = 'text';
+                    spanText.innerHTML = m.data;
+                    var lineBreak = document.createElement('br');
+                    messageBox.appendChild(spanText);
+                    messageBox.appendChild(lineBreak);
+                    messageBox.scrollTop = messageBox.scrollHeight
+                    - messageBox.clientHeight;
+                }
+            },
+
+            _onclose: function (m) {
+                this._ws = null;
+            }
+        };
+    </script>
+    <style type='text/css'>
+        div {
+            border: 0px solid black;
+        }
+
+        div#messageBox {
+            clear: both;
+            width: 40em;
+            height: 20ex;
+            overflow: auto;
+            background-color: #f0f0f0;
+            padding: 4px;
+            border: 1px solid black;
+        }
+
+        div#input {
+            clear: both;
+            width: 40em;
+            padding: 4px;
+            background-color: #e0e0e0;
+            border: 1px solid black;
+            border-top: 0px
+        }
+
+        div.hidden {
+            display: none;
+        }
+
+        span.alert {
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+<div id='messageBox'></div>
+<div id='input'>
+    <div>
+        <input id='connect' class='button' type='submit' name='Connect'
+               value='Connect'/>
+    </div>
+</div>
+<script type='text/javascript'>
+    $('connect').onclick = function (event) {
+        server.connect();
+        return false;
+    };
+</script>
+
+<p>
+    This is a demonstration of the Jetty websocket server.
+</p>
+</body>
 </html>

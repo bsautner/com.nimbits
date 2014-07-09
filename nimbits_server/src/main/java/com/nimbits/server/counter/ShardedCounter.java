@@ -64,7 +64,6 @@ public class ShardedCounter {
     private String kind;
 
 
-
     /**
      * Constructor which creates a sharded counter using the provided counter
      * name.
@@ -109,7 +108,7 @@ public class ShardedCounter {
      * @return shard count
      */
     private int getShardCount() {
-         return 0;
+        return 0;
     }
 
     /**
@@ -117,9 +116,9 @@ public class ShardedCounter {
      * the provided key does not exist, instead create an entity with the supplied
      * initial property value.
      *
-     * @param key the entity key to update or create
-     * @param prop the property name to be incremented
-     * @param increment the amount by which to increment
+     * @param key          the entity key to update or create
+     * @param prop         the property name to be incremented
+     * @param increment    the amount by which to increment
      * @param initialValue the value to use if the entity does not exist
      */
     private void incrementPropertyTx(String key, String prop, long increment,

@@ -63,9 +63,8 @@ public class EmailServiceImpl implements EmailService {
 
         String HOST = settingsService.getSetting(ServerSetting.smtp);
         String USER = settingsService.getSetting(ServerSetting.admin);
-        String PASSWORD =settingsService.getSetting(ServerSetting.smtpPassword);
+        String PASSWORD = settingsService.getSetting(ServerSetting.smtpPassword);
         String PORT = "465";
-
 
 
         Properties props = new Properties();
@@ -94,11 +93,11 @@ public class EmailServiceImpl implements EmailService {
 
             //Construct the mail message
 
-          //  message.setText(TEXT);
-          //  message.setSubject(SUBJECT);
-           // message.setFrom(new InternetAddress(FROM));
-           // message.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(to));
-           // message.saveChanges();
+            //  message.setText(TEXT);
+            //  message.setSubject(SUBJECT);
+            // message.setFrom(new InternetAddress(FROM));
+            // message.addRecipient(MimeMessage.RecipientType.TO, new InternetAddress(to));
+            // message.saveChanges();
 
             //Use Transport to deliver the message
             Transport transport = session.getTransport("smtps");
@@ -187,9 +186,10 @@ public class EmailServiceImpl implements EmailService {
 
         }
     }
+
     private InternetAddress getFromEmail() throws UnsupportedEncodingException {
         final String fromEmail;
-        fromEmail = SettingServiceFactory.getDaoInstance(pmf).getSetting(ServerSetting.admin );
+        fromEmail = SettingServiceFactory.getDaoInstance(pmf).getSetting(ServerSetting.admin);
         return new InternetAddress(fromEmail, WORD_NIMBITS);
 
 
@@ -200,7 +200,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendAlert(final Entity entity,
                           final Point point,
                           final EmailAddress emailAddress,
-                          final Value value, Subscription subscription)  {
+                          final Value value, Subscription subscription) {
 
         final Properties props = new Properties();
         final Session session = Session.getDefaultInstance(props, null);
@@ -250,8 +250,7 @@ public class EmailServiceImpl implements EmailService {
             final InternetAddress from = getFromEmail();
             if (from == null) {
 
-            } else
-            {
+            } else {
                 msg.setFrom(from);
                 InternetAddress internetAddress = new InternetAddress(emailAddress.getValue());
                 msg.addRecipient(Message.RecipientType.TO, internetAddress);

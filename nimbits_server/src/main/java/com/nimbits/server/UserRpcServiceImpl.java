@@ -31,7 +31,7 @@ import java.util.Date;
 import java.util.List;
 
 
-public class UserRpcServiceImpl extends RemoteServiceServlet implements  UserService{
+public class UserRpcServiceImpl extends RemoteServiceServlet implements UserService {
 
 
     NimbitsEngine engine = ApplicationListener.createEngine();
@@ -48,34 +48,32 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements  UserSer
 
 
         com.nimbits.server.transaction.user.service.UserService userService = AuthenticationServiceFactory.getInstance(engine);
-            final List<Entity> list = entityService
-                    .getEntityByKey(
-                            userService.getAnonUser(), internetAddress.getValue(), EntityType.user);
+        final List<Entity> list = entityService
+                .getEntityByKey(
+                        userService.getAnonUser(), internetAddress.getValue(), EntityType.user);
 
 
-            if (list.isEmpty()) {
+        if (list.isEmpty()) {
 
-                retObj = userService.createUserRecord(internetAddress);
+            retObj = userService.createUserRecord(internetAddress);
 
-            } else {
-                retObj = (User) list.get(0);
-            }
+        } else {
+            retObj = (User) list.get(0);
+        }
 
-            retObj.setLoggedIn(true);
+        retObj.setLoggedIn(true);
 
-            retObj.setUserAdmin(true);
+        retObj.setUserAdmin(true);
 
-            retObj.setLogoutUrl("");
+        retObj.setLogoutUrl("");
 
-            retObj.setLastLoggedIn(new Date());
-            entityService.addUpdateEntity(retObj, Arrays.<Entity>asList(retObj));
-            retObj.addAccessKey(userService.authenticatedKey(retObj));
-
+        retObj.setLastLoggedIn(new Date());
+        entityService.addUpdateEntity(retObj, Arrays.<Entity>asList(retObj));
+        retObj.addAccessKey(userService.authenticatedKey(retObj));
 
 
         return retObj;
     }
-
 
 
 }

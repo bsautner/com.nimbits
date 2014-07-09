@@ -41,6 +41,7 @@ public class BlobStoreImpl implements BlobStore {
     private final Logger log = Logger.getLogger(BlobStoreImpl.class.getName());
     private final PersistenceManagerFactory pmf;
     private SettingsService settingsService;
+
     public BlobStoreImpl(PersistenceManagerFactory pmf) {
         this.pmf = pmf;
 
@@ -49,7 +50,7 @@ public class BlobStoreImpl implements BlobStore {
 
 
     @Override
-    public List<Value> getTopDataSeries(final Entity entity, final int maxValues, final Date endDate)   {
+    public List<Value> getTopDataSeries(final Entity entity, final int maxValues, final Date endDate) {
         PersistenceManager pm = pmf.getPersistenceManager();
         try {
 
@@ -64,7 +65,7 @@ public class BlobStoreImpl implements BlobStore {
             final List<ValueBlobStoreEntity> result = (List<ValueBlobStoreEntity>) q.execute(entity.getKey(), endDate.getTime());
 
             for (final ValueBlobStoreEntity e : result) {
-                List<Value> values =  readValuesFromFile(e.getBlobKey(), e.getLength());
+                List<Value> values = readValuesFromFile(e.getBlobKey(), e.getLength());
                 //log.info("extracted " + entity.getKey() + " " + values.size());
                 for (final Value vx : values) {
                     if (vx.getTimestamp().getTime() <= endDate.getTime()) {
@@ -83,8 +84,6 @@ public class BlobStoreImpl implements BlobStore {
     }
 
 
-
-
     @Override
     public List<Value> getDataSegment(final Entity entity, final Range<Date> timespan) {
         PersistenceManager pm = pmf.getPersistenceManager();
@@ -100,7 +99,6 @@ public class BlobStoreImpl implements BlobStore {
                 List<Value> values = readValuesFromFile(e.getBlobKey(), e.getLength());
                 for (final Value vx : values) {
                     if (timespan.contains(vx.getTimestamp())) {
-                        // if (vx.getTimestamp().getTime() <= timespan.upperEndpoint().getTime() && vx.getTimestamp().getTime() >= timespan.lowerEndpoint()) {
                         retObj.add(vx);
                     }
                 }
@@ -144,7 +142,7 @@ public class BlobStoreImpl implements BlobStore {
 
             final List<Value> values = new ArrayList<Value>();
             for (final ValueBlobStore store : result) {
-                values.addAll( readValuesFromFile((store.getBlobKey()), store.getLength()));
+                values.addAll(readValuesFromFile((store.getBlobKey()), store.getLength()));
             }
 
             deleteBlobs(result);
@@ -182,9 +180,10 @@ public class BlobStoreImpl implements BlobStore {
 
         }
     }
+
     private String readFile(String fn) throws IOException {
         String folder = getFolder();
-        try (BufferedReader br = new BufferedReader(new FileReader(folder +  fn))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(folder + fn))) {
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
@@ -202,12 +201,11 @@ public class BlobStoreImpl implements BlobStore {
         String failover = "/tmp/";
         if (settingsService == null) {
             return failover;
-        }
-        else {
+        } else {
 
             String folder = settingsService.getSetting(ServerSetting.storeDirectory);
             if (folder == null) {
-                folder =failover;
+                folder = failover;
             }
             if (!folder.endsWith("/")) {
                 folder += "/";
@@ -217,7 +215,7 @@ public class BlobStoreImpl implements BlobStore {
     }
 
     @Override
-    public List<Value> readValuesFromFile(final String key, final long length)  {
+    public List<Value> readValuesFromFile(final String key, final long length) {
 
         final Type valueListType = new TypeToken<List<ValueModel>>() {
         }.getType();
@@ -231,12 +229,10 @@ public class BlobStoreImpl implements BlobStore {
                 models = GsonFactory.getInstance().fromJson(segment, valueListType);
                 if (models != null) {
                     Collections.sort(models);
-                }
-                else {
+                } else {
                     models = Collections.emptyList();
                 }
-            }
-            else {
+            } else {
                 models = Collections.emptyList();
             }
             return models;
@@ -251,7 +247,7 @@ public class BlobStoreImpl implements BlobStore {
     @Override
     public void deleteBlobs(List<ValueBlobStore> result) {
         for (ValueBlobStore store : result) {
-            final String blobKey =  store.getBlobKey();
+            final String blobKey = store.getBlobKey();
             File file = new File(getFolder() + blobKey);
             file.delete();
 
@@ -266,7 +262,7 @@ public class BlobStoreImpl implements BlobStore {
     }
 
     @Override
-    public List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final ValueDayHolder holder)  {
+    public List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final ValueDayHolder holder) {
         PersistenceManager pm = pmf.getPersistenceManager();
         try {
             final String json = GsonFactory.getInstance().toJson(holder.getValues());
@@ -285,7 +281,7 @@ public class BlobStoreImpl implements BlobStore {
                     mostRecentTimeForDay,
                     earliestForDay,
                     fn,
-                    json.length()
+                    json.length(), BlobStore.storageVersion
 
             );
 
@@ -294,7 +290,7 @@ public class BlobStoreImpl implements BlobStore {
             pm.makePersistent(currentStoreEntity);
 
             pm.flush();
-            List<ValueBlobStore>  result = ValueBlobStoreFactory.createValueBlobStore(currentStoreEntity);
+            List<ValueBlobStore> result = ValueBlobStoreFactory.createValueBlobStore(currentStoreEntity);
             out.close();
             return result;
 
@@ -306,8 +302,9 @@ public class BlobStoreImpl implements BlobStore {
         }
 
     }
+
     @Override
-    public List<ValueBlobStore> mergeTimespan(final Entity entity, final Range<Date> timespan)   {
+    public List<ValueBlobStore> mergeTimespan(final Entity entity, final Range<Date> timespan) {
         PersistenceManager pm = pmf.getPersistenceManager();
 
         PrintWriter out = null;
@@ -335,7 +332,7 @@ public class BlobStoreImpl implements BlobStore {
                     timestamp = store.getTimestamp();
 
                 }
-                List<Value> read =  readValuesFromFile((store.getBlobKey()), store.getLength());
+                List<Value> read = readValuesFromFile((store.getBlobKey()), store.getLength());
                 combined.addAll(read);
                 delete(store.getBlobKey());
 
@@ -368,7 +365,7 @@ public class BlobStoreImpl implements BlobStore {
                     new Date(max),
                     new Date(min),
                     fn,
-                    json.length());
+                    json.length(), BlobStore.storageVersion);
 
             currentStoreEntity.validate();
             pm.makePersistent(currentStoreEntity);
@@ -388,7 +385,7 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public void delete(List<ValueBlobStore> result) {
-        for (ValueBlobStore store: result) {
+        for (ValueBlobStore store : result) {
             delete(store.getBlobKey());
         }
     }

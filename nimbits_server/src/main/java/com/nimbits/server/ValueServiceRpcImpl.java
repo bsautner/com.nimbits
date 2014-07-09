@@ -38,9 +38,10 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements com.nim
     NimbitsEngine engine = ApplicationListener.createEngine();
     TaskService task = ApplicationListener.getTaskService(engine);
     ValueService valueService = ValueServiceFactory.getInstance(engine, task);
+
     @Override
-    public List<Value> solveEquationRpc(final User user, final Calculation calculation)  {
-        List<Value> response =  CalculationServiceFactory.getInstance(engine, task).solveEquation(user, calculation);
+    public List<Value> solveEquationRpc(final User user, final Calculation calculation) {
+        List<Value> response = CalculationServiceFactory.getInstance(engine, task).solveEquation(user, calculation);
 
         return new ArrayList<>(response);
     }
@@ -65,7 +66,7 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements com.nim
 
     @Override
     public void createDataDumpRpc(Entity entity, Timespan timespan) {
-       task.startDataDumpTask(entity, timespan);
+        task.startDataDumpTask(entity, timespan);
     }
 
 

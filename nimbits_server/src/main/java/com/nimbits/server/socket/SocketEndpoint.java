@@ -23,7 +23,6 @@ import java.util.List;
 public class SocketEndpoint extends WebSocketServlet {
 
 
-
     @Override
     public void init() throws ServletException {
         super.init();
@@ -32,13 +31,12 @@ public class SocketEndpoint extends WebSocketServlet {
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response) throws ServletException, IOException {
 
-       try {
-           getServletContext().getNamedDispatcher("default").forward(request,
-                   response);
-       }
-       catch (Exception ex) {
-           System.out.println(ex.getMessage());
-       }
+        try {
+            getServletContext().getNamedDispatcher("default").forward(request,
+                    response);
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     public WebSocket doWebSocketConnect(HttpServletRequest request,
@@ -51,15 +49,15 @@ public class SocketEndpoint extends WebSocketServlet {
         String ids = request.getParameter(Parameters.points.toString());
         String format = request.getParameter(Parameters.format.toString());
 
-        System.out.println("Connection ids : "+ ids);
+        System.out.println("Connection ids : " + ids);
         List<String> points;
         if (!Utils.isEmptyString(ids)) {
             Gson gson = new GsonBuilder().create();
-            Type type = new TypeToken<List<String>>() {}.getType();
-            points = gson.fromJson(ids ,type );
+            Type type = new TypeToken<List<String>>() {
+            }.getType();
+            points = gson.fromJson(ids, type);
 
-        }
-        else {
+        } else {
             points = Collections.emptyList();
         }
         List<String> fixed = new ArrayList<>(points.size());
@@ -75,18 +73,18 @@ public class SocketEndpoint extends WebSocketServlet {
 
         EmailAddress emailAddress = CommonFactory.createEmailAddress(email);
 
-        System.out.println("Connection from : "+ email);
-        System.out.println("Connection cid : "+ cid);
-        System.out.println("Connection ids : "+ ids);
+        System.out.println("Connection from : " + email);
+        System.out.println("Connection cid : " + cid);
+        System.out.println("Connection ids : " + ids);
 
         if (format == null) {
             format = "json";
         }
 
         for (String s : fixed) {
-            System.out.println("Connection id : "+ s);
+            System.out.println("Connection id : " + s);
         }
-        System.out.println("Connection format : "+ format);
+        System.out.println("Connection format : " + format);
         SocketClient client = new SocketClient(emailAddress, fixed, cid, format);
 
         ConnectedClients.add(client);

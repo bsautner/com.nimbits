@@ -47,11 +47,9 @@ public class ApplicationListener implements ServletContextListener {
     private static final Logger log = Logger.getLogger(ApplicationListener.class.getName());
 
 
-
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         log.info("Context Initialised");
-
 
 
         ServletContext context = servletContextEvent.getServletContext();
@@ -68,12 +66,13 @@ public class ApplicationListener implements ServletContextListener {
         }
 
 
-
     }
+
     public static TaskService getTaskService(NimbitsEngine engine) {
         TaskService taskService = TaskServiceFactory.getServiceInstance(engine);
         return taskService;
     }
+
     public static NimbitsEngine createEngine() {
 
         if (engine == null) {
@@ -111,7 +110,7 @@ public class ApplicationListener implements ServletContextListener {
             Driver driver = driverEnumeration.nextElement();
             ClassLoader driverClassLoader = driver.getClass().getClassLoader();
             if (driverClassLoader != null
-                    && driverClassLoader.equals(applicationClassLoader)){
+                    && driverClassLoader.equals(applicationClassLoader)) {
                 try {
                     DriverManager.deregisterDriver(driver);
                 } catch (SQLException e) {

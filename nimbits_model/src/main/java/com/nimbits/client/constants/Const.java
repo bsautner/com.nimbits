@@ -12,13 +12,7 @@
 
 package com.nimbits.client.constants;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 6/25/11
- * Time: 10:35 AM
- */
-@Deprecated
+
 public class Const {
 
 

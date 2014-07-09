@@ -15,31 +15,22 @@ package com.nimbits.client.model.valueblobstore;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 3/23/12
- * Time: 10:47 AM
- */
+
 public interface ValueBlobStore extends Serializable, Comparable<ValueBlobStore> {
 
     String getEntity();
 
     Date getTimestamp();
 
-  //  String getPath();
-
     Date getMaxTimestamp();
 
-    void setMaxTimestamp(Date maxTimestamp);
-
     Date getMinTimestamp();
-
-    void setMinTimestamp(Date minTimestamp);
 
     String getBlobKey();
 
     long getLength();
 
     void validate();
+
+    Integer getVersion();
 }

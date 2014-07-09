@@ -21,12 +21,7 @@ import javax.jdo.annotations.*;
 import java.util.Date;
 import java.util.logging.Logger;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/22/12
- * Time: 11:08 AM
- */
+
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class ValueBlobStoreEntity implements ValueBlobStore {
     static final Logger log = Logger.getLogger(ValueBlobStoreEntity.class.getName());
@@ -54,6 +49,9 @@ public class ValueBlobStoreEntity implements ValueBlobStore {
     @Persistent
     private BlobKey blobkey;
 
+    @Persistent
+    private Integer version;
+
 
 
     public ValueBlobStoreEntity(final String entity,
@@ -61,13 +59,15 @@ public class ValueBlobStoreEntity implements ValueBlobStore {
                                 final Date maxTimestamp,
                                 final Date minTimestamp,
                                 final BlobKey blobkey,
-                                final long length) {
+                                final long length,
+                                final int version) {
         this.entity = entity;
         this.timestamp = timestamp.getTime();
         this.maxTimestamp = maxTimestamp.getTime();
         this.minTimestamp = minTimestamp.getTime();
         this.blobkey = blobkey;
         this.length = length;
+        this.version = version;
     }
 
     public Key getKey() {
@@ -95,18 +95,8 @@ public class ValueBlobStoreEntity implements ValueBlobStore {
     }
 
     @Override
-    public void setMaxTimestamp(Date maxTimestamp) {
-        this.maxTimestamp = maxTimestamp.getTime();
-    }
-
-    @Override
     public Date getMinTimestamp() {
         return new Date(minTimestamp);
-    }
-
-    @Override
-    public void setMinTimestamp(Date minTimestamp) {
-        this.minTimestamp = minTimestamp.getTime();
     }
 
     @Override
@@ -147,5 +137,8 @@ public class ValueBlobStoreEntity implements ValueBlobStore {
         return new Date(this.timestamp).compareTo(that.getTimestamp());
     }
 
-
+    @Override
+    public Integer getVersion() {
+        return version == null ? 0 : version;
+    }
 }

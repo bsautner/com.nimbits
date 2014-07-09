@@ -37,12 +37,10 @@ import org.apache.http.message.BasicNameValuePair;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -99,7 +97,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void startRecordValueTask(HttpServletRequest req, User u, Entity entity, Value value){
+    public void startRecordValueTask(HttpServletRequest req, User u, Entity entity, Value value) {
 
         try {
             ValueTaskImpl.processRequest(req, value, u, entity, entityService, engine, this);
@@ -131,7 +129,7 @@ public class TaskServiceImpl implements TaskService {
 
         params.add(new BasicNameValuePair(Parameters.json.getText(), json));
 
-            postTask(req, params, PATH_POINT_MAINT_TASK);
+        postTask(req, params, PATH_POINT_MAINT_TASK);
 
 
     }
@@ -143,7 +141,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void startHeartbeatTask(HttpServletRequest req, User user, List<Point> entities, Action update)   {
+    public void startHeartbeatTask(HttpServletRequest req, User user, List<Point> entities, Action update) {
         Gson gson = new GsonBuilder()
                 .setDateFormat(Const.GSON_DATE_FORMAT)
                 .serializeNulls()
@@ -154,47 +152,45 @@ public class TaskServiceImpl implements TaskService {
                 .registerTypeAdapter(User.class, new UserSerializer())
                 .registerTypeAdapter(Date.class, new DateSerializer())
                 .create();
-        final String json =  gson.toJson(entities);
-        final String userJson =  gson.toJson(user);
+        final String json = gson.toJson(entities);
+        final String userJson = gson.toJson(user);
         final String actionStr = update.getCode();
 
 
-            List<NameValuePair> params = new ArrayList<NameValuePair>();
+        List<NameValuePair> params = new ArrayList<NameValuePair>();
 
 
-            params.add(new BasicNameValuePair(Parameters.json.getText(), json));
-            params.add(new BasicNameValuePair(Parameters.user.getText(), userJson));
-            params.add(new BasicNameValuePair(Parameters.action.getText(), actionStr));
-            params.add(new BasicNameValuePair(Parameters.gae.getText(), "false"));
-            postTask(req, params, PATH_HB_TASK);
-
+        params.add(new BasicNameValuePair(Parameters.json.getText(), json));
+        params.add(new BasicNameValuePair(Parameters.user.getText(), userJson));
+        params.add(new BasicNameValuePair(Parameters.action.getText(), actionStr));
+        params.add(new BasicNameValuePair(Parameters.gae.getText(), "false"));
+        postTask(req, params, PATH_HB_TASK);
 
 
     }
 
-    protected void postTask(HttpServletRequest req, List<NameValuePair> params, String path)   {
+    protected void postTask(HttpServletRequest req, List<NameValuePair> params, String path) {
         String request = req.getScheme() + "://" +
                 req.getServerName() +
                 ":" + req.getServerPort() +
-                 req.getContextPath() +
+                req.getContextPath() +
                 "" + path;
 
         try {
-        log.info("Post Task: " + request);
-        URL url = new URL(request);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setDoOutput(true);
-        connection.setRequestMethod("POST");
+            log.info("Post Task: " + request);
+            URL url = new URL(request);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setRequestMethod("POST");
 
 
-        OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-        writer.write(getQuery(params));
+            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+            writer.write(getQuery(params));
 
-        writer.close();
-        int r = connection.getResponseCode();
-        log.info("Post Task Respond" + r);
-        }
-        catch (IOException ex) {
+            writer.close();
+            int r = connection.getResponseCode();
+            log.info("Post Task Respond" + r);
+        } catch (IOException ex) {
             log.severe(ex.getMessage());
         }
     }
@@ -203,8 +199,7 @@ public class TaskServiceImpl implements TaskService {
         StringBuilder result = new StringBuilder();
         boolean first = true;
 
-        for (NameValuePair pair : params)
-        {
+        for (NameValuePair pair : params) {
             if (first)
                 first = false;
             else

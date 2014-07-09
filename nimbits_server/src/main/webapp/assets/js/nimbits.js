@@ -64,7 +64,7 @@ function set(_element, _val) {
 function getPoint() {
 
     $.get(server + "service/v2/entity",
-        { uuid: uuid, type: type})
+        {uuid: uuid, type: type})
         .fail(function () {
             updateProgress("The server returned an error loading this data point, the point may no longer exist.")
         })
@@ -83,7 +83,7 @@ function getPoint() {
             //document.getElementById("uuid").innerHTML = "<a href='report.html?uuid=" + uuid + "'>" + uuid + "</a>";
 
             document.getElementById("QR").src = "https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=" +
-                server + "/report.html?uuid=" + uuid;
+            server + "/report.html?uuid=" + uuid;
 
             if (type == "1") {
                 getCurrentValue(obj);
@@ -117,7 +117,7 @@ function updateGraph(url) {
     }
     else {
 
-        graph.updateOptions({ 'file': url });
+        graph.updateOptions({'file': url});
     }
 
 }
@@ -142,15 +142,15 @@ function getSeries() {
 function getCurrentValue(point) {
 
     $.get(server + "service/v2/value",
-        { uuid: uuid },
+        {uuid: uuid},
         function (data) {
             var value = eval(data);
             document.getElementById("status").innerHTML =
                 "<span class='" + alertLabel[value.st] + "'>"
 //                                + alertState[value.st] + ": "
-                + value.d + point.unit + "  " + value.n
-                + alertState[value.st]
-                + "</span><br />";
+            + value.d + point.unit + "  " + value.n
+            + alertState[value.st]
+            + "</span><br />";
 
             document.getElementById("dataText").value = value.dx;
 
@@ -192,11 +192,11 @@ $(function () {
 
 
         });
-$("#to").datepicker({
-    showOtherMonths: true,
-    selectOtherMonths: true,
-    changeMonth: true,
-    changeYear: true
+        $("#to").datepicker({
+            showOtherMonths: true,
+            selectOtherMonths: true,
+            changeMonth: true,
+            changeYear: true
+        });
     });
-});
 });

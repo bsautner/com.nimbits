@@ -63,12 +63,9 @@ public class ShardedDate {
     }
 
 
-
-
-    public ShardedDate( ) {
+    public ShardedDate() {
 
     }
-
 
 
     /**

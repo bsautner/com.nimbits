@@ -15,7 +15,6 @@ package com.nimbits;
 import com.nimbits.server.ApplicationListener;
 import com.nimbits.server.NimbitsEngine;
 import com.nimbits.server.api.*;
-
 import com.nimbits.server.process.task.PointMaintTask;
 import com.nimbits.server.process.task.ValueTask;
 import org.junit.AfterClass;
@@ -28,19 +27,20 @@ import javax.servlet.ServletContext;
 public class BaseTest {
 
     public static BatchApi batchApi;
-    public  static ValueApi valueApi;
+    public static ValueApi valueApi;
     public static SessionApi sessionApi;
     public static EntityApi entityApi;
 
     public static SeriesApi seriesApi;
-    public  static ValueTask valueTask;
+    public static ValueTask valueTask;
 
-    public  static PointMaintTask pointTask;
+    public static PointMaintTask pointTask;
 
     @AfterClass
     public static void tearDown() {
 
     }
+
     @BeforeClass
     public static void before() {
         final MockServletContext context = new MockServletContext();
@@ -82,7 +82,6 @@ public class BaseTest {
         };
 
 
-
         seriesApi = new SeriesApi() {
             @Override
             public ServletContext getServletContext() {
@@ -118,7 +117,6 @@ public class BaseTest {
 
             }
         };
-
 
 
     }

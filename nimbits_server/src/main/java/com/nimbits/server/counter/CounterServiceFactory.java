@@ -17,8 +17,8 @@ package com.nimbits.server.counter;
  */
 public class CounterServiceFactory {
 
-  public static CounterService getInstance() {
-      return new CounterServiceImpl();
-  }
+    public static CounterService getInstance() {
+        return new CounterServiceImpl();
+    }
 
 }

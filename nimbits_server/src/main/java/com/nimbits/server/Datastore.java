@@ -13,11 +13,8 @@
 package com.nimbits.server;
 
 import javax.jdo.JDOHelper;
-import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
-import javax.jdo.Transaction;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 public class Datastore {
     private static PersistenceManagerFactory PMF;
@@ -33,6 +30,7 @@ public class Datastore {
         PMF = JDOHelper.getPersistenceManagerFactory(props);
 
     }
+
     public static PersistenceManagerFactory get() {
         if (PMF == null) {
             initialize();

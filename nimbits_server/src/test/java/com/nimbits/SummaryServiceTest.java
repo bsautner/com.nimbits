@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Random;
 
 
-
 public class SummaryServiceTest extends NimbitsServletTest {
 
     private static final int SUMMARY_INTERVAL_MS = 60000;
@@ -44,6 +43,7 @@ public class SummaryServiceTest extends NimbitsServletTest {
 
 
     SummaryService summaryService;
+
     @Before
     public void setup() {
         super.setup();

@@ -97,15 +97,41 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void startRecordValueTask(HttpServletRequest req, User u, Entity entity, Value value) {
+    public void startRecordValueTask(final HttpServletRequest req, final User u, final Entity entity, final Value value) {
 
-        try {
-            ValueTaskImpl.processRequest(req, value, u, entity, entityService, engine, this);
-        } catch (ValueException e) {
-            e.printStackTrace();
-        }
+        new RecordValueThread(this, req, u, entity, value ).start();
+
+
 
     }
+
+    private class RecordValueThread extends Thread {
+
+        final HttpServletRequest req;
+        final User u;
+        final Entity entity;
+        final Value value;
+        final TaskService service;
+
+        public RecordValueThread(final TaskService service, final HttpServletRequest req, final User u, final Entity entity, final Value value) {
+            this.req = req;
+            this.u = u;
+            this.entity = entity;
+            this.value = value;
+            this.service = service;
+        }
+
+        @Override
+        public void run() {
+            try {
+                ValueTaskImpl.processRequest(req, value, u, entity, entityService, engine, service);
+            } catch (ValueException e) {
+                log.severe(e.getMessage());
+
+            }
+        }
+    }
+
 
     @Override
     public void startIncomingMailTask(String fromAddress, String inContent) {

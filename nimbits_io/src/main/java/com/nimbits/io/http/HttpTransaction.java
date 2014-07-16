@@ -126,9 +126,6 @@ public class HttpTransaction {
 
             return Collections.emptyList();
 
-        } finally {
-            //  http.abort();
-            ///  HttpClientFactory.getInstance().getConnectionManager().closeExpiredConnections();
         }
 
 

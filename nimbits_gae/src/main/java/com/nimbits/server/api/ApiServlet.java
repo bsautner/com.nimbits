@@ -34,8 +34,6 @@ import com.nimbits.server.transaction.value.service.ValueService;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -159,10 +157,10 @@ public class ApiServlet extends HttpServlet {
             if (!Utils.isEmptyString(gps)) {
                 location = LocationFactory.createLocation(gps);
             } else {
-                location = LocationFactory.createLocation();
+                location = LocationFactory.createEmptyLocation();
             }
         } else {
-            location = LocationFactory.createLocation();
+            location = LocationFactory.createEmptyLocation();
         }
         return location;
     }

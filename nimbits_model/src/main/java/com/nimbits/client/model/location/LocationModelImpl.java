@@ -14,19 +14,14 @@ package com.nimbits.client.model.location;
 
 import java.io.Serializable;
 
-/**
- * Created with IntelliJ IDEA.
- * User: benjamin
- * Date: 8/4/12
- * Time: 9:20 AM
- */
+
 public class LocationModelImpl implements Serializable, Location{
 
-    private double _lat;
-    private double _lng;
+    private Double _lat;
+    private Double _lng;
 
 
-    public LocationModelImpl(double lat, double lng) {
+    public LocationModelImpl(Double lat, Double lng) {
         this._lat = lat;
         this._lng = lng;
     }
@@ -38,14 +33,14 @@ public class LocationModelImpl implements Serializable, Location{
             _lng = Double.valueOf(r[1].trim());
         }
         else {
-            _lat = 0.0;
-            _lng =0.0;
+            _lat = null;
+            _lng = null;
         }
 
     }
 
     @Override
-    public double getLat() {
+    public Double getLat() {
         return _lat;
     }
 
@@ -53,18 +48,23 @@ public class LocationModelImpl implements Serializable, Location{
         this._lat = _lat;
     }
     @Override
-    public double getLng() {
+    public Double getLng() {
         return _lng;
     }
 
     @Override
     public boolean isEmpty() {
-        return _lat == 0.0 && _lng == 0.0;
+        return _lat == null && _lng == null;
 
     }
 
     public void setLng(double _lng) {
         this._lng = _lng;
+    }
+
+    @Override
+    public String toString() {
+        return _lat +", " + _lng;
     }
 
     @Override
@@ -74,14 +74,16 @@ public class LocationModelImpl implements Serializable, Location{
 
         LocationModelImpl that = (LocationModelImpl) o;
 
-        if (Double.compare(that._lat, _lat) != 0) return false;
-        if (Double.compare(that._lng, _lng) != 0) return false;
+        if (_lat != null ? !_lat.equals(that._lat) : that._lat != null) return false;
+        if (_lng != null ? !_lng.equals(that._lng) : that._lng != null) return false;
 
         return true;
     }
 
     @Override
-    public String toString() {
-        return _lat +", " + _lng;
+    public int hashCode() {
+        int result = _lat != null ? _lat.hashCode() : 0;
+        result = 31 * result + (_lng != null ? _lng.hashCode() : 0);
+        return result;
     }
 }

@@ -12,12 +12,7 @@
 
 package com.nimbits.client.model.location;
 
-/**
- * Created with IntelliJ IDEA.
- * User: benjamin
- * Date: 8/4/12
- * Time: 9:24 AM
- */
+
 public class LocationFactory {
 
 
@@ -27,9 +22,9 @@ public class LocationFactory {
         return new LocationModelImpl(locationString);
 
     }
-    public static Location createLocation( ) {
+    public static Location createEmptyLocation() {
 
-        return new LocationModelImpl(0.0, 0.0);
+        return new LocationModelImpl(null, null);
 
     }
 

@@ -23,11 +23,13 @@ public class ValueDataModel implements ValueData, Serializable {
     private String data;
 
     protected ValueDataModel() {
-        this.data = "";
+
     }
 
-    public ValueDataModel(SimpleValue<String> data) {
-        this.data = data.getValue();
+    private ValueDataModel(SimpleValue<String> data) {
+        if  (! data.isEmpty()) {
+            this.data = data.getValue();
+        }
     }
 
     public static ValueData getInstance(SimpleValue<String> data) {
@@ -41,12 +43,12 @@ public class ValueDataModel implements ValueData, Serializable {
     }
     @Override
     public String getContent() {
-        return this.data;
+        return this.data == null ? "" : this.data;
     }
 
     @Override
     public String toString() {
-        return data;
+        return getContent();
     }
 
     @Override
@@ -55,16 +57,14 @@ public class ValueDataModel implements ValueData, Serializable {
         if (o == null || getClass() != o.getClass()) return false;
 
         ValueDataModel that = (ValueDataModel) o;
-        if (data==null) {
-            data = "";
-        }
-        if (!data.equals(that.data)) return false;
+
+        if (data != null ? !data.equals(that.data) : that.data != null) return false;
 
         return true;
     }
 
     @Override
     public int hashCode() {
-        return data.hashCode();
+        return data != null ? data.hashCode() : 0;
     }
 }

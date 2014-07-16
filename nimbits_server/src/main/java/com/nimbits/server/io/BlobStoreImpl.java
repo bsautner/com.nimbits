@@ -14,8 +14,11 @@ package com.nimbits.server.io;
 
 
 import com.google.common.collect.Range;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
@@ -23,7 +26,8 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.client.model.valueblobstore.ValueBlobStoreFactory;
-import com.nimbits.server.gson.GsonFactory;
+
+import com.nimbits.server.gson.ValueDeserializer;
 import com.nimbits.server.io.blob.BlobStore;
 import com.nimbits.server.orm.store.ValueBlobStoreEntity;
 import com.nimbits.server.transaction.settings.SettingsService;
@@ -41,8 +45,18 @@ public class BlobStoreImpl implements BlobStore {
     private final Logger log = Logger.getLogger(BlobStoreImpl.class.getName());
     private final PersistenceManagerFactory pmf;
     private SettingsService settingsService;
+    private static final Gson gson;
 
-    public BlobStoreImpl(PersistenceManagerFactory pmf) {
+    static {
+        gson = new GsonBuilder()
+                .setDateFormat(Const.GSON_DATE_FORMAT)
+                .registerTypeAdapter(Value.class, new ValueDeserializer())
+                .excludeFieldsWithoutExposeAnnotation()
+                .create();
+    }
+
+
+    public BlobStoreImpl(final PersistenceManagerFactory pmf) {
         this.pmf = pmf;
 
 
@@ -181,9 +195,12 @@ public class BlobStoreImpl implements BlobStore {
         }
     }
 
-    private String readFile(String fn) throws IOException {
+    private String readFile(final String fn) throws IOException {
         String folder = getFolder();
+
+
         try (BufferedReader br = new BufferedReader(new FileReader(folder + fn))) {
+
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
@@ -226,7 +243,7 @@ public class BlobStoreImpl implements BlobStore {
 
             String segment = readFile(key);
             if (!Utils.isEmptyString(segment)) {
-                models = GsonFactory.getInstance().fromJson(segment, valueListType);
+                models = gson.fromJson(segment, valueListType);
                 if (models != null) {
                     Collections.sort(models);
                 } else {
@@ -265,7 +282,7 @@ public class BlobStoreImpl implements BlobStore {
     public List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final ValueDayHolder holder) {
         PersistenceManager pm = pmf.getPersistenceManager();
         try {
-            final String json = GsonFactory.getInstance().toJson(holder.getValues());
+            final String json = gson.toJson(holder.getValues());
             String fn = UUID.randomUUID().toString();
             PrintWriter out = new PrintWriter(getFolder() + fn);
             out.println(json);
@@ -353,7 +370,7 @@ public class BlobStoreImpl implements BlobStore {
                 }
             }
 
-            String json = GsonFactory.getInstance().toJson(combined);
+            String json = gson.toJson(combined);
             // byte[] compressed = CompressionImpl.compressBytes(json);
             out.print(json);
             out.close();

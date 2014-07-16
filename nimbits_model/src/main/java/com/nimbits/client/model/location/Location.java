@@ -14,16 +14,11 @@ package com.nimbits.client.model.location;
 
 import java.io.Serializable;
 
-/**
- * Created with IntelliJ IDEA.
- * User: benjamin
- * Date: 8/4/12
- * Time: 9:20 AM
- */
-public interface Location extends Serializable {
-    double getLat();
 
-    double getLng();
+public interface Location extends Serializable {
+    Double getLat();
+
+    Double getLng();
 
     boolean isEmpty();
 

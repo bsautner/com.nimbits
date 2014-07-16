@@ -13,6 +13,7 @@
 package com.nimbits.client.model.value.impl;
 
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.model.location.Location;
@@ -32,14 +33,20 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
      *
      */
 
-
-    double lt;
-    double lg;
-    double d;
-    long t;
+    @Expose
+    Double lt;
+    @Expose
+    Double lg;
+    @Expose
+    Double d;
+    @Expose
+    Long t;
+    @Expose
     String n;
+    @Expose
     String dx;
-    int st;
+
+    Integer st;
 
 
     @SuppressWarnings("unused")
@@ -74,7 +81,12 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     @Override
     public Location getLocation() {
-        return LocationFactory.createLocation(lt, lg);
+        if (lt == null || lg == null) {
+            return LocationFactory.createEmptyLocation();
+        }
+        else {
+            return LocationFactory.createLocation(lt, lg);
+        }
     }
 
 
@@ -111,19 +123,33 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
                       final ValueData data,
                       final AlertType alert) {
 
-        this.lt = location.getLat();
-        this.lg = location.getLng();
+        if (location.isEmpty()) {
+            this.lg = null;
+            this.lt = null;
+        }
+        else {
+            this.lt = location.getLat();
+            this.lg = location.getLng();
+        }
+
         if (d != null) {
             this.d = d;
         }
-        this.st = alert.getCode();
+        if (alert != null) {
+            this.st = alert.getCode();
+        }
+        else {
+            this.st = AlertType.OK.getCode();
+        }
 
         this.t = timestamp.getTime();
+
         this.n = note;
         this.dx = data.getContent();
     }
 
 
+    //todo replace with an object to allow n to be null like dx
     @Override
     public String getNote() {
         return n == null ? "" : n;
@@ -171,24 +197,33 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     }
 
 
-    @SuppressWarnings({"InstanceofInterfaces", "CastToConcreteClass", "NonFinalFieldReferenceInEquals"})
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ValueModel)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
 
         ValueModel that = (ValueModel) o;
 
-        if (Double.compare(that.d, d) != 0) return false;
-        if (Double.compare(that.lg, lg) != 0) return false;
-        if (Double.compare(that.lt, lt) != 0) return false;
-        if (st != that.st) return false;
-        if (t != that.t) return false;
+        if (d != null ? !d.equals(that.d) : that.d != null) return false;
         if (dx != null ? !dx.equals(that.dx) : that.dx != null) return false;
+        if (lg != null ? !lg.equals(that.lg) : that.lg != null) return false;
+        if (lt != null ? !lt.equals(that.lt) : that.lt != null) return false;
         if (n != null ? !n.equals(that.n) : that.n != null) return false;
+        if (st != null ? !st.equals(that.st) : that.st != null) return false;
+        if (t != null ? !t.equals(that.t) : that.t != null) return false;
 
         return true;
     }
 
-
+    @Override
+    public int hashCode() {
+        int result = lt != null ? lt.hashCode() : 0;
+        result = 31 * result + (lg != null ? lg.hashCode() : 0);
+        result = 31 * result + (d != null ? d.hashCode() : 0);
+        result = 31 * result + (t != null ? t.hashCode() : 0);
+        result = 31 * result + (n != null ? n.hashCode() : 0);
+        result = 31 * result + (dx != null ? dx.hashCode() : 0);
+        result = 31 * result + (st != null ? st.hashCode() : 0);
+        return result;
+    }
 }

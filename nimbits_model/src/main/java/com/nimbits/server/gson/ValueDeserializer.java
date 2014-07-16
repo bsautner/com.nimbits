@@ -50,7 +50,7 @@ public class ValueDeserializer implements JsonDeserializer<Value> {
             location = LocationFactory.createLocation(lat, lng);
         }
         else {
-            location = LocationFactory.createLocation();
+            location = LocationFactory.createEmptyLocation();
         }
 
 

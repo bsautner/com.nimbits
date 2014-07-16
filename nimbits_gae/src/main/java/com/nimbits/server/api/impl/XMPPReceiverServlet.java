@@ -180,7 +180,7 @@ public class XMPPReceiverServlet extends ApiServlet {
 
 
                 if (u != null) {
-                    Value value = ValueFactory.createValueModel(LocationFactory.createLocation(), v, new Date(), "", ValueDataModel.getInstance(SimpleValue.getInstance("")), AlertType.OK);
+                    Value value = ValueFactory.createValueModel(LocationFactory.createEmptyLocation(), v, new Date(), "", ValueDataModel.getInstance(SimpleValue.getInstance("")), AlertType.OK);
                     valueService.recordValue(req, u, pointName, value, false);
                 }
             } catch (NumberFormatException ignored) {

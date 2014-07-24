@@ -177,7 +177,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     @Override
     public Date getTimestamp() {
-        return new Date(this.t);
+        return this.t == null ? new Date() :  new Date(this.t);
     }
 
     @Override

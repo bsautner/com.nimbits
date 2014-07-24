@@ -23,6 +23,13 @@ import java.util.logging.Logger;
 
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
+@Indices({
+        @Index(name="TIMESTAMP_IDX", members={"timestamp"}),
+        @Index(name="MAXTIMESTAMP_IDX", members={"maxTimestamp"}),
+        @Index(name="MINTIMESTAMP_IDX", members={"minTimestamp"}),
+        @Index(name="ENTITY_IDX", members={"entity"})
+})
+
 public class ValueBlobStoreEntity implements ValueBlobStore {
     static final Logger log = Logger.getLogger(ValueBlobStoreEntity.class.getName());
 

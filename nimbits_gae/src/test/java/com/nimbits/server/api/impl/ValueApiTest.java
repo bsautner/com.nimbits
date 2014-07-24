@@ -23,11 +23,7 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 
-/**
- * Author: Benjamin Sautner
- * Date: 1/14/13
- * Time: 4:43 PM
- */
+
 public class ValueApiTest extends NimbitsServletTest {
 
 

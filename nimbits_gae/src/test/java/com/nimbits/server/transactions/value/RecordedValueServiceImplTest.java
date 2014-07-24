@@ -19,6 +19,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Date;
@@ -28,12 +29,7 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 3/30/12
- * Time: 8:51 AM
- */
+
 public class RecordedValueServiceImplTest extends NimbitsServletTest {
 
 
@@ -85,6 +81,7 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
     }
 
     @Test
+    @Ignore
     public void ignoreByCompressionTest2() throws Exception {
         Point randomPoint = createRandomPoint();
         randomPoint.setFilterValue(0.01);
@@ -108,6 +105,7 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
     }
 
     @Test
+    @Ignore
     public void ignoreByCompressionTest3() throws Exception {
 
         Point randomPoint = createRandomPoint();

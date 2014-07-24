@@ -157,7 +157,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     @Override
     public double getDoubleValue() {
-        return this.d;
+        return this.d == null ? 0.0 : this.d;
 
     }
 

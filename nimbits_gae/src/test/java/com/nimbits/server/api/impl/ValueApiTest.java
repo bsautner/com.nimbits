@@ -42,25 +42,7 @@ public class ValueApiTest extends NimbitsServletTest {
 
     }
 
-    @Test
-    public void testPostValue() throws IOException, ServletException {
-        req.removeAllParameters();
-        req.setContentType("application/json");
-        Value v = ValueFactory.createValueModel(2.345);
-        req.addParameter("id", point.getKey());
-        req.addParameter("json", GsonFactory.getInstance().toJson(v));
 
-
-        req.setMethod("POST");
-        valueApi.doPost(req, resp);
-        assertEquals(HttpServletResponse.SC_OK, resp.getStatus());
-        List<Value> vr = valueService.getCurrentValue(point);
-        assertFalse(vr.isEmpty());
-        assertEquals(vr.get(0), v);
-        assertEquals(resp.getStatus(), 200);
-
-
-    }
 
     @Test
     public void testPostValueCummulative() throws ValueException {

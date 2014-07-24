@@ -18,9 +18,12 @@ import com.nimbits.server.process.task.PointMaintTask;
 import com.nimbits.server.process.task.ValueTask;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.springframework.mock.web.MockServletContext;
 
 import javax.servlet.ServletContext;
+
+import static org.junit.Assert.assertTrue;
 
 
 public class BaseTest {
@@ -126,5 +129,10 @@ public class BaseTest {
 
             }
         };
+    }
+
+    @Test
+    public void someTest() {
+        assertTrue(true);
     }
 }

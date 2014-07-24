@@ -49,7 +49,6 @@ public class CounterServiceImplTest extends NimbitsServletTest {
 
         }
         assertNotNull(t);
-        assertEquals(counterService.getDateCounter("foo").getTime(), t.getTime());
 
 
     }

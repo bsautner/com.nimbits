@@ -67,7 +67,9 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements com.nim
 
     @Override
     public void createDataDumpRpc(Entity entity, Timespan timespan) {
-        task.startDataDumpTask(entity, timespan);
+        User user = UserHelper.getUser(engine).get(0);
+
+        task.startDataDumpTask(user, entity, timespan);
     }
 
 

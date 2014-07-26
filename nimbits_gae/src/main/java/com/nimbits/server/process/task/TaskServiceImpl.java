@@ -104,11 +104,13 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
-    public void startDataDumpTask(final Entity entity, final Timespan timespan) {
+    public void startDataDumpTask(User user, final Entity entity, final Timespan timespan) {
         final Queue queue = QueueFactory.getQueue(DUMP);
         final String json = GsonFactory.getInstance().toJson(entity);
+        final String userJson = GsonFactory.getInstance().toJson(user);
         queue.add(TaskOptions.Builder.withUrl(PATH_TASK_DUMP_TASK)
                         .param(Parameters.entity.getText(), json)
+                        .param(Parameters.user.getText(), userJson)
                         .param(Parameters.sd.getText(),
                                 String.valueOf(timespan.getStart().getTime()))
                         .param(Parameters.ed.getText(),

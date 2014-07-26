@@ -116,7 +116,7 @@ public class SystemHealthCheck {
                 System.out.println("Verifying Passed!");
                 valueHelper.recordValue(volumeBenchmark, (double) valueList.size());
                 counter = 0;
-                Thread.sleep(1000);
+                Thread.sleep(2000);
             }
 
         }

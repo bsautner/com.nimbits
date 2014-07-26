@@ -82,7 +82,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void startDataDumpTask(Entity entity, Timespan timespan) {
+    public void startDataDumpTask(User user, Entity entity, Timespan timespan) {
 
     }
 

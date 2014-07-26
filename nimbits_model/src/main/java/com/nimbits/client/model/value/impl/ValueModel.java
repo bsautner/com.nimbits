@@ -164,7 +164,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     @Override
     public String getValueWithNote() {
         StringBuilder sb = new StringBuilder(INT);
-        if (this.d != Const.CONST_IGNORED_NUMBER_VALUE) {
+        if (this.d != null && this.d != Const.CONST_IGNORED_NUMBER_VALUE) {
             sb.append(this.d);
         }
         if (this.n != null && !this.n.isEmpty()) {
@@ -191,9 +191,9 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     @Override
     public int compareTo(Value that) {
-        return this.t < that.getTimestamp().getTime()
+        return this.getTimestamp().getTime() < that.getTimestamp().getTime()
                 ? 1
-                : this.t > that.getTimestamp().getTime()
+                : this.getTimestamp().getTime() > that.getTimestamp().getTime()
                 ? -1
                 : 0;
 

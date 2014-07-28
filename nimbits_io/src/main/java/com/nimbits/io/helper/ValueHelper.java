@@ -24,6 +24,14 @@ public interface ValueHelper {
 
     /**
      *
+     * @param pointName the name of the data point
+     * @param value any a Value Model Object @see ValueModel implements Value
+     * @return the newly recorded value pojo with a timestamp of the current time the value was recorded.
+     */
+    Value recordValue(String pointName, Value value);
+
+    /**
+     *
      * @param name the name of the data point
      * @return a list of value objects
      */

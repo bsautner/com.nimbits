@@ -29,9 +29,6 @@ import java.util.Date;
 public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     private static final int INT = 64;
-    /**
-     *
-     */
 
     @Expose
     Double lt;
@@ -149,7 +146,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     }
 
 
-    //todo replace with an object to allow n to be null like dx
+    @Deprecated
     @Override
     public String getNote() {
         return n == null ? "" : n;
@@ -161,6 +158,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     }
 
+    @Deprecated
     @Override
     public String getValueWithNote() {
         StringBuilder sb = new StringBuilder(INT);

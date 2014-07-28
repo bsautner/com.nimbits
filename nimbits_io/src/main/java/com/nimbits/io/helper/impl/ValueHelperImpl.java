@@ -43,6 +43,13 @@ public class ValueHelperImpl implements ValueHelper {
 
     }
 
+    @Override
+    public Value recordValue(String pointName, Value value)  {
+
+        return doRecordValue(pointName, value);
+
+    }
+
     private Value doRecordValue(String name, Value vx) {
         Point point = HelperFactory.getPointHelper(server, email, accessKey).getPoint(name);
 
@@ -60,7 +67,7 @@ public class ValueHelperImpl implements ValueHelper {
     public List<Value> getSeries(String name)   {
         Point point = HelperFactory.getPointHelper(server, email, accessKey).getPoint(name);
 
-            return NimbitsClientFactory.getInstance(server, email, accessKey).getSeries(point.getKey());
+        return NimbitsClientFactory.getInstance(server, email, accessKey).getSeries(point.getKey());
 
     }
 

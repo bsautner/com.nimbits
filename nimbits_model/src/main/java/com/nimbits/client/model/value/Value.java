@@ -20,11 +20,12 @@ import java.util.Date;
 
  
 public interface Value extends Serializable, Comparable<Value> {
-
+    @Deprecated //notes will be replaced with just the data channel dx.
     String getNote();
 
     double getDoubleValue();
 
+    @Deprecated
     String getValueWithNote();
 
     Date getTimestamp();

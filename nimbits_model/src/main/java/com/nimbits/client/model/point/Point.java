@@ -20,12 +20,7 @@ import com.nimbits.client.model.value.Value;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 4/16/11
- * Time: 12:04 PM
- */
+
 public interface Point extends Entity, Serializable {
 
 
@@ -100,4 +95,8 @@ public interface Point extends Entity, Serializable {
     int getDeltaSeconds();
 
     void setDeltaSeconds(int deltaSeconds);
+
+    int getPrecision();
+
+    void setPrecision(int precision);
 }

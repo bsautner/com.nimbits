@@ -235,7 +235,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0);
+                PointType.basic, 0, false, 0.0, 10);
         return (Point) entityService.addUpdateEntity(user, Arrays.<Entity>asList(p)).get(0);
     }
 

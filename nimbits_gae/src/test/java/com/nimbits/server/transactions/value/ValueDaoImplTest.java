@@ -346,7 +346,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0);
+                PointType.basic, 0, false, 0.0, 10);
         final Point point2 = PointModelFactory.createPointModel(
                 entity2,
                 0.0,
@@ -361,7 +361,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0);
+                PointType.basic, 0, false, 0.0, 10);
         final Point point3 = PointModelFactory.createPointModel(
                 entity3,
                 0.0,
@@ -376,7 +376,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0);
+                PointType.basic, 0, false, 0.0, 10);
 
 
         try {

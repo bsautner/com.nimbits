@@ -52,14 +52,16 @@ public class PointModelFactory {
                                          final PointType pointType,
                                          final Integer deltaAlarmSeconds,
                                          final boolean deltaAlarmOn,
-                                         final double deltaAlarm
+                                         final double deltaAlarm,
+                                         final int precision
+
                                         )   {
         return new PointModel(
                 entity,  highAlarm,
                 expire,  unit,  lowAlarm,
                 highAlarmOn,  lowAlarmOn,
                 idleAlarmOn,  idleSeconds,  idleAlarmSent,
-                filterType,  filterValue, inferLocation, pointType,deltaAlarm, deltaAlarmOn, deltaAlarmSeconds);
+                filterType,  filterValue, inferLocation, pointType,deltaAlarm, deltaAlarmOn, deltaAlarmSeconds, precision);
     }
 
 
@@ -82,7 +84,7 @@ public class PointModelFactory {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0);
+                PointType.basic, 0, false, 0.0, 10);
         newPoint.setExpire(5);
 
         return newPoint;

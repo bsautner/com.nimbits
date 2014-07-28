@@ -67,7 +67,7 @@ public class EntityDaoImplTest extends NimbitsServletTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0);
+                PointType.basic, 0, false, 0.0, 10);
         Entity result = entityService.addUpdateEntity(user, add).get(0);
         //Entity result = EntityDao.addUpdateSingleEntity(entity);
         Entity r = dao.getEntityByKey(user, result.getKey(), PointEntity.class).get(0);
@@ -90,7 +90,7 @@ public class EntityDaoImplTest extends NimbitsServletTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0);
+                PointType.basic, 0, false, 0.0, 10);
         Point px = (Point) entityService.addUpdateSingleEntity(point1);
 
         //Point rp = PointTransactionsFactory.getDaoInstance(user).getPointByKey(result.getKey());
@@ -124,7 +124,7 @@ public class EntityDaoImplTest extends NimbitsServletTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0);
+                PointType.basic, 0, false, 0.0, 10);
         Entity result = entityService.addUpdateEntity(user, add).get(0);
         //Entity result = EntityDao.addUpdateSingleEntity(entity);
         Entity r = dao.getEntityByKey(user, result.getKey(), PointEntity.class).get(0);
@@ -147,7 +147,7 @@ public class EntityDaoImplTest extends NimbitsServletTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0);
+                PointType.basic, 0, false, 0.0, 10);
         Point px = (Point) entityService.addUpdateSingleEntity(point1);
 
         //Point rp = PointTransactionsFactory.getDaoInstance(user).getPointByKey(result.getKey());
@@ -190,7 +190,7 @@ public class EntityDaoImplTest extends NimbitsServletTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0);
+                PointType.basic, 0, false, 0.0, 10);
 
         final Entity result = entityService.addUpdateEntity(user, Arrays.<Entity>asList(point1)).get(0);
         //Entity result = EntityDao.addUpdateSingleEntity(entity);

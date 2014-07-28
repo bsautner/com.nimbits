@@ -118,7 +118,7 @@ public class EntityServiceTest extends NimbitsServletTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0);
+                PointType.basic, 0, false, 0.0, 10);
         entityService.addUpdateSingleEntity(p1);
         Point p2 = PointModelFactory.createPointModel(
                 model2,
@@ -134,7 +134,7 @@ public class EntityServiceTest extends NimbitsServletTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0);
+                PointType.basic, 0, false, 0.0, 10);
         entityService.addUpdateSingleEntity(p2);
 
     }
@@ -240,7 +240,7 @@ public class EntityServiceTest extends NimbitsServletTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0);
+                PointType.basic, 0, false, 0.0, 10);
         return entityService.addUpdateEntity(user, Arrays.<Entity>asList(newChild)).get(0);
 
     }

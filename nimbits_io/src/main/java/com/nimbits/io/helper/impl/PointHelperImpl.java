@@ -55,7 +55,7 @@ public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
                 email.getValue(),  email.getValue());
 
         Point point = PointModelFactory.createPointModel(entity, 0.0, 365, "", 0.0, false, false, false, 0, false, FilterType.none,
-                0.0, false, PointType.basic, 0, false, 0.0);
+                0.0, false, PointType.basic, 0, false, 0.0, 10);
 
         List<Point> sample;
 

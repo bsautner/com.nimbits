@@ -92,30 +92,7 @@ public class NimbitsServletTest extends BaseTest {
 
     public ValueDao valueDao;
 
-    public Point createRandomPoint() {
-        Point point;
-        EntityName pointName;
-        pointName = CommonFactory.createName(UUID.randomUUID().toString(), EntityType.point);
-        pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone, group.getKey(), user.getKey(), UUID.randomUUID().toString());
-        Point newPoint = PointModelFactory.createPointModel(
-                pointEntity,
-                0.0,
-                90,
-                "",
-                0.0,
-                false,
-                false,
-                false,
-                0,
-                false,
-                FilterType.fixedHysteresis,
-                0.1,
-                false,
-                PointType.basic, 0, false, 0.0);
-        newPoint.setExpire(5);
-        point = (Point) entityService.addUpdateEntity(user, newPoint).get(0);
-        return point;
-    }
+
 
 
     @Before
@@ -186,7 +163,7 @@ public class NimbitsServletTest extends BaseTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0);
+                PointType.basic, 0, false, 0.0, 10);
         newPoint.setExpire(5);
         point = (Point) entityService.addUpdateEntity(user, newPoint).get(0);
         // point = pointService.addPoint(user, pointEntity);
@@ -206,7 +183,7 @@ public class NimbitsServletTest extends BaseTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0);
+                PointType.basic, 0, false, 0.0, 10);
         pointChild = (Point) entityService.addUpdateEntity(user, newChild).get(0);
         // pointChild =  pointService.addPoint(user, pointChildEntity);
         assertNotNull(pointChild);

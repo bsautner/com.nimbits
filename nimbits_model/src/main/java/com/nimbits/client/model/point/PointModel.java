@@ -61,6 +61,8 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
     private int pointType;
 
+    private int precision;
+
 
     public PointModel(final Entity entity,
                       final double highAlarm,
@@ -78,7 +80,8 @@ public class PointModel extends EntityModel implements Serializable, Point {
                       final PointType pointType,
                       final double deltaAlarm,
                       final boolean deltaAlarmOn,
-                      final int deltaSeconds)   {
+                      final int deltaSeconds,
+                      final int precision)   {
         super(entity);
         this.highAlarm = highAlarm;
         this.expire = expire;
@@ -96,6 +99,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
         this.deltaAlarm = deltaAlarm;
         this.deltaAlarmOn = deltaAlarmOn;
         this.deltaSeconds = deltaSeconds;
+        this.precision = precision;
     }
 
     // Constructors
@@ -119,6 +123,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
         this.deltaSeconds = point.getDeltaSeconds();
         this.deltaAlarm = point.getDeltaAlarm();
         this.deltaAlarmOn = point.isDeltaAlarmOn();
+        this.precision = point.getPrecision();
     }
 
     protected PointModel() {
@@ -310,5 +315,14 @@ public class PointModel extends EntityModel implements Serializable, Point {
     @Override
     public void setDeltaSeconds(int deltaSeconds) {
         this.deltaSeconds = deltaSeconds;
+    }
+
+    @Override
+    public int getPrecision() {
+        return precision;
+    }
+    @Override
+    public void setPrecision(int precision) {
+        this.precision = precision;
     }
 }

@@ -124,7 +124,7 @@ public class NimbitsServletTest extends BaseTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0);
+                PointType.basic, 0, false, 0.0, 10);
         newPoint.setExpire(5);
         point = (Point) entityService.addUpdateEntity(user, newPoint).get(0);
         return point;
@@ -205,7 +205,7 @@ public class NimbitsServletTest extends BaseTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0);
+                PointType.basic, 0, false, 0.0, 10);
         newPoint.setExpire(5);
         point = (Point) entityService.addUpdateEntity(user, newPoint).get(0);
         // point = pointService.addPoint(user, pointEntity);
@@ -225,7 +225,7 @@ public class NimbitsServletTest extends BaseTest {
                 FilterType.fixedHysteresis,
                 0.1,
                 false,
-                PointType.basic, 0, false, 0.0);
+                PointType.basic, 0, false, 0.0, 10);
         pointChild = (Point) entityService.addUpdateEntity(user, newChild).get(0);
         // pointChild =  pointService.addPoint(user, pointChildEntity);
         assertNotNull(pointChild);

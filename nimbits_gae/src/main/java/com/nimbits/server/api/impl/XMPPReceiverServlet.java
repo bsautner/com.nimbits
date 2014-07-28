@@ -159,7 +159,8 @@ public class XMPPReceiverServlet extends ApiServlet {
         EntityName pointName = CommonFactory.createName(body.substring(1).trim(), EntityType.point);
         Entity entity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,
                 u.getKey(), u.getKey(), UUID.randomUUID().toString());
-        Point p = PointModelFactory.createPointModel(entity, 0.0, 90, "", 0.0, false, false, false, 0, false, FilterType.fixedHysteresis, 0.1, false, PointType.basic, 0, false, 0.0);
+        Point p = PointModelFactory.createPointModel(entity, 0.0, 90, "", 0.0, false,
+                false, false, 0, false, FilterType.fixedHysteresis, 0.1, false, PointType.basic, 0, false, 0.0, 10);
 
         entityService.addUpdateEntity(u, Arrays.<Entity>asList(p));
         //PointServiceFactory.getInstance().addPoint(u, entity);

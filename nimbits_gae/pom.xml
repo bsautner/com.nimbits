@@ -275,6 +275,7 @@
                 <version>${appengine.target.version}</version>
                 <configuration>
                 <port>8081</port>
+
                 <jvmFlags>
                     <jvmFlag>-Xdebug</jvmFlag>
                     <jvmFlag>-agentlib:jdwp=transport=dt_socket,address=5006,server=y,suspend=n</jvmFlag>
@@ -309,7 +310,23 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <webResources>
+                        <resource>
+                            <!-- this is relative to the pom.xml directory -->
+                            <directory>../../nimbits-private/nimbits_core/src/main/webapp </directory>
+                        </resource>
+                    </webResources>
+                </configuration>
 
+                <!--<configuration>-->
+                <!--<webappDirectory>/var/lib/tomcat7/webapps</webappDirectory>-->
+                <!--</configuration>-->
+            </plugin>
 
         </plugins>
     </build>

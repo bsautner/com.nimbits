@@ -228,7 +228,7 @@
 
     <build>
         <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
-        <finalName>nimbits_gae_3.6.1</finalName>
+        <finalName>nimbits_gae_3.6.2</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -317,8 +317,9 @@
                 <configuration>
                     <webResources>
                         <resource>
+                            <exclude>**/web.xml</exclude>
                             <!-- this is relative to the pom.xml directory -->
-                            <directory>../../nimbits-private/nimbits_core/src/main/webapp </directory>
+                            <directory>../nimbits_server/src/main/webapp </directory>
                         </resource>
                     </webResources>
                 </configuration>

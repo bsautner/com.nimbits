@@ -24,7 +24,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Basic Input and Ouput for the Nimbits API.
+ * Basic Input and Output for the Nimbits API.
  * @see com.nimbits.client.model package for the varios POJOs this api returns.
  */
 

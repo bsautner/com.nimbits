@@ -1,0 +1,483 @@
+/*
+ * Copyright (c) 2010 Nimbits Inc.
+ *
+ * http://www.nimbits.com
+ *
+ *
+ * Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+ *
+ * http://www.gnu.org/licenses/gpl.html
+ *
+ * Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+ */
+
+* {
+    font-family: arial, helvetica, tahoma, sans-serif;
+}
+
+.floatpanel {
+    float: left;
+}
+
+.menubar {
+    float: right;
+    align: right;
+    background-color: #e6eae7;
+}
+
+.fillpanel {
+
+}
+
+.x-theme-slate #demo-header {
+    background: #1E4176 url(../images/bg/slate-hd-bg.gif) repeat-x scroll 0pt;
+}
+
+.drag-ok {
+    border: 1px solid green !important;
+    background-color: #e6eae7;
+}
+
+/* chooser */
+#img-chooser-dlg .details {
+    padding: 10px;
+    text-align: center;
+}
+
+#img-chooser-dlg .details-info {
+    border-top: 1px solid #cccccc;
+    font: 11px Arial, Helvetica, sans-serif;
+    margin-top: 5px;
+    padding-top: 5px;
+    text-align: left;
+}
+
+#img-chooser-dlg .details-info b {
+    color: #555555;
+    display: block;
+    margin-bottom: 4px;
+}
+
+#img-chooser-dlg .details-info span {
+    display: block;
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+
+#img-chooser-view {
+    background: white;
+    font: 11px Arial, Helvetica, sans-serif;
+}
+
+#img-chooser-view .thumb {
+    background: #dddddd;
+    padding: 3px;
+}
+
+#img-chooser-view .thumb img {
+    height: 60px;
+    width: 80px;
+}
+
+#img-chooser-view .thumb-wrap {
+    float: left;
+    margin: 4px;
+    margin-right: 0;
+    padding: 5px;
+}
+
+#img-chooser-view .thumb-wrap span {
+    display: block;
+    overflow: hidden;
+    text-align: center;
+}
+
+#img-chooser-view .x-view-over {
+    border: 1px solid #dddddd;
+    background: #efefef repeat-x left top;
+    padding: 4px;
+}
+
+#img-chooser-view .x-view-selected {
+    background: #DFEDFF;
+    border: 1px solid #6593cf;
+    padding: 4px;
+}
+
+#img-chooser-view .x-view-selected .thumb {
+    background: transparent;
+}
+
+#img-chooser-view .x-view-selected span {
+    color: #1A4D8F;
+}
+
+#img-chooser-view .loading-indicator {
+    font-size: 11px;
+    background-image: url('..//images/grid/loading.gif');
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left: 20px;
+    margin: 10px;
+}
+
+/* list view */
+#images-view .x-panel-body {
+    background: white;
+    font: 11px Arial, Helvetica, sans-serif;
+}
+
+#images-view .thumb {
+    background: #dddddd;
+    padding: 3px;
+}
+
+#images-view .thumb img {
+    height: 60px;
+    width: 80px;
+}
+
+#images-view .thumb-wrap {
+    float: left;
+    margin: 0px;
+    margin-right: 0;
+    padding: 0px;
+    border: 0px
+}
+
+#images-view .thumb-wrap span {
+    display: block;
+    overflow: hidden;
+    text-align: center;
+}
+
+#images-view .x-view-over {
+    border: 1px solid #dddddd;
+    background: #efefef url(../../gxt/images/default/grid/row-over.gif) repeat-x left top;
+    padding: 4px;
+}
+
+#images-view .x-view-selected {
+    background: #eff5fb no-repeat right bottom;
+    border: 1px solid #99bbe8;
+    padding: 4px;
+}
+
+#images-view .x-view-selected .thumb {
+    background: transparent;
+}
+
+#images-view .loading-indicator {
+    font-size: 11px;
+    background-image: url(../../gxt/resources/images/default/grid/loading.gif);
+    background-repeat: no-repeat;
+    background-position: left;
+    padding-left: 20px;
+    margin: 10px;
+}
+
+/* totals grid */
+.x-grid3-body .x-grid3-td-cost {
+    background-color: #F1F2F4;
+}
+
+.x-grid3-summary-row {
+    background: #F1F2F4 none repeat scroll 0% 50%;
+    border-left: 1px solid #FFFFFF;
+    border-right: 1px solid #FFFFFF;
+    color: #333333;
+}
+
+.x-grid3-summary-row .x-grid3-cell-inner {
+    font-weight: bold;
+    padding-bottom: 4px;
+}
+
+.x-grid3-cell-inner {
+    font-family: "segoe ui", tahoma, arial, sans-serif;
+}
+
+#demo-header {
+    background: #1E4176 url(../images/bg/hd-bg.gif) repeat-x scroll 0pt;
+    border: 0pt none;
+    padding-left: 3px;
+}
+
+#demo-theme {
+    float: right;
+    padding-top: 5px;
+    padding-right: 8px;
+}
+
+#demo-title {
+    color: white;
+    font-family: tahoma, arial, sans-serif;
+    font-size: 16px;
+    font-size-adjust: none;
+    font-stretch: normal;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+    line-height: normal;
+    padding: 6 0 8 6px;
+}
+
+.sample-box {
+    float: left;
+    width: 135px;
+    margin: 5px 5px 0 5px;
+    text-align: center;
+    height: 114px;
+    cursor: default;
+    color: #444;
+    overflow: hidden;
+}
+
+.sample-over {
+    background: transparent url(../images/thumbs/sample-over.gif) no-repeat;
+}
+
+.sample-over div {
+    color: #1860A8;
+}
+
+.sample-box div, #sample-box div a {
+    font-size: 10px;
+    line-height: 12px;
+    font-family: tahoma, arial, sans-serif;
+}
+
+.sample-box dt a {
+    border: 0 none !important;
+}
+
+.x-view-over {
+    background: #EFEFEF url(../images/default/grid/row-over.gif) repeat-x scroll left top;
+    border: 1px solid #DDDDDD;
+    padding: 4px;
+}
+
+.x-view-selected {
+    border: 1px solid #99BBE8;
+    padding: 4px;
+}
+
+.x-view-selected .thumb {
+    background: transparent none repeat scroll 0%;
+}
+
+.green {
+    color: green;
+}
+
+.red {
+    color: red;
+}
+
+.text {
+    font-size: 12px;
+}
+
+.pad-text {
+    font-size: 12px;
+    padding: 5px;
+}
+
+.x-grid3-row-body p {
+    margin: 5px 5px 10px 5px !important;
+}
+
+.icon-app-side {
+    background-image: url(../images/icons/application_side_list.png) !important;
+}
+
+.icon-calendar {
+    background-image: url(../images/icons/calendar.gif) !important;
+}
+
+.icon-list-items {
+    background-image: url(../images/icons/list-items.gif) !important;
+}
+
+.icon-menu-show {
+    background-image: url(../images/icons/menu-show.gif) !important;
+}
+
+.icon-user-add {
+    background-image: url(../images/icons/fam/user_add.gif) !important;
+}
+
+.icon-user-delete {
+    background-image: url(../images/icons/fam/user_delete.gif) !important;
+}
+
+.icon-connect {
+    background-image: url(../images/icons/fam/connect.gif) !important;
+}
+
+.icon-accordion {
+    background-image: url(../images/icons/accordion.gif) !important;
+}
+
+.user {
+    background-image: url(../images/icons/fam/user.gif) !important;
+}
+
+.user-add {
+    background-image: url(../images/icons/fam/user_add.gif) !important;
+}
+
+.user-delete {
+    background-image: url(../images/icons/fam/user_delete.gif) !important;
+}
+
+.connect {
+    background-image: url(../images/icons/fam/connect.gif) !important;
+}
+
+.user-girl {
+    background-image: url(../images/icons/fam/user_female.gif) !important;
+}
+
+.user-kid {
+    background-image: url(../images/icons/fam/user_green.gif) !important;
+}
+
+.user-suit {
+    background-image: url(../images/icons/fam/user_suit.gif) !important;
+}
+
+.icon-filter {
+    background-image: url(../images/icons/funnel.png) !important;
+}
+
+.icon-form {
+    background-image: url(../images/icons/application_form.png) !important;
+}
+
+.icon-add {
+    background-image: url(../images/icons/add.gif) !important;
+}
+
+.icon-plugin {
+    background-image: url(../images/icons/plugin.png) !important;
+}
+
+.icon-table {
+    background-image: url(../images/icons/table.png) !important;
+}
+
+.icon-delete {
+    background-image: url(../images/icons/delete.gif) !important;
+}
+
+.icon-email {
+    background-image: url(../images/icons/email.png) !important;
+}
+
+.icon-email-add {
+    background-image: url(../images/icons/email_add.png) !important;
+}
+
+.icon-email-reply {
+    background-image: url(../images/icons/email_go.png) !important;
+}
+
+.icon-date-add {
+    background-image: url(../images/icons/date-add.png) !important;
+}
+
+.icon-contact {
+    background-image: url(../images/icons/vcard.png) !important;
+}
+
+.icon-contact-add {
+    background-image: url(../images/icons/vcard_add.png) !important;
+}
+
+.icon-shell {
+    background-image: url(../images/icons/shell.gif) !important;
+}
+
+.icon-page {
+    background-image: url(../images/icons/document.gif) !important;
+}
+
+.icon-page-java {
+    background-image: url(../images/icons/page_white_cup.png) !important;
+}
+
+.icon-page-html {
+    background-image: url(../images/icons/page_white_code.png) !important;
+}
+
+.icon-album {
+    background-image: url(../images/icons/album.gif) !important;
+}
+
+.icon-text {
+    background-image: url(../images/icons/text.gif) !important;
+}
+
+.icon-add-disabled {
+    background-image: url(../images/icons/add.gif) !important;
+}
+
+.icon-chart {
+    background-image: url(../images/icons/chart.png) !important;
+}
+
+.icon-list {
+    background-image: url(../images/icons/list.gif) !important;
+}
+
+.icon-feed {
+    background-image: url(../images/icons/feed.gif) !important;
+}
+
+.icon-info {
+    background-image: url(../images/icons/information.png) !important;
+}
+
+.icon-info-white {
+    background-image: url(../images/icons/information-white.gif) !important;
+}
+
+.icon-music {
+    background-image: url(../images/icons/music.png) !important;
+}
+
+.icon-printer {
+    background-image: url(../images/icons/printer.png) !important;
+}
+
+.icon-page-code {
+    background-image: url(../images/icons/page.png) !important;
+}
+
+.icon-tabs {
+    background-image: url(../images/icons/tabs.gif) !important;
+}
+
+.add {
+    background-image: url(../images/icons/toolbar/add.gif) !important;
+}
+
+.add16 {
+    background-image: url(../images/icons/toolbar/add16.gif) !important;
+}
+
+.add24 {
+    background-image: url(../images/icons/toolbar/add24.gif) !important;
+}
+
+#custom-slider {
+    width: 214px;
+    padding-top: 6px;
+    background-repeat: no-repeat;
+    background-image: url(../images/bg/ticks.gif);
+}
+
+#custom-slider .x-slider-thumb {
+    background-image: url(../images/bg/slider-thumb.png);
+}

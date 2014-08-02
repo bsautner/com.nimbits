@@ -1,0 +1,159 @@
+<!doctype html>
+<!--
+  ~ Copyright (c) 2010 Nimbits Inc.
+  ~
+  ~ http://www.nimbits.com
+  ~
+  ~
+  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+  ~
+  ~ http://www.gnu.org/licenses/gpl.html
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
+  -->
+
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+    <link rel="stylesheet" type="text/css" href="resources/css/gxt-all.css"/>
+    <link rel="stylesheet" type="text/css" href="resources/css/gxt-all-2.css"/>
+    <link rel="stylesheet" type="text/css" href="resources/css/resources.css"/>
+
+    <style>
+        #loading {
+            position: absolute;
+            left: 45%;
+            top: 40%;
+            margin-left: -45px;
+            padding: 2px;
+            z-index: 20001;
+            height: auto;
+            border: 1px solid #ccc;
+        }
+
+        #loading a {
+            color: #225588;
+        }
+
+        #loading .loading-indicator {
+            background: white;
+            color: #444;
+            font: bold 13px tahoma, arial, helvetica;
+            padding: 10px;
+            margin: 0;
+            height: auto;
+
+        }
+
+        #loading .loading-indicator img {
+            margin-right: 8px;
+            float: left;
+            vertical-align: top;
+        }
+
+        #loading-msg {
+            font: normal 10px arial, tahoma, sans-serif;
+        }
+
+        .search-item {
+            font: normal 11px tahoma, arial, helvetica, sans-serif;
+            padding: 3px 10px 3px 10px;
+            border: 1px solid #fff;
+            border-bottom: 1px solid #eeeeee;
+            white-space: normal;
+            color: #555;
+        }
+
+        .search-item h3 {
+            display: block;
+            font: inherit;
+            font-weight: bold;
+            color: #222;
+        }
+
+        .search-item h3 span {
+            float: right;
+            font-weight: normal;
+            margin: 0 0 5px 5px;
+            width: 100px;
+            display: block;
+            clear: none;
+        }
+
+
+    </style>
+
+
+    <title>Nimbits Web Console</title>
+
+    <link type="text/css" rel="stylesheet" href="nimbits.css">
+
+    <!--                                            -->
+    <!-- This script is required bootstrap stuff.   -->
+    <!--                                            -->
+    <script type="text/javascript" language="javascript" src="nimbits/nimbits.nocache.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js"></script>
+    <script type="text/javascript" language="javascript" src="resources/flash/swfobject.js"></script>
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script src="assets/js/jquery-1.10.2.min.js"></script>
+
+    <script type="text/javascript">
+        var idleTime = 0;
+        $(document).ready(function () {
+            //Increment the idle time counter every minute.
+            var idleInterval = setInterval("timerIncrement()", 60000); // 1 minute
+
+            //Zero the idle timer on mouse movement.
+            $(this).mousemove(function (e) {
+                idleTime = 0;
+            });
+            $(this).keypress(function (e) {
+                idleTime = 0;
+            });
+        })
+        function timerIncrement() {
+            idleTime = idleTime + 1;
+            if (idleTime > 20) { // 20 minutes
+
+                window.location.replace("http://www.nimbits.com");
+            }
+        }
+
+
+        var _gaq = _gaq || [];
+        _gaq.push(['_setAccount', 'UA-11739682-6']);
+        _gaq.push(['_trackPageview']);
+
+        (function () {
+            var ga = document.createElement('script');
+            ga.type = 'text/javascript';
+            ga.async = true;
+            ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(ga, s);
+        })();
+
+    </script>
+
+</head>
+
+
+<body style="overflow: hidden">
+
+<div id="loading">
+    <div class="loading-indicator">
+        <img src="resources/images/default/shared/blue-loading.gif" width="32" height="32"/>Loading Nimbits<br/>
+        <span id="loading-msg">Authenticating...</span>
+    </div>
+</div>
+<div>
+    <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1'
+            style="position:absolute;width:0;height:0;border:0"></iframe>
+    <div id="main"></div>
+</div>
+
+
+</body>
+</html>

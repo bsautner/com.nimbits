@@ -4,6 +4,7 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 		  http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
+    <!--j2ee version-->
     <filter>
         <filter-name>usageFilter</filter-name>
         <filter-class>com.nimbits.server.api.filter.ApiUsageFilter</filter-class>

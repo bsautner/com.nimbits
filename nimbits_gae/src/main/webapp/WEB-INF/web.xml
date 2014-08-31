@@ -235,17 +235,6 @@
         <url-pattern>/task/deleteBlobTask</url-pattern>
     </servlet-mapping>
 
-
-    <servlet>
-        <servlet-name>batchTask</servlet-name>
-        <servlet-class>com.nimbits.server.process.task.ProcessBatchTask</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>batchTask</servlet-name>
-        <url-pattern>/task/batchTask</url-pattern>
-    </servlet-mapping>
-
-
     <servlet>
         <servlet-name>mailTask</servlet-name>
         <servlet-class>com.nimbits.server.process.task.IncomingMailTask</servlet-class>
@@ -419,23 +408,6 @@
     <servlet-mapping>
         <servlet-name>chart</servlet-name>
         <url-pattern>/service/chart</url-pattern>
-    </servlet-mapping>
-
-
-
-
-
-    <servlet>
-        <servlet-name>batch</servlet-name>
-        <!--<servlet-class>BatchServletImpl</servlet-class>-->
-        <servlet-class>com.nimbits.server.api.impl.BatchServletImpl</servlet-class>
-
-    </servlet>
-
-
-    <servlet-mapping>
-        <servlet-name>batch</servlet-name>
-        <url-pattern>/service/batch</url-pattern>
     </servlet-mapping>
 
 

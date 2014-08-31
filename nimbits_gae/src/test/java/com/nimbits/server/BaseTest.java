@@ -28,7 +28,7 @@ import static org.junit.Assert.assertTrue;
 
 public class BaseTest {
 
-    public static BatchApi batchApi;
+
     public  static ValueApi valueApi;
     public static SessionApi sessionApi;
     public static EntityApi entityApi;
@@ -53,16 +53,7 @@ public class BaseTest {
         context.setAttribute("engine", engine);
         context.setAttribute("task", ApplicationListener.getTaskService(engine));
 
-        batchApi = new BatchApi() {
 
-            @Override
-            public ServletContext getServletContext() {
-
-                return context;
-
-            }
-
-        };
 
         sessionApi = new SessionApi() {
             @Override

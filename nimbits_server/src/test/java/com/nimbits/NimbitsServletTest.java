@@ -120,8 +120,8 @@ public class NimbitsServletTest extends BaseTest {
         emailAddress = CommonFactory.createEmailAddress(email);
 
 
-        pointName = CommonFactory.createName("point", EntityType.point);
-        pointChildName = CommonFactory.createName("pointChild", EntityType.point);
+        pointName = CommonFactory.createName(UUID.randomUUID().toString(), EntityType.point);
+        pointChildName = CommonFactory.createName(UUID.randomUUID().toString(), EntityType.point);
         groupName = CommonFactory.createName("group1", EntityType.point);
 
 
@@ -134,7 +134,7 @@ public class NimbitsServletTest extends BaseTest {
         user = (User) result.get(0);
 
 
-        Entity accessKey = EntityModelFactory.createEntity(CommonFactory.createName("access Key", EntityType.accessKey), "", EntityType.accessKey, ProtectionLevel.onlyMe, user.getKey(), user.getKey());
+        Entity accessKey = EntityModelFactory.createEntity(CommonFactory.createName(UUID.randomUUID().toString(), EntityType.accessKey), "", EntityType.accessKey, ProtectionLevel.onlyMe, user.getKey(), user.getKey());
         AccessKey ak = AccessKeyFactory.createAccessKey(accessKey, "AUTH", user.getKey(), AuthLevel.admin);
         entityService.addUpdateSingleEntity(ak);
 

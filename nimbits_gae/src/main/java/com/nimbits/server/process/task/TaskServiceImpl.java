@@ -27,11 +27,10 @@ import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.gson.*;
-import org.apache.http.message.BasicNameValuePair;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 import java.util.logging.Logger;
 
 
@@ -47,7 +46,6 @@ public class TaskServiceImpl implements TaskService {
     private static final String PATH_TASK_RECORD_VALUE = "/task/valueTask";
     private static final String PATH_TASK_DUMP_TASK = "/task/dumpTask";
     private static final String PATH_TASK_UPLOAD_TASK = "/task/uploadTask";
-    private static final String PATH_TASK_PROCESS_BATCH = "/task/batchTask";
     private static final String PATH_INCOMING_MAIL_QUEUE = "/task/mailTask";
     private static final String PATH_DELETE_DATA_TASK = "/task/deleteTask";
     private static final String PATH_HB_TASK = "/task/hb";
@@ -129,36 +127,6 @@ public class TaskServiceImpl implements TaskService {
                         .param(Parameters.user.getText(), userJson)
                         .param(Parameters.blobkey.getText(), blobKey)
         );
-    }
-
-
-    @Override
-    public void startProcessBatchTask(final User user, final HttpServletRequest req, final HttpServletResponse resp) {
-
-
-        final Queue queue = QueueFactory.getQueue(DEFAULT);
-
-
-        final String userJson = GsonFactory.getInstance().toJson(user);
-
-        log.info(userJson);
-
-        final TaskOptions options = TaskOptions.Builder.withUrl(PATH_TASK_PROCESS_BATCH);
-
-        final Enumeration enumeration = req.getParameterNames();
-        final Map m = req.getParameterMap();
-
-        while (enumeration.hasMoreElements()) {
-            final String param = enumeration.nextElement().toString();
-            final String value = ((String[]) m.get(param))[0];
-            options.param(param, value);
-        }
-
-        options.param(Parameters.pointUser.getText(), userJson);
-
-        queue.add(options);
-
-
     }
 
 

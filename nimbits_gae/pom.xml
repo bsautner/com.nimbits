@@ -161,6 +161,7 @@
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-api-jdo</artifactId>
             <version>3.1.2</version>
+
         </dependency>
         <dependency>
             <groupId>com.google.appengine.orm</groupId>
@@ -228,7 +229,7 @@
 
     <build>
         <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
-        <finalName>nimbits_gae_3.6.2</finalName>
+        <finalName>nimbits_gae_3.6.4</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

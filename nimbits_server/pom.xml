@@ -244,7 +244,7 @@
     </dependencies>
     <build>
         <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
-        <finalName>nimbits_server_3.6.2</finalName>
+        <finalName>nimbits_server_3.6.4</finalName>
         <plugins>
 
             <plugin>

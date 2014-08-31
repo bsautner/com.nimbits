@@ -16,12 +16,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 11/20/11
- * Time: 10:05 AM
- */
+
 public enum ValueType {
 
     rawData(0), statisticShard(1), counter(2), calculated(3), mobile(4), manualEntry(5), emailBatch(6), xmpp(7), nonexistent(8);

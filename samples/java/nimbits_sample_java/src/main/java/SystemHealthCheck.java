@@ -47,18 +47,10 @@ public class SystemHealthCheck {
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Welcome To Nimbits!");
         startTime = System.currentTimeMillis();
-
-
-
-
-
         //use an access key you created via the web console to get your user data
-
         UserHelper sessionHelper = HelperFactory.getUserHelper(SERVER, EMAIL_ADDRESS, ACCESS_KEY);
 
         User user = sessionHelper.getSession();
-
-
         System.out.println("Hello " + user.getEmail());
 
         //record some data!
@@ -69,7 +61,7 @@ public class SystemHealthCheck {
         while (! error) {
 
             long s = System.currentTimeMillis();
-            Value value = valueHelper.recordValue(pointName, r.nextDouble() * 10000);
+            Value value = valueHelper.recordValue(pointName, r.nextDouble() * 10000 * r.nextDouble());
             long e = System.currentTimeMillis();
             long elapsed = e - s;
             valueHelper.recordValue(valueBenchmark, (double) elapsed);

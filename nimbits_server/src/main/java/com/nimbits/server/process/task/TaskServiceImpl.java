@@ -92,11 +92,6 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void startProcessBatchTask(User user, HttpServletRequest req, HttpServletResponse resp) {
-
-    }
-
-    @Override
     public void startRecordValueTask(final HttpServletRequest req, final User u, final Entity entity, final Value value) {
 
         new RecordValueThread(this, req, u, entity, value ).start();

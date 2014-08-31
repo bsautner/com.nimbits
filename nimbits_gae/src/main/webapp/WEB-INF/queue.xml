@@ -47,10 +47,7 @@
         <rate>30/s</rate>
         <bucket-size>100</bucket-size>
     </queue>
-    <queue>
-        <name>processbatchqueue</name>
-        <rate>10/s</rate>
-    </queue>
+
     <queue>
         <name>move</name>
         <rate>30/s</rate>

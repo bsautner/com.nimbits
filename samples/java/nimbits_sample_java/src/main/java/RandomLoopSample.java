@@ -6,13 +6,10 @@ import com.nimbits.client.model.server.ServerFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.io.helper.HelperFactory;
-import com.nimbits.io.helper.PointHelper;
 import com.nimbits.io.helper.UserHelper;
 import com.nimbits.io.helper.ValueHelper;
 
-import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 /**
  * This program assumes you have logged into the target nimbits SERVER on the INSTANCE_URL used below, right clicked on
@@ -59,7 +56,7 @@ public class RandomLoopSample {
 
             try {
                 Value value = valueHelper.recordValue(pointName, r.nextDouble() * 100);
-                System.out.println("Recorded Value: " + value.getValueWithNote());
+                System.out.println("Recorded Value: " + value.getValueWithData());
 
             } catch (Exception e) {
                //let's just keep on trucking for this sample.

@@ -39,7 +39,7 @@ public class Const {
     public static final double CONST_IGNORED_NUMBER_VALUE = -9999999.9999999;
 
     public static final int CONST_MAX_NAME_LENGTH = 250;
-    public static final int CONST_MAX_BATCH_COUNT = 100;
+
 
     @Deprecated //delete when all blobstores have length
     public static final long CONST_DEFAULT_BLOB_LENGTH = 100000;

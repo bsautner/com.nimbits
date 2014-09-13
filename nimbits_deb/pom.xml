@@ -91,7 +91,7 @@
                                     </mapper>
                                 </data>
                                 <data>
-                                    <src>/home/benjamin/source/nimbits/com.nimbits/nimbits_deb/src/main/bin</src>
+                                    <src>${project.basedir}/src/main/bin</src>
                                     <type>directory</type>
                                     <mapper>
                                         <type>perm</type>

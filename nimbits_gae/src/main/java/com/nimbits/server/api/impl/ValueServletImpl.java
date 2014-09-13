@@ -83,7 +83,7 @@ public class ValueServletImpl extends ApiServlet {
                     }
 //                    log.info(location.toString());
                     v = ValueFactory.createValueModel(l, vx.getDoubleValue(), vx.getTimestamp(),
-                            vx.getNote(), vx.getData(), AlertType.OK);
+                             vx.getData(), AlertType.OK);
                 }
 
 
@@ -154,7 +154,7 @@ public class ValueServletImpl extends ApiServlet {
         }
 
 
-        nv = ValueFactory.createValueModel(location1, value, timestamp, getParam(Parameters.note), vd, AlertType.OK);
+        nv = ValueFactory.createValueModel(location1, value, timestamp,  vd, AlertType.OK);
         return nv;
     }
 
@@ -201,7 +201,7 @@ public class ValueServletImpl extends ApiServlet {
                 // request
                 final Value newValue = ValueFactory.createValueModel(
                         nv.getLocation(), nv.getDoubleValue(),
-                        nv.getTimestamp(), nv.getNote(), nv.getData(), AlertType.OK);
+                        nv.getTimestamp(),  nv.getData(), AlertType.OK);
 
 
                 value = valueService.recordValue(req, u, p, newValue, false);

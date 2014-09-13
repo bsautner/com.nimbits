@@ -33,12 +33,10 @@ public class ValueDeserializer implements JsonDeserializer<Value> {
 
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         JsonElement valueElement = jsonObject.get("d");
-        JsonElement noteElement = jsonObject.get("n");
         JsonElement dataElement = jsonObject.get("dx");
         JsonElement latElement = jsonObject.get("lt");
         JsonElement lngElement = jsonObject.get("lg");
         JsonElement timestampElement = jsonObject.get("t");
-        String note = noteElement == null ? null : noteElement.getAsString();
         String data = dataElement == null ? null : dataElement.getAsString();
         Double lat = latElement == null ? null : latElement.getAsDouble();
         Double lng = lngElement == null ? null : lngElement.getAsDouble();
@@ -64,7 +62,7 @@ public class ValueDeserializer implements JsonDeserializer<Value> {
             valueData = ValueDataModel.getEmptyInstance();
         }
 
-        return ValueFactory.createValueModel(location, value, time, note, valueData, AlertType.OK);
+        return ValueFactory.createValueModel(location, value, time, valueData, AlertType.OK);
 
     }
 }

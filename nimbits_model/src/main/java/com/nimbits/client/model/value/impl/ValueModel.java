@@ -39,8 +39,6 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     @Expose
     Long t;
     @Expose
-    String n;
-    @Expose
     String dx;
 
     Integer st;
@@ -57,11 +55,11 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     }
     public static Value getInstance(final Value value, final Date timestamp) {
-        return new ValueModel(value.getLocation(), value.getDoubleValue(), timestamp, value.getNote(), value.getData(), value.getAlertState());
+        return new ValueModel(value.getLocation(), value.getDoubleValue(), timestamp, value.getData(), value.getAlertState());
 
     }
     public static Value getInstance(Value value, double v) {
-        return new ValueModel(value.getLocation(), v, new Date(), value.getNote(), value.getData(), AlertType.OK);
+        return new ValueModel(value.getLocation(), v, new Date(),  value.getData(), AlertType.OK);
 
     }
 
@@ -102,7 +100,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         this.lg = v.getLocation().getLng();
         this.d = v.getDoubleValue();
         this.t = v.getTimestamp().getTime();
-        this.n = v.getNote();
+
     }
 
     public ValueModel(final Value v, final String dataOverride) {
@@ -116,7 +114,6 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     public ValueModel(final Location location,
                       final Double d,
                       final Date timestamp,
-                      final String note,
                       final ValueData data,
                       final AlertType alert) {
 
@@ -141,15 +138,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
         this.t = timestamp.getTime();
 
-        this.n = note;
         this.dx = data.getContent();
-    }
-
-
-    @Deprecated
-    @Override
-    public String getNote() {
-        return n == null ? "" : n;
     }
 
     @Override
@@ -158,28 +147,32 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     }
 
-    @Deprecated
+
     @Override
-    public String getValueWithNote() {
+    public String getValueWithData() {
         StringBuilder sb = new StringBuilder(INT);
         if (this.d != null && this.d != Const.CONST_IGNORED_NUMBER_VALUE) {
             sb.append(this.d);
         }
-        if (this.n != null && !this.n.isEmpty()) {
+        if (this.dx != null && !this.dx.isEmpty()) {
             sb.append(' ');
-            sb.append(this.n);
+            sb.append(this.dx);
         }
         return sb.toString().trim();
 
     }
 
 
-
-
-
     @Override
     public Date getTimestamp() {
         return this.t == null ? new Date() :  new Date(this.t);
+    }
+
+    @Override
+    public void initTimestamp() {
+        if (this.t == null ) {
+            this.t = System.currentTimeMillis();
+        }
     }
 
     @Override
@@ -210,7 +203,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         if (dx != null ? !dx.equals(that.dx) : that.dx != null) return false;
         if (lg != null ? !lg.equals(that.lg) : that.lg != null) return false;
         if (lt != null ? !lt.equals(that.lt) : that.lt != null) return false;
-        if (n != null ? !n.equals(that.n) : that.n != null) return false;
+
         if (st != null ? !st.equals(that.st) : that.st != null) return false;
         if (t != null ? !t.equals(that.t) : that.t != null) return false;
 
@@ -223,7 +216,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         result = 31 * result + (lg != null ? lg.hashCode() : 0);
         result = 31 * result + (d != null ? d.hashCode() : 0);
         result = 31 * result + (t != null ? t.hashCode() : 0);
-        result = 31 * result + (n != null ? n.hashCode() : 0);
+
         result = 31 * result + (dx != null ? dx.hashCode() : 0);
         result = 31 * result + (st != null ? st.hashCode() : 0);
         return result;

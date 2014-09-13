@@ -91,7 +91,6 @@ public class UploadTask extends TaskBase {
     private Value processString(String line) throws Exception {
         Date date = null;
         double value = 0;
-        String note = null;
         String data = null;
         double lat = 0;
         double lng = 0;
@@ -103,9 +102,7 @@ public class UploadTask extends TaskBase {
                 value = Double.valueOf(split[1]);
 
             }
-            if (split.length >= 3) {
-                note = split[2];
-            }
+
             if (split.length >= 4) {
                 data = split[3];
             }
@@ -120,7 +117,7 @@ public class UploadTask extends TaskBase {
             if (date == null) {
                 throw new Exception("Uploaded Data Must contain a timestamp in unix epoch format in Milliseconds as the first column in your CSV file." );
             }
-            return ValueFactory.createValueModel(location, value, date, note, valueData, AlertType.OK);
+            return ValueFactory.createValueModel(location, value, date, valueData, AlertType.OK);
         } catch (NumberFormatException e) {
             return null;
         }

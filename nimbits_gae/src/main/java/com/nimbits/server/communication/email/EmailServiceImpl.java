@@ -174,14 +174,14 @@ public class EmailServiceImpl implements EmailService {
                 message.append("<P>Alarm Status: High</P>")
                         .append("<P>Alarm Setting: ").append(point.getHighAlarm()).append("</P>")
                         .append("<p>Value Recorded: ").append(value.getDoubleValue()).append("</p>")
-                        .append("<p>Note : ").append(value.getNote()).append("</p>");
+                        .append("<p>Data : ").append(value.getData().getContent()).append("</p>");
                 break;
             }
             case LowAlert: {
                 message.append("<P>Alarm Status: Low</P>")
                         .append("<P>Alarm Setting: ").append(point.getLowAlarm()).append("</P>")
                         .append("<p>Value : ").append(value.getDoubleValue()).append("</p>")
-                        .append("<p>Note : ").append(value.getNote()).append("</p>");
+                        .append("<p>Data : ").append(value.getData().getContent()).append("</p>");
                 break;
             }
             case IdleAlert: {
@@ -192,7 +192,7 @@ public class EmailServiceImpl implements EmailService {
             case OK: {
                 message.append("<P>Alarm Status: OK</P>")
                 .append("<p>Value : ").append(value.getDoubleValue()).append("</p>")
-                .append("<p>Note : ").append(value.getNote()).append("</p>");
+                .append("<p>Data : ").append(value.getData().getContent()).append("</p>");
 
             }
 

@@ -79,7 +79,7 @@ public class DumpTask extends TaskBase {
                 final FileWriteChannel writeChannel = fileService.openWriteChannel(file, true);
                 final PrintWriter out = new PrintWriter(Channels.newWriter(writeChannel, "UTF8"));
                 for (final Value v : values) {
-                    out.println(v.getTimestamp().getTime() + "," + v.getDoubleValue() + "," + v.getNote() + "," + v.getData() + "," + v.getLocation().getLat() + "," + v.getLocation().getLng());
+                    out.println(v.getTimestamp().getTime() + "," + v.getDoubleValue() + ","  + v.getData() + "," + v.getLocation().getLat() + "," + v.getLocation().getLng());
                 }
 
 

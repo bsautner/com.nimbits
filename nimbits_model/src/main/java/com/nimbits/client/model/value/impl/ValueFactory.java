@@ -30,7 +30,7 @@ public class ValueFactory {
 
     public static Value createValueFromString(final SimpleValue<String> valueAndNote, final Date timestamp) {
         double d = 0;
-        String note = null;
+        String dx = null;
         String sample = valueAndNote.getValue().trim();
         if (!sample.isEmpty()) {
 
@@ -38,23 +38,25 @@ public class ValueFactory {
                 String a[] = sample.split(" ");
                 try {
                     d = Double.parseDouble(a[0]);
-                    note = sample.replace(a[0], "").trim();
+                    dx = sample.replace(a[0], "").trim();
                 } catch (NumberFormatException ex) {
-                    note = sample;
+                    dx = sample;
                     d = Const.CONST_IGNORED_NUMBER_VALUE;
                 }
             } else {
                 try {
                     d = Double.parseDouble(sample);
-                    note = "";
+                    dx = "";
                 } catch (NumberFormatException ex) {
-                    note = sample;
+                    dx = sample;
                     d = Const.CONST_IGNORED_NUMBER_VALUE;
                 }
             }
         }
-
-        return new ValueModel(LocationFactory.createEmptyLocation(), d, timestamp, note, ValueDataModel.getInstance(SimpleValue.getInstance("")), AlertType.OK);
+        if (dx == null) {
+            dx = "";
+        }
+        return new ValueModel(LocationFactory.createEmptyLocation(), d, timestamp,  ValueDataModel.getInstance(SimpleValue.getInstance(dx)), AlertType.OK);
     }
     public static ValueModel createValueModel(final Value v) {
 
@@ -68,7 +70,6 @@ public class ValueFactory {
         return new ValueModel(v.getLocation(),
                 v.getDoubleValue(),
                 v.getTimestamp(),
-                v.getNote(),
                 v.getData(),
                 alertType);
 
@@ -84,38 +85,27 @@ public class ValueFactory {
     public static ValueModel createValueModel(final Location location,
                                               final Double d,
                                               final Date timestamp,
-                                              final String note,
                                               final ValueData data,
                                               final AlertType alert) {
 
-        return new ValueModel(location, d, timestamp, note, data, alert);
+        return new ValueModel(location, d, timestamp, data, alert);
 
     }
 
 
     public static ValueModel createValueModel(final double d) {
 
-        return new ValueModel(LocationFactory.createEmptyLocation(), d, new Date(), null, ValueDataModel.getEmptyInstance(), null);
+        return new ValueModel(LocationFactory.createEmptyLocation(), d, new Date(), ValueDataModel.getEmptyInstance(), null);
 
     }
 
-    public static ValueModel createValueModel(final double d, final String note) {
-
-        return new ValueModel(LocationFactory.createEmptyLocation(), d, new Date(), note, ValueDataModel.getEmptyInstance(), null);
-
-    }
 
     public static ValueModel createValueModel(final double d, final Date timestamp) {
 
-        return new ValueModel(LocationFactory.createEmptyLocation(), d, timestamp, null, ValueDataModel.getEmptyInstance(), null);
+        return new ValueModel(LocationFactory.createEmptyLocation(), d, timestamp,  ValueDataModel.getEmptyInstance(), null);
 
     }
 
-    public static ValueModel createValueModel(final double d, final String note, final Date timestamp) {
-
-        return new ValueModel(LocationFactory.createEmptyLocation(), d, timestamp, note, ValueDataModel.getEmptyInstance(), null);
-
-    }
 
 
     public static Value createValueModel(Value value, Date date) {
@@ -123,6 +113,6 @@ public class ValueFactory {
     }
 
     public static Value createValueModel(Double d, Date date, AlertType alertType) {
-        return new ValueModel(LocationFactory.createEmptyLocation(), d, date, null, ValueDataModel.getEmptyInstance(), alertType);
+        return new ValueModel(LocationFactory.createEmptyLocation(), d, date, ValueDataModel.getEmptyInstance(), alertType);
     }
 }

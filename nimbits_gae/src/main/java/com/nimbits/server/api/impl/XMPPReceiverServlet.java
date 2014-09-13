@@ -181,7 +181,7 @@ public class XMPPReceiverServlet extends ApiServlet {
 
 
                 if (u != null) {
-                    Value value = ValueFactory.createValueModel(LocationFactory.createEmptyLocation(), v, new Date(), "", ValueDataModel.getInstance(SimpleValue.getInstance("")), AlertType.OK);
+                    Value value = ValueFactory.createValueModel(LocationFactory.createEmptyLocation(), v, new Date(), ValueDataModel.getInstance(SimpleValue.getInstance("")), AlertType.OK);
                     valueService.recordValue(req, u, pointName, value, false);
                 }
             } catch (NumberFormatException ignored) {
@@ -211,9 +211,7 @@ public class XMPPReceiverServlet extends ApiServlet {
                     if (!sample.isEmpty()) {
                         Value v = sample.get(0);
                         String t = "";
-                        if (v.getNote() != null && !v.getNote().isEmpty()) {
-                            t = v.getNote();
-                        }
+
                         engine.getXmppService().sendMessage(e.getName().getValue() + '='
                                 + v.getDoubleValue() + ' ' + t, u.getEmail());
                     } else {

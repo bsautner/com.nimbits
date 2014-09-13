@@ -23,4 +23,11 @@
         <description>php setup attempt</description>
     </blacklist>
 
+    <blacklist>
+
+        <subnet>89.101.1.103</subnet>
+        <description>won't stop hitting deprecated bactch url</description>
+    </blacklist>
+
+
 </blacklistentries>

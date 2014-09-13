@@ -1,0 +1,3 @@
+#!/bin/bash
+echo "hello world"
+java -jar /usr/share/nimbits/lib/nimbits-jar-with-dependencies.jar

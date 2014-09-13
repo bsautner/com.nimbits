@@ -1,0 +1,7 @@
+Package: nimbits
+Version: 1.0
+Section: devel
+Priority: optional
+Architecture: all
+Description: Nimbits Debian Client. Visit nimbits.com to learn more.
+Maintainer: Benjamin Sautner <bsautner@nimbits.com>

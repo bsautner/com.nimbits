@@ -98,6 +98,14 @@
                                         <prefix>/usr/bin</prefix>
                                     </mapper>
                                 </data>
+                                <data>
+                                    <src>${project.basedir}/src/main/nimbits</src>
+                                    <type>directory</type>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <prefix>/var/lib/nimbits</prefix>
+                                    </mapper>
+                                </data>
                             </dataSet>
 
                         </configuration>

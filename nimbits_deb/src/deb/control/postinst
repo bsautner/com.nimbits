@@ -1,2 +1,3 @@
 #!/bin/sh
 chmod +x /usr/bin/nimbits
+tar -zxvf /var/lib/nimbits/jetty*.tar.gz

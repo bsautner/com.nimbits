@@ -7,6 +7,7 @@ useradd nimbits -U -s /bin/false
 chown -R nimbits:nimbits /opt/nimbits
 cd /opt/nimbits/webapps
 wget http://www.nimbits.com/download/nimbits_server_3.6.6.war -O nimbits.war
+sudo update-rc.d nimbits defaults
 service nimbits restart
 
 

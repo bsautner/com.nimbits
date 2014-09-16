@@ -23,7 +23,7 @@ public class Program {
 
     public static void main(String args[]) {
 
-        System.out.println("Welcome To Nimbits!");
+        System.out.println("Welcome To Nimbits 2!");
 
     }
 

@@ -170,13 +170,6 @@
         </dependency>
 
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.29</version>
-        </dependency>
-
-
-        <dependency>
             <groupId>javax.jdo</groupId>
             <artifactId>jdo-api</artifactId>
             <version>3.0.1</version>

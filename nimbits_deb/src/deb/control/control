@@ -1,5 +1,5 @@
 Package: nimbits
-Version: 1.02
+Version: 1.03
 Section: devel
 Priority: optional
 Architecture: amd64 i386 armhf

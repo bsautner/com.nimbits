@@ -91,13 +91,32 @@
                                     </mapper>
                                 </data>
                                 <data>
-                                    <src>${project.basedir}/src/main/bin</src>
+                                    <src>${project.basedir}/src/main/usr/bin</src>
                                     <type>directory</type>
                                     <mapper>
                                         <type>perm</type>
                                         <prefix>/usr/bin</prefix>
                                     </mapper>
                                 </data>
+
+                                <data>
+                                    <src>${project.basedir}/src/main/opt</src>
+                                    <type>directory</type>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <prefix>/opt</prefix>
+                                    </mapper>
+                                </data>
+
+                                <data>
+                                    <src>${project.basedir}/src/main/etc</src>
+                                    <type>directory</type>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <prefix>/etc</prefix>
+                                    </mapper>
+                                </data>
+
                                 <data>
                                     <src>${project.basedir}/src/main/nimbits</src>
                                     <type>directory</type>

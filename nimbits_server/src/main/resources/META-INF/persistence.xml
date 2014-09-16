@@ -20,10 +20,15 @@
 
         <exclude-unlisted-classes/>
         <properties>
-            <property name="datanucleus.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
-            <property name="datanucleus.ConnectionURL" value="jdbc:mysql://localhost/nimbits"/>
-            <property name="datanucleus.ConnectionUserName" value="root"/>
-            <property name="datanucleus.ConnectionPassword" value="password"/>
+            <!--<property name="datanucleus.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>-->
+            <!--<property name="datanucleus.ConnectionURL" value="jdbc:mysql://localhost/nimbits"/>-->
+            <!--<property name="datanucleus.ConnectionUserName" value="root"/>-->
+            <!--<property name="datanucleus.ConnectionPassword" value="password"/>-->
+            <property name="datanucleus.ConnectionDriverName" value="org.h2.Driver"/>
+            <property name="datanucleus.ConnectionURL" value="jdbc:h2:'./nimbits'"/>
+            <property name="datanucleus.ConnectionUserName" value="sa"/>
+            <property name="datanucleus.ConnectionPassword" value=""/>
+
             <property name="datanucleus.autoCreateSchema" value="true"/>
             <property name="datanucleus.validateTables" value="false"/>
             <property name="datanucleus.validateConstraints" value="false"/>

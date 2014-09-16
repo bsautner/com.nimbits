@@ -1,3 +1,11 @@
 #!/bin/sh
 chmod +x /usr/bin/nimbits
-tar -zxvf /var/lib/nimbits/jetty*.tar.gz
+chmod +x /etc/init.d/jetty
+useradd jetty -U -s /bin/false
+chown -R jetty:jetty /opt/jetty
+cd /opt/jetty/webapps
+wget http://www.nimbits.com/download/nimbits_server_3.6.6.war -O nimbits.war
+service jetty start
+
+
+

@@ -1,7 +1,7 @@
 Package: nimbits
-Version: 1.03
+Version: 1.04
 Section: devel
 Priority: optional
-Architecture: amd64 i386 armhf
+Architecture: all
 Description: Nimbits Data Acquisition Platform. Visit nimbits.com to learn more.
 Maintainer: Benjamin Sautner <bsautner@nimbits.com>

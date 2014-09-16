@@ -5,7 +5,7 @@
 # To get the service to restart correctly on reboot, uncomment below (3 lines):
 # ========================
 # chkconfig: 3 99 99
-# description: Jetty 8 webserver
+# description: Jetty 8 webserver for Nimbits Server
 # processname: jetty
 # ========================
 

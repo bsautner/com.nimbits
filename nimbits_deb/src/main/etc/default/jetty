@@ -1,5 +1,6 @@
+JETTY_HOME=/opt/nimbits
 JAVA_HOME=/usr/bin/java
 NO_START=0
 JETTY_ARGS=jetty.port=8080
 JETTY_HOST=0.0.0.0
-JETTY_USER=jetty
+JETTY_USER=nimbits

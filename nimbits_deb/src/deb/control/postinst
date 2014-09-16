@@ -1,11 +1,13 @@
 #!/bin/sh
+export JETTY_HOME=/opt/nimbits
+service nimbits stop
 chmod +x /usr/bin/nimbits
-chmod +x /etc/init.d/jetty
-useradd jetty -U -s /bin/false
-chown -R jetty:jetty /opt/jetty
-cd /opt/jetty/webapps
+chmod +x /etc/init.d/nimbits
+useradd nimbits -U -s /bin/false
+chown -R nimbits:nimbits /opt/nimbits
+cd /opt/nimbits/webapps
 wget http://www.nimbits.com/download/nimbits_server_3.6.6.war -O nimbits.war
-service jetty start
+service nimbits start
 
 
 

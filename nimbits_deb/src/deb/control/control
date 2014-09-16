@@ -1,7 +1,7 @@
 Package: nimbits
-Version: 1.01
+Version: 1.02
 Section: devel
 Priority: optional
 Architecture: all
-Description: Nimbits Debian Client. Visit nimbits.com to learn more.
+Description: Nimbits Data Acquisition Platform. Visit nimbits.com to learn more.
 Maintainer: Benjamin Sautner <bsautner@nimbits.com>

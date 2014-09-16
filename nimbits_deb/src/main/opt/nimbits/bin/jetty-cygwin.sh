@@ -508,10 +508,10 @@ RUN_CMD="$JAVA $RUN_ARGS"
 ##################################################
 case "$ACTION" in
   start)
-        echo -n "Starting Jetty: "
+        echo -n "Starting Nimbits: "
 
         if [ "$NO_START" = "1" ]; then 
-	  echo "Not starting jetty - NO_START=1 in /etc/default/jetty8";
+	  echo "Not starting nimbits - NO_START=1 in /etc/default/jetty8";
           exit 0;
 	fi
 
@@ -567,7 +567,7 @@ case "$ACTION" in
         ;;
 
   stop)
-        echo -n "Stopping Jetty: "
+        echo -n "Stopping Nimbits: "
 	if [ "$START_STOP_DAEMON" = "1" ] && type start-stop-daemon > /dev/null 2>&1; then
 	  start-stop-daemon -K -p $JETTY_PID -d $JETTY_HOME -a $JAVA -s HUP 
 	  sleep 1

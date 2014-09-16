@@ -431,10 +431,10 @@ fi
 ##################################################
 case "$ACTION" in
   start)
-    echo -n "Starting Jetty: "
+    echo -n "Starting Nimbits: "
 
     if (( NO_START )); then 
-      echo "Not starting jetty - NO_START=1";
+      echo "Not starting Nimbits - NO_START=1";
       exit
     fi
 
@@ -494,7 +494,7 @@ case "$ACTION" in
     ;;
 
   stop)
-    echo -n "Stopping Jetty: "
+    echo -n "Stopping Nimbits: "
     if [ $UID -eq 0 ] && type start-stop-daemon > /dev/null 2>&1; then
       start-stop-daemon -K -p"$JETTY_PID" -d"$JETTY_HOME" -a "$JAVA" -s HUP
       

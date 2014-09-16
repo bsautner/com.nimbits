@@ -12,7 +12,6 @@
 
 package com.nimbits.server;
 
-import com.mysql.jdbc.AbandonedConnectionCleanupThread;
 import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.server.communication.email.EmailService;
 import com.nimbits.server.communication.mail.EmailServiceFactory;
@@ -99,11 +98,7 @@ public class ApplicationListener implements ServletContextListener {
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        try {
-            AbandonedConnectionCleanupThread.shutdown();
-        } catch (InterruptedException e) {
-        }
-
+      
         ClassLoader applicationClassLoader = this.getClass().getClassLoader();
         Enumeration<Driver> driverEnumeration = DriverManager.getDrivers();
         while (driverEnumeration.hasMoreElements()) {

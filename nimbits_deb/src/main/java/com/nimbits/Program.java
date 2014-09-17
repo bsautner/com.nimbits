@@ -18,12 +18,247 @@
 
 package com.nimbits;
 
+import com.nimbits.client.model.UrlContainer;
+import com.nimbits.client.model.common.impl.CommonFactory;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.server.Server;
+import com.nimbits.client.model.server.ServerFactory;
+import com.nimbits.client.model.server.apikey.ApiKey;
+import com.nimbits.client.model.server.apikey.ApiKeyFactory;
+import com.nimbits.client.model.user.User;
+import com.nimbits.command.TerminalCommand;
+import com.nimbits.io.helper.EntityHelper;
+import com.nimbits.io.helper.HelperFactory;
+import com.nimbits.io.helper.UserHelper;
+import jline.ArgumentCompletor;
+import jline.Completor;
+import jline.ConsoleReader;
+import jline.SimpleCompletor;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+
+
 public class Program {
 
+    public static EmailAddress EMAIL_ADDRESS;
+    private static UrlContainer INSTANCE_URL;
+    private static ApiKey API_KEY;
+    private static Server SERVER;
+    public static User user;
+    public static Entity current;
+    public static List<Entity> tree = Collections.emptyList();
 
-    public static void main(String args[]) {
+    private static List<SimpleCompletor> completorList = new LinkedList<>();
+    private static MyReader currentReader;
 
-        System.out.println("Welcome To Nimbits 2!");
+    private static class MyReader extends ConsoleReader {
+        private boolean closed;
+        public MyReader() throws IOException {
+        }
+
+        public void setClosed(boolean closed) {
+            this.closed = closed;
+        }
+
+        public boolean isClosed() {
+            return closed;
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+
+
+
+        loadDefaults();
+        UserHelper sessionHelper = HelperFactory.getUserHelper(SERVER, EMAIL_ADDRESS, null);
+        user = sessionHelper.getSession();
+        current = user;
+        new Thread(new TreeLoader()).run();
+
+        createReader();
+
+
+
+    }
+
+    private static void startListening() throws IOException {
+        String line;
+        TerminalCommand terminalCommand;
+        PrintWriter out = new PrintWriter(System.out);
+
+
+        String prompt = SERVER.getUrl() + "/" + current.getName() + ":";
+        currentReader.setDefaultPrompt(prompt);
+
+        while ((line = currentReader.readLine(prompt)) != null && ! currentReader.isClosed()) {
+
+            try {
+
+                String[] options = line.split(" ");
+                String mainArg = options.length > 0 ? options[0].trim() : "";
+                terminalCommand = TerminalCommand.lookup(mainArg);
+                if (terminalCommand != null) {
+                    terminalCommand.init(SERVER).doCommand(options);
+                }
+                else {
+                    if (mainArg.trim().length() < 0) {
+                        System.out.println("command \"" + mainArg + "\" not found. try \"help\"");
+                    }
+                }
+
+            }  catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            out.flush();
+
+        }
+    }
+
+    public static void setCurrent(Entity current) throws IOException {
+        Program.current = current;
+
+        createReader();
+
+
+    }
+
+    public static Entity getCurrent() {
+        return current;
+    }
+
+    private static class TreeLoader implements Runnable {
+
+        @Override
+        public void run() {
+//            final Type entityListType = new TypeToken<List<EntityModel>>() {
+//            }.getType();
+//            String fn = "/tmp/" + user.getEmail().getValue() + ".json";
+//            File file = new File(fn);
+//            try {
+//            if (file.exists()) {
+//                StringBuilder b = new StringBuilder();
+//                try (BufferedReader br = new BufferedReader(new FileReader(fn))) {
+//
+//                    String line = br.readLine();
+//                    b.append(line);
+//
+//                    while (line != null) {
+//                        line = br.readLine();
+//                        if (line != null) {
+//                           b.append(line);
+//                        }
+//                    }
+//
+//                    Program.tree = GsonFactory.getInstance().fromJson(b.toString(), entityListType);
+//
+//
+//
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            else {
+                EntityHelper helper = HelperFactory.getEntityHelper(SERVER, Program.EMAIL_ADDRESS, null);
+                Program.tree = helper.getTree();
+               // String json = GsonFactory.getInstance().toJson(Program.tree, entityListType);
+//                PrintWriter out = new PrintWriter(fn);
+//                out.println(json);
+//                out.close();
+          //  }
+
+
+            try {
+                createReader();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+
+        }
+    }
+
+    private static  void createReader() throws IOException {
+        if (currentReader != null) {
+            currentReader.setClosed(true);
+        }
+
+        currentReader  = new MyReader();
+
+        List<String> dir = new ArrayList<>();
+        for (Entity e : Program.tree) {
+            if (e.getParent().equals(current.getKey())) {
+                dir.add(e.getName().getValue());
+            }
+
+        }
+        String[] l = new String[dir.size()];
+        dir.toArray(l);
+
+        for (Object o : currentReader.getCompletors()) {
+            currentReader.removeCompletor((Completor) o);
+        }
+        completorList.clear();
+        String[] commandsList = new String[TerminalCommand.values().length];
+        TerminalCommand.lookupMap.keySet().toArray(commandsList);
+
+
+        completorList.add(new SimpleCompletor(commandsList));
+        completorList.add(new SimpleCompletor(l));
+
+        currentReader.addCompletor(new ArgumentCompletor(completorList));
+
+
+        SimpleCompletor entityCompletor = new SimpleCompletor(commandsList);
+        currentReader.addCompletor(entityCompletor);
+        startListening();
+    }
+
+    private static void loadDefaults() throws IOException {
+        try (BufferedReader br = new BufferedReader(new FileReader("/etc/default/nimbits"))) {
+
+            String line = br.readLine();
+            processDefault(line);
+            while (line != null) {
+                line = br.readLine();
+                if (line != null) {
+                    processDefault(line);
+                }
+
+            }
+
+
+        }
+        SERVER =  ServerFactory.getInstance(INSTANCE_URL, API_KEY);
+    }
+
+    private static void processDefault(String value) {
+
+        String[] s = value.split("=");
+        switch (s[0]) {
+
+            case "EMAIL":
+                EMAIL_ADDRESS = CommonFactory.createEmailAddress(s[1]);
+                break;
+            case "APIKEY" :
+                API_KEY = ApiKeyFactory.createApiKey(s[1]);
+                break;
+            case "INSTANCE" :
+                INSTANCE_URL =  UrlContainer.getInstance(s[1]);
+
+                break;
+
+        }
 
     }
 

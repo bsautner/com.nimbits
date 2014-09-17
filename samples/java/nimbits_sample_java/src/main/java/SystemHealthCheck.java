@@ -35,7 +35,7 @@ public class SystemHealthCheck {
     //and localhost:8080/nimbits if that's your jetty local instance for example.
     private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8081");
     private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL);
-    private static  List<Value> valueList = new ArrayList<>();
+    private static  List<Value> valueList = new ArrayList<Value>();
 
     private static ValueHelper valueHelper;
     private static long startTime;

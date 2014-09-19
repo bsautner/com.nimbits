@@ -1,7 +1,9 @@
 package com.nimbits.io.helper;
 
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
 
 import java.util.List;
 
@@ -43,4 +45,14 @@ public interface EntityHelper {
      * @return the entity if it exists
      */
     Entity getCategory(String key);
+
+
+    /**
+     * Creates a new Data Point
+     * @param name a valid point name
+     * @param entityType @see EntityType
+     * @return new point
+     *
+     */
+    Point createPoint(String name, EntityType entityType, Entity parent);
 }

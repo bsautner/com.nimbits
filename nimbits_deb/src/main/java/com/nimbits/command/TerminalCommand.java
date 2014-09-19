@@ -9,7 +9,13 @@ import java.util.Map;
 
 public enum TerminalCommand {
 
-    ls(ListCommand.class), cd(ChangeDirectoryCommand.class), exit(ExitCommand.class), help(HelpCommand.class);
+    ls(ListCommand.class),
+    cd(ChangeDirectoryCommand.class),
+    exit(ExitCommand.class),
+    help(HelpCommand.class),
+    create(CreateCommand.class),
+    rm(RemoveCommand.class),
+    seed(SeedRandomCommand.class);
 
     private Constructor constructor;
     public final static Map<String, TerminalCommand> lookupMap = new HashMap<>(TerminalCommand.values().length);

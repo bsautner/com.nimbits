@@ -70,8 +70,18 @@ public class PointModelFactory {
         EntityName pointName;
         pointName = CommonFactory.createName(name, EntityType.point);
         Entity pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone, user.getKey(), user.getKey(), "");
+        Point newPoint = createPoint(pointEntity);
+        newPoint.setExpire(5);
+
+        return newPoint;
+
+
+    }
+
+    public static Point createPoint(Entity base) {
+
         Point newPoint = PointModelFactory.createPointModel(
-                pointEntity,
+                base,
                 0.0,
                 90,
                 "",
@@ -85,10 +95,8 @@ public class PointModelFactory {
                 0.1,
                 false,
                 PointType.basic, 0, false, 0.0, 10);
-        newPoint.setExpire(5);
-
         return newPoint;
-
-
     }
+
+
 }

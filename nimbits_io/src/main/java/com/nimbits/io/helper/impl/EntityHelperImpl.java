@@ -6,6 +6,10 @@ import com.nimbits.client.model.category.CategoryModel;
 import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
+import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.io.NimbitsClient;
 import com.nimbits.io.helper.EntityHelper;
@@ -65,6 +69,24 @@ public class EntityHelperImpl implements EntityHelper {
         }
         else {
             return  sample.get(0);
+        }
+
+    }
+
+    @Override
+    public Point createPoint(String name, EntityType entityType, Entity parent) {
+        Entity entity = EntityModelFactory.createEntity(name, entityType);
+        entity.setParent(parent.getKey());
+        entity.setOwner(email.getValue());
+
+        Point point =  PointModelFactory.createPoint(entity);
+        List<Entity> sample = addEntity(point,  PointModel.class);
+        if (sample.isEmpty()) {
+            throw new RuntimeException("Couldn't create point");
+
+        }
+        else {
+            return (Point) sample.get(0);
         }
 
     }

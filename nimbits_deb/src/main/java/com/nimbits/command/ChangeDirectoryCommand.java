@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class ChangeDirectoryCommand extends AbstractCommand implements Command {
 
-    private final static String USAGE = "navigate to entity: cd entityname";
+    private final static String USAGE = "navigate to entity: cd <entity name>";
 
     public ChangeDirectoryCommand(Server server) {
         super(server);

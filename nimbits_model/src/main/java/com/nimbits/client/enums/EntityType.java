@@ -32,8 +32,10 @@ public enum EntityType implements Serializable {
     private static final Map<Integer, EntityType> lookup = new HashMap<Integer, EntityType>(EntityType.values().length);
 
     static {
-        for (EntityType s : EnumSet.allOf(EntityType.class))
+        for (EntityType s : EnumSet.allOf(EntityType.class)) {
             lookup.put(s.code, s);
+
+        }
     }
 
     public static List<String> classList() {

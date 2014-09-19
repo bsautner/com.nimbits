@@ -14,9 +14,7 @@ package com.nimbits.client.model.device;
 
 import java.io.Serializable;
 
-/**
- * Created by benjamin on 7/23/13.
- */
+
 public class DeviceImpl implements Device, Serializable {
 
     private String regId;

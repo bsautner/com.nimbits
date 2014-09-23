@@ -126,4 +126,9 @@ public class EntityModelFactory {
     public static TargetEntity createTarget(final String key) {
         return   new TargetEntityImpl(key);
     }
+
+    public static Entity createEntity(String name, EntityType entityType) {
+        EntityName entityName = CommonFactory.createName(name, entityType);
+        return createEntity(entityName, entityType);
+    }
 }

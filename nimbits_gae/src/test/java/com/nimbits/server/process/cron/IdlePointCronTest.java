@@ -38,7 +38,7 @@ public class IdlePointCronTest extends NimbitsServletTest {
 
         entityService.addUpdateEntity(user, Arrays.<Entity>asList(point));
         idleCron.doGet(req, resp);
-        final int c = idleCron.processGet();
+        final int c = idleCron.processGet(resp);
         assertEquals(1, c);
 
 

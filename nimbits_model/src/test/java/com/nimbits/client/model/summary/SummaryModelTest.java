@@ -13,9 +13,7 @@ import java.util.Date;
 import static org.junit.Assert.assertFalse;
 
 
-/**
- * Created by benjamin on 8/19/13.
- */
+
 public class SummaryModelTest {
     @Test
     public void testIsReady() throws Exception {

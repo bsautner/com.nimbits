@@ -128,7 +128,7 @@ public class NimbitsClientImpl implements NimbitsClient {
         UrlContainer path = UrlContainer.combine(instanceUrl, VALUE_SERVICE);
 
         List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(4);
-        String content = GsonFactory.getInstance().toJson(value);
+        String content = new GsonBuilder().create().toJson(value);
         params.add((new BasicNameValuePair(Parameters.id.getText(), entity.getKey())));
         params.add((new BasicNameValuePair(Parameters.json.getText(), content)));
         params.add((new BasicNameValuePair(Parameters.email.getText(), email.getValue())));

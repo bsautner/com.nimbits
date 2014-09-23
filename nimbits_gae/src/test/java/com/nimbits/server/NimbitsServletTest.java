@@ -57,12 +57,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/29/12
- * Time: 9:27 AM
- */
+
 
 public class NimbitsServletTest extends BaseTest {
     public NimbitsEngine engine;

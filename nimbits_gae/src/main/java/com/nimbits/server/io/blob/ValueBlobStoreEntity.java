@@ -59,7 +59,8 @@ public class ValueBlobStoreEntity implements ValueBlobStore {
     @Persistent
     private Integer version;
 
-
+    @Persistent
+    private String entityUUID;
 
     public ValueBlobStoreEntity(final String entity,
                                 final Date timestamp,
@@ -67,7 +68,8 @@ public class ValueBlobStoreEntity implements ValueBlobStore {
                                 final Date minTimestamp,
                                 final BlobKey blobkey,
                                 final long length,
-                                final int version) {
+                                final int version,
+                                final String entityUUID) {
         this.entity = entity;
         this.timestamp = timestamp.getTime();
         this.maxTimestamp = maxTimestamp.getTime();
@@ -75,6 +77,7 @@ public class ValueBlobStoreEntity implements ValueBlobStore {
         this.blobkey = blobkey;
         this.length = length;
         this.version = version;
+        this.entityUUID = entityUUID;
     }
 
     public Key getKey() {
@@ -147,5 +150,10 @@ public class ValueBlobStoreEntity implements ValueBlobStore {
     @Override
     public Integer getVersion() {
         return version == null ? 0 : version;
+    }
+
+    @Override
+    public String getEntityUUID() {
+        return this.entityUUID == null ? "" : this.entityUUID;
     }
 }

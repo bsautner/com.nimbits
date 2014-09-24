@@ -6,6 +6,7 @@ import com.nimbits.client.model.category.CategoryModel;
 import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
@@ -87,6 +88,48 @@ public class EntityHelperImpl implements EntityHelper {
         }
         else {
             return (Point) sample.get(0);
+        }
+
+    }
+
+    @Override
+    public Point createPoint(String name, int expire, EntityType entityType, Entity parent) {
+        Entity entity = EntityModelFactory.createEntity(name, entityType);
+        entity.setParent(parent.getKey());
+        entity.setOwner(email.getValue());
+
+        Point point =  PointModelFactory.createPoint(entity);
+        point.setExpire(expire);
+        List<Entity> sample = addEntity(point,  PointModel.class);
+        if (sample.isEmpty()) {
+            throw new RuntimeException("Couldn't create point");
+
+        }
+        else {
+            return (Point) sample.get(0);
+        }
+
+    }
+
+    @Override
+    public void deleteEntity(String name, EntityType type) {
+        SimpleValue<String> id;
+        if (! name.startsWith(email.getValue())) {
+            id = SimpleValue.getInstance(email + "/" + name);
+        }
+        else {
+            id = SimpleValue.getInstance(name);
+        }
+
+        List<Point> sample;
+
+        sample = nimbitsClient.getEntity(id, type, EntityModel.class);
+
+        if (sample.isEmpty()) {
+            throw new IllegalStateException("Entity Not Found");
+        }
+        else {
+             deleteEntity(sample.get(0));
         }
 
     }

@@ -55,4 +55,16 @@ public interface EntityHelper {
      *
      */
     Point createPoint(String name, EntityType entityType, Entity parent);
+
+    /**
+     * Creates a new Data Point
+     * @param name a valid point name
+     * @param entityType @see EntityType
+     * @param expire how many days old data can be before being purged
+     * @return new point
+     *
+     */
+    Point createPoint(String name, int expire, EntityType entityType, Entity parent);
+
+    void deleteEntity(String name, EntityType type);
 }

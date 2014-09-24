@@ -61,7 +61,9 @@ public class BlobStoreImpl implements BlobStore {
 
 
     }
-
+    private boolean validateOwnership(Entity entity, ValueBlobStore e) {
+        return e.getEntityUUID().equals("") || e.getEntityUUID().equals(entity.getUUID());
+    }
 
     @Override
     public List<Value> getTopDataSeries(final Entity entity, final int maxValues, final Date endDate) {
@@ -79,15 +81,17 @@ public class BlobStoreImpl implements BlobStore {
             final List<ValueBlobStoreEntity> result = (List<ValueBlobStoreEntity>) q.execute(entity.getKey(), endDate.getTime());
 
             for (final ValueBlobStoreEntity e : result) {
-                List<Value> values = readValuesFromFile(e.getBlobKey(), e.getLength());
-                //log.info("extracted " + entity.getKey() + " " + values.size());
-                for (final Value vx : values) {
-                    if (vx.getTimestamp().getTime() <= endDate.getTime()) {
-                        retObj.add(vx);
-                    }
+                if (validateOwnership(entity, e)) {
+                    List<Value> values = readValuesFromFile(e.getBlobKey(), e.getLength());
 
-                    if (retObj.size() >= maxValues) {
-                        break;
+                    for (final Value vx : values) {
+                        if (vx.getTimestamp().getTime() <= endDate.getTime()) {
+                            retObj.add(vx);
+                        }
+
+                        if (retObj.size() >= maxValues) {
+                            break;
+                        }
                     }
                 }
             }
@@ -110,10 +114,12 @@ public class BlobStoreImpl implements BlobStore {
 
             final Iterable<ValueBlobStore> result = (Iterable<ValueBlobStore>) q.execute(entity.getKey(), timespan.upperEndpoint().getTime(), timespan.lowerEndpoint().getTime());
             for (final ValueBlobStore e : result) {    //todo break out of loop when range is met
-                List<Value> values = readValuesFromFile(e.getBlobKey(), e.getLength());
-                for (final Value vx : values) {
-                    if (timespan.contains(vx.getTimestamp())) {
-                        retObj.add(vx);
+                if (validateOwnership(entity, e)) {
+                    List<Value> values = readValuesFromFile(e.getBlobKey(), e.getLength());
+                    for (final Value vx : values) {
+                        if (timespan.contains(vx.getTimestamp())) {
+                            retObj.add(vx);
+                        }
                     }
                 }
             }
@@ -135,8 +141,14 @@ public class BlobStoreImpl implements BlobStore {
             q.setOrdering("timestamp descending");
 
             final Collection<ValueBlobStore> result = (Collection<ValueBlobStore>) q.execute(entity.getKey());
-            log.info("Got all stores for " + entity.getName().getValue() + " total::" + result.size());
-            return ValueBlobStoreFactory.createValueBlobStores(result);
+            List<ValueBlobStore> checked = new ArrayList<>(result.size()); {
+                for (ValueBlobStore e : result) {
+                    if (validateOwnership(entity, e)) {
+                        checked.add(e);
+                    }
+                }
+            }
+            return ValueBlobStoreFactory.createValueBlobStores(checked);
         } finally {
             pm.close();
         }
@@ -155,8 +167,10 @@ public class BlobStoreImpl implements BlobStore {
             final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(entity.getKey(), timestamp.getTime());
 
             final List<Value> values = new ArrayList<Value>();
-            for (final ValueBlobStore store : result) {
-                values.addAll(readValuesFromFile((store.getBlobKey()), store.getLength()));
+            for (final ValueBlobStore e : result) {
+                if (validateOwnership(entity, e)) {
+                    values.addAll(readValuesFromFile((e.getBlobKey()), e.getLength()));
+                }
             }
 
             deleteBlobs(result);
@@ -281,10 +295,11 @@ public class BlobStoreImpl implements BlobStore {
     @Override
     public List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final ValueDayHolder holder) {
         PersistenceManager pm = pmf.getPersistenceManager();
+        PrintWriter out = null;
         try {
             final String json = gson.toJson(holder.getValues());
-            String fn = UUID.randomUUID().toString();
-            PrintWriter out = new PrintWriter(getFolder() + fn);
+            String fn =  entity.getName().getValue() +"_" + UUID.randomUUID().toString();
+            out = new PrintWriter(getFolder() + fn);
             out.println(json);
             out.close();
 
@@ -298,7 +313,7 @@ public class BlobStoreImpl implements BlobStore {
                     mostRecentTimeForDay,
                     earliestForDay,
                     fn,
-                    json.length(), BlobStore.storageVersion
+                    json.length(), BlobStore.storageVersion,entity.getUUID()
 
             );
 
@@ -307,14 +322,16 @@ public class BlobStoreImpl implements BlobStore {
             pm.makePersistent(currentStoreEntity);
 
             pm.flush();
-            List<ValueBlobStore> result = ValueBlobStoreFactory.createValueBlobStore(currentStoreEntity);
-            out.close();
-            return result;
+
+            return ValueBlobStoreFactory.createValueBlobStore(currentStoreEntity);
 
         } catch (IOException e) {
 
             return Collections.emptyList();
         } finally {
+            if (out != null) {
+                out.close();
+            }
             pm.close();
         }
 
@@ -382,7 +399,7 @@ public class BlobStoreImpl implements BlobStore {
                     new Date(max),
                     new Date(min),
                     fn,
-                    json.length(), BlobStore.storageVersion);
+                    json.length(), BlobStore.storageVersion, entity.getUUID());
 
             currentStoreEntity.validate();
             pm.makePersistent(currentStoreEntity);

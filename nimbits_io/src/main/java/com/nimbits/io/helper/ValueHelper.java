@@ -56,4 +56,16 @@ public interface ValueHelper {
      * @return a list of values up to the count.  May be less than the count if that many values don't exist.
      */
     List<Value> getSeries(String name, int count);
+
+    /**
+     *
+     * @param pointName the name of the data point
+     * @param data a list of Value Objects @see ValueModel
+     */
+    void recordSeries(String pointName, List<Value> data);
+
+    /**
+     * execute the move cron task.
+     */
+    void moveCron();
 }

@@ -33,4 +33,6 @@ public interface ValueBlobStore extends Serializable, Comparable<ValueBlobStore>
     void validate();
 
     Integer getVersion();
+
+    String getEntityUUID();
 }

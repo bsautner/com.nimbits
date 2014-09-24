@@ -100,6 +100,7 @@ public class ValueFactory {
     }
 
 
+
     public static ValueModel createValueModel(final double d, final Date timestamp) {
 
         return new ValueModel(LocationFactory.createEmptyLocation(), d, timestamp,  ValueDataModel.getEmptyInstance(), null);

@@ -36,6 +36,7 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
 
     private Integer version;
 
+    private String entityUUID;
 
     public ValueBlobStoreModel(ValueBlobStore store) {
         this.entity = store.getEntity();
@@ -46,6 +47,7 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
         this.key = store.getBlobKey();
         this.length = store.getLength();
         this.version = store.getVersion();
+        this.entityUUID = store.getEntityUUID();
     }
 
     public ValueBlobStoreModel() {
@@ -94,6 +96,11 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
     @Override
     public Integer getVersion() {
         return version == null ? 0 : version;
+    }
+
+    @Override
+    public String getEntityUUID() {
+        return this.entityUUID == null ? "" : entityUUID;
     }
 
     @Override

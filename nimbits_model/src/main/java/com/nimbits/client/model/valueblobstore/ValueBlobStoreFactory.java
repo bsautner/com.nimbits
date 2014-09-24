@@ -17,9 +17,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-/**
- * Created by benjamin on 10/18/13.
- */
+
 public class ValueBlobStoreFactory {
     public static List<ValueBlobStore> createValueBlobStores(final Collection<ValueBlobStore> store) {
         final List<ValueBlobStore> retObj = new ArrayList<ValueBlobStore>(store.size());

@@ -88,4 +88,15 @@ public class ValueHelperImpl implements ValueHelper {
 
         return NimbitsClientFactory.getInstance(server, email, accessKey).getSeries(name, count);
     }
+
+    @Override
+    public void recordSeries(String pointName, List<Value> data) {
+        Point point = HelperFactory.getPointHelper(server, email, accessKey).getPoint(pointName);
+        NimbitsClientFactory.getInstance(server, email, accessKey).recordSeries(point, data);
+    }
+
+    @Override
+    public void moveCron() {
+        NimbitsClientFactory.getInstance(server, email, accessKey).moveCron();
+    }
 }

@@ -17,6 +17,7 @@ import com.nimbits.client.android.AndroidControl;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 
@@ -41,6 +42,8 @@ public interface NimbitsClient {
 
     List<Value> getValue(Entity entity);
 
+    void moveCron();
+
     <T> List<T> getTree();
 
     List<Value> postValue(Entity entity, Value value);
@@ -62,4 +65,6 @@ public interface NimbitsClient {
     List<AndroidControl> getControl();
 
     void doHeartbeat(Entity parent);
+
+    void recordSeries(Point entity, List<Value> data);
 }

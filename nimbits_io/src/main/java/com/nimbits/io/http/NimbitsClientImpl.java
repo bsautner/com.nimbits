@@ -30,6 +30,8 @@ import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
@@ -51,7 +53,7 @@ import java.util.Date;
 import java.util.List;
 
 public class NimbitsClientImpl implements NimbitsClient {
-
+    private static final UrlContainer MOVE_CRON = UrlContainer.getInstance("/cron/moveCron");
     private static final UrlContainer VALUE_SERVICE = UrlContainer.getInstance("/service/v2/value");
     private static final UrlContainer SESSION_SERVICE = UrlContainer.getInstance("/service/v2/session");
     private static final UrlContainer SERIES_SERVICE = UrlContainer.getInstance("/service/v2/series");
@@ -108,6 +110,18 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     }
 
+    @Override
+    public void moveCron() {
+        UrlContainer path = UrlContainer.combine(instanceUrl, MOVE_CRON);
+
+        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(1);
+
+        if (accessKey != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        }
+        helper.doGet(String.class, path, params, valueListType, false);
+
+    }
 
     @Override
     public <T> List<T> getTree() {
@@ -292,5 +306,29 @@ public class NimbitsClientImpl implements NimbitsClient {
             params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
         }
         helper.doPost(String.class, path, params, entityListType, false);
+    }
+
+    @Override
+    public void recordSeries(Point entity, List<Value> data) {
+        final Type listType = new TypeToken<List<PointModel>>() {
+        }.getType();
+
+        entity.setValues(data);
+
+        UrlContainer path = UrlContainer.combine(instanceUrl, SERIES_SERVICE);
+        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(3);
+        List<Point> points = new ArrayList<>(1);
+        points.add(entity);
+        String json = new GsonBuilder().create().toJson(points);
+
+        params.add((new BasicNameValuePair(Parameters.id.getText(), entity.getKey())));
+        params.add((new BasicNameValuePair(Parameters.json.getText(), json)));
+
+        if (accessKey != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        }
+        helper.doPost(String.class, path, params, listType, false);
+
+
     }
 }

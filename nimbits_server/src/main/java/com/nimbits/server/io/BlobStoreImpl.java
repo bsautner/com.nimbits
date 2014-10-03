@@ -298,7 +298,7 @@ public class BlobStoreImpl implements BlobStore {
         PrintWriter out = null;
         try {
             final String json = gson.toJson(holder.getValues());
-            String fn =  entity.getName().getValue() +"_" + UUID.randomUUID().toString();
+            String fn =  entity.getName().getValue() + "_" + UUID.randomUUID().toString();
             out = new PrintWriter(getFolder() + fn);
             out.println(json);
             out.close();
@@ -313,7 +313,9 @@ public class BlobStoreImpl implements BlobStore {
                     mostRecentTimeForDay,
                     earliestForDay,
                     fn,
-                    json.length(), BlobStore.storageVersion,entity.getUUID()
+                    json.length(),
+                    BlobStore.storageVersion,
+                    entity.getUUID()
 
             );
 

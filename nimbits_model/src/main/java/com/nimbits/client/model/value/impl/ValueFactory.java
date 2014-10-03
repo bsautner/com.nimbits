@@ -99,6 +99,13 @@ public class ValueFactory {
 
     }
 
+    public static ValueModel createValueModel(final Date date, final String data) {
+
+        ValueData valueData = ValueDataModel.getInstance(SimpleValue.getInstance(data));
+        return new ValueModel(LocationFactory.createEmptyLocation(), null, date, valueData, null);
+
+    }
+
 
 
     public static ValueModel createValueModel(final double d, final Date timestamp) {

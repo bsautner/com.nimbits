@@ -56,8 +56,6 @@ public class SystemHealthCheck2 {
 
     private static ValueHelper valueHelper;
 
-
-    private static boolean error = false;
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Welcome To Nimbits!");
 

@@ -1,6 +1,10 @@
 package com.nimbits.io.helper.impl;
 
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.calculation.CalculationModel;
+import com.nimbits.client.model.calculation.CalculationModelFactory;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.category.CategoryModel;
 import com.nimbits.client.model.common.SimpleValue;
@@ -12,8 +16,12 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.server.Server;
+import com.nimbits.client.model.trigger.TargetEntity;
+import com.nimbits.client.model.trigger.TriggerEntity;
 import com.nimbits.io.NimbitsClient;
 import com.nimbits.io.helper.EntityHelper;
+import com.nimbits.io.helper.HelperFactory;
+import com.nimbits.io.helper.PointHelper;
 import com.nimbits.io.http.NimbitsClientFactory;
 
 import java.util.List;
@@ -21,9 +29,12 @@ import java.util.List;
 public class EntityHelperImpl implements EntityHelper {
     protected final EmailAddress email;
     protected final NimbitsClient nimbitsClient;
-
+    protected final Server server;
+    protected final String accessKey;
     public EntityHelperImpl(Server server, EmailAddress email, String accessKey) {
         this.email = email;
+        this.server = server;
+        this.accessKey = accessKey;
         this.nimbitsClient = NimbitsClientFactory.getInstance(server, email, accessKey);
     }
 
@@ -93,13 +104,14 @@ public class EntityHelperImpl implements EntityHelper {
     }
 
     @Override
-    public Point createPoint(String name, int expire, EntityType entityType, Entity parent) {
+    public Point createPoint(String name, int expire, FilterType filterType, EntityType entityType, Entity parent) {
         Entity entity = EntityModelFactory.createEntity(name, entityType);
         entity.setParent(parent.getKey());
         entity.setOwner(email.getValue());
 
         Point point =  PointModelFactory.createPoint(entity);
         point.setExpire(expire);
+        point.setFilterType(filterType);
         List<Entity> sample = addEntity(point,  PointModel.class);
         if (sample.isEmpty()) {
             throw new RuntimeException("Couldn't create point");
@@ -133,4 +145,47 @@ public class EntityHelperImpl implements EntityHelper {
         }
 
     }
+
+
+    @Override
+    public Calculation createCalculation(String name, String trigger, String target, String formula, String xVar, String yVar, String zVar) {
+        PointHelper helper = HelperFactory.getPointHelper(this.server, this.email, this.accessKey);
+        Point triggerPoint = helper.getPoint(trigger);
+        Point targetPoint = helper.getPoint(target);
+        String x = null;
+        String y = null;
+        String z = null;
+        if (xVar != null) {
+            Point xPoint = helper.getPoint(xVar);
+            x = xPoint.getKey();
+
+        }
+        if (yVar != null) {
+            Point yPoint = helper.getPoint(yVar);
+            y = yPoint.getKey();
+        }
+
+        if (zVar != null) {
+            Point zPoint = helper.getPoint(zVar);
+            z = zPoint.getKey();
+
+        }
+
+        Entity entity = EntityModelFactory.createEntity(name, EntityType.calculation);
+        TriggerEntity trigger1 =EntityModelFactory.createTrigger(triggerPoint.getKey());
+        TargetEntity targetEntity = EntityModelFactory.createTarget(targetPoint.getKey());
+        Calculation calculation =  CalculationModelFactory.createCalculation(entity, trigger1, true, formula, targetEntity, x, y, z);
+        calculation.setParent(triggerPoint.getKey());
+        calculation.setOwner(email.getValue());
+        List<Entity> result  =  addEntity(calculation, CalculationModel.class);
+        if (result.isEmpty()) {
+            throw new RuntimeException("failed to create calculation");
+
+        }
+        else {
+            return (Calculation) result.get(0);
+        }
+
+    }
+
 }

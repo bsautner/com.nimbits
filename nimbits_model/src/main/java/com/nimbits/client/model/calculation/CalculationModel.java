@@ -108,8 +108,28 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
     }
 
     @Override
+    public String getVar(String var) {
+//TODO GWT 2.5.1 does not support java 7 - so no enum yet.
+
+        if (var.equals("x")) {
+            return getX();
+        }
+        else if (var.equals("y")) {
+            return getY();
+        }
+        else if (var.equals("z")) {
+            return getZ();
+        }
+        else {
+            return  "";
+        }
+
+
+    }
+
+    @Override
     public void update(Entity update) {
-      throw new RuntimeException("Not Implemented");
+        throw new RuntimeException("Not Implemented");
     }
 
     @Override

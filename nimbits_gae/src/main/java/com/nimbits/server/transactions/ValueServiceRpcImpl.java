@@ -43,7 +43,7 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements com.nim
 
     @Override
     public List<Value> solveEquationRpc(final User user, final Calculation calculation) {
-        List<Value> response = CalculationServiceFactory.getInstance(engine, task).solveEquation(user, calculation);
+        List<Value> response = CalculationServiceFactory.getInstance(engine, task).solveEquation(user, calculation, null, null);
 
         return new ArrayList<>(response);
     }

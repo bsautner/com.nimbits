@@ -16,12 +16,7 @@ import com.nimbits.client.model.trigger.Trigger;
 
 import java.io.Serializable;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 12/24/11
- * Time: 4:52 PM
- */
+
 public interface Calculation extends Trigger, Serializable {
 
     String getFormula();
@@ -32,11 +27,15 @@ public interface Calculation extends Trigger, Serializable {
 
     String getZ();
 
+    String getVar(String var);
+
     void setZ(final String z);
 
     void setY(final String y);
 
     void setX(final String x);
+
+
 
     void setFormula(final String formula);
 

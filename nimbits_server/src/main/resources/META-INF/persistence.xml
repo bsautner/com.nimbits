@@ -25,7 +25,7 @@
             <!--<property name="datanucleus.ConnectionUserName" value="root"/>-->
             <!--<property name="datanucleus.ConnectionPassword" value="password"/>-->
             <property name="datanucleus.ConnectionDriverName" value="org.h2.Driver"/>
-            <property name="datanucleus.ConnectionURL" value="jdbc:h2:./database"/>
+            <property name="datanucleus.ConnectionURL" value="jdbc:h2:./database/db;MV_STORE=FALSE;MVCC=FALSE;FILE_LOCK=NO"/>
             <property name="datanucleus.ConnectionUserName" value="sa"/>
             <property name="datanucleus.ConnectionPassword" value=""/>
 

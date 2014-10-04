@@ -62,7 +62,7 @@ public interface ValueHelper {
      * @param pointName the name of the data point
      * @param data a list of Value Objects @see ValueModel
      */
-    void recordSeries(String pointName, List<Value> data);
+    void recordValues(String pointName, List<Value> data);
 
     /**
      * execute the move cron task.

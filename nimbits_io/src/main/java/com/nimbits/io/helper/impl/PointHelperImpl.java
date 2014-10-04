@@ -17,6 +17,9 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.point.PointType;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.calculation.CalculationModel;
+import com.nimbits.client.model.calculation.CalculationModelFactory;
 import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
@@ -27,10 +30,14 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.server.Server;
+import com.nimbits.client.model.trigger.TargetEntity;
+import com.nimbits.client.model.trigger.Trigger;
+import com.nimbits.client.model.trigger.TriggerEntity;
+import com.nimbits.io.helper.HelperFactory;
 import com.nimbits.io.helper.PointHelper;
 
 import java.util.List;
-
+import java.util.UUID;
 
 
 public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
@@ -114,6 +121,7 @@ public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
 
 
     }
+
 
 
 }

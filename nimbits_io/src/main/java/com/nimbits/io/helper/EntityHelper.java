@@ -1,6 +1,8 @@
 package com.nimbits.io.helper;
 
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
@@ -60,11 +62,27 @@ public interface EntityHelper {
      * Creates a new Data Point
      * @param name a valid point name
      * @param entityType @see EntityType
+     * @param filterType the type of filter to use. @See FilterType
      * @param expire how many days old data can be before being purged
+     * @param parent the id of the parent entity
      * @return new point
      *
      */
-    Point createPoint(String name, int expire, EntityType entityType, Entity parent);
+    Point createPoint(String name, int expire, FilterType filterType, EntityType entityType, Entity parent);
 
     void deleteEntity(String name, EntityType type);
+
+    /**
+     *
+     * @param name the name of the new calc
+     * @param trigger the id of the point that will trigger this calc
+     * @param target the id of the point that will get the result recorded to it
+     * @param formula the formula to computer e.g. (x * 2) or (x + y + z)
+     * @param xVar  nullable - the id of the point to use as the x variable
+     * @param yVar nullable - the id of the point to use as the y variable
+     * @param zVar  nullable - the id of the point to use as the z variable
+     */
+
+    Calculation createCalculation(String name, String trigger, String target, String formula, String xVar, String yVar, String zVar);
+
 }

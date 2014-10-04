@@ -48,9 +48,7 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class NimbitsClientImpl implements NimbitsClient {
     private static final UrlContainer MOVE_CRON = UrlContainer.getInstance("/cron/moveCron");
@@ -164,6 +162,15 @@ public class NimbitsClientImpl implements NimbitsClient {
             params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
         }
         List<Value> sample = helper.doGet(ValueModel.class, path, params, valueListType, true);
+        List<Value> fixed = new ArrayList<>(sample.size());
+        Set<Long> test = new HashSet<>(sample.size());
+        for (Value value : sample) {
+            if (! test.contains(value.getTimestamp().getTime())) {
+                fixed.add(value);
+                test.add(value.getTimestamp().getTime());
+            }
+
+        }
         return sample;
 
     }

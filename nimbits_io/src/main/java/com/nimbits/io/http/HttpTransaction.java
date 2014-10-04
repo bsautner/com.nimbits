@@ -154,10 +154,11 @@ public class HttpTransaction {
             inputStream.close();
 
         } catch (ClientProtocolException e) {
-
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
         } catch (IOException e) {
-
-
+            e.printStackTrace();
         }
         return processResponse(clz, type, result, expectList);
 

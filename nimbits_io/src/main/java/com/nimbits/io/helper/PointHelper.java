@@ -31,4 +31,6 @@ public interface PointHelper extends EntityHelper {
      * @throws java.lang.IllegalArgumentException
      */
     Point getPoint(String name);
+
+
 }

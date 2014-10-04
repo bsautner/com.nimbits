@@ -16,12 +16,6 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.trigger.TargetEntity;
 import com.nimbits.client.model.trigger.TriggerEntity;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 2/18/12
- * Time: 10:04 AM
- */
 public class CalculationModelFactory {
 
     private CalculationModelFactory() {

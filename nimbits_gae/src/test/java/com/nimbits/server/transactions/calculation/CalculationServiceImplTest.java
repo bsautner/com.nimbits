@@ -111,7 +111,8 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         org.junit.Assert.assertEquals(vz.get(0).getDoubleValue(), rz, DELTA);
 
         Thread.sleep(1000);
-        CalculationServiceFactory.getInstance(engine, taskService).process(req, user, trigger);
+        //added dummy value to end here - calc service now uses a value to preserve time
+        CalculationServiceFactory.getInstance(engine, taskService).process(req, user, trigger, ValueFactory.createValueModel(123.00));
         Thread.sleep(1000);
         final List<Value> endResult = valueService.getCurrentValue(target);
         org.junit.Assert.assertNotNull(endResult);

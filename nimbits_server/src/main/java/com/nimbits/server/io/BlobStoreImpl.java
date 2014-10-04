@@ -108,7 +108,7 @@ public class BlobStoreImpl implements BlobStore {
         try {
             final List<Value> retObj = new ArrayList<Value>();
             final Query q = pm.newQuery(ValueBlobStoreEntity.class);
-            q.setFilter("entity == k && minTimestamp <= et && minTimestamp >= st ");
+            q.setFilter("entity == k && minTimestamp <= et && maxTimestamp >= st ");
             q.declareParameters("String k, Long et, Long st");
             q.setOrdering("minTimestamp desc");
 
@@ -118,7 +118,8 @@ public class BlobStoreImpl implements BlobStore {
                     List<Value> values = readValuesFromFile(e.getBlobKey(), e.getLength());
                     for (final Value vx : values) {
                         if (timespan.contains(vx.getTimestamp())) {
-                            retObj.add(vx);
+                                 retObj.add(vx);
+
                         }
                     }
                 }

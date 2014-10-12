@@ -19,17 +19,17 @@
 
     <!-- Administrators and users will be sent to this URL for application support -->
     <Support>
-        <Link rel="support" href="http://www.nimbits.com?content=domain" />
+        <Link rel="support" href="http://www.nimbits.com?content=domain"/>
     </Support>
 
     <!-- Show this link in Google's universal navigation for all users -->
     <Extension id="navLink" type="link">
         <Name>Nimbits</Name>
         <Url>https://cloud.nimbits.com/openid?hd=${DOMAIN_NAME}</Url>
-        <Scope ref="docsFeed" />
-        <Scope ref="calendarAPI" />
-        <Scope ref="spreadsheetsFeed" />
-        <Scope ref="contentFeed" />
+        <Scope ref="docsFeed"/>
+        <Scope ref="calendarAPI"/>
+        <Scope ref="spreadsheetsFeed"/>
+        <Scope ref="contentFeed"/>
     </Extension>
 
     <!-- Declare our OpenID realm so our app is white listed -->

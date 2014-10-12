@@ -25,8 +25,8 @@
 
     function getOffsets(offsets, width, height) {
         return [
-            parseFloat(offsets[ 0 ]) * ( rpercent.test(offsets[ 0 ]) ? width / 100 : 1 ),
-            parseFloat(offsets[ 1 ]) * ( rpercent.test(offsets[ 1 ]) ? height / 100 : 1 )
+                parseFloat(offsets[ 0 ]) * ( rpercent.test(offsets[ 0 ]) ? width / 100 : 1 ),
+                parseFloat(offsets[ 1 ]) * ( rpercent.test(offsets[ 1 ]) ? height / 100 : 1 )
         ];
     }
 
@@ -382,14 +382,14 @@
                     overRight = collisionPosLeft + data.collisionWidth - outerWidth - offsetLeft,
                     myOffset = data.my[ 0 ] === "left" ?
                         -data.elemWidth :
-                        data.my[ 0 ] === "right" ?
-                            data.elemWidth :
-                            0,
+                            data.my[ 0 ] === "right" ?
+                        data.elemWidth :
+                        0,
                     atOffset = data.at[ 0 ] === "left" ?
                         data.targetWidth :
-                        data.at[ 0 ] === "right" ?
-                            -data.targetWidth :
-                            0,
+                            data.at[ 0 ] === "right" ?
+                        -data.targetWidth :
+                        0,
                     offset = -2 * data.offset[ 0 ],
                     newOverRight,
                     newOverLeft;
@@ -418,14 +418,14 @@
                     top = data.my[ 1 ] === "top",
                     myOffset = top ?
                         -data.elemHeight :
-                        data.my[ 1 ] === "bottom" ?
-                            data.elemHeight :
-                            0,
+                            data.my[ 1 ] === "bottom" ?
+                        data.elemHeight :
+                        0,
                     atOffset = data.at[ 1 ] === "top" ?
                         data.targetHeight :
-                        data.at[ 1 ] === "bottom" ?
-                            -data.targetHeight :
-                            0,
+                            data.at[ 1 ] === "bottom" ?
+                        -data.targetHeight :
+                        0,
                     offset = -2 * data.offset[ 1 ],
                     newOverTop,
                     newOverBottom;

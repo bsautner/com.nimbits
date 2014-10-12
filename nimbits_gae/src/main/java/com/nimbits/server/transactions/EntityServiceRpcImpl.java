@@ -13,7 +13,6 @@
 package com.nimbits.server.transactions;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.server.Datastore;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
@@ -21,37 +20,49 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityServiceRpc;
-import com.nimbits.server.ApplicationListener;
-import com.nimbits.server.NimbitsEngine;
-import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.user.UserHelper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import javax.jdo.PersistenceManagerFactory;
+import javax.servlet.ServletException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+@Service
 public class EntityServiceRpcImpl extends RemoteServiceServlet implements EntityServiceRpc {
     final static Logger logger = Logger.getLogger(EntityServiceRpcImpl.class.getName());
 
-    private final NimbitsEngine engine = ApplicationListener.createEngine();
-    private final EntityService service = EntityServiceFactory.getInstance(engine);
+    @Autowired
+    private EntityService entityService;
+
+    @Autowired
+    private UserHelper userHelper;
 
     @Override
     public List<Entity> addUpdateEntityRpc(final List<Entity> entity) throws ClassNotFoundException {
-        return service.addUpdateEntity(entity);
+        return entityService.addUpdateEntity(entity);
 
     }
 
     @Override
+    public void init() throws ServletException {
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+
+
+    }
+
+
+    @Override
     public List<Entity> deleteEntityRpc(final List<Entity> entityList) {
-        User u = UserHelper.getUser(engine).get(0);
+        User u = userHelper.getUser().get(0);
         if (u != null && !entityList.isEmpty()) {
 
-            return service.deleteEntity(u, entityList);
+            return entityService.deleteEntity(u, entityList);
         } else {
             return Collections.emptyList();
         }
@@ -60,7 +71,7 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
 
     @Override
     public Map<String, Entity> getEntityMapRpc(final User user, final int type, final int limit) {
-        return service.getEntityModelMap(user, EntityType.get(type), limit);
+        return entityService.getEntityModelMap(user, EntityType.get(type), limit);
     }
 
     @Override
@@ -76,7 +87,7 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
                 p.setKey(null);
                 List<Entity> list = new ArrayList<Entity>(1);
                 list.add(p);
-                return service.addUpdateEntity(list);
+                return entityService.addUpdateEntity(list);
             //return PointServiceFactory.getInstance().copyPoint(getUser(), originalEntity, newName);
 
             case category:
@@ -92,13 +103,13 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
     @Override
     public List<Entity> getEntitiesRpc(final User user) {
 
-        List<Entity> result =  service.getEntities(user);
+        List<Entity> result = entityService.getEntities(user);
         logger.info("getEntitiesRpc:: " + result.size());
         return result;
     }
 
     @Override
     public List<Entity> getEntityByKeyRpc(final User user, final String entityId, final EntityType type) {
-        return service.getEntityByKey(user, entityId, type);
+        return entityService.getEntityByKey(user, entityId, type);
     }
 }

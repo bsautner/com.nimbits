@@ -89,7 +89,7 @@
                 if (o.val().length > max || o.val().length < min) {
                     o.addClass("ui-state-error");
                     updateTips("Length of " + n + " must be between " +
-                    min + " and " + max + ".");
+                            min + " and " + max + ".");
                     return false;
                 } else {
                     return true;
@@ -127,10 +127,10 @@
 
                         if (bValid) {
                             $("#users tbody").append("<tr>" +
-                            "<td>" + name.val() + "</td>" +
-                            "<td>" + email.val() + "</td>" +
-                            "<td>" + password.val() + "</td>" +
-                            "</tr>");
+                                    "<td>" + name.val() + "</td>" +
+                                    "<td>" + email.val() + "</td>" +
+                                    "<td>" + password.val() + "</td>" +
+                                    "</tr>");
                             $(this).dialog("close");
                         }
                     },

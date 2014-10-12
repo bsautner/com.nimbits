@@ -16,13 +16,14 @@ import com.nimbits.client.common.Utils;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.constants.UserMessages;
 import com.nimbits.client.enums.*;
+import com.nimbits.client.exception.ValueException;
+import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.location.LocationFactory;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueData;
@@ -30,7 +31,6 @@ import com.nimbits.client.model.value.impl.ValueDataModel;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.server.api.ApiServlet;
-import com.nimbits.client.exception.ValueException;
 import com.nimbits.server.gson.GsonFactory;
 
 import javax.servlet.http.HttpServletRequest;
@@ -46,7 +46,6 @@ import java.util.logging.Logger;
 public class ValueServletImpl extends ApiServlet {
     final private static Logger log = Logger.getLogger(ValueServletImpl.class.getName());
     final private static String WORD_DOUBLE = "double";
-
 
 
     @Override
@@ -83,7 +82,7 @@ public class ValueServletImpl extends ApiServlet {
                     }
 //                    log.info(location.toString());
                     v = ValueFactory.createValueModel(l, vx.getDoubleValue(), vx.getTimestamp(),
-                             vx.getData(), AlertType.OK);
+                            vx.getData(), AlertType.OK);
                 }
 
 
@@ -121,7 +120,7 @@ public class ValueServletImpl extends ApiServlet {
             doInit(req, resp, ExportType.plain);
             final PrintWriter out = resp.getWriter();
             Value nv = null;
-            final String format = getParam(Parameters.format) == null ?  WORD_DOUBLE : getParam(Parameters.format);
+            final String format = getParam(Parameters.format) == null ? WORD_DOUBLE : getParam(Parameters.format);
 
             if (format.equals(Parameters.json.getText()) && !Utils.isEmptyString(getParam(Parameters.json))) {
                 nv = GsonFactory.getInstance().fromJson(getParam(Parameters.json), ValueModel.class);
@@ -154,7 +153,7 @@ public class ValueServletImpl extends ApiServlet {
         }
 
 
-        nv = ValueFactory.createValueModel(location1, value, timestamp,  vd, AlertType.OK);
+        nv = ValueFactory.createValueModel(location1, value, timestamp, vd, AlertType.OK);
         return nv;
     }
 
@@ -201,7 +200,7 @@ public class ValueServletImpl extends ApiServlet {
                 // request
                 final Value newValue = ValueFactory.createValueModel(
                         nv.getLocation(), nv.getDoubleValue(),
-                        nv.getTimestamp(),  nv.getData(), AlertType.OK);
+                        nv.getTimestamp(), nv.getData(), AlertType.OK);
 
 
                 value = valueService.recordValue(req, u, p, newValue, false);

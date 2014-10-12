@@ -22,6 +22,8 @@ import com.google.gson.JsonParser;
 import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.enums.point.PointType;
+import com.nimbits.client.exception.ValueException;
+import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
@@ -30,17 +32,16 @@ import com.nimbits.client.model.location.LocationFactory;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueDataModel;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.server.ApplicationListener;
 import com.nimbits.server.api.ApiServlet;
-import com.nimbits.client.exception.ValueException;
+import com.nimbits.server.communication.xmpp.XmppService;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.json.JsonHelper;
-import com.nimbits.server.transaction.user.AuthenticationServiceFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,20 +53,20 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 
-@SuppressWarnings("serial")
+@Service
 public class XMPPReceiverServlet extends ApiServlet {
 
 
     private static final Pattern COMPILE = Pattern.compile("/");
     private static final Pattern PATTERN = Pattern.compile("=");
 
+    @Autowired
+    private XmppService xmppService;
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
         User u;
         String body;
-
-        setEngine(ApplicationListener.createEngine());
 
 
 //            doInit(req, resp, ExportType.json);
@@ -76,10 +77,10 @@ public class XMPPReceiverServlet extends ApiServlet {
         final String j[] = COMPILE.split(fromJid.getId());
         final String email = j[0].toLowerCase();
 
-        List<Entity> result = entityService.getEntityByKey(AuthenticationServiceFactory.getInstance(engine).getAdmin(), email, EntityType.user);
+        List<Entity> result = entityService.getEntityByKey(userService.getAdmin(), email, EntityType.user);
         if (!result.isEmpty()) {
             u = (User) result.get(0);
-            u.addAccessKey(AuthenticationServiceFactory.getInstance(engine).authenticatedKey(u));
+            u.addAccessKey(userService.authenticatedKey(u));
 
             if (body.toLowerCase().trim().equals("ls")) {
                 //sendPointList(u);
@@ -92,7 +93,7 @@ public class XMPPReceiverServlet extends ApiServlet {
                 sendCurrentValue(body, u);
 
             } else if (body.toLowerCase().startsWith("c ")) {
-                engine.getXmppService().sendMessage("creating point...", u.getEmail());
+                xmppService.sendMessage("creating point...", u.getEmail());
 
                 createPoint(body, u);
 
@@ -102,7 +103,7 @@ public class XMPPReceiverServlet extends ApiServlet {
             } else if (JsonHelper.isJson(body)) { //it's json from the sdk
                 processJson(req, u, body);
             } else {
-                engine.getXmppService().sendMessage(":( I don't understand you - try ? ", u.getEmail());
+                xmppService.sendMessage(":( I don't understand you - try ? ", u.getEmail());
             }
         }
 
@@ -132,12 +133,12 @@ public class XMPPReceiverServlet extends ApiServlet {
                     try {
                         v = valueService.recordValue(req, u, point, p.getValue(), false);
 
-                    point.setValue(v);
-                    String result = gson.toJson(point);
-                    engine.getXmppService().sendMessage(result, u.getEmail());
-                } catch (ValueException e) {
-                e.printStackTrace();
-            }
+                        point.setValue(v);
+                        String result = gson.toJson(point);
+                        xmppService.sendMessage(result, u.getEmail());
+                    } catch (ValueException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 break;
@@ -145,12 +146,12 @@ public class XMPPReceiverServlet extends ApiServlet {
     }
 
     private void sendHelp(User u) {
-        engine.getXmppService().sendMessage("Usage:", u.getEmail());
-        engine.getXmppService().sendMessage("? | Help", u.getEmail());
-        engine.getXmppService().sendMessage("c pointname | Create a data point", u.getEmail());
-        engine.getXmppService().sendMessage("pointname? | getInstance the current value of a point", u.getEmail());
-        engine.getXmppService().sendMessage("pointname=3.14 | record a value to that point", u.getEmail());
-        engine.getXmppService().sendMessage("pointname=Foo Bar | record a text value to that point", u.getEmail());
+        xmppService.sendMessage("Usage:", u.getEmail());
+        xmppService.sendMessage("? | Help", u.getEmail());
+        xmppService.sendMessage("c pointname | Create a data point", u.getEmail());
+        xmppService.sendMessage("pointname? | getInstance the current value of a point", u.getEmail());
+        xmppService.sendMessage("pointname=3.14 | record a value to that point", u.getEmail());
+        xmppService.sendMessage("pointname=Foo Bar | record a text value to that point", u.getEmail());
     }
 
     private void createPoint(final String body, final User u) {
@@ -164,7 +165,7 @@ public class XMPPReceiverServlet extends ApiServlet {
 
         entityService.addUpdateEntity(u, Arrays.<Entity>asList(p));
         //PointServiceFactory.getInstance().addPoint(u, entity);
-        engine.getXmppService().sendMessage(pointName.getValue() + " created", u.getEmail());
+        xmppService.sendMessage(pointName.getValue() + " created", u.getEmail());
 
 
     }
@@ -212,10 +213,10 @@ public class XMPPReceiverServlet extends ApiServlet {
                         Value v = sample.get(0);
                         String t = "";
 
-                        engine.getXmppService().sendMessage(e.getName().getValue() + '='
+                        xmppService.sendMessage(e.getName().getValue() + '='
                                 + v.getDoubleValue() + ' ' + t, u.getEmail());
                     } else {
-                        engine.getXmppService().sendMessage(pointName.getValue() + " has no data", u.getEmail());
+                        xmppService.sendMessage(pointName.getValue() + " has no data", u.getEmail());
 
                     }
                 } else {
@@ -229,7 +230,7 @@ public class XMPPReceiverServlet extends ApiServlet {
             message = "I don't understand";
 
         }
-        engine.getXmppService().sendMessage(message + " " + body, u.getEmail());
+        xmppService.sendMessage(message + " " + body, u.getEmail());
 
     }
 

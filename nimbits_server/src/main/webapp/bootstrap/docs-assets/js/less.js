@@ -24,9 +24,9 @@
             filename: document.location.href.replace(/#.*$/, ""),
             dumpLineNumbers: r.dumpLineNumbers
         })).parse(e[t].innerHTML || "", function (n, r) {
-            var i = r.toCSS(), s = e[t];
-            s.type = "text/css", s.styleSheet ? s.styleSheet.cssText = i : s.innerHTML = i
-        })
+                var i = r.toCSS(), s = e[t];
+                s.type = "text/css", s.styleSheet ? s.styleSheet.cssText = i : s.innerHTML = i
+            })
     }
 
     function g(e, t) {
@@ -82,17 +82,17 @@
                     files: u,
                     dumpLineNumbers: r.dumpLineNumbers
                 })).parse(e, function (r, i) {
-                    if (r)return k(r, f);
-                    try {
-                        n(r, i, e, t, {
-                            local: !1,
-                            lastModified: l,
-                            remaining: s
-                        }, f), N(document.getElementById("less-error-message:" + E(f)))
-                    } catch (r) {
-                        k(r, f)
-                    }
-                })
+                        if (r)return k(r, f);
+                        try {
+                            n(r, i, e, t, {
+                                local: !1,
+                                lastModified: l,
+                                remaining: s
+                            }, f), N(document.getElementById("less-error-message:" + E(f)))
+                        } catch (r) {
+                            k(r, f)
+                        }
+                    })
             } catch (c) {
                 k(c, f)
             }
@@ -1632,8 +1632,8 @@
         }, e.Ruleset.prototype = {
             eval: function (t) {
                 var n = this.selectors && this.selectors.map(function (e) {
-                        return e.eval(t)
-                    }), r = new e.Ruleset(n, this.rules.slice(0), this.strictImports), i;
+                    return e.eval(t)
+                }), r = new e.Ruleset(n, this.rules.slice(0), this.strictImports), i;
                 r.originalRuleset = this, r.root = this.root, r.allowImports = this.allowImports, this.debugInfo && (r.debugInfo = this.debugInfo), t.frames.unshift(r), (r.root || r.allowImports || !r.strictImports) && r.evalImports(t);
                 for (var s = 0; s < r.rules.length; s++)r.rules[s]instanceof e.mixin.Definition && (r.rules[s].frames = t.frames.slice(0));
                 var o = t.mediaBlocks && t.mediaBlocks.length || 0;
@@ -1804,8 +1804,8 @@
                 };
                 this.evaluating = !0;
                 if (n = e.find(t.frames, function (e) {
-                        if (r = e.variable(i))return r.value.eval(t)
-                    }))return this.evaluating = !1, n;
+                    if (r = e.variable(i))return r.value.eval(t)
+                }))return this.evaluating = !1, n;
                 throw{type: "Name", message: "variable " + i + " is undefined", filename: this.file, index: this.index}
             }
         }

@@ -148,7 +148,7 @@
                         // scripts is true for back-compat
                         jQuery.merge(this, jQuery.parseHTML(
                             match[1],
-                            context && context.nodeType ? context.ownerDocument || context : document,
+                                context && context.nodeType ? context.ownerDocument || context : document,
                             true
                         ));
 
@@ -462,7 +462,7 @@
                 return String(obj);
             }
             return typeof obj === "object" || typeof obj === "function" ?
-            class2type[ core_toString.call(obj) ] || "object" :
+                class2type[ core_toString.call(obj) ] || "object" :
                 typeof obj;
         },
 
@@ -553,8 +553,8 @@
                     // Make sure the incoming data is actual JSON
                     // Logic borrowed from http://json.org/json2.js
                     if (rvalidchars.test(data.replace(rvalidescape, "@")
-                            .replace(rvalidtokens, "]")
-                            .replace(rvalidbraces, ""))) {
+                        .replace(rvalidtokens, "]")
+                        .replace(rvalidbraces, ""))) {
 
                         return ( new Function("return " + data) )();
                     }
@@ -687,7 +687,7 @@
             if (arr != null) {
                 if (isArraylike(Object(arr))) {
                     jQuery.merge(ret,
-                        typeof arr === "string" ?
+                            typeof arr === "string" ?
                             [ arr ] : arr
                     );
                 } else {
@@ -962,8 +962,8 @@
         }
 
         return type === "array" || type !== "function" &&
-        ( length === 0 ||
-        typeof length === "number" && length > 0 && ( length - 1 ) in obj );
+            ( length === 0 ||
+                typeof length === "number" && length > 0 && ( length - 1 ) in obj );
     }
 
 // All jQuery objects should point back to these
@@ -1850,12 +1850,12 @@
             if (typeof data === "string") {
                 try {
                     data = data === "true" ? true :
-                        data === "false" ? false :
+                            data === "false" ? false :
                             data === "null" ? null :
-                                // Only convert to a number if it doesn't change the string
-                                +data + "" === data ? +data :
-                                    rbrace.test(data) ? jQuery.parseJSON(data) :
-                                        data;
+                        // Only convert to a number if it doesn't change the string
+                            +data + "" === data ? +data :
+                        rbrace.test(data) ? jQuery.parseJSON(data) :
+                            data;
                 } catch (e) {
                 }
 
@@ -2092,7 +2092,7 @@
                     cur = elem.nodeType === 1 && ( elem.className ?
                         ( " " + elem.className + " " ).replace(rclass, " ") :
                         " "
-                    );
+                        );
 
                     if (cur) {
                         j = 0;
@@ -2130,7 +2130,7 @@
                     cur = elem.nodeType === 1 && ( elem.className ?
                         ( " " + elem.className + " " ).replace(rclass, " ") :
                         ""
-                    );
+                        );
 
                     if (cur) {
                         j = 0;
@@ -2220,7 +2220,7 @@
                         // handle most common string cases
                         ret.replace(rreturn, "") :
                         // handle cases where value is null/undef or number
-                        ret == null ? "" : ret;
+                            ret == null ? "" : ret;
                 }
 
                 return;
@@ -2291,7 +2291,7 @@
 
                         // oldIE doesn't update selected after form reset (#2551)
                         if (( option.selected || i === index ) &&
-                                // Don't return options that are disabled or in a disabled optgroup
+                            // Don't return options that are disabled or in a disabled optgroup
                             ( jQuery.support.optDisabled ? !option.disabled : option.getAttribute("disabled") === null ) &&
                             ( !option.parentNode.disabled || !jQuery.nodeName(option.parentNode, "optgroup") )) {
 
@@ -2486,9 +2486,9 @@
 
                     return attributeNode && attributeNode.specified ?
                         parseInt(attributeNode.value, 10) :
-                        rfocusable.test(elem.nodeName) || rclickable.test(elem.nodeName) && elem.href ?
-                            0 :
-                            undefined;
+                            rfocusable.test(elem.nodeName) || rclickable.test(elem.nodeName) && elem.href ?
+                        0 :
+                        undefined;
                 }
             }
         }
@@ -2505,13 +2505,13 @@
                 attr = typeof prop === "boolean" && elem.getAttribute(name),
                 detail = typeof prop === "boolean" ?
 
-                    getSetInput && getSetAttribute ?
+                        getSetInput && getSetAttribute ?
                     attr != null :
-                        // oldIE fabricates an empty string for missing boolean attributes
-                        // and conflates checked/selected into attroperties
-                        ruseDefault.test(name) ?
-                            elem[ jQuery.camelCase("default-" + name) ] :
-                            !!attr :
+                    // oldIE fabricates an empty string for missing boolean attributes
+                    // and conflates checked/selected into attroperties
+                    ruseDefault.test(name) ?
+                        elem[ jQuery.camelCase("default-" + name) ] :
+                        !!attr :
 
                     // fetch an attribute node for properties not recognized as boolean
                     elem.getAttributeNode(name);
@@ -2547,7 +2547,7 @@
                     // Ignore the value *property* by using defaultValue
                     elem.defaultValue :
 
-                    ret && ret.specified ? ret.value : undefined;
+                        ret && ret.specified ? ret.value : undefined;
             },
             set: function (elem, value, name) {
                 if (jQuery.nodeName(elem, "input")) {
@@ -2981,7 +2981,7 @@
 
                 event.type = i > 1 ?
                     bubbleType :
-                special.bindType || type;
+                    special.bindType || type;
 
                 // jQuery handler
                 handle = ( jQuery._data(cur, "events") || {} )[ event.type ] && jQuery._data(cur, "handle");
@@ -3118,7 +3118,7 @@
 
                             if (matches[ sel ] === undefined) {
                                 matches[ sel ] = handleObj.needsContext ?
-                                jQuery(sel, this).index(cur) >= 0 :
+                                    jQuery(sel, this).index(cur) >= 0 :
                                     jQuery.find(sel, this, null, [ cur ]).length;
                             }
                             if (matches[ sel ]) {
@@ -3346,7 +3346,7 @@
             // Events bubbling up the document may have been marked as prevented
             // by a handler lower down the tree; reflect the correct value.
             this.isDefaultPrevented = ( src.defaultPrevented || src.returnValue === false ||
-            src.getPreventDefault && src.getPreventDefault() ) ? returnTrue : returnFalse;
+                src.getPreventDefault && src.getPreventDefault() ) ? returnTrue : returnFalse;
 
             // Event type
         } else {
@@ -3736,15 +3736,15 @@
             slice = arr.slice,
         // Use a stripped-down indexOf if we can't use a native one
             indexOf = arr.indexOf || function (elem) {
-                    var i = 0,
-                        len = this.length;
-                    for (; i < len; i++) {
-                        if (this[i] === elem) {
-                            return i;
-                        }
+                var i = 0,
+                    len = this.length;
+                for (; i < len; i++) {
+                    if (this[i] === elem) {
+                        return i;
                     }
-                    return -1;
-                },
+                }
+                return -1;
+            },
 
 
         // Regular expressions
@@ -3788,12 +3788,12 @@
                 "ATTR": new RegExp("^" + attributes),
                 "PSEUDO": new RegExp("^" + pseudos),
                 "CHILD": new RegExp("^:(only|first|last|nth|nth-last)-(child|of-type)(?:\\(" + whitespace +
-                "*(even|odd|(([+-]|)(\\d*)n|)" + whitespace + "*(?:([+-]|)" + whitespace +
-                "*(\\d+)|))" + whitespace + "*\\)|)", "i"),
+                    "*(even|odd|(([+-]|)(\\d*)n|)" + whitespace + "*(?:([+-]|)" + whitespace +
+                    "*(\\d+)|))" + whitespace + "*\\)|)", "i"),
                 // For use in libraries implementing .is()
                 // We use this for POS matching in `select`
                 "needsContext": new RegExp("^" + whitespace + "*[>+~]|:(even|odd|eq|gt|lt|nth|first|last)(?:\\(" +
-                whitespace + "*((?:-\\d)?\\d*)" + whitespace + "*\\)|)(?=[^-]|$)", "i")
+                    whitespace + "*((?:-\\d)?\\d*)" + whitespace + "*\\)|)(?=[^-]|$)", "i")
             },
 
             rsibling = /[\x20\t\r\n\f]*[+~]/,
@@ -3817,10 +3817,10 @@
                 return high !== high ?
                     escaped :
                     // BMP codepoint
-                    high < 0 ?
-                        String.fromCharCode(high + 0x10000) :
-                        // Supplemental Plane codepoint (surrogate pair)
-                        String.fromCharCode(high >> 10 | 0xD800, high & 0x3FF | 0xDC00);
+                        high < 0 ?
+                    String.fromCharCode(high + 0x10000) :
+                    // Supplemental Plane codepoint (surrogate pair)
+                    String.fromCharCode(high >> 10 | 0xD800, high & 0x3FF | 0xDC00);
             };
 
 // Use a stripped-down slice if we can't use a native one
@@ -4069,9 +4069,9 @@
 
                 // Test
                 var pass = doc.getElementsByName &&
-                        // buggy browsers will return fewer than the correct 2
+                    // buggy browsers will return fewer than the correct 2
                     doc.getElementsByName(expando).length === 2 +
-                        // buggy browsers will return more than the correct 0
+                    // buggy browsers will return more than the correct 0
                     doc.getElementsByName(expando + 0).length;
                 support.getIdNotName = !doc.getElementById(expando);
 
@@ -4085,7 +4085,7 @@
             Expr.attrHandle = assert(function (div) {
                 div.innerHTML = "<a href='#'></a>";
                 return div.firstChild && typeof div.firstChild.getAttribute !== strundefined &&
-                div.firstChild.getAttribute("href") === "#";
+                    div.firstChild.getAttribute("href") === "#";
             }) ?
             {} :
             {
@@ -4119,9 +4119,9 @@
                         var m = context.getElementById(id);
 
                         return m ?
-                            m.id === id || typeof m.getAttributeNode !== strundefined && m.getAttributeNode("id").value === id ?
-                                [m] :
-                                undefined :
+                                m.id === id || typeof m.getAttributeNode !== strundefined && m.getAttributeNode("id").value === id ?
+                            [m] :
+                            undefined :
                             [];
                     }
                 };
@@ -4260,8 +4260,8 @@
                     return a === bup || !!( bup && bup.nodeType === 1 && (
                         adown.contains ?
                             adown.contains(bup) :
-                        a.compareDocumentPosition && a.compareDocumentPosition(bup) & 16
-                    ));
+                            a.compareDocumentPosition && a.compareDocumentPosition(bup) & 16
+                        ));
                 } :
                 function (a, b) {
                     if (b) {
@@ -4315,10 +4315,10 @@
                         // Parentless nodes are either documents or disconnected
                     } else if (!aup || !bup) {
                         return a === doc ? -1 :
-                            b === doc ? 1 :
-                                aup ? -1 :
-                                    bup ? 1 :
-                                        0;
+                                b === doc ? 1 :
+                            aup ? -1 :
+                                bup ? 1 :
+                                    0;
 
                         // If the nodes are siblings, we can do a quick check
                     } else if (aup === bup) {
@@ -4345,9 +4345,9 @@
                         siblingCheck(ap[i], bp[i]) :
 
                         // Otherwise nodes in our document sort first
-                        ap[i] === preferredDoc ? -1 :
+                            ap[i] === preferredDoc ? -1 :
                             bp[i] === preferredDoc ? 1 :
-                                0;
+                        0;
                 };
 
             // Always assume the presence of duplicates if sort doesn't
@@ -4379,8 +4379,8 @@
 
                     // IE 9's matchesSelector returns false on disconnected nodes
                     if (ret || support.disconnectedMatch ||
-                            // As well, disconnected nodes are said to be in a document
-                            // fragment in IE 9
+                        // As well, disconnected nodes are said to be in a document
+                        // fragment in IE 9
                         elem.document && elem.document.nodeType !== 11) {
                         return ret;
                     }
@@ -4418,7 +4418,7 @@
             }
             return ( (val = elem.getAttributeNode(name)) || elem.getAttribute(name) ) && elem[ name ] === true ?
                 name :
-                val && val.specified ? val.value : null;
+                    val && val.specified ? val.value : null;
         };
 
         Sizzle.error = function (msg) {
@@ -4619,9 +4619,9 @@
 
                         // Strip excess characters from unquoted arguments
                     } else if (unquoted && rpseudo.test(unquoted) &&
-                            // Get excess from tokenize (recursively)
+                        // Get excess from tokenize (recursively)
                         (excess = tokenize(unquoted, true)) &&
-                            // advance to the next closing parenthesis
+                        // advance to the next closing parenthesis
                         (excess = unquoted.indexOf(")", unquoted.length - excess) - unquoted.length)) {
 
                         // excess is a negative index
@@ -4653,10 +4653,10 @@
                     var pattern = classCache[ className + " " ];
 
                     return pattern ||
-                    (pattern = new RegExp("(^|" + whitespace + ")" + className + "(" + whitespace + "|$)")) &&
-                    classCache(className, function (elem) {
-                        return pattern.test(elem.className || (typeof elem.getAttribute !== strundefined && elem.getAttribute("class")) || "");
-                    });
+                        (pattern = new RegExp("(^|" + whitespace + ")" + className + "(" + whitespace + "|$)")) &&
+                        classCache(className, function (elem) {
+                            return pattern.test(elem.className || (typeof elem.getAttribute !== strundefined && elem.getAttribute("class")) || "");
+                        });
                 },
 
                 "ATTR": function (name, operator, check) {
@@ -4673,13 +4673,13 @@
                         result += "";
 
                         return operator === "=" ? result === check :
-                            operator === "!=" ? result !== check :
+                                operator === "!=" ? result !== check :
                                 operator === "^=" ? check && result.indexOf(check) === 0 :
-                                    operator === "*=" ? check && result.indexOf(check) > -1 :
-                                        operator === "$=" ? check && result.slice(-check.length) === check :
-                                            operator === "~=" ? ( " " + result + " " ).indexOf(check) > -1 :
-                                                operator === "|=" ? result === check || result.slice(0, check.length + 1) === check + "-" :
-                                                    false;
+                                operator === "*=" ? check && result.indexOf(check) > -1 :
+                                operator === "$=" ? check && result.slice(-check.length) === check :
+                                operator === "~=" ? ( " " + result + " " ).indexOf(check) > -1 :
+                                operator === "|=" ? result === check || result.slice(0, check.length + 1) === check + "-" :
+                            false;
                     };
                 },
 
@@ -4733,7 +4733,7 @@
                                     while ((node = ++nodeIndex && node && node[ dir ] ||
 
                                         // Fallback to seeking `elem` from the start
-                                    (diff = nodeIndex = 0) || start.pop())) {
+                                        (diff = nodeIndex = 0) || start.pop())) {
 
                                         // When found, cache indexes on `parent` and break
                                         if (node.nodeType === 1 && ++diff && node === elem) {
@@ -4750,7 +4750,7 @@
                                 } else {
                                     // Use the same loop as above to seek `elem` from the start
                                     while ((node = ++nodeIndex && node && node[ dir ] ||
-                                    (diff = nodeIndex = 0) || start.pop())) {
+                                        (diff = nodeIndex = 0) || start.pop())) {
 
                                         if (( ofType ? node.nodeName.toLowerCase() === name : node.nodeType === 1 ) && ++diff) {
                                             // Cache the index of each encountered element
@@ -4870,7 +4870,7 @@
                         do {
                             if ((elemLang = documentIsXML ?
                                 elem.getAttribute("xml:lang") || elem.getAttribute("lang") :
-                                    elem.lang)) {
+                                elem.lang)) {
 
                                 elemLang = elemLang.toLowerCase();
                                 return elemLang === lang || elemLang.indexOf(lang + "-") === 0;
@@ -4958,8 +4958,8 @@
                     // IE6 and 7 will map elem.type to 'text' for new HTML5 types (search, etc)
                     // use getAttribute instead to test this case
                     return elem.nodeName.toLowerCase() === "input" &&
-                    elem.type === "text" &&
-                    ( (attr = elem.getAttribute("type")) == null || attr.toLowerCase() === elem.type );
+                        elem.type === "text" &&
+                        ( (attr = elem.getAttribute("type")) == null || attr.toLowerCase() === elem.type );
                 },
 
                 // Position-in-collection
@@ -5202,13 +5202,13 @@
 
                     matcherOut = matcher ?
                         // If we have a postFinder, or filtered seed, or non-seed postFilter or preexisting results,
-                        postFinder || ( seed ? preFilter : preexisting || postFilter ) ?
+                            postFinder || ( seed ? preFilter : preexisting || postFilter ) ?
 
-                            // ...intermediate processing is necessary
-                            [] :
+                        // ...intermediate processing is necessary
+                        [] :
 
-                            // ...otherwise use results directly
-                            results :
+                        // ...otherwise use results directly
+                        results :
                         matcherIn;
 
                 // Find primary matches
@@ -5259,7 +5259,7 @@
                     // Add elements to results, through postFinder if defined
                 } else {
                     matcherOut = condense(
-                        matcherOut === results ?
+                            matcherOut === results ?
                             matcherOut.splice(preexisting, matcherOut.length) :
                             matcherOut
                     );
@@ -5309,12 +5309,12 @@
                             }
                         }
                         return setMatcher(
-                            i > 1 && elementMatcher(matchers),
-                            i > 1 && toSelector(tokens.slice(0, i - 1)).replace(rtrim, "$1"),
+                                i > 1 && elementMatcher(matchers),
+                                i > 1 && toSelector(tokens.slice(0, i - 1)).replace(rtrim, "$1"),
                             matcher,
-                            i < j && matcherFromTokens(tokens.slice(i, j)),
-                            j < len && matcherFromTokens((tokens = tokens.slice(j))),
-                            j < len && toSelector(tokens)
+                                i < j && matcherFromTokens(tokens.slice(i, j)),
+                                j < len && matcherFromTokens((tokens = tokens.slice(j))),
+                                j < len && toSelector(tokens)
                         );
                     }
                     matchers.push(matcher);
@@ -5495,9 +5495,9 @@
                         if ((find = Expr.find[ type ])) {
                             // Search, expanding context for leading sibling combinators
                             if ((seed = find(
-                                    token.matches[0].replace(runescape, funescape),
+                                token.matches[0].replace(runescape, funescape),
                                     rsibling.test(tokens[0].type) && context.parentNode || context
-                                ))) {
+                            ))) {
 
                                 // If seed is empty or no tokens remain, we can return early
                                 tokens.splice(i, 1);
@@ -5614,10 +5614,10 @@
 
         is: function (selector) {
             return !!selector && (
-                typeof selector === "string" ?
-                    // If this is a positional/relative selector, check membership in the returned set
-                    // so $("p:first").is("p:last") won't return true for a doc with two "p".
-                    rneedsContext.test(selector) ?
+                    typeof selector === "string" ?
+                // If this is a positional/relative selector, check membership in the returned set
+                // so $("p:first").is("p:last") won't return true for a doc with two "p".
+                rneedsContext.test(selector) ?
                     jQuery(selector, this.context).index(this[0]) >= 0 :
                     jQuery.filter(selector, this).length > 0 :
                 this.filter(selector).length > 0 );
@@ -5730,7 +5730,7 @@
         },
         contents: function (elem) {
             return jQuery.nodeName(elem, "iframe") ?
-            elem.contentDocument || elem.contentWindow.document :
+                elem.contentDocument || elem.contentWindow.document :
                 jQuery.merge([], elem.childNodes);
         }
     }, function (name, fn) {
@@ -6162,7 +6162,7 @@
                         }
 
                         callback.call(
-                            table && jQuery.nodeName(this[i], "table") ?
+                                table && jQuery.nodeName(this[i], "table") ?
                                 findOrAppend(this[i], "tbody") :
                                 this[i],
                             node,
@@ -6362,8 +6362,8 @@
         var elems, elem,
             i = 0,
             found = typeof context.getElementsByTagName !== core_strundefined ? context.getElementsByTagName(tag || "*") :
-                typeof context.querySelectorAll !== core_strundefined ? context.querySelectorAll(tag || "*") :
-                    undefined;
+                    typeof context.querySelectorAll !== core_strundefined ? context.querySelectorAll(tag || "*") :
+                undefined;
 
         if (!found) {
             for (found = [], elems = context.childNodes || context; (elem = elems[i]) != null; i++) {
@@ -6496,9 +6496,9 @@
                                 tmp.firstChild :
 
                                 // String was a bare <thead> or <tfoot>
-                                wrap[1] === "<table>" && !rtbody.test(elem) ?
-                                    tmp :
-                                    0;
+                                    wrap[1] === "<table>" && !rtbody.test(elem) ?
+                                tmp :
+                                0;
 
                             j = elem && elem.childNodes.length;
                             while (j--) {
@@ -7027,7 +7027,7 @@
         var matches = rnumsplit.exec(value);
         return matches ?
             // Guard against undefined "subtract", e.g., when used as in cssHooks
-        Math.max(0, matches[ 1 ] - ( subtract || 0 )) + ( matches[ 2 ] || "px" ) :
+            Math.max(0, matches[ 1 ] - ( subtract || 0 )) + ( matches[ 2 ] || "px" ) :
             value;
     }
 
@@ -7036,7 +7036,7 @@
                 // If we already have the right measurement, avoid augmentation
                 4 :
                 // Otherwise initialize for horizontal or vertical properties
-                name === "width" ? 1 : 0,
+                    name === "width" ? 1 : 0,
 
             val = 0;
 
@@ -7103,14 +7103,14 @@
 
         // use the active box-sizing model to add/subtract irrelevant styles
         return ( val +
-        augmentWidthOrHeight(
-            elem,
-            name,
-            extra || ( isBorderBox ? "border" : "content" ),
-            valueIsBorderBox,
-            styles
-        )
-        ) + "px";
+            augmentWidthOrHeight(
+                elem,
+                name,
+                    extra || ( isBorderBox ? "border" : "content" ),
+                valueIsBorderBox,
+                styles
+            )
+            ) + "px";
     }
 
 // Try to determine the default display value of an element
@@ -7125,9 +7125,9 @@
             if (display === "none" || !display) {
                 // Use the already-created iframe if possible
                 iframe = ( iframe ||
-                jQuery("<iframe frameborder='0' width='0' height='0'/>")
-                    .css("cssText", "display:block !important")
-                ).appendTo(doc.documentElement);
+                    jQuery("<iframe frameborder='0' width='0' height='0'/>")
+                        .css("cssText", "display:block !important")
+                    ).appendTo(doc.documentElement);
 
                 // Always write a new HTML skeleton so Webkit and Firefox don't choke on reuse
                 doc = ( iframe[0].contentWindow || iframe[0].contentDocument ).document;
@@ -7174,7 +7174,7 @@
                             elem,
                             name,
                             extra,
-                            jQuery.support.boxSizing && jQuery.css(elem, "boxSizing", false, styles) === "border-box",
+                                jQuery.support.boxSizing && jQuery.css(elem, "boxSizing", false, styles) === "border-box",
                             styles
                         ) : 0
                 );
@@ -7187,7 +7187,7 @@
             get: function (elem, computed) {
                 // IE uses filters for opacity
                 return ropacity.test((computed && elem.currentStyle ? elem.currentStyle.filter : elem.style.filter) || "") ?
-                ( 0.01 * parseFloat(RegExp.$1) ) + "" :
+                    ( 0.01 * parseFloat(RegExp.$1) ) + "" :
                     computed ? "1" : "";
             },
 
@@ -7221,7 +7221,7 @@
                 // otherwise, set new filter values
                 style.filter = ralpha.test(filter) ?
                     filter.replace(ralpha, opacity) :
-                filter + " " + opacity;
+                    filter + " " + opacity;
             }
         };
     }
@@ -7253,7 +7253,7 @@
                             computed = curCSS(elem, prop);
                             // if curCSS returns percentage, fallback to offset
                             return rnumnonpx.test(computed) ?
-                            jQuery(elem).position()[ prop ] + "px" :
+                                jQuery(elem).position()[ prop ] + "px" :
                                 computed;
                         }
                     }
@@ -7268,7 +7268,7 @@
             // Support: Opera <= 12.12
             // Opera reports offsetWidths and offsetHeights less than zero on some elements
             return elem.offsetWidth <= 0 && elem.offsetHeight <= 0 ||
-            (!jQuery.support.reliableHiddenOffsets && ((elem.style && elem.style.display) || jQuery.css(elem, "display")) === "none");
+                (!jQuery.support.reliableHiddenOffsets && ((elem.style && elem.style.display) || jQuery.css(elem, "display")) === "none");
         };
 
         jQuery.expr.filters.visible = function (elem) {
@@ -7323,8 +7323,8 @@
                     var type = this.type;
                     // Use .is(":disabled") so that fieldset[disabled] works
                     return this.name && !jQuery(this).is(":disabled") &&
-                    rsubmittable.test(this.nodeName) && !rsubmitterTypes.test(type) &&
-                    ( this.checked || !manipulation_rcheckableType.test(type) );
+                        rsubmittable.test(this.nodeName) && !rsubmitterTypes.test(type) &&
+                        ( this.checked || !manipulation_rcheckableType.test(type) );
                 })
                 .map(function (i, elem) {
                     var val = jQuery(this).val();
@@ -7404,8 +7404,8 @@
     }
 
     jQuery.each(("blur focus focusin focusout load resize scroll unload click dblclick " +
-    "mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +
-    "change select submit keydown keypress keyup error contextmenu").split(" "), function (i, name) {
+        "mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +
+        "change select submit keydown keypress keyup error contextmenu").split(" "), function (i, name) {
 
         // Handle event binding
         jQuery.fn[ name ] = function (data, fn) {
@@ -7863,10 +7863,10 @@
             if (s.crossDomain == null) {
                 parts = rurl.exec(s.url.toLowerCase());
                 s.crossDomain = !!( parts &&
-                ( parts[ 1 ] !== ajaxLocParts[ 1 ] || parts[ 2 ] !== ajaxLocParts[ 2 ] ||
-                ( parts[ 3 ] || ( parts[ 1 ] === "http:" ? 80 : 443 ) ) !=
-                ( ajaxLocParts[ 3 ] || ( ajaxLocParts[ 1 ] === "http:" ? 80 : 443 ) ) )
-                );
+                    ( parts[ 1 ] !== ajaxLocParts[ 1 ] || parts[ 2 ] !== ajaxLocParts[ 2 ] ||
+                        ( parts[ 3 ] || ( parts[ 1 ] === "http:" ? 80 : 443 ) ) !=
+                        ( ajaxLocParts[ 3 ] || ( ajaxLocParts[ 1 ] === "http:" ? 80 : 443 ) ) )
+                    );
             }
 
             // Convert data if not already a string
@@ -7918,7 +7918,7 @@
                         cacheURL.replace(rts, "$1_=" + ajax_nonce++) :
 
                         // Otherwise add one to the end
-                    cacheURL + ( ajax_rquery.test(cacheURL) ? "&" : "?" ) + "_=" + ajax_nonce++;
+                        cacheURL + ( ajax_rquery.test(cacheURL) ? "&" : "?" ) + "_=" + ajax_nonce++;
                 }
             }
 
@@ -7940,8 +7940,8 @@
             // Set the Accepts header for the server, depending on the dataType
             jqXHR.setRequestHeader(
                 "Accept",
-                s.dataTypes[ 0 ] && s.accepts[ s.dataTypes[0] ] ?
-                s.accepts[ s.dataTypes[0] ] + ( s.dataTypes[ 0 ] !== "*" ? ", " + allTypes + "; q=0.01" : "" ) :
+                    s.dataTypes[ 0 ] && s.accepts[ s.dataTypes[0] ] ?
+                    s.accepts[ s.dataTypes[0] ] + ( s.dataTypes[ 0 ] !== "*" ? ", " + allTypes + "; q=0.01" : "" ) :
                     s.accepts[ "*" ]
             );
 
@@ -8228,7 +8228,7 @@
 
                                 // If prev can be converted to accepted input
                                 conv = converters[ prev + " " + tmp[ 0 ] ] ||
-                                converters[ "* " + tmp[ 0 ] ];
+                                    converters[ "* " + tmp[ 0 ] ];
                                 if (conv) {
                                     // Condense equivalence converters
                                     if (conv === true) {
@@ -8377,7 +8377,7 @@
 
         var callbackName, overwritten, responseContainer,
             jsonProp = s.jsonp !== false && ( rjsonp.test(s.url) ?
-                    "url" :
+                "url" :
                 typeof s.data === "string" && !( s.contentType || "" ).indexOf("application/x-www-form-urlencoded") && rjsonp.test(s.data) && "data"
                 );
 
@@ -8443,12 +8443,12 @@
         xhrId = 0,
     // #5280: Internet Explorer will keep connections alive if we don't abort on unload
         xhrOnUnloadAbort = window.ActiveXObject && function () {
-                // Abort all pending requests
-                var key;
-                for (key in xhrCallbacks) {
-                    xhrCallbacks[ key ](undefined, true);
-                }
-            };
+            // Abort all pending requests
+            var key;
+            for (key in xhrCallbacks) {
+                xhrCallbacks[ key ](undefined, true);
+            }
+        };
 
 // Functions to create xhrs
     function createStandardXHR() {
@@ -8766,7 +8766,7 @@
                 tweens: [],
                 createTween: function (prop, end) {
                     var tween = jQuery.Tween(elem, animation.opts, prop, end,
-                        animation.opts.specialEasing[ prop ] || animation.opts.easing);
+                            animation.opts.specialEasing[ prop ] || animation.opts.easing);
                     animation.tweens.push(tween);
                     return tween;
                 },
@@ -9283,13 +9283,13 @@
     jQuery.speed = function (speed, easing, fn) {
         var opt = speed && typeof speed === "object" ? jQuery.extend({}, speed) : {
             complete: fn || !fn && easing ||
-            jQuery.isFunction(speed) && speed,
+                jQuery.isFunction(speed) && speed,
             duration: speed,
             easing: fn && easing || easing && !jQuery.isFunction(easing) && easing
         };
 
         opt.duration = jQuery.fx.off ? 0 : typeof opt.duration === "number" ? opt.duration :
-            opt.duration in jQuery.fx.speeds ? jQuery.fx.speeds[ opt.duration ] : jQuery.fx.speeds._default;
+                opt.duration in jQuery.fx.speeds ? jQuery.fx.speeds[ opt.duration ] : jQuery.fx.speeds._default;
 
         // normalize opt.queue - true/undefined/null -> "fx"
         if (opt.queue == null || opt.queue === true) {
@@ -9545,9 +9545,9 @@
     function getWindow(elem) {
         return jQuery.isWindow(elem) ?
             elem :
-            elem.nodeType === 9 ?
+                elem.nodeType === 9 ?
             elem.defaultView || elem.parentWindow :
-                false;
+            false;
     }
 
 // Create innerHeight, innerWidth, height, width, outerHeight and outerWidth methods

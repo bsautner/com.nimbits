@@ -942,8 +942,8 @@ DygraphLayout.prototype.computePlotArea = function () {
 DygraphLayout.prototype.setAnnotations = function (d) {
     this.annotations = [];
     var e = this.attr_("xValueParser") || function (a) {
-            return a
-        };
+        return a
+    };
     for (var c = 0; c < d.length; c++) {
         var b = {};
         if (!d[c].xval && d[c].x === undefined) {

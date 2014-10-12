@@ -50,7 +50,7 @@ import java.util.regex.Pattern;
 
 @Deprecated
 
-public class ChartApiServletImpl extends ApiServlet  {
+public class ChartApiServletImpl extends ApiServlet {
     private static final Logger log = Logger.getLogger(ChartApiServletImpl.class.getName());
     /**
      *
@@ -61,7 +61,6 @@ public class ChartApiServletImpl extends ApiServlet  {
     private static final int INT = 512;
     private static final Pattern COMPILE = Pattern.compile(",");
     private static final String PATH_GOOGLE_CHART_API = "http://chart.apis.google.com/chart";
-
 
 
     @Override

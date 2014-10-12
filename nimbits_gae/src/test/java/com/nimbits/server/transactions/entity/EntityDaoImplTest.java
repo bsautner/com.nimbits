@@ -28,7 +28,6 @@ import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.orm.PointEntity;
 import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.settings.SettingServiceFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -40,12 +39,14 @@ import static org.junit.Assert.*;
 public class EntityDaoImplTest extends NimbitsServletTest {
 
     EntityDao dao;
+
     @Before
     public void setup() {
         super.setup();
         dao = EntityServiceFactory.getDaoInstance(engine);
 
     }
+
     @Test
     public void addUpdateEntityTest() throws Exception {
 

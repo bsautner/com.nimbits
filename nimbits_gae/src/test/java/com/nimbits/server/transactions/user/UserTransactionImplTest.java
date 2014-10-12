@@ -19,7 +19,7 @@ import org.junit.Test;
 
 import static junit.framework.Assert.assertEquals;
 
- 
+
 public class UserTransactionImplTest extends NimbitsServletTest {
     @Test
     public void testGetHttpRequestUser() throws Exception {

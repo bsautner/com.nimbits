@@ -19,24 +19,37 @@ import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.service.user.UserService;
-import com.nimbits.server.transaction.entity.EntityServiceFactory;
+import com.nimbits.client.service.user.UserRpcService;
 import com.nimbits.server.transaction.entity.service.EntityService;
-import com.nimbits.server.transaction.settings.SettingServiceFactory;
 import com.nimbits.server.transaction.settings.SettingsService;
-import com.nimbits.server.transaction.user.AuthenticationServiceFactory;
+import com.nimbits.server.transaction.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.annotation.Resource;
+import javax.servlet.ServletException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+@Service
+public class UserRpcServiceImpl extends RemoteServiceServlet implements UserRpcService {
 
-public class UserRpcServiceImpl extends RemoteServiceServlet implements UserService {
+
+    @Autowired
+    private EntityService entityService;
+    @Autowired
+    private SettingsService settingsService;
+    @Autowired
+    private UserService userService;
+
+    @Override
+    public void init() throws ServletException {
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 
 
-    NimbitsEngine engine = ApplicationListener.createEngine();
-    private final EntityService entityService = EntityServiceFactory.getInstance(engine);
-    private final SettingsService settingsService = SettingServiceFactory.getServiceInstance(engine);
+    }
 
     @Override
     public User loginRpc(final String requestUri) {
@@ -47,7 +60,6 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements UserServ
         internetAddress = CommonFactory.createEmailAddress(admin);
 
 
-        com.nimbits.server.transaction.user.service.UserService userService = AuthenticationServiceFactory.getInstance(engine);
         final List<Entity> list = entityService
                 .getEntityByKey(
                         userService.getAnonUser(), internetAddress.getValue(), EntityType.user);

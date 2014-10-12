@@ -14,12 +14,6 @@ package com.nimbits.server.counter;
 
 import java.util.Date;
 
-/**
- * Created with IntelliJ IDEA.
- * User: benjamin
- * Date: 9/21/12
- * Time: 2:37 PM
- */
 
 public class CounterServiceImpl implements CounterService {
 

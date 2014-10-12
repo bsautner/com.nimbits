@@ -6,7 +6,7 @@ chmod +x /etc/init.d/nimbits
 useradd nimbits -U -s /bin/false
 chown -R nimbits:nimbits /opt/nimbits
 cd /opt/nimbits/webapps
-wget http://www.nimbits.com/download/nimbits_server_3.6.9.war -O nimbits.war
+wget http://www.nimbits.com/download/nimbits_server_3.7.0.war -O nimbits.war
 sudo update-rc.d nimbits defaults
 service nimbits restart
 

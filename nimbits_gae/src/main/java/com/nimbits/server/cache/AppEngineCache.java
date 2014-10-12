@@ -15,21 +15,25 @@ package com.nimbits.server.cache;
 import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.server.transaction.cache.BaseCache;
 import com.nimbits.server.transaction.cache.NimbitsCache;
+import org.springframework.stereotype.Component;
 
-import javax.cache.*;
+import javax.cache.Cache;
+import javax.cache.CacheException;
 import javax.cache.CacheFactory;
-
+import javax.cache.CacheManager;
 import java.util.Collections;
 import java.util.logging.Logger;
 
+@Component
 public class AppEngineCache extends BaseCache implements NimbitsCache {
     private final Cache cache;
     final static Logger logger = Logger.getLogger(AppEngineCache.class.getName());
+
     public AppEngineCache() throws CacheException {
 
         CacheFactory cacheFactory = CacheManager.getInstance().getCacheFactory();
         cache = cacheFactory.createCache(Collections.emptyMap());
-        logger.info("AppEngineCache created:: "  + (cache == null));
+        logger.info("AppEngineCache created:: " + (cache == null));
     }
 
     @Override

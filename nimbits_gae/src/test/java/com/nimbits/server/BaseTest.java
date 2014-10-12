@@ -12,16 +12,15 @@
 
 package com.nimbits.server;
 
-import com.nimbits.server.api.*;
+import com.nimbits.server.api.EntityApi;
+import com.nimbits.server.api.SeriesApi;
+import com.nimbits.server.api.SessionApi;
+import com.nimbits.server.api.ValueApi;
 import com.nimbits.server.process.cron.IdlePointCron;
 import com.nimbits.server.process.task.PointMaintTask;
 import com.nimbits.server.process.task.ValueTask;
 import org.junit.AfterClass;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.mock.web.MockServletContext;
-
-import javax.servlet.ServletContext;
 
 import static org.junit.Assert.assertTrue;
 
@@ -29,98 +28,20 @@ import static org.junit.Assert.assertTrue;
 public class BaseTest {
 
 
-    public  static ValueApi valueApi;
+    public static ValueApi valueApi;
     public static SessionApi sessionApi;
     public static EntityApi entityApi;
 
     public static SeriesApi seriesApi;
-    public  static ValueTask valueTask;
-    public  static IdlePointCron idleCron;
-    public  static PointMaintTask pointTask;
+    public static ValueTask valueTask;
+    public static IdlePointCron idleCron;
+    public static PointMaintTask pointTask;
 
     @AfterClass
     public static void tearDown() {
 
     }
-    @BeforeClass
-    public static void before() {
-        final MockServletContext context = new MockServletContext();
-        System.setProperty("appengine.orm.disable.duplicate.pmf.exception", "false");
 
-
-        NimbitsEngine engine = ApplicationListener.createEngine();
-
-        context.setAttribute("engine", engine);
-        context.setAttribute("task", ApplicationListener.getTaskService(engine));
-
-
-
-        sessionApi = new SessionApi() {
-            @Override
-            public ServletContext getServletContext() {
-
-                return context;
-
-            }
-        };
-
-        entityApi = new EntityApi() {
-            @Override
-            public ServletContext getServletContext() {
-
-                return context;
-
-            }
-        };
-
-
-
-        seriesApi = new SeriesApi() {
-            @Override
-            public ServletContext getServletContext() {
-
-                return context;
-
-            }
-        };
-
-        valueApi = new ValueApi() {
-            @Override
-            public ServletContext getServletContext() {
-
-                return context;
-
-            }
-        };
-
-        valueTask = new ValueTask() {
-            @Override
-            public ServletContext getServletContext() {
-
-                return context;
-
-            }
-        };
-
-        pointTask = new PointMaintTask() {
-            @Override
-            public ServletContext getServletContext() {
-
-                return context;
-
-            }
-        };
-
-
-        idleCron = new IdlePointCron() {
-            @Override
-            public ServletContext getServletContext() {
-
-                return context;
-
-            }
-        };
-    }
 
     @Test
     public void someTest() {

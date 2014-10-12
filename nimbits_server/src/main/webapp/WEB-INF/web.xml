@@ -3,16 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 		  http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         metadata-complete="true"
          version="3.0">
+
+
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
     <!--j2ee version-->
-    <filter>
-        <filter-name>usageFilter</filter-name>
-        <filter-class>com.nimbits.server.api.filter.ApiUsageFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>usageFilter</filter-name>
-        <url-pattern>/service/v2/*</url-pattern>
-    </filter-mapping>
+
 
     <filter>
         <filter-name>socketFilter</filter-name>
@@ -133,7 +132,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>com.nimbits UserService</servlet-name>
-        <url-pattern>/nimbits/userService</url-pattern>
+        <url-pattern>/nimbits/userRpcService</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

@@ -45,12 +45,20 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import retrofit.RequestInterceptor;
+import retrofit.RestAdapter;
+import retrofit.converter.GsonConverter;
+import retrofit.http.*;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
 
 public class NimbitsClientImpl implements NimbitsClient {
+
+
+
+
     private static final UrlContainer MOVE_CRON = UrlContainer.getInstance("/cron/moveCron");
     private static final UrlContainer VALUE_SERVICE = UrlContainer.getInstance("/service/v2/value");
     private static final UrlContainer SESSION_SERVICE = UrlContainer.getInstance("/service/v2/session");
@@ -69,14 +77,14 @@ public class NimbitsClientImpl implements NimbitsClient {
     private final EmailAddress email;
     private final UrlContainer instanceUrl;
     private final String accessKey;
-
+    private final Server server;
 
     public NimbitsClientImpl(Server server, EmailAddress email, String accessKey) {
         this.instanceUrl = UrlContainer.getInstance("http://" + server.getUrl());
         this.email = email;
         this.helper = new HttpHelper(email, server);
         this.accessKey = accessKey;
-
+        this.server = server;
     }
 
     @Override
@@ -316,26 +324,38 @@ public class NimbitsClientImpl implements NimbitsClient {
     }
 
     @Override
-    public void recordSeries(Point entity, List<Value> data) {
-        final Type listType = new TypeToken<List<PointModel>>() {
-        }.getType();
+    public void recordSeries(final Point point) {
+        recordSeries( Arrays.asList(point), email.getValue());
+    }
 
-        entity.setValues(data);
 
-        UrlContainer path = UrlContainer.combine(instanceUrl, SERIES_SERVICE);
-        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(3);
-        List<Point> points = new ArrayList<>(1);
-        points.add(entity);
-        String json = new GsonBuilder().create().toJson(points);
+    private void recordSeries(final List<Point> point, String email) {
 
-        params.add((new BasicNameValuePair(Parameters.id.getText(), entity.getKey())));
-        params.add((new BasicNameValuePair(Parameters.json.getText(), json)));
 
-        if (accessKey != null) {
-            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
-        }
-        helper.doPost(String.class, path, params, listType, false);
+        RequestInterceptor requestInterceptor = new RequestInterceptor() {
+            @Override
+            public void intercept(RequestInterceptor.RequestFacade request) {
+                if (!server.getApiKey().isEmpty()) {
+                    request.addHeader(Parameters.apikey.getText(), server.getApiKey().getValue());
+                }
+            }
+        };
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(instanceUrl.getUrl())
+                .setRequestInterceptor(requestInterceptor)
+
+                .build();
+
+        SeriesApi seriesApi = restAdapter.create(SeriesApi.class);
+
+        String response = seriesApi.recordSeries(point, email, accessKey);
+        System.out.print(response);
+
 
 
     }
+
+
+
 }
+

@@ -25,18 +25,15 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.NimbitsEngine;
 import com.nimbits.server.gson.*;
-import com.nimbits.server.process.task.impl.ValueTaskImpl;
-import com.nimbits.server.transaction.entity.EntityServiceFactory;
-import com.nimbits.server.transaction.entity.service.EntityService;
-import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
@@ -48,7 +45,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-
+@Service
 public class TaskServiceImpl implements TaskService {
     private final Logger log = Logger.getLogger(TaskServiceImpl.class.getName());
 
@@ -59,14 +56,13 @@ public class TaskServiceImpl implements TaskService {
     public static final String UTF_8 = "UTF-8";
 
 
-    private NimbitsEngine engine;
-    private EntityService entityService;
+    @Autowired
+    private ValueService valueService;
 
+    @Autowired
+    private ProcessValueTask processValueTask;
 
-    public TaskServiceImpl(NimbitsEngine engine) {
-        this.engine = engine;
-        this.entityService = EntityServiceFactory.getInstance(engine);
-
+    public TaskServiceImpl() {
 
     }
 
@@ -94,9 +90,9 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void startRecordValueTask(final HttpServletRequest req, final User u, final Entity entity, final Value value) {
 
-       // new RecordValueThread(this, req, u, entity, value ).start();
+        // new RecordValueThread(this, req, u, entity, value ).start();
         try {
-            ValueTaskImpl.processRequest(req, value, u, entity, entityService, engine, this);
+            processValueTask.processRequest(req, value, u, entity);
         } catch (ValueException e) {
             e.printStackTrace();
         }
@@ -123,7 +119,7 @@ public class TaskServiceImpl implements TaskService {
         @Override
         public void run() {
             try {
-                ValueTaskImpl.processRequest(req, value, u, entity, entityService, engine, service);
+                processValueTask.processRequest(req, value, u, entity);
             } catch (ValueException e) {
                 log.severe(e.getMessage());
 
@@ -161,7 +157,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void startMoveCachedValuesToStoreTask(Entity point) {
-        ValueService valueService = ValueServiceFactory.getInstance(engine, this);
+
         valueService.moveValuesFromCacheToStore(point);
     }
 

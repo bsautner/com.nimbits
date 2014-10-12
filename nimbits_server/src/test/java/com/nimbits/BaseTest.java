@@ -12,8 +12,6 @@
 
 package com.nimbits;
 
-import com.nimbits.server.ApplicationListener;
-import com.nimbits.server.NimbitsEngine;
 import com.nimbits.server.api.*;
 import com.nimbits.server.process.task.PointMaintTask;
 import com.nimbits.server.process.task.ValueTask;
@@ -46,11 +44,6 @@ public class BaseTest {
         final MockServletContext context = new MockServletContext();
         System.setProperty("appengine.orm.disable.duplicate.pmf.exception", "false");
 
-
-        NimbitsEngine engine = ApplicationListener.createEngine();
-
-        context.setAttribute("engine", engine);
-        context.setAttribute("task", ApplicationListener.getTaskService(engine));
 
         batchApi = new BatchApi() {
 

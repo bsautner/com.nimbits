@@ -25,14 +25,12 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.server.Datastore;
 import com.nimbits.server.NimbitsServletTest;
 import org.junit.Test;
 
 import java.util.*;
 
 import static org.junit.Assert.*;
-
 
 
 public class EntityServiceTest extends NimbitsServletTest {

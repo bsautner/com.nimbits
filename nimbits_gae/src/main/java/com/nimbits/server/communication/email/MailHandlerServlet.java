@@ -37,9 +37,9 @@ public class MailHandlerServlet extends HttpServlet {
      */
     private static final long serialVersionUID = 1L;
     private static final Logger log = Logger.getLogger(MailHandlerServlet.class.getName());
-     private TaskService TaskImpl;
+    private TaskService TaskImpl;
 
-     @Override
+    @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
 
@@ -93,11 +93,11 @@ public class MailHandlerServlet extends HttpServlet {
     }
 
 
-     public void setTaskImpl(TaskService TaskImpl) {
-         this.TaskImpl = TaskImpl;
-     }
+    public void setTaskImpl(TaskService TaskImpl) {
+        this.TaskImpl = TaskImpl;
+    }
 
-     public TaskService getTaskImpl() {
-         return TaskImpl;
-     }
- }
+    public TaskService getTaskImpl() {
+        return TaskImpl;
+    }
+}

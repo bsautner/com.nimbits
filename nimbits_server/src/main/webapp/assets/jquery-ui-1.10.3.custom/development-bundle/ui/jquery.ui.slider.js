@@ -51,10 +51,10 @@
 
             this.element
                 .addClass("ui-slider" +
-                " ui-slider-" + this.orientation +
-                " ui-widget" +
-                " ui-widget-content" +
-                " ui-corner-all");
+                    " ui-slider-" + this.orientation +
+                    " ui-widget" +
+                    " ui-widget-content" +
+                    " ui-corner-all");
 
             this._refresh();
             this._setOption("disabled", this.options.disabled);
@@ -118,7 +118,7 @@
                     classes = "ui-slider-range" +
                         // note: this isn't the most fittingly semantic framework class for this element,
                         // but worked best visually with a variety of themes
-                    " ui-widget-header ui-corner-all";
+                        " ui-widget-header ui-corner-all";
                 } else {
                     this.range.removeClass("ui-slider-range-min ui-slider-range-max")
                         // Handle range switching from true to min/max
@@ -129,7 +129,7 @@
                 }
 
                 this.range.addClass(classes +
-                ( ( options.range === "min" || options.range === "max" ) ? " ui-slider-range-" + options.range : "" ));
+                    ( ( options.range === "min" || options.range === "max" ) ? " ui-slider-range-" + options.range : "" ));
             } else {
                 this.range = $([]);
             }
@@ -149,11 +149,11 @@
 
             this.element
                 .removeClass("ui-slider" +
-                " ui-slider-horizontal" +
-                " ui-slider-vertical" +
-                " ui-widget" +
-                " ui-widget-content" +
-                " ui-corner-all");
+                    " ui-slider-horizontal" +
+                    " ui-slider-vertical" +
+                    " ui-widget" +
+                    " ui-widget-content" +
+                    " ui-corner-all");
 
             this._mouseDestroy();
         },
@@ -180,7 +180,7 @@
                 var thisDistance = Math.abs(normValue - that.values(i));
                 if (( distance > thisDistance ) ||
                     ( distance === thisDistance &&
-                    (i === that._lastChangedValue || that.values(i) === o.min ))) {
+                        (i === that._lastChangedValue || that.values(i) === o.min ))) {
                     distance = thisDistance;
                     closestHandle = $(this);
                     index = i;
@@ -204,10 +204,10 @@
             this._clickOffset = mouseOverHandle ? {left: 0, top: 0} : {
                 left: event.pageX - offset.left - ( closestHandle.width() / 2 ),
                 top: event.pageY - offset.top -
-                ( closestHandle.height() / 2 ) -
-                ( parseInt(closestHandle.css("borderTopWidth"), 10) || 0 ) -
-                ( parseInt(closestHandle.css("borderBottomWidth"), 10) || 0) +
-                ( parseInt(closestHandle.css("marginTop"), 10) || 0)
+                    ( closestHandle.height() / 2 ) -
+                    ( parseInt(closestHandle.css("borderTopWidth"), 10) || 0 ) -
+                    ( parseInt(closestHandle.css("borderBottomWidth"), 10) || 0) +
+                    ( parseInt(closestHandle.css("marginTop"), 10) || 0)
             };
 
             if (!this.handles.hasClass("ui-state-hover")) {
@@ -302,7 +302,7 @@
 
                 if (( this.options.values.length === 2 && this.options.range === true ) &&
                     ( ( index === 0 && newVal > otherVal) || ( index === 1 && newVal < otherVal ) )
-                ) {
+                    ) {
                     newVal = otherVal;
                 }
 
@@ -573,7 +573,7 @@
                 valueMin = this._valueMin();
                 valueMax = this._valueMax();
                 valPercent = ( valueMax !== valueMin ) ?
-                ( value - valueMin ) / ( valueMax - valueMin ) * 100 :
+                    ( value - valueMin ) / ( valueMax - valueMin ) * 100 :
                     0;
                 _set[ this.orientation === "horizontal" ? "left" : "bottom" ] = valPercent + "%";
                 this.handle.stop(1, 1)[ animate ? "animate" : "css" ](_set, o.animate);

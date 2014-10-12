@@ -358,7 +358,7 @@
                         role: "tooltip"
                     })
                     .addClass("ui-tooltip ui-widget ui-corner-all ui-widget-content " +
-                    ( this.options.tooltipClass || "" ));
+                        ( this.options.tooltipClass || "" ));
             $("<div>")
                 .addClass("ui-tooltip-content")
                 .appendTo(tooltip);

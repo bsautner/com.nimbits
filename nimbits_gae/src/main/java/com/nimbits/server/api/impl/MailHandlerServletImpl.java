@@ -91,7 +91,6 @@ public class MailHandlerServletImpl extends ApiServlet {
     }
 
 
-
     public void setTaskImpl(TaskService TaskImpl) {
         this.TaskImpl = TaskImpl;
     }

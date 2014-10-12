@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2013 Nimbits Inc.
  *
@@ -155,9 +154,9 @@ public class ShardedCounter {
      * the provided key does not exist, instead create an entity with the supplied
      * initial property value.
      *
-     * @param key the entity key to update or create
-     * @param prop the property name to be incremented
-     * @param increment the amount by which to increment
+     * @param key          the entity key to update or create
+     * @param prop         the property name to be incremented
+     * @param increment    the amount by which to increment
      * @param initialValue the value to use if the entity does not exist
      */
     private void incrementPropertyTx(Key key, String prop, long increment,

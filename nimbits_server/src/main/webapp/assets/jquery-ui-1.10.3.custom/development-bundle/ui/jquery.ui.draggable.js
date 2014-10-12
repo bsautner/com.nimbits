@@ -393,10 +393,10 @@
 
             if (o.containment === "window") {
                 this.containment = [
-                    $(window).scrollLeft() - this.offset.relative.left - this.offset.parent.left,
-                    $(window).scrollTop() - this.offset.relative.top - this.offset.parent.top,
-                    $(window).scrollLeft() + $(window).width() - this.helperProportions.width - this.margins.left,
-                    $(window).scrollTop() + ( $(window).height() || document.body.parentNode.scrollHeight ) - this.helperProportions.height - this.margins.top
+                        $(window).scrollLeft() - this.offset.relative.left - this.offset.parent.left,
+                        $(window).scrollTop() - this.offset.relative.top - this.offset.parent.top,
+                        $(window).scrollLeft() + $(window).width() - this.helperProportions.width - this.margins.left,
+                        $(window).scrollTop() + ( $(window).height() || document.body.parentNode.scrollHeight ) - this.helperProportions.height - this.margins.top
                 ];
                 return;
             }
@@ -405,8 +405,8 @@
                 this.containment = [
                     0,
                     0,
-                    $(document).width() - this.helperProportions.width - this.margins.left,
-                    ( $(document).height() || document.body.parentNode.scrollHeight ) - this.helperProportions.height - this.margins.top
+                        $(document).width() - this.helperProportions.width - this.margins.left,
+                        ( $(document).height() || document.body.parentNode.scrollHeight ) - this.helperProportions.height - this.margins.top
                 ];
                 return;
             }
@@ -430,10 +430,10 @@
             over = c.css("overflow") !== "hidden";
 
             this.containment = [
-                ( parseInt(c.css("borderLeftWidth"), 10) || 0 ) + ( parseInt(c.css("paddingLeft"), 10) || 0 ),
-                ( parseInt(c.css("borderTopWidth"), 10) || 0 ) + ( parseInt(c.css("paddingTop"), 10) || 0 ),
-                ( over ? Math.max(ce.scrollWidth, ce.offsetWidth) : ce.offsetWidth ) - ( parseInt(c.css("borderRightWidth"), 10) || 0 ) - ( parseInt(c.css("paddingRight"), 10) || 0 ) - this.helperProportions.width - this.margins.left - this.margins.right,
-                ( over ? Math.max(ce.scrollHeight, ce.offsetHeight) : ce.offsetHeight ) - ( parseInt(c.css("borderBottomWidth"), 10) || 0 ) - ( parseInt(c.css("paddingBottom"), 10) || 0 ) - this.helperProportions.height - this.margins.top - this.margins.bottom
+                    ( parseInt(c.css("borderLeftWidth"), 10) || 0 ) + ( parseInt(c.css("paddingLeft"), 10) || 0 ),
+                    ( parseInt(c.css("borderTopWidth"), 10) || 0 ) + ( parseInt(c.css("paddingTop"), 10) || 0 ),
+                    ( over ? Math.max(ce.scrollWidth, ce.offsetWidth) : ce.offsetWidth ) - ( parseInt(c.css("borderRightWidth"), 10) || 0 ) - ( parseInt(c.css("paddingRight"), 10) || 0 ) - this.helperProportions.width - this.margins.left - this.margins.right,
+                    ( over ? Math.max(ce.scrollHeight, ce.offsetHeight) : ce.offsetHeight ) - ( parseInt(c.css("borderBottomWidth"), 10) || 0 ) - ( parseInt(c.css("paddingBottom"), 10) || 0 ) - this.helperProportions.height - this.margins.top - this.margins.bottom
             ];
             this.relative_container = c;
         },
@@ -454,17 +454,17 @@
 
             return {
                 top: (
-                pos.top +																// The absolute mouse position
-                this.offset.relative.top * mod +										// Only for relative positioned nodes: Relative offset from element to offset parent
-                this.offset.parent.top * mod -										// The offsetParent's offset without borders (offset + border)
-                ( ( this.cssPosition === "fixed" ? -this.scrollParent.scrollTop() : this.offset.scroll.top ) * mod )
-                ),
+                    pos.top +																// The absolute mouse position
+                    this.offset.relative.top * mod +										// Only for relative positioned nodes: Relative offset from element to offset parent
+                    this.offset.parent.top * mod -										// The offsetParent's offset without borders (offset + border)
+                    ( ( this.cssPosition === "fixed" ? -this.scrollParent.scrollTop() : this.offset.scroll.top ) * mod )
+                    ),
                 left: (
-                pos.left +																// The absolute mouse position
-                this.offset.relative.left * mod +										// Only for relative positioned nodes: Relative offset from element to offset parent
-                this.offset.parent.left * mod -										// The offsetParent's offset without borders (offset + border)
-                ( ( this.cssPosition === "fixed" ? -this.scrollParent.scrollLeft() : this.offset.scroll.left ) * mod )
-                )
+                    pos.left +																// The absolute mouse position
+                    this.offset.relative.left * mod +										// Only for relative positioned nodes: Relative offset from element to offset parent
+                    this.offset.parent.left * mod -										// The offsetParent's offset without borders (offset + border)
+                    ( ( this.cssPosition === "fixed" ? -this.scrollParent.scrollLeft() : this.offset.scroll.left ) * mod )
+                    )
             };
 
         },
@@ -493,10 +493,10 @@
                     if (this.relative_container) {
                         co = this.relative_container.offset();
                         containment = [
-                            this.containment[ 0 ] + co.left,
-                            this.containment[ 1 ] + co.top,
-                            this.containment[ 2 ] + co.left,
-                            this.containment[ 3 ] + co.top
+                                this.containment[ 0 ] + co.left,
+                                this.containment[ 1 ] + co.top,
+                                this.containment[ 2 ] + co.left,
+                                this.containment[ 3 ] + co.top
                         ];
                     }
                     else {
@@ -530,19 +530,19 @@
 
             return {
                 top: (
-                pageY -																	// The absolute mouse position
-                this.offset.click.top -												// Click offset (relative to the element)
-                this.offset.relative.top -												// Only for relative positioned nodes: Relative offset from element to offset parent
-                this.offset.parent.top +												// The offsetParent's offset without borders (offset + border)
-                ( this.cssPosition === "fixed" ? -this.scrollParent.scrollTop() : this.offset.scroll.top )
-                ),
+                    pageY -																	// The absolute mouse position
+                    this.offset.click.top -												// Click offset (relative to the element)
+                    this.offset.relative.top -												// Only for relative positioned nodes: Relative offset from element to offset parent
+                    this.offset.parent.top +												// The offsetParent's offset without borders (offset + border)
+                    ( this.cssPosition === "fixed" ? -this.scrollParent.scrollTop() : this.offset.scroll.top )
+                    ),
                 left: (
-                pageX -																	// The absolute mouse position
-                this.offset.click.left -												// Click offset (relative to the element)
-                this.offset.relative.left -												// Only for relative positioned nodes: Relative offset from element to offset parent
-                this.offset.parent.left +												// The offsetParent's offset without borders (offset + border)
-                ( this.cssPosition === "fixed" ? -this.scrollParent.scrollLeft() : this.offset.scroll.left )
-                )
+                    pageX -																	// The absolute mouse position
+                    this.offset.click.left -												// Click offset (relative to the element)
+                    this.offset.relative.left -												// Only for relative positioned nodes: Relative offset from element to offset parent
+                    this.offset.parent.left +												// The offsetParent's offset without borders (offset + border)
+                    ( this.cssPosition === "fixed" ? -this.scrollParent.scrollLeft() : this.offset.scroll.left )
+                    )
             };
 
         },
@@ -660,7 +660,7 @@
                         if (this !== thisSortable &&
                             this.instance._intersectsWith(this.instance.containerCache) &&
                             $.contains(thisSortable.instance.element[0], this.instance.element[0])
-                        ) {
+                            ) {
                             innermostIntersecting = false;
                         }
                         return innermostIntersecting;

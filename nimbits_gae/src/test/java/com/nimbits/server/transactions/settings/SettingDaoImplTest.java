@@ -14,21 +14,24 @@ package com.nimbits.server.transactions.settings;
 
 import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.transaction.settings.SettingServiceFactory;
+import com.nimbits.server.transaction.settings.SettingsService;
 import org.junit.Test;
+
+import javax.annotation.Resource;
 
 import static org.junit.Assert.assertNotNull;
 
 
 public class SettingDaoImplTest extends NimbitsServletTest {
-
+    @Resource(name = "settingsService")
+    SettingsService settingsService;
 
     @Test
     public void getSettingsTest() throws Exception {
 
         Thread.sleep(2000);
         for (ServerSetting types : ServerSetting.values()) {
-            String settings = SettingServiceFactory.getServiceInstance(engine).getSetting(types);
+            String settings = settingsService.getSetting(types);
             assertNotNull(settings);
         }
 

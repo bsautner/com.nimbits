@@ -154,7 +154,7 @@
                 Math.abs(this._mouseDownEvent.pageX - event.pageX),
                 Math.abs(this._mouseDownEvent.pageY - event.pageY)
             ) >= this.options.distance
-            );
+                );
         },
 
         _mouseDelayMet: function (/* event */) {

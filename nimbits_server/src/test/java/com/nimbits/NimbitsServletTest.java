@@ -27,27 +27,22 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.ApplicationListener;
-import com.nimbits.server.NimbitsEngine;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.io.BlobStoreFactory;
 import com.nimbits.server.io.blob.BlobStore;
 import com.nimbits.server.process.task.TaskService;
-import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import com.nimbits.server.transaction.entity.service.EntityService;
-import com.nimbits.server.transaction.settings.SettingServiceFactory;
 import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.subscription.SubscriptionService;
-import com.nimbits.server.transaction.subscription.SubscriptionServiceFactory;
-import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.dao.ValueDao;
-import com.nimbits.server.transaction.value.dao.ValueDaoImpl;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.runner.RunWith;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
 import java.util.Map;
@@ -56,9 +51,10 @@ import java.util.UUID;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
-
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"/META-INF/applicationContext.xml", "/META-INF/context.xml"})
 public class NimbitsServletTest extends BaseTest {
-    public NimbitsEngine engine;
+
     public TaskService taskService;
     public SettingsService settingsService;
     public EntityService entityService;
@@ -93,24 +89,13 @@ public class NimbitsServletTest extends BaseTest {
     public ValueDao valueDao;
 
 
-
-
     @Before
     public void setup() {
 
 
-        engine = ApplicationListener.createEngine();
-        taskService = ApplicationListener.getTaskService(engine);
-        settingsService = SettingServiceFactory.getServiceInstance(engine);
-        entityService = EntityServiceFactory.getInstance(engine);
-        valueService = ValueServiceFactory.getInstance(engine, taskService);
-        blobStore = BlobStoreFactory.getInstance(engine.getPmf());
-        subscriptionService = SubscriptionServiceFactory.getServiceInstance(engine, taskService);
-
-
         req = new MockHttpServletRequest();
         resp = new MockHttpServletResponse();
-        valueDao = new ValueDaoImpl(engine);
+
         context = new MockServletContext();
 
 

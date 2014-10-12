@@ -138,13 +138,13 @@ public class TaskServiceImpl implements TaskService {
         }
         final Queue queue = QueueFactory.getQueue(DEFAULT);
         final String userJson = GsonFactory.getInstance().toJson(u);
-        final String pointJson = GsonFactory.getInstance().toJson(point);
+        final String pointId = point.getKey();
         final String valueJson = GsonFactory.getInstance().toJson(value);
 
         queue.add(TaskOptions.Builder
                 .withUrl(PATH_TASK_RECORD_VALUE)
                 .param(Parameters.pointUser.getText(), userJson)
-                .param(Parameters.pointJson.getText(), pointJson)
+                .param(Parameters.point.getText(), pointId)
                 .param(Parameters.valueJson.getText(), valueJson));
 
     }
@@ -177,12 +177,12 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void startMoveCachedValuesToStoreTask(final Entity point) {
-        final String json = GsonFactory.getInstance().toJson(point);
+        final String pointid = point.getKey();
 
         final Queue queue = QueueFactory.getQueue(DEFAULT);
 
         queue.add(TaskOptions.Builder.withUrl(PATH_MOVE_TASK)
-                .param(Parameters.point.getText(), json));
+                .param(Parameters.point.getText(), pointid));
     }
 
     @Override
@@ -197,8 +197,8 @@ public class TaskServiceImpl implements TaskService {
                 .registerTypeAdapter(User.class, new UserSerializer())
                 .registerTypeAdapter(Date.class, new DateSerializer())
                 .create();
-        final String json =  gson.toJson(entities);
-        final String userJson =  gson.toJson(user);
+        final String json = gson.toJson(entities);
+        final String userJson = gson.toJson(user);
         final String actionStr = update.getCode();
 
         final Queue queue = QueueFactory.getQueue(HB_QUEUE);

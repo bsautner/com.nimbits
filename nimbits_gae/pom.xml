@@ -93,7 +93,6 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
@@ -141,8 +140,6 @@
             <version>1.1</version>
             <scope>compile</scope>
         </dependency>
-
-
 
 
         <!--JDO Dependencies-->
@@ -197,7 +194,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>3.2.1.RELEASE</version>
+            <version>4.1.1.RELEASE</version>
             <scope>test</scope>
         </dependency>
 
@@ -229,7 +226,7 @@
 
     <build>
         <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
-        <finalName>nimbits_gae_3.6.9</finalName>
+        <finalName>nimbits_gae_3.7.0</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -275,12 +272,12 @@
                 <artifactId>appengine-maven-plugin</artifactId>
                 <version>${appengine.target.version}</version>
                 <configuration>
-                <port>8081</port>
+                    <port>8089</port>
 
-                <jvmFlags>
-                    <jvmFlag>-Xdebug</jvmFlag>
-                    <jvmFlag>-agentlib:jdwp=transport=dt_socket,address=5006,server=y,suspend=n</jvmFlag>
-                </jvmFlags>
+                    <jvmFlags>
+                        <jvmFlag>-Xdebug</jvmFlag>
+                        <jvmFlag>-agentlib:jdwp=transport=dt_socket,address=5006,server=y,suspend=n</jvmFlag>
+                    </jvmFlags>
                 </configuration>
             </plugin>
 
@@ -320,7 +317,7 @@
                         <resource>
                             <exclude>**/web.xml</exclude>
                             <!-- this is relative to the pom.xml directory -->
-                            <directory>../nimbits_server/src/main/webapp </directory>
+                            <directory>../nimbits_server/src/main/webapp</directory>
                         </resource>
                     </webResources>
                 </configuration>

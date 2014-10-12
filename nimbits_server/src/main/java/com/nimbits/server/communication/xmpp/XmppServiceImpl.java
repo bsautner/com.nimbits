@@ -17,8 +17,6 @@ import com.nimbits.client.model.email.EmailAddress;
 
 public class XmppServiceImpl implements XmppService {
 
-    private static final long serialVersionUID = 1L;
-
     @Override
     public void sendMessage(final String msgBody, final EmailAddress email) {
 

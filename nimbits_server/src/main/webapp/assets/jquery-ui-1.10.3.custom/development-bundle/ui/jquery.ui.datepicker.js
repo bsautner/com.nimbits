@@ -299,7 +299,7 @@
                 this.uuid += 1;
                 id = "dp" + this.uuid;
                 this._dialogInput = $("<input type='text' id='" + id +
-                "' style='position: absolute; top: -100px; width: 0px;'/>");
+                    "' style='position: absolute; top: -100px; width: 0px;'/>");
                 this._dialogInput.keydown(this._doKeyDown);
                 $("body").append(this._dialogInput);
                 inst = this._dialogInst = this._newInst(this._dialogInput, false);
@@ -568,7 +568,7 @@
                         break; // hide on tab out
                     case 13:
                         sel = $("td." + $.datepicker._dayOverClass + ":not(." +
-                        $.datepicker._currentClass + ")", inst.dpDiv);
+                            $.datepicker._currentClass + ")", inst.dpDiv);
                         if (sel[0]) {
                             $.datepicker._selectDay(event.target, inst.selectedMonth, inst.selectedYear, sel[0]);
                         }
@@ -802,9 +802,9 @@
                 inst.dpDiv.addClass("ui-datepicker-multi-" + cols).css("width", (width * cols) + "em");
             }
             inst.dpDiv[(numMonths[0] !== 1 || numMonths[1] !== 1 ? "add" : "remove") +
-            "Class"]("ui-datepicker-multi");
+                "Class"]("ui-datepicker-multi");
             inst.dpDiv[(this._get(inst, "isRTL") ? "add" : "remove") +
-            "Class"]("ui-datepicker-rtl");
+                "Class"]("ui-datepicker-rtl");
 
             if (inst === $.datepicker._curInst && $.datepicker._datepickerShowing && $.datepicker._shouldFocusInput(inst)) {
                 inst.input.focus();
@@ -945,7 +945,7 @@
                 return;
             }
             this._adjustInstDate(inst, offset +
-                (period === "M" ? this._get(inst, "showCurrentAtPos") : 0), // undo positioning
+                    (period === "M" ? this._get(inst, "showCurrentAtPos") : 0), // undo positioning
                 period);
             this._updateDatepicker(inst);
         },
@@ -1105,7 +1105,7 @@
                 iValue = 0,
                 shortYearCutoffTemp = (settings ? settings.shortYearCutoff : null) || this._defaults.shortYearCutoff,
                 shortYearCutoff = (typeof shortYearCutoffTemp !== "string" ? shortYearCutoffTemp :
-                new Date().getFullYear() % 100 + parseInt(shortYearCutoffTemp, 10)),
+                    new Date().getFullYear() % 100 + parseInt(shortYearCutoffTemp, 10)),
                 dayNamesShort = (settings ? settings.dayNamesShort : null) || this._defaults.dayNamesShort,
                 dayNames = (settings ? settings.dayNames : null) || this._defaults.dayNames,
                 monthNamesShort = (settings ? settings.monthNamesShort : null) || this._defaults.monthNamesShort,
@@ -1233,7 +1233,7 @@
                 year = new Date().getFullYear();
             } else if (year < 100) {
                 year += new Date().getFullYear() - new Date().getFullYear() % 100 +
-                (year <= shortYearCutoff ? 0 : -100);
+                    (year <= shortYearCutoff ? 0 : -100);
             }
 
             if (doy > -1) {
@@ -1271,7 +1271,7 @@
         W3C: "yy-mm-dd", // ISO 8601
 
         _ticksTo1970: (((1970 - 1) * 365 + Math.floor(1970 / 4) - Math.floor(1970 / 100) +
-        Math.floor(1970 / 400)) * 24 * 60 * 60 * 10000000),
+            Math.floor(1970 / 400)) * 24 * 60 * 60 * 10000000),
 
         /* Format a date object into a string value.
          * The format can be combinations of the following:
@@ -1364,7 +1364,7 @@
                                 break;
                             case "y":
                                 output += (lookAhead("y") ? date.getFullYear() :
-                                (date.getYear() % 100 < 10 ? "0" : "") + date.getYear() % 100);
+                                    (date.getYear() % 100 < 10 ? "0" : "") + date.getYear() % 100);
                                 break;
                             case "@":
                                 output += date.getTime();
@@ -1490,7 +1490,7 @@
                     }
 
                     var date = (offset.toLowerCase().match(/^c/) ?
-                                $.datepicker._getDate(inst) : null) || new Date(),
+                            $.datepicker._getDate(inst) : null) || new Date(),
                         year = date.getFullYear(),
                         month = date.getMonth(),
                         day = date.getDate(),
@@ -1646,7 +1646,7 @@
             }
             if (maxDate) {
                 maxDraw = this._daylightSavingAdjust(new Date(maxDate.getFullYear(),
-                    maxDate.getMonth() - (numMonths[0] * numMonths[1]) + 1, maxDate.getDate()));
+                        maxDate.getMonth() - (numMonths[0] * numMonths[1]) + 1, maxDate.getDate()));
                 maxDraw = (minDate && maxDraw < minDate ? minDate : maxDraw);
                 while (this._daylightSavingAdjust(new Date(drawYear, drawMonth, 1)) > maxDraw) {
                     drawMonth--;
@@ -1665,8 +1665,8 @@
                 this._getFormatConfig(inst)));
 
             prev = (this._canAdjustMonth(inst, -1, drawYear, drawMonth) ?
-            "<a class='ui-datepicker-prev ui-corner-all' data-handler='prev' data-event='click'" +
-            " title='" + prevText + "'><span class='ui-icon ui-icon-circle-triangle-" + ( isRTL ? "e" : "w") + "'>" + prevText + "</span></a>" :
+                "<a class='ui-datepicker-prev ui-corner-all' data-handler='prev' data-event='click'" +
+                " title='" + prevText + "'><span class='ui-icon ui-icon-circle-triangle-" + ( isRTL ? "e" : "w") + "'>" + prevText + "</span></a>" :
                 (hideIfNoPrevNext ? "" : "<a class='ui-datepicker-prev ui-corner-all ui-state-disabled' title='" + prevText + "'><span class='ui-icon ui-icon-circle-triangle-" + ( isRTL ? "e" : "w") + "'>" + prevText + "</span></a>"));
 
             nextText = this._get(inst, "nextText");
@@ -1675,8 +1675,8 @@
                 this._getFormatConfig(inst)));
 
             next = (this._canAdjustMonth(inst, +1, drawYear, drawMonth) ?
-            "<a class='ui-datepicker-next ui-corner-all' data-handler='next' data-event='click'" +
-            " title='" + nextText + "'><span class='ui-icon ui-icon-circle-triangle-" + ( isRTL ? "w" : "e") + "'>" + nextText + "</span></a>" :
+                "<a class='ui-datepicker-next ui-corner-all' data-handler='next' data-event='click'" +
+                " title='" + nextText + "'><span class='ui-icon ui-icon-circle-triangle-" + ( isRTL ? "w" : "e") + "'>" + nextText + "</span></a>" :
                 (hideIfNoPrevNext ? "" : "<a class='ui-datepicker-next ui-corner-all ui-state-disabled' title='" + nextText + "'><span class='ui-icon ui-icon-circle-triangle-" + ( isRTL ? "w" : "e") + "'>" + nextText + "</span></a>"));
 
             currentText = this._get(inst, "currentText");
@@ -1685,11 +1685,11 @@
                 this.formatDate(currentText, gotoDate, this._getFormatConfig(inst)));
 
             controls = (!inst.inline ? "<button type='button' class='ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all' data-handler='hide' data-event='click'>" +
-            this._get(inst, "closeText") + "</button>" : "");
+                this._get(inst, "closeText") + "</button>" : "");
 
             buttonPanel = (showButtonPanel) ? "<div class='ui-datepicker-buttonpane ui-widget-content'>" + (isRTL ? controls : "") +
-            (this._isInRange(inst, gotoDate) ? "<button type='button' class='ui-datepicker-current ui-state-default ui-priority-secondary ui-corner-all' data-handler='today' data-event='click'" +
-            ">" + currentText + "</button>" : "") + (isRTL ? "" : controls) + "</div>" : "";
+                (this._isInRange(inst, gotoDate) ? "<button type='button' class='ui-datepicker-current ui-state-default ui-priority-secondary ui-corner-all' data-handler='today' data-event='click'" +
+                    ">" + currentText + "</button>" : "") + (isRTL ? "" : controls) + "</div>" : "";
 
             firstDay = parseInt(this._get(inst, "firstDay"), 10);
             firstDay = (isNaN(firstDay) ? 0 : firstDay);
@@ -1733,17 +1733,17 @@
                         calender += "'>";
                     }
                     calender += "<div class='ui-datepicker-header ui-widget-header ui-helper-clearfix" + cornerClass + "'>" +
-                    (/all|left/.test(cornerClass) && row === 0 ? (isRTL ? next : prev) : "") +
-                    (/all|right/.test(cornerClass) && row === 0 ? (isRTL ? prev : next) : "") +
-                    this._generateMonthYearHeader(inst, drawMonth, drawYear, minDate, maxDate,
-                        row > 0 || col > 0, monthNames, monthNamesShort) + // draw month headers
-                    "</div><table class='ui-datepicker-calendar'><thead>" +
-                    "<tr>";
+                        (/all|left/.test(cornerClass) && row === 0 ? (isRTL ? next : prev) : "") +
+                        (/all|right/.test(cornerClass) && row === 0 ? (isRTL ? prev : next) : "") +
+                        this._generateMonthYearHeader(inst, drawMonth, drawYear, minDate, maxDate,
+                                row > 0 || col > 0, monthNames, monthNamesShort) + // draw month headers
+                        "</div><table class='ui-datepicker-calendar'><thead>" +
+                        "<tr>";
                     thead = (showWeek ? "<th class='ui-datepicker-week-col'>" + this._get(inst, "weekHeader") + "</th>" : "");
                     for (dow = 0; dow < 7; dow++) { // days of the week
                         day = (dow + firstDay) % 7;
                         thead += "<th" + ((dow + firstDay + 6) % 7 >= 5 ? " class='ui-datepicker-week-end'" : "") + ">" +
-                        "<span title='" + dayNames[day] + "'>" + dayNamesMin[day] + "</span></th>";
+                            "<span title='" + dayNames[day] + "'>" + dayNamesMin[day] + "</span></th>";
                     }
                     calender += thead + "</tr></thead><tbody>";
                     daysInMonth = this._getDaysInMonth(drawYear, drawMonth);
@@ -1758,32 +1758,32 @@
                     for (dRow = 0; dRow < numRows; dRow++) { // create date picker rows
                         calender += "<tr>";
                         tbody = (!showWeek ? "" : "<td class='ui-datepicker-week-col'>" +
-                        this._get(inst, "calculateWeek")(printDate) + "</td>");
+                            this._get(inst, "calculateWeek")(printDate) + "</td>");
                         for (dow = 0; dow < 7; dow++) { // create date picker days
                             daySettings = (beforeShowDay ?
                                 beforeShowDay.apply((inst.input ? inst.input[0] : null), [printDate]) : [true, ""]);
                             otherMonth = (printDate.getMonth() !== drawMonth);
                             unselectable = (otherMonth && !selectOtherMonths) || !daySettings[0] ||
-                            (minDate && printDate < minDate) || (maxDate && printDate > maxDate);
+                                (minDate && printDate < minDate) || (maxDate && printDate > maxDate);
                             tbody += "<td class='" +
-                            ((dow + firstDay + 6) % 7 >= 5 ? " ui-datepicker-week-end" : "") + // highlight weekends
-                            (otherMonth ? " ui-datepicker-other-month" : "") + // highlight days from other months
-                            ((printDate.getTime() === selectedDate.getTime() && drawMonth === inst.selectedMonth && inst._keyEvent) || // user pressed key
-                            (defaultDate.getTime() === printDate.getTime() && defaultDate.getTime() === selectedDate.getTime()) ?
-                                // or defaultDate is current printedDate and defaultDate is selectedDate
-                            " " + this._dayOverClass : "") + // highlight selected day
-                            (unselectable ? " " + this._unselectableClass + " ui-state-disabled" : "") +  // highlight unselectable days
-                            (otherMonth && !showOtherMonths ? "" : " " + daySettings[1] + // highlight custom dates
-                            (printDate.getTime() === currentDate.getTime() ? " " + this._currentClass : "") + // highlight selected day
-                            (printDate.getTime() === today.getTime() ? " ui-datepicker-today" : "")) + "'" + // highlight today (if different)
-                            ((!otherMonth || showOtherMonths) && daySettings[2] ? " title='" + daySettings[2].replace(/'/g, "&#39;") + "'" : "") + // cell title
-                            (unselectable ? "" : " data-handler='selectDay' data-event='click' data-month='" + printDate.getMonth() + "' data-year='" + printDate.getFullYear() + "'") + ">" + // actions
-                            (otherMonth && !showOtherMonths ? "&#xa0;" : // display for other months
-                                (unselectable ? "<span class='ui-state-default'>" + printDate.getDate() + "</span>" : "<a class='ui-state-default" +
-                                (printDate.getTime() === today.getTime() ? " ui-state-highlight" : "") +
-                                (printDate.getTime() === currentDate.getTime() ? " ui-state-active" : "") + // highlight selected day
-                                (otherMonth ? " ui-priority-secondary" : "") + // distinguish dates from other months
-                                "' href='#'>" + printDate.getDate() + "</a>")) + "</td>"; // display selectable date
+                                ((dow + firstDay + 6) % 7 >= 5 ? " ui-datepicker-week-end" : "") + // highlight weekends
+                                (otherMonth ? " ui-datepicker-other-month" : "") + // highlight days from other months
+                                ((printDate.getTime() === selectedDate.getTime() && drawMonth === inst.selectedMonth && inst._keyEvent) || // user pressed key
+                                    (defaultDate.getTime() === printDate.getTime() && defaultDate.getTime() === selectedDate.getTime()) ?
+                                    // or defaultDate is current printedDate and defaultDate is selectedDate
+                                    " " + this._dayOverClass : "") + // highlight selected day
+                                (unselectable ? " " + this._unselectableClass + " ui-state-disabled" : "") +  // highlight unselectable days
+                                (otherMonth && !showOtherMonths ? "" : " " + daySettings[1] + // highlight custom dates
+                                    (printDate.getTime() === currentDate.getTime() ? " " + this._currentClass : "") + // highlight selected day
+                                    (printDate.getTime() === today.getTime() ? " ui-datepicker-today" : "")) + "'" + // highlight today (if different)
+                                ((!otherMonth || showOtherMonths) && daySettings[2] ? " title='" + daySettings[2].replace(/'/g, "&#39;") + "'" : "") + // cell title
+                                (unselectable ? "" : " data-handler='selectDay' data-event='click' data-month='" + printDate.getMonth() + "' data-year='" + printDate.getFullYear() + "'") + ">" + // actions
+                                (otherMonth && !showOtherMonths ? "&#xa0;" : // display for other months
+                                    (unselectable ? "<span class='ui-state-default'>" + printDate.getDate() + "</span>" : "<a class='ui-state-default" +
+                                        (printDate.getTime() === today.getTime() ? " ui-state-highlight" : "") +
+                                        (printDate.getTime() === currentDate.getTime() ? " ui-state-active" : "") + // highlight selected day
+                                        (otherMonth ? " ui-priority-secondary" : "") + // distinguish dates from other months
+                                        "' href='#'>" + printDate.getDate() + "</a>")) + "</td>"; // display selectable date
                             printDate.setDate(printDate.getDate() + 1);
                             printDate = this._daylightSavingAdjust(printDate);
                         }
@@ -1795,7 +1795,7 @@
                         drawYear++;
                     }
                     calender += "</tbody></table>" + (isMultiMonth ? "</div>" +
-                    ((numMonths[0] > 0 && col === numMonths[1] - 1) ? "<div class='ui-datepicker-row-break'></div>" : "") : "");
+                        ((numMonths[0] > 0 && col === numMonths[1] - 1) ? "<div class='ui-datepicker-row-break'></div>" : "") : "");
                     group += calender;
                 }
                 html += group;
@@ -1806,8 +1806,7 @@
         },
 
         /* Generate the month and year header. */
-        _generateMonthYearHeader: function (inst, drawMonth, drawYear, minDate, maxDate,
-                                            secondary, monthNames, monthNamesShort) {
+        _generateMonthYearHeader: function (inst, drawMonth, drawYear, minDate, maxDate, secondary, monthNames, monthNamesShort) {
 
             var inMinYear, inMaxYear, month, years, thisYear, determineYear, year, endYear,
                 changeMonth = this._get(inst, "changeMonth"),
@@ -1826,8 +1825,8 @@
                 for (month = 0; month < 12; month++) {
                     if ((!inMinYear || month >= minDate.getMonth()) && (!inMaxYear || month <= maxDate.getMonth())) {
                         monthHtml += "<option value='" + month + "'" +
-                        (month === drawMonth ? " selected='selected'" : "") +
-                        ">" + monthNamesShort[month] + "</option>";
+                            (month === drawMonth ? " selected='selected'" : "") +
+                            ">" + monthNamesShort[month] + "</option>";
                     }
                 }
                 monthHtml += "</select>";
@@ -1859,8 +1858,8 @@
                     inst.yearshtml += "<select class='ui-datepicker-year' data-handler='selectYear' data-event='change'>";
                     for (; year <= endYear; year++) {
                         inst.yearshtml += "<option value='" + year + "'" +
-                        (year === drawYear ? " selected='selected'" : "") +
-                        ">" + year + "</option>";
+                            (year === drawYear ? " selected='selected'" : "") +
+                            ">" + year + "</option>";
                     }
                     inst.yearshtml += "</select>";
 
@@ -1934,7 +1933,7 @@
         _canAdjustMonth: function (inst, offset, curYear, curMonth) {
             var numMonths = this._getNumberOfMonths(inst),
                 date = this._daylightSavingAdjust(new Date(curYear,
-                    curMonth + (offset < 0 ? offset : numMonths[0] * numMonths[1]), 1));
+                        curMonth + (offset < 0 ? offset : numMonths[0] * numMonths[1]), 1));
 
             if (offset < 0) {
                 date.setDate(this._getDaysInMonth(date.getFullYear(), date.getMonth()));
@@ -1964,16 +1963,16 @@
             }
 
             return ((!minDate || date.getTime() >= minDate.getTime()) &&
-            (!maxDate || date.getTime() <= maxDate.getTime()) &&
-            (!minYear || date.getFullYear() >= minYear) &&
-            (!maxYear || date.getFullYear() <= maxYear));
+                (!maxDate || date.getTime() <= maxDate.getTime()) &&
+                (!minYear || date.getFullYear() >= minYear) &&
+                (!maxYear || date.getFullYear() <= maxYear));
         },
 
         /* Provide the configuration settings for formatting/parsing. */
         _getFormatConfig: function (inst) {
             var shortYearCutoff = this._get(inst, "shortYearCutoff");
             shortYearCutoff = (typeof shortYearCutoff !== "string" ? shortYearCutoff :
-            new Date().getFullYear() % 100 + parseInt(shortYearCutoff, 10));
+                new Date().getFullYear() % 100 + parseInt(shortYearCutoff, 10));
             return {
                 shortYearCutoff: shortYearCutoff,
                 dayNamesShort: this._get(inst, "dayNamesShort"), dayNames: this._get(inst, "dayNames"),

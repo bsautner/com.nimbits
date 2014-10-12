@@ -21,15 +21,12 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.location.LocationFactory;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.ApplicationListener;
-import com.nimbits.server.NimbitsEngine;
 import com.nimbits.server.process.task.TaskService;
-import com.nimbits.server.process.task.TaskServiceFactory;
-import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import com.nimbits.server.transaction.entity.service.EntityService;
-import com.nimbits.server.transaction.user.AuthenticationServiceFactory;
-import com.nimbits.server.transaction.value.ValueServiceFactory;
+import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +36,7 @@ import java.util.Map;
 
 
 @Deprecated
-
+@Service
 public class ApiServlet extends HttpServlet {
 
     protected static User user;
@@ -47,9 +44,17 @@ public class ApiServlet extends HttpServlet {
 
     protected static Location location;
     private static final String POST = "POST";
+
+    @Autowired
     protected EntityService entityService;
+
+    @Autowired
     protected ValueService valueService;
-    protected NimbitsEngine engine;
+
+    @Autowired
+    protected UserService userService;
+
+    @Autowired
     public TaskService taskService;
 
     protected static boolean okToReport(final User u, final Entity c) {
@@ -58,27 +63,11 @@ public class ApiServlet extends HttpServlet {
     }
 
 
-
     public void doInit(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type) {
 
-        try {
-            engine = (NimbitsEngine) getServletContext().getAttribute("engine");
-            taskService = (TaskService) getServletContext().getAttribute("task");
-        } catch (Exception e) {
-            engine = null;
-            taskService = null;
-        }
 
-        if (engine == null) {
-            engine = ApplicationListener.createEngine();
-            taskService = ApplicationListener.getTaskService(engine);
+        user = userService.getHttpRequestUser(req).get(0);
 
-        }
-
-
-        entityService = EntityServiceFactory.getInstance(engine);
-        user = AuthenticationServiceFactory.getInstance(engine).getHttpRequestUser(req).get(0);
-        valueService = ValueServiceFactory.getInstance(engine, taskService);
         getGPS(req);
         buildParamMap(req);
         addResponseHeaders(resp, type);
@@ -176,10 +165,5 @@ public class ApiServlet extends HttpServlet {
 
     }
 
-    public void setEngine(NimbitsEngine engine) {
-        this.engine = engine;
-        this.entityService = EntityServiceFactory.getInstance(engine);
-        this.taskService = TaskServiceFactory.getServiceInstance(engine);
-        this.valueService = ValueServiceFactory.getInstance(engine, taskService);
-    }
+
 }

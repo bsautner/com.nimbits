@@ -1,4 +1,3 @@
-
 /*
  * Copyright (c) 2013 Nimbits Inc.
  *
@@ -26,6 +25,7 @@ public class ShardedDate {
 
 
     private MemcacheService cacheFactory;
+
     private class Counter {
 
         private static final String KIND = "LastDateShard";
@@ -78,12 +78,9 @@ public class ShardedDate {
     }
 
 
-
-
-    public ShardedDate( ) {
+    public ShardedDate() {
         cacheFactory = MemcacheServiceFactory.getMemcacheService();
     }
-
 
 
     /**

@@ -19,11 +19,11 @@ import com.google.appengine.api.files.FileService;
 import com.google.appengine.api.files.FileServiceFactory;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.location.LocationFactory;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.value.Value;
@@ -46,14 +46,13 @@ import java.util.List;
 public class UploadTask extends TaskBase {
 
 
-
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        setup( );
+        setup();
 
         final String key = request.getParameter(Parameters.blobkey.getText());
         final String json = request.getParameter(Parameters.entity.getText());
-        final String userJson= request.getParameter(Parameters.user.getText());
+        final String userJson = request.getParameter(Parameters.user.getText());
         final BlobKey blobKey = new BlobKey(key);
         final Point entity = GsonFactory.getInstance().fromJson(json, PointModel.class);
         final User user = GsonFactory.getInstance().fromJson(userJson, UserModel.class);
@@ -83,11 +82,12 @@ public class UploadTask extends TaskBase {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             response.setHeader("ERROR", e.getMessage());
 
-        }  finally {
+        } finally {
             readChannel.close();
         }
 
     }
+
     private Value processString(String line) throws Exception {
         Date date = null;
         double value = 0;
@@ -115,7 +115,7 @@ public class UploadTask extends TaskBase {
             Location location = LocationFactory.createLocation(lat, lng);
             ValueData valueData = ValueDataModel.getInstance(SimpleValue.getInstance(data));
             if (date == null) {
-                throw new Exception("Uploaded Data Must contain a timestamp in unix epoch format in Milliseconds as the first column in your CSV file." );
+                throw new Exception("Uploaded Data Must contain a timestamp in unix epoch format in Milliseconds as the first column in your CSV file.");
             }
             return ValueFactory.createValueModel(location, value, date, valueData, AlertType.OK);
         } catch (NumberFormatException e) {

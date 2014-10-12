@@ -23,8 +23,8 @@
 
     function isLocal(anchor) {
         return anchor.hash.length > 1 &&
-        decodeURIComponent(anchor.href.replace(rhash, "")) ===
-        decodeURIComponent(location.href.replace(rhash, ""));
+            decodeURIComponent(anchor.href.replace(rhash, "")) ===
+            decodeURIComponent(location.href.replace(rhash, ""));
     }
 
     $.widget("ui.tabs", {
@@ -518,7 +518,7 @@
 
                 this.panels.each(function () {
                     $(this).height(Math.max(0, maxHeight -
-                    $(this).innerHeight() + $(this).height()));
+                        $(this).innerHeight() + $(this).height()));
                 })
                     .css("overflow", "auto");
             } else if (heightStyle === "auto") {
@@ -548,13 +548,13 @@
             event.preventDefault();
 
             if (tab.hasClass("ui-state-disabled") ||
-                    // tab is already loading
+                // tab is already loading
                 tab.hasClass("ui-tabs-loading") ||
-                    // can't switch durning an animation
+                // can't switch durning an animation
                 this.running ||
-                    // click on active header, but not collapsible
+                // click on active header, but not collapsible
                 ( clickedIsActive && !options.collapsible ) ||
-                    // allow canceling activation
+                // allow canceling activation
                 ( this._trigger("beforeActivate", event, eventData) === false )) {
                 return;
             }
@@ -697,7 +697,7 @@
                 } else {
                     $(this)
                         .removeClass("ui-state-default ui-state-active ui-state-disabled " +
-                        "ui-corner-top ui-corner-bottom ui-widget-content ui-tabs-active ui-tabs-panel")
+                            "ui-corner-top ui-corner-bottom ui-widget-content ui-tabs-active ui-tabs-panel")
                         .removeAttr("tabIndex")
                         .removeAttr("aria-live")
                         .removeAttr("aria-busy")

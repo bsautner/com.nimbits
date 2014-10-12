@@ -31,18 +31,12 @@ import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.io.blob.BlobStore;
-import com.nimbits.server.io.blob.BlobStoreFactory;
 import com.nimbits.server.process.task.TaskService;
-import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import com.nimbits.server.transaction.entity.service.EntityService;
-import com.nimbits.server.transaction.settings.SettingServiceFactory;
 import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.subscription.SubscriptionService;
-import com.nimbits.server.transaction.subscription.SubscriptionServiceFactory;
-import com.nimbits.server.transaction.user.AuthenticationServiceFactory;
-import com.nimbits.server.transaction.value.ValueServiceFactory;
+import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.dao.ValueDao;
-import com.nimbits.server.transaction.value.dao.ValueDaoImpl;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -50,6 +44,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockServletContext;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -58,25 +53,40 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 
-
 public class NimbitsServletTest extends BaseTest {
-    public NimbitsEngine engine;
+
+
+    @Resource(name = "taskService")
     public TaskService taskService;
+
+    @Resource(name = "settingsService")
     public SettingsService settingsService;
+
+    @Resource(name = "entityService")
     public EntityService entityService;
+
+    @Resource(name = "valueService")
     public ValueService valueService;
+
+    @Resource(name = "blobStore")
     public BlobStore blobStore;
+
+    @Resource(name = "subscriptionService")
     public SubscriptionService subscriptionService;
 
+    @Resource(name = "valueDao")
+    public ValueDao valueDao;
+
+    @Resource(name = "userService")
+    public UserService userService;
 
     public static final String email = ServerSetting.admin.getDefaultValue();
     public final LocalServiceTestHelper helper = new LocalServiceTestHelper(
-           new LocalDatastoreServiceTestConfig(),
-           new LocalTaskQueueTestConfig(),
+            new LocalDatastoreServiceTestConfig(),
+            new LocalTaskQueueTestConfig(),
             new LocalBlobstoreServiceTestConfig(),
             new LocalUserServiceTestConfig())
             .setEnvIsLoggedIn(true).setEnvEmail(email).setEnvAuthDomain("nimbits.com");
-
 
 
     public MockHttpServletRequest req;
@@ -99,8 +109,7 @@ public class NimbitsServletTest extends BaseTest {
     public Category group;
 
 
-    public ValueDao valueDao;
-     public Point createRandomPoint() {
+    public Point createRandomPoint() {
         Point point;
         EntityName pointName;
         pointName = CommonFactory.createName(UUID.randomUUID().toString(), EntityType.point);
@@ -130,21 +139,10 @@ public class NimbitsServletTest extends BaseTest {
     public void setup() {
 
 
-
-        engine = ApplicationListener.createEngine();
-        taskService = ApplicationListener.getTaskService(engine);
-        settingsService = SettingServiceFactory.getServiceInstance(engine);
-        entityService = EntityServiceFactory.getInstance(engine);
-        valueService = ValueServiceFactory.getInstance(engine, taskService);
-        blobStore = BlobStoreFactory.getInstance(engine.getPmf());
-        subscriptionService = SubscriptionServiceFactory.getServiceInstance(engine, taskService);
-
-
-
         SystemProperty.environment.set(SystemProperty.Environment.Value.Development);
         req = new MockHttpServletRequest();
         resp = new MockHttpServletResponse();
-        valueDao = new ValueDaoImpl(engine);
+
         context = new MockServletContext();
 
 
@@ -162,7 +160,7 @@ public class NimbitsServletTest extends BaseTest {
         groupName = CommonFactory.createName("group1", EntityType.point);
 
 
-        user = AuthenticationServiceFactory.getInstance(engine).createUserRecord(emailAddress);
+        user = userService.createUserRecord(emailAddress);
         assertNotNull(user);
 
 
@@ -241,7 +239,6 @@ public class NimbitsServletTest extends BaseTest {
     public static void afterClass() {
 
     }
-
 
 
 }

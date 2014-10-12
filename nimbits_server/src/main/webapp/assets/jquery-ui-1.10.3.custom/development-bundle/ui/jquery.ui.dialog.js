@@ -274,7 +274,7 @@
         _createWrapper: function () {
             this.uiDialog = $("<div>")
                 .addClass("ui-dialog ui-widget ui-widget-content ui-corner-all ui-front " +
-                this.options.dialogClass)
+                    this.options.dialogClass)
                 .hide()
                 .attr({
                     // Setting tabIndex makes the div focusable
@@ -453,8 +453,8 @@
                 },
                 stop: function (event, ui) {
                     options.position = [
-                        ui.position.left - that.document.scrollLeft(),
-                        ui.position.top - that.document.scrollTop()
+                            ui.position.left - that.document.scrollLeft(),
+                            ui.position.top - that.document.scrollTop()
                     ];
                     $(this).removeClass("ui-dialog-dragging");
                     that._unblockFrames();
@@ -783,7 +783,7 @@
 
                         position = {
                             my: myAt[0] + (offset[0] < 0 ? offset[0] : "+" + offset[0]) + " " +
-                            myAt[1] + (offset[1] < 0 ? offset[1] : "+" + offset[1]),
+                                myAt[1] + (offset[1] < 0 ? offset[1] : "+" + offset[1]),
                             at: myAt.join(" ")
                         };
                     }

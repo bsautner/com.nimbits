@@ -92,1281 +92,1288 @@
     </ul>
 </div>
 <section id="options">
-    <header><h2 class="underline">Options</h2></header>
-    <div id="option-appendTo" class="api-item first-item">
-        <h3>appendTo<span class="option-type"><strong>Type: </strong><a href="http://api.jquery.com/Types#Selector">Selector</a></span>
-        </h3>
+<header><h2 class="underline">Options</h2></header>
+<div id="option-appendTo" class="api-item first-item">
+    <h3>appendTo<span class="option-type"><strong>Type: </strong><a
+            href="http://api.jquery.com/Types#Selector">Selector</a></span>
+    </h3>
 
-        <div class="default">
-            <strong>Default: </strong><code>"body"</code>
-        </div>
-        <div>Which element the selection helper (the lasso) should be appended to.</div>
-        <strong>Code examples:</strong>
+    <div class="default">
+        <strong>Default: </strong><code>"body"</code>
+    </div>
+    <div>Which element the selection helper (the lasso) should be appended to.</div>
+    <strong>Code examples:</strong>
 
-        <p>Initialize the selectable with the appendTo option specified:</p>
+    <p>Initialize the selectable with the appendTo option specified:</p>
 
-        <div class="syntaxhighlighter nogutter  ">
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tbody>
-                <tr>
-                    <td class="code">
-                        <div class="container">
-                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
-                                <code class="plain">).selectable({ appendTo: </code><code
-                                        class="string">"#someElem"</code> <code class="plain">});</code></div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <p>Get or set the appendTo option, after initialization:</p>
+    <div class="syntaxhighlighter nogutter  ">
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr>
+                <td class="code">
+                    <div class="container">
+                        <div class="line number1 index0 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
+                            <code class="plain">).selectable({ appendTo: </code><code
+                                    class="string">"#someElem"</code> <code class="plain">});</code></div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p>Get or set the appendTo option, after initialization:</p>
 
-        <div class="syntaxhighlighter nogutter  ">
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tbody>
-                <tr>
-                    <td class="code">
-                        <div class="container">
-                            <div class="line number1 index0 alt2"><code class="comments">// getter</code></div>
-                            <div class="line number2 index1 alt1"><code class="keyword">var</code> <code class="plain">appendTo
-                                = $( </code><code class="string">".selector"</code> <code
-                                    class="plain">).selectable( </code><code class="string">"option"</code><code
-                                    class="plain">, </code><code class="string">"appendTo"</code> <code
+    <div class="syntaxhighlighter nogutter  ">
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr>
+                <td class="code">
+                    <div class="container">
+                        <div class="line number1 index0 alt2"><code class="comments">// getter</code></div>
+                        <div class="line number2 index1 alt1"><code class="keyword">var</code> <code class="plain">appendTo
+                            = $( </code><code class="string">".selector"</code> <code
+                                class="plain">).selectable( </code><code class="string">"option"</code><code
+                                class="plain">, </code><code class="string">"appendTo"</code> <code
+                                class="plain">);</code></div>
+                        <div class="line number3 index2 alt2">&nbsp;</div>
+                        <div class="line number4 index3 alt1"><code class="comments">// setter</code></div>
+                        <div class="line number5 index4 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
+                            <code class="plain">).selectable( </code><code class="string">"option"</code><code
+                                    class="plain">, </code><code class="string">"appendTo"</code><code
+                                    class="plain">, </code><code class="string">"#someElem"</code> <code
                                     class="plain">);</code></div>
-                            <div class="line number3 index2 alt2">&nbsp;</div>
-                            <div class="line number4 index3 alt1"><code class="comments">// setter</code></div>
-                            <div class="line number5 index4 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
-                                <code class="plain">).selectable( </code><code class="string">"option"</code><code
-                                        class="plain">, </code><code class="string">"appendTo"</code><code
-                                        class="plain">, </code><code class="string">"#someElem"</code> <code
-                                        class="plain">);</code></div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="option-autoRefresh" class="api-item">
+    <h3>autoRefresh<span class="option-type"><strong>Type: </strong><a href="http://api.jquery.com/Types#Boolean">Boolean</a></span>
+    </h3>
+
+    <div class="default">
+        <strong>Default: </strong><code>true</code>
+    </div>
+    <div>This determines whether to refresh (recalculate) the position and size of each selectee at the beginning of
+        each select operation. If you have many items, you may want to set this to false and call the <a
+                href="#method-refresh"><code>refresh()</code></a> method manually.
+    </div>
+    <strong>Code examples:</strong>
+
+    <p>Initialize the selectable with the autoRefresh option specified:</p>
+
+    <div class="syntaxhighlighter nogutter  ">
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr>
+                <td class="code">
+                    <div class="container">
+                        <div class="line number1 index0 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
+                            <code class="plain">).selectable({ autoRefresh: </code><code
+                                    class="keyword">false</code> <code class="plain">});</code></div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p>Get or set the autoRefresh option, after initialization:</p>
+
+    <div class="syntaxhighlighter nogutter  ">
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr>
+                <td class="code">
+                    <div class="container">
+                        <div class="line number1 index0 alt2"><code class="comments">// getter</code></div>
+                        <div class="line number2 index1 alt1"><code class="keyword">var</code> <code class="plain">autoRefresh
+                            = $( </code><code class="string">".selector"</code> <code
+                                class="plain">).selectable( </code><code class="string">"option"</code><code
+                                class="plain">, </code><code class="string">"autoRefresh"</code> <code
+                                class="plain">);</code></div>
+                        <div class="line number3 index2 alt2">&nbsp;</div>
+                        <div class="line number4 index3 alt1"><code class="comments">// setter</code></div>
+                        <div class="line number5 index4 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
+                            <code class="plain">).selectable( </code><code class="string">"option"</code><code
+                                    class="plain">, </code><code class="string">"autoRefresh"</code><code
+                                    class="plain">, </code><code class="keyword">false</code> <code
+                                    class="plain">);</code></div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="option-cancel" class="api-item">
+    <h3>cancel<span class="option-type"><strong>Type: </strong><a
+            href="http://api.jquery.com/Types#Selector">Selector</a></span>
+    </h3>
+
+    <div class="default">
+        <strong>Default: </strong><code>"input,textarea,button,select,option"</code>
+    </div>
+    <div>Prevents selecting if you start on elements matching the selector.</div>
+    <strong>Code examples:</strong>
+
+    <p>Initialize the selectable with the cancel option specified:</p>
+
+    <div class="syntaxhighlighter nogutter  ">
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr>
+                <td class="code">
+                    <div class="container">
+                        <div class="line number1 index0 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
+                            <code class="plain">).selectable({ cancel: a,.cancel });</code></div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p>Get or set the cancel option, after initialization:</p>
+
+    <div class="syntaxhighlighter nogutter  ">
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr>
+                <td class="code">
+                    <div class="container">
+                        <div class="line number1 index0 alt2"><code class="comments">// getter</code></div>
+                        <div class="line number2 index1 alt1"><code class="keyword">var</code> <code class="plain">cancel
+                            = $( </code><code class="string">".selector"</code> <code
+                                class="plain">).selectable( </code><code class="string">"option"</code><code
+                                class="plain">, </code><code class="string">"cancel"</code> <code
+                                class="plain">);</code></div>
+                        <div class="line number3 index2 alt2">&nbsp;</div>
+                        <div class="line number4 index3 alt1"><code class="comments">// setter</code></div>
+                        <div class="line number5 index4 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
+                            <code class="plain">).selectable( </code><code class="string">"option"</code><code
+                                    class="plain">, </code><code class="string">"cancel"</code><code class="plain">,
+                                a,.cancel );</code></div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="option-delay" class="api-item">
+    <h3>delay<span class="option-type"><strong>Type: </strong><a
+            href="http://api.jquery.com/Types#Integer">Integer</a></span>
+    </h3>
+
+    <div class="default">
+        <strong>Default: </strong><code>0</code>
+    </div>
+    <div>Time in milliseconds to define when the selecting should start. This helps prevent unwanted selections when
+        clicking on an element.
+    </div>
+    <strong>Code examples:</strong>
+
+    <p>Initialize the selectable with the delay option specified:</p>
+
+    <div class="syntaxhighlighter nogutter  ">
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr>
+                <td class="code">
+                    <div class="container">
+                        <div class="line number1 index0 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
+                            <code class="plain">).selectable({ delay: 150 });</code></div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p>Get or set the delay option, after initialization:</p>
+
+    <div class="syntaxhighlighter nogutter  ">
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr>
+                <td class="code">
+                    <div class="container">
+                        <div class="line number1 index0 alt2"><code class="comments">// getter</code></div>
+                        <div class="line number2 index1 alt1"><code class="keyword">var</code> <code class="plain">delay
+                            = $( </code><code class="string">".selector"</code> <code
+                                class="plain">).selectable( </code><code class="string">"option"</code><code
+                                class="plain">, </code><code class="string">"delay"</code> <code
+                                class="plain">);</code></div>
+                        <div class="line number3 index2 alt2">&nbsp;</div>
+                        <div class="line number4 index3 alt1"><code class="comments">// setter</code></div>
+                        <div class="line number5 index4 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
+                            <code class="plain">).selectable( </code><code class="string">"option"</code><code
+                                    class="plain">, </code><code class="string">"delay"</code><code class="plain">,
+                                150 );</code></div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="option-disabled" class="api-item">
+    <h3>disabled<span class="option-type"><strong>Type: </strong><a
+            href="http://api.jquery.com/Types#Boolean">Boolean</a></span>
+    </h3>
+
+    <div class="default">
+        <strong>Default: </strong><code>false</code>
+    </div>
+    <div>Disables the selectable if set to <code>true</code>.</div>
+    <strong>Code examples:</strong>
+
+    <p>Initialize the selectable with the disabled option specified:</p>
+
+    <div class="syntaxhighlighter nogutter  ">
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr>
+                <td class="code">
+                    <div class="container">
+                        <div class="line number1 index0 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
+                            <code class="plain">).selectable({ disabled: </code><code class="keyword">true</code>
+                            <code class="plain">});</code></div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p>Get or set the disabled option, after initialization:</p>
+
+    <div class="syntaxhighlighter nogutter  ">
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr>
+                <td class="code">
+                    <div class="container">
+                        <div class="line number1 index0 alt2"><code class="comments">// getter</code></div>
+                        <div class="line number2 index1 alt1"><code class="keyword">var</code> <code class="plain">disabled
+                            = $( </code><code class="string">".selector"</code> <code
+                                class="plain">).selectable( </code><code class="string">"option"</code><code
+                                class="plain">, </code><code class="string">"disabled"</code> <code
+                                class="plain">);</code></div>
+                        <div class="line number3 index2 alt2">&nbsp;</div>
+                        <div class="line number4 index3 alt1"><code class="comments">// setter</code></div>
+                        <div class="line number5 index4 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
+                            <code class="plain">).selectable( </code><code class="string">"option"</code><code
+                                    class="plain">, </code><code class="string">"disabled"</code><code
+                                    class="plain">, </code><code class="keyword">true</code> <code
+                                    class="plain">);</code></div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="option-distance" class="api-item">
+    <h3>distance<span class="option-type"><strong>Type: </strong><a
+            href="http://api.jquery.com/Types#Number">Number</a></span>
+    </h3>
+
+    <div class="default">
+        <strong>Default: </strong><code>0</code>
+    </div>
+    <div>Tolerance, in pixels, for when selecting should start. If specified, selecting will not start until the
+        mouse has been dragged beyond the specified distance.
+    </div>
+    <strong>Code examples:</strong>
+
+    <p>Initialize the selectable with the distance option specified:</p>
+
+    <div class="syntaxhighlighter nogutter  ">
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr>
+                <td class="code">
+                    <div class="container">
+                        <div class="line number1 index0 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
+                            <code class="plain">).selectable({ distance: 30 });</code></div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p>Get or set the distance option, after initialization:</p>
+
+    <div class="syntaxhighlighter nogutter  ">
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr>
+                <td class="code">
+                    <div class="container">
+                        <div class="line number1 index0 alt2"><code class="comments">// getter</code></div>
+                        <div class="line number2 index1 alt1"><code class="keyword">var</code> <code class="plain">distance
+                            = $( </code><code class="string">".selector"</code> <code
+                                class="plain">).selectable( </code><code class="string">"option"</code><code
+                                class="plain">, </code><code class="string">"distance"</code> <code
+                                class="plain">);</code></div>
+                        <div class="line number3 index2 alt2">&nbsp;</div>
+                        <div class="line number4 index3 alt1"><code class="comments">// setter</code></div>
+                        <div class="line number5 index4 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
+                            <code class="plain">).selectable( </code><code class="string">"option"</code><code
+                                    class="plain">, </code><code class="string">"distance"</code><code
+                                    class="plain">, 30 );</code></div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="option-filter" class="api-item">
+    <h3>filter<span class="option-type"><strong>Type: </strong><a
+            href="http://api.jquery.com/Types#Selector">Selector</a></span>
+    </h3>
+
+    <div class="default">
+        <strong>Default: </strong><code>"*"</code>
+    </div>
+    <div>The matching child elements will be made selectees (able to be selected).</div>
+    <strong>Code examples:</strong>
+
+    <p>Initialize the selectable with the filter option specified:</p>
+
+    <div class="syntaxhighlighter nogutter  ">
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr>
+                <td class="code">
+                    <div class="container">
+                        <div class="line number1 index0 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
+                            <code class="plain">).selectable({ filter: li });</code></div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p>Get or set the filter option, after initialization:</p>
+
+    <div class="syntaxhighlighter nogutter  ">
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr>
+                <td class="code">
+                    <div class="container">
+                        <div class="line number1 index0 alt2"><code class="comments">// getter</code></div>
+                        <div class="line number2 index1 alt1"><code class="keyword">var</code> <code class="plain">filter
+                            = $( </code><code class="string">".selector"</code> <code
+                                class="plain">).selectable( </code><code class="string">"option"</code><code
+                                class="plain">, </code><code class="string">"filter"</code> <code
+                                class="plain">);</code></div>
+                        <div class="line number3 index2 alt2">&nbsp;</div>
+                        <div class="line number4 index3 alt1"><code class="comments">// setter</code></div>
+                        <div class="line number5 index4 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
+                            <code class="plain">).selectable( </code><code class="string">"option"</code><code
+                                    class="plain">, </code><code class="string">"filter"</code><code class="plain">,
+                                li );</code></div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="option-tolerance" class="api-item">
+    <h3>tolerance<span class="option-type"><strong>Type: </strong><a
+            href="http://api.jquery.com/Types#String">String</a></span>
+    </h3>
+
+    <div class="default">
+        <strong>Default: </strong><code>"touch"</code>
+    </div>
+    <div>
+        Specifies which mode to use for testing whether the lasso should select an item. Possible values:
+        <ul>
+            <li>
+                <code>"fit"</code>: Lasso overlaps the item entirely.
+            </li>
+            <li>
+                <code>"touch"</code>: Lasso overlaps the item by any amount.
+            </li>
+        </ul>
+    </div>
+    <strong>Code examples:</strong>
+
+    <p>Initialize the selectable with the tolerance option specified:</p>
+
+    <div class="syntaxhighlighter nogutter  ">
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr>
+                <td class="code">
+                    <div class="container">
+                        <div class="line number1 index0 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
+                            <code class="plain">).selectable({ tolerance: </code><code class="string">"fit"</code>
+                            <code class="plain">});</code></div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p>Get or set the tolerance option, after initialization:</p>
+
+    <div class="syntaxhighlighter nogutter  ">
+        <table border="0" cellpadding="0" cellspacing="0">
+            <tbody>
+            <tr>
+                <td class="code">
+                    <div class="container">
+                        <div class="line number1 index0 alt2"><code class="comments">// getter</code></div>
+                        <div class="line number2 index1 alt1"><code class="keyword">var</code> <code class="plain">tolerance
+                            = $( </code><code class="string">".selector"</code> <code
+                                class="plain">).selectable( </code><code class="string">"option"</code><code
+                                class="plain">, </code><code class="string">"tolerance"</code> <code
+                                class="plain">);</code>
                         </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+                        <div class="line number3 index2 alt2">&nbsp;</div>
+                        <div class="line number4 index3 alt1"><code class="comments">// setter</code></div>
+                        <div class="line number5 index4 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
+                            <code class="plain">).selectable( </code><code class="string">"option"</code><code
+                                    class="plain">, </code><code class="string">"tolerance"</code><code
+                                    class="plain">, </code><code class="string">"fit"</code> <code
+                                    class="plain">);</code></div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</section>
+<section id="methods">
+<header><h2 class="underline">Methods</h2></header>
+<div id="method-destroy">
+    <div class="api-item first-item">
+        <h3>destroy()</h3>
+
+        <div>
+            Removes the selectable functionality completely. This will return the element back to its pre-init
+            state.
+        </div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the destroy method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).selectable( </code><code class="string">"destroy"</code>
+                                    <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    <div id="option-autoRefresh" class="api-item">
-        <h3>autoRefresh<span class="option-type"><strong>Type: </strong><a href="http://api.jquery.com/Types#Boolean">Boolean</a></span>
-        </h3>
+</div>
+<div id="method-disable">
+    <div class="api-item">
+        <h3>disable()</h3>
 
-        <div class="default">
-            <strong>Default: </strong><code>true</code>
+        <div>
+            Disables the selectable.
         </div>
-        <div>This determines whether to refresh (recalculate) the position and size of each selectee at the beginning of
-            each select operation. If you have many items, you may want to set this to false and call the <a
-                    href="#method-refresh"><code>refresh()</code></a> method manually.
-        </div>
-        <strong>Code examples:</strong>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
 
-        <p>Initialize the selectable with the autoRefresh option specified:</p>
+            <p>Invoke the disable method:</p>
 
-        <div class="syntaxhighlighter nogutter  ">
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tbody>
-                <tr>
-                    <td class="code">
-                        <div class="container">
-                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
-                                <code class="plain">).selectable({ autoRefresh: </code><code
-                                        class="keyword">false</code> <code class="plain">});</code></div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <p>Get or set the autoRefresh option, after initialization:</p>
-
-        <div class="syntaxhighlighter nogutter  ">
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tbody>
-                <tr>
-                    <td class="code">
-                        <div class="container">
-                            <div class="line number1 index0 alt2"><code class="comments">// getter</code></div>
-                            <div class="line number2 index1 alt1"><code class="keyword">var</code> <code class="plain">autoRefresh
-                                = $( </code><code class="string">".selector"</code> <code
-                                    class="plain">).selectable( </code><code class="string">"option"</code><code
-                                    class="plain">, </code><code class="string">"autoRefresh"</code> <code
-                                    class="plain">);</code></div>
-                            <div class="line number3 index2 alt2">&nbsp;</div>
-                            <div class="line number4 index3 alt1"><code class="comments">// setter</code></div>
-                            <div class="line number5 index4 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
-                                <code class="plain">).selectable( </code><code class="string">"option"</code><code
-                                        class="plain">, </code><code class="string">"autoRefresh"</code><code
-                                        class="plain">, </code><code class="keyword">false</code> <code
-                                        class="plain">);</code></div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).selectable( </code><code class="string">"disable"</code>
+                                    <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    <div id="option-cancel" class="api-item">
-        <h3>cancel<span class="option-type"><strong>Type: </strong><a href="http://api.jquery.com/Types#Selector">Selector</a></span>
-        </h3>
+</div>
+<div id="method-enable">
+    <div class="api-item">
+        <h3>enable()</h3>
 
-        <div class="default">
-            <strong>Default: </strong><code>"input,textarea,button,select,option"</code>
+        <div>
+            Enables the selectable.
         </div>
-        <div>Prevents selecting if you start on elements matching the selector.</div>
-        <strong>Code examples:</strong>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
 
-        <p>Initialize the selectable with the cancel option specified:</p>
+            <p>Invoke the enable method:</p>
 
-        <div class="syntaxhighlighter nogutter  ">
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tbody>
-                <tr>
-                    <td class="code">
-                        <div class="container">
-                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
-                                <code class="plain">).selectable({ cancel: a,.cancel });</code></div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <p>Get or set the cancel option, after initialization:</p>
-
-        <div class="syntaxhighlighter nogutter  ">
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tbody>
-                <tr>
-                    <td class="code">
-                        <div class="container">
-                            <div class="line number1 index0 alt2"><code class="comments">// getter</code></div>
-                            <div class="line number2 index1 alt1"><code class="keyword">var</code> <code class="plain">cancel
-                                = $( </code><code class="string">".selector"</code> <code
-                                    class="plain">).selectable( </code><code class="string">"option"</code><code
-                                    class="plain">, </code><code class="string">"cancel"</code> <code
-                                    class="plain">);</code></div>
-                            <div class="line number3 index2 alt2">&nbsp;</div>
-                            <div class="line number4 index3 alt1"><code class="comments">// setter</code></div>
-                            <div class="line number5 index4 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
-                                <code class="plain">).selectable( </code><code class="string">"option"</code><code
-                                        class="plain">, </code><code class="string">"cancel"</code><code class="plain">,
-                                    a,.cancel );</code></div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).selectable( </code><code class="string">"enable"</code>
+                                    <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    <div id="option-delay" class="api-item">
-        <h3>delay<span class="option-type"><strong>Type: </strong><a
-                href="http://api.jquery.com/Types#Integer">Integer</a></span>
+</div>
+<div id="method-option">
+    <div class="api-item">
+        <h3>option( optionName )<span class="returns">Returns: <a
+                href="http://api.jquery.com/Types#Object">Object</a></span>
         </h3>
 
-        <div class="default">
-            <strong>Default: </strong><code>0</code>
-        </div>
-        <div>Time in milliseconds to define when the selecting should start. This helps prevent unwanted selections when
-            clicking on an element.
-        </div>
-        <strong>Code examples:</strong>
+        <div>Gets the value currently associated with the specified <code>optionName</code>.</div>
+        <ul>
+            <li>
+                <div><strong>optionName</strong></div>
+                <div>Type: <a href="http://api.jquery.com/Types#String">String</a>
+                </div>
+                <div>The name of the option to get.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
 
-        <p>Initialize the selectable with the delay option specified:</p>
+            <p>Invoke the method:</p>
 
-        <div class="syntaxhighlighter nogutter  ">
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tbody>
-                <tr>
-                    <td class="code">
-                        <div class="container">
-                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
-                                <code class="plain">).selectable({ delay: 150 });</code></div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <p>Get or set the delay option, after initialization:</p>
-
-        <div class="syntaxhighlighter nogutter  ">
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tbody>
-                <tr>
-                    <td class="code">
-                        <div class="container">
-                            <div class="line number1 index0 alt2"><code class="comments">// getter</code></div>
-                            <div class="line number2 index1 alt1"><code class="keyword">var</code> <code class="plain">delay
-                                = $( </code><code class="string">".selector"</code> <code
-                                    class="plain">).selectable( </code><code class="string">"option"</code><code
-                                    class="plain">, </code><code class="string">"delay"</code> <code
-                                    class="plain">);</code></div>
-                            <div class="line number3 index2 alt2">&nbsp;</div>
-                            <div class="line number4 index3 alt1"><code class="comments">// setter</code></div>
-                            <div class="line number5 index4 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
-                                <code class="plain">).selectable( </code><code class="string">"option"</code><code
-                                        class="plain">, </code><code class="string">"delay"</code><code class="plain">,
-                                    150 );</code></div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
+                                        class="plain">isDisabled = $( </code><code class="string">".selector"</code>
+                                    <code class="plain">).selectable( </code><code
+                                            class="string">"option"</code><code class="plain">, </code><code
+                                            class="string">"disabled"</code> <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
-    <div id="option-disabled" class="api-item">
-        <h3>disabled<span class="option-type"><strong>Type: </strong><a href="http://api.jquery.com/Types#Boolean">Boolean</a></span>
+    <div class="api-item">
+        <h3>option()<span class="returns">Returns: <a
+                href="http://api.jquery.com/Types#PlainObject">PlainObject</a></span>
         </h3>
 
-        <div class="default">
-            <strong>Default: </strong><code>false</code>
+        <div>Gets an object containing key/value pairs representing the current selectable options hash.</div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
+                                        class="plain">options = $( </code><code class="string">".selector"</code>
+                                    <code class="plain">).selectable( </code><code class="string">"option"</code>
+                                    <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
-        <div>Disables the selectable if set to <code>true</code>.</div>
-        <strong>Code examples:</strong>
+    </div>
+    <div class="api-item">
+        <h3>option( optionName, value )</h3>
 
-        <p>Initialize the selectable with the disabled option specified:</p>
+        <div>Sets the value of the selectable option associated with the specified <code>optionName</code>.</div>
+        <ul>
+            <li>
+                <div><strong>optionName</strong></div>
+                <div>Type: <a href="http://api.jquery.com/Types#String">String</a>
+                </div>
+                <div>The name of the option to set.</div>
+            </li>
+            <li>
+                <div><strong>value</strong></div>
+                <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
+                </div>
+                <div>A value to set for the option.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
 
-        <div class="syntaxhighlighter nogutter  ">
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tbody>
-                <tr>
-                    <td class="code">
-                        <div class="container">
-                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
-                                <code class="plain">).selectable({ disabled: </code><code class="keyword">true</code>
-                                <code class="plain">});</code></div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <p>Get or set the disabled option, after initialization:</p>
+            <p>Invoke the method:</p>
 
-        <div class="syntaxhighlighter nogutter  ">
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tbody>
-                <tr>
-                    <td class="code">
-                        <div class="container">
-                            <div class="line number1 index0 alt2"><code class="comments">// getter</code></div>
-                            <div class="line number2 index1 alt1"><code class="keyword">var</code> <code class="plain">disabled
-                                = $( </code><code class="string">".selector"</code> <code
-                                    class="plain">).selectable( </code><code class="string">"option"</code><code
-                                    class="plain">, </code><code class="string">"disabled"</code> <code
-                                    class="plain">);</code></div>
-                            <div class="line number3 index2 alt2">&nbsp;</div>
-                            <div class="line number4 index3 alt1"><code class="comments">// setter</code></div>
-                            <div class="line number5 index4 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
-                                <code class="plain">).selectable( </code><code class="string">"option"</code><code
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).selectable( </code><code class="string">"option"</code><code
                                         class="plain">, </code><code class="string">"disabled"</code><code
                                         class="plain">, </code><code class="keyword">true</code> <code
                                         class="plain">);</code></div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div id="option-distance" class="api-item">
-        <h3>distance<span class="option-type"><strong>Type: </strong><a
-                href="http://api.jquery.com/Types#Number">Number</a></span>
-        </h3>
-
-        <div class="default">
-            <strong>Default: </strong><code>0</code>
-        </div>
-        <div>Tolerance, in pixels, for when selecting should start. If specified, selecting will not start until the
-            mouse has been dragged beyond the specified distance.
-        </div>
-        <strong>Code examples:</strong>
-
-        <p>Initialize the selectable with the distance option specified:</p>
-
-        <div class="syntaxhighlighter nogutter  ">
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tbody>
-                <tr>
-                    <td class="code">
-                        <div class="container">
-                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
-                                <code class="plain">).selectable({ distance: 30 });</code></div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <p>Get or set the distance option, after initialization:</p>
-
-        <div class="syntaxhighlighter nogutter  ">
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tbody>
-                <tr>
-                    <td class="code">
-                        <div class="container">
-                            <div class="line number1 index0 alt2"><code class="comments">// getter</code></div>
-                            <div class="line number2 index1 alt1"><code class="keyword">var</code> <code class="plain">distance
-                                = $( </code><code class="string">".selector"</code> <code
-                                    class="plain">).selectable( </code><code class="string">"option"</code><code
-                                    class="plain">, </code><code class="string">"distance"</code> <code
-                                    class="plain">);</code></div>
-                            <div class="line number3 index2 alt2">&nbsp;</div>
-                            <div class="line number4 index3 alt1"><code class="comments">// setter</code></div>
-                            <div class="line number5 index4 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
-                                <code class="plain">).selectable( </code><code class="string">"option"</code><code
-                                        class="plain">, </code><code class="string">"distance"</code><code
-                                        class="plain">, 30 );</code></div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div id="option-filter" class="api-item">
-        <h3>filter<span class="option-type"><strong>Type: </strong><a href="http://api.jquery.com/Types#Selector">Selector</a></span>
-        </h3>
-
-        <div class="default">
-            <strong>Default: </strong><code>"*"</code>
-        </div>
-        <div>The matching child elements will be made selectees (able to be selected).</div>
-        <strong>Code examples:</strong>
-
-        <p>Initialize the selectable with the filter option specified:</p>
-
-        <div class="syntaxhighlighter nogutter  ">
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tbody>
-                <tr>
-                    <td class="code">
-                        <div class="container">
-                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
-                                <code class="plain">).selectable({ filter: li });</code></div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <p>Get or set the filter option, after initialization:</p>
-
-        <div class="syntaxhighlighter nogutter  ">
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tbody>
-                <tr>
-                    <td class="code">
-                        <div class="container">
-                            <div class="line number1 index0 alt2"><code class="comments">// getter</code></div>
-                            <div class="line number2 index1 alt1"><code class="keyword">var</code> <code class="plain">filter
-                                = $( </code><code class="string">".selector"</code> <code
-                                    class="plain">).selectable( </code><code class="string">"option"</code><code
-                                    class="plain">, </code><code class="string">"filter"</code> <code
-                                    class="plain">);</code></div>
-                            <div class="line number3 index2 alt2">&nbsp;</div>
-                            <div class="line number4 index3 alt1"><code class="comments">// setter</code></div>
-                            <div class="line number5 index4 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
-                                <code class="plain">).selectable( </code><code class="string">"option"</code><code
-                                        class="plain">, </code><code class="string">"filter"</code><code class="plain">,
-                                    li );</code></div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-    <div id="option-tolerance" class="api-item">
-        <h3>tolerance<span class="option-type"><strong>Type: </strong><a href="http://api.jquery.com/Types#String">String</a></span>
-        </h3>
-
-        <div class="default">
-            <strong>Default: </strong><code>"touch"</code>
-        </div>
-        <div>
-            Specifies which mode to use for testing whether the lasso should select an item. Possible values:
-            <ul>
-                <li>
-                    <code>"fit"</code>: Lasso overlaps the item entirely.
-                </li>
-                <li>
-                    <code>"touch"</code>: Lasso overlaps the item by any amount.
-                </li>
-            </ul>
-        </div>
-        <strong>Code examples:</strong>
-
-        <p>Initialize the selectable with the tolerance option specified:</p>
-
-        <div class="syntaxhighlighter nogutter  ">
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tbody>
-                <tr>
-                    <td class="code">
-                        <div class="container">
-                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
-                                <code class="plain">).selectable({ tolerance: </code><code class="string">"fit"</code>
-                                <code class="plain">});</code></div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-        <p>Get or set the tolerance option, after initialization:</p>
-
-        <div class="syntaxhighlighter nogutter  ">
-            <table border="0" cellpadding="0" cellspacing="0">
-                <tbody>
-                <tr>
-                    <td class="code">
-                        <div class="container">
-                            <div class="line number1 index0 alt2"><code class="comments">// getter</code></div>
-                            <div class="line number2 index1 alt1"><code class="keyword">var</code> <code class="plain">tolerance
-                                = $( </code><code class="string">".selector"</code> <code
-                                    class="plain">).selectable( </code><code class="string">"option"</code><code
-                                    class="plain">, </code><code class="string">"tolerance"</code> <code class="plain">);</code>
                             </div>
-                            <div class="line number3 index2 alt2">&nbsp;</div>
-                            <div class="line number4 index3 alt1"><code class="comments">// setter</code></div>
-                            <div class="line number5 index4 alt2"><code class="plain">$( </code><code class="string">".selector"</code>
-                                <code class="plain">).selectable( </code><code class="string">"option"</code><code
-                                        class="plain">, </code><code class="string">"tolerance"</code><code
-                                        class="plain">, </code><code class="string">"fit"</code> <code
-                                        class="plain">);</code></div>
-                        </div>
-                    </td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</section>
-<section id="methods">
-    <header><h2 class="underline">Methods</h2></header>
-    <div id="method-destroy">
-        <div class="api-item first-item">
-            <h3>destroy()</h3>
-
-            <div>
-                Removes the selectable functionality completely. This will return the element back to its pre-init
-                state.
-            </div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the destroy method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).selectable( </code><code class="string">"destroy"</code>
-                                        <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div id="method-disable">
-        <div class="api-item">
-            <h3>disable()</h3>
+    <div class="api-item">
+        <h3>option( options )</h3>
 
-            <div>
-                Disables the selectable.
-            </div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the disable method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).selectable( </code><code class="string">"disable"</code>
-                                        <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+        <div>Sets one or more options for the selectable.</div>
+        <ul>
+            <li>
+                <div><strong>options</strong></div>
+                <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
                 </div>
+                <div>A map of option-value pairs to set.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).selectable( </code><code class="string">"option"</code><code
+                                        class="plain">, { disabled: </code><code class="keyword">true</code> <code
+                                        class="plain">} );</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div id="method-enable">
-        <div class="api-item">
-            <h3>enable()</h3>
+</div>
+<div id="method-refresh">
+    <div class="api-item">
+        <h3>refresh()</h3>
 
-            <div>
-                Enables the selectable.
-            </div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
+        <div>Refresh the position and size of each selectee element. This method can be used to manually recalculate
+            the position and size of each selectee when the <a
+                    href="#option-autoRefresh"><code>autoRefresh</code></a> option is set to <code>false</code>.
+        </div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
 
-                <p>Invoke the enable method:</p>
+            <p>Invoke the refresh method:</p>
 
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).selectable( </code><code class="string">"enable"</code>
-                                        <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).selectable( </code><code class="string">"refresh"</code>
+                                    <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div id="method-option">
-        <div class="api-item">
-            <h3>option( optionName )<span class="returns">Returns: <a
-                    href="http://api.jquery.com/Types#Object">Object</a></span>
-            </h3>
+</div>
+<div id="method-widget">
+    <div class="api-item">
+        <h3>widget()<span class="returns">Returns: <a href="http://api.jquery.com/Types#jQuery">jQuery</a></span>
+        </h3>
 
-            <div>Gets the value currently associated with the specified <code>optionName</code>.</div>
-            <ul>
-                <li>
-                    <div><strong>optionName</strong></div>
-                    <div>Type: <a href="http://api.jquery.com/Types#String">String</a>
-                    </div>
-                    <div>The name of the option to get.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
-                                            class="plain">isDisabled = $( </code><code class="string">".selector"</code>
-                                        <code class="plain">).selectable( </code><code
-                                                class="string">"option"</code><code class="plain">, </code><code
-                                                class="string">"disabled"</code> <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div>
+            Returns a <code>jQuery</code> object containing the selectable element.
         </div>
-        <div class="api-item">
-            <h3>option()<span class="returns">Returns: <a href="http://api.jquery.com/Types#PlainObject">PlainObject</a></span>
-            </h3>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
 
-            <div>Gets an object containing key/value pairs representing the current selectable options hash.</div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
+            <p>Invoke the widget method:</p>
 
-                <p>Invoke the method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
-                                            class="plain">options = $( </code><code class="string">".selector"</code>
-                                        <code class="plain">).selectable( </code><code class="string">"option"</code>
-                                        <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="api-item">
-            <h3>option( optionName, value )</h3>
-
-            <div>Sets the value of the selectable option associated with the specified <code>optionName</code>.</div>
-            <ul>
-                <li>
-                    <div><strong>optionName</strong></div>
-                    <div>Type: <a href="http://api.jquery.com/Types#String">String</a>
-                    </div>
-                    <div>The name of the option to set.</div>
-                </li>
-                <li>
-                    <div><strong>value</strong></div>
-                    <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
-                    </div>
-                    <div>A value to set for the option.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).selectable( </code><code class="string">"option"</code><code
-                                            class="plain">, </code><code class="string">"disabled"</code><code
-                                            class="plain">, </code><code class="keyword">true</code> <code
-                                            class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="api-item">
-            <h3>option( options )</h3>
-
-            <div>Sets one or more options for the selectable.</div>
-            <ul>
-                <li>
-                    <div><strong>options</strong></div>
-                    <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
-                    </div>
-                    <div>A map of option-value pairs to set.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).selectable( </code><code class="string">"option"</code><code
-                                            class="plain">, { disabled: </code><code class="keyword">true</code> <code
-                                            class="plain">} );</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
+                                        class="plain">widget = $( </code><code class="string">".selector"</code>
+                                    <code class="plain">).selectable( </code><code class="string">"widget"</code>
+                                    <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div id="method-refresh">
-        <div class="api-item">
-            <h3>refresh()</h3>
-
-            <div>Refresh the position and size of each selectee element. This method can be used to manually recalculate
-                the position and size of each selectee when the <a
-                        href="#option-autoRefresh"><code>autoRefresh</code></a> option is set to <code>false</code>.
-            </div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the refresh method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).selectable( </code><code class="string">"refresh"</code>
-                                        <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="method-widget">
-        <div class="api-item">
-            <h3>widget()<span class="returns">Returns: <a href="http://api.jquery.com/Types#jQuery">jQuery</a></span>
-            </h3>
-
-            <div>
-                Returns a <code>jQuery</code> object containing the selectable element.
-            </div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the widget method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
-                                            class="plain">widget = $( </code><code class="string">".selector"</code>
-                                        <code class="plain">).selectable( </code><code class="string">"widget"</code>
-                                        <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+</div>
 </section>
 <section id="events">
-    <header><h2 class="underline">Events</h2></header>
-    <div id="event-create" class="api-item first-item">
-        <h3>create( event, ui )<span class="returns">Type: <code>selectablecreate</code></span>
-        </h3>
+<header><h2 class="underline">Events</h2></header>
+<div id="event-create" class="api-item first-item">
+    <h3>create( event, ui )<span class="returns">Type: <code>selectablecreate</code></span>
+    </h3>
 
-        <div>
-            Triggered when the selectable is created.
-        </div>
-        <ul>
-            <li>
-                <div><strong>event</strong></div>
-                <div>Type: <a href="http://api.jquery.com/Types#Event">Event</a>
-                </div>
-                <div></div>
-            </li>
-            <li>
-                <div><strong>ui</strong></div>
-                <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
-                </div>
-                <div></div>
-            </li>
-        </ul>
-        <div>
-            <strong>Code examples:</strong>
-
-            <p>Initialize the selectable with the create callback specified:</p>
-
-            <div class="syntaxhighlighter nogutter  ">
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <tbody>
-                    <tr>
-                        <td class="code">
-                            <div class="container">
-                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                        class="string">".selector"</code> <code class="plain">).selectable({</code>
-                                </div>
-                                <div class="line number2 index1 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
-                                        class="plain">create: </code><code class="keyword">function</code><code
-                                        class="plain">( event, ui ) {}</code></div>
-                                <div class="line number3 index2 alt2"><code class="plain">});</code></div>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <p>Bind an event listener to the selectablecreate event:</p>
-
-            <div class="syntaxhighlighter nogutter  ">
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <tbody>
-                    <tr>
-                        <td class="code">
-                            <div class="container">
-                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                        class="string">".selector"</code> <code class="plain">).on( </code><code
-                                        class="string">"selectablecreate"</code><code class="plain">, </code><code
-                                        class="keyword">function</code><code class="plain">( event, ui ) {} );</code>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div>
+        Triggered when the selectable is created.
     </div>
-    <div id="event-selected" class="api-item">
-        <h3>selected( event, ui )<span class="returns">Type: <code>selectableselected</code></span>
-        </h3>
+    <ul>
+        <li>
+            <div><strong>event</strong></div>
+            <div>Type: <a href="http://api.jquery.com/Types#Event">Event</a>
+            </div>
+            <div></div>
+        </li>
+        <li>
+            <div><strong>ui</strong></div>
+            <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
+            </div>
+            <div></div>
+        </li>
+    </ul>
+    <div>
+        <strong>Code examples:</strong>
 
-        <div>Triggered at the end of the select operation, on each element added to the selection.</div>
-        <ul>
-            <li>
-                <div><strong>event</strong></div>
-                <div>Type: <a href="http://api.jquery.com/Types#Event">Event</a>
-                </div>
-                <div></div>
-            </li>
-            <li>
-                <div><strong>ui</strong></div>
-                <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
-                </div>
-                <div></div>
-                <ul>
-                    <li>
-                        <div><strong>selected</strong></div>
-                        <div>Type: <a href="http://api.jquery.com/Types#Element">Element</a>
+        <p>Initialize the selectable with the create callback specified:</p>
+
+        <div class="syntaxhighlighter nogutter  ">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tbody>
+                <tr>
+                    <td class="code">
+                        <div class="container">
+                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                    class="string">".selector"</code> <code class="plain">).selectable({</code>
+                            </div>
+                            <div class="line number2 index1 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+                                    class="plain">create: </code><code class="keyword">function</code><code
+                                    class="plain">( event, ui ) {}</code></div>
+                            <div class="line number3 index2 alt2"><code class="plain">});</code></div>
                         </div>
-                        <div>The selectable item that has been selected.</div>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        <div>
-            <strong>Code examples:</strong>
-
-            <p>Initialize the selectable with the selected callback specified:</p>
-
-            <div class="syntaxhighlighter nogutter  ">
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <tbody>
-                    <tr>
-                        <td class="code">
-                            <div class="container">
-                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                        class="string">".selector"</code> <code class="plain">).selectable({</code>
-                                </div>
-                                <div class="line number2 index1 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
-                                        class="plain">selected: </code><code class="keyword">function</code><code
-                                        class="plain">( event, ui ) {}</code></div>
-                                <div class="line number3 index2 alt2"><code class="plain">});</code></div>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <p>Bind an event listener to the selectableselected event:</p>
-
-            <div class="syntaxhighlighter nogutter  ">
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <tbody>
-                    <tr>
-                        <td class="code">
-                            <div class="container">
-                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                        class="string">".selector"</code> <code class="plain">).on( </code><code
-                                        class="string">"selectableselected"</code><code class="plain">, </code><code
-                                        class="keyword">function</code><code class="plain">( event, ui ) {} );</code>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-    </div>
-    <div id="event-selecting" class="api-item">
-        <h3>selecting( event, ui )<span class="returns">Type: <code>selectableselecting</code></span>
-        </h3>
+        <p>Bind an event listener to the selectablecreate event:</p>
 
-        <div>Triggered during the select operation, on each element added to the selection.</div>
-        <ul>
-            <li>
-                <div><strong>event</strong></div>
-                <div>Type: <a href="http://api.jquery.com/Types#Event">Event</a>
-                </div>
-                <div></div>
-            </li>
-            <li>
-                <div><strong>ui</strong></div>
-                <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
-                </div>
-                <div></div>
-                <ul>
-                    <li>
-                        <div><strong>selecting</strong></div>
-                        <div>Type: <a href="http://api.jquery.com/Types#Element">Element</a>
+        <div class="syntaxhighlighter nogutter  ">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tbody>
+                <tr>
+                    <td class="code">
+                        <div class="container">
+                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                    class="string">".selector"</code> <code class="plain">).on( </code><code
+                                    class="string">"selectablecreate"</code><code class="plain">, </code><code
+                                    class="keyword">function</code><code class="plain">( event, ui ) {} );</code>
+                            </div>
                         </div>
-                        <div>The current selectable item being selected.</div>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        <div>
-            <strong>Code examples:</strong>
-
-            <p>Initialize the selectable with the selecting callback specified:</p>
-
-            <div class="syntaxhighlighter nogutter  ">
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <tbody>
-                    <tr>
-                        <td class="code">
-                            <div class="container">
-                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                        class="string">".selector"</code> <code class="plain">).selectable({</code>
-                                </div>
-                                <div class="line number2 index1 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
-                                        class="plain">selecting: </code><code class="keyword">function</code><code
-                                        class="plain">( event, ui ) {}</code></div>
-                                <div class="line number3 index2 alt2"><code class="plain">});</code></div>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <p>Bind an event listener to the selectableselecting event:</p>
-
-            <div class="syntaxhighlighter nogutter  ">
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <tbody>
-                    <tr>
-                        <td class="code">
-                            <div class="container">
-                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                        class="string">".selector"</code> <code class="plain">).on( </code><code
-                                        class="string">"selectableselecting"</code><code class="plain">, </code><code
-                                        class="keyword">function</code><code class="plain">( event, ui ) {} );</code>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
-    <div id="event-start" class="api-item">
-        <h3>start( event, ui )<span class="returns">Type: <code>selectablestart</code></span>
-        </h3>
+</div>
+<div id="event-selected" class="api-item">
+    <h3>selected( event, ui )<span class="returns">Type: <code>selectableselected</code></span>
+    </h3>
 
-        <div>Triggered at the beginning of the select operation.</div>
-        <ul>
-            <li>
-                <div><strong>event</strong></div>
-                <div>Type: <a href="http://api.jquery.com/Types#Event">Event</a>
-                </div>
-                <div></div>
-            </li>
-            <li>
-                <div><strong>ui</strong></div>
-                <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
-                </div>
-                <div></div>
-            </li>
-        </ul>
-        <div>
-            <strong>Code examples:</strong>
-
-            <p>Initialize the selectable with the start callback specified:</p>
-
-            <div class="syntaxhighlighter nogutter  ">
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <tbody>
-                    <tr>
-                        <td class="code">
-                            <div class="container">
-                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                        class="string">".selector"</code> <code class="plain">).selectable({</code>
-                                </div>
-                                <div class="line number2 index1 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
-                                        class="plain">start: </code><code class="keyword">function</code><code
-                                        class="plain">( event, ui ) {}</code></div>
-                                <div class="line number3 index2 alt2"><code class="plain">});</code></div>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+    <div>Triggered at the end of the select operation, on each element added to the selection.</div>
+    <ul>
+        <li>
+            <div><strong>event</strong></div>
+            <div>Type: <a href="http://api.jquery.com/Types#Event">Event</a>
             </div>
-            <p>Bind an event listener to the selectablestart event:</p>
-
-            <div class="syntaxhighlighter nogutter  ">
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <tbody>
-                    <tr>
-                        <td class="code">
-                            <div class="container">
-                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                        class="string">".selector"</code> <code class="plain">).on( </code><code
-                                        class="string">"selectablestart"</code><code class="plain">, </code><code
-                                        class="keyword">function</code><code class="plain">( event, ui ) {} );</code>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
+            <div></div>
+        </li>
+        <li>
+            <div><strong>ui</strong></div>
+            <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
             </div>
-        </div>
-    </div>
-    <div id="event-stop" class="api-item">
-        <h3>stop( event, ui )<span class="returns">Type: <code>selectablestop</code></span>
-        </h3>
+            <div></div>
+            <ul>
+                <li>
+                    <div><strong>selected</strong></div>
+                    <div>Type: <a href="http://api.jquery.com/Types#Element">Element</a>
+                    </div>
+                    <div>The selectable item that has been selected.</div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <div>
+        <strong>Code examples:</strong>
 
-        <div>Triggered at the end of the select operation.</div>
-        <ul>
-            <li>
-                <div><strong>event</strong></div>
-                <div>Type: <a href="http://api.jquery.com/Types#Event">Event</a>
-                </div>
-                <div></div>
-            </li>
-            <li>
-                <div><strong>ui</strong></div>
-                <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
-                </div>
-                <div></div>
-            </li>
-        </ul>
-        <div>
-            <strong>Code examples:</strong>
+        <p>Initialize the selectable with the selected callback specified:</p>
 
-            <p>Initialize the selectable with the stop callback specified:</p>
-
-            <div class="syntaxhighlighter nogutter  ">
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <tbody>
-                    <tr>
-                        <td class="code">
-                            <div class="container">
-                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                        class="string">".selector"</code> <code class="plain">).selectable({</code>
-                                </div>
-                                <div class="line number2 index1 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
-                                        class="plain">stop: </code><code class="keyword">function</code><code
-                                        class="plain">( event, ui ) {}</code></div>
-                                <div class="line number3 index2 alt2"><code class="plain">});</code></div>
+        <div class="syntaxhighlighter nogutter  ">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tbody>
+                <tr>
+                    <td class="code">
+                        <div class="container">
+                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                    class="string">".selector"</code> <code class="plain">).selectable({</code>
                             </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <p>Bind an event listener to the selectablestop event:</p>
-
-            <div class="syntaxhighlighter nogutter  ">
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <tbody>
-                    <tr>
-                        <td class="code">
-                            <div class="container">
-                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                        class="string">".selector"</code> <code class="plain">).on( </code><code
-                                        class="string">"selectablestop"</code><code class="plain">, </code><code
-                                        class="keyword">function</code><code class="plain">( event, ui ) {} );</code>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-    <div id="event-unselected" class="api-item">
-        <h3>unselected( event, ui )<span class="returns">Type: <code>selectableunselected</code></span>
-        </h3>
-
-        <div>Triggered at the end of the select operation, on each element removed from the selection.</div>
-        <ul>
-            <li>
-                <div><strong>event</strong></div>
-                <div>Type: <a href="http://api.jquery.com/Types#Event">Event</a>
-                </div>
-                <div></div>
-            </li>
-            <li>
-                <div><strong>ui</strong></div>
-                <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
-                </div>
-                <div></div>
-                <ul>
-                    <li>
-                        <div><strong>unselected</strong></div>
-                        <div>Type: <a href="http://api.jquery.com/Types#Element">Element</a>
+                            <div class="line number2 index1 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+                                    class="plain">selected: </code><code class="keyword">function</code><code
+                                    class="plain">( event, ui ) {}</code></div>
+                            <div class="line number3 index2 alt2"><code class="plain">});</code></div>
                         </div>
-                        <div>The selectable item that has been unselected.</div>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        <div>
-            <strong>Code examples:</strong>
-
-            <p>Initialize the selectable with the unselected callback specified:</p>
-
-            <div class="syntaxhighlighter nogutter  ">
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <tbody>
-                    <tr>
-                        <td class="code">
-                            <div class="container">
-                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                        class="string">".selector"</code> <code class="plain">).selectable({</code>
-                                </div>
-                                <div class="line number2 index1 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
-                                        class="plain">unselected: </code><code class="keyword">function</code><code
-                                        class="plain">( event, ui ) {}</code></div>
-                                <div class="line number3 index2 alt2"><code class="plain">});</code></div>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <p>Bind an event listener to the selectableunselected event:</p>
-
-            <div class="syntaxhighlighter nogutter  ">
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <tbody>
-                    <tr>
-                        <td class="code">
-                            <div class="container">
-                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                        class="string">".selector"</code> <code class="plain">).on( </code><code
-                                        class="string">"selectableunselected"</code><code class="plain">, </code><code
-                                        class="keyword">function</code><code class="plain">( event, ui ) {} );</code>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
-    </div>
-    <div id="event-unselecting" class="api-item">
-        <h3>unselecting( event, ui )<span class="returns">Type: <code>selectableunselecting</code></span>
-        </h3>
+        <p>Bind an event listener to the selectableselected event:</p>
 
-        <div>Triggered during the select operation, on each element removed from the selection.</div>
-        <ul>
-            <li>
-                <div><strong>event</strong></div>
-                <div>Type: <a href="http://api.jquery.com/Types#Event">Event</a>
-                </div>
-                <div></div>
-            </li>
-            <li>
-                <div><strong>ui</strong></div>
-                <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
-                </div>
-                <div></div>
-                <ul>
-                    <li>
-                        <div><strong>unselecting</strong></div>
-                        <div>Type: <a href="http://api.jquery.com/Types#Element">Element</a>
+        <div class="syntaxhighlighter nogutter  ">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tbody>
+                <tr>
+                    <td class="code">
+                        <div class="container">
+                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                    class="string">".selector"</code> <code class="plain">).on( </code><code
+                                    class="string">"selectableselected"</code><code class="plain">, </code><code
+                                    class="keyword">function</code><code class="plain">( event, ui ) {} );</code>
+                            </div>
                         </div>
-                        <div>The current selectable item being unselected.</div>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-        <div>
-            <strong>Code examples:</strong>
-
-            <p>Initialize the selectable with the unselecting callback specified:</p>
-
-            <div class="syntaxhighlighter nogutter  ">
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <tbody>
-                    <tr>
-                        <td class="code">
-                            <div class="container">
-                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                        class="string">".selector"</code> <code class="plain">).selectable({</code>
-                                </div>
-                                <div class="line number2 index1 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
-                                        class="plain">unselecting: </code><code class="keyword">function</code><code
-                                        class="plain">( event, ui ) {}</code></div>
-                                <div class="line number3 index2 alt2"><code class="plain">});</code></div>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <p>Bind an event listener to the selectableunselecting event:</p>
-
-            <div class="syntaxhighlighter nogutter  ">
-                <table border="0" cellpadding="0" cellspacing="0">
-                    <tbody>
-                    <tr>
-                        <td class="code">
-                            <div class="container">
-                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                        class="string">".selector"</code> <code class="plain">).on( </code><code
-                                        class="string">"selectableunselecting"</code><code class="plain">, </code><code
-                                        class="keyword">function</code><code class="plain">( event, ui ) {} );</code>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
+</div>
+<div id="event-selecting" class="api-item">
+    <h3>selecting( event, ui )<span class="returns">Type: <code>selectableselecting</code></span>
+    </h3>
+
+    <div>Triggered during the select operation, on each element added to the selection.</div>
+    <ul>
+        <li>
+            <div><strong>event</strong></div>
+            <div>Type: <a href="http://api.jquery.com/Types#Event">Event</a>
+            </div>
+            <div></div>
+        </li>
+        <li>
+            <div><strong>ui</strong></div>
+            <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
+            </div>
+            <div></div>
+            <ul>
+                <li>
+                    <div><strong>selecting</strong></div>
+                    <div>Type: <a href="http://api.jquery.com/Types#Element">Element</a>
+                    </div>
+                    <div>The current selectable item being selected.</div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <div>
+        <strong>Code examples:</strong>
+
+        <p>Initialize the selectable with the selecting callback specified:</p>
+
+        <div class="syntaxhighlighter nogutter  ">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tbody>
+                <tr>
+                    <td class="code">
+                        <div class="container">
+                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                    class="string">".selector"</code> <code class="plain">).selectable({</code>
+                            </div>
+                            <div class="line number2 index1 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+                                    class="plain">selecting: </code><code class="keyword">function</code><code
+                                    class="plain">( event, ui ) {}</code></div>
+                            <div class="line number3 index2 alt2"><code class="plain">});</code></div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p>Bind an event listener to the selectableselecting event:</p>
+
+        <div class="syntaxhighlighter nogutter  ">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tbody>
+                <tr>
+                    <td class="code">
+                        <div class="container">
+                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                    class="string">".selector"</code> <code class="plain">).on( </code><code
+                                    class="string">"selectableselecting"</code><code class="plain">, </code><code
+                                    class="keyword">function</code><code class="plain">( event, ui ) {} );</code>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="event-start" class="api-item">
+    <h3>start( event, ui )<span class="returns">Type: <code>selectablestart</code></span>
+    </h3>
+
+    <div>Triggered at the beginning of the select operation.</div>
+    <ul>
+        <li>
+            <div><strong>event</strong></div>
+            <div>Type: <a href="http://api.jquery.com/Types#Event">Event</a>
+            </div>
+            <div></div>
+        </li>
+        <li>
+            <div><strong>ui</strong></div>
+            <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
+            </div>
+            <div></div>
+        </li>
+    </ul>
+    <div>
+        <strong>Code examples:</strong>
+
+        <p>Initialize the selectable with the start callback specified:</p>
+
+        <div class="syntaxhighlighter nogutter  ">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tbody>
+                <tr>
+                    <td class="code">
+                        <div class="container">
+                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                    class="string">".selector"</code> <code class="plain">).selectable({</code>
+                            </div>
+                            <div class="line number2 index1 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+                                    class="plain">start: </code><code class="keyword">function</code><code
+                                    class="plain">( event, ui ) {}</code></div>
+                            <div class="line number3 index2 alt2"><code class="plain">});</code></div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p>Bind an event listener to the selectablestart event:</p>
+
+        <div class="syntaxhighlighter nogutter  ">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tbody>
+                <tr>
+                    <td class="code">
+                        <div class="container">
+                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                    class="string">".selector"</code> <code class="plain">).on( </code><code
+                                    class="string">"selectablestart"</code><code class="plain">, </code><code
+                                    class="keyword">function</code><code class="plain">( event, ui ) {} );</code>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="event-stop" class="api-item">
+    <h3>stop( event, ui )<span class="returns">Type: <code>selectablestop</code></span>
+    </h3>
+
+    <div>Triggered at the end of the select operation.</div>
+    <ul>
+        <li>
+            <div><strong>event</strong></div>
+            <div>Type: <a href="http://api.jquery.com/Types#Event">Event</a>
+            </div>
+            <div></div>
+        </li>
+        <li>
+            <div><strong>ui</strong></div>
+            <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
+            </div>
+            <div></div>
+        </li>
+    </ul>
+    <div>
+        <strong>Code examples:</strong>
+
+        <p>Initialize the selectable with the stop callback specified:</p>
+
+        <div class="syntaxhighlighter nogutter  ">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tbody>
+                <tr>
+                    <td class="code">
+                        <div class="container">
+                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                    class="string">".selector"</code> <code class="plain">).selectable({</code>
+                            </div>
+                            <div class="line number2 index1 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+                                    class="plain">stop: </code><code class="keyword">function</code><code
+                                    class="plain">( event, ui ) {}</code></div>
+                            <div class="line number3 index2 alt2"><code class="plain">});</code></div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p>Bind an event listener to the selectablestop event:</p>
+
+        <div class="syntaxhighlighter nogutter  ">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tbody>
+                <tr>
+                    <td class="code">
+                        <div class="container">
+                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                    class="string">".selector"</code> <code class="plain">).on( </code><code
+                                    class="string">"selectablestop"</code><code class="plain">, </code><code
+                                    class="keyword">function</code><code class="plain">( event, ui ) {} );</code>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="event-unselected" class="api-item">
+    <h3>unselected( event, ui )<span class="returns">Type: <code>selectableunselected</code></span>
+    </h3>
+
+    <div>Triggered at the end of the select operation, on each element removed from the selection.</div>
+    <ul>
+        <li>
+            <div><strong>event</strong></div>
+            <div>Type: <a href="http://api.jquery.com/Types#Event">Event</a>
+            </div>
+            <div></div>
+        </li>
+        <li>
+            <div><strong>ui</strong></div>
+            <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
+            </div>
+            <div></div>
+            <ul>
+                <li>
+                    <div><strong>unselected</strong></div>
+                    <div>Type: <a href="http://api.jquery.com/Types#Element">Element</a>
+                    </div>
+                    <div>The selectable item that has been unselected.</div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <div>
+        <strong>Code examples:</strong>
+
+        <p>Initialize the selectable with the unselected callback specified:</p>
+
+        <div class="syntaxhighlighter nogutter  ">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tbody>
+                <tr>
+                    <td class="code">
+                        <div class="container">
+                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                    class="string">".selector"</code> <code class="plain">).selectable({</code>
+                            </div>
+                            <div class="line number2 index1 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+                                    class="plain">unselected: </code><code class="keyword">function</code><code
+                                    class="plain">( event, ui ) {}</code></div>
+                            <div class="line number3 index2 alt2"><code class="plain">});</code></div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p>Bind an event listener to the selectableunselected event:</p>
+
+        <div class="syntaxhighlighter nogutter  ">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tbody>
+                <tr>
+                    <td class="code">
+                        <div class="container">
+                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                    class="string">".selector"</code> <code class="plain">).on( </code><code
+                                    class="string">"selectableunselected"</code><code class="plain">, </code><code
+                                    class="keyword">function</code><code class="plain">( event, ui ) {} );</code>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="event-unselecting" class="api-item">
+    <h3>unselecting( event, ui )<span class="returns">Type: <code>selectableunselecting</code></span>
+    </h3>
+
+    <div>Triggered during the select operation, on each element removed from the selection.</div>
+    <ul>
+        <li>
+            <div><strong>event</strong></div>
+            <div>Type: <a href="http://api.jquery.com/Types#Event">Event</a>
+            </div>
+            <div></div>
+        </li>
+        <li>
+            <div><strong>ui</strong></div>
+            <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
+            </div>
+            <div></div>
+            <ul>
+                <li>
+                    <div><strong>unselecting</strong></div>
+                    <div>Type: <a href="http://api.jquery.com/Types#Element">Element</a>
+                    </div>
+                    <div>The current selectable item being unselected.</div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+    <div>
+        <strong>Code examples:</strong>
+
+        <p>Initialize the selectable with the unselecting callback specified:</p>
+
+        <div class="syntaxhighlighter nogutter  ">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tbody>
+                <tr>
+                    <td class="code">
+                        <div class="container">
+                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                    class="string">".selector"</code> <code class="plain">).selectable({</code>
+                            </div>
+                            <div class="line number2 index1 alt1"><code class="undefined spaces">&nbsp;&nbsp;&nbsp;&nbsp;</code><code
+                                    class="plain">unselecting: </code><code class="keyword">function</code><code
+                                    class="plain">( event, ui ) {}</code></div>
+                            <div class="line number3 index2 alt2"><code class="plain">});</code></div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p>Bind an event listener to the selectableunselecting event:</p>
+
+        <div class="syntaxhighlighter nogutter  ">
+            <table border="0" cellpadding="0" cellspacing="0">
+                <tbody>
+                <tr>
+                    <td class="code">
+                        <div class="container">
+                            <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                    class="string">".selector"</code> <code class="plain">).on( </code><code
+                                    class="string">"selectableunselecting"</code><code class="plain">, </code><code
+                                    class="keyword">function</code><code class="plain">( event, ui ) {} );</code>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 </section>
 <section class="entry-examples" id="entry-examples">
     <header><h2 class="underline">Example:</h2></header>

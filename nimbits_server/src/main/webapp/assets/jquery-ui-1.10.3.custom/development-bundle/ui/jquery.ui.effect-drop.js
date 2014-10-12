@@ -44,7 +44,7 @@
         animation[ ref ] = ( show ?
             ( motion === "pos" ? "+=" : "-=" ) :
             ( motion === "pos" ? "-=" : "+=" ) ) +
-        distance;
+            distance;
 
         // Animate
         el.animate(animation, {

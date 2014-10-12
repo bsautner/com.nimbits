@@ -66,5 +66,5 @@ public interface NimbitsClient {
 
     void doHeartbeat(Entity parent);
 
-    void recordSeries(Point entity, List<Value> data);
+    void recordSeries(Point entity);
 }

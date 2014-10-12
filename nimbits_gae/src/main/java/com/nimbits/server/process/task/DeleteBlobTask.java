@@ -16,13 +16,10 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.nimbits.client.enums.Parameters;
-import com.nimbits.server.api.ApiBase;
 import com.nimbits.shared.Utils;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 
 
 public class DeleteBlobTask extends TaskBase {

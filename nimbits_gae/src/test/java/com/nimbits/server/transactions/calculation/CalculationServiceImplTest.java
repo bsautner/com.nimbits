@@ -18,6 +18,7 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.point.PointType;
+import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.calculation.CalculationModelFactory;
 import com.nimbits.client.model.common.impl.CommonFactory;
@@ -30,10 +31,11 @@ import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.client.exception.ValueException;
-import com.nimbits.server.transaction.calculation.CalculationServiceFactory;
+
+import com.nimbits.server.transaction.calculation.CalculationService;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.List;
@@ -43,6 +45,8 @@ import java.util.UUID;
 
 public class CalculationServiceImplTest extends NimbitsServletTest {
 
+    @Autowired
+    CalculationService calculationService;
 
     private static final double DELTA = 0.0001;
 
@@ -112,7 +116,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
 
         Thread.sleep(1000);
         //added dummy value to end here - calc service now uses a value to preserve time
-        CalculationServiceFactory.getInstance(engine, taskService).process(req, user, trigger, ValueFactory.createValueModel(123.00));
+        calculationService.process(req, user, trigger, ValueFactory.createValueModel(123.00));
         Thread.sleep(1000);
         final List<Value> endResult = valueService.getCurrentValue(target);
         org.junit.Assert.assertNotNull(endResult);

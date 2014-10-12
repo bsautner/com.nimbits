@@ -15,21 +15,20 @@ package com.nimbits.server.transactions.user;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.server.transaction.user.service.AuthenticationMechanism;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-public class AuthenticationMechanismImpl implements AuthenticationMechanism {
+public class AuthenticationMechanismImpl {
     private com.google.appengine.api.users.UserService googleUserService;
 
     public AuthenticationMechanismImpl() {
         googleUserService = UserServiceFactory.getUserService();
     }
 
-    @Override
+
     public List<EmailAddress> getCurrentUserEmail() {
         if (this.googleUserService != null) {
             this.googleUserService = UserServiceFactory.getUserService();

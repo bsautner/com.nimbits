@@ -181,7 +181,7 @@
                         instance = $.data(this, fullName);
                     if (!instance) {
                         return $.error("cannot call methods on " + name + " prior to initialization; " +
-                        "attempted to call method '" + options + "'");
+                            "attempted to call method '" + options + "'");
                     }
                     if (!$.isFunction(instance[options]) || options.charAt(0) === "_") {
                         return $.error("no such method '" + options + "' for " + name + " widget instance");
@@ -250,7 +250,7 @@
                     // element within the document
                     element.ownerDocument :
                     // element is window or document
-                element.document || element);
+                    element.document || element);
                 this.window = $(this.document[0].defaultView || this.document[0].parentWindow);
             }
 
@@ -280,8 +280,8 @@
                 .unbind(this.eventNamespace)
                 .removeAttr("aria-disabled")
                 .removeClass(
-                this.widgetFullName + "-disabled " +
-                "ui-state-disabled");
+                    this.widgetFullName + "-disabled " +
+                    "ui-state-disabled");
 
             // clean up events and states
             this.bindings.unbind(this.eventNamespace);
@@ -392,7 +392,7 @@
                     // - disabled class as method for disabling individual parts
                     if (!suppressDisabledCheck &&
                         ( instance.options.disabled === true ||
-                        $(this).hasClass("ui-state-disabled") )) {
+                            $(this).hasClass("ui-state-disabled") )) {
                         return;
                     }
                     return ( typeof handler === "string" ? instance[ handler ] : handler )
@@ -463,7 +463,7 @@
             event = $.Event(event);
             event.type = ( type === this.widgetEventPrefix ?
                 type :
-            this.widgetEventPrefix + type ).toLowerCase();
+                this.widgetEventPrefix + type ).toLowerCase();
             // the original event may come from any element
             // so we need to reset the target on the new event
             event.target = this.element[ 0 ];
@@ -480,8 +480,8 @@
 
             this.element.trigger(event, data);
             return !( $.isFunction(callback) &&
-            callback.apply(this.element[0], [ event ].concat(data)) === false ||
-            event.isDefaultPrevented() );
+                callback.apply(this.element[0], [ event ].concat(data)) === false ||
+                event.isDefaultPrevented() );
         }
     };
 
@@ -493,8 +493,8 @@
             var hasOptions,
                 effectName = !options ?
                     method :
-                    options === true || typeof options === "number" ?
-                        defaultEffect :
+                        options === true || typeof options === "number" ?
+                    defaultEffect :
                     options.effect || defaultEffect;
             options = options || {};
             if (typeof options === "number") {

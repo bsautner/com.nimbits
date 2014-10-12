@@ -652,17 +652,17 @@
                     // Time zone offset with leading zero
                     hour = value.getTimezoneOffset() / 60;
                     ret.push(
-                        ( hour <= 0 ? "+" : "-" ) + padZeros(Math.floor(Math.abs(hour)), clength)
+                            ( hour <= 0 ? "+" : "-" ) + padZeros(Math.floor(Math.abs(hour)), clength)
                     );
                     break;
                 case "zzz":
                     // Time zone offset with leading zero
                     hour = value.getTimezoneOffset() / 60;
                     ret.push(
-                        ( hour <= 0 ? "+" : "-" ) + padZeros(Math.floor(Math.abs(hour)), 2)
+                            ( hour <= 0 ? "+" : "-" ) + padZeros(Math.floor(Math.abs(hour)), 2)
                             // Hard coded ":" separator, rather than using cal.TimeSeparator
                             // Repeated here for consistency, plus ":" was already assumed in date parsing.
-                        + ":" + padZeros(Math.abs(value.getTimezoneOffset() % 60), 2)
+                            + ":" + padZeros(Math.abs(value.getTimezoneOffset() % 60), 2)
                     );
                     break;
                 case "g":
@@ -724,7 +724,7 @@
 
             if (precision > 0) {
                 right = formatInfo[ "." ] +
-                ( (right.length > precision) ? right.slice(0, precision) : zeroPad(right, precision) );
+                    ( (right.length > precision) ? right.slice(0, precision) : zeroPad(right, precision) );
             }
             else {
                 right = "";
@@ -1142,7 +1142,7 @@
                                 !pmHour && (
                                 !cal.AM || ( matchGroup !== cal.AM[0] && matchGroup !== cal.AM[1] && matchGroup !== cal.AM[2] )
                                 )
-                            ) return null;
+                                ) return null;
                             break;
                         case "f":
                         // Deciseconds.
@@ -1447,7 +1447,7 @@
 
     Globalize.localize = function (key, cultureSelector) {
         return this.findClosestCulture(cultureSelector).messages[ key ] ||
-        this.cultures[ "default" ].messages[ key ];
+            this.cultures[ "default" ].messages[ key ];
     };
 
     Globalize.parseDate = function (value, formats, culture) {

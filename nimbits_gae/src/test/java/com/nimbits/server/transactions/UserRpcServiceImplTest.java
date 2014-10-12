@@ -17,7 +17,7 @@ import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
 import com.google.appengine.tools.development.testing.LocalTaskQueueTestConfig;
 import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.service.user.UserService;
+import com.nimbits.client.service.user.UserRpcService;
 import com.nimbits.server.NimbitsServletTest;
 import org.junit.After;
 import org.junit.Before;
@@ -30,8 +30,8 @@ public class UserRpcServiceImplTest extends NimbitsServletTest {
 
     public final LocalServiceTestHelper helper = new LocalServiceTestHelper(
             new LocalDatastoreServiceTestConfig(),
-    new LocalTaskQueueTestConfig(),
-    new LocalUserServiceTestConfig()).setEnvIsLoggedIn(true).setEnvEmail(email).setEnvAuthDomain("example.com");
+            new LocalTaskQueueTestConfig(),
+            new LocalUserServiceTestConfig()).setEnvIsLoggedIn(true).setEnvEmail(email).setEnvAuthDomain("example.com");
 
 
     @Before
@@ -48,7 +48,7 @@ public class UserRpcServiceImplTest extends NimbitsServletTest {
 
     @Test
     public void loginRpcTest() {
-        UserService service = new UserRpcServiceImpl();
+        UserRpcService service = new UserRpcServiceImpl();
         User user = service.loginRpc("foo.bar");
         assertNotNull(user);
 

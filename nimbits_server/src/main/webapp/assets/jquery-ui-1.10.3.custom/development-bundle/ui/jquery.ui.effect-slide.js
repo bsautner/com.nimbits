@@ -43,7 +43,7 @@
         animation[ ref ] = ( show ?
             ( positiveMotion ? "+=" : "-=") :
             ( positiveMotion ? "-=" : "+=")) +
-        distance;
+            distance;
 
         // Animate
         el.animate(animation, {

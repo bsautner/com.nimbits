@@ -34,6 +34,7 @@ import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.client.model.valueblobstore.ValueBlobStoreFactory;
 import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.value.dao.ValueDayHolder;
+import org.springframework.stereotype.Service;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
@@ -44,20 +45,25 @@ import java.lang.reflect.Type;
 import java.nio.channels.Channels;
 import java.util.*;
 
+@Service
 public class BlobStoreImpl implements BlobStore {
     //  private final Logger log = Logger.getLogger(BlobStoreImpl.class.getName());
-    private final PersistenceManagerFactory pmf;
+    private PersistenceManagerFactory persistenceManagerFactory;
 
     private Gson gson = new GsonBuilder().create();
-    public BlobStoreImpl(PersistenceManagerFactory pmf) {
-        this.pmf = pmf;
+
+    public BlobStoreImpl() {
+
 
     }
 
+    public void setPersistenceManagerFactory(PersistenceManagerFactory persistenceManagerFactory) {
+        this.persistenceManagerFactory = persistenceManagerFactory;
+    }
 
     @Override
     public List<Value> getTopDataSeries(final Entity entity, final int maxValues, final Date endDate) {
-        PersistenceManager pm = pmf.getPersistenceManager();
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
 
         final List<Value> retObj = new ArrayList<Value>(maxValues);
@@ -95,7 +101,7 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public List<Value> getDataSegment(final Entity entity, final Range<Date> timespan) {
-        PersistenceManager pm = pmf.getPersistenceManager();
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
             final List<Value> retObj = new ArrayList<Value>();
             final Query q = pm.newQuery(ValueBlobStoreEntity.class);
@@ -128,7 +134,7 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public List<ValueBlobStore> getAllStores(final Entity entity) {
-        PersistenceManager pm = pmf.getPersistenceManager();
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
         final Query q = pm.newQuery(ValueBlobStoreEntity.class);
         q.setFilter("entity == k");
@@ -136,9 +142,9 @@ public class BlobStoreImpl implements BlobStore {
         q.setOrdering("timestamp descending");
 
 
-
         final Collection<ValueBlobStore> result = (Collection<ValueBlobStore>) q.execute(entity.getKey());
-        List<ValueBlobStore> checked = new ArrayList<>(result.size()); {
+        List<ValueBlobStore> checked = new ArrayList<>(result.size());
+        {
             for (ValueBlobStore e : result) {
                 if (validateOwnership(entity, e)) {
                     checked.add(e);
@@ -151,7 +157,7 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public List<Value> consolidateDate(final Entity entity, final Date timestamp) {
-        PersistenceManager pm = pmf.getPersistenceManager();
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
 
         try {
@@ -182,7 +188,7 @@ public class BlobStoreImpl implements BlobStore {
     @Override
     public void deleteExpiredData(final Entity entity) {
 
-        PersistenceManager pm = pmf.getPersistenceManager();
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
 
         int exp = ((Point) entity).getExpire();
@@ -252,7 +258,7 @@ public class BlobStoreImpl implements BlobStore {
     @Override
     public List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final ValueDayHolder holder) {
 
-        PersistenceManager pm = pmf.getPersistenceManager();
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
             final String json = gson.toJson(holder.getValues());
             final FileService fileService = FileServiceFactory.getFileService();
@@ -299,7 +305,7 @@ public class BlobStoreImpl implements BlobStore {
 
 
         final FileService fileService = FileServiceFactory.getFileService();
-        PersistenceManager pm = pmf.getPersistenceManager();
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
         PrintWriter out = null;
         try {

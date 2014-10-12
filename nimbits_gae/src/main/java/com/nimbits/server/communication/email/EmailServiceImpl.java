@@ -25,8 +25,9 @@ import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.ServerInfo;
-import com.nimbits.server.transaction.settings.SettingServiceFactory;
 import com.nimbits.server.transaction.settings.SettingsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import javax.jdo.PersistenceManagerFactory;
 import javax.mail.Message;
@@ -40,20 +41,26 @@ import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 import java.util.logging.Logger;
 
+@Service
 public class EmailServiceImpl implements EmailService {
 
+    @Autowired
+    SettingsService settingsService;
 
     private static final Logger log = Logger.getLogger(EmailServiceImpl.class.getName());
     private static final String DEFAULT_EMAIL_SUBJECT = "Nimbits Messaging";
     private static final String WORD_NIMBITS = "Nimbits";
     private static final int INT = 128;
     private static final int SECONDS_IN_MINUTE = 60;
-     private final PersistenceManagerFactory pmf;
+    private PersistenceManagerFactory persistenceManagerFactory;
 
-    public EmailServiceImpl(PersistenceManagerFactory pmf) {
-        this.pmf = pmf;
+    public EmailServiceImpl() {
+
     }
 
+    public void setPersistenceManagerFactory(PersistenceManagerFactory persistenceManagerFactory) {
+        this.persistenceManagerFactory = persistenceManagerFactory;
+    }
 
     private static void send(final Message msg) {
 
@@ -92,8 +99,6 @@ public class EmailServiceImpl implements EmailService {
 
         }
     }
-
-
 
 
     @Override
@@ -147,10 +152,11 @@ public class EmailServiceImpl implements EmailService {
 
         }
     }
+
     private InternetAddress getFromEmail() throws UnsupportedEncodingException {
         final String fromEmail;
-      fromEmail = SettingServiceFactory.getDaoInstance(pmf).getSetting(ServerSetting.admin );
-            return new InternetAddress(fromEmail, WORD_NIMBITS);
+        fromEmail = settingsService.getSetting(ServerSetting.admin);
+        return new InternetAddress(fromEmail, WORD_NIMBITS);
 
 
     }
@@ -160,7 +166,7 @@ public class EmailServiceImpl implements EmailService {
     public void sendAlert(final Entity entity,
                           final Point point,
                           final EmailAddress emailAddress,
-                          final Value value, Subscription subscription)  {
+                          final Value value, Subscription subscription) {
 
         final Properties props = new Properties();
         final Session session = Session.getDefaultInstance(props, null);
@@ -187,12 +193,12 @@ public class EmailServiceImpl implements EmailService {
             case IdleAlert: {
                 message.append("<P>Alarm Status: Idle</P>")
                         .append("<P>Idle Setting: ").append(point.getIdleSeconds() / SECONDS_IN_MINUTE).append(" minutes</P>");
-               break;
+                break;
             }
             case OK: {
                 message.append("<P>Alarm Status: OK</P>")
-                .append("<p>Value : ").append(value.getDoubleValue()).append("</p>")
-                .append("<p>Data : ").append(value.getData().getContent()).append("</p>");
+                        .append("<p>Value : ").append(value.getDoubleValue()).append("</p>")
+                        .append("<p>Data : ").append(value.getData().getContent()).append("</p>");
 
             }
 
@@ -210,16 +216,15 @@ public class EmailServiceImpl implements EmailService {
             final InternetAddress from = getFromEmail();
             if (from == null) {
                 log.severe("Null email from sendAlert");
-            } else
-            {
-            msg.setFrom(from);
-            InternetAddress internetAddress = new InternetAddress(emailAddress.getValue());
-            msg.addRecipient(Message.RecipientType.TO, internetAddress);
-            msg.setSubject(DEFAULT_EMAIL_SUBJECT);
-            msg.setContent(message.toString(), Const.CONTENT_TYPE_HTML);
-            log.info(emailAddress + " " + message);
-            send(msg);
-            log.info("to" + internetAddress.getAddress());
+            } else {
+                msg.setFrom(from);
+                InternetAddress internetAddress = new InternetAddress(emailAddress.getValue());
+                msg.addRecipient(Message.RecipientType.TO, internetAddress);
+                msg.setSubject(DEFAULT_EMAIL_SUBJECT);
+                msg.setContent(message.toString(), Const.CONTENT_TYPE_HTML);
+                log.info(emailAddress + " " + message);
+                send(msg);
+                log.info("to" + internetAddress.getAddress());
                 log.info("from:" + from.getAddress());
             }
         } catch (AddressException e) {
@@ -258,7 +263,6 @@ public class EmailServiceImpl implements EmailService {
         ;
 
 
-
         String subject = "Nimbits Connection Request";
         sendEmail(to, sb.toString(), subject);
 
@@ -271,15 +275,13 @@ public class EmailServiceImpl implements EmailService {
 
         StringBuilder sb = new StringBuilder();
         sb
-                .append("<P>" + to.getValue() + " has approved your connection request. You can now login to see their data points, and they can see yours." +  "</P>")
+                .append("<P>" + to.getValue() + " has approved your connection request. You can now login to see their data points, and they can see yours." + "</P>")
 
                 .append(ServerInfo.getFullServerURL(null))
 
 
-
                 .append("<p>Learn more at http://www.nimbits.com/howto_connections.jsp</p>");
         ;
-
 
 
         String subject = "Nimbits Connection Request Complete";

@@ -49,9 +49,9 @@
                     re: /rgba?\(\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*,\s*(\d+(?:\.\d+)?)\%\s*(?:,\s*(\d?(?:\.\d+)?)\s*)?\)/,
                     parse: function (execResult) {
                         return [
-                            execResult[ 1 ] * 2.55,
-                            execResult[ 2 ] * 2.55,
-                            execResult[ 3 ] * 2.55,
+                                execResult[ 1 ] * 2.55,
+                                execResult[ 2 ] * 2.55,
+                                execResult[ 3 ] * 2.55,
                             execResult[ 4 ]
                         ];
                     }
@@ -84,8 +84,8 @@
                     parse: function (execResult) {
                         return [
                             execResult[ 1 ],
-                            execResult[ 2 ] / 100,
-                            execResult[ 3 ] / 100,
+                                execResult[ 2 ] / 100,
+                                execResult[ 3 ] / 100,
                             execResult[ 4 ]
                         ];
                     }
@@ -607,8 +607,8 @@
                             if (!support.rgba && value._rgba[ 3 ] !== 1) {
                                 curElem = hook === "backgroundColor" ? elem.parentNode : elem;
                                 while (
-                                (backgroundColor === "" || backgroundColor === "transparent") &&
-                                curElem && curElem.style
+                                    (backgroundColor === "" || backgroundColor === "transparent") &&
+                                    curElem && curElem.style
                                     ) {
                                     try {
                                         backgroundColor = jQuery.css(curElem, "backgroundColor");
@@ -1120,9 +1120,9 @@
 
             speed = speed || options.duration;
             effect.duration = $.fx.off ? 0 :
-                typeof speed === "number" ? speed :
+                    typeof speed === "number" ? speed :
                     speed in $.fx.speeds ? $.fx.speeds[ speed ] :
-                        $.fx.speeds._default;
+                $.fx.speeds._default;
 
             effect.complete = callback || options.complete;
 
@@ -1278,7 +1278,7 @@
             },
             Elastic: function (p) {
                 return p === 0 || p === 1 ? p :
-                -Math.pow(2, 8 * (p - 1)) * Math.sin(( (p - 1) * 80 - 7.5 ) * Math.PI / 15);
+                    -Math.pow(2, 8 * (p - 1)) * Math.sin(( (p - 1) * 80 - 7.5 ) * Math.PI / 15);
             },
             Back: function (p) {
                 return p * p * ( 3 * p - 2 );
@@ -1300,8 +1300,8 @@
             };
             $.easing[ "easeInOut" + name ] = function (p) {
                 return p < 0.5 ?
-                easeIn(p * 2) / 2 :
-                1 - easeIn(p * -2 + 2) / 2;
+                    easeIn(p * 2) / 2 :
+                    1 - easeIn(p * -2 + 2) / 2;
             };
         });
 

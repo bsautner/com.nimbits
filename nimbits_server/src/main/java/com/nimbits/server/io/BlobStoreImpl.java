@@ -26,12 +26,14 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.client.model.valueblobstore.ValueBlobStoreFactory;
-
+import com.nimbits.server.Datastore;
 import com.nimbits.server.gson.ValueDeserializer;
 import com.nimbits.server.io.blob.BlobStore;
 import com.nimbits.server.orm.store.ValueBlobStoreEntity;
 import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.value.dao.ValueDayHolder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
@@ -41,9 +43,12 @@ import java.lang.reflect.Type;
 import java.util.*;
 import java.util.logging.Logger;
 
+@Repository
 public class BlobStoreImpl implements BlobStore {
     private final Logger log = Logger.getLogger(BlobStoreImpl.class.getName());
-    private final PersistenceManagerFactory pmf;
+    private PersistenceManagerFactory persistenceManagerFactory;
+
+    @Autowired
     private SettingsService settingsService;
     private static final Gson gson;
 
@@ -56,18 +61,21 @@ public class BlobStoreImpl implements BlobStore {
     }
 
 
-    public BlobStoreImpl(final PersistenceManagerFactory pmf) {
-        this.pmf = pmf;
-
+    public BlobStoreImpl( ) {
 
     }
+
+    public void setPersistenceManagerFactory(PersistenceManagerFactory persistenceManagerFactory) {
+        this.persistenceManagerFactory = persistenceManagerFactory;
+    }
+
     private boolean validateOwnership(Entity entity, ValueBlobStore e) {
         return e.getEntityUUID().equals("") || e.getEntityUUID().equals(entity.getUUID());
     }
 
     @Override
     public List<Value> getTopDataSeries(final Entity entity, final int maxValues, final Date endDate) {
-        PersistenceManager pm = pmf.getPersistenceManager();
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
 
             final List<Value> retObj = new ArrayList<Value>(maxValues);
@@ -104,7 +112,7 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public List<Value> getDataSegment(final Entity entity, final Range<Date> timespan) {
-        PersistenceManager pm = pmf.getPersistenceManager();
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
             final List<Value> retObj = new ArrayList<Value>();
             final Query q = pm.newQuery(ValueBlobStoreEntity.class);
@@ -118,7 +126,7 @@ public class BlobStoreImpl implements BlobStore {
                     List<Value> values = readValuesFromFile(e.getBlobKey(), e.getLength());
                     for (final Value vx : values) {
                         if (timespan.contains(vx.getTimestamp())) {
-                                 retObj.add(vx);
+                            retObj.add(vx);
 
                         }
                     }
@@ -133,7 +141,7 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public List<ValueBlobStore> getAllStores(final Entity entity) {
-        PersistenceManager pm = pmf.getPersistenceManager();
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
 
             final Query q = pm.newQuery(ValueBlobStoreEntity.class);
@@ -142,7 +150,8 @@ public class BlobStoreImpl implements BlobStore {
             q.setOrdering("timestamp descending");
 
             final Collection<ValueBlobStore> result = (Collection<ValueBlobStore>) q.execute(entity.getKey());
-            List<ValueBlobStore> checked = new ArrayList<>(result.size()); {
+            List<ValueBlobStore> checked = new ArrayList<>(result.size());
+            {
                 for (ValueBlobStore e : result) {
                     if (validateOwnership(entity, e)) {
                         checked.add(e);
@@ -157,7 +166,7 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public List<Value> consolidateDate(final Entity entity, final Date timestamp) {
-        PersistenceManager pm = pmf.getPersistenceManager();
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
 
         try {
@@ -187,7 +196,7 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public void deleteExpiredData(final Entity entity) {
-        PersistenceManager pm = pmf.getPersistenceManager();
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
 
         int exp = ((Point) entity).getExpire();
@@ -295,11 +304,11 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final ValueDayHolder holder) {
-        PersistenceManager pm = pmf.getPersistenceManager();
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         PrintWriter out = null;
         try {
             final String json = gson.toJson(holder.getValues());
-            String fn =  entity.getName().getValue() + "_" + UUID.randomUUID().toString();
+            String fn = entity.getName().getValue() + "_" + UUID.randomUUID().toString();
             out = new PrintWriter(getFolder() + fn);
             out.println(json);
             out.close();
@@ -342,7 +351,7 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public List<ValueBlobStore> mergeTimespan(final Entity entity, final Range<Date> timespan) {
-        PersistenceManager pm = pmf.getPersistenceManager();
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
         PrintWriter out = null;
         try {

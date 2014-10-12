@@ -1565,529 +1565,531 @@
 </div>
 </section>
 <section id="methods">
-    <header><h2 class="underline">Methods</h2></header>
-    <div id="method-cancel">
-        <div class="api-item first-item">
-            <h3>cancel()</h3>
+<header><h2 class="underline">Methods</h2></header>
+<div id="method-cancel">
+    <div class="api-item first-item">
+        <h3>cancel()</h3>
 
-            <div>Cancels a change in the current sortable and reverts it to the state prior to when the current sort was
-                started. Useful in the stop and receive callback functions.
-            </div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the cancel method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).sortable( </code><code class="string">"cancel"</code> <code
-                                            class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <div>Cancels a change in the current sortable and reverts it to the state prior to when the current sort was
+            started. Useful in the stop and receive callback functions.
         </div>
-    </div>
-    <div id="method-destroy">
-        <div class="api-item">
-            <h3>destroy()</h3>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
 
-            <div>
-                Removes the sortable functionality completely. This will return the element back to its pre-init state.
-            </div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
+            <p>Invoke the cancel method:</p>
 
-                <p>Invoke the destroy method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).sortable( </code><code class="string">"destroy"</code> <code
-                                            class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="method-disable">
-        <div class="api-item">
-            <h3>disable()</h3>
-
-            <div>
-                Disables the sortable.
-            </div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the disable method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).sortable( </code><code class="string">"disable"</code> <code
-                                            class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="method-enable">
-        <div class="api-item">
-            <h3>enable()</h3>
-
-            <div>
-                Enables the sortable.
-            </div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the enable method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).sortable( </code><code class="string">"enable"</code> <code
-                                            class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="method-option">
-        <div class="api-item">
-            <h3>option( optionName )<span class="returns">Returns: <a
-                    href="http://api.jquery.com/Types#Object">Object</a></span>
-            </h3>
-
-            <div>Gets the value currently associated with the specified <code>optionName</code>.</div>
-            <ul>
-                <li>
-                    <div><strong>optionName</strong></div>
-                    <div>Type: <a href="http://api.jquery.com/Types#String">String</a>
-                    </div>
-                    <div>The name of the option to get.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
-                                            class="plain">isDisabled = $( </code><code class="string">".selector"</code>
-                                        <code class="plain">).sortable( </code><code class="string">"option"</code><code
-                                                class="plain">, </code><code class="string">"disabled"</code> <code
-                                                class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="api-item">
-            <h3>option()<span class="returns">Returns: <a href="http://api.jquery.com/Types#PlainObject">PlainObject</a></span>
-            </h3>
-
-            <div>Gets an object containing key/value pairs representing the current sortable options hash.</div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
-                                            class="plain">options = $( </code><code class="string">".selector"</code>
-                                        <code class="plain">).sortable( </code><code class="string">"option"</code>
-                                        <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="api-item">
-            <h3>option( optionName, value )</h3>
-
-            <div>Sets the value of the sortable option associated with the specified <code>optionName</code>.</div>
-            <ul>
-                <li>
-                    <div><strong>optionName</strong></div>
-                    <div>Type: <a href="http://api.jquery.com/Types#String">String</a>
-                    </div>
-                    <div>The name of the option to set.</div>
-                </li>
-                <li>
-                    <div><strong>value</strong></div>
-                    <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
-                    </div>
-                    <div>A value to set for the option.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).sortable( </code><code class="string">"option"</code><code
-                                            class="plain">, </code><code class="string">"disabled"</code><code
-                                            class="plain">, </code><code class="keyword">true</code> <code
-                                            class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="api-item">
-            <h3>option( options )</h3>
-
-            <div>Sets one or more options for the sortable.</div>
-            <ul>
-                <li>
-                    <div><strong>options</strong></div>
-                    <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
-                    </div>
-                    <div>A map of option-value pairs to set.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).sortable( </code><code class="string">"option"</code><code
-                                            class="plain">, { disabled: </code><code class="keyword">true</code> <code
-                                            class="plain">} );</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="method-refresh">
-        <div class="api-item">
-            <h3>refresh()</h3>
-
-            <div>Refresh the sortable items. Triggers the reloading of all sortable items, causing new items to be
-                recognized.
-            </div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the refresh method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).sortable( </code><code class="string">"refresh"</code> <code
-                                            class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="method-refreshPositions">
-        <div class="api-item">
-            <h3>refreshPositions()</h3>
-
-            <div>Refresh the cached positions of the sortable items. Calling this method refreshes the cached item
-                positions of all sortables.
-            </div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the refreshPositions method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).sortable( </code><code
-                                            class="string">"refreshPositions"</code> <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div id="method-serialize">
-        <div class="api-item">
-            <h3>serialize( options )<span class="returns">Returns: <a
-                    href="http://api.jquery.com/Types#String">String</a></span>
-            </h3>
-
-            <div>
-                <p>Serializes the sortable's item <code>id</code>s into a form/ajax submittable string. Calling this
-                    method produces a hash that can be appended to any url to easily submit a new item order back to the
-                    server.</p>
-
-                <p>It works by default by looking at the <code>id</code> of each item in the format <code>"setname_number"</code>,
-                    and it spits out a hash like <code>"setname[]=number&amp;setname[]=number"</code>.</p>
-
-                <p><em>Note: If serialize returns an empty string, make sure the <code>id</code> attributes include an
-                    underscore. They must be in the form: <code>"set_number"</code> For example, a 3 element list with
-                    <code>id</code> attributes <code>"foo_1"</code>, <code>"foo_5"</code>, <code>"foo_2"</code> will
-                    serialize to <code>"foo[]=1&amp;foo[]=5&amp;foo[]=2"</code>. You can use an underscore, equal sign
-                    or hyphen to separate the set and number. For example <code>"foo=1"</code>, <code>"foo-1"</code>,
-                    and <code>"foo_1"</code> all serialize to <code>"foo[]=1"</code>.</em></p>
-            </div>
-            <ul>
-                <li>
-                    <div><strong>options</strong></div>
-                    <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
-                    </div>
-                    <div>Options to customize the serialization.</div>
-                    <ul>
-                        <li>
-                            <div>
-                                <strong>key</strong> (default: <code>the part of the attribute in front of the
-                                separator</code>)
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).sortable( </code><code class="string">"cancel"</code> <code
+                                        class="plain">);</code></div>
                             </div>
-                            <div>Type: <a href="http://api.jquery.com/Types#String">String</a>
-                            </div>
-                            <div>Replaces <code>part1[]</code> with the specified value.</div>
-                        </li>
-                        <li>
-                            <div>
-                                <strong>attribute</strong> (default: <code>"id"</code>)
-                            </div>
-                            <div>Type: <a href="http://api.jquery.com/Types#String">String</a>
-                            </div>
-                            <div>The name of the attribute to use for the values.</div>
-                        </li>
-                        <li>
-                            <div>
-                                <strong>expression</strong> (default: <code>/(.+)[-=_](.+)/</code>)
-                            </div>
-                            <div>Type: <a href="http://api.jquery.com/Types#RegExp">RegExp</a>
-                            </div>
-                            <div>A regular expression used to split the attribute value into key and value parts.</div>
-                        </li>
-                    </ul>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the serialize method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
-                                            class="plain">sorted = $( </code><code class="string">".selector"</code>
-                                        <code class="plain">).sortable( </code><code
-                                                class="string">"serialize"</code><code class="plain">, {
-                                            key: </code><code class="string">"sort"</code> <code class="plain">}
-                                            );</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div id="method-toArray">
-        <div class="api-item">
-            <h3>toArray()<span class="returns">Returns: <a href="http://api.jquery.com/Types#Array">Array</a></span>
-            </h3>
+</div>
+<div id="method-destroy">
+    <div class="api-item">
+        <h3>destroy()</h3>
 
-            <div>Serializes the sortable's item id's into an array of string.</div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
+        <div>
+            Removes the sortable functionality completely. This will return the element back to its pre-init state.
+        </div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
 
-                <p>Invoke the toArray method:</p>
+            <p>Invoke the destroy method:</p>
 
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
-                                            class="plain">sortedIDs = $( </code><code class="string">".selector"</code>
-                                        <code class="plain">).sortable( </code><code class="string">"toArray"</code>
-                                        <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).sortable( </code><code class="string">"destroy"</code> <code
+                                        class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div id="method-widget">
-        <div class="api-item">
-            <h3>widget()<span class="returns">Returns: <a href="http://api.jquery.com/Types#jQuery">jQuery</a></span>
-            </h3>
+</div>
+<div id="method-disable">
+    <div class="api-item">
+        <h3>disable()</h3>
 
-            <div>
-                Returns a <code>jQuery</code> object containing the sortable element.
-            </div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
+        <div>
+            Disables the sortable.
+        </div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
 
-                <p>Invoke the widget method:</p>
+            <p>Invoke the disable method:</p>
 
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
-                                            class="plain">widget = $( </code><code class="string">".selector"</code>
-                                        <code class="plain">).sortable( </code><code class="string">"widget"</code>
-                                        <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).sortable( </code><code class="string">"disable"</code> <code
+                                        class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+</div>
+<div id="method-enable">
+    <div class="api-item">
+        <h3>enable()</h3>
+
+        <div>
+            Enables the sortable.
+        </div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the enable method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).sortable( </code><code class="string">"enable"</code> <code
+                                        class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="method-option">
+    <div class="api-item">
+        <h3>option( optionName )<span class="returns">Returns: <a
+                href="http://api.jquery.com/Types#Object">Object</a></span>
+        </h3>
+
+        <div>Gets the value currently associated with the specified <code>optionName</code>.</div>
+        <ul>
+            <li>
+                <div><strong>optionName</strong></div>
+                <div>Type: <a href="http://api.jquery.com/Types#String">String</a>
+                </div>
+                <div>The name of the option to get.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
+                                        class="plain">isDisabled = $( </code><code class="string">".selector"</code>
+                                    <code class="plain">).sortable( </code><code class="string">"option"</code><code
+                                            class="plain">, </code><code class="string">"disabled"</code> <code
+                                            class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="api-item">
+        <h3>option()<span class="returns">Returns: <a
+                href="http://api.jquery.com/Types#PlainObject">PlainObject</a></span>
+        </h3>
+
+        <div>Gets an object containing key/value pairs representing the current sortable options hash.</div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
+                                        class="plain">options = $( </code><code class="string">".selector"</code>
+                                    <code class="plain">).sortable( </code><code class="string">"option"</code>
+                                    <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="api-item">
+        <h3>option( optionName, value )</h3>
+
+        <div>Sets the value of the sortable option associated with the specified <code>optionName</code>.</div>
+        <ul>
+            <li>
+                <div><strong>optionName</strong></div>
+                <div>Type: <a href="http://api.jquery.com/Types#String">String</a>
+                </div>
+                <div>The name of the option to set.</div>
+            </li>
+            <li>
+                <div><strong>value</strong></div>
+                <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
+                </div>
+                <div>A value to set for the option.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).sortable( </code><code class="string">"option"</code><code
+                                        class="plain">, </code><code class="string">"disabled"</code><code
+                                        class="plain">, </code><code class="keyword">true</code> <code
+                                        class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="api-item">
+        <h3>option( options )</h3>
+
+        <div>Sets one or more options for the sortable.</div>
+        <ul>
+            <li>
+                <div><strong>options</strong></div>
+                <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
+                </div>
+                <div>A map of option-value pairs to set.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).sortable( </code><code class="string">"option"</code><code
+                                        class="plain">, { disabled: </code><code class="keyword">true</code> <code
+                                        class="plain">} );</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="method-refresh">
+    <div class="api-item">
+        <h3>refresh()</h3>
+
+        <div>Refresh the sortable items. Triggers the reloading of all sortable items, causing new items to be
+            recognized.
+        </div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the refresh method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).sortable( </code><code class="string">"refresh"</code> <code
+                                        class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="method-refreshPositions">
+    <div class="api-item">
+        <h3>refreshPositions()</h3>
+
+        <div>Refresh the cached positions of the sortable items. Calling this method refreshes the cached item
+            positions of all sortables.
+        </div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the refreshPositions method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).sortable( </code><code
+                                        class="string">"refreshPositions"</code> <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="method-serialize">
+    <div class="api-item">
+        <h3>serialize( options )<span class="returns">Returns: <a
+                href="http://api.jquery.com/Types#String">String</a></span>
+        </h3>
+
+        <div>
+            <p>Serializes the sortable's item <code>id</code>s into a form/ajax submittable string. Calling this
+                method produces a hash that can be appended to any url to easily submit a new item order back to the
+                server.</p>
+
+            <p>It works by default by looking at the <code>id</code> of each item in the format
+                <code>"setname_number"</code>,
+                and it spits out a hash like <code>"setname[]=number&amp;setname[]=number"</code>.</p>
+
+            <p><em>Note: If serialize returns an empty string, make sure the <code>id</code> attributes include an
+                underscore. They must be in the form: <code>"set_number"</code> For example, a 3 element list with
+                <code>id</code> attributes <code>"foo_1"</code>, <code>"foo_5"</code>, <code>"foo_2"</code> will
+                serialize to <code>"foo[]=1&amp;foo[]=5&amp;foo[]=2"</code>. You can use an underscore, equal sign
+                or hyphen to separate the set and number. For example <code>"foo=1"</code>, <code>"foo-1"</code>,
+                and <code>"foo_1"</code> all serialize to <code>"foo[]=1"</code>.</em></p>
+        </div>
+        <ul>
+            <li>
+                <div><strong>options</strong></div>
+                <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
+                </div>
+                <div>Options to customize the serialization.</div>
+                <ul>
+                    <li>
+                        <div>
+                            <strong>key</strong> (default: <code>the part of the attribute in front of the
+                            separator</code>)
+                        </div>
+                        <div>Type: <a href="http://api.jquery.com/Types#String">String</a>
+                        </div>
+                        <div>Replaces <code>part1[]</code> with the specified value.</div>
+                    </li>
+                    <li>
+                        <div>
+                            <strong>attribute</strong> (default: <code>"id"</code>)
+                        </div>
+                        <div>Type: <a href="http://api.jquery.com/Types#String">String</a>
+                        </div>
+                        <div>The name of the attribute to use for the values.</div>
+                    </li>
+                    <li>
+                        <div>
+                            <strong>expression</strong> (default: <code>/(.+)[-=_](.+)/</code>)
+                        </div>
+                        <div>Type: <a href="http://api.jquery.com/Types#RegExp">RegExp</a>
+                        </div>
+                        <div>A regular expression used to split the attribute value into key and value parts.</div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the serialize method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
+                                        class="plain">sorted = $( </code><code class="string">".selector"</code>
+                                    <code class="plain">).sortable( </code><code
+                                            class="string">"serialize"</code><code class="plain">, {
+                                        key: </code><code class="string">"sort"</code> <code class="plain">}
+                                        );</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="method-toArray">
+    <div class="api-item">
+        <h3>toArray()<span class="returns">Returns: <a href="http://api.jquery.com/Types#Array">Array</a></span>
+        </h3>
+
+        <div>Serializes the sortable's item id's into an array of string.</div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the toArray method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
+                                        class="plain">sortedIDs = $( </code><code class="string">".selector"</code>
+                                    <code class="plain">).sortable( </code><code class="string">"toArray"</code>
+                                    <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="method-widget">
+    <div class="api-item">
+        <h3>widget()<span class="returns">Returns: <a href="http://api.jquery.com/Types#jQuery">jQuery</a></span>
+        </h3>
+
+        <div>
+            Returns a <code>jQuery</code> object containing the sortable element.
+        </div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the widget method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
+                                        class="plain">widget = $( </code><code class="string">".selector"</code>
+                                    <code class="plain">).sortable( </code><code class="string">"widget"</code>
+                                    <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 </section>
 <section id="events">
 <header><h2 class="underline">Events</h2></header>

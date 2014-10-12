@@ -31,7 +31,6 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
 
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -43,16 +42,13 @@ import java.util.List;
 import java.util.UUID;
 
 
-
 @Deprecated
-public class PointServletImpl extends ApiServlet  {
+public class PointServletImpl extends ApiServlet {
 
     private static final long serialVersionUID = 1L;
     private static final int INT = 1024;
     private static final int EXPIRE = 90;
     private static final double FILTER_VALUE = 0.1;
-
-
 
 
     @Override

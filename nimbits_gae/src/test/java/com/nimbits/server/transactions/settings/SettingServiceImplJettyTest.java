@@ -13,13 +13,12 @@
 package com.nimbits.server.transactions.settings;
 
 import com.nimbits.client.enums.ServerSetting;
-import com.nimbits.server.ApplicationListener;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.cache.CacheFactory;
 import com.nimbits.server.transaction.cache.NimbitsCache;
-import com.nimbits.server.transaction.settings.SettingServiceFactory;
 import com.nimbits.server.transaction.settings.SettingsService;
 import org.junit.Test;
+
+import javax.annotation.Resource;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -27,18 +26,21 @@ import static org.junit.Assert.assertTrue;
 
 public class SettingServiceImplJettyTest extends NimbitsServletTest {
 
+    @Resource(name = "cache")
+    NimbitsCache cache;
 
-    SettingsService service = SettingServiceFactory.getServiceInstance(ApplicationListener.createEngine());
+    @Resource(name = "settingsService")
+    SettingsService settingsService;
 
     @Test
     public void getSettingsTest() throws Exception {
 
         Thread.sleep(2000);
 
-        String admin = service.getSetting(ServerSetting.admin);
+        String admin = settingsService.getSetting(ServerSetting.admin);
         assertNotNull(admin);
         System.out.println(admin);
-        NimbitsCache cache = CacheFactory.getInstance();
+
         assertTrue(cache.confirmCached(ServerSetting.admin.getName()));
 
     }

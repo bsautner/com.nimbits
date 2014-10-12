@@ -510,7 +510,7 @@
             ul.outerWidth(Math.max(
                 // Firefox wraps long text (possibly a rounding bug)
                 // so we add 1px to avoid the wrapping (#7513)
-                ul.width("").outerWidth() + 1,
+                    ul.width("").outerWidth() + 1,
                 this.element.outerWidth()
             ));
         },
@@ -586,7 +586,7 @@
                 noResults: "No search results.",
                 results: function (amount) {
                     return amount + ( amount > 1 ? " results are" : " result is" ) +
-                    " available, use up and down arrow keys to navigate.";
+                        " available, use up and down arrow keys to navigate.";
                 }
             }
         },

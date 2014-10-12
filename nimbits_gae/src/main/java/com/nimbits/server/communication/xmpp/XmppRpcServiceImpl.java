@@ -17,17 +17,20 @@ import com.google.appengine.api.xmpp.XMPPServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.xmpp.XmppRpcService;
-import com.nimbits.server.ApplicationListener;
-import com.nimbits.server.NimbitsEngine;
 import com.nimbits.server.transaction.user.UserHelper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-
+@Service
 public class XmppRpcServiceImpl extends RemoteServiceServlet implements XmppRpcService {
+
+    @Autowired
+    UserHelper userHelper;
 
     @Override
     public void sendInviteRpc() {
-        NimbitsEngine engine = ApplicationListener.createEngine();
-        User user = UserHelper.getUser(engine).get(0);
+
+        User user = userHelper.getUser().get(0);
 
 
         final JID jid = new JID(user.getEmail().getValue());

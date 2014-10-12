@@ -24,16 +24,20 @@ import com.nimbits.client.model.summary.SummaryModelFactory;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.transaction.summary.SummaryService;
-import com.nimbits.server.transaction.summary.SummaryServiceFactory;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"/META-INF/applicationContext.xml", "/META-INF/context.xml"})
 public class SummaryServiceTest extends NimbitsServletTest {
 
     private static final int SUMMARY_INTERVAL_MS = 60000;
@@ -42,12 +46,13 @@ public class SummaryServiceTest extends NimbitsServletTest {
     double[] v = {1, 2, 3};
 
 
+    @Resource(name = "summaryService")
     SummaryService summaryService;
 
     @Before
     public void setup() {
         super.setup();
-        summaryService = SummaryServiceFactory.getServiceInstance(engine, taskService);
+
 
     }
 
@@ -77,7 +82,7 @@ public class SummaryServiceTest extends NimbitsServletTest {
             Thread.sleep(INT);
             d[i] = dx;
         }
-        double com = SummaryServiceFactory.getServiceInstance(engine, taskService).getValue(SummaryType.average, d);
+        double com = summaryService.getValue(SummaryType.average, d);
 
         summaryService.process(req, user, point);
 

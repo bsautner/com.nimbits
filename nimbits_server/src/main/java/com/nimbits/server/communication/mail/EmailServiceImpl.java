@@ -23,11 +23,14 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.server.DatastoreImpl;
 import com.nimbits.server.ServerInfo;
 import com.nimbits.server.communication.email.EmailService;
-import com.nimbits.server.transaction.settings.SettingServiceFactory;
 import com.nimbits.server.transaction.settings.SettingsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.jdo.PersistenceManagerFactory;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -38,22 +41,23 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 import java.io.UnsupportedEncodingException;
 import java.util.Properties;
-import java.util.logging.Logger;
 
-
+@Service
 public class EmailServiceImpl implements EmailService {
 
 
-    private final PersistenceManagerFactory pmf;
-    private static final Logger log = Logger.getLogger(EmailServiceImpl.class.getName());
+
+
     private static final String DEFAULT_EMAIL_SUBJECT = "Nimbits Messaging";
     private static final String WORD_NIMBITS = "Nimbits";
     private static final int INT = 128;
     private static final int SECONDS_IN_MINUTE = 60;
+
+    @Autowired
     private SettingsService settingsService;
 
-    public EmailServiceImpl(PersistenceManagerFactory pmf) {
-        this.pmf = pmf;
+    public EmailServiceImpl( ) {
+
 
     }
 
@@ -189,7 +193,7 @@ public class EmailServiceImpl implements EmailService {
 
     private InternetAddress getFromEmail() throws UnsupportedEncodingException {
         final String fromEmail;
-        fromEmail = SettingServiceFactory.getDaoInstance(pmf).getSetting(ServerSetting.admin);
+        fromEmail = settingsService.getSetting(ServerSetting.admin);
         return new InternetAddress(fromEmail, WORD_NIMBITS);
 
 

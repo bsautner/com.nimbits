@@ -1265,8 +1265,8 @@
             deferred.done(function () {
                 state = "resolved";
             }, failList.disable, progressList.lock).fail(function () {
-                    state = "rejected";
-                }, doneList.disable, progressList.lock);
+                state = "rejected";
+            }, doneList.disable, progressList.lock);
 
             // Call given func if any
             if (func) {
@@ -1935,11 +1935,11 @@
             if (typeof data === "string") {
                 try {
                     data = data === "true" ? true :
-                        data === "false" ? false :
+                            data === "false" ? false :
                             data === "null" ? null :
-                                jQuery.isNumeric(data) ? parseFloat(data) :
-                                    rbrace.test(data) ? jQuery.parseJSON(data) :
-                                        data;
+                        jQuery.isNumeric(data) ? parseFloat(data) :
+                            rbrace.test(data) ? jQuery.parseJSON(data) :
+                                data;
                 } catch (e) {
                 }
 
@@ -2134,7 +2134,7 @@
                 if (( tmp = jQuery.data(elements[ i ], deferDataKey, undefined, true) ||
                     ( jQuery.data(elements[ i ], queueDataKey, undefined, true) ||
                         jQuery.data(elements[ i ], markDataKey, undefined, true) ) &&
-                        jQuery.data(elements[ i ], deferDataKey, jQuery.Callbacks("once memory"), true) )) {
+                    jQuery.data(elements[ i ], deferDataKey, jQuery.Callbacks("once memory"), true) )) {
                     count++;
                     tmp.add(resolve);
                 }
@@ -2320,7 +2320,7 @@
                         // handle most common string cases
                         ret.replace(rreturn, "") :
                         // handle cases where value is null/undef or number
-                        ret == null ? "" : ret;
+                            ret == null ? "" : ret;
                 }
 
                 return;
@@ -2623,9 +2623,9 @@
 
                     return attributeNode && attributeNode.specified ?
                         parseInt(attributeNode.value, 10) :
-                        rfocusable.test(elem.nodeName) || rclickable.test(elem.nodeName) && elem.href ?
-                            0 :
-                            undefined;
+                            rfocusable.test(elem.nodeName) || rclickable.test(elem.nodeName) && elem.href ?
+                        0 :
+                        undefined;
                 }
             }
         }
@@ -2817,8 +2817,8 @@
             var attrs = elem.attributes || {};
             return (
                 (!m[1] || elem.nodeName.toLowerCase() === m[1]) &&
-                    (!m[2] || (attrs.id || {}).value === m[2]) &&
-                    (!m[3] || m[3].test((attrs[ "class" ] || {}).value))
+                (!m[2] || (attrs.id || {}).value === m[2]) &&
+                (!m[3] || m[3].test((attrs[ "class" ] || {}).value))
                 );
         },
         hoverHack = function (events) {
@@ -4404,7 +4404,7 @@
 
                         // parse equations like 'even', 'odd', '5', '2n', '3n+2', '4n-1', '-n+6'
                         var test = /(-?)(\d*)(?:n([+\-]?\d*))?/.exec(
-                            match[2] === "even" && "2n" || match[2] === "odd" && "2n+1" ||
+                                match[2] === "even" && "2n" || match[2] === "odd" && "2n+1" ||
                                 !/\D/.test(match[2]) && "0n+" + match[2] || match[2]);
 
                         // calculate the numbers (first)n+(last) including if they are negative
@@ -4701,34 +4701,34 @@
                             Sizzle.attr(elem, name) :
                             Expr.attrHandle[ name ] ?
                                 Expr.attrHandle[ name ](elem) :
-                                elem[ name ] != null ?
-                                    elem[ name ] :
-                                    elem.getAttribute(name),
+                                    elem[ name ] != null ?
+                                elem[ name ] :
+                                elem.getAttribute(name),
                         value = result + "",
                         type = match[2],
                         check = match[4];
 
                     return result == null ?
                         type === "!=" :
-                        !type && Sizzle.attr ?
-                            result != null :
+                            !type && Sizzle.attr ?
+                        result != null :
                             type === "=" ?
-                                value === check :
-                                type === "*=" ?
-                                    value.indexOf(check) >= 0 :
-                                    type === "~=" ?
-                                        (" " + value + " ").indexOf(check) >= 0 :
-                                        !check ?
-                                            value && result !== false :
-                                            type === "!=" ?
-                                                value !== check :
-                                                type === "^=" ?
-                                                    value.indexOf(check) === 0 :
-                                                    type === "$=" ?
-                                                        value.substr(value.length - check.length) === check :
-                                                        type === "|=" ?
-                                                            value === check || value.substr(0, check.length + 1) === check + "-" :
-                                                            false;
+                        value === check :
+                            type === "*=" ?
+                        value.indexOf(check) >= 0 :
+                            type === "~=" ?
+                        (" " + value + " ").indexOf(check) >= 0 :
+                        !check ?
+                            value && result !== false :
+                                type === "!=" ?
+                            value !== check :
+                                type === "^=" ?
+                            value.indexOf(check) === 0 :
+                                type === "$=" ?
+                            value.substr(value.length - check.length) === check :
+                                type === "|=" ?
+                            value === check || value.substr(0, check.length + 1) === check + "-" :
+                            false;
                 },
 
                 POS: function (elem, match, i, array) {
@@ -4913,9 +4913,9 @@
                         var m = context.getElementById(match[1]);
 
                         return m ?
-                            m.id === match[1] || typeof m.getAttributeNode !== "undefined" && m.getAttributeNode("id").nodeValue === match[1] ?
-                                [m] :
-                                undefined :
+                                m.id === match[1] || typeof m.getAttributeNode !== "undefined" && m.getAttributeNode("id").nodeValue === match[1] ?
+                            [m] :
+                            undefined :
                             [];
                     }
                 };
@@ -5371,13 +5371,13 @@
 
         is: function (selector) {
             return !!selector && (
-                typeof selector === "string" ?
-                    // If this is a positional selector, check membership in the returned set
-                    // so $("p:first").is("p:last") won't return true for a doc with two "p".
-                    POS.test(selector) ?
-                        jQuery(selector, this.context).index(this[0]) >= 0 :
-                        jQuery.filter(selector, this).length > 0 :
-                    this.filter(selector).length > 0 );
+                    typeof selector === "string" ?
+                // If this is a positional selector, check membership in the returned set
+                // so $("p:first").is("p:last") won't return true for a doc with two "p".
+                POS.test(selector) ?
+                    jQuery(selector, this.context).index(this[0]) >= 0 :
+                    jQuery.filter(selector, this).length > 0 :
+                this.filter(selector).length > 0 );
         },
 
         closest: function (selectors, context) {
@@ -5966,7 +5966,7 @@
                             // in certain situations (Bug #8070).
                             // Fragments from the fragment cache must always be cloned and never used
                             // in place.
-                            results.cacheable || ( l > 1 && i < lastIndex ) ?
+                                results.cacheable || ( l > 1 && i < lastIndex ) ?
                                 jQuery.clone(fragment, true, true) :
                                 fragment
                         );
@@ -6308,9 +6308,9 @@
                                     div.firstChild && div.firstChild.childNodes :
 
                                     // String was a bare <thead> or <tfoot>
-                                    wrap[1] === "<table>" && !hasBody ?
-                                        div.childNodes :
-                                        [];
+                                        wrap[1] === "<table>" && !hasBody ?
+                                    div.childNodes :
+                                    [];
 
                             for (j = tbody.length - 1; j >= 0; --j) {
                                 if (jQuery.nodeName(tbody[ j ], "tbody") && !tbody[ j ].childNodes.length) {
@@ -7448,7 +7448,7 @@
                 s.crossDomain = !!( parts &&
                     ( parts[ 1 ] != ajaxLocParts[ 1 ] || parts[ 2 ] != ajaxLocParts[ 2 ] ||
                         ( parts[ 3 ] || ( parts[ 1 ] === "http:" ? 80 : 443 ) ) !=
-                            ( ajaxLocParts[ 3 ] || ( ajaxLocParts[ 1 ] === "http:" ? 80 : 443 ) ) )
+                        ( ajaxLocParts[ 3 ] || ( ajaxLocParts[ 1 ] === "http:" ? 80 : 443 ) ) )
                     );
             }
 
@@ -7523,7 +7523,7 @@
             // Set the Accepts header for the server, depending on the dataType
             jqXHR.setRequestHeader(
                 "Accept",
-                s.dataTypes[ 0 ] && s.accepts[ s.dataTypes[0] ] ?
+                    s.dataTypes[ 0 ] && s.accepts[ s.dataTypes[0] ] ?
                     s.accepts[ s.dataTypes[0] ] + ( s.dataTypes[ 0 ] !== "*" ? ", " + allTypes + "; q=0.01" : "" ) :
                     s.accepts[ "*" ]
             );
@@ -7836,7 +7836,7 @@
 
         if (s.dataTypes[ 0 ] === "jsonp" ||
             s.jsonp !== false && ( jsre.test(s.url) ||
-                inspectData && jsre.test(s.data) )) {
+            inspectData && jsre.test(s.data) )) {
 
             var responseContainer,
                 jsonpCallback = s.jsonpCallback =
@@ -8560,7 +8560,7 @@
             };
 
             opt.duration = jQuery.fx.off ? 0 : typeof opt.duration === "number" ? opt.duration :
-                opt.duration in jQuery.fx.speeds ? jQuery.fx.speeds[ opt.duration ] : jQuery.fx.speeds._default;
+                    opt.duration in jQuery.fx.speeds ? jQuery.fx.speeds[ opt.duration ] : jQuery.fx.speeds._default;
 
             // normalize opt.queue - true/undefined/null -> "fx"
             if (opt.queue == null || opt.queue === true) {
@@ -8826,7 +8826,7 @@
 
     if (jQuery.expr && jQuery.expr.filters) {
         jQuery.expr.filters.animated = function (elem) {
-            return jQuery.grep(jQuery.timers,function (fn) {
+            return jQuery.grep(jQuery.timers, function (fn) {
                 return elem === fn.elem;
             }).length;
         };
@@ -9120,7 +9120,7 @@
                 // Return the scroll offset
                 return win ? ("pageXOffset" in win) ? win[ i ? "pageYOffset" : "pageXOffset" ] :
                     jQuery.support.boxModel && win.document.documentElement[ method ] ||
-                        win.document.body[ method ] :
+                    win.document.body[ method ] :
                     elem[ method ];
             }
 
@@ -9144,9 +9144,9 @@
     function getWindow(elem) {
         return jQuery.isWindow(elem) ?
             elem :
-            elem.nodeType === 9 ?
-                elem.defaultView || elem.parentWindow :
-                false;
+                elem.nodeType === 9 ?
+            elem.defaultView || elem.parentWindow :
+            false;
     }
 
 

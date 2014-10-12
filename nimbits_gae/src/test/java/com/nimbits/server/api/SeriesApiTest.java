@@ -12,15 +12,13 @@
 
 package com.nimbits.server.api;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
-
-import com.nimbits.client.model.value.impl.ValueModel;
-import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.gson.ValueDeserializer;
 import org.junit.Test;
 
@@ -103,7 +101,6 @@ public class SeriesApiTest {
 //        System.out.println(r);
 
     }
-
 
 
 }

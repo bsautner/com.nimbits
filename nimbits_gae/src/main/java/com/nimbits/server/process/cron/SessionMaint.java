@@ -24,7 +24,7 @@ import java.util.HashSet;
 import java.util.logging.Logger;
 
 
-public class SessionMaint extends HttpServlet  {
+public class SessionMaint extends HttpServlet {
     /**
      *
      */

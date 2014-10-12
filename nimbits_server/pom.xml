@@ -111,6 +111,11 @@
             <version>8.1.15.v20140411</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-annotations</artifactId>
+            <version>9.3.0.M0</version>
+        </dependency>
 
 
         <dependency>
@@ -191,12 +196,7 @@
             <version>3.1.2</version>
             <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
@@ -218,12 +218,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>3.2.1.RELEASE</version>
-            <scope>test</scope>
-        </dependency>
+
 
         <dependency>
             <groupId>junit</groupId>
@@ -231,17 +226,17 @@
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
-            <groupId>spring</groupId>
-            <artifactId>spring-mock</artifactId>
-            <version>1.0.2</version>
-            <scope>test</scope>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
         </dependency>
 
     </dependencies>
     <build>
         <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
-        <finalName>nimbits_server_3.6.9</finalName>
+        <finalName>nimbits_server_3.7.0</finalName>
         <plugins>
 
             <plugin>

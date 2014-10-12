@@ -25,16 +25,14 @@ import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.ServerInfo;
-import com.nimbits.server.api.ApiBase;
+import com.nimbits.server.communication.email.EmailService;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transaction.value.ValueServiceFactory;
-import com.nimbits.server.transaction.value.service.ValueService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -44,21 +42,24 @@ import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-
+@Service
 public class DumpTask extends TaskBase {
 
     private static final Logger log = Logger.getLogger(ValueTask.class.getName());
 
+    @Autowired
+    private EmailService emailService;
+
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response)  {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) {
 
         setup();
 
 
-        final String json =  request.getParameter(Parameters.entity.getText());
-        final String sd =  request.getParameter(Parameters.sd.getText());
-        final String ed =  request.getParameter(Parameters.ed.getText());
-        final String userJson =  request.getParameter(Parameters.user.getText());
+        final String json = request.getParameter(Parameters.entity.getText());
+        final String sd = request.getParameter(Parameters.sd.getText());
+        final String ed = request.getParameter(Parameters.ed.getText());
+        final String userJson = request.getParameter(Parameters.user.getText());
         final Entity entity = GsonFactory.getInstance().fromJson(json, EntityModel.class);
         final long sl = Long.valueOf(sd);
         final long el = Long.valueOf(ed);
@@ -69,7 +70,7 @@ public class DumpTask extends TaskBase {
         final Range timespan = Range.closed(new Date(sl), new Date(el));
 
         List<Entity> points = entityService.getEntityByKey(user, entity.getKey(), EntityType.point);
-        if (! points.isEmpty()) {
+        if (!points.isEmpty()) {
             final List<Value> values = valueService.getDataSegment(points.get(0), timespan);
 
             try {
@@ -79,7 +80,7 @@ public class DumpTask extends TaskBase {
                 final FileWriteChannel writeChannel = fileService.openWriteChannel(file, true);
                 final PrintWriter out = new PrintWriter(Channels.newWriter(writeChannel, "UTF8"));
                 for (final Value v : values) {
-                    out.println(v.getTimestamp().getTime() + "," + v.getDoubleValue() + ","  + v.getData() + "," + v.getLocation().getLat() + "," + v.getLocation().getLng());
+                    out.println(v.getTimestamp().getTime() + "," + v.getDoubleValue() + "," + v.getData() + "," + v.getLocation().getLat() + "," + v.getLocation().getLng());
                 }
 
 
@@ -92,7 +93,7 @@ public class DumpTask extends TaskBase {
                 final String m = ServerInfo.getFullServerURL(request) + "/service/blob?" + Parameters.blobkey.getText() + "=" + key.getKeyString();
 
 
-                engine.getEmailService().sendEmail(emailAddress, m, "Your extracted data for " + entity.getName().getValue() + " is ready");
+                emailService.sendEmail(emailAddress, m, "Your extracted data for " + entity.getName().getValue() + " is ready");
                 log.info("email sent end of try");
             } catch (IOException ex) {
                 log.info("dump failed");

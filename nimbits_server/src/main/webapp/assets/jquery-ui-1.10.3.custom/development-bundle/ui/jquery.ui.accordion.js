@@ -260,7 +260,7 @@
                 heightStyle = options.heightStyle,
                 parent = this.element.parent(),
                 accordionId = this.accordionId = "ui-accordion-" +
-                (this.element.attr("id") || ++uid);
+                    (this.element.attr("id") || ++uid);
 
             this.active = this._findActive(options.active)
                 .addClass("ui-accordion-header-active ui-state-active ui-corner-top")
@@ -341,7 +341,7 @@
                 this.headers.next()
                     .each(function () {
                         $(this).height(Math.max(0, maxHeight -
-                        $(this).innerHeight() + $(this).height()));
+                            $(this).innerHeight() + $(this).height()));
                     })
                     .css("overflow", "auto");
             } else if (heightStyle === "auto") {
@@ -411,10 +411,10 @@
             event.preventDefault();
 
             if (
-                // click on active header, but not collapsible
-            ( clickedIsActive && !options.collapsible ) ||
+            // click on active header, but not collapsible
+                ( clickedIsActive && !options.collapsible ) ||
                 // allow canceling activation
-            ( this._trigger("beforeActivate", event, eventData) === false )) {
+                ( this._trigger("beforeActivate", event, eventData) === false )) {
                 return;
             }
 

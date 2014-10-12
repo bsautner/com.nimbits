@@ -992,10 +992,10 @@
                     continue;
                 }
                 querystring += encodeURIComponent(key) + "=" +
-                encodeURIComponent(params[ key ]) + "&";
+                    encodeURIComponent(params[ key ]) + "&";
             }
             return window.location.protocol + "//" + window.location.host +
-            window.location.pathname + querystring.slice(0, -1);
+                window.location.pathname + querystring.slice(0, -1);
         },
 
         extend: extend,
@@ -1069,23 +1069,23 @@
             }
             config[ val.id ] = QUnit.urlParams[ val.id ];
             urlConfigHtml += "<input id='qunit-urlconfig-" + escapeText(val.id) +
-            "' name='" + escapeText(val.id) +
-            "' type='checkbox'" + ( config[ val.id ] ? " checked='checked'" : "" ) +
-            " title='" + escapeText(val.tooltip) +
-            "'><label for='qunit-urlconfig-" + escapeText(val.id) +
-            "' title='" + escapeText(val.tooltip) + "'>" + val.label + "</label>";
+                "' name='" + escapeText(val.id) +
+                "' type='checkbox'" + ( config[ val.id ] ? " checked='checked'" : "" ) +
+                " title='" + escapeText(val.tooltip) +
+                "'><label for='qunit-urlconfig-" + escapeText(val.id) +
+                "' title='" + escapeText(val.tooltip) + "'>" + val.label + "</label>";
         }
 
         moduleFilterHtml += "<label for='qunit-modulefilter'>Module: </label><select id='qunit-modulefilter' name='modulefilter'><option value='' " +
-        ( config.module === undefined ? "selected='selected'" : "" ) +
-        ">< All Modules ></option>";
+            ( config.module === undefined ? "selected='selected'" : "" ) +
+            ">< All Modules ></option>";
 
         for (i in config.modules) {
             if (config.modules.hasOwnProperty(i)) {
                 numModules += 1;
                 moduleFilterHtml += "<option value='" + escapeText(encodeURIComponent(i)) + "' " +
-                ( config.module === i ? "selected='selected'" : "" ) +
-                ">" + escapeText(i) + "</option>";
+                    ( config.module === i ? "selected='selected'" : "" ) +
+                    ">" + escapeText(i) + "</option>";
             }
         }
         moduleFilterHtml += "</select>";
@@ -1550,7 +1550,7 @@
 
     function id(name) {
         return !!( typeof document !== "undefined" && document && document.getElementById ) &&
-        document.getElementById(name);
+            document.getElementById(name);
     }
 
     function registerLoggingCallback(key) {
@@ -1596,8 +1596,8 @@
             parents = [],
 
             getProto = Object.getPrototypeOf || function (obj) {
-                    return obj.__proto__;
-                },
+                return obj.__proto__;
+            },
             callbacks = (function () {
 
                 // for string, boolean, number and null
@@ -1632,13 +1632,13 @@
                     "regexp": function (b, a) {
                         return QUnit.objectType(b) === "regexp" &&
                             // the regex itself
-                        a.source === b.source &&
+                            a.source === b.source &&
                             // and its modifers
-                        a.global === b.global &&
+                            a.global === b.global &&
                             // (gmi) ...
-                        a.ignoreCase === b.ignoreCase &&
-                        a.multiline === b.multiline &&
-                        a.sticky === b.sticky;
+                            a.ignoreCase === b.ignoreCase &&
+                            a.multiline === b.multiline &&
+                            a.sticky === b.sticky;
                     },
 
                     // - skip when the property is a method of an instance (OOP)
@@ -1841,11 +1841,11 @@
                     } else if (obj.nodeType) {
                         type = "node";
                     } else if (
-                        // native arrays
-                    toString.call(obj) === "[object Array]" ||
+                    // native arrays
+                        toString.call(obj) === "[object Array]" ||
                         // NodeList objects
-                    ( typeof obj.length === "number" && typeof obj.item !== "undefined" && ( obj.length ? obj.item(0) === obj[0] : ( obj.item(0) === null && typeof obj[0] === "undefined" ) ) )
-                    ) {
+                        ( typeof obj.length === "number" && typeof obj.item !== "undefined" && ( obj.length ? obj.item(0) === obj[0] : ( obj.item(0) === null && typeof obj[0] === "undefined" ) ) )
+                        ) {
                         type = "array";
                     } else if (obj.constructor === Error.prototype.constructor) {
                         type = "error";

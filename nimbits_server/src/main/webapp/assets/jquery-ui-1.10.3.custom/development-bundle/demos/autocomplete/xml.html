@@ -30,7 +30,7 @@
                     var data = $("geoname", xmlResponse).map(function () {
                         return {
                             value: $("name", this).text() + ", " +
-                            ( $.trim($("countryName", this).text()) || "(unknown country)" ),
+                                    ( $.trim($("countryName", this).text()) || "(unknown country)" ),
                             id: $("geonameId", this).text()
                         };
                     }).get();
@@ -39,8 +39,8 @@
                         minLength: 0,
                         select: function (event, ui) {
                             log(ui.item ?
-                            "Selected: " + ui.item.value + ", geonameId: " + ui.item.id :
-                            "Nothing selected, input was " + this.value);
+                                    "Selected: " + ui.item.value + ", geonameId: " + ui.item.id :
+                                    "Nothing selected, input was " + this.value);
                         }
                     });
                 }

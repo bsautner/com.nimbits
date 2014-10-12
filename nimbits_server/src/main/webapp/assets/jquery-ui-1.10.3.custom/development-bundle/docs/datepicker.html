@@ -2965,514 +2965,516 @@
 </div>
 </section>
 <section id="methods">
-    <header><h2 class="underline">Methods</h2></header>
-    <div id="method-destroy">
-        <div class="api-item first-item">
-            <h3>destroy()</h3>
+<header><h2 class="underline">Methods</h2></header>
+<div id="method-destroy">
+    <div class="api-item first-item">
+        <h3>destroy()</h3>
 
-            <div>
-                Removes the datepicker functionality completely. This will return the element back to its pre-init
-                state.
-            </div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
+        <div>
+            Removes the datepicker functionality completely. This will return the element back to its pre-init
+            state.
+        </div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
 
-                <p>Invoke the destroy method:</p>
+            <p>Invoke the destroy method:</p>
 
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).datepicker( </code><code class="string">"destroy"</code>
-                                        <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).datepicker( </code><code class="string">"destroy"</code>
+                                    <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div id="method-dialog">
-        <div class="api-item">
-            <h3>dialog( date [, onSelect ] [, settings ] [, pos ] )</h3>
+</div>
+<div id="method-dialog">
+    <div class="api-item">
+        <h3>dialog( date [, onSelect ] [, settings ] [, pos ] )</h3>
 
-            <div>Opens the datepicker in a dialog box.</div>
-            <ul>
-                <li>
-                    <div><strong>date</strong></div>
-                    <div>Type: <a href="http://api.jquery.com/Types#String">String</a> or <a
-                            href="http://api.jquery.com/Types#Date">Date</a>
-                    </div>
-                    <div>The initial date.</div>
-                </li>
-                <li>
-                    <div><strong>onSelect</strong></div>
-                    <div>Type: <a href="http://api.jquery.com/Types/#Function">Function</a>()</div>
-                    <div>A callback function when a date is selected. The function receives the date text and date
-                        picker instance as parameters.
-                    </div>
-                </li>
-                <li>
-                    <div><strong>settings</strong></div>
-                    <div>Type: <a href="http://api.jquery.com/Types#Options">Options</a>
-                    </div>
-                    <div>The new settings for the date picker.</div>
-                </li>
-                <li>
-                    <div><strong>pos</strong></div>
-                    <div>Type: <a href="http://api.jquery.com/Types#Number%5B2%5D%20or%20MouseEvent">Number[2] or
-                        MouseEvent</a>
-                    </div>
-                    <div>The position of the top/left of the dialog as <code>[x, y]</code> or a <code>MouseEvent</code>
-                        that contains the coordinates. If not specified the dialog is centered on the screen.
-                    </div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the dialog method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).datepicker( </code><code class="string">"dialog"</code><code
-                                            class="plain">, </code><code class="string">"10/12/2012"</code> <code
-                                            class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+        <div>Opens the datepicker in a dialog box.</div>
+        <ul>
+            <li>
+                <div><strong>date</strong></div>
+                <div>Type: <a href="http://api.jquery.com/Types#String">String</a> or <a
+                        href="http://api.jquery.com/Types#Date">Date</a>
                 </div>
+                <div>The initial date.</div>
+            </li>
+            <li>
+                <div><strong>onSelect</strong></div>
+                <div>Type: <a href="http://api.jquery.com/Types/#Function">Function</a>()</div>
+                <div>A callback function when a date is selected. The function receives the date text and date
+                    picker instance as parameters.
+                </div>
+            </li>
+            <li>
+                <div><strong>settings</strong></div>
+                <div>Type: <a href="http://api.jquery.com/Types#Options">Options</a>
+                </div>
+                <div>The new settings for the date picker.</div>
+            </li>
+            <li>
+                <div><strong>pos</strong></div>
+                <div>Type: <a href="http://api.jquery.com/Types#Number%5B2%5D%20or%20MouseEvent">Number[2] or
+                    MouseEvent</a>
+                </div>
+                <div>The position of the top/left of the dialog as <code>[x, y]</code> or a <code>MouseEvent</code>
+                    that contains the coordinates. If not specified the dialog is centered on the screen.
+                </div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the dialog method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).datepicker( </code><code class="string">"dialog"</code><code
+                                        class="plain">, </code><code class="string">"10/12/2012"</code> <code
+                                        class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div id="method-getDate">
-        <div class="api-item">
-            <h3>getDate()<span class="returns">Returns: <a href="http://api.jquery.com/Types#Date">Date</a></span>
-            </h3>
+</div>
+<div id="method-getDate">
+    <div class="api-item">
+        <h3>getDate()<span class="returns">Returns: <a href="http://api.jquery.com/Types#Date">Date</a></span>
+        </h3>
 
-            <div>Returns the current date for the datepicker or <code>null</code> if no date has been selected.</div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
+        <div>Returns the current date for the datepicker or <code>null</code> if no date has been selected.</div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
 
-                <p>Invoke the getDate method:</p>
+            <p>Invoke the getDate method:</p>
 
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
-                                            class="plain">currentDate = $( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).datepicker( </code><code class="string">"getDate"</code>
-                                        <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
+                                        class="plain">currentDate = $( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).datepicker( </code><code class="string">"getDate"</code>
+                                    <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div id="method-hide">
-        <div class="api-item">
-            <h3>hide()</h3>
+</div>
+<div id="method-hide">
+    <div class="api-item">
+        <h3>hide()</h3>
 
-            <div>Close a previously opened date picker.</div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
+        <div>Close a previously opened date picker.</div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
 
-                <p>Invoke the hide method:</p>
+            <p>Invoke the hide method:</p>
 
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).datepicker( </code><code class="string">"hide"</code> <code
-                                            class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).datepicker( </code><code class="string">"hide"</code> <code
+                                        class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div id="method-isDisabled">
-        <div class="api-item">
-            <h3>isDisabled()<span class="returns">Returns: <a
-                    href="http://api.jquery.com/Types#Boolean">Boolean</a></span>
-            </h3>
+</div>
+<div id="method-isDisabled">
+    <div class="api-item">
+        <h3>isDisabled()<span class="returns">Returns: <a
+                href="http://api.jquery.com/Types#Boolean">Boolean</a></span>
+        </h3>
 
-            <div>Determine whether a date picker has been disabled.</div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
+        <div>Determine whether a date picker has been disabled.</div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
 
-                <p>Invoke the isDisabled method:</p>
+            <p>Invoke the isDisabled method:</p>
 
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
-                                            class="plain">isDisabled = $( </code><code class="string">".selector"</code>
-                                        <code class="plain">).datepicker( </code><code
-                                                class="string">"isDisabled"</code> <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
+                                        class="plain">isDisabled = $( </code><code class="string">".selector"</code>
+                                    <code class="plain">).datepicker( </code><code
+                                            class="string">"isDisabled"</code> <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div id="method-option">
-        <div class="api-item">
-            <h3>option( optionName )<span class="returns">Returns: <a
-                    href="http://api.jquery.com/Types#Object">Object</a></span>
-            </h3>
+</div>
+<div id="method-option">
+    <div class="api-item">
+        <h3>option( optionName )<span class="returns">Returns: <a
+                href="http://api.jquery.com/Types#Object">Object</a></span>
+        </h3>
 
-            <div>Gets the value currently associated with the specified <code>optionName</code>.</div>
-            <ul>
-                <li>
-                    <div><strong>optionName</strong></div>
-                    <div>Type: <a href="http://api.jquery.com/Types#String">String</a>
-                    </div>
-                    <div>The name of the option to get.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
-                                            class="plain">isDisabled = $( </code><code class="string">".selector"</code>
-                                        <code class="plain">).datepicker( </code><code
-                                                class="string">"option"</code><code class="plain">, </code><code
-                                                class="string">"disabled"</code> <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+        <div>Gets the value currently associated with the specified <code>optionName</code>.</div>
+        <ul>
+            <li>
+                <div><strong>optionName</strong></div>
+                <div>Type: <a href="http://api.jquery.com/Types#String">String</a>
                 </div>
-            </div>
-        </div>
-        <div class="api-item">
-            <h3>option()<span class="returns">Returns: <a href="http://api.jquery.com/Types#PlainObject">PlainObject</a></span>
-            </h3>
+                <div>The name of the option to get.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
 
-            <div>Gets an object containing key/value pairs representing the current datepicker options hash.</div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
+            <p>Invoke the method:</p>
 
-                <p>Invoke the method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
-                                            class="plain">options = $( </code><code class="string">".selector"</code>
-                                        <code class="plain">).datepicker( </code><code class="string">"option"</code>
-                                        <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="api-item">
-            <h3>option( optionName, value )</h3>
-
-            <div>Sets the value of the datepicker option associated with the specified <code>optionName</code>.</div>
-            <ul>
-                <li>
-                    <div><strong>optionName</strong></div>
-                    <div>Type: <a href="http://api.jquery.com/Types#String">String</a>
-                    </div>
-                    <div>The name of the option to set.</div>
-                </li>
-                <li>
-                    <div><strong>value</strong></div>
-                    <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
-                    </div>
-                    <div>A value to set for the option.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).datepicker( </code><code class="string">"option"</code><code
-                                            class="plain">, </code><code class="string">"disabled"</code><code
-                                            class="plain">, </code><code class="keyword">true</code> <code
-                                            class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="api-item">
-            <h3>option( options )</h3>
-
-            <div>Sets one or more options for the datepicker.</div>
-            <ul>
-                <li>
-                    <div><strong>options</strong></div>
-                    <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
-                    </div>
-                    <div>A map of option-value pairs to set.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).datepicker( </code><code class="string">"option"</code><code
-                                            class="plain">, { disabled: </code><code class="keyword">true</code> <code
-                                            class="plain">} );</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
+                                        class="plain">isDisabled = $( </code><code class="string">".selector"</code>
+                                    <code class="plain">).datepicker( </code><code
+                                            class="string">"option"</code><code class="plain">, </code><code
+                                            class="string">"disabled"</code> <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div id="method-refresh">
-        <div class="api-item">
-            <h3>refresh()</h3>
+    <div class="api-item">
+        <h3>option()<span class="returns">Returns: <a
+                href="http://api.jquery.com/Types#PlainObject">PlainObject</a></span>
+        </h3>
 
-            <div>Redraw the date picker, after having made some external modifications.</div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
+        <div>Gets an object containing key/value pairs representing the current datepicker options hash.</div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
 
-                <p>Invoke the refresh method:</p>
+            <p>Invoke the method:</p>
 
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).datepicker( </code><code class="string">"refresh"</code>
-                                        <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
+                                        class="plain">options = $( </code><code class="string">".selector"</code>
+                                    <code class="plain">).datepicker( </code><code class="string">"option"</code>
+                                    <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div id="method-setDate">
-        <div class="api-item">
-            <h3>setDate( date )</h3>
+    <div class="api-item">
+        <h3>option( optionName, value )</h3>
 
-            <div>Sets the date for the datepicker. The new date may be a <code>Date</code> object or a string in the
-                current <a href="#option-dateFormat">date format</a> (e.g., <code>"01/26/2009"</code>), a number of days
-                from today (e.g., <code>+7</code>) or a string of values and periods (<code>"y"</code> for years, <code>"m"</code>
-                for months, <code>"w"</code> for weeks, <code>"d"</code> for days, e.g., <code>"+1m +7d"</code>), or
-                <code>null</code> to clear the selected date.
-            </div>
-            <ul>
-                <li>
-                    <div><strong>date</strong></div>
-                    <div>Type: <a href="http://api.jquery.com/Types#String">String</a> or <a
-                            href="http://api.jquery.com/Types#Date">Date</a>
-                    </div>
-                    <div>The new date.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the setDate method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).datepicker( </code><code
-                                            class="string">"setDate"</code><code class="plain">, </code><code
-                                            class="string">"10/12/2012"</code> <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+        <div>Sets the value of the datepicker option associated with the specified <code>optionName</code>.</div>
+        <ul>
+            <li>
+                <div><strong>optionName</strong></div>
+                <div>Type: <a href="http://api.jquery.com/Types#String">String</a>
                 </div>
+                <div>The name of the option to set.</div>
+            </li>
+            <li>
+                <div><strong>value</strong></div>
+                <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
+                </div>
+                <div>A value to set for the option.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).datepicker( </code><code class="string">"option"</code><code
+                                        class="plain">, </code><code class="string">"disabled"</code><code
+                                        class="plain">, </code><code class="keyword">true</code> <code
+                                        class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div id="method-show">
-        <div class="api-item">
-            <h3>show()</h3>
+    <div class="api-item">
+        <h3>option( options )</h3>
 
-            <div>Open the date picker. If the datepicker is attached to an input, the input must be visible for the
-                datepicker to be shown.
-            </div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
-
-                <p>Invoke the show method:</p>
-
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="plain">$( </code><code
-                                            class="string">".selector"</code> <code
-                                            class="plain">).datepicker( </code><code class="string">"show"</code> <code
-                                            class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+        <div>Sets one or more options for the datepicker.</div>
+        <ul>
+            <li>
+                <div><strong>options</strong></div>
+                <div>Type: <a href="http://api.jquery.com/Types#Object">Object</a>
                 </div>
+                <div>A map of option-value pairs to set.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).datepicker( </code><code class="string">"option"</code><code
+                                        class="plain">, { disabled: </code><code class="keyword">true</code> <code
+                                        class="plain">} );</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
-    <div id="method-widget">
-        <div class="api-item">
-            <h3>widget()<span class="returns">Returns: <a href="http://api.jquery.com/Types#jQuery">jQuery</a></span>
-            </h3>
+</div>
+<div id="method-refresh">
+    <div class="api-item">
+        <h3>refresh()</h3>
 
-            <div>
-                Returns a <code>jQuery</code> object containing the datepicker.
-            </div>
-            <ul>
-                <li>
-                    <div class="null-signature">This method does not accept any arguments.</div>
-                </li>
-            </ul>
-            <div>
-                <strong>Code examples:</strong>
+        <div>Redraw the date picker, after having made some external modifications.</div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
 
-                <p>Invoke the widget method:</p>
+            <p>Invoke the refresh method:</p>
 
-                <div class="syntaxhighlighter nogutter  ">
-                    <table border="0" cellpadding="0" cellspacing="0">
-                        <tbody>
-                        <tr>
-                            <td class="code">
-                                <div class="container">
-                                    <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
-                                            class="plain">widget = $( </code><code class="string">".selector"</code>
-                                        <code class="plain">).datepicker( </code><code class="string">"widget"</code>
-                                        <code class="plain">);</code></div>
-                                </div>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).datepicker( </code><code class="string">"refresh"</code>
+                                    <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+</div>
+<div id="method-setDate">
+    <div class="api-item">
+        <h3>setDate( date )</h3>
+
+        <div>Sets the date for the datepicker. The new date may be a <code>Date</code> object or a string in the
+            current <a href="#option-dateFormat">date format</a> (e.g., <code>"01/26/2009"</code>), a number of days
+            from today (e.g., <code>+7</code>) or a string of values and periods (<code>"y"</code> for years,
+            <code>"m"</code>
+            for months, <code>"w"</code> for weeks, <code>"d"</code> for days, e.g., <code>"+1m +7d"</code>), or
+            <code>null</code> to clear the selected date.
+        </div>
+        <ul>
+            <li>
+                <div><strong>date</strong></div>
+                <div>Type: <a href="http://api.jquery.com/Types#String">String</a> or <a
+                        href="http://api.jquery.com/Types#Date">Date</a>
+                </div>
+                <div>The new date.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the setDate method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).datepicker( </code><code
+                                        class="string">"setDate"</code><code class="plain">, </code><code
+                                        class="string">"10/12/2012"</code> <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="method-show">
+    <div class="api-item">
+        <h3>show()</h3>
+
+        <div>Open the date picker. If the datepicker is attached to an input, the input must be visible for the
+            datepicker to be shown.
+        </div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the show method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="plain">$( </code><code
+                                        class="string">".selector"</code> <code
+                                        class="plain">).datepicker( </code><code class="string">"show"</code> <code
+                                        class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="method-widget">
+    <div class="api-item">
+        <h3>widget()<span class="returns">Returns: <a href="http://api.jquery.com/Types#jQuery">jQuery</a></span>
+        </h3>
+
+        <div>
+            Returns a <code>jQuery</code> object containing the datepicker.
+        </div>
+        <ul>
+            <li>
+                <div class="null-signature">This method does not accept any arguments.</div>
+            </li>
+        </ul>
+        <div>
+            <strong>Code examples:</strong>
+
+            <p>Invoke the widget method:</p>
+
+            <div class="syntaxhighlighter nogutter  ">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tbody>
+                    <tr>
+                        <td class="code">
+                            <div class="container">
+                                <div class="line number1 index0 alt2"><code class="keyword">var</code> <code
+                                        class="plain">widget = $( </code><code class="string">".selector"</code>
+                                    <code class="plain">).datepicker( </code><code class="string">"widget"</code>
+                                    <code class="plain">);</code></div>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
 </section>
 <section class="entry-examples" id="entry-examples">
     <header><h2 class="underline">Example:</h2></header>

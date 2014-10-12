@@ -2,21 +2,17 @@ package com.nimbits.server.api.impl;
 
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.point.PointType;
+import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.client.exception.ValueException;
-import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,7 +33,6 @@ public class ValueApiTest extends NimbitsServletTest {
         resp1 = new MockHttpServletResponse();
 
     }
-
 
 
     @Test

@@ -32,8 +32,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 
-
-public class SeriesServletImpl extends ApiServlet  {
+public class SeriesServletImpl extends ApiServlet {
 
 
     private static final long serialVersionUID = 1L;

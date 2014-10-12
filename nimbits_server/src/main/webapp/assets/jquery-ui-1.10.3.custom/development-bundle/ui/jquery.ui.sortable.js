@@ -383,7 +383,7 @@
                 if (itemElement !== this.currentItem[0] &&
                     this.placeholder[intersection === 1 ? "next" : "prev"]()[0] !== itemElement && !$.contains(this.placeholder[0], itemElement) &&
                     (this.options.type === "semi-dynamic" ? !$.contains(this.element[0], itemElement) : true)
-                ) {
+                    ) {
 
                     this.direction = intersection === 1 ? "down" : "up";
 
@@ -554,14 +554,14 @@
             if (this.options.tolerance === "pointer" ||
                 this.options.forcePointerForContainers ||
                 (this.options.tolerance !== "pointer" && this.helperProportions[this.floating ? "width" : "height"] > item[this.floating ? "width" : "height"])
-            ) {
+                ) {
                 return isOverElement;
             } else {
 
                 return (l < x1 + (this.helperProportions.width / 2) && // Right Half
-                x2 - (this.helperProportions.width / 2) < r && // Left Half
-                t < y1 + (this.helperProportions.height / 2) && // Bottom Half
-                y2 - (this.helperProportions.height / 2) < b ); // Top Half
+                    x2 - (this.helperProportions.width / 2) < r && // Left Half
+                    t < y1 + (this.helperProportions.height / 2) && // Bottom Half
+                    y2 - (this.helperProportions.height / 2) < b ); // Top Half
 
             }
         },
@@ -1038,10 +1038,10 @@
             }
             if (o.containment === "document" || o.containment === "window") {
                 this.containment = [
-                    0 - this.offset.relative.left - this.offset.parent.left,
-                    0 - this.offset.relative.top - this.offset.parent.top,
-                    $(o.containment === "document" ? document : window).width() - this.helperProportions.width - this.margins.left,
-                    ($(o.containment === "document" ? document : window).height() || document.body.parentNode.scrollHeight) - this.helperProportions.height - this.margins.top
+                        0 - this.offset.relative.left - this.offset.parent.left,
+                        0 - this.offset.relative.top - this.offset.parent.top,
+                        $(o.containment === "document" ? document : window).width() - this.helperProportions.width - this.margins.left,
+                        ($(o.containment === "document" ? document : window).height() || document.body.parentNode.scrollHeight) - this.helperProportions.height - this.margins.top
                 ];
             }
 
@@ -1051,10 +1051,10 @@
                 over = ($(ce).css("overflow") !== "hidden");
 
                 this.containment = [
-                    co.left + (parseInt($(ce).css("borderLeftWidth"), 10) || 0) + (parseInt($(ce).css("paddingLeft"), 10) || 0) - this.margins.left,
-                    co.top + (parseInt($(ce).css("borderTopWidth"), 10) || 0) + (parseInt($(ce).css("paddingTop"), 10) || 0) - this.margins.top,
-                    co.left + (over ? Math.max(ce.scrollWidth, ce.offsetWidth) : ce.offsetWidth) - (parseInt($(ce).css("borderLeftWidth"), 10) || 0) - (parseInt($(ce).css("paddingRight"), 10) || 0) - this.helperProportions.width - this.margins.left,
-                    co.top + (over ? Math.max(ce.scrollHeight, ce.offsetHeight) : ce.offsetHeight) - (parseInt($(ce).css("borderTopWidth"), 10) || 0) - (parseInt($(ce).css("paddingBottom"), 10) || 0) - this.helperProportions.height - this.margins.top
+                        co.left + (parseInt($(ce).css("borderLeftWidth"), 10) || 0) + (parseInt($(ce).css("paddingLeft"), 10) || 0) - this.margins.left,
+                        co.top + (parseInt($(ce).css("borderTopWidth"), 10) || 0) + (parseInt($(ce).css("paddingTop"), 10) || 0) - this.margins.top,
+                        co.left + (over ? Math.max(ce.scrollWidth, ce.offsetWidth) : ce.offsetWidth) - (parseInt($(ce).css("borderLeftWidth"), 10) || 0) - (parseInt($(ce).css("paddingRight"), 10) || 0) - this.helperProportions.width - this.margins.left,
+                        co.top + (over ? Math.max(ce.scrollHeight, ce.offsetHeight) : ce.offsetHeight) - (parseInt($(ce).css("borderTopWidth"), 10) || 0) - (parseInt($(ce).css("paddingBottom"), 10) || 0) - this.helperProportions.height - this.margins.top
                 ];
             }
 
@@ -1071,17 +1071,17 @@
 
             return {
                 top: (
-                pos.top +																// The absolute mouse position
-                this.offset.relative.top * mod +										// Only for relative positioned nodes: Relative offset from element to offset parent
-                this.offset.parent.top * mod -											// The offsetParent's offset without borders (offset + border)
-                ( ( this.cssPosition === "fixed" ? -this.scrollParent.scrollTop() : ( scrollIsRootNode ? 0 : scroll.scrollTop() ) ) * mod)
-                ),
+                    pos.top +																// The absolute mouse position
+                    this.offset.relative.top * mod +										// Only for relative positioned nodes: Relative offset from element to offset parent
+                    this.offset.parent.top * mod -											// The offsetParent's offset without borders (offset + border)
+                    ( ( this.cssPosition === "fixed" ? -this.scrollParent.scrollTop() : ( scrollIsRootNode ? 0 : scroll.scrollTop() ) ) * mod)
+                    ),
                 left: (
-                pos.left +																// The absolute mouse position
-                this.offset.relative.left * mod +										// Only for relative positioned nodes: Relative offset from element to offset parent
-                this.offset.parent.left * mod -										// The offsetParent's offset without borders (offset + border)
-                ( ( this.cssPosition === "fixed" ? -this.scrollParent.scrollLeft() : scrollIsRootNode ? 0 : scroll.scrollLeft() ) * mod)
-                )
+                    pos.left +																// The absolute mouse position
+                    this.offset.relative.left * mod +										// Only for relative positioned nodes: Relative offset from element to offset parent
+                    this.offset.parent.left * mod -										// The offsetParent's offset without borders (offset + border)
+                    ( ( this.cssPosition === "fixed" ? -this.scrollParent.scrollLeft() : scrollIsRootNode ? 0 : scroll.scrollLeft() ) * mod)
+                    )
             };
 
         },
@@ -1136,19 +1136,19 @@
 
             return {
                 top: (
-                pageY -																// The absolute mouse position
-                this.offset.click.top -													// Click offset (relative to the element)
-                this.offset.relative.top -											// Only for relative positioned nodes: Relative offset from element to offset parent
-                this.offset.parent.top +												// The offsetParent's offset without borders (offset + border)
-                ( ( this.cssPosition === "fixed" ? -this.scrollParent.scrollTop() : ( scrollIsRootNode ? 0 : scroll.scrollTop() ) ))
-                ),
+                    pageY -																// The absolute mouse position
+                    this.offset.click.top -													// Click offset (relative to the element)
+                    this.offset.relative.top -											// Only for relative positioned nodes: Relative offset from element to offset parent
+                    this.offset.parent.top +												// The offsetParent's offset without borders (offset + border)
+                    ( ( this.cssPosition === "fixed" ? -this.scrollParent.scrollTop() : ( scrollIsRootNode ? 0 : scroll.scrollTop() ) ))
+                    ),
                 left: (
-                pageX -																// The absolute mouse position
-                this.offset.click.left -												// Click offset (relative to the element)
-                this.offset.relative.left -											// Only for relative positioned nodes: Relative offset from element to offset parent
-                this.offset.parent.left +												// The offsetParent's offset without borders (offset + border)
-                ( ( this.cssPosition === "fixed" ? -this.scrollParent.scrollLeft() : scrollIsRootNode ? 0 : scroll.scrollLeft() ))
-                )
+                    pageX -																// The absolute mouse position
+                    this.offset.click.left -												// Click offset (relative to the element)
+                    this.offset.relative.left -											// Only for relative positioned nodes: Relative offset from element to offset parent
+                    this.offset.parent.left +												// The offsetParent's offset without borders (offset + border)
+                    ( ( this.cssPosition === "fixed" ? -this.scrollParent.scrollLeft() : scrollIsRootNode ? 0 : scroll.scrollLeft() ))
+                    )
             };
 
         },

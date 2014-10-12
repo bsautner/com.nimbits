@@ -15,20 +15,37 @@ package com.nimbits.server;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.service.settings.SettingsServiceRpc;
-import com.nimbits.server.transaction.settings.SettingServiceFactory;
+import com.nimbits.server.transaction.settings.SettingsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.annotation.Resource;
+import javax.servlet.ServletException;
+
+@Service
 public class SettingServiceRpcImpl extends RemoteServiceServlet implements SettingsServiceRpc {
 
+
+    @Autowired
+    private SettingsService settingsService;
+
+    @Override
+    public void init() throws ServletException {
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+
+
+    }
 
     @Override
     public String getSetting(String setting) {
         ServerSetting s = ServerSetting.get(setting);
-        return SettingServiceFactory.getServiceInstance(ApplicationListener.createEngine()).getSetting(s);
+        return settingsService.getSetting(s);
     }
 
     @Override
     public void updateSetting(String setting, String value) {
         ServerSetting s = ServerSetting.get(setting);
-        SettingServiceFactory.getServiceInstance(ApplicationListener.createEngine()).updateSetting(s, value);
+        settingsService.updateSetting(s, value);
     }
 }

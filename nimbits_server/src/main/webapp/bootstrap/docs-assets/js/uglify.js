@@ -1608,10 +1608,10 @@
                 var b = a.length;
                 return b == 0 ? "{}" : "{" + k + K(a, function (a, d) {
                     var e = a[1].length > 0, f = p(function () {
-                            return o(a[0] ? q(["case", y(a[0]) + ":"]) : "default:")
-                        }, .5) + (e ? k + p(function () {
-                            return L(a[1]).join(k)
-                        }) : "");
+                        return o(a[0] ? q(["case", y(a[0]) + ":"]) : "default:")
+                    }, .5) + (e ? k + p(function () {
+                        return L(a[1]).join(k)
+                    }) : "");
                     return !c && e && d < b - 1 && (f += ";"), f
                 }).join(k) + k + o("}")
             }
@@ -1730,12 +1730,12 @@
                     var d = v(this);
                     if (a.length == 0)return d ? "({})" : "{}";
                     var e = "{" + k + p(function () {
-                            return K(a, function (a) {
-                                if (a.length == 3)return o(E(a[0], a[1][2], a[1][3], a[2]));
-                                var d = a[0], e = t(a[1], "seq");
-                                return b.quote_keys ? d = m(d) : (typeof d == "number" || !c && +d + "" == d) && parseFloat(d) >= 0 ? d = w(+d) : I(d) || (d = m(d)), o(q(c && b.space_colon ? [d, ":", e] : [d + ":", e]))
-                            }).join("," + k)
-                        }) + k + o("}");
+                        return K(a, function (a) {
+                            if (a.length == 3)return o(E(a[0], a[1][2], a[1][3], a[2]));
+                            var d = a[0], e = t(a[1], "seq");
+                            return b.quote_keys ? d = m(d) : (typeof d == "number" || !c && +d + "" == d) && parseFloat(d) >= 0 ? d = w(+d) : I(d) || (d = m(d)), o(q(c && b.space_colon ? [d, ":", e] : [d + ":", e]))
+                        }).join("," + k)
+                    }) + k + o("}");
                     return d ? "(" + e + ")" : e
                 }, regexp: function (a, b) {
                     return "/" + a + "/" + b

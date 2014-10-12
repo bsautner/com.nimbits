@@ -22,43 +22,48 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModelFactory;
-import com.nimbits.client.service.user.UserService;
-import com.nimbits.server.ApplicationListener;
-import com.nimbits.server.NimbitsEngine;
-import com.nimbits.server.transaction.entity.EntityServiceFactory;
+import com.nimbits.client.service.user.UserRpcService;
 import com.nimbits.server.transaction.entity.service.EntityService;
-import com.nimbits.server.transaction.user.AuthenticationServiceFactory;
 import com.nimbits.server.transaction.user.cache.UserCache;
+import com.nimbits.server.transaction.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.annotation.Resource;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class UserRpcServiceImpl extends RemoteServiceServlet implements UserService {
+@Service
+public class UserRpcServiceImpl extends RemoteServiceServlet implements UserRpcService {
 
     public static final String ANON_NIMBITS_COM = "anon@nimbits.com";
     private static final Logger log = Logger.getLogger(UserRpcServiceImpl.class.getName());
 
+    @Autowired
+    private EntityService entityService;
+    @Autowired
+    private UserCache userCache;
+    @Autowired
+    private UserService userService;
+
 
     @Override
     public User loginRpc(final String requestUri) {
-        final NimbitsEngine engine = ApplicationListener.createEngine();
-        final EntityService entityService = EntityServiceFactory.getInstance(engine);
-        final UserCache userCache = AuthenticationServiceFactory.getCacheInstance(engine);
-        final com.nimbits.server.transaction.user.service.UserService  userService = AuthenticationServiceFactory.getInstance(engine);
+
         final User retObj;
         EmailAddress internetAddress = null;
         boolean isAdmin = false;
 
 
-
         final com.google.appengine.api.users.UserService gaeUserService = com.google.appengine.api.users.UserServiceFactory.getUserService();
         if (gaeUserService == null) {
             throw new SecurityException("Google Login Service Unavailable");
-        }
-        else {
+        } else {
 
             final com.google.appengine.api.users.User googleUser = gaeUserService.getCurrentUser();
             if (googleUser != null) {
@@ -114,6 +119,12 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements UserServ
         }
     }
 
+    @Override
+    public void init() throws ServletException {
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+
+
+    }
 
 }
 

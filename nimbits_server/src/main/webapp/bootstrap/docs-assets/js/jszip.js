@@ -114,7 +114,7 @@ JSZip.prototype = (function () {
         JSZip.support.uint8array &&
         typeof TextEncoder === "function" &&
         typeof TextDecoder === "function"
-    ) {
+        ) {
         textEncoder = new TextEncoder("utf-8");
         textDecoder = new TextDecoder("utf-8");
     }
@@ -491,21 +491,21 @@ JSZip.prototype = (function () {
         var fileRecord = JSZip.signature.LOCAL_FILE_HEADER + header + utfEncodedFileName;
 
         var dirRecord = JSZip.signature.CENTRAL_FILE_HEADER +
-                // version made by (00: DOS)
+            // version made by (00: DOS)
             "\x14\x00" +
-                // file header (common to file and central directory)
+            // file header (common to file and central directory)
             header +
-                // file comment length
+            // file comment length
             "\x00\x00" +
-                // disk number start
+            // disk number start
             "\x00\x00" +
-                // internal file attributes TODO
+            // internal file attributes TODO
             "\x00\x00" +
-                // external file attributes
+            // external file attributes
             (file.options.dir === true ? "\x10\x00\x00\x00" : "\x00\x00\x00\x00") +
-                // relative offset of local header
+            // relative offset of local header
             decToHex(offset, 4) +
-                // file name
+            // file name
             utfEncodedFileName;
 
 
@@ -744,19 +744,19 @@ JSZip.prototype = (function () {
             // end of central dir signature
             dirEnd = JSZip.signature.CENTRAL_DIRECTORY_END +
                 // number of this disk
-            "\x00\x00" +
+                "\x00\x00" +
                 // number of the disk with the start of the central directory
-            "\x00\x00" +
+                "\x00\x00" +
                 // total number of entries in the central directory on this disk
-            decToHex(zipData.length, 2) +
+                decToHex(zipData.length, 2) +
                 // total number of entries in the central directory
-            decToHex(zipData.length, 2) +
+                decToHex(zipData.length, 2) +
                 // size of the central directory   4 bytes
-            decToHex(centralDirLength, 4) +
+                decToHex(centralDirLength, 4) +
                 // offset of start of central directory with respect to the starting disk number
-            decToHex(localDirLength, 4) +
+                decToHex(localDirLength, 4) +
                 // .ZIP file comment length
-            "\x00\x00";
+                "\x00\x00";
 
 
             // we have all the parts (and the total length)
@@ -1434,8 +1434,8 @@ JSZip.base64 = (function () {
                 }
 
                 output = output +
-                _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
-                _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+                    _keyStr.charAt(enc1) + _keyStr.charAt(enc2) +
+                    _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
 
             }
 

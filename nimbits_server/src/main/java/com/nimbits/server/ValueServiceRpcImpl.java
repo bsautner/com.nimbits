@@ -22,26 +22,46 @@ import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.process.task.TaskService;
-import com.nimbits.server.transaction.calculation.CalculationServiceFactory;
+import com.nimbits.server.transaction.calculation.CalculationService;
 import com.nimbits.server.transaction.user.UserHelper;
-import com.nimbits.server.transaction.value.ValueServiceFactory;
 import com.nimbits.server.transaction.value.service.ValueService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.annotation.Resource;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-
+@Service
 public class ValueServiceRpcImpl extends RemoteServiceServlet implements com.nimbits.client.service.value.ValueServiceRpc {
 
-    NimbitsEngine engine = ApplicationListener.createEngine();
-    TaskService task = ApplicationListener.getTaskService(engine);
-    ValueService valueService = ValueServiceFactory.getInstance(engine, task);
+
+    @Autowired
+    private TaskService taskService;
+
+    @Autowired
+    private ValueService valueService;
+
+    @Autowired
+    private UserHelper userHelper;
+
+    @Autowired
+    private CalculationService calculationService;
+
+    @Override
+    public void init() throws ServletException {
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+
+
+    }
 
     @Override
     public List<Value> solveEquationRpc(final User user, final Calculation calculation) {
-        List<Value> response = CalculationServiceFactory.getInstance(engine, task).solveEquation(user, calculation, null, null);
+        List<Value> response = calculationService.solveEquation(user, calculation, null, null);
 
         return new ArrayList<>(response);
     }
@@ -50,7 +70,7 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements com.nim
     public Value recordValueRpc(final Entity point,
                                 final Value value) throws ValueException {
 
-        User user = UserHelper.getUser(engine).get(0);
+        User user = userHelper.getUser().get(0);
         HttpServletRequest req = getThreadLocalRequest();
 
         return valueService.recordValue(req, user, point, value, false);
@@ -66,8 +86,8 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements com.nim
 
     @Override
     public void createDataDumpRpc(Entity entity, Timespan timespan) {
-        User user = UserHelper.getUser(engine).get(0);
-        task.startDataDumpTask(user, entity, timespan);
+        User user = userHelper.getUser().get(0);
+        taskService.startDataDumpTask(user, entity, timespan);
     }
 
 

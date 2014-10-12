@@ -915,7 +915,7 @@ var JSHINT = (function () {
 
     function isAlpha(str) {
         return (str >= "a" && str <= "z\uffff") ||
-        (str >= "A" && str <= "Z\uffff");
+            (str >= "A" && str <= "Z\uffff");
     }
 
     function isDigit(str) {
@@ -1217,9 +1217,9 @@ var JSHINT = (function () {
             i = t.id;
             if (i !== "(endline)") {
                 prereg = i &&
-                (("(,=:[!&|?{};".indexOf(i.charAt(i.length - 1)) >= 0) ||
-                i === "return" ||
-                i === "case");
+                    (("(,=:[!&|?{};".indexOf(i.charAt(i.length - 1)) >= 0) ||
+                        i === "return" ||
+                        i === "case");
             }
             return t;
         }
@@ -1571,7 +1571,7 @@ var JSHINT = (function () {
                                             case "/":
                                                 if (depth > 0) {
                                                     warningAt("{a} unterminated regular expression " +
-                                                    "group(s).", line, from + l, depth);
+                                                        "group(s).", line, from + l, depth);
                                                 }
                                                 c = s.substr(0, l - 1);
                                                 q = {
@@ -1654,7 +1654,7 @@ var JSHINT = (function () {
                                                 }
                                                 if (c === "]") {
                                                     warningAt("Empty class.", line,
-                                                        from + l - 1);
+                                                            from + l - 1);
                                                 }
                                                 isLiteral = false;
                                                 isInRange = false;
@@ -1750,7 +1750,7 @@ var JSHINT = (function () {
                                             case ".":
                                                 if (option.regexp) {
                                                     warningAt("Insecure '{a}'.", line,
-                                                        from + l, c);
+                                                            from + l, c);
                                                 }
                                                 break;
                                             case "]":
@@ -1760,7 +1760,7 @@ var JSHINT = (function () {
                                             case "+":
                                             case "*":
                                                 warningAt("Unescaped '{a}'.", line,
-                                                    from + l, c);
+                                                        from + l, c);
                                         }
                                         if (b) {
                                             switch (s.charAt(l)) {
@@ -2452,12 +2452,12 @@ var JSHINT = (function () {
 
     function isPoorRelation(node) {
         return node &&
-        ((node.type === "(number)" && +node.value === 0) ||
-        (node.type === "(string)" && node.value === "") ||
-        (node.type === "null" && !option.eqnull) ||
-        node.type === "true" ||
-        node.type === "false" ||
-        node.type === "undefined");
+            ((node.type === "(number)" && +node.value === 0) ||
+                (node.type === "(string)" && node.value === "") ||
+                (node.type === "null" && !option.eqnull) ||
+                node.type === "true" ||
+                node.type === "false" ||
+                node.type === "undefined");
     }
 
 
@@ -3008,7 +3008,7 @@ var JSHINT = (function () {
                                 // error, even within the typeof and delete operators
                                 if (!(anonname === "typeof" || anonname === "delete") ||
                                     (nexttoken &&
-                                    (nexttoken.value === "." || nexttoken.value === "["))) {
+                                        (nexttoken.value === "." || nexttoken.value === "["))) {
 
                                     isundef(funct, "'{a}' is not defined.", token, v);
                                 }
@@ -3318,8 +3318,8 @@ var JSHINT = (function () {
         nospace();
         if (option.immed && !left.immed && left.id === "function") {
             warning("Wrap an immediate function invocation in parentheses " +
-            "to assist the reader in understanding that the expression " +
-            "is the result of a function, and not the function itself.");
+                "to assist the reader in understanding that the expression " +
+                "is the result of a function, and not the function itself.");
         }
         var n = 0,
             p = [];
@@ -3362,7 +3362,7 @@ var JSHINT = (function () {
                     }
                 } else if (p[0] && p[0].id === "(string)" &&
                     (left.value === "setTimeout" ||
-                    left.value === "setInterval")) {
+                        left.value === "setInterval")) {
                     warning(
                         "Implied eval is evil. Pass a function instead of a string.", left);
                     addInternalSrc(left, p[0].value);
@@ -3372,7 +3372,7 @@ var JSHINT = (function () {
                     left.value === "." &&
                     left.left.value === "window" &&
                     (left.right === "setTimeout" ||
-                    left.right === "setInterval")) {
+                        left.right === "setInterval")) {
                     warning(
                         "Implied eval is evil. Pass a function instead of a string.", left);
                     addInternalSrc(left, p[0].value);
@@ -3768,7 +3768,7 @@ var JSHINT = (function () {
 
                 if (nexttoken.id !== "=") {
                     warning("const " +
-                    "'{a}' is initialized to 'undefined'.", token, id);
+                        "'{a}' is initialized to 'undefined'.", token, id);
                 }
 
                 if (nexttoken.id === "=") {
@@ -3777,7 +3777,7 @@ var JSHINT = (function () {
                     nonadjacent(token, nexttoken);
                     if (nexttoken.id === "undefined") {
                         warning("It is not necessary to initialize " +
-                        "'{a}' to 'undefined'.", token, id);
+                            "'{a}' to 'undefined'.", token, id);
                     }
                     if (peek(0).id === "=" && nexttoken.identifier) {
                         error("Constant {a} was not declared correctly.",
@@ -3857,8 +3857,8 @@ var JSHINT = (function () {
     blockstmt("function", function () {
         if (inblock) {
             warning("Function declarations should not be placed in blocks. " +
-            "Use a function expression or move the statement to the top of " +
-            "the outer function.", token);
+                "Use a function expression or move the statement to the top of " +
+                "the outer function.", token);
 
         }
         var i = identifier();
@@ -4208,7 +4208,7 @@ var JSHINT = (function () {
             if (option.forin && s && (s.length > 1 || typeof s[0] !== "object" ||
                 s[0].value !== "if")) {
                 warning("The body of a for in should be wrapped in an if statement to filter " +
-                "unwanted properties from the prototype.", this);
+                    "unwanted properties from the prototype.", this);
             }
             funct["(breakage)"] -= 1;
             funct["(loopage)"] -= 1;

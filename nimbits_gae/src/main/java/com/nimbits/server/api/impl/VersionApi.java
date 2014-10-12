@@ -14,29 +14,29 @@ package com.nimbits.server.api.impl;
 
 import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.server.api.ApiBase;
-import com.nimbits.server.api.filter.FilteredRequest;
-import com.nimbits.server.transaction.settings.SettingServiceFactory;
+import com.nimbits.server.transaction.settings.SettingsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-/**
- * Author: Benjamin Sautner
- * Date: 1/13/13
- * Time: 1:13 PM
- */
-
+@Service
 public class VersionApi extends ApiBase {
+
+    @Autowired
+    SettingsService settingsService;
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         PrintWriter out = resp.getWriter();
         addHeaders(resp);
-        out.print(SettingServiceFactory.getServiceInstance(((FilteredRequest)req).getEngine()).getSetting(ServerSetting.version));
+        out.print(settingsService.getSetting(ServerSetting.version));
         out.close();
 
     }

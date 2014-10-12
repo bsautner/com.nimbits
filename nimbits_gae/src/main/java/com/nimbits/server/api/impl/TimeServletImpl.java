@@ -20,7 +20,6 @@ import com.nimbits.client.enums.Parameters;
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.gson.GsonFactory;
 
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,7 +28,7 @@ import java.io.PrintWriter;
 import java.util.Date;
 
 
-public class TimeServletImpl extends ApiServlet  {
+public class TimeServletImpl extends ApiServlet {
 
 
     private static final long serialVersionUID = 6160961337851138572L;

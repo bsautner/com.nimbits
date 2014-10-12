@@ -12,14 +12,17 @@
 
 package com.nimbits.server;
 
+import org.springframework.stereotype.Component;
+
 import javax.jdo.JDOHelper;
 import javax.jdo.PersistenceManagerFactory;
 import java.util.Properties;
 
-public class Datastore {
+@Component
+public class DatastoreImpl implements Datastore {
     private static PersistenceManagerFactory PMF;
 
-    public static void initialize() {
+    public void initialize() {
         if (PMF != null) {
             throw new IllegalStateException("initialize() already called");
         }
@@ -31,7 +34,8 @@ public class Datastore {
 
     }
 
-    public static PersistenceManagerFactory get() {
+    @Override
+    public PersistenceManagerFactory get() {
         if (PMF == null) {
             initialize();
         }

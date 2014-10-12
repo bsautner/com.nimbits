@@ -139,11 +139,11 @@
         }
         return ( /input|select|textarea|button|object/.test(nodeName) ?
             !element.disabled :
-            "a" === nodeName ?
+                "a" === nodeName ?
             element.href || isTabIndexNotNaN :
-                isTabIndexNotNaN) &&
+            isTabIndexNotNaN) &&
             // the element and all of its ancestors must be visible
-        visible(element);
+            visible(element);
     }
 
     function visible(element) {
@@ -252,7 +252,7 @@
     $.fn.extend({
         disableSelection: function () {
             return this.bind(( $.support.selectstart ? "selectstart" : "mousedown" ) +
-            ".ui-disableSelection", function (event) {
+                ".ui-disableSelection", function (event) {
                 event.preventDefault();
             });
         },

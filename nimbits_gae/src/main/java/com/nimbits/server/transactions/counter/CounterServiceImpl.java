@@ -16,66 +16,59 @@ import com.nimbits.server.counter.CounterService;
 
 import java.util.Date;
 
-/**
- * Created with IntelliJ IDEA.
- * User: benjamin
- * Date: 9/21/12
- * Time: 2:37 PM
- */
 
 public class CounterServiceImpl implements CounterService {
 
 
-   private ShardedDate shardedDate;
+    private ShardedDate shardedDate;
 
     public CounterServiceImpl() {
         this.shardedDate = new ShardedDate();
     }
 
-    
-   @Override
-   public void createShards(final String name) {
 
-       final ShardedCounter counter = new ShardedCounter(name);
-       counter.addShards(10);
+    @Override
+    public void createShards(final String name) {
 
-   }
+        final ShardedCounter counter = new ShardedCounter(name);
+        counter.addShards(10);
 
-   
-   @Override
-   public void incrementCounter(final String name) {
+    }
 
 
-
-       final ShardedCounter counter = new ShardedCounter(name);
-
-       counter.increment();
-
-   }
-
-   
-   @Override
-   public long getCount(String name) {
-       final ShardedCounter counter = new ShardedCounter(name);
-       return counter.getCount();
-   }
-
-   
-   @Override
-   public Date updateDateCounter(final String name) {
-       shardedDate.setName(name);
-       return shardedDate.update();
+    @Override
+    public void incrementCounter(final String name) {
 
 
-   }
+        final ShardedCounter counter = new ShardedCounter(name);
 
-   
-   @Override
-   public Date getDateCounter(String name) {
-       shardedDate.setName(name);
-       return shardedDate.getMostRecent();
+        counter.increment();
 
-   }
+    }
+
+
+    @Override
+    public long getCount(String name) {
+        final ShardedCounter counter = new ShardedCounter(name);
+        return counter.getCount();
+    }
+
+
+    @Override
+    public Date updateDateCounter(final String name) {
+        shardedDate.setName(name);
+        return shardedDate.update();
+
+
+    }
+
+
+    @Override
+    public Date getDateCounter(String name) {
+        shardedDate.setName(name);
+        return shardedDate.getMostRecent();
+
+    }
 
 
 }

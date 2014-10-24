@@ -17,6 +17,7 @@ import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.counter.CounterService;
 import junit.framework.Assert;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Date;
 
@@ -25,7 +26,8 @@ import static org.junit.Assert.assertNotNull;
 
 public class CounterServiceImplTest extends NimbitsServletTest {
 
-    CounterService counterService = CounterServiceFactory.getInstance();
+    @Autowired
+    CounterService counterService;
 
     @Test
     public void testIncrementCounter() throws Exception {

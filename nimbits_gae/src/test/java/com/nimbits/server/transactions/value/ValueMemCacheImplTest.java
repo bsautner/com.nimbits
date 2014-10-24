@@ -18,7 +18,7 @@ import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.transaction.value.ValueServiceFactory;
+
 import com.nimbits.server.transaction.value.cache.ValueCache;
 import org.junit.Test;
 
@@ -143,7 +143,7 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
 
     @Test
     public void testAddToBuffer() throws InterruptedException {
-        ValueCache cache = ValueServiceFactory.getCacheInstance(engine, taskService);
+        ValueCache cache = null;
         Value v = ValueFactory.createValueModel(3.4);
         cache.addValueToBuffer(point, v);
         List<Value> buffer = cache.getValueBuffer(point);

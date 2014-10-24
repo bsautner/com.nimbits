@@ -20,12 +20,7 @@ import com.nimbits.client.model.user.User;
 
 import java.lang.reflect.Type;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 11/10/11
- * Time: 7:28 PM
- */
+
 public class UserSerializer implements JsonSerializer<User> {
 
     @Override

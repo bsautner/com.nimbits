@@ -10,7 +10,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.communication.email;
+package com.nimbits.server.communication.mail;
 
 
 import com.nimbits.client.constants.Const;
@@ -29,7 +29,6 @@ import com.nimbits.server.transaction.settings.SettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.jdo.PersistenceManagerFactory;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -52,15 +51,11 @@ public class EmailServiceImpl implements EmailService {
     private static final String WORD_NIMBITS = "Nimbits";
     private static final int INT = 128;
     private static final int SECONDS_IN_MINUTE = 60;
-    private PersistenceManagerFactory persistenceManagerFactory;
 
     public EmailServiceImpl() {
 
     }
 
-    public void setPersistenceManagerFactory(PersistenceManagerFactory persistenceManagerFactory) {
-        this.persistenceManagerFactory = persistenceManagerFactory;
-    }
 
     private static void send(final Message msg) {
 
@@ -155,7 +150,7 @@ public class EmailServiceImpl implements EmailService {
 
     private InternetAddress getFromEmail() throws UnsupportedEncodingException {
         final String fromEmail;
-        fromEmail = settingsService.getSetting(ServerSetting.admin);
+        fromEmail =  settingsService.getSetting(ServerSetting.admin);
         return new InternetAddress(fromEmail, WORD_NIMBITS);
 
 

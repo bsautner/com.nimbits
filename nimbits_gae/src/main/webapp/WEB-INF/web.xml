@@ -23,6 +23,10 @@
         <listener-class>com.nimbits.server.ApplicationListener</listener-class>
     </listener>
 
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
     <servlet>
         <servlet-name>userApi</servlet-name>
         <servlet-class>com.nimbits.server.api.UserApi</servlet-class>
@@ -393,37 +397,48 @@
 
 
     <servlet>
-        <servlet-name>chart</servlet-name>
-        <servlet-class>com.nimbits.server.api.impl.ChartApiServletImpl</servlet-class>
-
+        <servlet-name>WebSocket</servlet-name>
+        <servlet-class>com.nimbits.server.socket.SocketEndpoint</servlet-class>
     </servlet>
+
     <servlet-mapping>
-        <servlet-name>chart</servlet-name>
-        <url-pattern>/service/chart</url-pattern>
+        <servlet-name>WebSocket</servlet-name>
+        <url-pattern>/socket/*</url-pattern>
     </servlet-mapping>
 
 
+    <!--<servlet>-->
+        <!--<servlet-name>springGwtRemoteServiceServlet</servlet-name>-->
+        <!--<servlet-class>org.spring4gwt.server.SpringGwtRemoteServiceServlet</servlet-class>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>springGwtRemoteServiceServlet</servlet-name>-->
+        <!--<url-pattern>/nimbits/*</url-pattern>-->
+    <!--</servlet-mapping>-->
+
     <servlet>
         <servlet-name>com.nimbits EntityService</servlet-name>
-        <servlet-class>com.nimbits.server.transactions.EntityServiceRpcImpl</servlet-class>
+        <servlet-class>com.nimbits.server.EntityServiceRpcImpl</servlet-class>
     </servlet>
-    <servlet>
-        <servlet-name>com.nimbits UserService</servlet-name>
-        <servlet-class>com.nimbits.server.transactions.UserRpcServiceImpl</servlet-class>
-    </servlet>
+
 
     <servlet>
         <servlet-name>com.nimbits SettingsService</servlet-name>
-        <servlet-class>com.nimbits.server.transactions.SettingServiceRpcImpl</servlet-class>
+        <servlet-class>com.nimbits.server.SettingServiceRpcImpl</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>com.nimbits ValueService</servlet-name>
-        <servlet-class>com.nimbits.server.transactions.ValueServiceRpcImpl</servlet-class>
+        <servlet-class>com.nimbits.server.ValueServiceRpcImpl</servlet-class>
     </servlet>
+
     <servlet>
-        <servlet-name>com.nimbits XmppService</servlet-name>
-        <servlet-class>com.nimbits.server.communication.xmpp.XmppRpcServiceImpl</servlet-class>
+        <servlet-name>com.nimbits UserService</servlet-name>
+        <servlet-class>com.nimbits.server.UserRpcServiceImpl</servlet-class>
     </servlet>
+    <servlet-mapping>
+        <servlet-name>com.nimbits UserService</servlet-name>
+        <url-pattern>/nimbits/userRpcService</url-pattern>
+    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>com.nimbits EntityService</servlet-name>
@@ -437,14 +452,6 @@
     <servlet-mapping>
         <servlet-name>com.nimbits ValueService</servlet-name>
         <url-pattern>/nimbits/valueService</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>com.nimbits XmppService</servlet-name>
-        <url-pattern>/nimbits/xmppService</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>com.nimbits UserService</servlet-name>
-        <url-pattern>/nimbits/userService</url-pattern>
     </servlet-mapping>
 
     <security-constraint>

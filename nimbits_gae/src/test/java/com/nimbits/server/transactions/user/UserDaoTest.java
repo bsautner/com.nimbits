@@ -20,7 +20,7 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.transaction.user.AuthenticationServiceFactory;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -52,7 +52,7 @@ public class UserDaoTest extends NimbitsServletTest {
     @Test
     public void createUserTest() throws Exception {
         EmailAddress e = CommonFactory.createEmailAddress("bob@example.com");
-        User u = AuthenticationServiceFactory.getInstance(engine).createUserRecord(e);
+        User u = null;
         assertNotNull(u);
         assertEquals(e.getValue(), u.getEmail().getValue());
         List<Entity> result = entityService.getEntityByKey(u, e.getValue(), EntityType.user);

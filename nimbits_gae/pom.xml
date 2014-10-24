@@ -115,6 +115,13 @@
         </dependency>
 
         <dependency>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
+        </dependency>
+
+
+        <dependency>
             <groupId>com.extjs</groupId>
             <artifactId>gxt</artifactId>
             <version>2.3.0-gwt22</version>
@@ -143,11 +150,12 @@
 
 
         <!--JDO Dependencies-->
-        <dependency>
-            <groupId>javax.jdo</groupId>
-            <artifactId>jdo-api</artifactId>
-            <version>3.0.1</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>javax.jdo</groupId>-->
+            <!--<artifactId>jdo-api</artifactId>-->
+            <!--<version>3.0.1</version>-->
+            <!--<scope>provided</scope>-->
+        <!--</dependency>-->
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-core</artifactId>
@@ -158,13 +166,13 @@
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-api-jdo</artifactId>
             <version>3.1.2</version>
-
+            <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>com.google.appengine.orm</groupId>
             <artifactId>datanucleus-appengine</artifactId>
             <version>2.1.2</version>
-            <scope>compile</scope>
+            <scope>runtime</scope>
         </dependency>
 
         <!--test dep-->
@@ -204,12 +212,14 @@
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
+
+
         <dependency>
-            <groupId>spring</groupId>
+            <groupId>org.springframework</groupId>
             <artifactId>spring-mock</artifactId>
-            <version>1.0.2</version>
-            <scope>test</scope>
+            <version>2.0.8</version>
         </dependency>
+
 
         <dependency>
             <groupId>org.mockito</groupId>
@@ -222,11 +232,20 @@
             <artifactId>appengine-api-1.0-sdk</artifactId>
             <version>1.9.6</version>
         </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>org.spring4gwt</groupId>-->
+            <!--<artifactId>spring4gwt</artifactId>-->
+            <!--<version>0.0.1</version>-->
+            <!--<scope>system</scope>-->
+            <!--<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/spring4gwt-0.0.1.jar</systemPath>-->
+        <!--</dependency>-->
+
     </dependencies>
 
     <build>
         <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
-        <finalName>nimbits_gae_3.7.0</finalName>
+        <finalName>nimbits_gae_3.7.1</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -272,7 +291,7 @@
                 <artifactId>appengine-maven-plugin</artifactId>
                 <version>${appengine.target.version}</version>
                 <configuration>
-                    <port>8089</port>
+                    <port>8092</port>
 
                     <jvmFlags>
                         <jvmFlag>-Xdebug</jvmFlag>

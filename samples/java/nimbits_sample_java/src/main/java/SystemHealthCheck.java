@@ -77,6 +77,7 @@ public class SystemHealthCheck {
                 List<Value> sample = valueHelper.getSeries(pointName, range);
                 long e2 = System.currentTimeMillis();
                 long elapsed2 = e2 - s2;
+                System.out.println("benchmarking at " + elapsed + "ms");
                 valueHelper.recordValue(seriesBenchmark, (double) elapsed2);
 
 

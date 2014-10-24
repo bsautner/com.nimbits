@@ -15,12 +15,7 @@ package com.nimbits.server.gson;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 12/10/11
- * Time: 5:35 PM
- */
+
 public class NimbitsExclusionStrategy implements ExclusionStrategy {
     private final Class<?> typeToSkip;
 

@@ -13,15 +13,8 @@
 package com.nimbits.shared;
 
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 6/11/11
- * Time: 9:04 AM
- */
+@Deprecated //use commons
 public class Utils {
-
-    private static final double DOUBLE = 100.0;
 
     private Utils() {
     }
@@ -31,11 +24,6 @@ public class Utils {
 
     }
 
-
-    public static double roundDouble(final double d) {
-        int ix = (int) (d * DOUBLE); // scale it
-        return (double) ix / DOUBLE;
-    }
 
 
 }

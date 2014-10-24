@@ -52,7 +52,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/META-INF/applicationContext.xml", "/META-INF/context.xml"})
+
 public class NimbitsServletTest extends BaseTest {
 
     public TaskService taskService;

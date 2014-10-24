@@ -7,7 +7,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.transaction.entity.EntityServiceFactory;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -40,7 +40,7 @@ public class ValueApiTest extends NimbitsServletTest {
 
         point.setPointType(PointType.cumulative);
         point.setFilterType(FilterType.none);
-        EntityServiceFactory.getInstance(engine).addUpdateEntity(Arrays.<Entity>asList(pointChild));
+       //TODO spring EntityServiceFactory.getInstance(engine).addUpdateEntity(Arrays.<Entity>asList(pointChild));
         Value v = ValueFactory.createValueModel(1);
         for (int i = 0; i < 3; i++) {
             valueService.recordValue(req, user, point, v, false);

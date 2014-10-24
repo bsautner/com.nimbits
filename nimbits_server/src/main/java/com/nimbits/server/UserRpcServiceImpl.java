@@ -46,7 +46,12 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements UserRpcS
     private UserService userService;
 
 
+    @Override
+    public void init() throws ServletException {
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 
+
+    }
 
     @Override
     public User loginRpc(final String requestUri) {

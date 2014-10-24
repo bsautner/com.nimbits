@@ -44,8 +44,7 @@ public class UserRpcServiceImpl extends RemoteServiceServlet  implements UserRpc
 
     @Autowired
     private EntityService entityService;
-    @Autowired
-    private UserCache userCache;
+
     @Autowired
     private UserService userService;
 

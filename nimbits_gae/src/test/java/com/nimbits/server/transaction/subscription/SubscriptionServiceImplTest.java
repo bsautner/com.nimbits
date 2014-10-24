@@ -23,7 +23,7 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.subscription.SubscriptionFactory;
 import com.nimbits.server.NimbitsServletTest;
-import com.nimbits.server.transactions.counter.CounterServiceFactory;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
@@ -56,7 +56,6 @@ public class SubscriptionServiceImplTest extends NimbitsServletTest {
         Subscription s = SubscriptionFactory.createSubscription(entity, point.getKey(), SubscriptionType.newValue,
                 SubscriptionNotifyMethod.email, 100, false, true);
         Subscription result = (Subscription) entityService.addUpdateSingleEntity(s);
-        CounterServiceFactory.getInstance().updateDateCounter(result.getKey());
 
         assertFalse(subscriptionService.okToProcess(result));
 

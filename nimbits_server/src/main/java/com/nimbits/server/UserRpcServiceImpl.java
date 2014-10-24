@@ -28,12 +28,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-@Service
+@Service("userRpcService")
 public class UserRpcServiceImpl extends RemoteServiceServlet implements UserRpcService {
 
 
@@ -44,12 +45,8 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements UserRpcS
     @Autowired
     private UserService userService;
 
-    @Override
-    public void init() throws ServletException {
-        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 
 
-    }
 
     @Override
     public User loginRpc(final String requestUri) {

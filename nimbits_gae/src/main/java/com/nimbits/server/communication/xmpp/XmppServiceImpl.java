@@ -17,8 +17,9 @@ import com.google.appengine.api.xmpp.Message;
 import com.google.appengine.api.xmpp.MessageBuilder;
 import com.google.appengine.api.xmpp.XMPPServiceFactory;
 import com.nimbits.client.model.email.EmailAddress;
+import org.springframework.stereotype.Service;
 
-
+@Service
 public class XmppServiceImpl implements XmppService {
 
     private static final long serialVersionUID = 1L;

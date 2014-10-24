@@ -18,12 +18,7 @@ import com.nimbits.client.model.user.UserModel;
 
 import java.lang.reflect.Type;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 11/10/11
- * Time: 7:11 PM
- */
+
 public class UserDeserializer implements JsonDeserializer<User> {
     @Override
     public User deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {

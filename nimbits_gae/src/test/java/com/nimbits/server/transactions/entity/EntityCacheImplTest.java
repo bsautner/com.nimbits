@@ -23,10 +23,10 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.orm.CalcEntity;
-import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import com.nimbits.server.transaction.entity.cache.EntityCache;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -34,13 +34,13 @@ import static org.junit.Assert.assertFalse;
 
 
 public class EntityCacheImplTest extends NimbitsServletTest {
-
+    @Autowired
     EntityCache cache;
 
     @Before
     public void setup() {
         super.setup();
-        cache = EntityServiceFactory.getCacheInstance(engine);
+
 
     }
 

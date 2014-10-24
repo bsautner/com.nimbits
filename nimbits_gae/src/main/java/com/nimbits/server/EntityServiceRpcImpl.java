@@ -10,7 +10,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.transactions;
+package com.nimbits.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.enums.EntityType;
@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 @Service
-public class EntityServiceRpcImpl extends RemoteServiceServlet implements EntityServiceRpc {
+public class EntityServiceRpcImpl extends RemoteServiceServlet  implements EntityServiceRpc {
     final static Logger logger = Logger.getLogger(EntityServiceRpcImpl.class.getName());
 
     @Autowired
@@ -44,18 +44,17 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
     private UserHelper userHelper;
 
     @Override
-    public List<Entity> addUpdateEntityRpc(final List<Entity> entity) throws ClassNotFoundException {
-        return entityService.addUpdateEntity(entity);
-
-    }
-
-    @Override
     public void init() throws ServletException {
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 
 
     }
 
+    @Override
+    public List<Entity> addUpdateEntityRpc(final List<Entity> entity) throws ClassNotFoundException {
+        return entityService.addUpdateEntity(entity);
+
+    }
 
     @Override
     public List<Entity> deleteEntityRpc(final List<Entity> entityList) {

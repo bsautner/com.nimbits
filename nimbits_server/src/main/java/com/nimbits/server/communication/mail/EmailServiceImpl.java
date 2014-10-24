@@ -23,15 +23,11 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.DatastoreImpl;
 import com.nimbits.server.ServerInfo;
-import com.nimbits.server.communication.email.EmailService;
 import com.nimbits.server.transaction.settings.SettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import javax.jdo.PersistenceManagerFactory;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;

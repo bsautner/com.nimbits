@@ -10,7 +10,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.transactions;
+package com.nimbits.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.enums.EntityType;
@@ -30,18 +30,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import javax.annotation.Resource;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpSession;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
 
-@Service
-public class UserRpcServiceImpl extends RemoteServiceServlet implements UserRpcService {
+@Service("userRpcService")
+public class UserRpcServiceImpl extends RemoteServiceServlet  implements UserRpcService  {
 
-    public static final String ANON_NIMBITS_COM = "anon@nimbits.com";
+    private static final String ANON_NIMBITS_COM = "anon@nimbits.com";
     private static final Logger log = Logger.getLogger(UserRpcServiceImpl.class.getName());
 
     @Autowired
@@ -51,6 +49,12 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements UserRpcS
     @Autowired
     private UserService userService;
 
+    @Override
+    public void init() throws ServletException {
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+
+
+    }
 
     @Override
     public User loginRpc(final String requestUri) {
@@ -105,25 +109,18 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements UserRpcS
                 retObj.setLoggedIn(false);
                 retObj.setLoginUrl(gaeUserService.createLoginURL(requestUri));
             }
-            if (getThreadLocalRequest() != null) {
-                HttpSession session = getThreadLocalRequest().getSession();
-                if (session != null) {
-                    retObj.setSessionId(session.getId());
-                    userCache.cacheAuthenticatedUser(session.getId(), retObj);
-                }
-            }
+//            if (getThreadLocalRequest() != null) {
+//                HttpSession session = getThreadLocalRequest().getSession();
+//                if (session != null) {
+//                    retObj.setSessionId(session.getId());
+//                    userCache.cacheAuthenticatedUser(session.getId(), retObj);
+//                }
+//            }
 
             return retObj;
 
 
         }
-    }
-
-    @Override
-    public void init() throws ServletException {
-        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-
-
     }
 
 }

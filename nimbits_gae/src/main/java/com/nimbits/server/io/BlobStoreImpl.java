@@ -10,7 +10,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.io.blob;
+package com.nimbits.server.io;
 
 
 import com.google.appengine.api.blobstore.BlobKey;
@@ -32,6 +32,8 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.client.model.valueblobstore.ValueBlobStoreFactory;
+import com.nimbits.server.io.blob.BlobStore;
+import com.nimbits.server.io.blob.ValueBlobStoreEntity;
 import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.value.dao.ValueDayHolder;
 import org.springframework.stereotype.Service;

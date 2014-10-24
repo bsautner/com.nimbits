@@ -26,7 +26,6 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.orm.PointEntity;
-import com.nimbits.server.transaction.entity.EntityServiceFactory;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 import org.junit.Before;
 import org.junit.Test;
@@ -43,7 +42,7 @@ public class EntityDaoImplTest extends NimbitsServletTest {
     @Before
     public void setup() {
         super.setup();
-        dao = EntityServiceFactory.getDaoInstance(engine);
+
 
     }
 

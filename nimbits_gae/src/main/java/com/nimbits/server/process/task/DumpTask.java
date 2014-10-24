@@ -28,7 +28,7 @@ import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.ServerInfo;
-import com.nimbits.server.communication.email.EmailService;
+import com.nimbits.server.communication.mail.EmailService;
 import com.nimbits.server.gson.GsonFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,9 +52,6 @@ public class DumpTask extends TaskBase {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) {
-
-        setup();
-
 
         final String json = request.getParameter(Parameters.entity.getText());
         final String sd = request.getParameter(Parameters.sd.getText());

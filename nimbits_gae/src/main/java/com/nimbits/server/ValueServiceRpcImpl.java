@@ -10,7 +10,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.transactions;
+package com.nimbits.server;
 
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -21,6 +21,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.client.service.value.ValueServiceRpc;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.transaction.calculation.CalculationService;
 import com.nimbits.server.transaction.user.UserHelper;
@@ -36,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ValueServiceRpcImpl extends RemoteServiceServlet implements com.nimbits.client.service.value.ValueServiceRpc {
+public class ValueServiceRpcImpl extends RemoteServiceServlet  implements ValueServiceRpc {
 
     @Autowired
     private TaskService taskService;
@@ -49,6 +50,13 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements com.nim
 
     @Autowired
     private UserHelper userHelper;
+
+    @Override
+    public void init() throws ServletException {
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+
+
+    }
 
     @Override
     public List<Value> solveEquationRpc(final User user, final Calculation calculation) {
@@ -81,11 +89,6 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements com.nim
         taskService.startDataDumpTask(user, entity, timespan);
     }
 
-    @Override
-    public void init() throws ServletException {
-        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 
-
-    }
 
 }

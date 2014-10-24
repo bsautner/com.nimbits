@@ -19,6 +19,7 @@ import com.google.appengine.tools.development.testing.LocalUserServiceTestConfig
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.user.UserRpcService;
 import com.nimbits.server.NimbitsServletTest;
+import com.nimbits.server.UserRpcServiceImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

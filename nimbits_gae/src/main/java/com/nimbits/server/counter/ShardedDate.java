@@ -10,7 +10,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.transactions.counter;
+package com.nimbits.server.counter;
 
 import com.google.appengine.api.datastore.*;
 import com.google.appengine.api.memcache.Expiration;
@@ -18,36 +18,38 @@ import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheService.SetPolicy;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 
+import java.util.Date;
 import java.util.Random;
 
+public class ShardedDate {
 
-public class ShardedCounter {
 
+    private MemcacheService cacheFactory;
 
     private class Counter {
 
-        private static final String KIND = "Counter";
-        private static final String SHARD_COUNT = "shard_count";
+        private static final String KIND = "LastDateShard";
+        private static final String SHARD_COUNT = "shard_date";
     }
 
     /**
      * Convenience class which contains constants related to the counter shards.
      * The shard number (as a String) is used as the entity key.
      */
-    private final class CounterShard {
+    private static final class CounterShard {
         /**
          * Entity kind prefix, which is concatenated with the counter name to form
          * the final entity kind, which represents counter shards.
          */
-        private static final String KIND_PREFIX = "CounterShard_";
+        private static final String KIND_PREFIX = "DateShard_";
 
         /**
          * Property to store the current count within a counter shard.
          */
-        private static final String COUNT = "count";
+        private static final String TIME = "time";
     }
 
-    private final DatastoreService ds = DatastoreServiceFactory
+    private static final DatastoreService ds = DatastoreServiceFactory
             .getDatastoreService();
 
     /**
@@ -58,7 +60,7 @@ public class ShardedCounter {
     /**
      * The name of this counter.
      */
-    private final String counterName;
+    private String name;
 
     /**
      * A random number generating, for distributing writes across shards.
@@ -70,19 +72,16 @@ public class ShardedCounter {
      */
     private String kind;
 
-    private final MemcacheService mc = MemcacheServiceFactory
-            .getMemcacheService();
-
-    /**
-     * Constructor which creates a sharded counter using the provided counter
-     * name.
-     *
-     * @param counterName name of the sharded counter
-     */
-    public ShardedCounter(String counterName) {
-        this.counterName = counterName;
-        kind = CounterShard.KIND_PREFIX + counterName;
+    public void setName(String name) {
+        this.name = name;
+        kind = CounterShard.KIND_PREFIX + name;
     }
+
+
+    public ShardedDate() {
+        cacheFactory = MemcacheServiceFactory.getMemcacheService();
+    }
+
 
     /**
      * Increase the number of shards for a given sharded counter. Will never
@@ -91,9 +90,8 @@ public class ShardedCounter {
      * @param count Number of new shards to build and store
      */
     public void addShards(int count) {
-        Key counterKey = KeyFactory.createKey(Counter.KIND, counterName);
-        incrementPropertyTx(counterKey, Counter.SHARD_COUNT, count, INITIAL_SHARDS
-                + count);
+        Key counterKey = KeyFactory.createKey(Counter.KIND, name);
+        incrementPropertyTx(counterKey, Counter.SHARD_COUNT, new Date());
     }
 
     /**
@@ -101,27 +99,30 @@ public class ShardedCounter {
      *
      * @return Summed total of all shards' counts
      */
-    public long getCount() {
-        Long value = (Long) mc.get(kind);
+    public Date getMostRecent() {
+        Long value = (Long) cacheFactory.get(kind);
         if (value != null) {
-            return value;
+            return new Date(value);
         }
 
-        long sum = 0;
+        Date retVal = new Date(0);
         Query query = new Query(kind);
         for (Entity shard : ds.prepare(query).asIterable()) {
-            sum += (Long) shard.getProperty(CounterShard.COUNT);
+            Date option = new Date((Long) shard.getProperty(CounterShard.TIME));
+            if (option.getTime() > retVal.getTime()) {
+                retVal = option;
+            }
         }
-        mc.put(kind, sum, Expiration.byDeltaSeconds(60),
+        cacheFactory.put(kind, retVal.getTime(), Expiration.byDeltaSeconds(60),
                 SetPolicy.ADD_ONLY_IF_NOT_PRESENT);
 
-        return sum;
+        return retVal;
     }
 
     /**
      * Increment the value of this sharded counter.
      */
-    public void increment() {
+    public Date update() {
         // Find how many shards are in this counter.
         int numShards = getShardCount();
 
@@ -129,8 +130,10 @@ public class ShardedCounter {
         long shardNum = generator.nextInt(numShards);
 
         Key shardKey = KeyFactory.createKey(kind, Long.toString(shardNum));
-        incrementPropertyTx(shardKey, CounterShard.COUNT, 1, 1);
-        mc.increment(kind, 1);
+        Date d = new Date();
+        incrementPropertyTx(shardKey, CounterShard.TIME, new Date());
+        cacheFactory.increment(kind, 1);
+        return d;
     }
 
     /**
@@ -140,7 +143,7 @@ public class ShardedCounter {
      */
     private int getShardCount() {
         try {
-            Key counterKey = KeyFactory.createKey(Counter.KIND, counterName);
+            Key counterKey = KeyFactory.createKey(Counter.KIND, name);
             Entity counter = ds.get(counterKey);
             Long shardCount = (Long) counter.getProperty(Counter.SHARD_COUNT);
             return shardCount.intValue();
@@ -149,27 +152,16 @@ public class ShardedCounter {
         }
     }
 
-    /**
-     * Increment datastore property value inside a transaction. If the entity with
-     * the provided key does not exist, instead create an entity with the supplied
-     * initial property value.
-     *
-     * @param key          the entity key to update or create
-     * @param prop         the property name to be incremented
-     * @param increment    the amount by which to increment
-     * @param initialValue the value to use if the entity does not exist
-     */
-    private void incrementPropertyTx(Key key, String prop, long increment,
-                                     long initialValue) {
+    private void incrementPropertyTx(Key key, String prop, Date newDate) {
         Transaction tx = ds.beginTransaction();
         Entity thing;
         long value;
         try {
             thing = ds.get(tx, key);
-            value = (Long) thing.getProperty(prop) + increment;
+            value = newDate.getTime();
         } catch (EntityNotFoundException e) {
             thing = new Entity(key);
-            value = initialValue;
+            value = new Date().getTime();
         }
         thing.setUnindexedProperty(prop, value);
         ds.put(tx, thing);

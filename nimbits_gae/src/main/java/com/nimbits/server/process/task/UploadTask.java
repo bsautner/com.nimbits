@@ -48,8 +48,6 @@ public class UploadTask extends TaskBase {
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        setup();
-
         final String key = request.getParameter(Parameters.blobkey.getText());
         final String json = request.getParameter(Parameters.entity.getText());
         final String userJson = request.getParameter(Parameters.user.getText());

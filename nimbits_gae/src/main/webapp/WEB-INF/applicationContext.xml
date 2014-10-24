@@ -4,6 +4,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:beans="http://www.springframework.org/schema/beans"
+       xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <beans:import resource="context.xml"/>
@@ -13,9 +14,9 @@
 
     <bean id="userCache" class="com.nimbits.server.transaction.user.cache.UserCacheImpl"/>
     <bean id="userService" class="com.nimbits.server.transaction.user.service.UserServiceImpl"/>
-    <bean id="userHelper" class="com.nimbits.server.transaction.user.UserHelper"/>
+    <bean id="userHelper" class="com.nimbits.server.transaction.user.UserHelper" scope="session" />
     <bean id="entityService" class=" com.nimbits.server.transaction.entity.EntityServiceImpl"/>
-
+    <bean id="authService" class=" com.nimbits.server.auth.AuthServiceImpl"/>
 
     <bean id="settingsService" class="com.nimbits.server.transaction.settings.SettingsServiceImpl"/>
     <bean id="settingsCache" class="com.nimbits.server.transaction.settings.SettingsCacheImpl"/>
@@ -23,18 +24,19 @@
 
         <property name="persistenceManagerFactory" ref="pmf"/>
     </bean>
-    <bean id="emailService" class="com.nimbits.server.communication.email.EmailServiceImpl">
-        <property name="persistenceManagerFactory" ref="pmf"/>
+
+    <bean id="emailService" class="com.nimbits.server.communication.mail.EmailServiceImpl">
+
     </bean>
 
-    <bean id="blobStore" class="com.nimbits.server.io.blob.BlobStoreImpl">
+    <bean id="blobStore" class="com.nimbits.server.io.BlobStoreImpl">
         <property name="persistenceManagerFactory" ref="pmf"/>
     </bean>
     <bean id="entityDao" class="com.nimbits.server.transaction.entity.dao.EntityDaoImpl">
         <property name="persistenceManagerFactory" ref="pmf"/>
     </bean>
 
-    <bean id="counterService" class="com.nimbits.server.transactions.counter.CounterServiceImpl"/>
+    <bean id="counterService" class="com.nimbits.server.counter.CounterServiceImpl"/>
 
     <bean id="valueService" class="com.nimbits.server.transaction.value.service.ValueServiceImpl"/>
     <bean id="valueCache" class="com.nimbits.server.transaction.value.cache.ValueCacheImpl"/>
@@ -54,20 +56,31 @@
 
     <bean id="entityCache" class="com.nimbits.server.transaction.entity.cache.EntityCacheImpl"/>
 
-    <bean id="pmf" class="org.springframework.orm.jdo.LocalPersistenceManagerFactoryBean">
-        <property name="jdoProperties">
+    <bean id="transactionManager" class="org.springframework.orm.jdo.JdoTransactionManager"
+          p:persistenceManagerFactory-ref="pmf" />
+
+    <bean id="transactionAwarePersistenceManagerFactoryProxy"
+          class="org.springframework.orm.jdo.TransactionAwarePersistenceManagerFactoryProxy"
+          p:targetPersistenceManagerFactory-ref="pmf"
+          p:allowCreate="false" />
+
+    <bean id="pmf"
+          class="org.springframework.orm.jdo.LocalPersistenceManagerFactoryBean">
+        <property name="jdoPropertyMap">
             <props>
                 <prop key="javax.jdo.PersistenceManagerFactoryClass">
-                    org.datanucleus.store.appengine.jdo.DatastoreJDOPersistenceManagerFactory
+                    org.datanucleus.api.jdo.JDOPersistenceManagerFactory
                 </prop>
                 <prop key="javax.jdo.option.ConnectionURL">appengine</prop>
                 <prop key="javax.jdo.option.NontransactionalRead">true</prop>
-                <prop key="javax.jdo.option.NontransactionalWrite">true</prop>
-                <prop key="javax.jdo.option.RetainValues">true</prop>
+                <prop key="javax.jdo.option.NontransactionalWrite">false</prop>
+                <prop key="javax.jdo.option.RetainValues">false</prop>
+                <prop key="javax.jdo.option.DetachAllOnCommit">true</prop>
+                <prop key="javax.jdo.option.Multithreaded">true</prop>
+                <prop key="datanucleus.appengine.ignorableMetaDataBehavior">NONE</prop>
                 <prop key="datanucleus.appengine.autoCreateDatastoreTxns">true</prop>
             </props>
         </property>
-
     </bean>
 
 

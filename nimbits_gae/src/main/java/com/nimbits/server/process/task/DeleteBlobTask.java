@@ -29,7 +29,7 @@ public class DeleteBlobTask extends TaskBase {
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
-        setup();
+
 
 
         final String key = req.getParameter(Parameters.key.getText());

@@ -56,26 +56,37 @@
     <bean id="entityCache" class="com.nimbits.server.transaction.entity.cache.EntityCacheImpl"/>
 
 
-    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">-->
+        <!--<property name="driverClassName" value="org.h2.Driver"/>-->
+        <!--<property name="url" value="jdbc:h2:./database/db;MV_STORE=FALSE;MVCC=FALSE;FILE_LOCK=NO"/>-->
+        <!--<property name="username" value="sa"/>-->
+        <!--<property name="password" value=""/>-->
 
-        <property name="driverClassName" value="org.h2.Driver"/>
-        <property name="url"
-                  value="jdbc:h2:./database/db;MV_STORE=FALSE;MVCC=FALSE;FILE_LOCK=NO"/>
-        <property name="username" value="sa"/>
-        <property name="password" value=""/>
+    <!--</bean>-->
 
-        <!--<property name="datanucleus.autoCreateSchema" value="true"/>-->
-        <!--<property name="datanucleus.validateTables" value="false"/>-->
-        <!--<property name="datanucleus.validateConstraints" value="false"/>-->
-        <!--<property name="datanucleus.autoCreateTables" value="true"/>-->
+    <!--<bean id="pmf" class="org.datanucleus.api.jdo.JDOPersistenceManagerFactory" destroy-method="close">-->
+        <!--<property name="connectionFactory" ref="dataSource"/>-->
+        <!--<property name="nontransactionalRead" value="true"/>-->
 
+    <!--</bean>-->
 
-
+    <bean id="pmf" class="org.springframework.orm.jdo.LocalPersistenceManagerFactoryBean">
+        <property name="jdoProperties">
+            <props>
+                <prop key="javax.jdo.PersistenceManagerFactoryClass">
+                    org.datanucleus.api.jdo.JDOPersistenceManagerFactory
+                </prop>
+                <prop key="javax.jdo.option.ConnectionURL">jdbc:h2:./database/db;MV_STORE=FALSE;MVCC=FALSE;;FILE_LOCK=NO</prop>
+                <prop key="javax.jdo.option.ConnectionUserName">sa</prop>
+                <prop key="javax.jdo.option.ConnectionPassword"></prop>
+                <prop key="javax.jdo.option.ConnectionDriverName">org.h2.Driver</prop>
+                <prop key="org.jpox.autoCreateSchema">true</prop>
+                <prop key="org.jpox.identifier.case">PreserveCase</prop>
+                <prop key="datanucleus.autoCreateTables">true</prop>
+            </props>
+        </property>
     </bean>
 
-    <bean id="pmf" class="org.datanucleus.api.jdo.JDOPersistenceManagerFactory" destroy-method="close">
-        <property name="connectionFactory" ref="dataSource"/>
-        <property name="nontransactionalRead" value="true"/>
-    </bean>
+
 
 </beans>

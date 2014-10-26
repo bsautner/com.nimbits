@@ -1,2 +1,15 @@
 #!/bin/sh
+H2=/opt/nimbits/lib/h2.jar
+D=/opt/nimbits/database
+F=/tmp/nimbitsdb.zip
+
+if [ -f "$H2" ]; then
+    if [ -d "$D" ]; then
+        echo "Backing up existing databse to /tmp/nimbitsdb.zip"
+        java -cp /opt/nimbits/lib/h2.jar org.h2.tools.Backup  -file ${F} -dir ${D}
+    fi
+fi
+
+
+
 

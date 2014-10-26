@@ -1,4 +1,7 @@
 #!/bin/sh
+D=/opt/nimbits/database
+F=/tmp/nimbitsdb.zip
+H2=/opt/nimbits/lib/h2.jar
 export JETTY_HOME=/opt/nimbits
 service nimbits stop
 chmod +x /usr/bin/nimbits
@@ -8,6 +11,13 @@ chown -R nimbits:nimbits /opt/nimbits
 cd /opt/nimbits/webapps
 wget http://www.nimbits.com/download/nimbits_server_3.7.1.war -O nimbits.war
 sudo update-rc.d nimbits defaults
+if [ -f "$H2" ]; then
+    if [ -f "$F" ]; then
+        echo "Restoring existing database to $D"
+        sudo java -cp ${H2} org.h2.tools.Restore -file ${F} -dir ${D}
+        chown -R nimbits ${D}
+    fi
+fi
 service nimbits restart
 
 

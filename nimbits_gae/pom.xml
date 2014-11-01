@@ -73,6 +73,7 @@
     <dependencies>
 
 
+
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_core</artifactId>
@@ -320,24 +321,24 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-war-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <webResources>
-                        <resource>
-                            <exclude>**/web.xml</exclude>
-                            <!-- this is relative to the pom.xml directory -->
-                            <directory>../nimbits_server/src/main/webapp</directory>
-                        </resource>
-                    </webResources>
-                </configuration>
-
+            <!--<plugin>-->
+                <!--<groupId>org.apache.maven.plugins</groupId>-->
+                <!--<artifactId>maven-war-plugin</artifactId>-->
+                <!--<version>2.4</version>-->
                 <!--<configuration>-->
-                <!--<webappDirectory>/var/lib/tomcat7/webapps</webappDirectory>-->
+                    <!--<webResources>-->
+                        <!--&lt;!&ndash;<resource>&ndash;&gt;-->
+                            <!--&lt;!&ndash;<exclude>**/web.xml</exclude>&ndash;&gt;-->
+                            <!--&lt;!&ndash;&lt;!&ndash; this is relative to the pom.xml directory &ndash;&gt;&ndash;&gt;-->
+                            <!--&lt;!&ndash;<directory>../nimbits_server/src/main/webapp</directory>&ndash;&gt;-->
+                        <!--&lt;!&ndash;</resource>&ndash;&gt;-->
+                    <!--</webResources>-->
                 <!--</configuration>-->
-            </plugin>
+
+                <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
+                <!--&lt;!&ndash;<webappDirectory>/var/lib/tomcat7/webapps</webappDirectory>&ndash;&gt;-->
+                <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
+            <!--</plugin>-->
 
         </plugins>
     </build>

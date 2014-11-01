@@ -60,10 +60,10 @@
     <bean id="transactionManager" class="org.springframework.orm.jdo.JdoTransactionManager"
           p:persistenceManagerFactory-ref="pmf" />
 
-    <bean id="transactionAwarePersistenceManagerFactoryProxy"
-          class="org.springframework.orm.jdo.TransactionAwarePersistenceManagerFactoryProxy"
-          p:targetPersistenceManagerFactory-ref="pmf"
-          p:allowCreate="false" />
+    <!--<bean id="transactionAwarePersistenceManagerFactoryProxy"-->
+          <!--class="org.springframework.orm.jdo.TransactionAwarePersistenceManagerFactoryProxy"-->
+          <!--p:targetPersistenceManagerFactory-ref="pmf"-->
+          <!--p:allowCreate="false" />-->
 
     <bean id="pmf"
           class="org.springframework.orm.jdo.LocalPersistenceManagerFactoryBean">

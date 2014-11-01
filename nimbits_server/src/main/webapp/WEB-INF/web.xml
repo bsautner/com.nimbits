@@ -10,8 +10,11 @@
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
-    <!--j2ee version-->
 
+
+    <listener>
+        <listener-class>com.nimbits.server.ApplicationListener</listener-class>
+    </listener>
 
     <filter>
         <filter-name>socketFilter</filter-name>
@@ -22,9 +25,6 @@
         <url-pattern>/socket/*</url-pattern>
     </filter-mapping>
 
-    <listener>
-        <listener-class>com.nimbits.server.ApplicationListener</listener-class>
-    </listener>
 
     <servlet>
         <servlet-name>WebSocket</servlet-name>
@@ -111,6 +111,8 @@
     </servlet-mapping>
 
 
+
+    <!--gwt rpc services -->
     <servlet>
         <servlet-name>com.nimbits EntityService</servlet-name>
         <servlet-class>com.nimbits.server.EntityServiceRpcImpl</servlet-class>
@@ -132,21 +134,21 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>com.nimbits UserService</servlet-name>
-        <url-pattern>/nimbits/userRpcService</url-pattern>
+        <url-pattern>/nimbits/rpc/userRpcService</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>com.nimbits EntityService</servlet-name>
-        <url-pattern>/nimbits/entityService</url-pattern>
+        <url-pattern>/nimbits/rpc/entityService</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>com.nimbits SettingsService</servlet-name>
-        <url-pattern>/nimbits/settingsService</url-pattern>
+        <url-pattern>/nimbits/rpc/settingsService</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>com.nimbits ValueService</servlet-name>
-        <url-pattern>/nimbits/valueService</url-pattern>
+        <url-pattern>/nimbits/rpc/valueService</url-pattern>
     </servlet-mapping>
 
 

@@ -17,6 +17,8 @@ import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.service.settings.SettingsServiceRpc;
 import com.nimbits.server.transaction.settings.SettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -24,7 +26,7 @@ import javax.annotation.Resource;
 import javax.servlet.ServletException;
 
 @Service
-public class SettingServiceRpcImpl extends RemoteServiceServlet  implements SettingsServiceRpc {
+public class SettingServiceRpcImpl  extends RemoteServiceServlet implements SettingsServiceRpc {
 
     @Autowired
     SettingsService settingsService;
@@ -35,6 +37,7 @@ public class SettingServiceRpcImpl extends RemoteServiceServlet  implements Sett
 
 
     }
+
 
     @Override
     public String getSetting(String setting) {

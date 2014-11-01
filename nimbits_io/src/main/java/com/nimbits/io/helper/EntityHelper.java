@@ -85,4 +85,10 @@ public interface EntityHelper {
 
     Calculation createCalculation(String name, String trigger, String target, String formula, String xVar, String yVar, String zVar);
 
+    /**
+     * Create a new folder under the parent
+     * @param name the new folder name
+     * @param parent the parent entity, can be a user, point, another folder etc.
+     */
+    Category createFolder(Entity parent, String name);
 }

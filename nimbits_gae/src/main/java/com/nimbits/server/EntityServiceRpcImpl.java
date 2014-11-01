@@ -23,6 +23,8 @@ import com.nimbits.client.service.entity.EntityServiceRpc;
 import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.user.UserHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -34,7 +36,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 @Service
-public class EntityServiceRpcImpl extends RemoteServiceServlet  implements EntityServiceRpc {
+public class EntityServiceRpcImpl  extends RemoteServiceServlet implements EntityServiceRpc {
     final static Logger logger = Logger.getLogger(EntityServiceRpcImpl.class.getName());
 
     @Autowired

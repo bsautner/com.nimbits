@@ -27,6 +27,8 @@ import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.user.cache.UserCache;
 import com.nimbits.server.transaction.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -37,16 +39,10 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Service("userRpcService")
-public class UserRpcServiceImpl extends RemoteServiceServlet  implements UserRpcService  {
+public class UserRpcServiceImpl  extends RemoteServiceServlet implements UserRpcService  {
 
     private static final String ANON_NIMBITS_COM = "anon@nimbits.com";
     private static final Logger log = Logger.getLogger(UserRpcServiceImpl.class.getName());
-
-    @Autowired
-    private EntityService entityService;
-
-    @Autowired
-    private UserService userService;
 
     @Override
     public void init() throws ServletException {
@@ -54,6 +50,13 @@ public class UserRpcServiceImpl extends RemoteServiceServlet  implements UserRpc
 
 
     }
+
+    @Autowired
+    private EntityService entityService;
+
+    @Autowired
+    private UserService userService;
+
 
     @Override
     public User loginRpc(final String requestUri) {

@@ -87,6 +87,14 @@ public class NimbitsClientImpl implements NimbitsClient {
         this.server = server;
     }
 
+    public NimbitsClientImpl(Server server, EmailAddress emailAddress) {
+        this.instanceUrl = UrlContainer.getInstance("http://" + server.getUrl());
+        this.email = emailAddress;
+        this.helper = new HttpHelper(email, server);
+        this.accessKey = null;
+        this.server = server;
+    }
+
     @Override
     public List<User> getSession() {
 

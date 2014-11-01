@@ -36,7 +36,7 @@
     </bean>
 
     <bean id="counterService" class="com.nimbits.server.counter.CounterServiceImpl"/>
-
+    <bean id="recursionValidation" class="com.nimbits.server.orm.validation.RecursionValidation"/>
     <bean id="valueService" class="com.nimbits.server.transaction.value.service.ValueServiceImpl"/>
     <bean id="valueCache" class="com.nimbits.server.transaction.value.cache.ValueCacheImpl"/>
     <bean id="valueDao" class="com.nimbits.server.transaction.value.dao.ValueDaoImpl"/>
@@ -55,20 +55,6 @@
 
     <bean id="entityCache" class="com.nimbits.server.transaction.entity.cache.EntityCacheImpl"/>
 
-
-    <!--<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">-->
-        <!--<property name="driverClassName" value="org.h2.Driver"/>-->
-        <!--<property name="url" value="jdbc:h2:./database/db;MV_STORE=FALSE;MVCC=FALSE;FILE_LOCK=NO"/>-->
-        <!--<property name="username" value="sa"/>-->
-        <!--<property name="password" value=""/>-->
-
-    <!--</bean>-->
-
-    <!--<bean id="pmf" class="org.datanucleus.api.jdo.JDOPersistenceManagerFactory" destroy-method="close">-->
-        <!--<property name="connectionFactory" ref="dataSource"/>-->
-        <!--<property name="nontransactionalRead" value="true"/>-->
-
-    <!--</bean>-->
 
     <bean id="pmf" class="org.springframework.orm.jdo.LocalPersistenceManagerFactoryBean">
         <property name="jdoProperties">

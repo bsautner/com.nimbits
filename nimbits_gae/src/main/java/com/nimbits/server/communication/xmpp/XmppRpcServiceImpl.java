@@ -24,18 +24,18 @@ import org.springframework.stereotype.Service;
 @Service
 public class XmppRpcServiceImpl extends RemoteServiceServlet implements XmppRpcService {
 
-    @Autowired
-    UserHelper userHelper;
+//    @Autowired
+//    UserHelper userHelper;
 
     @Override
     public void sendInviteRpc() {
 
-        User user = userHelper.getUser().get(0);
-
-
-        final JID jid = new JID(user.getEmail().getValue());
-        final com.google.appengine.api.xmpp.XMPPService xmpp = XMPPServiceFactory.getXMPPService();
-        xmpp.sendInvitation(jid);
+//        User user = userHelper.getUser().get(0);
+//
+//
+//        final JID jid = new JID(user.getEmail().getValue());
+//        final com.google.appengine.api.xmpp.XMPPService xmpp = XMPPServiceFactory.getXMPPService();
+//        xmpp.sendInvitation(jid);
 
 
     }

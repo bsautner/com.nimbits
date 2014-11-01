@@ -25,6 +25,11 @@ public class UserHelperImpl implements UserHelper {
         this.client = NimbitsClientFactory.getInstance(server, emailAddress, accessKey);
     }
 
+    public UserHelperImpl(Server server, EmailAddress emailAddress) {
+
+        this.client = NimbitsClientFactory.getInstance(server, emailAddress);
+    }
+
 
     @Override
     public User getSession() {

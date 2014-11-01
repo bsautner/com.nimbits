@@ -5,11 +5,12 @@ F=/tmp/nimbitsdb.zip
 
 if [ -f "$H2" ]; then
     if [ -d "$D" ]; then
-        echo "Backing up existing databse to /tmp/nimbitsdb.zip"
+        echo "Backing up existing database to /tmp/nimbitsdb.zip"
         java -cp /opt/nimbits/lib/h2.jar org.h2.tools.Backup  -file ${F} -dir ${D}
     fi
 fi
-
+echo "backing up settings"
+cp
 
 
 

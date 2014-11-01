@@ -29,11 +29,11 @@ public class SocketSample {
     private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("support@nimbits.com");
 
     //a running jetty server with nimbits installed (using nimbits.war)
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("192.168.1.14:8080/nimbits");
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8081/nimbits");
 
     //you can create this server object with an API KEY you configured your server with to make authentication easy
 
-    private static final ApiKey API_KEY = ApiKeyFactory.createApiKey("KEY");
+    private static final ApiKey API_KEY = ApiKeyFactory.createApiKey("API_KEY_DEFAULT");
     private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL, API_KEY);
 
 

@@ -22,4 +22,8 @@ public class NimbitsClientFactory {
     public static NimbitsClient getInstance(final Server server, final EmailAddress email, final String accessKey)  {
         return new NimbitsClientImpl(server, email, accessKey);
     }
+
+    public static NimbitsClient getInstance(Server server, EmailAddress emailAddress) {
+        return new NimbitsClientImpl(server, emailAddress);
+    }
 }

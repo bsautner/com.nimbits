@@ -7,9 +7,9 @@
     <application>nimbits-02</application>
 
 
-    <version>834</version>
+    <version>837</version>
 
-
+    <sessions-enabled>true</sessions-enabled>
     <precompilation-enabled>false</precompilation-enabled>
 
     <system-properties>

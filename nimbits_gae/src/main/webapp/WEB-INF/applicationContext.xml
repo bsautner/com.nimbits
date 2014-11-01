@@ -14,14 +14,14 @@
 
     <bean id="userCache" class="com.nimbits.server.transaction.user.cache.UserCacheImpl"/>
     <bean id="userService" class="com.nimbits.server.transaction.user.service.UserServiceImpl"/>
-    <bean id="userHelper" class="com.nimbits.server.transaction.user.UserHelper" scope="session" />
+    <bean id="userHelper" class="com.nimbits.server.transaction.user.UserHelper"/>
     <bean id="entityService" class=" com.nimbits.server.transaction.entity.EntityServiceImpl"/>
     <bean id="authService" class=" com.nimbits.server.auth.AuthServiceImpl"/>
 
     <bean id="settingsService" class="com.nimbits.server.transaction.settings.SettingsServiceImpl"/>
     <bean id="settingsCache" class="com.nimbits.server.transaction.settings.SettingsCacheImpl"/>
+    <bean id="recursionValidation" class="com.nimbits.server.orm.validation.RecursionValidation"/>
     <bean id="settingsDao" class="com.nimbits.server.transaction.settings.SettingsDaoImpl">
-
         <property name="persistenceManagerFactory" ref="pmf"/>
     </bean>
 
@@ -37,6 +37,7 @@
     </bean>
 
     <bean id="counterService" class="com.nimbits.server.counter.CounterServiceImpl"/>
+
 
     <bean id="valueService" class="com.nimbits.server.transaction.value.service.ValueServiceImpl"/>
     <bean id="valueCache" class="com.nimbits.server.transaction.value.cache.ValueCacheImpl"/>
@@ -73,7 +74,7 @@
                 </prop>
                 <prop key="javax.jdo.option.ConnectionURL">appengine</prop>
                 <prop key="javax.jdo.option.NontransactionalRead">true</prop>
-                <prop key="javax.jdo.option.NontransactionalWrite">false</prop>
+                <prop key="javax.jdo.option.NontransactionalWrite">true</prop>
                 <prop key="javax.jdo.option.RetainValues">false</prop>
                 <prop key="javax.jdo.option.DetachAllOnCommit">true</prop>
                 <prop key="javax.jdo.option.Multithreaded">true</prop>

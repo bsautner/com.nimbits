@@ -32,8 +32,10 @@
         <appengine.app.version>1</appengine.app.version>
         <gwt.version>2.5.1</gwt.version>
         <gxt.version>2.2.5</gxt.version>
-        <appengine.target.version>1.9.7</appengine.target.version>
+        <spring.version>4.1.1.RELEASE</spring.version>
+        <appengine.target.version>1.9.14</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
     </properties>
 
     <repositories>
@@ -122,6 +124,12 @@
 
 
         <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.extjs</groupId>
             <artifactId>gxt</artifactId>
             <version>2.3.0-gwt22</version>
@@ -149,30 +157,11 @@
         </dependency>
 
 
-        <!--JDO Dependencies-->
-        <!--<dependency>-->
-            <!--<groupId>javax.jdo</groupId>-->
-            <!--<artifactId>jdo-api</artifactId>-->
-            <!--<version>3.0.1</version>-->
-            <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-        <dependency>
-            <groupId>org.datanucleus</groupId>
-            <artifactId>datanucleus-core</artifactId>
-            <version>3.1.1</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.datanucleus</groupId>
-            <artifactId>datanucleus-api-jdo</artifactId>
-            <version>3.1.2</version>
-            <scope>compile</scope>
-        </dependency>
         <dependency>
             <groupId>com.google.appengine.orm</groupId>
             <artifactId>datanucleus-appengine</artifactId>
             <version>2.1.2</version>
-            <scope>runtime</scope>
+            <scope>compile</scope>
         </dependency>
 
         <!--test dep-->
@@ -196,30 +185,34 @@
             <scope>test</scope>
         </dependency>
 
-
-
-
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <version>4.1.1.RELEASE</version>
-            <scope>test</scope>
+            <groupId>javax.jdo</groupId>
+            <artifactId>jdo-api</artifactId>
+            <version>3.0.1</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-core</artifactId>
+            <version>3.1.1</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-api-jdo</artifactId>
+            <version>3.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-rdbms</artifactId>
+            <version>3.1.2</version>
+            <scope>compile</scope>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
             <scope>test</scope>
         </dependency>
-
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-mock</artifactId>
-            <version>2.0.8</version>
-        </dependency>
-
 
         <dependency>
             <groupId>org.mockito</groupId>
@@ -230,7 +223,7 @@
         <dependency>
             <groupId>com.google.appengine</groupId>
             <artifactId>appengine-api-1.0-sdk</artifactId>
-            <version>1.9.6</version>
+            <version>${appengine.target.version}</version>
         </dependency>
 
         <!--<dependency>-->
@@ -245,7 +238,7 @@
 
     <build>
         <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
-        <finalName>nimbits_gae_3.7.1</finalName>
+        <finalName>nimbits_gae_3.7.2</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

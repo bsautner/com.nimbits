@@ -6,6 +6,7 @@ import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.calculation.CalculationModel;
 import com.nimbits.client.model.calculation.CalculationModelFactory;
 import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.category.CategoryFactory;
 import com.nimbits.client.model.category.CategoryModel;
 import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.email.EmailAddress;
@@ -25,6 +26,7 @@ import com.nimbits.io.helper.PointHelper;
 import com.nimbits.io.http.NimbitsClientFactory;
 
 import java.util.List;
+import java.util.UUID;
 
 public class EntityHelperImpl implements EntityHelper {
     protected final EmailAddress email;
@@ -185,6 +187,16 @@ public class EntityHelperImpl implements EntityHelper {
         else {
             return (Calculation) result.get(0);
         }
+
+    }
+
+    @Override
+    public Category createFolder(Entity parent, String name) {
+        Category category = CategoryFactory.createCategory(parent, name);
+
+
+
+        return addCategory(category);
 
     }
 

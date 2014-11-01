@@ -27,9 +27,12 @@ import com.nimbits.server.transaction.calculation.CalculationService;
 import com.nimbits.server.transaction.user.UserHelper;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -37,7 +40,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ValueServiceRpcImpl extends RemoteServiceServlet  implements ValueServiceRpc {
+public class ValueServiceRpcImpl  extends RemoteServiceServlet implements ValueServiceRpc {
 
     @Autowired
     private TaskService taskService;
@@ -70,8 +73,8 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet  implements ValueS
                                 final Value value) throws ValueException {
 
         User user = userHelper.getUser().get(0);
-        HttpServletRequest req = getThreadLocalRequest();
-        return valueService.recordValue(req, user, point, value, false);
+      //  HttpServletRequest req = getThreadLocalRequest();
+        return valueService.recordValue(null, user, point, value, false);
 
 
     }

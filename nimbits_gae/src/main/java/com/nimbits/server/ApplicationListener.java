@@ -27,7 +27,7 @@ public class ApplicationListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         ServletContext context = servletContextEvent.getServletContext();
 
-        log.info("nimbits GAE context Initialized");
+        log.info("nimbits s GAE context Initialized");
 
 
     }

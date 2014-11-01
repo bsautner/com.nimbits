@@ -26,6 +26,18 @@ public class HelperFactory {
     }
 
     /**
+     * For getting the user session data. Helpful for testing credentials.
+     * @param server A sever object containing the instance url, MUST CONSTAIN AN API KEY etc
+     * @param emailAddress The account owner
+      * @return UserHelper
+     */
+    public static UserHelper getUserHelper(Server server, EmailAddress emailAddress) {
+
+        return new UserHelperImpl(server, emailAddress);
+
+    }
+
+    /**
      * For creating, deleting and updating data points
      * @param server A sever object containing the instance url, Optional API KEY etc
      * @param emailAddress The account owner
@@ -62,5 +74,18 @@ public class HelperFactory {
 
         return new EntityHelperImpl(server, emailAddress, accessKey);
 
+    }
+    /**
+     * For creating, deleting and updating entities
+     * @param server A sever object containing the instance url, MUST BE CONSTRUCTED WITH AN API KEY etc
+     * @param emailAddress The account owner
+     * @return EntityHelper
+     */
+    public static EntityHelper getEntityHelper(Server server, EmailAddress emailAddress) {
+        return new EntityHelperImpl(server, emailAddress, null);
+    }
+
+    public static PointHelper getPointHelper(Server server, EmailAddress emailAddress) {
+        return new PointHelperImpl(server, emailAddress, null);
     }
 }

@@ -21,12 +21,7 @@ import com.nimbits.client.model.user.User;
 
 import java.io.Serializable;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 4/9/12
- * Time: 2:17 PM
- */
+
 public class CategoryModel extends EntityModel implements Serializable, Category {
 
     protected CategoryModel() {
@@ -45,4 +40,10 @@ public class CategoryModel extends EntityModel implements Serializable, Category
 
     }
 
+    public CategoryModel(Entity parent, String categoryName) {
+
+        super(CommonFactory.createName(categoryName, EntityType.category),
+                "", EntityType.category, ProtectionLevel.everyone, parent.getKey(), parent.getOwner(), ""
+        );
+    }
 }

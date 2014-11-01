@@ -1,31 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<!--
-  ~ Copyright (c) 2012 Nimbits Inc.
-  ~
-  ~    http://www.nimbits.com
-  ~
-  ~
-  ~ Licensed under the GNU GENERAL PUBLIC LICENSE, Version 3.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
-  ~
-  ~ http://www.gnu.org/licenses/gpl.html
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, eitherexpress or implied. See the License for the specific language governing permissions and limitations under the License.
-  -->
 
-<web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
 		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
 
 
-    <!--v2 services-->
     <listener>
         <listener-class>com.nimbits.server.ApplicationListener</listener-class>
     </listener>
 
-    <listener>
-        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-    </listener>
 
     <servlet>
         <servlet-name>userApi</servlet-name>
@@ -339,41 +327,7 @@
     </servlet-mapping>
 
 
-    <servlet>
-        <servlet-name>value</servlet-name>
-        <servlet-class>com.nimbits.server.api.impl.ValueServletImpl</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>value</servlet-name>
-        <url-pattern>/service/currentvalue</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>value</servlet-name>
-        <url-pattern>/service/value</url-pattern>
-    </servlet-mapping>
 
-    <servlet>
-        <servlet-name>series</servlet-name>
-
-        <servlet-class>com.nimbits.server.api.impl.SeriesServletImpl</servlet-class>
-
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>series</servlet-name>
-        <url-pattern>/service/series</url-pattern>
-    </servlet-mapping>
-
-
-    <servlet>
-        <servlet-name>point</servlet-name>
-
-        <servlet-class>com.nimbits.server.api.impl.PointServletImpl</servlet-class>
-
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>point</servlet-name>
-        <url-pattern>/service/point</url-pattern>
-    </servlet-mapping>
 
 
     <servlet>
@@ -407,15 +361,7 @@
     </servlet-mapping>
 
 
-    <!--<servlet>-->
-        <!--<servlet-name>springGwtRemoteServiceServlet</servlet-name>-->
-        <!--<servlet-class>org.spring4gwt.server.SpringGwtRemoteServiceServlet</servlet-class>-->
-    <!--</servlet>-->
-    <!--<servlet-mapping>-->
-        <!--<servlet-name>springGwtRemoteServiceServlet</servlet-name>-->
-        <!--<url-pattern>/nimbits/*</url-pattern>-->
-    <!--</servlet-mapping>-->
-
+    <!--gwt rpc services -->
     <servlet>
         <servlet-name>com.nimbits EntityService</servlet-name>
         <servlet-class>com.nimbits.server.EntityServiceRpcImpl</servlet-class>
@@ -437,22 +383,23 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>com.nimbits UserService</servlet-name>
-        <url-pattern>/nimbits/userRpcService</url-pattern>
+        <url-pattern>/nimbits/rpc/userRpcService</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>com.nimbits EntityService</servlet-name>
-        <url-pattern>/nimbits/entityService</url-pattern>
+        <url-pattern>/nimbits/rpc/entityService</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>com.nimbits SettingsService</servlet-name>
-        <url-pattern>/nimbits/settingsService</url-pattern>
+        <url-pattern>/nimbits/rpc/settingsService</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>com.nimbits ValueService</servlet-name>
-        <url-pattern>/nimbits/valueService</url-pattern>
+        <url-pattern>/nimbits/rpc/valueService</url-pattern>
     </servlet-mapping>
+
 
     <security-constraint>
         <web-resource-collection>

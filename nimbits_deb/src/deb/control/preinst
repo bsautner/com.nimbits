@@ -1,5 +1,7 @@
 #!/bin/sh
 H2=/opt/nimbits/lib/h2.jar
+DE=/etc/default/jetty
+DEBAK=/tmp/jetty
 D=/opt/nimbits/database
 F=/tmp/nimbitsdb.zip
 
@@ -9,8 +11,14 @@ if [ -f "$H2" ]; then
         java -cp /opt/nimbits/lib/h2.jar org.h2.tools.Backup  -file ${F} -dir ${D}
     fi
 fi
-echo "backing up settings"
-cp
+
+if [ -f "$DE" ]; then
+
+        echo "backing up settings"
+        cp -vf "$DE" "$DEBAK"
+
+
+fi
 
 
 

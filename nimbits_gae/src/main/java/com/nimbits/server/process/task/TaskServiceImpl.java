@@ -177,12 +177,25 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void startMoveCachedValuesToStoreTask(final Entity point) {
-        final String pointid = point.getKey();
+
+        Gson gson = new GsonBuilder()
+                .setDateFormat(Const.GSON_DATE_FORMAT)
+                .serializeNulls()
+                .registerTypeAdapter(Value.class, new ValueSerializer())
+                .registerTypeAdapter(Point.class, new PointSerializer())
+                .registerTypeAdapter(Entity.class, new EntitySerializer())
+                .registerTypeAdapter(AccessKey.class, new AccessKeySerializer())
+                .registerTypeAdapter(User.class, new UserSerializer())
+                .registerTypeAdapter(Date.class, new DateSerializer())
+                .create();
+
+
+        final String pointJson = gson.toJson(point);
 
         final Queue queue = QueueFactory.getQueue(DEFAULT);
 
         queue.add(TaskOptions.Builder.withUrl(PATH_MOVE_TASK)
-                .param(Parameters.point.getText(), pointid));
+                .param(Parameters.json.getText(), pointJson));
     }
 
     @Override

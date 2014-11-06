@@ -31,8 +31,14 @@ import com.nimbits.client.model.value.ValueData;
 import com.nimbits.client.model.value.impl.ValueDataModel;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.transaction.cache.NimbitsCache;
+import com.nimbits.server.transaction.entity.service.EntityService;
+import com.nimbits.server.transaction.user.service.UserService;
+import com.nimbits.server.transaction.value.service.ValueService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
@@ -43,7 +49,22 @@ import java.util.Date;
 import java.util.List;
 
 
-public class UploadTask extends TaskBase {
+public class UploadTask   extends HttpServlet {
+
+    @Autowired
+    protected EntityService entityService;
+
+    @Autowired
+    protected ValueService valueService;
+
+    @Autowired
+    public NimbitsCache cache;
+
+    @Autowired
+    public TaskService taskService;
+
+    @Autowired
+    public UserService userService;
 
 
     @Override

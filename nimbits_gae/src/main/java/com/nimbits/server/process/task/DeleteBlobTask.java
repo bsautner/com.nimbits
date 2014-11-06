@@ -16,13 +16,34 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.nimbits.client.enums.Parameters;
+import com.nimbits.server.transaction.cache.NimbitsCache;
+import com.nimbits.server.transaction.entity.service.EntityService;
+import com.nimbits.server.transaction.user.service.UserService;
+import com.nimbits.server.transaction.value.service.ValueService;
 import com.nimbits.shared.Utils;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-public class DeleteBlobTask extends TaskBase {
+public class DeleteBlobTask   extends HttpServlet {
+
+    @Autowired
+    protected EntityService entityService;
+
+    @Autowired
+    protected ValueService valueService;
+
+    @Autowired
+    public NimbitsCache cache;
+
+    @Autowired
+    public TaskService taskService;
+
+    @Autowired
+    public UserService userService;
 
 
     private static final long serialVersionUID = 1L;

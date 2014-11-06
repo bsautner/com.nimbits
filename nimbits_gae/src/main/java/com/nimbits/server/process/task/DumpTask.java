@@ -25,14 +25,20 @@ import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.ServerInfo;
 import com.nimbits.server.communication.mail.EmailService;
 import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.transaction.cache.NimbitsCache;
+import com.nimbits.server.transaction.entity.service.EntityService;
+import com.nimbits.server.transaction.user.service.UserService;
+import com.nimbits.server.transaction.value.service.ValueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -43,7 +49,22 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Service
-public class DumpTask extends TaskBase {
+public class DumpTask   extends HttpServlet {
+
+    @Autowired
+    protected EntityService entityService;
+
+    @Autowired
+    protected ValueService valueService;
+
+    @Autowired
+    public NimbitsCache cache;
+
+    @Autowired
+    public TaskService taskService;
+
+    @Autowired
+    public UserService userService;
 
     private static final Logger log = Logger.getLogger(ValueTask.class.getName());
 
@@ -61,7 +82,7 @@ public class DumpTask extends TaskBase {
         final long sl = Long.valueOf(sd);
         final long el = Long.valueOf(ed);
 
-        user = GsonFactory.getInstance().fromJson(userJson, UserModel.class);
+        User user = GsonFactory.getInstance().fromJson(userJson, UserModel.class);
 
 
         final Range timespan = Range.closed(new Date(sl), new Date(el));

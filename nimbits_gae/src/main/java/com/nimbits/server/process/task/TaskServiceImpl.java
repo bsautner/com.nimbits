@@ -43,7 +43,7 @@ public class TaskServiceImpl implements TaskService {
     private static final String PATH_DELETE_BLOB_TASK = "/task/deleteBlobTask";
     private static final String PATH_POINT_MAINT_TASK = "/task/pointTask";
     private static final String PATH_MOVE_TASK = "/task/moveTask";
-    private static final String PATH_TASK_RECORD_VALUE = "/task/valueTask";
+
     private static final String PATH_TASK_DUMP_TASK = "/task/dumpTask";
     private static final String PATH_TASK_UPLOAD_TASK = "/task/uploadTask";
     private static final String PATH_INCOMING_MAIL_QUEUE = "/task/mailTask";

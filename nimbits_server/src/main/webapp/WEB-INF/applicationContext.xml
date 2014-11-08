@@ -46,7 +46,6 @@
     <bean id="syncService" class="com.nimbits.server.transaction.sync.SyncServiceImpl"/>
     <bean id="subscriptionService" class="com.nimbits.server.transaction.subscription.SubscriptionServiceImpl"/>
 
-    <bean id="processValueTask" class="com.nimbits.server.process.task.ProcessValueTaskImpl"/>
 
     <bean id="xmppService" class="com.nimbits.server.communication.xmpp.XmppServiceImpl"/>
 

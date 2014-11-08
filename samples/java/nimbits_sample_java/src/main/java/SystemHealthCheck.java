@@ -33,7 +33,7 @@ public class SystemHealthCheck {
 
     //set this to your appid.appspot.com if on google app engine, cloud.nimbits.com for the public cloud,
     //and localhost:8080/nimbits if that's your jetty local instance for example.
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080/nimbits");
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8081/nimbits");
     private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL);
     private static  List<Value> valueList = new ArrayList<Value>();
 

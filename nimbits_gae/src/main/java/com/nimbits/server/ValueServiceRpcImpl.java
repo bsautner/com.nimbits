@@ -74,7 +74,7 @@ public class ValueServiceRpcImpl  extends RemoteServiceServlet implements ValueS
 
         User user = userHelper.getUser().get(0);
       //  HttpServletRequest req = getThreadLocalRequest();
-        return valueService.recordValue(null, user, point, value, false);
+        return valueService.recordValue(user, point, value, false);
 
 
     }

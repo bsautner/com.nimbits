@@ -199,15 +199,6 @@
         <servlet-name>dumpTask</servlet-name>
         <url-pattern>/task/dumpTask</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>valueTask</servlet-name>
-        <!--<servlet-class>ValueTask</servlet-class>-->
-        <servlet-class>com.nimbits.server.process.task.ValueTask</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>valueTask</servlet-name>
-        <url-pattern>/task/valueTask</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>deleteBlobTask</servlet-name>

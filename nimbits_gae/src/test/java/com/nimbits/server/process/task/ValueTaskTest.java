@@ -26,6 +26,7 @@ import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.gson.GsonFactory;
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.List;
@@ -33,13 +34,6 @@ import java.util.List;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
-
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 4/11/12
- * Time: 11:11 AM
- */
 
 public class ValueTaskTest extends NimbitsServletTest {
 
@@ -63,14 +57,13 @@ public class ValueTaskTest extends NimbitsServletTest {
                 null, null);
         entityService.addUpdateEntity(Arrays.<Entity>asList(c));
         Value v = ValueFactory.createValueModel(1.12);
-        valueService.recordValue(req, user, point, v, false);
+        valueService.recordValue(user, point, v, false);
         List<Value> vr = valueService.getCurrentValue(point);
         assertFalse(vr.isEmpty());
         assertEquals(v.getDoubleValue(), vr.get(0).getDoubleValue(), 0.001);
         String vj = GsonFactory.getInstance().toJson(vr.get(0));
         req.addParameter(Parameters.valueJson.getText(), vj);
 
-        valueTask.doPost(req, resp);
 
         List<Value> vx = valueService.getCurrentValue(pointChild);
         assertEquals(vx.get(0).getDoubleValue(), v.getDoubleValue() + 1, 0.001);

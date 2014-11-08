@@ -130,24 +130,26 @@ public class TaskServiceImpl implements TaskService {
     }
 
 
-    @Override
-    public void startRecordValueTask(HttpServletRequest req, final User u, final Entity point, final Value value) {
-
-        if (Double.valueOf(value.getDoubleValue()).isInfinite()) {
-            return;
-        }
-        final Queue queue = QueueFactory.getQueue(DEFAULT);
-        final String userJson = GsonFactory.getInstance().toJson(u);
-        final String pointId = point.getKey();
-        final String valueJson = GsonFactory.getInstance().toJson(value);
-
-        queue.add(TaskOptions.Builder
-                .withUrl(PATH_TASK_RECORD_VALUE)
-                .param(Parameters.pointUser.getText(), userJson)
-                .param(Parameters.point.getText(), pointId)
-                .param(Parameters.valueJson.getText(), valueJson));
-
-    }
+//    @Override
+//    public void startRecordValueTask(HttpServletRequest req, final User u, final Entity point, final Value value) {
+//
+//        if (Double.valueOf(value.getDoubleValue()).isInfinite()) {
+//            return;
+//        }
+////        final Queue queue = QueueFactory.getQueue(DEFAULT);
+////        final String userJson = GsonFactory.getInstance().toJson(u);
+////        final String pointId = point.getKey();
+////        final String valueJson = GsonFactory.getInstance().toJson(value);
+//
+////        queue.add(TaskOptions.Builder
+////                .withUrl(PATH_TASK_RECORD_VALUE)
+////                .param(Parameters.pointUser.getText(), userJson)
+////                .param(Parameters.point.getText(), pointId)
+////                .param(Parameters.valueJson.getText(), valueJson));
+//
+//
+//
+//    }
 
 
     @Override

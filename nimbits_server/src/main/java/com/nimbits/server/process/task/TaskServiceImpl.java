@@ -59,8 +59,6 @@ public class TaskServiceImpl implements TaskService {
     @Autowired
     private ValueService valueService;
 
-    @Autowired
-    private ProcessValueTask processValueTask;
 
     public TaskServiceImpl() {
 
@@ -87,45 +85,8 @@ public class TaskServiceImpl implements TaskService {
 
     }
 
-    @Override
-    public void startRecordValueTask(final HttpServletRequest req, final User u, final Entity entity, final Value value) {
-
-        // new RecordValueThread(this, req, u, entity, value ).start();
-        try {
-            processValueTask.processRequest(req, value, u, entity);
-        } catch (ValueException e) {
-            e.printStackTrace();
-        }
 
 
-    }
-
-    private class RecordValueThread extends Thread {
-
-        final HttpServletRequest req;
-        final User u;
-        final Entity entity;
-        final Value value;
-        final TaskService service;
-
-        public RecordValueThread(final TaskService service, final HttpServletRequest req, final User u, final Entity entity, final Value value) {
-            this.req = req;
-            this.u = u;
-            this.entity = entity;
-            this.value = value;
-            this.service = service;
-        }
-
-        @Override
-        public void run() {
-            try {
-                processValueTask.processRequest(req, value, u, entity);
-            } catch (ValueException e) {
-                log.severe(e.getMessage());
-
-            }
-        }
-    }
 
 
     @Override

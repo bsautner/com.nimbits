@@ -49,7 +49,7 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
         Value value2 = ValueFactory.createValueModel(D);
         Value value3 = ValueFactory.createValueModel(D1);
 
-        valueService.recordValue(req, user, point, value, false);
+        valueService.recordValue(user, point, value, false);
 
 
         assertTrue(valueService.ignoreByFilter(point, value2));
@@ -71,7 +71,7 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
         point.setFilterType(FilterType.percentageHysteresis);
         entityService.addUpdateSingleEntity(point);
         //  pointService.updatePoint(point);
-        valueService.recordValue(req, user, point, ValueFactory.createValueModel(100), false);
+        valueService.recordValue( user, point, ValueFactory.createValueModel(100), false);
         Thread.sleep(10);
         assertTrue(valueService.ignoreByFilter(point, ValueFactory.createValueModel(105)));
         assertTrue(valueService.ignoreByFilter(point, ValueFactory.createValueModel(95)));
@@ -91,12 +91,12 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
         Value value2 = ValueFactory.createValueModel(0.02);
         Value value3 = ValueFactory.createValueModel(0.03);
 
-        valueService.recordValue(req, user, randomPoint, value, false);
+        valueService.recordValue(user, randomPoint, value, false);
         assertTrue(valueService.ignoreByFilter(randomPoint, value2));
         Thread.sleep(100);
-        valueService.recordValue(req, user, randomPoint, value2, false);
+        valueService.recordValue(user, randomPoint, value2, false);
         Thread.sleep(100);
-        valueService.recordValue(req, user, randomPoint, value3, false);
+        valueService.recordValue(user, randomPoint, value3, false);
         Thread.sleep(100);
         assertTrue(valueService.ignoreByFilter(randomPoint, value3));
         List<Value> series = valueService.getTopDataSeries(randomPoint, 100);
@@ -118,11 +118,11 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
         Value value2 = ValueFactory.createValueModel(0.002);
         Value value3 = ValueFactory.createValueModel(0.003);
 
-        valueService.recordValue(req, user, randomPoint, value, false);
+        valueService.recordValue(user, randomPoint, value, false);
         Thread.sleep(100);
-        valueService.recordValue(req, user, randomPoint, value2, false);
+        valueService.recordValue(user, randomPoint, value2, false);
         Thread.sleep(100);
-        valueService.recordValue(req, user, randomPoint, value3, false);
+        valueService.recordValue(user, randomPoint, value3, false);
         List<Value> series = valueService.getTopDataSeries(randomPoint, 100);
         assertEquals(2, series.size());
 

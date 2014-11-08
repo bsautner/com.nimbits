@@ -121,7 +121,7 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
     public void testGetPrevValue() throws InterruptedException, ValueException {
 
         Value v = ValueFactory.createValueModel(D);
-        valueService.recordValue(req, user, point, v, false);
+        valueService.recordValue(  user, point, v, false);
         Thread.sleep(1000);
         List<Value> vr = valueService.getRecordedValuePrecedingTimestamp(point, new Date());
         List<Value> dv = valueService.getRecordedValuePrecedingTimestamp(pointChild, new Date());

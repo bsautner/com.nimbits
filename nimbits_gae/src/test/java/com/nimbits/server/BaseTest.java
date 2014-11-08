@@ -18,7 +18,7 @@ import com.nimbits.server.api.SessionApi;
 import com.nimbits.server.api.ValueApi;
 import com.nimbits.server.process.cron.IdlePointCron;
 import com.nimbits.server.process.task.PointMaintTask;
-import com.nimbits.server.process.task.ValueTask;
+
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -28,12 +28,7 @@ import static org.junit.Assert.assertTrue;
 public class BaseTest {
 
 
-    public static ValueApi valueApi;
-    public static SessionApi sessionApi;
-    public static EntityApi entityApi;
 
-    public static SeriesApi seriesApi;
-    public static ValueTask valueTask;
     public static IdlePointCron idleCron;
     public static PointMaintTask pointTask;
 

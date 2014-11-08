@@ -90,7 +90,7 @@ public class ValueServletImpl extends ApiServlet {
 
                 final PrintWriter out;
                 try {
-                    final Value result = valueService.recordValue(req, user, point, v, false);
+                    final Value result = valueService.recordValue(user, point, v, false);
                     out = resp.getWriter();
                     final String j = GsonFactory.getInstance().toJson(result);
                     out.print(j);
@@ -203,7 +203,7 @@ public class ValueServletImpl extends ApiServlet {
                         nv.getTimestamp(), nv.getData(), AlertType.OK);
 
 
-                value = valueService.recordValue(req, u, p, newValue, false);
+                value = valueService.recordValue(u, p, newValue, false);
                 if (nv.getLocation().isEmpty()) {
                     //reportLocation(p, location);
                 } else {

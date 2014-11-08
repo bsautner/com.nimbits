@@ -66,7 +66,6 @@ public class DumpTask   extends HttpServlet {
     @Autowired
     public UserService userService;
 
-    private static final Logger log = Logger.getLogger(ValueTask.class.getName());
 
     @Autowired
     private EmailService emailService;
@@ -112,15 +111,14 @@ public class DumpTask   extends HttpServlet {
 
 
                 emailService.sendEmail(emailAddress, m, "Your extracted data for " + entity.getName().getValue() + " is ready");
-                log.info("email sent end of try");
+
             } catch (IOException ex) {
-                log.info("dump failed");
-                log.severe(ex.getMessage());
+
             } finally {
                 response.setStatus(HttpServletResponse.SC_OK);
             }
         }
-        log.info("dump done");
+
 
     }
 

@@ -100,11 +100,11 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         entityService.addUpdateSingleEntity(trigger);
 
 
-        valueService.recordValue(req, user, yName, ValueFactory.createValueModel(ry), false);
+        valueService.recordValue(  user, yName, ValueFactory.createValueModel(ry), false);
 
-        valueService.recordValue(req, user, zName, ValueFactory.createValueModel(rz), false);
+        valueService.recordValue(  user, zName, ValueFactory.createValueModel(rz), false);
         Thread.sleep(200);
-        final Value vt = valueService.recordValue(req, user, triggerName, ValueFactory.createValueModel(r2), false);
+        final Value vt = valueService.recordValue( user, triggerName, ValueFactory.createValueModel(r2), false);
 
         org.junit.Assert.assertEquals(vt.getDoubleValue(), r2, DELTA);
 
@@ -116,7 +116,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
 
         Thread.sleep(1000);
         //added dummy value to end here - calc service now uses a value to preserve time
-        calculationService.process(req, user, trigger, ValueFactory.createValueModel(123.00));
+        calculationService.process( user, trigger, ValueFactory.createValueModel(123.00));
         Thread.sleep(1000);
         final List<Value> endResult = valueService.getCurrentValue(target);
         org.junit.Assert.assertNotNull(endResult);

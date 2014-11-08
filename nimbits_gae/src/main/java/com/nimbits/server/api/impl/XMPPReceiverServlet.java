@@ -53,7 +53,7 @@ import java.util.UUID;
 import java.util.regex.Pattern;
 
 
-@Service
+@Service @Deprecated //let's make this work the same way as the new command line app does! ben from the past
 public class XMPPReceiverServlet extends ApiServlet {
 
 
@@ -86,7 +86,7 @@ public class XMPPReceiverServlet extends ApiServlet {
                 //sendPointList(u);
             } else if (body.indexOf('=') > 0) {
 
-                recordNewValue(req, body, u);
+                recordNewValue(body, u);
 
             } else if (!body.trim().equals("?") && !body.isEmpty() && body.charAt(body.length() - 1) == '?') {
 
@@ -131,7 +131,7 @@ public class XMPPReceiverServlet extends ApiServlet {
 
                     final Value v;
                     try {
-                        v = valueService.recordValue(req, u, point, p.getValue(), false);
+                        v = valueService.recordValue(u, point, p.getValue(), false);
 
                         point.setValue(v);
                         String result = gson.toJson(point);
@@ -170,7 +170,7 @@ public class XMPPReceiverServlet extends ApiServlet {
 
     }
 
-    private void recordNewValue(HttpServletRequest req, final CharSequence body, final User u) {
+    private void recordNewValue(final CharSequence body, final User u) {
         String b[] = PATTERN.split(body);
         if (b.length == 2) {
 
@@ -183,7 +183,7 @@ public class XMPPReceiverServlet extends ApiServlet {
 
                 if (u != null) {
                     Value value = ValueFactory.createValueModel(LocationFactory.createEmptyLocation(), v, new Date(), ValueDataModel.getInstance(SimpleValue.getInstance("")), AlertType.OK);
-                    valueService.recordValue(req, u, pointName, value, false);
+                    valueService.recordValue(u, pointName, value, false);
                 }
             } catch (NumberFormatException ignored) {
 

@@ -14,7 +14,7 @@ package com.nimbits;
 
 import com.nimbits.server.api.*;
 import com.nimbits.server.process.task.PointMaintTask;
-import com.nimbits.server.process.task.ValueTask;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.springframework.mock.web.MockServletContext;
@@ -31,7 +31,6 @@ public class BaseTest {
     public static EntityApi entityApi;
 
     public static SeriesApi seriesApi;
-    public static ValueTask valueTask;
 
     public static PointMaintTask pointTask;
 
@@ -94,14 +93,7 @@ public class BaseTest {
             }
         };
 
-        valueTask = new ValueTask() {
-            @Override
-            public ServletContext getServletContext() {
 
-                return context;
-
-            }
-        };
 
         pointTask = new PointMaintTask() {
             @Override

@@ -35,8 +35,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"/META-INF/applicationContext.xml", "/META-INF/context.xml"})
+
 public class SummaryServiceTest extends NimbitsServletTest {
 
     private static final int SUMMARY_INTERVAL_MS = 60000;
@@ -76,14 +75,14 @@ public class SummaryServiceTest extends NimbitsServletTest {
         for (int i = 0; i < c; i++) {
             double dx = rand.nextDouble() * 100;
             Value value = ValueFactory.createValueModel(dx);
-            Value vr = valueService.recordValue(req, user, point, value, false);
+            Value vr = valueService.recordValue( user, point, value, false);
             Assert.assertNotNull(vr);
             Thread.sleep(INT);
             d[i] = dx;
         }
         double com = summaryService.getValue(SummaryType.average, d);
 
-        summaryService.process(req, user, point);
+        summaryService.process( user, point);
 
         List<Value> result = valueService.getCurrentValue(pointChild);
         Thread.sleep(100);

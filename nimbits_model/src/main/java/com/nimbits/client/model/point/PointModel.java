@@ -63,6 +63,10 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
     private int precision;
 
+    private List<Value> values;
+
+    private Value value;
+
 
     public PointModel(final Entity entity,
                       final double highAlarm,
@@ -128,13 +132,6 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
     protected PointModel() {
     }
-
-
-    private List<Value> values;
-
-    private Value value;
-
-
 
     @Override
     public int getExpire() {

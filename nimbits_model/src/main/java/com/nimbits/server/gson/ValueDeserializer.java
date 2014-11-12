@@ -38,10 +38,10 @@ public class ValueDeserializer implements JsonDeserializer<Value> {
         JsonElement lngElement = jsonObject.get("lg");
         JsonElement timestampElement = jsonObject.get("t");
         String data = dataElement == null ? null : dataElement.getAsString();
-        Double lat = latElement == null ? null : latElement.getAsDouble();
-        Double lng = lngElement == null ? null : lngElement.getAsDouble();
-        Double value =  valueElement == null ? null : valueElement.getAsDouble();
-        Long timestamp =  timestampElement == null ? 0 :  timestampElement.getAsLong();
+        Double lat = latElement == null ||  latElement.isJsonNull() ? null : latElement.getAsDouble();
+        Double lng = lngElement == null ||  lngElement.isJsonNull()? null : lngElement.getAsDouble();
+        Double value =  valueElement == null ||  valueElement.isJsonNull()? null : valueElement.getAsDouble();
+        Long timestamp =  timestampElement == null ||  timestampElement.isJsonNull() ? 0 :  timestampElement.getAsLong();
 
 
         if (lat != null && lng != null) {

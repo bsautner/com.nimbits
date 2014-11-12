@@ -20,7 +20,9 @@ package com.nimbits.io.http;
 
 
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.value.Value;
 import retrofit.http.Body;
+import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Query;
 
@@ -32,4 +34,7 @@ public interface SeriesApi {
 
     @POST(SERIES_API)
     String recordSeries(@Body final List<Point> point, @Query("email") String email, @Query("key") String key);
+
+    @GET(SERIES_API)
+    List<Value>  getSeries(@Query("email") String email, @Query("key") String key, @Query("id") String id);
 }

@@ -49,10 +49,9 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Service
-public class DumpTask   extends HttpServlet {
+public class DumpTask extends HttpServlet {
 
-    @Autowired
-    protected EntityService entityService;
+
 
     @Autowired
     protected ValueService valueService;
@@ -66,9 +65,11 @@ public class DumpTask   extends HttpServlet {
     @Autowired
     public UserService userService;
 
-
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    protected EntityService entityService;
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) {

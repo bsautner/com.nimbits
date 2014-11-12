@@ -23,7 +23,7 @@ import java.util.UUID;
  *
  */
 public class SimpleJavaSample {
-    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("suppor@nimbits.com");
+    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("support@nimbits.com");
 
     //this sample uses an access key, so you've logged into nimbits and right clicked on your account to create this read/write key with user scope.
 

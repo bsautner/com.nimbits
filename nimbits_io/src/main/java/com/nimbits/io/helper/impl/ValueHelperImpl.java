@@ -36,6 +36,12 @@ public class ValueHelperImpl implements ValueHelper {
         this.accessKey = accessKey;
     }
 
+    public ValueHelperImpl(Server server, EmailAddress emailAddress) {
+        this.server = server;
+        this.email = emailAddress;
+        this.accessKey = null;
+    }
+
     @Override
     public Value recordValue(String pointName, double value)  {
         Value vx = ValueFactory.createValueModel(value);

@@ -64,6 +64,19 @@ public class HelperFactory {
     }
 
     /**
+     * For recording and downloading time series data values without an API KEY
+     * @param server A sever object containing the instance url, REQUIRES AN API KEY etc
+     * @param emailAddress The account owner
+
+     * @return ValueHelper
+     */
+    public static ValueHelper getValueHelper(Server server, EmailAddress emailAddress ) {
+
+        return new ValueHelperImpl(server, emailAddress);
+
+    }
+
+    /**
      * For creating, deleting and updating entities
      * @param server A sever object containing the instance url, Optional API KEY etc
      * @param emailAddress The account owner

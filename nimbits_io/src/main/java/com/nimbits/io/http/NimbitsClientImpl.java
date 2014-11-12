@@ -39,6 +39,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.io.NimbitsClient;
 import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.gson.ValueDeserializer;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -170,14 +171,40 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     @Override
     public List<Value> getSeries(final String entity) {
-        UrlContainer path = UrlContainer.combine(instanceUrl, SERIES_SERVICE);
-        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(2);
-        params.add((new BasicNameValuePair(Parameters.id.getText(), entity)));
-        params.add((new BasicNameValuePair(Parameters.count.getText(), String.valueOf(MAX_COUNT))));
-        if (accessKey != null) {
-            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
-        }
-        List<Value> sample = helper.doGet(ValueModel.class, path, params, valueListType, true);
+
+
+
+        final Gson gson = new GsonBuilder().registerTypeAdapter(Value.class, new ValueDeserializer()).create();
+
+
+        RequestInterceptor requestInterceptor = new RequestInterceptor() {
+            @Override
+            public void intercept(RequestInterceptor.RequestFacade request) {
+                if (!server.getApiKey().isEmpty()) {
+                    request.addHeader(Parameters.apikey.getText(), server.getApiKey().getValue());
+                }
+            }
+        };
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(instanceUrl.getUrl())
+                .setRequestInterceptor(requestInterceptor)
+                .setConverter(new GsonConverter(gson))
+                .build();
+
+        SeriesApi seriesApi = restAdapter.create(SeriesApi.class);
+
+        List<Value> sample = seriesApi.getSeries(email.getValue(), accessKey, entity);
+
+
+//
+//        UrlContainer path = UrlContainer.combine(instanceUrl, SERIES_SERVICE);
+//        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(2);
+//        params.add((new BasicNameValuePair(Parameters.id.getText(), entity)));
+//        params.add((new BasicNameValuePair(Parameters.count.getText(), String.valueOf(MAX_COUNT))));
+//        if (accessKey != null) {
+//            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+//        }
+//        List<Value> sample = helper.doGet(ValueModel.class, path, params, valueListType, true);
         List<Value> fixed = new ArrayList<>(sample.size());
         Set<Long> test = new HashSet<>(sample.size());
         for (Value value : sample) {
@@ -340,6 +367,7 @@ public class NimbitsClientImpl implements NimbitsClient {
     private void recordSeries(final List<Point> point, String email) {
 
 
+
         RequestInterceptor requestInterceptor = new RequestInterceptor() {
             @Override
             public void intercept(RequestInterceptor.RequestFacade request) {
@@ -356,8 +384,8 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         SeriesApi seriesApi = restAdapter.create(SeriesApi.class);
 
-        String response = seriesApi.recordSeries(point, email, accessKey);
-        System.out.print(response);
+        seriesApi.recordSeries(point, email, accessKey);
+
 
 
 

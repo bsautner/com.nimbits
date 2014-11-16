@@ -28,6 +28,7 @@ import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.client.model.valueblobstore.ValueBlobStoreFactory;
 import com.nimbits.server.Datastore;
 import com.nimbits.server.gson.ValueDeserializer;
+
 import com.nimbits.server.io.blob.BlobStore;
 import com.nimbits.server.orm.store.ValueBlobStoreEntity;
 import com.nimbits.server.transaction.settings.SettingsService;
@@ -46,6 +47,7 @@ import java.util.logging.Logger;
 @Repository
 public class BlobStoreImpl implements BlobStore {
     private final Logger log = Logger.getLogger(BlobStoreImpl.class.getName());
+
     private PersistenceManagerFactory persistenceManagerFactory;
 
     @Autowired

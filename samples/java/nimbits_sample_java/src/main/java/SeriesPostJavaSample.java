@@ -46,7 +46,7 @@ import java.util.*;
 public class SeriesPostJavaSample {
     private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("support@nimbits.com");
     private static final String ACCESS_KEY = "key";
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8094");
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8081/nimbits");
     private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL);
 
 
@@ -83,7 +83,7 @@ public class SeriesPostJavaSample {
             System.out.println("Created Point " + pointName);
             stored.put(pointName, new ArrayList<Value>());
 
-            Random r = new Random();
+
             ValueHelper valueHelper = HelperFactory.getValueHelper(SERVER, EMAIL_ADDRESS, ACCESS_KEY);
             List<Value> values = new ArrayList<>();
             for (int i =0; i < 1000; i++) {

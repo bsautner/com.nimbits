@@ -20,11 +20,12 @@
 
     <bean id="settingsService" class="com.nimbits.server.transaction.settings.SettingsServiceImpl"/>
     <bean id="settingsCache" class="com.nimbits.server.transaction.settings.SettingsCacheImpl"/>
-    <bean id="recursionValidation" class="com.nimbits.server.orm.validation.RecursionValidation"/>
+
     <bean id="settingsDao" class="com.nimbits.server.transaction.settings.SettingsDaoImpl">
         <property name="persistenceManagerFactory" ref="pmf"/>
     </bean>
 
+    <bean id="recursionValidation" class="com.nimbits.server.orm.validation.RecursionValidation"/>
     <bean id="emailService" class="com.nimbits.server.communication.mail.EmailServiceImpl">
 
     </bean>

@@ -32,7 +32,6 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.client.model.valueblobstore.ValueBlobStoreFactory;
-import com.nimbits.server.io.blob.BlobStore;
 import com.nimbits.server.io.blob.ValueBlobStoreEntity;
 import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.value.dao.ValueDayHolder;

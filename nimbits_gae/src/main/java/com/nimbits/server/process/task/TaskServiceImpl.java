@@ -27,6 +27,7 @@ import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.gson.*;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 
+@Service
 public class TaskServiceImpl implements TaskService {
 
     private static final String IN_CONTENT = "inContent";
@@ -49,7 +51,7 @@ public class TaskServiceImpl implements TaskService {
     private static final String PATH_INCOMING_MAIL_QUEUE = "/task/mailTask";
     private static final String PATH_DELETE_DATA_TASK = "/task/deleteTask";
     private static final String PATH_HB_TASK = "/task/hb";
-    private static final Logger log = Logger.getLogger(TaskServiceImpl.class.getName());
+    private static final Logger log = Logger.getLogger(com.nimbits.server.process.task.stub.TaskServiceImpl.class.getName());
     private static final String DUMP = "dump";
 
 

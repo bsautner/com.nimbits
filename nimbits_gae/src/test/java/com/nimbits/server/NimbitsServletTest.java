@@ -30,7 +30,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.io.blob.BlobStore;
+import com.nimbits.server.io.BlobStore;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.settings.SettingsService;

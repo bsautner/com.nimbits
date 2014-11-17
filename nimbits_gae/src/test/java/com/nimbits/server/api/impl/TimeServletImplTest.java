@@ -29,13 +29,7 @@ import java.util.Date;
 
 import static org.junit.Assert.*;
 
-/**
- * Created with IntelliJ IDEA.
- * User: benjamin
- * Date: 5/4/12
- * Time: 10:00 AM
- * To change this template use File | Settings | File Templates.
- */
+
 
 public class TimeServletImplTest {
     public MockHttpServletRequest req;

@@ -222,5 +222,10 @@ public class TaskServiceImpl implements TaskService {
 
     }
 
+    @Override
+    public void processNewValueTask(Value v, User user, Point point) {
+
+    }
+
 
 }

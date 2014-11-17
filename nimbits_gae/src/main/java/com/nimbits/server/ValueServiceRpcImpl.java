@@ -14,6 +14,7 @@ package com.nimbits.server;
 
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
@@ -24,17 +25,14 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.value.ValueServiceRpc;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.transaction.calculation.CalculationService;
+import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.user.UserHelper;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +42,9 @@ public class ValueServiceRpcImpl  extends RemoteServiceServlet implements ValueS
 
     @Autowired
     private TaskService taskService;
+
+    @Autowired
+    private EntityService entityService;
 
     @Autowired
     private ValueService valueService;
@@ -74,7 +75,15 @@ public class ValueServiceRpcImpl  extends RemoteServiceServlet implements ValueS
 
         User user = userHelper.getUser().get(0);
       //  HttpServletRequest req = getThreadLocalRequest();
-        return valueService.recordValue(user, point, value, false);
+        List<Entity> entities = entityService.getEntityByKey(user, point.getKey(), EntityType.point);
+        if (! entities.isEmpty()) {
+            return valueService.recordValue(user, (Point) entities.get(0), value, false);
+
+        }
+        else {
+            return value;
+        }
+
 
 
     }

@@ -1,10 +1,12 @@
 package com.nimbits.io.helper;
 
 import com.google.common.collect.Range;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -65,7 +67,13 @@ public interface ValueHelper {
     void recordValues(String pointName, List<Value> data);
 
     /**
+     *
+     * @param points a list of points with the values field set to the list of values to record.
+     */
+    void recordValues(List<Point> points);
+
+    /**
      * execute the move cron task.
      */
-    void moveCron();
+    Map<String, Integer> moveCron();
 }

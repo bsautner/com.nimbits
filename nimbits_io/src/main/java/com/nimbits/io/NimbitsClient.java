@@ -23,6 +23,7 @@ import com.nimbits.client.model.value.Value;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Basic Input and Output for the Nimbits API.
@@ -42,7 +43,7 @@ public interface NimbitsClient {
 
     List<Value> getValue(Entity entity);
 
-    void moveCron();
+    Map<String, Integer> moveCron();
 
     <T> List<T> getTree();
 
@@ -67,4 +68,6 @@ public interface NimbitsClient {
     void doHeartbeat(Entity parent);
 
     void recordSeries(Point entity);
+
+    void recordSeries(List<Point> entity);
 }

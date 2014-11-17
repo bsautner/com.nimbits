@@ -190,7 +190,7 @@ public class ValueServletImpl extends ApiServlet {
             throw new Exception(UserMessages.ERROR_POINT_NOT_FOUND);
         } else {
 
-            final Entity p = result.get(0);
+            final Point p = (Point) result.get(0);
             if ((u == null || u.isRestricted()) && !p.getProtectionLevel().equals(ProtectionLevel.everyone)) {
                 throw new Exception(UserMessages.RESPONSE_PROTECTED_POINT);
             }

@@ -31,7 +31,6 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
@@ -49,7 +48,6 @@ import org.apache.http.util.EntityUtils;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.converter.GsonConverter;
-import retrofit.http.*;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -126,15 +124,25 @@ public class NimbitsClientImpl implements NimbitsClient {
     }
 
     @Override
-    public void moveCron() {
-        UrlContainer path = UrlContainer.combine(instanceUrl, MOVE_CRON);
+    public Map<String, Integer> moveCron() {
+        RequestInterceptor requestInterceptor = new RequestInterceptor() {
+            @Override
+            public void intercept(RequestInterceptor.RequestFacade request) {
+                if (!server.getApiKey().isEmpty()) {
+                    request.addHeader(Parameters.apikey.getText(), server.getApiKey().getValue());
+                }
+            }
+        };
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(instanceUrl.getUrl())
+                .setRequestInterceptor(requestInterceptor)
 
-        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(1);
+                .build();
 
-        if (accessKey != null) {
-            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
-        }
-        helper.doGet(String.class, path, params, valueListType, false);
+        MoveCron cron = restAdapter.create(MoveCron.class);
+
+        return cron.move();
+
 
     }
 
@@ -361,6 +369,11 @@ public class NimbitsClientImpl implements NimbitsClient {
     @Override
     public void recordSeries(final Point point) {
         recordSeries( Arrays.asList(point), email.getValue());
+    }
+
+    @Override
+    public void recordSeries(List<Point> points) {
+        recordSeries(points, email.getValue());
     }
 
 

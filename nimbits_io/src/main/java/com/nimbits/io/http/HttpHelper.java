@@ -20,6 +20,7 @@ import org.apache.http.message.BasicNameValuePair;
 import java.lang.reflect.Type;
 import java.util.List;
 
+@Deprecated //use retrofit
 public class HttpHelper {
 
     private final EmailAddress email;

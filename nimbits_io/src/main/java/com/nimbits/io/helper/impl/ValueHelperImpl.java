@@ -24,6 +24,7 @@ import com.nimbits.io.http.NimbitsClientFactory;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 public class ValueHelperImpl implements ValueHelper {
@@ -103,7 +104,14 @@ public class ValueHelperImpl implements ValueHelper {
     }
 
     @Override
-    public void moveCron() {
-        NimbitsClientFactory.getInstance(server, email, accessKey).moveCron();
+    public void recordValues(List<Point> points) {
+        NimbitsClientFactory.getInstance(server, email, accessKey).recordSeries(points);
+    }
+
+    @Override
+    public Map<String, Integer> moveCron() {
+        return NimbitsClientFactory.getInstance(server, email, accessKey).moveCron();
+
+
     }
 }

@@ -26,10 +26,10 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.client.model.valueblobstore.ValueBlobStoreFactory;
-import com.nimbits.server.Datastore;
+
 import com.nimbits.server.gson.ValueDeserializer;
 
-import com.nimbits.server.io.blob.BlobStore;
+
 import com.nimbits.server.orm.store.ValueBlobStoreEntity;
 import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.value.dao.ValueDayHolder;
@@ -438,8 +438,4 @@ public class BlobStoreImpl implements BlobStore {
         }
     }
 
-    @Override
-    public void setSettingService(SettingsService settingsService) {
-        this.settingsService = settingsService;
-    }
 }

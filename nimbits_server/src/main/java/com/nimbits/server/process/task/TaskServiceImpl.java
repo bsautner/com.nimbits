@@ -117,7 +117,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void startMoveCachedValuesToStoreTask(Entity point) {
+    public void startMoveCachedValuesToStoreTask(User user, Entity point) {
 
         valueService.moveValuesFromCacheToStore(point);
     }
@@ -148,6 +148,11 @@ public class TaskServiceImpl implements TaskService {
         params.add(new BasicNameValuePair(Parameters.gae.getText(), "false"));
         postTask(req, params, PATH_HB_TASK);
 
+
+    }
+
+    @Override
+    public void processNewValueTask(Value v, User user, Point point) {
 
     }
 

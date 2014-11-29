@@ -47,7 +47,7 @@ import java.util.*;
 public class SeriesPostJavaSample {
     private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("support@nimbits.com");
     private static final String ACCESS_KEY = "key";
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8081");
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8092");
     private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL);
     protected static final int COUNT = 10;
 
@@ -80,20 +80,17 @@ public class SeriesPostJavaSample {
         calendar.roll(Calendar.SECOND, 10000);
         System.out.println(calendar.getTime());
 
-
-
         for (Point point : points) {
 
-
-
             List<Value> values = new ArrayList<>();
-            for (int i = 0; i < 1000; i++) {
+            for (int i = 0; i < 100; i++) {
 
                 Value value = ValueFactory.createValueModel((double) calendar.getTimeInMillis(), calendar.getTime());
                 values.add(value);
                 point.getValues().add(value);
                 calendar.roll(Calendar.SECOND, 1);
             }
+
         }
 
         valueHelper.recordValues(points);

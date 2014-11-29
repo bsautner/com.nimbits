@@ -121,17 +121,19 @@
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_model</artifactId>
             <version>1.0-SNAPSHOT</version>
-            <scope>compile</scope>
+
         </dependency>
         <dependency>
             <groupId>com.squareup.retrofit</groupId>
             <artifactId>retrofit</artifactId>
             <version>1.7.0</version>
+
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp</groupId>
             <artifactId>okhttp</artifactId>
             <version>2.0.0</version>
+
         </dependency>
         <dependency>
             <groupId>com.squareup.okhttp</groupId>
@@ -143,16 +145,22 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>14.0.1</version>
-            <scope>compile</scope>
+
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-websocket</artifactId>
             <version>8.1.15.v20140411</version>
-            <scope>compile</scope>
+
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.3.6</version>
+
+        </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>

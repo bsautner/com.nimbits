@@ -14,6 +14,7 @@ package com.nimbits.server;
 
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
@@ -23,6 +24,7 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.transaction.calculation.CalculationService;
+import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.user.UserHelper;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,6 +47,9 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements com.nim
 
     @Autowired
     private ValueService valueService;
+
+    @Autowired
+    private EntityService entityService;
 
     @Autowired
     private UserHelper userHelper;
@@ -71,8 +76,8 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements com.nim
                                 final Value value) throws ValueException {
 
         User user = userHelper.getUser().get(0);
-
-        return valueService.recordValue(user, point, value, false);
+        Point p = (Point) entityService.getEntityByKey(user, point.getKey(), EntityType.point);
+        return valueService.recordValue(user, p, value, false);
 
 
     }

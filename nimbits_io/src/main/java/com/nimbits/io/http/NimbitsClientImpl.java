@@ -203,16 +203,6 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         List<Value> sample = seriesApi.getSeries(email.getValue(), accessKey, entity);
 
-
-//
-//        UrlContainer path = UrlContainer.combine(instanceUrl, SERIES_SERVICE);
-//        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(2);
-//        params.add((new BasicNameValuePair(Parameters.id.getText(), entity)));
-//        params.add((new BasicNameValuePair(Parameters.count.getText(), String.valueOf(MAX_COUNT))));
-//        if (accessKey != null) {
-//            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
-//        }
-//        List<Value> sample = helper.doGet(ValueModel.class, path, params, valueListType, true);
         List<Value> fixed = new ArrayList<>(sample.size());
         Set<Long> test = new HashSet<>(sample.size());
         for (Value value : sample) {
@@ -242,16 +232,48 @@ public class NimbitsClientImpl implements NimbitsClient {
     }
     @Override
     public List<Value> getSeries(final String entity, final Range<Date> range) {
-        UrlContainer path = UrlContainer.combine(instanceUrl, SERIES_SERVICE);
-        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(3);
+//        UrlContainer path = UrlContainer.combine(instanceUrl, SERIES_SERVICE);
+//        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(3);
+//
+//        params.add((new BasicNameValuePair(Parameters.id.getText(), entity)));
+//        params.add((new BasicNameValuePair(Parameters.sd.getText(), String.valueOf(range.lowerEndpoint().getTime()))));
+//        params.add((new BasicNameValuePair(Parameters.ed.getText(), String.valueOf(range.upperEndpoint().getTime()))));
+//        if (accessKey != null) {
+//            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+//        }
+//        List<Value> sample =  helper.doGet(ValueModel.class, path, params, valueListType, true);
+//        return sample;
 
-        params.add((new BasicNameValuePair(Parameters.id.getText(), entity)));
-        params.add((new BasicNameValuePair(Parameters.sd.getText(), String.valueOf(range.lowerEndpoint().getTime()))));
-        params.add((new BasicNameValuePair(Parameters.ed.getText(), String.valueOf(range.upperEndpoint().getTime()))));
-        if (accessKey != null) {
-            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        final Gson gson = new GsonBuilder().registerTypeAdapter(Value.class, new ValueDeserializer()).create();
+
+
+        RequestInterceptor requestInterceptor = new RequestInterceptor() {
+            @Override
+            public void intercept(RequestInterceptor.RequestFacade request) {
+                if (!server.getApiKey().isEmpty()) {
+                    request.addHeader(Parameters.apikey.getText(), server.getApiKey().getValue());
+                }
+            }
+        };
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(instanceUrl.getUrl())
+                .setRequestInterceptor(requestInterceptor)
+                .setConverter(new GsonConverter(gson))
+                .build();
+
+        SeriesApi seriesApi = restAdapter.create(SeriesApi.class);
+
+        List<Value> sample = seriesApi.getSeries(email.getValue(), accessKey, entity, range.lowerEndpoint().getTime(), range.upperEndpoint().getTime());
+
+        List<Value> fixed = new ArrayList<>(sample.size());
+        Set<Long> test = new HashSet<>(sample.size());
+        for (Value value : sample) {
+            if (! test.contains(value.getTimestamp().getTime())) {
+                fixed.add(value);
+                test.add(value.getTimestamp().getTime());
+            }
+
         }
-        List<Value> sample =  helper.doGet(ValueModel.class, path, params, valueListType, true);
         return sample;
 
     }

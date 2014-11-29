@@ -16,6 +16,7 @@
  * from Nimbits Inc.
  */
 
+import com.google.common.collect.Range;
 import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
@@ -47,10 +48,11 @@ import java.util.*;
 public class SeriesPostJavaSample {
     private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("support@nimbits.com");
     private static final String ACCESS_KEY = "key";
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8092");
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8081/nimbits");
     private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL);
     protected static final int COUNT = 10;
-
+    public static final int VCOUNT = 1000;
+    public static final int ROUNDS = 100;
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Welcome To Nimbits!");
@@ -77,45 +79,73 @@ public class SeriesPostJavaSample {
 
         //  boolean success = pointHelper.pointExists(pointName);
         Calendar calendar = Calendar.getInstance();
-        calendar.roll(Calendar.SECOND, 10000);
+        calendar.add(Calendar.YEAR, -1);
+        calendar.add(Calendar.SECOND, 1);
+        Date start = calendar.getTime();
         System.out.println(calendar.getTime());
+        Random r = new Random();
 
-        for (Point point : points) {
+        for (int repeat = 0; repeat < ROUNDS; repeat++) {
+            System.out.println("ROUND: " + repeat);
 
-            List<Value> values = new ArrayList<>();
-            for (int i = 0; i < 100; i++) {
+            for (Point point : points) {
+                point.getValues().clear();
 
-                Value value = ValueFactory.createValueModel((double) calendar.getTimeInMillis(), calendar.getTime());
-                values.add(value);
-                point.getValues().add(value);
-                calendar.roll(Calendar.SECOND, 1);
+                List<Value> values = new ArrayList<>();
+                for (int i = 0; i < VCOUNT; i++) {
+
+                    Value value = ValueFactory.createValueModel(r.nextDouble() * 100, calendar.getTime());
+                    values.add(value);
+                    point.getValues().add(value);
+                    calendar.add(Calendar.SECOND, 1);
+                }
+
             }
 
+            valueHelper.recordValues(points);
+
+            for (Point point : points) {
+                List<Value> recordedValues = valueHelper.getSeries(point.getName().getValue());
+                System.out.println("downloaded " + recordedValues.size() + " Cached Values.");
+                if (recordedValues.size() != VCOUNT) {
+                   // /return;
+                }
+            }
+
+            Map<String, Integer> moveMap = valueHelper.moveCron();
+            System.out.println("moveMap contained (should be " + COUNT + ") " + moveMap.size());
+            if (moveMap.size() != COUNT) {
+               // return;
+            }
+            for (String name : moveMap.keySet()) {
+                System.out.println(name + " moved " + moveMap.get(name));
+            }
+
+
+            Map<String, Integer> verify = valueHelper.moveCron();
+            System.out.println("verify move cron empty (should be zero)" + verify.size());
+            if (verify.size() > 0) {
+              //  return;
+            }
+            for (String name : verify.keySet()) {
+                System.out.println(name + " moved " + verify.get(name));
+            }
+
+            for (Point point : points) {
+                List<Value> recordedValues = valueHelper.getSeries(point.getName().getValue());
+                System.out.println("downloaded " + recordedValues.size() + " Stored Values.");
+            }
         }
 
-        valueHelper.recordValues(points);
-
+        Date end = calendar.getTime();
         for (Point point : points) {
-            List<Value> recordedValues = valueHelper.getSeries(point.getName().getValue());
-            System.out.println("downloaded " + recordedValues.size() + " Cached Values.");
+            List<Value> recordedValues = valueHelper.getSeries(point.getName().getValue(),
+                    Range.closed(start, end));
+            System.out.println("Downloads All Values:" + recordedValues.size());
+
         }
 
-        Map<String, Integer> moveMap = valueHelper.moveCron();
-        System.out.println("moveMap contained (should be " + COUNT + ") " + moveMap.size());
-        for (String name : moveMap.keySet()) {
-            System.out.println(name + " moved " + moveMap.get(name));
-        }
-
-        Map<String, Integer> verify = valueHelper.moveCron();
-        System.out.println("verify contained (should be zero)" + verify.size());
-        for (String name : verify.keySet()) {
-            System.out.println(name + " moved " + verify.get(name));
-        }
-
-        for (Point point : points) {
-            List<Value> recordedValues = valueHelper.getSeries(point.getName().getValue());
-            System.out.println("downloaded " + recordedValues.size() + " Stored Values.");
-        }
+        System.out.println("Done!");
 
     }
 

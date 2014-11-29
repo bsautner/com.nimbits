@@ -46,21 +46,18 @@ import java.util.logging.Logger;
 
 @Repository
 public class BlobStoreImpl implements BlobStore {
-    private final Logger log = Logger.getLogger(BlobStoreImpl.class.getName());
+    private final Logger logger = Logger.getLogger(BlobStoreImpl.class.getName());
 
     private PersistenceManagerFactory persistenceManagerFactory;
 
     @Autowired
     private SettingsService settingsService;
-    private static final Gson gson;
+    private final Gson gson = new GsonBuilder()
+            .setDateFormat(Const.GSON_DATE_FORMAT)
+            .registerTypeAdapter(Value.class, new ValueDeserializer())
+            .excludeFieldsWithoutExposeAnnotation()
+            .create();
 
-    static {
-        gson = new GsonBuilder()
-                .setDateFormat(Const.GSON_DATE_FORMAT)
-                .registerTypeAdapter(Value.class, new ValueDeserializer())
-                .excludeFieldsWithoutExposeAnnotation()
-                .create();
-    }
 
 
     public BlobStoreImpl( ) {
@@ -89,11 +86,11 @@ public class BlobStoreImpl implements BlobStore {
             q.setRange(0, maxValues);
 
             final List<ValueBlobStoreEntity> result = (List<ValueBlobStoreEntity>) q.execute(entity.getKey(), endDate.getTime());
-
+            logger.info("reading blobs " + result.size());
             for (final ValueBlobStoreEntity e : result) {
                 if (validateOwnership(entity, e)) {
-                    List<Value> values = readValuesFromFile(e.getBlobKey(), e.getLength());
-
+                    List<Value> values = readValuesFromFile(e.getBlobKey());
+                    logger.info("reading values from blob " + values.size());
                     for (final Value vx : values) {
                         if (vx.getTimestamp().getTime() <= endDate.getTime()) {
                             retObj.add(vx);
@@ -113,6 +110,40 @@ public class BlobStoreImpl implements BlobStore {
 
 
     @Override
+    public List<Value> getTopDataSeries(final Entity entity, final int maxValues) {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+        try {
+
+            final List<Value> retObj = new ArrayList<Value>(maxValues);
+
+            final Query q = pm.newQuery(ValueBlobStoreEntity.class);
+            q.setFilter("entity == k");
+            q.declareParameters("String k");
+            q.setOrdering("minTimestamp desc");
+            q.setRange(0, 1000);
+
+            final List<ValueBlobStoreEntity> result = (List<ValueBlobStoreEntity>) q.execute(entity.getKey());
+            logger.info("reading blobs " + result.size());
+            for (final ValueBlobStoreEntity e : result) {
+                if (validateOwnership(entity, e)) {
+                    List<Value> values = readValuesFromFile(e.getBlobKey());
+                    logger.info("reading values from blob " + values.size());
+                    for (final Value vx : values) {
+                        retObj.add(vx);
+
+                        if (retObj.size() >= maxValues) {
+                            break;
+                        }
+                    }
+                }
+            }
+            return retObj;
+        } finally {
+            pm.close();
+        }
+    }
+
+    @Override
     public List<Value> getDataSegment(final Entity entity, final Range<Date> timespan) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
@@ -125,7 +156,7 @@ public class BlobStoreImpl implements BlobStore {
             final Iterable<ValueBlobStore> result = (Iterable<ValueBlobStore>) q.execute(entity.getKey(), timespan.upperEndpoint().getTime(), timespan.lowerEndpoint().getTime());
             for (final ValueBlobStore e : result) {    //todo break out of loop when range is met
                 if (validateOwnership(entity, e)) {
-                    List<Value> values = readValuesFromFile(e.getBlobKey(), e.getLength());
+                    List<Value> values = readValuesFromFile(e.getBlobKey());
                     for (final Value vx : values) {
                         if (timespan.contains(vx.getTimestamp())) {
                             retObj.add(vx);
@@ -181,7 +212,7 @@ public class BlobStoreImpl implements BlobStore {
             final List<Value> values = new ArrayList<Value>();
             for (final ValueBlobStore e : result) {
                 if (validateOwnership(entity, e)) {
-                    values.addAll(readValuesFromFile((e.getBlobKey()), e.getLength()));
+                    values.addAll(readValuesFromFile(e.getBlobKey()));
                 }
             }
 
@@ -258,7 +289,7 @@ public class BlobStoreImpl implements BlobStore {
     }
 
     @Override
-    public List<Value> readValuesFromFile(final String key, final long length) {
+    public List<Value> readValuesFromFile(final String key) {
 
         final Type valueListType = new TypeToken<List<ValueModel>>() {
         }.getType();
@@ -305,10 +336,11 @@ public class BlobStoreImpl implements BlobStore {
     }
 
     @Override
-    public List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final ValueDayHolder holder) {
+    public List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final ValueDayHolder holder) throws FileNotFoundException {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         PrintWriter out = null;
         try {
+            logger.info("Creating Blobstore for " + holder.getValues().size());
             final String json = gson.toJson(holder.getValues());
             String fn = entity.getName().getValue() + "_" + UUID.randomUUID().toString();
             out = new PrintWriter(getFolder() + fn);
@@ -339,9 +371,7 @@ public class BlobStoreImpl implements BlobStore {
 
             return ValueBlobStoreFactory.createValueBlobStore(currentStoreEntity);
 
-        } catch (IOException e) {
 
-            return Collections.emptyList();
         } finally {
             if (out != null) {
                 out.close();
@@ -380,7 +410,7 @@ public class BlobStoreImpl implements BlobStore {
                     timestamp = store.getTimestamp();
 
                 }
-                List<Value> read = readValuesFromFile((store.getBlobKey()), store.getLength());
+                List<Value> read = readValuesFromFile((store.getBlobKey()));
                 combined.addAll(read);
                 delete(store.getBlobKey());
 

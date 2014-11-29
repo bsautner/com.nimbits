@@ -51,7 +51,6 @@ public class TaskServiceImpl implements TaskService {
     private static final String PATH_INCOMING_MAIL_QUEUE = "/task/mailTask";
     private static final String PATH_DELETE_DATA_TASK = "/task/deleteTask";
     private static final String PATH_HB_TASK = "/task/hb";
-    private static final Logger log = Logger.getLogger(com.nimbits.server.process.task.stub.TaskServiceImpl.class.getName());
     private static final String DUMP = "dump";
 
 

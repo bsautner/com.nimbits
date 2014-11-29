@@ -26,6 +26,7 @@ import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.gson.GsonFactory;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
@@ -123,7 +124,7 @@ public class PointMaintTaskTest extends NimbitsServletTest {
     }
 
     @Test
-    public void testMergeDate() throws InterruptedException {
+    public void testMergeDate() throws InterruptedException, IOException {
 
         Random r = new Random();
         int t = 0;

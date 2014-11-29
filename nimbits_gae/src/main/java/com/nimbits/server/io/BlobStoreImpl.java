@@ -99,6 +99,43 @@ public class BlobStoreImpl implements BlobStore {
     }
 
 
+
+    @Override
+    public List<Value> getTopDataSeries(final Entity entity, final int maxValues) {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+
+        final List<Value> retObj = new ArrayList<Value>(maxValues);
+
+        final Query q = pm.newQuery(ValueBlobStoreEntity.class);
+        q.setFilter("entity == k");
+        q.declareParameters("String k");
+        q.setOrdering("minTimestamp desc");
+
+
+        final List<ValueBlobStoreEntity> result = (List<ValueBlobStoreEntity>) q.execute(entity.getKey());
+
+        for (final ValueBlobStoreEntity e : result) {
+            if (validateOwnership(entity, e)) {
+                List<Value> values = readValuesFromFile(e.getBlobKey(), e.getLength());
+
+                for (final Value vx : values) {
+
+                        retObj.add(vx);
+
+                    if (retObj.size() >= maxValues) {
+                        break;
+                    }
+
+                }
+                if (retObj.size() >= maxValues) {
+                    break;
+                }
+            }
+        }
+        return retObj;
+
+    }
     @Override
     public List<Value> getDataSegment(final Entity entity, final Range<Date> timespan) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -256,7 +293,7 @@ public class BlobStoreImpl implements BlobStore {
     }
 
     @Override
-    public List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final ValueDayHolder holder) {
+    public List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final ValueDayHolder holder) throws IOException {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
@@ -290,9 +327,6 @@ public class BlobStoreImpl implements BlobStore {
             out.close();
             return result;
 
-        } catch (IOException e) {
-
-            return Collections.emptyList();
         } finally {
 
 

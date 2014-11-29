@@ -288,8 +288,19 @@ public class BlobStoreImpl implements BlobStore {
         }
     }
 
+    /**
+     *
+     * @param key
+     * @param unused - used in gae version for blobstoreservice
+     * @return
+     */
     @Override
-    public List<Value> readValuesFromFile(final String key) {
+    public List<Value> readValuesFromFile(final String key, long unused) {
+        return readValuesFromFile(key);
+    }
+
+
+    private List<Value> readValuesFromFile(final String key) {
 
         final Type valueListType = new TypeToken<List<ValueModel>>() {
         }.getType();
@@ -336,7 +347,7 @@ public class BlobStoreImpl implements BlobStore {
     }
 
     @Override
-    public List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final ValueDayHolder holder) throws FileNotFoundException {
+    public List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final ValueDayHolder holder) throws IOException {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         PrintWriter out = null;
         try {

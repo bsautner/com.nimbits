@@ -22,6 +22,7 @@ import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.transaction.value.cache.ValueCache;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -118,7 +119,7 @@ public class ValueMemCacheImplTest extends NimbitsServletTest {
 
 
     @Test
-    public void testGetPrevValue() throws InterruptedException, ValueException {
+    public void testGetPrevValue() throws InterruptedException, ValueException, IOException {
 
         Value v = ValueFactory.createValueModel(D);
         valueService.recordValue(  user, point, v, false);

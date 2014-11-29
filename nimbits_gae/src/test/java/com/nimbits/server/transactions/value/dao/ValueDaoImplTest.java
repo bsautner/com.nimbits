@@ -20,6 +20,7 @@ import com.nimbits.server.transaction.value.dao.ValueDayHolder;
 import junit.framework.TestCase;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.util.*;
 
 import static junit.framework.Assert.assertEquals;
@@ -30,7 +31,7 @@ public class ValueDaoImplTest extends NimbitsServletTest {
     public static final int INT = 1000;
 
     @Test
-    public void recordValuesTest() {
+    public void recordValuesTest() throws IOException {
 
         List<Value> values = new ArrayList<Value>(INT);
         List<Value> values2 = new ArrayList<Value>(INT);

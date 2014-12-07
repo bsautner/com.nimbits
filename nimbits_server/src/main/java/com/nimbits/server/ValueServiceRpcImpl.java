@@ -76,8 +76,13 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements com.nim
                                 final Value value) throws ValueException {
 
         User user = userHelper.getUser().get(0);
-        Point p = (Point) entityService.getEntityByKey(user, point.getKey(), EntityType.point);
-        return valueService.recordValue(user, p, value, false);
+        List<Entity> p = entityService.getEntityByKey(user, point.getKey(), EntityType.point);
+        if (! p.isEmpty()) {
+            return valueService.recordValue(user, (Point)(p.get(0)), value, false);
+        }
+        else {
+            return null;
+        }
 
 
     }

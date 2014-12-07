@@ -33,7 +33,7 @@
         <gwt.version>2.5.1</gwt.version>
         <gxt.version>2.2.5</gxt.version>
         <spring.version>4.1.1.RELEASE</spring.version>
-        <appengine.target.version>1.9.14</appengine.target.version>
+        <appengine.target.version>1.9.15</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
     </properties>
@@ -293,7 +293,7 @@
 
     <build>
         <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
-        <finalName>nimbits_gae_3.7.5</finalName>
+        <finalName>nimbits_gae_3.7.6</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

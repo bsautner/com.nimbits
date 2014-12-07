@@ -75,18 +75,6 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.181</version>
-        </dependency>
 
         <dependency>
             <groupId>com.nimbits</groupId>
@@ -100,6 +88,28 @@
             <artifactId>nimbits_core</artifactId>
             <version>1.0-SNAPSHOT</version>
 
+        </dependency>
+
+        <dependency>
+            <groupId>com.nimbits</groupId>
+            <artifactId>nimbits_io</artifactId>
+            <version>1.0-SNAPSHOT</version>
+
+        </dependency>
+
+
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.181</version>
         </dependency>
 
         <dependency>
@@ -325,7 +335,7 @@
     </dependencies>
     <build>
         <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
-        <finalName>nimbits_server_3.7.5</finalName>
+        <finalName>nimbits_server_3.7.6</finalName>
         <plugins>
 
             <plugin>
@@ -338,6 +348,7 @@
                     <compileSourcesArtifacts>
                         <compileSourcesArtifact>com.nimbits:nimbits_model</compileSourcesArtifact>
                         <compileSourcesArtifact>com.nimbits:nimbits_core</compileSourcesArtifact>
+                        <compileSourcesArtifact>com.nimbits:nimbits_io</compileSourcesArtifact>
                     </compileSourcesArtifacts>
 
                 </configuration>
@@ -391,6 +402,8 @@
                 <!--<webappDirectory>/var/lib/tomcat7/webapps</webappDirectory>-->
                 <!--</configuration>-->
             </plugin>
+
+
 
 
         </plugins>

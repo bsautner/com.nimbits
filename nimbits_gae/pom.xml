@@ -293,7 +293,7 @@
 
     <build>
         <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
-        <finalName>nimbits_gae_3.7.6</finalName>
+        <finalName>nimbits_gae_3.7.7</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

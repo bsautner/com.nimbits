@@ -1,7 +1,4 @@
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
@@ -12,9 +9,6 @@ import com.nimbits.client.model.server.apikey.ApiKey;
 import com.nimbits.client.model.server.apikey.ApiKeyFactory;
 import com.nimbits.io.socket.SocketConnection;
 import com.nimbits.io.socket.SocketListener;
-
-import java.lang.reflect.Type;
-import java.util.List;
 
 /**
  * An example of writing values to a data point and also having a web socket open to recieve those events.
@@ -29,7 +23,7 @@ public class SocketSample {
     private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("support@nimbits.com");
 
     //a running jetty server with nimbits installed (using nimbits.war)
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8081/nimbits");
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080/nimbits");
 
     //you can create this server object with an API KEY you configured your server with to make authentication easy
 

@@ -26,6 +26,7 @@ import java.io.Serializable;
 
 public class InstanceModel extends EntityModel implements Serializable, Instance {
 
+
     private long serverId;
 
     private String baseUrl;

@@ -7,7 +7,7 @@
     <application>nimbits-02</application>
 
 
-    <version>847</version>
+    <version>852</version>
 
     <sessions-enabled>true</sessions-enabled>
     <precompilation-enabled>false</precompilation-enabled>
@@ -27,7 +27,7 @@
     </static-files>
     <inbound-services>
         <service>xmpp_message</service>
-        <!--<service>xmpp_presence</service>-->
+        <service>xmpp_presence</service>
         <!--<service>xmpp_subscribe</service>-->
         <!--<service>xmpp_error</service>-->
     </inbound-services>

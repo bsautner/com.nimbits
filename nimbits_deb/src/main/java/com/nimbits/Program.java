@@ -27,7 +27,8 @@ import com.nimbits.client.model.server.ServerFactory;
 import com.nimbits.client.model.server.apikey.ApiKey;
 import com.nimbits.client.model.server.apikey.ApiKeyFactory;
 import com.nimbits.client.model.user.User;
-import com.nimbits.command.TerminalCommand;
+import com.nimbits.io.command.CommandListener;
+import com.nimbits.io.command.TerminalCommand;
 import com.nimbits.io.helper.EntityHelper;
 import com.nimbits.io.helper.HelperFactory;
 import com.nimbits.io.helper.UserHelper;
@@ -46,7 +47,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class Program {
+public class Program   {
 
     public static EmailAddress EMAIL_ADDRESS;
     private static UrlContainer INSTANCE_URL;
@@ -98,6 +99,24 @@ public class Program {
         String prompt = SERVER.getUrl() + "/" + current.getName() + ":";
         currentReader.setDefaultPrompt(prompt);
 
+        CommandListener listener = new CommandListener() {
+            @Override
+            public void onMessage(String message) {
+                System.out.println(message);
+            }
+
+            @Override
+            public void setCurrent(Entity newCurrent) {
+                current = newCurrent;
+            }
+
+            @Override
+            public void onTreeUpdated(List<Entity> newTree) {
+                tree = newTree;
+            }
+        };
+
+
         while ((line = currentReader.readLine(prompt)) != null && ! currentReader.isClosed()) {
 
             try {
@@ -106,7 +125,7 @@ public class Program {
                 String mainArg = options.length > 0 ? options[0].trim() : "";
                 terminalCommand = TerminalCommand.lookup(mainArg);
                 if (terminalCommand != null) {
-                    terminalCommand.init(SERVER).doCommand(options);
+                    terminalCommand.init(user, current, SERVER, tree).doCommand(listener, options);
                 }
                 else {
                     if (mainArg.trim().length() < 0) {
@@ -123,67 +142,21 @@ public class Program {
         }
     }
 
-    public static void setCurrent(Entity current) throws IOException {
-        Program.current = current;
-
-        createReader();
-
-
-    }
-
-    public static Entity getCurrent() {
-        return current;
-    }
 
     private static class TreeLoader implements Runnable {
 
         @Override
         public void run() {
-//            final Type entityListType = new TypeToken<List<EntityModel>>() {
-//            }.getType();
-//            String fn = "/tmp/" + user.getEmail().getValue() + ".json";
-//            File file = new File(fn);
-//            try {
-//            if (file.exists()) {
-//                StringBuilder b = new StringBuilder();
-//                try (BufferedReader br = new BufferedReader(new FileReader(fn))) {
-//
-//                    String line = br.readLine();
-//                    b.append(line);
-//
-//                    while (line != null) {
-//                        line = br.readLine();
-//                        if (line != null) {
-//                           b.append(line);
-//                        }
-//                    }
-//
-//                    Program.tree = GsonFactory.getInstance().fromJson(b.toString(), entityListType);
-//
-//
-//
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            else {
-                EntityHelper helper = HelperFactory.getEntityHelper(SERVER, Program.EMAIL_ADDRESS, null);
-                Program.tree = helper.getTree();
-               // String json = GsonFactory.getInstance().toJson(Program.tree, entityListType);
-//                PrintWriter out = new PrintWriter(fn);
-//                out.println(json);
-//                out.close();
-          //  }
 
+            EntityHelper helper = HelperFactory.getEntityHelper(SERVER, Program.EMAIL_ADDRESS);
+            Program.tree = helper.getTree();
 
             try {
                 createReader();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
+
 
         }
     }

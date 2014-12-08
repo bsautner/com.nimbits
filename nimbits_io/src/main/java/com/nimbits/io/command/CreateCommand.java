@@ -1,24 +1,25 @@
-package com.nimbits.command;
+package com.nimbits.io.command;
 
-import com.nimbits.AbstractCommand;
-import com.nimbits.Command;
-import com.nimbits.Program;
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.server.Server;
+import com.nimbits.client.model.user.User;
 import com.nimbits.io.helper.EntityHelper;
 import com.nimbits.io.helper.HelperFactory;
+
+import java.util.List;
 
 public class CreateCommand extends AbstractCommand implements Command {
 
     private final static String USAGE = "create a new entity: create <entity type> <entity name> e.g create point foobar";
 
-    public CreateCommand(Server server) {
-        super(server);
+    public CreateCommand(User user, Entity current, Server server, List<Entity> tree) {
+        super(user, current, server, tree);
     }
 
     @Override
-    public void doCommand(String[] args) {
+    public void doCommand(CommandListener listener, String[] args) {
 
         if (args.length != 3) {
             System.out.println(USAGE);
@@ -29,24 +30,27 @@ public class CreateCommand extends AbstractCommand implements Command {
                 String name = args[2];
                 EntityType entityType = EntityType.valueOf(type);
                 if (entityType.equals(EntityType.point)) {
-                    EntityHelper helper = HelperFactory.getEntityHelper(server, Program.user.getEmail(), null);
-                    Point point = helper.createPoint(name, entityType, Program.current);
-                    Program.tree.add(point);
-                    Program.setCurrent(Program.current);
+                    EntityHelper helper = HelperFactory.getEntityHelper(server, user.getEmail(), null);
+                    Point point = helper.createPoint(name, entityType,  current);
+                    tree.add(point);
+                    listener.onTreeUpdated(tree);
+                    listener.setCurrent(current);
 
                 }
                 else {
-                    System.out.println("you can only create a type point for now.");
+                    listener.onMessage("you can only create a type point for now.");
                 }
             }
             catch (Exception ex) {
-               System.out.println(ex.getMessage());
+                listener.onMessage(ex.getMessage());
             }
 
         }
 
 
     }
+
+
 
     @Override
     public String getUsage() {

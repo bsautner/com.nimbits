@@ -12,9 +12,7 @@
 
 package com.nimbits.server.communication.xmpp;
 
-/**
- * Created by benjamin on 10/18/13.
- */
+
 public class XmppServiceFactory {
 
     public static XmppService getServiceInstance() {

@@ -391,6 +391,15 @@
         <url-pattern>/nimbits/rpc/valueService</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>com.nimbits XMPPService</servlet-name>
+        <servlet-class>com.nimbits.server.XmppRpcServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>com.nimbits XMPPService</servlet-name>
+        <url-pattern>/nimbits/rpc/xmppService</url-pattern>
+    </servlet-mapping>
 
     <!--<security-constraint>-->
         <!--<web-resource-collection>-->

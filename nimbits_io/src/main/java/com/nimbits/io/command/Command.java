@@ -1,4 +1,4 @@
-package com.nimbits;
+package com.nimbits.io.command;
 
 public interface Command {
 

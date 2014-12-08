@@ -47,6 +47,8 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     private String id;
     private String action;
 
+
+
     public EntityModel(final CommonIdentifier name,
                        final String description,
                        final EntityType entityType,

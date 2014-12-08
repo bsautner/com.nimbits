@@ -10,7 +10,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.communication.xmpp;
+package com.nimbits.server;
 
 import com.google.appengine.api.xmpp.JID;
 import com.google.appengine.api.xmpp.XMPPServiceFactory;
@@ -20,22 +20,32 @@ import com.nimbits.client.service.xmpp.XmppRpcService;
 import com.nimbits.server.transaction.user.UserHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+
+import javax.servlet.ServletException;
 
 @Service
-public class XmppRpcServiceImpl extends RemoteServiceServlet implements XmppRpcService {
+public class XmppRpcServiceImpl extends RemoteServiceServlet  implements XmppRpcService {
 
-//    @Autowired
-//    UserHelper userHelper;
+    @Autowired
+    UserHelper userHelper;
+
+    @Override
+    public void init() throws ServletException {
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+
+
+    }
 
     @Override
     public void sendInviteRpc() {
 
-//        User user = userHelper.getUser().get(0);
-//
-//
-//        final JID jid = new JID(user.getEmail().getValue());
-//        final com.google.appengine.api.xmpp.XMPPService xmpp = XMPPServiceFactory.getXMPPService();
-//        xmpp.sendInvitation(jid);
+        User user = userHelper.getUser().get(0);
+
+//TODO do this on first login
+        final JID jid = new JID(user.getEmail().getValue());
+        final com.google.appengine.api.xmpp.XMPPService xmpp = XMPPServiceFactory.getXMPPService();
+        xmpp.sendInvitation(jid);
 
 
     }

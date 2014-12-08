@@ -19,97 +19,149 @@ import com.google.appengine.api.xmpp.XMPPServiceFactory;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
-import com.nimbits.client.common.Utils;
-import com.nimbits.client.enums.*;
-import com.nimbits.client.enums.point.PointType;
+import com.nimbits.client.enums.Action;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.exception.ValueException;
-import com.nimbits.client.model.common.SimpleValue;
-import com.nimbits.client.model.common.impl.CommonFactory;
+import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.location.LocationFactory;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.point.PointModelFactory;
+import com.nimbits.client.model.server.Server;
+import com.nimbits.client.model.server.ServerFactory;
+import com.nimbits.client.model.server.apikey.ApiKey;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.impl.ValueDataModel;
-import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.server.api.ApiServlet;
+import com.nimbits.io.command.CommandListener;
+import com.nimbits.io.command.TerminalCommand;
+import com.nimbits.server.ServerInfo;
+import com.nimbits.server.api.ApiBase;
 import com.nimbits.server.communication.xmpp.XmppService;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.json.JsonHelper;
+import com.nimbits.server.transaction.cache.NimbitsCache;
+import com.nimbits.server.transaction.settings.SettingsService;
+import com.nimbits.server.transaction.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
 
-@Service @Deprecated //let's make this work the same way as the new command line app does! ben from the past
-public class XMPPReceiverServlet extends ApiServlet {
+@Service
+public class XMPPReceiverServlet extends ApiBase {
 
 
     private static final Pattern COMPILE = Pattern.compile("/");
     private static final Pattern PATTERN = Pattern.compile("=");
 
+
+    @Autowired
+    protected UserService userService;
+
+    @Autowired
+    protected SettingsService settingsService;
+
+    @Autowired
+    private NimbitsCache cache;
+
+    @Override
+    public void init() throws ServletException {
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+
+
+    }
+
     @Autowired
     private XmppService xmppService;
 
+
+    private String getCurrentKey(User user) {
+        return user.getKey() + "COMMANDCURRENTKEY";
+    }
+
+    private String getTreeKey(User user) {
+        return user.getKey() + "COMMANDTREEKEY";
+    }
+
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
-        User u;
-        String body;
 
 
-//            doInit(req, resp, ExportType.json);
         final XMPPService xmpp = XMPPServiceFactory.getXMPPService();
         final Message message = xmpp.parseMessage(req);
         final JID fromJid = message.getFromJid();
-        body = message.getBody();
+        final String body = message.getBody();
         final String j[] = COMPILE.split(fromJid.getId());
         final String email = j[0].toLowerCase();
 
         List<Entity> result = entityService.getEntityByKey(userService.getAdmin(), email, EntityType.user);
         if (!result.isEmpty()) {
-            u = (User) result.get(0);
-            u.addAccessKey(userService.authenticatedKey(u));
+            final User user = (User) result.get(0);
+            user.addAccessKey(userService.authenticatedKey(user));
 
-            if (body.toLowerCase().trim().equals("ls")) {
-                //sendPointList(u);
-            } else if (body.indexOf('=') > 0) {
-
-                recordNewValue(body, u);
-
-            } else if (!body.trim().equals("?") && !body.isEmpty() && body.charAt(body.length() - 1) == '?') {
-
-                sendCurrentValue(body, u);
-
-            } else if (body.toLowerCase().startsWith("c ")) {
-                xmppService.sendMessage("creating point...", u.getEmail());
-
-                createPoint(body, u);
-
-            } else if (body.trim().equals("?") || body.toLowerCase().equals("help")) {
-                sendHelp(u);
-
-            } else if (JsonHelper.isJson(body)) { //it's json from the sdk
-                processJson(req, u, body);
+            if (JsonHelper.isJson(body)) {
+                processJson(req, user, body);
             } else {
-                xmppService.sendMessage(":( I don't understand you - try ? ", u.getEmail());
+
+                CommandListener listener = new CommandListener() {
+                    @Override
+                    public void onMessage(String message) {
+                        xmppService.sendMessage(message, user.getEmail());
+                    }
+
+                    @Override
+                    public void setCurrent(Entity newCurrent) {
+                      cache.put(getCurrentKey(user), newCurrent);
+                    }
+
+                    @Override
+                    public void onTreeUpdated(List<Entity> newTree) {
+                        cache.put(getTreeKey(user), newTree);
+                    }
+                };
+                String[] args = body.split(" ");
+                TerminalCommand terminalCommand = TerminalCommand.lookup(args[0]);
+                if (terminalCommand != null) {
+                    UrlContainer urlContainer = UrlContainer.getInstance(ServerInfo.getFullServerURL(req));
+                    ApiKey apiKey = ApiKey.getInstance(settingsService.getSetting(ServerSetting.apiKey));
+                    Server server = ServerFactory.getInstance(urlContainer, apiKey );
+                    try {
+                        List<Entity> tree;
+                        if (cache.contains(getTreeKey(user))) {
+                            tree = (List<Entity>) cache.get(getTreeKey(user));
+                        }
+
+                        else {
+                            tree = Collections.<Entity>emptyList();
+                        }
+                        if (tree == null || tree.isEmpty() && terminalCommand.usesTree()) {
+                            tree = entityService.getEntities(user);
+                            cache.put(getTreeKey(user), tree);
+                        }
+                        terminalCommand.init(user, user, server, tree).doCommand(listener, args);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    xmppService.sendMessage("command not found", user.getEmail());
+
+                }
+
             }
         }
-
-
-        // ...
     }
+
+
+
+
 
     private void processJson(HttpServletRequest req, final User u, final String body) {
 
@@ -145,93 +197,8 @@ public class XMPPReceiverServlet extends ApiServlet {
         }
     }
 
-    private void sendHelp(User u) {
-        xmppService.sendMessage("Usage:", u.getEmail());
-        xmppService.sendMessage("? | Help", u.getEmail());
-        xmppService.sendMessage("c pointname | Create a data point", u.getEmail());
-        xmppService.sendMessage("pointname? | getInstance the current value of a point", u.getEmail());
-        xmppService.sendMessage("pointname=3.14 | record a value to that point", u.getEmail());
-        xmppService.sendMessage("pointname=Foo Bar | record a text value to that point", u.getEmail());
-    }
-
-    private void createPoint(final String body, final User u) {
 
 
-        EntityName pointName = CommonFactory.createName(body.substring(1).trim(), EntityType.point);
-        Entity entity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone,
-                u.getKey(), u.getKey(), UUID.randomUUID().toString());
-        Point p = PointModelFactory.createPointModel(entity, 0.0, 90, "", 0.0, false,
-                false, false, 0, false, FilterType.fixedHysteresis, 0.1, false, PointType.basic, 0, false, 0.0, 10);
 
-        entityService.addUpdateEntity(u, Arrays.<Entity>asList(p));
-        //PointServiceFactory.getInstance().addPoint(u, entity);
-        xmppService.sendMessage(pointName.getValue() + " created", u.getEmail());
-
-
-    }
-
-    private void recordNewValue(final CharSequence body, final User u) {
-        String b[] = PATTERN.split(body);
-        if (b.length == 2) {
-
-            EntityName pointName = CommonFactory.createName(b[0], EntityType.point);
-            String sval = b[1];
-
-            try {
-                double v = Double.parseDouble(sval);
-
-
-                if (u != null) {
-                    Value value = ValueFactory.createValueModel(LocationFactory.createEmptyLocation(), v, new Date(), ValueDataModel.getInstance(SimpleValue.getInstance("")), AlertType.OK);
-                    valueService.recordValue(u, pointName, value, false);
-                }
-            } catch (NumberFormatException ignored) {
-
-            } catch (Exception e) {
-                e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-            }
-
-        }
-    }
-
-
-    private void sendCurrentValue(final String body, final User u) {
-        String message = "";
-        if (!Utils.isEmptyString(body) && !body.isEmpty() && body.charAt(body.length() - 1) == '?') {
-            final EntityName pointName = CommonFactory.createName(body.replace("?", ""), EntityType.point);
-
-            List<Entity> eSample = entityService.getEntityByName(u, pointName, EntityType.point);
-            if (!eSample.isEmpty()) {
-                // Point point = PointServiceFactory.getInstance().getPointByKey(e.getKey());
-                Entity e = eSample.get(0);
-                List<Entity> pointSample = entityService.getEntityByKey(u, e.getKey(), EntityType.point);
-
-                if (!pointSample.isEmpty()) {
-                    Point point = (Point) pointSample.get(0);
-                    final List<Value> sample = valueService.getPrevValue(point, new Date());
-                    if (!sample.isEmpty()) {
-                        Value v = sample.get(0);
-                        String t = "";
-
-                        xmppService.sendMessage(e.getName().getValue() + '='
-                                + v.getDoubleValue() + ' ' + t, u.getEmail());
-                    } else {
-                        xmppService.sendMessage(pointName.getValue() + " has no data", u.getEmail());
-
-                    }
-                } else {
-                    message = "was that a data point?";
-                }
-
-            } else {
-                message = "Entity not found";
-            }
-        } else {
-            message = "I don't understand";
-
-        }
-        xmppService.sendMessage(message + " " + body, u.getEmail());
-
-    }
 
 }

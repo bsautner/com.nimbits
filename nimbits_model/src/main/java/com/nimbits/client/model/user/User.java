@@ -22,12 +22,7 @@ import java.util.Date;
 import java.util.List;
 
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 4/16/11
- * Time: 4:10 PM
- */
+
 public interface User extends Entity, Serializable {
 
     Date getLastLoggedIn();

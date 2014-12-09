@@ -36,6 +36,7 @@ import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -67,6 +68,12 @@ public class UploadTask   extends HttpServlet {
     public UserService userService;
 
 
+    @Override
+    public void init() throws ServletException {
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+
+
+    }
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         final String key = request.getParameter(Parameters.blobkey.getText());

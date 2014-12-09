@@ -37,7 +37,9 @@ import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -70,6 +72,13 @@ public class DumpTask extends HttpServlet {
 
     @Autowired
     protected EntityService entityService;
+
+    @Override
+    public void init() throws ServletException {
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+
+
+    }
 
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) {

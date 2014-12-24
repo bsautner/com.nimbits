@@ -45,64 +45,7 @@ public class BaseTest {
         System.setProperty("appengine.orm.disable.duplicate.pmf.exception", "false");
 
 
-        batchApi = new BatchApi() {
 
-            @Override
-            public ServletContext getServletContext() {
-
-                return context;
-
-            }
-
-        };
-
-        sessionApi = new SessionApi() {
-            @Override
-            public ServletContext getServletContext() {
-
-                return context;
-
-            }
-        };
-
-        entityApi = new EntityApi() {
-            @Override
-            public ServletContext getServletContext() {
-
-                return context;
-
-            }
-        };
-
-
-        seriesApi = new SeriesApi() {
-            @Override
-            public ServletContext getServletContext() {
-
-                return context;
-
-            }
-        };
-
-        valueApi = new ValueApi() {
-            @Override
-            public ServletContext getServletContext() {
-
-                return context;
-
-            }
-        };
-
-
-
-        pointTask = new PointMaintTask() {
-            @Override
-            public ServletContext getServletContext() {
-
-                return context;
-
-            }
-        };
 
 
     }

@@ -16,7 +16,7 @@
 
 
     <entry-point class='com.nimbits.local.nimbits'/>
-
+    <inherits name='com.google.gwt.visualization.Visualization'/>
     <inherits name="com.google.gwt.resources.Resources"/>
     <inherits name='com.google.gwt.user.User'/>
     <inherits name='com.google.gwt.user.theme.standard.Standard'/>

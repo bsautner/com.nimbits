@@ -80,10 +80,10 @@ function getPoint() {
 
             document.getElementById("name").innerHTML = obj.name;
             document.getElementById("desc").innerHTML = obj.description;
-            //document.getElementById("uuid").innerHTML = "<a href='report.html?uuid=" + uuid + "'>" + uuid + "</a>";
+
 
             document.getElementById("QR").src = "https://chart.googleapis.com/chart?chs=100x100&cht=qr&chl=" +
-                server + "/report.html?uuid=" + uuid;
+                server + "/report.jsp?uuid=" + uuid;
 
             if (type == "1") {
                 getCurrentValue(obj);

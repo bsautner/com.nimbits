@@ -14,6 +14,7 @@ package com.nimbits.server;
 
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.google.gwt.visualization.client.DataTable;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.calculation.Calculation;
@@ -60,6 +61,11 @@ public class ValueServiceRpcImpl  extends RemoteServiceServlet implements ValueS
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 
 
+    }
+
+    @Override
+    public String getChartTable(User user, Entity entity) {
+       return valueService.getChartTable( user, entity);
     }
 
     @Override

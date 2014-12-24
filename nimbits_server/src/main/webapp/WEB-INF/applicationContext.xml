@@ -8,7 +8,7 @@
 
     <beans:import resource="context.xml"/>
 
-
+    <bean id="chartHelper" class="com.nimbits.server.chart.ChartHelper"/>
     <bean id="cache" class="com.nimbits.server.transaction.cache.GoogleCache"/>
 
     <bean id="userCache" class="com.nimbits.server.transaction.user.cache.UserCacheImpl"/>

@@ -48,7 +48,7 @@ import java.util.*;
 public class SeriesPostJavaSample {
     private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("support@nimbits.com");
     private static final String ACCESS_KEY = "key";
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8081/nimbits");
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080/nimbits");
     private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL);
     protected static final int COUNT = 10;
     public static final int VCOUNT = 1000;

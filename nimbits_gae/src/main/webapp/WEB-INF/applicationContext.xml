@@ -58,6 +58,8 @@
 
     <bean id="entityCache" class="com.nimbits.server.transaction.entity.cache.EntityCacheImpl"/>
 
+    <bean id="chartHelper" class="com.nimbits.server.chart.ChartHelper"/>
+
     <bean id="transactionManager" class="org.springframework.orm.jdo.JdoTransactionManager"
           p:persistenceManagerFactory-ref="pmf" />
 

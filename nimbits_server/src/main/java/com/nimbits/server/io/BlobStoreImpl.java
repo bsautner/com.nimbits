@@ -86,7 +86,7 @@ public class BlobStoreImpl implements BlobStore {
             q.setRange(0, maxValues);
 
             final List<ValueBlobStoreEntity> result = (List<ValueBlobStoreEntity>) q.execute(entity.getKey(), endDate.getTime());
-            logger.info("reading blobs " + result.size());
+
             for (final ValueBlobStoreEntity e : result) {
                 if (validateOwnership(entity, e)) {
                     List<Value> values = readValuesFromFile(e.getBlobKey());
@@ -123,7 +123,7 @@ public class BlobStoreImpl implements BlobStore {
             q.setRange(0, 1000);
 
             final List<ValueBlobStoreEntity> result = (List<ValueBlobStoreEntity>) q.execute(entity.getKey());
-            logger.info("reading blobs " + result.size());
+
             for (final ValueBlobStoreEntity e : result) {
                 if (validateOwnership(entity, e)) {
                     List<Value> values = readValuesFromFile(e.getBlobKey());

@@ -29,6 +29,7 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.UserSource;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.io.BlobStore;
 import com.nimbits.server.process.task.TaskService;
@@ -160,7 +161,7 @@ public class NimbitsServletTest extends BaseTest {
         groupName = CommonFactory.createName("group1", EntityType.point);
 
 
-        user = userService.createUserRecord(emailAddress);
+        user = userService.createUserRecord(emailAddress, UUID.randomUUID().toString(), UserSource.google);
         assertNotNull(user);
 
 

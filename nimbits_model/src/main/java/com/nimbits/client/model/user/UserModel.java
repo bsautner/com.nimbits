@@ -39,13 +39,20 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     private String logoutUrl;
 
-    private boolean userAdmin;
+    private Boolean isAdmin;
 
     private String sessionId;
+
+    private String password;
+
+    private String passwordSalt;
+
+    private String source;
+
     /**
      *
      */
-    private static final long serialVersionUID = 3L;
+    private static final long serialVersionUID = 4L;
 
     @SuppressWarnings("unused")
     public UserModel() {
@@ -58,6 +65,10 @@ public class UserModel extends EntityModel implements Serializable, User {
             this.lastLoggedIn = u.getLastLoggedIn();
             this.accessKeys = u.getAccessKeys();
             this.emailAddress = u.getEmail().getValue();
+            this.password = u.getPassword();
+            this.passwordSalt = u.getPasswordSalt();
+            this.source = u.getSource().name();
+            this.isAdmin = u.getIsAdmin();
 
         }
     }
@@ -69,6 +80,29 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     }
 
+    public UserModel(final Entity entity, final String password, final String salt, final UserSource source) {
+        super(entity);
+        this.lastLoggedIn = new Date();
+        this.emailAddress = entity.getName().getValue();
+        this.password = password;
+        this.passwordSalt = salt;
+        this.source = source.name();
+
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+    @Override
+    public String getPasswordSalt() {
+        return passwordSalt;
+    }
+
+    @Override
+    public UserSource getSource() {
+        return source == null ? UserSource.google: UserSource.valueOf( source);
+    }
 
     @Override
     public Date getLastLoggedIn() {
@@ -142,13 +176,13 @@ public class UserModel extends EntityModel implements Serializable, User {
     }
 
     @Override
-    public boolean isUserAdmin() {
-        return userAdmin;
+    public boolean getIsAdmin() {
+        return isAdmin == null ? false : isAdmin;
     }
 
     @Override
-    public void setUserAdmin(final boolean userAdmin) {
-        this.userAdmin = userAdmin;
+    public void setIsAdmin(final boolean userAdmin) {
+        this.isAdmin = userAdmin;
     }
 
     @Override
@@ -178,7 +212,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         UserModel userModel = (UserModel) o;
 
         if (loggedIn != userModel.loggedIn) return false;
-        if (userAdmin != userModel.userAdmin) return false;
+        if (isAdmin != userModel.isAdmin) return false;
         if (accessKeys != null ? !accessKeys.equals(userModel.accessKeys) : userModel.accessKeys != null) return false;
         if (emailAddress != null ? !emailAddress.equals(userModel.emailAddress) : userModel.emailAddress != null)
             return false;
@@ -199,7 +233,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         result = 31 * result + (loggedIn ? 1 : 0);
         result = 31 * result + (loginUrl != null ? loginUrl.hashCode() : 0);
         result = 31 * result + (logoutUrl != null ? logoutUrl.hashCode() : 0);
-        result = 31 * result + (userAdmin ? 1 : 0);
+        result = 31 * result + (isAdmin ? 1 : 0);
 
         return result;
     }

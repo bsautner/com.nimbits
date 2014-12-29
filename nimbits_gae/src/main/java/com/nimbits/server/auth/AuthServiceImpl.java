@@ -31,7 +31,7 @@ import java.util.List;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    public List<EmailAddress> getCurrentUserEmail() {
+    public List<EmailAddress> getCurrentUser() {
         com.google.appengine.api.users.UserService googleUserService;
         googleUserService = UserServiceFactory.getUserService();
 

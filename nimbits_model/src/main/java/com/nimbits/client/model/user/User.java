@@ -25,6 +25,12 @@ import java.util.List;
 
 public interface User extends Entity, Serializable {
 
+    String getPassword();
+
+    String getPasswordSalt();
+
+    UserSource getSource();
+
     Date getLastLoggedIn();
 
     void setLastLoggedIn(final Date lastLoggedIn);
@@ -49,13 +55,15 @@ public interface User extends Entity, Serializable {
 
     void setLogoutUrl(String logoutUrl);
 
-    boolean isUserAdmin();
+    boolean getIsAdmin();
 
-    void setUserAdmin(boolean userAdmin);
+    void setIsAdmin(boolean userAdmin);
 
     void setSessionId(String sessionId);
 
     String getSessionId();
 
     void setEmail(EmailAddress emailAddress);
+
+
 }

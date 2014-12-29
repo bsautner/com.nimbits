@@ -352,11 +352,11 @@
                 <artifactId>appengine-maven-plugin</artifactId>
                 <version>${appengine.target.version}</version>
                 <configuration>
-                    <port>8087</port>
+                    <port>8080</port>
 
                     <jvmFlags>
                         <jvmFlag>-Xdebug</jvmFlag>
-                        <jvmFlag>-agentlib:jdwp=transport=dt_socket,address=5007,server=y,suspend=n</jvmFlag>
+                        <jvmFlag>-agentlib:jdwp=transport=dt_socket,address=5008,server=y,suspend=n</jvmFlag>
                     </jvmFlags>
                 </configuration>
             </plugin>

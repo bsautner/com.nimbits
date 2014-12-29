@@ -13,6 +13,7 @@
 package com.nimbits.server;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.common.impl.CommonFactory;
@@ -22,13 +23,12 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModelFactory;
+import com.nimbits.client.model.user.UserSource;
 import com.nimbits.client.service.user.UserRpcService;
 import com.nimbits.server.transaction.entity.service.EntityService;
-import com.nimbits.server.transaction.user.cache.UserCache;
 import com.nimbits.server.transaction.user.service.UserService;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -36,6 +36,7 @@ import javax.servlet.ServletException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 import java.util.logging.Logger;
 
 @Service("userRpcService")
@@ -43,6 +44,7 @@ public class UserRpcServiceImpl  extends RemoteServiceServlet implements UserRpc
 
     private static final String ANON_NIMBITS_COM = "anon@nimbits.com";
     private static final Logger log = Logger.getLogger(UserRpcServiceImpl.class.getName());
+    protected static final String LOGOUT_URL = "/service/v2/session?action=logout";
 
     @Override
     public void init() throws ServletException {
@@ -77,8 +79,6 @@ public class UserRpcServiceImpl  extends RemoteServiceServlet implements UserRpc
                 internetAddress = CommonFactory.createEmailAddress(googleUser.getEmail());
             }
 
-            log.info(String.valueOf("google user null check: " + (googleUser == null) + " " + (internetAddress == null)));
-
             if (internetAddress != null) {
 
                 log.info("getting user with address: " + internetAddress.getValue());
@@ -86,7 +86,7 @@ public class UserRpcServiceImpl  extends RemoteServiceServlet implements UserRpc
 
                 if (list.isEmpty()) {
                     log.info("user not found, creating record");
-                    retObj = userService.createUserRecord(internetAddress);
+                    retObj = userService.createUserRecord(internetAddress, UUID.randomUUID().toString(), UserSource.google);
 
                 } else {
                     log.info("got user result");
@@ -95,7 +95,7 @@ public class UserRpcServiceImpl  extends RemoteServiceServlet implements UserRpc
 
                 retObj.setLoggedIn(true);
 
-                retObj.setUserAdmin(isAdmin);
+                retObj.setIsAdmin(isAdmin);
 
                 retObj.setLogoutUrl(gaeUserService.createLogoutURL(requestUri));
 
@@ -107,7 +107,7 @@ public class UserRpcServiceImpl  extends RemoteServiceServlet implements UserRpc
             } else {
                 final EntityName name = CommonFactory.createName(ANON_NIMBITS_COM, EntityType.user);
                 final Entity e = EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe, "", "");
-                retObj = UserModelFactory.createUserModel(e);
+                retObj = UserModelFactory.createUnauthenticatedUserModel(e);
                 retObj.setLoggedIn(false);
                 retObj.setLoginUrl(gaeUserService.createLoginURL(requestUri));
             }
@@ -123,6 +123,55 @@ public class UserRpcServiceImpl  extends RemoteServiceServlet implements UserRpc
 
 
         }
+    }
+
+    @Override
+    public User doLogin(String email, String password) throws Exception {
+        List<User> userList = userService.getUserByKey(email, AuthLevel.readWriteAll);
+        if (userList.isEmpty()) {
+            throw new Exception("User Not Found.");
+        }
+        else {
+            User user = userList.get(0);
+            boolean okPassword = user.getPassword().equals(DigestUtils.sha512Hex(password + user.getPasswordSalt()));
+            if (okPassword) {
+                user.setLoggedIn(true);
+                user.setLogoutUrl(LOGOUT_URL);
+                return user;
+            }
+            else {
+                throw new Exception("Invalid user name or password");
+
+
+            }
+        }
+
+
+    }
+
+
+    @Override
+    public User register(String email, String password) throws Exception {
+        EmailAddress emailAddress = CommonFactory.createEmailAddress(email);
+        List<User> userList = userService.getUserByKey(email, AuthLevel.restricted);
+
+
+        if (userList.isEmpty()) {
+
+            User user = userService.createUserRecord(emailAddress, password, UserSource.local);
+            user.setLoggedIn(true);
+
+
+            user.setLogoutUrl(LOGOUT_URL);
+            return user;
+
+        }
+        else {
+            throw new Exception("A user with that email is already registered on this system");
+
+
+        }
+
     }
 
 }

@@ -24,6 +24,7 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModelFactory;
 import com.nimbits.client.model.user.UserSource;
+import com.nimbits.client.service.user.AbstractUserRpcService;
 import com.nimbits.client.service.user.UserRpcService;
 import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.user.service.UserService;
@@ -40,18 +41,13 @@ import java.util.UUID;
 import java.util.logging.Logger;
 
 @Service("userRpcService")
-public class UserRpcServiceImpl  extends RemoteServiceServlet implements UserRpcService  {
+public class UserRpcServiceImpl  extends AbstractUserRpcService implements UserRpcService  {
 
     private static final String ANON_NIMBITS_COM = "anon@nimbits.com";
     private static final Logger log = Logger.getLogger(UserRpcServiceImpl.class.getName());
-    protected static final String LOGOUT_URL = "/service/v2/session?action=logout";
-
-    @Override
-    public void init() throws ServletException {
-        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 
 
-    }
+
 
     @Autowired
     private EntityService entityService;
@@ -61,7 +57,7 @@ public class UserRpcServiceImpl  extends RemoteServiceServlet implements UserRpc
 
 
     @Override
-    public User loginRpc(final String requestUri) {
+    public User loginRpc(final String requestUri) throws Exception{
 
         final User retObj;
         EmailAddress internetAddress = null;
@@ -125,54 +121,7 @@ public class UserRpcServiceImpl  extends RemoteServiceServlet implements UserRpc
         }
     }
 
-    @Override
-    public User doLogin(String email, String password) throws Exception {
-        List<User> userList = userService.getUserByKey(email, AuthLevel.readWriteAll);
-        if (userList.isEmpty()) {
-            throw new Exception("User Not Found.");
-        }
-        else {
-            User user = userList.get(0);
-            boolean okPassword = user.getPassword().equals(DigestUtils.sha512Hex(password + user.getPasswordSalt()));
-            if (okPassword) {
-                user.setLoggedIn(true);
-                user.setLogoutUrl(LOGOUT_URL);
-                return user;
-            }
-            else {
-                throw new Exception("Invalid user name or password");
 
-
-            }
-        }
-
-
-    }
-
-
-    @Override
-    public User register(String email, String password) throws Exception {
-        EmailAddress emailAddress = CommonFactory.createEmailAddress(email);
-        List<User> userList = userService.getUserByKey(email, AuthLevel.restricted);
-
-
-        if (userList.isEmpty()) {
-
-            User user = userService.createUserRecord(emailAddress, password, UserSource.local);
-            user.setLoggedIn(true);
-
-
-            user.setLogoutUrl(LOGOUT_URL);
-            return user;
-
-        }
-        else {
-            throw new Exception("A user with that email is already registered on this system");
-
-
-        }
-
-    }
 
 }
 

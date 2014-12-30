@@ -24,6 +24,7 @@ import com.nimbits.client.model.email.EmailAddress;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -31,7 +32,7 @@ import java.util.List;
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    public List<EmailAddress> getCurrentUser() {
+    public List<EmailAddress> getCurrentUser(HttpServletRequest request) {
         com.google.appengine.api.users.UserService googleUserService;
         googleUserService = UserServiceFactory.getUserService();
 

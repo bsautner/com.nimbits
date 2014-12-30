@@ -12,13 +12,16 @@
 
 package com.nimbits.server;
 
-import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ServerSetting;
+import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.common.impl.CommonFactory;
-import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.UserModelFactory;
+import com.nimbits.client.service.user.AbstractUserRpcService;
 import com.nimbits.client.service.user.UserRpcService;
 import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.settings.SettingsService;
@@ -27,22 +30,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import javax.annotation.Resource;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 
 @Service("userRpcService")
-public class UserRpcServiceImpl extends RemoteServiceServlet implements UserRpcService {
+public class UserRpcServiceImpl extends AbstractUserRpcService implements UserRpcService {
 
+    private static final String ANON_NIMBITS_COM = "anon@nimbits.com";
+    public static final String UNAUTHORISED = "unauthorised";
 
-    @Autowired
-    private EntityService entityService;
-    @Autowired
-    private SettingsService settingsService;
-    @Autowired
     private UserService userService;
 
 
@@ -54,39 +51,37 @@ public class UserRpcServiceImpl extends RemoteServiceServlet implements UserRpcS
     }
 
     @Override
-    public User loginRpc(final String requestUri) {
+    public User loginRpc(final String requestUri) throws Exception {
+        User retObj;
+        if (getThreadLocalRequest().getSession() != null) {
+            String email = (String)  getThreadLocalRequest().getSession().getAttribute("LOGGED_IN_EMAIL");
+            if (email != null) {
+                List<User> users = userService.getUserByKey(email, AuthLevel.readWriteAll);
+                if (users.isEmpty()) {
+                    throw new Exception(UNAUTHORISED);
 
-        final User retObj;
-        EmailAddress internetAddress;
-        String admin = settingsService.getSetting(ServerSetting.admin);
-        internetAddress = CommonFactory.createEmailAddress(admin);
-
-
-        final List<Entity> list = entityService
-                .getEntityByKey(
-                        userService.getAnonUser(), internetAddress.getValue(), EntityType.user);
-
-
-        if (list.isEmpty()) {
-
-            retObj = userService.createUserRecord(internetAddress);
-
-        } else {
-            retObj = (User) list.get(0);
+                }
+                else {
+                    retObj = users.get(0);
+                }
+            }
+            else {
+                throw new Exception(UNAUTHORISED);
+            }
         }
+        else {
+            final EntityName name = CommonFactory.createName(ANON_NIMBITS_COM, EntityType.user);
+            final Entity e = EntityModelFactory.createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe, "", "");
+            retObj = UserModelFactory.createUnauthenticatedUserModel(e);
+            retObj.setLoggedIn(false);
 
-        retObj.setLoggedIn(true);
-
-        retObj.setUserAdmin(true);
-
-        retObj.setLogoutUrl("");
-
-        retObj.setLastLoggedIn(new Date());
-        entityService.addUpdateEntity(retObj, Arrays.<Entity>asList(retObj));
-        retObj.addAccessKey(userService.authenticatedKey(retObj));
-
-
+        }
         return retObj;
+
+
+
+
+
     }
 
 

@@ -12,10 +12,14 @@
 
 package com.nimbits.client.model.user;
 
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.model.entity.Entity;
 
 
 public class UserModelFactory {
+
+
+
 
     private UserModelFactory() {
     }
@@ -32,10 +36,16 @@ public class UserModelFactory {
 
     public static User createUserModel(final Entity entity, final String password, final String salt, final UserSource source)  {
 
-        User user = new UserModel(entity, password, salt, source);
 
+        return new UserModel(entity, password, salt, source);
+    }
 
-        return user;
+    public static LoginInfo createLoginInfo(String loginUrl, String logoutUrl, UserStatus userStatus, boolean isGAE) {
+        return new LoginInfoImpl(loginUrl,  logoutUrl, userStatus, isGAE) ;
+    }
+
+    public static LoginInfo createNullLoginInfo(boolean isGAE) {
+        return new LoginInfoImpl("", Const.WEBSITE, UserStatus.unknown, isGAE) ;
     }
 
 

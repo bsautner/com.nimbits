@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public enum UserSource implements Serializable {
 
-   local, google;
+    local, google;
 
     UserSource() {
     }

@@ -43,18 +43,6 @@ public interface User extends Entity, Serializable {
 
     List<AccessKey> getAccessKeys();
 
-    boolean isLoggedIn();
-
-    void setLoggedIn(boolean loggedIn);
-
-    String getLoginUrl();
-
-    void setLoginUrl(String loginUrl);
-
-    String getLogoutUrl();
-
-    void setLogoutUrl(String logoutUrl);
-
     boolean getIsAdmin();
 
     void setIsAdmin(boolean userAdmin);
@@ -64,6 +52,10 @@ public interface User extends Entity, Serializable {
     String getSessionId();
 
     void setEmail(EmailAddress emailAddress);
+
+    void setLoginInfo(LoginInfo loginInfo);
+
+    LoginInfo getLoginInfo();
 
 
 }

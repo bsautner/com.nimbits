@@ -50,4 +50,38 @@ public class AuthServiceImpl implements AuthService {
         }
         return Collections.emptyList();
     }
+
+    @Override
+    public boolean isGAE() {
+        return true;
+    }
+
+    @Override
+    public boolean isGAEAdmin() {
+        final com.google.appengine.api.users.UserService gaeUserService = com.google.appengine.api.users.UserServiceFactory.getUserService();
+        final com.google.appengine.api.users.User googleUser = gaeUserService.getCurrentUser();
+        if (googleUser != null) {
+            return gaeUserService.isUserAdmin();
+
+        }
+        else {
+            return false;
+        }
+    }
+
+    @Override
+    public String createLoginURL(String requestUri) {
+        final com.google.appengine.api.users.UserService gaeUserService = com.google.appengine.api.users.UserServiceFactory.getUserService();
+
+        return gaeUserService.createLoginURL(requestUri);
+    }
+
+    @Override
+    public String createLogoutURL(String requestUri) {
+        final com.google.appengine.api.users.UserService gaeUserService = com.google.appengine.api.users.UserServiceFactory.getUserService();
+
+        return gaeUserService.createLogoutURL(requestUri);
+    }
+
+
 }

@@ -33,12 +33,6 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     private List<AccessKey> accessKeys;
 
-    private boolean loggedIn = false;
-
-    private String loginUrl;
-
-    private String logoutUrl;
-
     private Boolean isAdmin;
 
     private String sessionId;
@@ -48,6 +42,8 @@ public class UserModel extends EntityModel implements Serializable, User {
     private String passwordSalt;
 
     private String source;
+
+    private LoginInfo loginInfo;
 
     /**
      *
@@ -145,35 +141,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         accessKeys.add(key);
     }
 
-    @Override
-    public boolean isLoggedIn() {
-        return loggedIn;
-    }
 
-    @Override
-    public void setLoggedIn(final boolean loggedIn) {
-        this.loggedIn = loggedIn;
-    }
-
-    @Override
-    public String getLoginUrl() {
-        return loginUrl;
-    }
-
-    @Override
-    public void setLoginUrl(final String loginUrl) {
-        this.loginUrl = loginUrl;
-    }
-
-    @Override
-    public String getLogoutUrl() {
-        return logoutUrl;
-    }
-
-    @Override
-    public void setLogoutUrl(final String logoutUrl) {
-        this.logoutUrl = logoutUrl;
-    }
 
     @Override
     public boolean getIsAdmin() {
@@ -199,6 +167,16 @@ public class UserModel extends EntityModel implements Serializable, User {
         this.emailAddress = emailAddress.getValue();
     }
 
+    @Override
+    public void setLoginInfo(LoginInfo loginInfo) {
+        this.loginInfo = loginInfo;
+    }
+
+    @Override
+    public LoginInfo getLoginInfo() {
+        return loginInfo == null ? UserModelFactory.createNullLoginInfo(false) : loginInfo;
+    }
+
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
     }
@@ -211,15 +189,13 @@ public class UserModel extends EntityModel implements Serializable, User {
 
         UserModel userModel = (UserModel) o;
 
-        if (loggedIn != userModel.loggedIn) return false;
+
         if (isAdmin != userModel.isAdmin) return false;
         if (accessKeys != null ? !accessKeys.equals(userModel.accessKeys) : userModel.accessKeys != null) return false;
         if (emailAddress != null ? !emailAddress.equals(userModel.emailAddress) : userModel.emailAddress != null)
             return false;
         if (lastLoggedIn != null ? !lastLoggedIn.equals(userModel.lastLoggedIn) : userModel.lastLoggedIn != null)
             return false;
-        if (loginUrl != null ? !loginUrl.equals(userModel.loginUrl) : userModel.loginUrl != null) return false;
-        if (logoutUrl != null ? !logoutUrl.equals(userModel.logoutUrl) : userModel.logoutUrl != null) return false;
 
         return true;
     }
@@ -230,9 +206,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         result = 31 * result + (lastLoggedIn != null ? lastLoggedIn.hashCode() : 0);
         result = 31 * result + emailAddress.hashCode();
         result = 31 * result + (accessKeys != null ? accessKeys.hashCode() : 0);
-        result = 31 * result + (loggedIn ? 1 : 0);
-        result = 31 * result + (loginUrl != null ? loginUrl.hashCode() : 0);
-        result = 31 * result + (logoutUrl != null ? logoutUrl.hashCode() : 0);
+
         result = 31 * result + (isAdmin ? 1 : 0);
 
         return result;

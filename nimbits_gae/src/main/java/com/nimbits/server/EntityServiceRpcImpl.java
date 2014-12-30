@@ -21,10 +21,8 @@ import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityServiceRpc;
 import com.nimbits.server.transaction.entity.service.EntityService;
-import com.nimbits.server.transaction.user.UserHelper;
+import com.nimbits.server.transaction.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -43,7 +41,7 @@ public class EntityServiceRpcImpl  extends RemoteServiceServlet implements Entit
     private EntityService entityService;
 
     @Autowired
-    private UserHelper userHelper;
+    private UserService userService;
 
     @Override
     public void init() throws ServletException {
@@ -54,13 +52,14 @@ public class EntityServiceRpcImpl  extends RemoteServiceServlet implements Entit
 
     @Override
     public List<Entity> addUpdateEntityRpc(final List<Entity> entity) throws ClassNotFoundException {
-        return entityService.addUpdateEntity(entity);
+        User u = userService.getHttpRequestUser(getThreadLocalRequest());
+        return entityService.addUpdateIncompleteEntity(u, entity);
 
     }
 
     @Override
     public List<Entity> deleteEntityRpc(final List<Entity> entityList) {
-        User u = userHelper.getUser().get(0);
+        User u = userService.getHttpRequestUser(getThreadLocalRequest());
         if (u != null && !entityList.isEmpty()) {
 
             return entityService.deleteEntity(u, entityList);
@@ -88,7 +87,8 @@ public class EntityServiceRpcImpl  extends RemoteServiceServlet implements Entit
                 p.setKey(null);
                 List<Entity> list = new ArrayList<Entity>(1);
                 list.add(p);
-                return entityService.addUpdateEntity(list);
+                User u = userService.getHttpRequestUser(getThreadLocalRequest());
+                return entityService.addUpdateIncompleteEntity(u, list);
             //return PointServiceFactory.getInstance().copyPoint(getUser(), originalEntity, newName);
 
             case category:

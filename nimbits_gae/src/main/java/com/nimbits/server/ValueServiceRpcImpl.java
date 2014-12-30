@@ -14,7 +14,6 @@ package com.nimbits.server;
 
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.google.gwt.visualization.client.DataTable;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.calculation.Calculation;
@@ -27,7 +26,7 @@ import com.nimbits.client.service.value.ValueServiceRpc;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.transaction.calculation.CalculationService;
 import com.nimbits.server.transaction.entity.service.EntityService;
-import com.nimbits.server.transaction.user.UserHelper;
+import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,13 +47,14 @@ public class ValueServiceRpcImpl  extends RemoteServiceServlet implements ValueS
     private EntityService entityService;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private ValueService valueService;
 
     @Autowired
     private CalculationService calculationService;
 
-    @Autowired
-    private UserHelper userHelper;
 
     @Override
     public void init() throws ServletException {
@@ -79,8 +79,7 @@ public class ValueServiceRpcImpl  extends RemoteServiceServlet implements ValueS
     public Value recordValueRpc(final Entity point,
                                 final Value value) throws ValueException {
 
-        User user = userHelper.getUser().get(0);
-      //  HttpServletRequest req = getThreadLocalRequest();
+        User user = userService.getHttpRequestUser(getThreadLocalRequest());
         List<Entity> entities = entityService.getEntityByKey(user, point.getKey(), EntityType.point);
         if (! entities.isEmpty()) {
             return valueService.recordValue(user, (Point) entities.get(0), value, false);
@@ -102,7 +101,7 @@ public class ValueServiceRpcImpl  extends RemoteServiceServlet implements ValueS
 
     @Override
     public void createDataDumpRpc(Entity entity, Timespan timespan) {
-        User user = userHelper.getUser().get(0);
+        User user = userService.getHttpRequestUser(getThreadLocalRequest());
 
         taskService.startDataDumpTask(user, entity, timespan);
     }

@@ -40,7 +40,7 @@ public class SubscriptionServiceImplTest extends NimbitsServletTest {
         Entity entity = EntityModelFactory.createEntity(name, EntityType.subscription);
         Subscription s = SubscriptionFactory.createSubscription(entity, point.getKey(), SubscriptionType.newValue,
                 SubscriptionNotifyMethod.email, 2, false, true);
-        Subscription result = (Subscription) entityService.addUpdateSingleEntity(s);
+        Subscription result = (Subscription) entityService.addUpdateSingleEntity(user, s);
         Thread.sleep(3000);
         assertTrue(subscriptionService.okToProcess(result));
 
@@ -55,7 +55,7 @@ public class SubscriptionServiceImplTest extends NimbitsServletTest {
         Entity entity = EntityModelFactory.createEntity(name, EntityType.subscription);
         Subscription s = SubscriptionFactory.createSubscription(entity, point.getKey(), SubscriptionType.newValue,
                 SubscriptionNotifyMethod.email, 100, false, true);
-        Subscription result = (Subscription) entityService.addUpdateSingleEntity(s);
+        Subscription result = (Subscription) entityService.addUpdateSingleEntity(user, s);
 
         assertFalse(subscriptionService.okToProcess(result));
 

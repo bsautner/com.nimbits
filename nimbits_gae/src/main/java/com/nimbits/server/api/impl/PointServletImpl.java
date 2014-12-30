@@ -306,7 +306,7 @@ public class PointServletImpl extends ApiServlet {
                 false, false, false, 0, false, FilterType.fixedHysteresis, FILTER_VALUE, true, PointType.basic, 0, false, 0.0, 10);
 
 
-        return (Point) entityService.addUpdateEntity(Arrays.<Entity>asList(point)).get(0);
+        return (Point) entityService.addUpdateIncompleteEntity(u, Arrays.<Entity>asList(point)).get(0);
     }
 
     private Point createPointWithJson(final User u, final EntityName parentName, final EntityType parentType, final String json) throws Exception {

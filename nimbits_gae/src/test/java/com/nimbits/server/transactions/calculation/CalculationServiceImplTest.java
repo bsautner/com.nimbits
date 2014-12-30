@@ -89,7 +89,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Calculation calculation = CalculationModelFactory.createCalculation(en, EntityModelFactory.createTrigger(trigger.getKey()),
                 true, "x+y+z+" + r1, EntityModelFactory.createTarget((target.getKey())), (trigger.getKey()), y.getKey(), z.getKey());
 
-        final Entity ce = entityService.addUpdateSingleEntity(calculation);
+        final Entity ce = entityService.addUpdateSingleEntity(user, calculation);
 
         org.junit.Assert.assertNotNull(ce);
 
@@ -97,7 +97,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         org.junit.Assert.assertNotNull(c);
         org.junit.Assert.assertFalse(c.isEmpty());
 
-        entityService.addUpdateSingleEntity(trigger);
+        entityService.addUpdateSingleEntity(user, trigger);
 
 
         valueService.recordValue(  user, yName, ValueFactory.createValueModel(ry), false);
@@ -157,7 +157,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Calculation calculation = CalculationModelFactory.createCalculation(en, EntityModelFactory.createTrigger(trigger.getKey()),
                 true, "x+y+z", EntityModelFactory.createTarget(trigger.getKey()), trigger.getKey(), y.getKey(), z.getKey());
 
-        final Entity ce = entityService.addUpdateSingleEntity(calculation);
+        final Entity ce = entityService.addUpdateSingleEntity(user, calculation);
 
         org.junit.Assert.assertNotNull(ce);
 
@@ -165,7 +165,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         org.junit.Assert.assertNotNull(c);
         org.junit.Assert.assertFalse(c.isEmpty());
 
-        entityService.addUpdateSingleEntity(trigger);
+        entityService.addUpdateSingleEntity(user, trigger);
 
     }
 
@@ -197,7 +197,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Calculation calculation = CalculationModelFactory.createCalculation(en, EntityModelFactory.createTrigger(trigger.getKey()),
                 true, "1+1", EntityModelFactory.createTarget(target.getKey()), "", "", "");
 
-        entityService.addUpdateSingleEntity(calculation);
+        entityService.addUpdateSingleEntity(user, calculation);
 
 
         Entity en2 = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, user.getKey(),
@@ -206,7 +206,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Calculation calculation2 = CalculationModelFactory.createCalculation(en2, EntityModelFactory.createTrigger(target.getKey()),
                 true, "1+1", EntityModelFactory.createTarget(target2.getKey()), "", "", "");
 
-        entityService.addUpdateSingleEntity(calculation2);
+        entityService.addUpdateSingleEntity(user, calculation2);
 
         Entity en3 = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, user.getKey(),
                 user.getKey());
@@ -214,7 +214,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Calculation calculation3 = CalculationModelFactory.createCalculation(en3, EntityModelFactory.createTrigger(target2.getKey()),
                 true, "1+1", EntityModelFactory.createTarget(trigger.getKey()), "", "", "");
 
-        entityService.addUpdateSingleEntity(calculation3);
+        entityService.addUpdateSingleEntity(user, calculation3);
 
     }
 
@@ -267,7 +267,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Calculation calculation = CalculationModelFactory.createCalculation(en, EntityModelFactory.createTrigger(trigger.getKey()),
                 true, "X+y+z", EntityModelFactory.createTarget(target.getKey()), (trigger.getKey()), y.getKey(), z.getKey());
 
-        entityService.addUpdateSingleEntity(calculation);
+        entityService.addUpdateSingleEntity(user, calculation);
 
 
     }
@@ -295,7 +295,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Calculation calculation = CalculationModelFactory.createCalculation(en, EntityModelFactory.createTrigger(trigger.getKey()),
                 true, "x+Y+z", EntityModelFactory.createTarget(target.getKey()), trigger.getKey(), y.getKey(), z.getKey());
 
-        entityService.addUpdateSingleEntity(calculation);
+        entityService.addUpdateSingleEntity(user, calculation);
 
 
     }
@@ -323,7 +323,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Calculation calculation = CalculationModelFactory.createCalculation(en, EntityModelFactory.createTrigger(trigger.getKey()),
                 true, "x+y+Z", EntityModelFactory.createTarget(target.getKey()), trigger.getKey(), y.getKey(), z.getKey());
 
-        entityService.addUpdateSingleEntity(calculation);
+        entityService.addUpdateSingleEntity(user, calculation);
 
 
     }
@@ -349,7 +349,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Calculation calculation = CalculationModelFactory.createCalculation(en, EntityModelFactory.createTrigger(trigger.getKey()),
                 true, "x+y+z", EntityModelFactory.createTarget(target.getKey()), trigger.getKey(), y.getKey(), "");
 
-        entityService.addUpdateSingleEntity(calculation);
+        entityService.addUpdateSingleEntity(user, calculation);
 
 
     }
@@ -377,7 +377,7 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
         final Calculation calculation = CalculationModelFactory.createCalculation(en, EntityModelFactory.createTrigger(trigger.getKey()),
                 true, "x+y+z", EntityModelFactory.createTarget(target.getKey()), "", y.getKey(), z.getKey());
 
-        entityService.addUpdateSingleEntity(calculation);
+        entityService.addUpdateSingleEntity(user, calculation);
 
 
     }

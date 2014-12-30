@@ -91,7 +91,7 @@ public class EntityDaoImplTest extends NimbitsServletTest {
                 0.1,
                 false,
                 PointType.basic, 0, false, 0.0, 10);
-        Point px = (Point) entityService.addUpdateSingleEntity(point1);
+        Point px = (Point) entityService.addUpdateSingleEntity(user, point1);
 
         //Point rp = PointTransactionsFactory.getDaoInstance(user).getPointByKey(result.getKey());
         Point rp = (Point) dao.getEntityByKey(user, result.getKey(), PointEntity.class).get(0);
@@ -148,7 +148,7 @@ public class EntityDaoImplTest extends NimbitsServletTest {
                 0.1,
                 false,
                 PointType.basic, 0, false, 0.0, 10);
-        Point px = (Point) entityService.addUpdateSingleEntity(point1);
+        Point px = (Point) entityService.addUpdateSingleEntity(user, point1);
 
         //Point rp = PointTransactionsFactory.getDaoInstance(user).getPointByKey(result.getKey());
         Point rp = (Point) dao.getEntityByKey(user, result.getKey(), PointEntity.class).get(0);

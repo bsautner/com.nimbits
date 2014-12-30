@@ -39,7 +39,7 @@ public class EntityServiceTest extends NimbitsServletTest {
     @Test
     public void addUpdateEntity() throws Exception {
         Point p = new EntityHelper().createPointWithName(UUID.randomUUID().toString());
-        Point r = (Point) entityService.addUpdateSingleEntity(p);
+        Point r = (Point) entityService.addUpdateSingleEntity(user, p);
         assertNotNull(p);
         assertNotNull(r);
 
@@ -117,7 +117,7 @@ public class EntityServiceTest extends NimbitsServletTest {
                 0.1,
                 false,
                 PointType.basic, 0, false, 0.0, 10);
-        entityService.addUpdateSingleEntity(p1);
+        entityService.addUpdateSingleEntity(user, p1);
         Point p2 = PointModelFactory.createPointModel(
                 model2,
                 0.0,
@@ -133,7 +133,7 @@ public class EntityServiceTest extends NimbitsServletTest {
                 0.1,
                 false,
                 PointType.basic, 0, false, 0.0, 10);
-        entityService.addUpdateSingleEntity(p2);
+        entityService.addUpdateSingleEntity(user, p2);
 
     }
 
@@ -143,11 +143,11 @@ public class EntityServiceTest extends NimbitsServletTest {
             EntityName name = CommonFactory.createName("TWICE", EntityType.category);
             Entity model = EntityModelFactory.createEntity(name, "", EntityType.category, ProtectionLevel.everyone,
                     user.getKey(), user.getKey());
-            Entity e = entityService.addUpdateSingleEntity(model);
+            Entity e = entityService.addUpdateSingleEntity(user, model);
             Entity model2 = EntityModelFactory.createEntity(name, "", EntityType.category, ProtectionLevel.everyone,
                     user.getKey(), user.getKey());
 
-            Entity e2 = entityService.addUpdateSingleEntity(model2);
+            Entity e2 = entityService.addUpdateSingleEntity(user, model2);
         } catch (Exception e1) {
             fail();
         }

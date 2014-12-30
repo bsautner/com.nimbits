@@ -26,7 +26,6 @@ import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
 import com.nimbits.server.gson.GsonFactory;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.List;
@@ -55,7 +54,7 @@ public class ValueTaskTest extends NimbitsServletTest {
         Calculation c = CalculationModelFactory.createCalculation(
                 e, EntityModelFactory.createTrigger(point.getKey()), true, "x+1", EntityModelFactory.createTarget(pointChild.getKey()), (point.getKey()),
                 null, null);
-        entityService.addUpdateEntity(Arrays.<Entity>asList(c));
+        entityService.addUpdateIncompleteEntity(user, Arrays.<Entity>asList(c));
         Value v = ValueFactory.createValueModel(1.12);
         valueService.recordValue(user, point, v, false);
         List<Value> vr = valueService.getCurrentValue(point);

@@ -17,7 +17,8 @@ import com.google.appengine.api.xmpp.XMPPServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.xmpp.XmppRpcService;
-import com.nimbits.server.transaction.user.UserHelper;
+
+import com.nimbits.server.transaction.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -28,7 +29,7 @@ import javax.servlet.ServletException;
 public class XmppRpcServiceImpl extends RemoteServiceServlet  implements XmppRpcService {
 
     @Autowired
-    UserHelper userHelper;
+    UserService userHelper;
 
     @Override
     public void init() throws ServletException {
@@ -40,7 +41,7 @@ public class XmppRpcServiceImpl extends RemoteServiceServlet  implements XmppRpc
     @Override
     public void sendInviteRpc() {
 
-        User user = userHelper.getUser().get(0);
+        User user = userHelper.getHttpRequestUser(getThreadLocalRequest());
 
 //TODO do this on first login
         final JID jid = new JID(user.getEmail().getValue());

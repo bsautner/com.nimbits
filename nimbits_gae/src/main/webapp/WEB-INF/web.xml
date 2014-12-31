@@ -370,11 +370,11 @@
 
     <servlet>
         <servlet-name>com.nimbits UserService</servlet-name>
-        <servlet-class>com.nimbits.server.transaction.user.service.UserRpcServiceImpl</servlet-class>
+        <servlet-class>com.nimbits.server.transaction.user.service.UserServiceRpcImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>com.nimbits UserService</servlet-name>
-        <url-pattern>/nimbits/rpc/userRpcService</url-pattern>
+        <url-pattern>/nimbits/rpc/userService</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

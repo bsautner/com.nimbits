@@ -38,7 +38,9 @@
     </bean>
 
     <bean id="counterService" class="com.nimbits.server.counter.CounterServiceImpl"/>
-
+    <bean id="userDao" class="com.nimbits.server.transaction.user.dao.UserDaoImpl">
+        <property name="persistenceManagerFactory" ref="pmf"/>
+    </bean>
 
     <bean id="valueService" class="com.nimbits.server.transaction.value.service.ValueServiceImpl"/>
     <bean id="valueCache" class="com.nimbits.server.transaction.value.cache.ValueCacheImpl"/>

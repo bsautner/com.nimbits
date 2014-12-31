@@ -28,6 +28,7 @@ public enum ServerSetting {
     apiKey(SettingConstants.API_KEY, SettingConstants.API_KEY_DEFAULT, false, true, false, false, false),
     smtp(SettingConstants.SETTING_SMTP, SettingConstants.SETTING_SMTP_DEFAULT, false, true, false, false, false),
     smtpPassword(SettingConstants.SETTING_SMTP_PASSWORD, SettingConstants.SETTING_SMTP_PASSWORD_DEFAULT, false, true, false, true, false),
+
     stats(SettingConstants.SETTING_STATS, SettingConstants.SETTING_STATS_DEFAULT, false, true, false, false, true)
 
     ;

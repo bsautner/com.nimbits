@@ -35,8 +35,8 @@ public class CreatePointWithAPIKey {
 
     private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("support@nimbits.com");
 
-    //a running jetty server with nimbits installed (using nimbits.war)
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8081/nimbits");
+    //a running jetty server with nimbits installed (using root.war)
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8081");
 
     //you can create this server object with an API KEY you configured your server with to make authentication easy
 

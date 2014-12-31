@@ -58,4 +58,15 @@ public interface User extends Entity, Serializable {
     LoginInfo getLoginInfo();
 
 
+    void setPasswordResetToken(String token);
+
+    void setPasswordResetTokenTimestamp(Date date);
+
+    String getPasswordResetToken();
+
+    Date getPasswordResetTokenTimestamp();
+
+    void setPasswordSalt(String passwordSalt);
+
+    void setPassword(String cryptPassword);
 }

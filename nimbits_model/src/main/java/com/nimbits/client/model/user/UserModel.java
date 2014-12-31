@@ -45,6 +45,9 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     private LoginInfo loginInfo;
 
+    private String passwordResetToken;
+
+    private Date passwordResetTokenTimestamp;
     /**
      *
      */
@@ -65,6 +68,8 @@ public class UserModel extends EntityModel implements Serializable, User {
             this.passwordSalt = u.getPasswordSalt();
             this.source = u.getSource().name();
             this.isAdmin = u.getIsAdmin();
+            this.passwordResetTokenTimestamp =u.getPasswordResetTokenTimestamp();
+            this.passwordResetToken = u.getPasswordResetToken();
 
         }
     }
@@ -177,10 +182,39 @@ public class UserModel extends EntityModel implements Serializable, User {
         return loginInfo == null ? UserModelFactory.createNullLoginInfo(false) : loginInfo;
     }
 
+    @Override
+    public void setPasswordResetToken(String token) {
+        this.passwordResetToken = token;
+    }
+
+    @Override
+    public void setPasswordResetTokenTimestamp(Date date) {
+        this.passwordResetTokenTimestamp = date;
+    }
+
+    @Override
+    public String getPasswordResetToken() {
+        return this.passwordResetToken;
+    }
+
+    @Override
+    public Date getPasswordResetTokenTimestamp() {
+        return this.passwordResetTokenTimestamp == null ? new Date(0) : this.passwordResetTokenTimestamp;
+    }
+
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
     }
 
+    @Override
+    public void setPasswordSalt(String passwordSalt) {
+        this.passwordSalt = passwordSalt;
+    }
+
+    @Override
+    public void setPassword(String cryptPassword) {
+        this.password = cryptPassword;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

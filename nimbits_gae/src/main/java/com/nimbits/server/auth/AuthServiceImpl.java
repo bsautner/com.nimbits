@@ -25,6 +25,7 @@ import com.nimbits.client.model.email.EmailAddress;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
+import javax.mail.Transport;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,6 +95,11 @@ public class AuthServiceImpl implements AuthService {
         final com.google.appengine.api.users.UserService gaeUserService = com.google.appengine.api.users.UserServiceFactory.getUserService();
 
         return gaeUserService.createLogoutURL(requestUri);
+    }
+
+    @Override
+    public Transport getMailTransport() {
+        return null;
     }
 
 

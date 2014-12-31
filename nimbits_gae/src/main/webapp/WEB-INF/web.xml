@@ -355,7 +355,7 @@
     <!--gwt rpc services -->
     <servlet>
         <servlet-name>com.nimbits EntityService</servlet-name>
-        <servlet-class>com.nimbits.server.EntityServiceRpcImpl</servlet-class>
+        <servlet-class>com.nimbits.server.transaction.entity.service.EntityServiceRpcImpl</servlet-class>
     </servlet>
 
 
@@ -365,7 +365,7 @@
     </servlet>
     <servlet>
         <servlet-name>com.nimbits ValueService</servlet-name>
-        <servlet-class>com.nimbits.server.ValueServiceRpcImpl</servlet-class>
+        <servlet-class>com.nimbits.server.transaction.value.service.ValueServiceRpcImpl</servlet-class>
     </servlet>
 
     <servlet>

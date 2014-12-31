@@ -16,7 +16,7 @@ package com.nimbits.server.communication.xmpp;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.xmpp.XmppRpcService;
-import com.nimbits.server.transaction.user.UserHelper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.Resource;
@@ -24,14 +24,13 @@ import javax.annotation.Resource;
 
 public class XmppRpcServiceImpl extends RemoteServiceServlet implements XmppRpcService {
 
-    @Autowired
-    private UserHelper userHelper;
+
 
 
     @Override
     public void sendInviteRpc() {
 
-        User user = userHelper.getUser().get(0);
+
 
 
     }

@@ -62,8 +62,8 @@ public class SummaryServiceTest extends NimbitsServletTest {
         Summary summary = SummaryModelFactory.createSummary(e, EntityModelFactory.createTrigger(point.getKey()),
                 EntityModelFactory.createTarget(pointChild.getKey()), true, SummaryType.average, SUMMARY_INTERVAL_MS, new Date(0));
         point.setFilterValue(0.0);
-        entityService.addUpdateSingleEntity(point);
-        entityService.addUpdateSingleEntity(summary);
+        entityService.addUpdateSingleEntity(user, point);
+        entityService.addUpdateSingleEntity(user, summary);
         final List<Entity> r = entityService.getEntityByTrigger(user, point, EntityType.summary);
 
 

@@ -13,7 +13,7 @@
 
     <bean id="userCache" class="com.nimbits.server.transaction.user.cache.UserCacheImpl"/>
     <bean id="userService" class="com.nimbits.server.transaction.user.service.UserServiceImpl"/>
-    <bean id="userHelper" class="com.nimbits.server.transaction.user.UserHelper"/>
+
     <bean id="entityService" class=" com.nimbits.server.transaction.entity.EntityServiceImpl"/>
 
     <bean id="authService" class=" com.nimbits.server.auth.AuthServiceImpl"/>

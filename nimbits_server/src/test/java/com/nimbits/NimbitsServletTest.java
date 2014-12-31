@@ -119,7 +119,7 @@ public class NimbitsServletTest extends BaseTest {
 
         Entity accessKey = EntityModelFactory.createEntity(CommonFactory.createName(UUID.randomUUID().toString(), EntityType.accessKey), "", EntityType.accessKey, ProtectionLevel.onlyMe, user.getKey(), user.getKey());
         AccessKey ak = AccessKeyFactory.createAccessKey(accessKey, "AUTH", user.getKey(), AuthLevel.admin);
-        entityService.addUpdateSingleEntity(ak);
+        entityService.addUpdateSingleEntity(user, ak);
 
 
         Map<String, Entity> map = entityService.getEntityModelMap(user, EntityType.accessKey, 1000);
@@ -129,7 +129,7 @@ public class NimbitsServletTest extends BaseTest {
         assertNotNull(user);
 
         Entity c = EntityModelFactory.createEntity(groupName, "", EntityType.category, ProtectionLevel.everyone, user.getKey(), user.getKey(), UUID.randomUUID().toString());
-        group = (Category) entityService.addUpdateSingleEntity(c);
+        group = (Category) entityService.addUpdateSingleEntity(user, c);
 
         pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone, group.getKey(), user.getKey(), UUID.randomUUID().toString());
         Point newPoint = PointModelFactory.createPointModel(

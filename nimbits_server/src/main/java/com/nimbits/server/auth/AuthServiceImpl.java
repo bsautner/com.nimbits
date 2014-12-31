@@ -18,38 +18,55 @@
 
 package com.nimbits.server.auth;
 
-import com.nimbits.client.enums.AuthLevel;
-import com.nimbits.client.enums.ServerSetting;
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.transaction.settings.SettingsService;
-import com.nimbits.server.transaction.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    private UserService userService;
-
-
-    @Override
     public List<EmailAddress> getCurrentUser(HttpServletRequest request) {
 
-        if (request.getSession() != null) {
-            String email = (String) request.getSession().getAttribute("LOGGED_IN_EMAIL");
+        List<EmailAddress> result = new ArrayList<EmailAddress>(1);
+
+        EmailAddress emailAddress;
+
+        if (request != null && request.getSession() != null) {
+            String email = (String) request.getSession().getAttribute(Const.LOGGED_IN_EMAIL);
             if (email != null) {
-                return Arrays.asList(CommonFactory.createEmailAddress(email));
+                emailAddress =  CommonFactory.createEmailAddress(email);
+                result.add(emailAddress);
             }
         }
-        return Collections.emptyList();
 
+        //todo - use filter to check here for auth token and query dao for user if provided
+
+
+        return result;
+    }
+
+    @Override
+    public boolean isGAE() {
+        return false;
+    }
+
+    @Override
+    public boolean isGAEAdmin() {
+       return false;
+    }
+
+    @Override
+    public String createLoginURL(String requestUri) {
+           return Const.WEBSITE;
+    }
+
+    @Override
+    public String createLogoutURL(String requestUri) {
+        return Const.WEBSITE;
     }
 }

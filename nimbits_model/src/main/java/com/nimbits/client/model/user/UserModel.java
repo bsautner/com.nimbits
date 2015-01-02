@@ -13,6 +13,7 @@
 package com.nimbits.client.model.user;
 
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.common.impl.CommonFactory;
@@ -27,20 +28,25 @@ import java.util.List;
 
 public class UserModel extends EntityModel implements Serializable, User {
 
+    @Expose
     private Date lastLoggedIn;
 
+    @Expose
     private String emailAddress;
 
     private List<AccessKey> accessKeys;
 
+    @Expose
     private Boolean isAdmin;
 
-    private String sessionId;
+    @Expose
+    private String authToken;
 
     private String password;
 
     private String passwordSalt;
 
+    @Expose
     private String source;
 
     private LoginInfo loginInfo;
@@ -163,8 +169,8 @@ public class UserModel extends EntityModel implements Serializable, User {
         return CommonFactory.createEmailAddress(emailAddress);
     }
 
-    public String getSessionId() {
-        return sessionId;
+    public String getAuthToken() {
+        return authToken;
     }
 
     @Override
@@ -202,8 +208,9 @@ public class UserModel extends EntityModel implements Serializable, User {
         return this.passwordResetTokenTimestamp == null ? new Date(0) : this.passwordResetTokenTimestamp;
     }
 
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
+    @Override
+    public void setAuthToken(String authToken) {
+        this.authToken = authToken;
     }
 
     @Override

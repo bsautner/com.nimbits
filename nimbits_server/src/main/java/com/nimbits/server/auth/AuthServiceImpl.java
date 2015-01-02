@@ -19,10 +19,13 @@
 package com.nimbits.server.auth;
 
 import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.user.User;
 import com.nimbits.server.transaction.settings.SettingsService;
+import com.nimbits.server.transaction.user.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,21 +33,35 @@ import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
     @Autowired
-    SettingsService settingsService;
+    private SettingsService settingsService;
+
+    @Autowired
+    private UserDao userDao;
 
     public List<EmailAddress> getCurrentUser(HttpServletRequest request) {
 
         List<EmailAddress> result = new ArrayList<EmailAddress>(1);
 
         EmailAddress emailAddress;
+
+        String authToken = request.getHeader(Parameters.authToken.getText());
+        if (authToken == null) {
+            authToken = request.getParameter(Parameters.authToken.getText());
+        }
+        if (authToken != null) {
+            System.out.println(authToken);
+            User user = userDao.getUserByActiveSession(authToken);
+            if (user != null) {
+                return Arrays.asList(user.getEmail());
+            }
+
+        }
 
         if (request != null && request.getSession() != null) {
             String email = (String) request.getSession().getAttribute(Const.LOGGED_IN_EMAIL);

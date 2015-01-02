@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Parameters {
+    test(ParamConstants.PARAM_AUTH_TOKEN),
+    authToken(ParamConstants.PARAM_AUTH_TOKEN),
     apikey(ParamConstants.PARAM_API_KEY),
     action(ParamConstants.PARAM_ACTION),
     autoscale(ParamConstants.PARAM_AUTO_SCALE),
@@ -225,6 +227,7 @@ public enum Parameters {
         private static final String TYPE = "type";
         private static final String GAE = "gae";
         public static final String CONNECTION_ID = "connection" ;
+        public static final String PARAM_AUTH_TOKEN = "AuthToken";
 
         private ParamConstants() {
         }

@@ -68,14 +68,6 @@
     </servlet-mapping>
 
 
-    <servlet>
-        <servlet-name>connectionApi</servlet-name>
-        <servlet-class>com.nimbits.server.api.ConnectionApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>connectionApi</servlet-name>
-        <url-pattern>/service/v2/connection</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>versionApi</servlet-name>

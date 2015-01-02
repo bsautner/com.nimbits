@@ -34,7 +34,7 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.io.command.CommandListener;
 import com.nimbits.io.command.TerminalCommand;
-import com.nimbits.server.ServerInfo;
+import com.nimbits.server.system.ServerInfo;
 import com.nimbits.server.api.ApiBase;
 import com.nimbits.server.communication.xmpp.XmppService;
 import com.nimbits.server.gson.GsonFactory;
@@ -62,6 +62,8 @@ public class XMPPReceiverServlet extends ApiBase {
     private static final Pattern COMPILE = Pattern.compile("/");
     private static final Pattern PATTERN = Pattern.compile("=");
 
+    @Autowired
+    private ServerInfo serverInfo;
 
     @Autowired
     protected UserService userService;
@@ -130,7 +132,7 @@ public class XMPPReceiverServlet extends ApiBase {
                 String[] args = body.split(" ");
                 TerminalCommand terminalCommand = TerminalCommand.lookup(args[0]);
                 if (terminalCommand != null) {
-                    UrlContainer urlContainer = UrlContainer.getInstance(ServerInfo.getFullServerURL(req));
+                    UrlContainer urlContainer = UrlContainer.getInstance(serverInfo.getFullServerURL(req));
                     ApiKey apiKey = ApiKey.getInstance(settingsService.getSetting(ServerSetting.apiKey));
                     Server server = ServerFactory.getInstance(urlContainer, apiKey );
                     try {

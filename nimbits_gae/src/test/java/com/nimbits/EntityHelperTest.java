@@ -19,12 +19,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertNotNull;
 
-/**
- * Created with IntelliJ IDEA.
- * User: benjamin
- * Date: 9/11/12
- * Time: 4:19 PM
- */
+
 
 
 public class EntityHelperTest {

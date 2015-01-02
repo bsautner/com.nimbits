@@ -13,6 +13,7 @@
 package com.nimbits.client.model.point;
 
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.model.entity.Entity;
@@ -28,16 +29,17 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
     private static final int DEFAULT_EXPIRE = 90;
 
+    @Expose
     private double highAlarm = 0.0;
-
+    @Expose
     private double lowAlarm = 0.0;
-
+    @Expose
     private double deltaAlarm = 0.0;
-
+    @Expose
     private int deltaSeconds = 0;
-
+    @Expose
     private int expire = DEFAULT_EXPIRE;
-
+    @Expose
     private String unit;
 
     private boolean highAlarmOn;
@@ -58,13 +60,13 @@ public class PointModel extends EntityModel implements Serializable, Point {
     private double filterValue;
 
     private boolean inferLocation;
-
+    @Expose
     private int pointType;
-
+    @Expose
     private int precision;
-
+    @Expose
     private List<Value> values;
-
+    @Expose
     private Value value;
 
 

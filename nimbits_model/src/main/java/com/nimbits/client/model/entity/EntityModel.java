@@ -13,6 +13,7 @@
 package com.nimbits.client.model.entity;
 
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.accesskey.AccessKey;
@@ -29,7 +30,9 @@ import java.util.List;
 public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
 
+    @Expose
     private String name;
+
     private String key;
     private String description;
     private int entityType;

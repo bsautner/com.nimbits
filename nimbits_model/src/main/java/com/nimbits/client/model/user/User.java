@@ -47,9 +47,9 @@ public interface User extends Entity, Serializable {
 
     void setIsAdmin(boolean userAdmin);
 
-    void setSessionId(String sessionId);
+    void setAuthToken(String authToken);
 
-    String getSessionId();
+    String getAuthToken();
 
     void setEmail(EmailAddress emailAddress);
 

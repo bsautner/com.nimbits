@@ -18,6 +18,7 @@
 
 package com.nimbits.server.auth;
 
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
@@ -25,19 +26,101 @@ import com.nimbits.server.transaction.settings.SettingsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
+import javax.mail.NoSuchProviderException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
     @Autowired
-    private SettingsService settingsService;
+    SettingsService settingsService;
 
+    public List<EmailAddress> getCurrentUser(HttpServletRequest request) {
+
+        List<EmailAddress> result = new ArrayList<EmailAddress>(1);
+
+        EmailAddress emailAddress;
+
+        if (request != null && request.getSession() != null) {
+            String email = (String) request.getSession().getAttribute(Const.LOGGED_IN_EMAIL);
+            if (email != null) {
+                emailAddress =  CommonFactory.createEmailAddress(email);
+                result.add(emailAddress);
+            }
+        }
+
+        //todo - use filter to check here for auth token and query dao for user if provided
+
+
+        return result;
+    }
 
     @Override
-    public List<EmailAddress> getCurrentUserEmail() {
+    public boolean isGAE() {
+        return false;
+    }
 
-        return Arrays.asList(CommonFactory.createEmailAddress(settingsService.getSetting(ServerSetting.admin)));
+    @Override
+    public boolean isGAEAdmin() {
+        return false;
+    }
+
+    @Override
+    public String createLoginURL(String requestUri) {
+        return Const.WEBSITE;
+    }
+
+    @Override
+    public String createLogoutURL(String requestUri) {
+        return Const.WEBSITE;
+    }
+
+    @Override
+    public Transport getMailTransport() {
+        //Use Properties object to set environment properties
+
+        String HOST = settingsService.getSetting(ServerSetting.smtp);
+        String USER = settingsService.getSetting(ServerSetting.admin);
+        String PASSWORD = settingsService.getSetting(ServerSetting.smtpPassword);
+        String PORT = "465";
+
+
+        Properties props = new Properties();
+
+        props.put("mail.smtp.host", HOST);
+        props.put("mail.smtp.port", PORT);
+        props.put("mail.smtp.user", USER);
+
+        String AUTH = "true";
+        props.put("mail.smtp.auth", AUTH);
+        String STARTTLS = "true";
+        props.put("mail.smtp.starttls.enable", STARTTLS);
+        String DEBUG = "true";
+        props.put("mail.smtp.debug", DEBUG);
+
+        props.put("mail.smtp.socketFactory.port", PORT);
+        String SOCKET_FACTORY = "javax.net.ssl.SSLSocketFactory";
+        props.put("mail.smtp.socketFactory.class", SOCKET_FACTORY);
+        props.put("mail.smtp.socketFactory.fallback", "false");
+
+
+        //Obtain the default mail session
+        Session session = Session.getDefaultInstance(props, null);
+        session.setDebug(true);
+
+
+        Transport transport = null;
+        try {
+            transport = session.getTransport("smtps");
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        }
+        return transport;
+
     }
 }

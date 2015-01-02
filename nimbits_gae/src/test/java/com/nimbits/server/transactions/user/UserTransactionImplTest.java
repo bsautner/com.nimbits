@@ -25,7 +25,7 @@ public class UserTransactionImplTest extends NimbitsServletTest {
     public void testGetHttpRequestUser() throws Exception {
         UserService t =null;
         t.getHttpRequestUser(req);
-        assertEquals(user.getEmail(), t.getHttpRequestUser(req).get(0).getEmail());
+        assertEquals(user.getEmail(), t.getHttpRequestUser(req).getEmail());
 
 
     }

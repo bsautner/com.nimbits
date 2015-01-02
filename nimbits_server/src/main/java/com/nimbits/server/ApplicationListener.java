@@ -12,7 +12,6 @@
 
 package com.nimbits.server;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.sql.Driver;
@@ -31,16 +30,12 @@ public class ApplicationListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         log.info("NIMBITS Context Initialised");
 
-
-        ServletContext context = servletContextEvent.getServletContext();
-
-
     }
 
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-
+        log.info("NIMBITS Context Destroyed");
         ClassLoader applicationClassLoader = this.getClass().getClassLoader();
         Enumeration<Driver> driverEnumeration = DriverManager.getDrivers();
         while (driverEnumeration.hasMoreElements()) {

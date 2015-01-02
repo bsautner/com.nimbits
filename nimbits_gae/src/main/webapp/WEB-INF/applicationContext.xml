@@ -14,7 +14,7 @@
 
     <bean id="userCache" class="com.nimbits.server.transaction.user.cache.UserCacheImpl"/>
     <bean id="userService" class="com.nimbits.server.transaction.user.service.UserServiceImpl"/>
-    <bean id="userHelper" class="com.nimbits.server.transaction.user.UserHelper"/>
+
     <bean id="entityService" class="com.nimbits.server.transaction.entity.EntityServiceImpl"/>
     <bean id="authService" class=" com.nimbits.server.auth.AuthServiceImpl"/>
 
@@ -38,7 +38,9 @@
     </bean>
 
     <bean id="counterService" class="com.nimbits.server.counter.CounterServiceImpl"/>
-
+    <bean id="userDao" class="com.nimbits.server.transaction.user.dao.UserDaoImpl">
+        <property name="persistenceManagerFactory" ref="pmf"/>
+    </bean>
 
     <bean id="valueService" class="com.nimbits.server.transaction.value.service.ValueServiceImpl"/>
     <bean id="valueCache" class="com.nimbits.server.transaction.value.cache.ValueCacheImpl"/>

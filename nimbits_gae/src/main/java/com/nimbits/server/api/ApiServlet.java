@@ -66,7 +66,7 @@ public class ApiServlet extends HttpServlet {
     public void doInit(final HttpServletRequest req, final HttpServletResponse resp, final ExportType type) {
 
 
-        user = userService.getHttpRequestUser(req).get(0);
+        user = userService.getHttpRequestUser(req);
 
         getGPS(req);
         buildParamMap(req);

@@ -105,8 +105,8 @@ public enum Parameters {
     session(ParamConstants.SESSION),
     cid(ParamConstants.CID),
     type(ParamConstants.TYPE),
-    gae(ParamConstants.GAE)
-    ;
+    gae(ParamConstants.GAE),
+    connectionId(ParamConstants.CONNECTION_ID);
 
     private static final Map<String, Parameters> lookup = new HashMap<String, Parameters>(100);
 
@@ -224,6 +224,8 @@ public enum Parameters {
         private static final String CID = "cid";
         private static final String TYPE = "type";
         private static final String GAE = "gae";
+        public static final String CONNECTION_ID = "connection" ;
+
         private ParamConstants() {
         }
     }

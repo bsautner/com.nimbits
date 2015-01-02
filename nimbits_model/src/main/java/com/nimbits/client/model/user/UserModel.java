@@ -33,19 +33,25 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     private List<AccessKey> accessKeys;
 
-    private boolean loggedIn = false;
-
-    private String loginUrl;
-
-    private String logoutUrl;
-
-    private boolean userAdmin;
+    private Boolean isAdmin;
 
     private String sessionId;
+
+    private String password;
+
+    private String passwordSalt;
+
+    private String source;
+
+    private LoginInfo loginInfo;
+
+    private String passwordResetToken;
+
+    private Date passwordResetTokenTimestamp;
     /**
      *
      */
-    private static final long serialVersionUID = 3L;
+    private static final long serialVersionUID = 4L;
 
     @SuppressWarnings("unused")
     public UserModel() {
@@ -58,6 +64,12 @@ public class UserModel extends EntityModel implements Serializable, User {
             this.lastLoggedIn = u.getLastLoggedIn();
             this.accessKeys = u.getAccessKeys();
             this.emailAddress = u.getEmail().getValue();
+            this.password = u.getPassword();
+            this.passwordSalt = u.getPasswordSalt();
+            this.source = u.getSource().name();
+            this.isAdmin = u.getIsAdmin();
+            this.passwordResetTokenTimestamp =u.getPasswordResetTokenTimestamp();
+            this.passwordResetToken = u.getPasswordResetToken();
 
         }
     }
@@ -69,6 +81,29 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     }
 
+    public UserModel(final Entity entity, final String password, final String salt, final UserSource source) {
+        super(entity);
+        this.lastLoggedIn = new Date();
+        this.emailAddress = entity.getName().getValue();
+        this.password = password;
+        this.passwordSalt = salt;
+        this.source = source.name();
+
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+    @Override
+    public String getPasswordSalt() {
+        return passwordSalt;
+    }
+
+    @Override
+    public UserSource getSource() {
+        return source == null ? UserSource.google: UserSource.valueOf( source);
+    }
 
     @Override
     public Date getLastLoggedIn() {
@@ -111,44 +146,16 @@ public class UserModel extends EntityModel implements Serializable, User {
         accessKeys.add(key);
     }
 
+
+
     @Override
-    public boolean isLoggedIn() {
-        return loggedIn;
+    public boolean getIsAdmin() {
+        return isAdmin == null ? false : isAdmin;
     }
 
     @Override
-    public void setLoggedIn(final boolean loggedIn) {
-        this.loggedIn = loggedIn;
-    }
-
-    @Override
-    public String getLoginUrl() {
-        return loginUrl;
-    }
-
-    @Override
-    public void setLoginUrl(final String loginUrl) {
-        this.loginUrl = loginUrl;
-    }
-
-    @Override
-    public String getLogoutUrl() {
-        return logoutUrl;
-    }
-
-    @Override
-    public void setLogoutUrl(final String logoutUrl) {
-        this.logoutUrl = logoutUrl;
-    }
-
-    @Override
-    public boolean isUserAdmin() {
-        return userAdmin;
-    }
-
-    @Override
-    public void setUserAdmin(final boolean userAdmin) {
-        this.userAdmin = userAdmin;
+    public void setIsAdmin(final boolean userAdmin) {
+        this.isAdmin = userAdmin;
     }
 
     @Override
@@ -165,10 +172,49 @@ public class UserModel extends EntityModel implements Serializable, User {
         this.emailAddress = emailAddress.getValue();
     }
 
+    @Override
+    public void setLoginInfo(LoginInfo loginInfo) {
+        this.loginInfo = loginInfo;
+    }
+
+    @Override
+    public LoginInfo getLoginInfo() {
+        return loginInfo == null ? UserModelFactory.createNullLoginInfo(false) : loginInfo;
+    }
+
+    @Override
+    public void setPasswordResetToken(String token) {
+        this.passwordResetToken = token;
+    }
+
+    @Override
+    public void setPasswordResetTokenTimestamp(Date date) {
+        this.passwordResetTokenTimestamp = date;
+    }
+
+    @Override
+    public String getPasswordResetToken() {
+        return this.passwordResetToken;
+    }
+
+    @Override
+    public Date getPasswordResetTokenTimestamp() {
+        return this.passwordResetTokenTimestamp == null ? new Date(0) : this.passwordResetTokenTimestamp;
+    }
+
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
     }
 
+    @Override
+    public void setPasswordSalt(String passwordSalt) {
+        this.passwordSalt = passwordSalt;
+    }
+
+    @Override
+    public void setPassword(String cryptPassword) {
+        this.password = cryptPassword;
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -177,15 +223,13 @@ public class UserModel extends EntityModel implements Serializable, User {
 
         UserModel userModel = (UserModel) o;
 
-        if (loggedIn != userModel.loggedIn) return false;
-        if (userAdmin != userModel.userAdmin) return false;
+
+        if (isAdmin != userModel.isAdmin) return false;
         if (accessKeys != null ? !accessKeys.equals(userModel.accessKeys) : userModel.accessKeys != null) return false;
         if (emailAddress != null ? !emailAddress.equals(userModel.emailAddress) : userModel.emailAddress != null)
             return false;
         if (lastLoggedIn != null ? !lastLoggedIn.equals(userModel.lastLoggedIn) : userModel.lastLoggedIn != null)
             return false;
-        if (loginUrl != null ? !loginUrl.equals(userModel.loginUrl) : userModel.loginUrl != null) return false;
-        if (logoutUrl != null ? !logoutUrl.equals(userModel.logoutUrl) : userModel.logoutUrl != null) return false;
 
         return true;
     }
@@ -196,10 +240,8 @@ public class UserModel extends EntityModel implements Serializable, User {
         result = 31 * result + (lastLoggedIn != null ? lastLoggedIn.hashCode() : 0);
         result = 31 * result + emailAddress.hashCode();
         result = 31 * result + (accessKeys != null ? accessKeys.hashCode() : 0);
-        result = 31 * result + (loggedIn ? 1 : 0);
-        result = 31 * result + (loginUrl != null ? loginUrl.hashCode() : 0);
-        result = 31 * result + (logoutUrl != null ? logoutUrl.hashCode() : 0);
-        result = 31 * result + (userAdmin ? 1 : 0);
+
+        result = 31 * result + (isAdmin ? 1 : 0);
 
         return result;
     }

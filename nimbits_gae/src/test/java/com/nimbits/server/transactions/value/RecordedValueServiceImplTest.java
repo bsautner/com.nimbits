@@ -42,7 +42,7 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
     @Test
     public void ignoreByCompressionTest() throws Exception {
         point.setFilterValue(VALUE);
-        entityService.addUpdateSingleEntity(point);
+        entityService.addUpdateSingleEntity(user, point);
 
 
         Value value = ValueFactory.createValueModel(D);
@@ -69,7 +69,7 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
         assertFalse(valueService.ignoreByFilter(point, ValueFactory.createValueModel(D2)));
 
         point.setFilterType(FilterType.percentageHysteresis);
-        entityService.addUpdateSingleEntity(point);
+        entityService.addUpdateSingleEntity(user, point);
         //  pointService.updatePoint(point);
         valueService.recordValue( user, point, ValueFactory.createValueModel(100), false);
         Thread.sleep(10);
@@ -85,7 +85,7 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
     public void ignoreByCompressionTest2() throws Exception {
         Point randomPoint = createRandomPoint();
         randomPoint.setFilterValue(0.01);
-        entityService.addUpdateSingleEntity(randomPoint);
+        entityService.addUpdateSingleEntity(user, randomPoint);
 
         Value value = ValueFactory.createValueModel(0.01);
         Value value2 = ValueFactory.createValueModel(0.02);
@@ -111,7 +111,7 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
         Point randomPoint = createRandomPoint();
         randomPoint.setFilterValue(0.01);
         randomPoint.setFilterValue(0.001);
-        entityService.addUpdateSingleEntity(randomPoint);
+        entityService.addUpdateSingleEntity(user, randomPoint);
 
 
         Value value = ValueFactory.createValueModel(0.001);

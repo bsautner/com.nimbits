@@ -15,8 +15,8 @@ package com.nimbits.client.constants;
 
 public class Const {
 
-
-
+    public static final String WEBSITE = "http://www.nimbits.com";
+    public static final String LOGGED_IN_EMAIL = "LOGGED_IN_EMAIL";
     public static final String CONTENT_TYPE_JSON = "application/json";
 
     public static final int DEFAULT_TIMER_UPDATE_SPEED = 5000;

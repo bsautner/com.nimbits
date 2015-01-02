@@ -12,15 +12,14 @@
 
 package com.nimbits.client.model.user;
 
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.model.entity.Entity;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 4/16/11
- * Time: 4:10 PM
- */
+
 public class UserModelFactory {
+
+
+
 
     private UserModelFactory() {
     }
@@ -30,11 +29,24 @@ public class UserModelFactory {
         return new UserModel(u);
     }
 
-    public static User createUserModel(final Entity entity)  {
+    public static User createUnauthenticatedUserModel(final Entity entity)  {
 
         return new UserModel(entity);
     }
 
+    public static User createUserModel(final Entity entity, final String password, final String salt, final UserSource source)  {
+
+
+        return new UserModel(entity, password, salt, source);
+    }
+
+    public static LoginInfo createLoginInfo(String loginUrl, String logoutUrl, UserStatus userStatus, boolean isGAE) {
+        return new LoginInfoImpl(loginUrl,  logoutUrl, userStatus, isGAE) ;
+    }
+
+    public static LoginInfo createNullLoginInfo(boolean isGAE) {
+        return new LoginInfoImpl("", Const.WEBSITE, UserStatus.unknown, isGAE) ;
+    }
 
 
 }

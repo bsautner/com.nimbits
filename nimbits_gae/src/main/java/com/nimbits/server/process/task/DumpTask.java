@@ -28,7 +28,7 @@ import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.ServerInfo;
+import com.nimbits.server.system.ServerInfo;
 import com.nimbits.server.communication.mail.EmailService;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transaction.cache.NimbitsCache;
@@ -48,12 +48,12 @@ import java.io.PrintWriter;
 import java.nio.channels.Channels;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Service
 public class DumpTask extends HttpServlet {
 
-
+    @Autowired
+    private ServerInfo serverInfo;
 
     @Autowired
     protected ValueService valueService;
@@ -117,7 +117,7 @@ public class DumpTask extends HttpServlet {
                 final EmailAddress emailAddress = CommonFactory.createEmailAddress(entity.getOwner());
 
 
-                final String m = ServerInfo.getFullServerURL(request) + "/service/blob?" + Parameters.blobkey.getText() + "=" + key.getKeyString();
+                final String m = serverInfo.getFullServerURL(request) + "/service/blob?" + Parameters.blobkey.getText() + "=" + key.getKeyString();
 
 
                 emailService.sendEmail(emailAddress, m, "Your extracted data for " + entity.getName().getValue() + " is ready");

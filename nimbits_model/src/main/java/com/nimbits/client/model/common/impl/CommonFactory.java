@@ -72,7 +72,7 @@ public class CommonFactory {
 
 
         if (name.length() > Const.CONST_MAX_NAME_LENGTH) {
-            throw new IllegalArgumentException("Whoa! That's a long name. Names must be less than " + Const.CONST_MAX_NAME_LENGTH + " chars!");
+            throw new IllegalArgumentException("Entity Names must be less than " + Const.CONST_MAX_NAME_LENGTH + " chars!");
 
         }
 

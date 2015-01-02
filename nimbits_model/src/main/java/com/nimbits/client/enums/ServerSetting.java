@@ -28,6 +28,7 @@ public enum ServerSetting {
     apiKey(SettingConstants.API_KEY, SettingConstants.API_KEY_DEFAULT, false, true, false, false, false),
     smtp(SettingConstants.SETTING_SMTP, SettingConstants.SETTING_SMTP_DEFAULT, false, true, false, false, false),
     smtpPassword(SettingConstants.SETTING_SMTP_PASSWORD, SettingConstants.SETTING_SMTP_PASSWORD_DEFAULT, false, true, false, true, false),
+
     stats(SettingConstants.SETTING_STATS, SettingConstants.SETTING_STATS_DEFAULT, false, true, false, false, true)
 
     ;
@@ -107,7 +108,7 @@ public enum ServerSetting {
     }
 
     private static class SettingConstants {
-        static final String CONST_SERVER_VERSION = "3.7.8";
+        static final String CONST_SERVER_VERSION = "3.7.9";
         static final String STORE_DIRECTORY_DEFAULT = "/tmp";
         static final String SETTING_ADMIN = "admin";
         static final String SETTING_SMTP = "smtp";

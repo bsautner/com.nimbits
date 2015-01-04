@@ -9,4 +9,5 @@ Release Notes:
 * Web Sockets for Jetty More Reliable
 * Login as a nimbits user without a Google account
 * New Command Line Interface also can be used via an xmpp chat client
-* 
+* All outgoing emails are now nicely formatted html
+* Reset passwords, create accounts Workflows.

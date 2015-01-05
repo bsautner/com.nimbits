@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Parameters {
-    test(ParamConstants.PARAM_AUTH_TOKEN),
+
     authToken(ParamConstants.PARAM_AUTH_TOKEN),
     apikey(ParamConstants.PARAM_API_KEY),
     action(ParamConstants.PARAM_ACTION),

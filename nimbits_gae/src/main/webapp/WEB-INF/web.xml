@@ -14,7 +14,15 @@
         <listener-class>com.nimbits.server.ApplicationListener</listener-class>
     </listener>
 
+    <filter>
+        <filter-name>authFilter</filter-name>
+        <filter-class>com.nimbits.server.api.filter.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>authFilter</filter-name>
+        <url-pattern>/service/v2/*</url-pattern>
 
+    </filter-mapping>
     <servlet>
         <servlet-name>userApi</servlet-name>
         <servlet-class>com.nimbits.server.api.UserApi</servlet-class>

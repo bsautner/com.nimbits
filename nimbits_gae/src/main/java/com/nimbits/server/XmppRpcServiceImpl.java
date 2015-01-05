@@ -28,8 +28,8 @@ import javax.servlet.ServletException;
 @Service
 public class XmppRpcServiceImpl extends RemoteServiceServlet  implements XmppRpcService {
 
-    @Autowired
-    UserService userHelper;
+   @Autowired
+   private UserService userService;
 
     @Override
     public void init() throws ServletException {
@@ -41,7 +41,7 @@ public class XmppRpcServiceImpl extends RemoteServiceServlet  implements XmppRpc
     @Override
     public void sendInviteRpc() {
 
-        User user = userHelper.getHttpRequestUser(getThreadLocalRequest());
+        User user = userService.getHttpRequestUser(getThreadLocalRequest());
 
 //TODO do this on first login
         final JID jid = new JID(user.getEmail().getValue());

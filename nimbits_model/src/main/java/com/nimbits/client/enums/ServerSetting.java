@@ -108,7 +108,7 @@ public enum ServerSetting {
     }
 
     private static class SettingConstants {
-        static final String CONST_SERVER_VERSION = "3.7.9";
+        static final String CONST_SERVER_VERSION = "3.8.0";
         static final String STORE_DIRECTORY_DEFAULT = "/tmp";
         static final String SETTING_ADMIN = "admin";
         static final String SETTING_SMTP = "smtp";

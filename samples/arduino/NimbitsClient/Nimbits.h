@@ -13,6 +13,7 @@
  THE SOFTWARE.
  */
 
+
 #ifndef _Nimbits_h
 #define _Nimbits_h
 
@@ -27,22 +28,29 @@
 
 class Nimbits {
 	public:
-		typedef void (*DataArrivedDelegate)(Nimbits client, String data, float value);
-		bool connect(char hostname[], char email[], char apiKey[], char* points[], int port, char clientId[]);
+	    Nimbits(String  hostname, int port, String  clientId);
+		typedef void (*DataArrivedDelegate)(String data, double value);
+		bool connectSocket(String points[], int count);
         bool connected();
         void disconnect();
-		void monitor();
+		void monitorSocket();
 		void setDataArrivedDelegate(DataArrivedDelegate dataArrivedDelegate);
-		void send(String data);
+		void sendSocketMessage(String data);
+		void recordValue(double value, String pointId);
+		double getValue(String point);
+		String login(String email, String password);
 
 	private:
         String getStringTableItem(int index);
-        void sendHandshake(char hostname[], char path[]);
-        EthernetClient _client;
+        void sendHandshake(char path[]);
+        EthernetClient ethernetClient;
         DataArrivedDelegate _dataArrivedDelegate;
         bool readHandshake();
         String readLine();
         char* parseJson(char *jsonString);
+        String arrayToJson(String points[], int count);
+        String floatToString(double number, uint8_t digits);
+
 };
 
 

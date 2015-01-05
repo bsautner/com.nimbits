@@ -55,15 +55,15 @@ public class AuthServiceImpl implements AuthService {
             authToken = request.getParameter(Parameters.authToken.getText());
         }
         if (authToken != null) {
-            System.out.println(authToken);
-            User user = userDao.getUserByActiveSession(authToken);
+
+            User user = userDao.getUserByAuthToken(authToken);
             if (user != null) {
                 return Arrays.asList(user.getEmail());
             }
 
         }
 
-        if (request != null && request.getSession() != null) {
+        if (request.getSession() != null) {
             String email = (String) request.getSession().getAttribute(Const.LOGGED_IN_EMAIL);
             if (email != null) {
                 emailAddress =  CommonFactory.createEmailAddress(email);

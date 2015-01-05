@@ -8,6 +8,7 @@ import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.server.auth.AuthService;
+import com.nimbits.server.transaction.user.dao.UserDao;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketServlet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
-public class SocketEndpoint extends WebSocketServlet {
+public class SocketEndpoint extends WebSocketServlet implements SocketEventListener {
 
     @Autowired
     private AuthService authService;
@@ -32,18 +33,23 @@ public class SocketEndpoint extends WebSocketServlet {
     @Autowired
     private ConnectedClients connectedClients;
 
+    @Autowired
+    private UserDao userDao;
+
+    private HttpServletRequest request;
 
     @Override
     public void init() throws ServletException {
         super.init();
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-        System.out.println(Parameters.test);
+
     }
 
     protected void doGet(HttpServletRequest request,
                          HttpServletResponse response) throws ServletException, IOException {
 
         try {
+            this.request = request;
             getServletContext().getNamedDispatcher("default").forward(request,
                     response);
         } catch (Exception ex) {
@@ -101,7 +107,7 @@ public class SocketEndpoint extends WebSocketServlet {
                 System.out.println("Connection id : " + s);
             }
 
-            SocketClient client = new SocketClient(users.get(0), fixed, authToken);
+            SocketClient client = new SocketClient(this, users.get(0), fixed, authToken);
 
             connectedClients.add(client);
             return client;
@@ -110,4 +116,13 @@ public class SocketEndpoint extends WebSocketServlet {
     }
 
 
+    @Override
+    public void onClose(int closeCode, String message, EmailAddress emailAddress, String authToken) {
+        connectedClients.remove(emailAddress, authToken);
+        userDao.deleteAuthToken(authToken);
+        if (request != null) {
+            request.getSession().invalidate();
+        }
+        System.out.println("socket event listener - on close.");
+    }
 }

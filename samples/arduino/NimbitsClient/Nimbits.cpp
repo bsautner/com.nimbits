@@ -18,77 +18,69 @@
 #include <WString.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ArduinoJson.h>
 
-prog_char stringVar[] PROGMEM = "{0}";
-prog_char clientHandshakeLine1[] PROGMEM = "GET {0} HTTP/1.1";
-prog_char clientHandshakeLine2[] PROGMEM = "Upgrade: WebSocket";
-prog_char clientHandshakeLine3[] PROGMEM = "Connection: Upgrade";
-prog_char clientHandshakeLine4[] PROGMEM = "Host: {0}";
-prog_char clientHandshakeLine5[] PROGMEM = "Origin: ArduinoNimbits";
-prog_char serverHandshake[] PROGMEM = "HTTP/1.1 101";
+String VALUE_API = "/service/v2/value";
+String SESSION_API = "/service/v2/session";
 
-PROGMEM const char *NimbitsStringTable[] =
-{   
-    stringVar,
-    clientHandshakeLine1,
-    clientHandshakeLine2,
-    clientHandshakeLine3,
-    clientHandshakeLine4,
-    clientHandshakeLine5,
-    serverHandshake
-};
+String _hostname;
+String _email;
+String _password;
+int _port;
+String _clientId;
 
-String Nimbits::getStringTableItem(int index) {
-    char buffer[35];
-    strcpy_P(buffer, (char*)pgm_read_word(&(NimbitsStringTable[index])));
-    return String(buffer);
+String _authToken;
+
+Nimbits::Nimbits(String  hostname, int port, String clientId){
+  _hostname = hostname;
+
+  _port = port;
+  _clientId = clientId;
+
 }
 
-bool Nimbits::connect(char hostname[], char email[], char apiKey[], char* points[], int port, char clientId[]) {
+String Nimbits::arrayToJson(String points[], int count) {
+       String retStr = "";
+
+
+       retStr += "[";
+
+       for (int i = 0; i < count; i++) {
+           if (i > 0) {
+              retStr += ",";
+           }
+            retStr += "\"";
+            retStr += points[i];
+            retStr += "\"";
+
+
+        }
+      retStr += "]";
+
+     return retStr;
+}
+
+bool Nimbits::connectSocket(String points[], int count) {
     bool result = false;
 
     char path[256];
     path[0] = '\0';
     byte uuidNumber[16];
+    String pointJson = arrayToJson(points, count);
 
 
-     strcat(path, "/nimbits/socket?email=");
-     strcat(path, email);
-     strcat(path, "&API_KEY=");
-     strcat(path, apiKey);
-     strcat(path, "&cid=");
-     strcat(path, clientId);
-     strcat(path, "&format=");
-     strcat(path, "simple");
-     strcat(path, "&points=[");
 
-     if (sizeof(points) == 1) {
-         strcat(path, "\"");
-         strcat(path, points[0]);
-         strcat(path, "\"]");
-     }
-     else {
-       for (int r = 0; r < sizeof(points); r++) {
-           strcat(path, "\"");
-            strcat(path, points[r]);
-             Serial.println(points[r]);
-             if (r < sizeof(points) -1) {
-              strcat(path, "\",");
-             }
-             else {
-              strcat(path, "\"");
-             }
-
-         }
-         strcat(path, "]");
+     strcat(path, "/socket?AuthToken=");
+     strcat(path, _authToken.c_str());
+     if (count > 0) {
+        strcat(path, "&points=");
+        strcat(path, pointJson.c_str());
      }
 
 
 
-
-    Serial.println(path);
-    if (_client.connect(hostname, port)) {
-        sendHandshake(hostname, path);
+    if (ethernetClient.connect(_hostname.c_str(), _port)) {
+        sendHandshake(path);
         result = readHandshake();
     }
     
@@ -97,47 +89,63 @@ bool Nimbits::connect(char hostname[], char email[], char apiKey[], char* points
 
 
 bool Nimbits::connected() {
-    return _client.connected();
+    return ethernetClient.connected();
 }
 
 void Nimbits::disconnect() {
-    _client.stop();
+    ethernetClient.stop();
 }
 
-void Nimbits::monitor () {
+void Nimbits::monitorSocket () {
     char character;
     
-	if (_client.available() > 0 && (character = _client.read()) == 0) {
-        String name = "";
-        String value = "";
-        char delim = ',';
+	if (ethernetClient.available() > 0 && (character = ethernetClient.read()) == 0) {
+        String str = "";
+
         bool endReached = false;
-        Serial.println("incoming data");
+
         int index = 0;
         while (!endReached) {
-            character = _client.read();
+            character = ethernetClient.read();
             endReached = character == -1;
 
             if (!endReached) {
-                if (character == delim) {
-                  index++;
-                }
-                else if (index == 0) {
-                    name += character;
-                }
-                else if (index == 1) {
-                    value += character;
-                }
+
+                    str += character;
+
             }
         }
-       char carray[value.length() + 1]; //determine size of the array
-       value.toCharArray(carray, sizeof(carray)); //put readStringinto an array
-       float n = atof(carray); //convert the array into an Integer
+
+         // if (str == "close_op") {
+          Serial.println(str);
+         // return;
+         //// }
+         // else {
+
+         int str_len = str.length() + 1;
+         StaticJsonBuffer<256> jsonBuffer;
+         char char_array[str_len];
+         str.toCharArray(char_array, str_len);
+
+
+
+         JsonObject& root = jsonBuffer.parseObject(char_array);
+
+         if (!root.success()) {
+
+           return;
+
+         }
+
+         double d = root["value"]["d"];
+         const char* name = root["name"];
+
         if (_dataArrivedDelegate != NULL) {
-            _dataArrivedDelegate(*this, name, n);
+            _dataArrivedDelegate(name, d);
+            }
 
       }
-    }
+  //  }
 
 }
 
@@ -147,29 +155,21 @@ void Nimbits::setDataArrivedDelegate(DataArrivedDelegate dataArrivedDelegate) {
 }
 
 
-void Nimbits::sendHandshake(char hostname[], char path[]) {
-    String stringVar = getStringTableItem(0);
-    String line1 = getStringTableItem(1);
-    String line2 = getStringTableItem(2);
-    String line3 = getStringTableItem(3);
-    String line4 = getStringTableItem(4);
-    String line5 = getStringTableItem(5);
-    
-    line1.replace(stringVar, path);
-    line4.replace(stringVar, hostname);
+void Nimbits::sendHandshake(char path[]) {
 
-     Serial.println(line1);
-        Serial.println(line2);
-        Serial.println(line3);
-        Serial.println(line4);
-        Serial.println(line5);
+    String line1 = "GET " + String(path) + " HTTP/1.1";
 
-    _client.println(line1);
-    _client.println(line2);
-    _client.println(line3);
-    _client.println(line4);
-    _client.println(line5);
-    _client.println();
+    String line2 = "Upgrade: WebSocket";
+    String line3 =  "Connection: Upgrade";
+    String line4 = "Host: " + _hostname;
+    String line5 = "Origin: ArduinoNimbits";
+
+    ethernetClient.println(line1);
+    ethernetClient.println(line2);
+    ethernetClient.println(line3);
+    ethernetClient.println(line4);
+    ethernetClient.println(line5);
+    ethernetClient.println();
 }
 
 bool Nimbits::readHandshake() {
@@ -178,7 +178,7 @@ bool Nimbits::readHandshake() {
     String handshake = "", line;
     int maxAttempts = 300, attempts = 0;
     
-    while(_client.available() == 0 && attempts < maxAttempts) 
+    while(ethernetClient.available() == 0 && attempts < maxAttempts)
     { 
         delay(100); 
         attempts++;
@@ -188,11 +188,12 @@ bool Nimbits::readHandshake() {
         handshake += line + '\n';
     }
     
-    String response = getStringTableItem(6);
+    String response = "HTTP/1.1 101";
     result = handshake.indexOf(response) != -1;
     
     if(!result) {
-        _client.stop();
+
+        ethernetClient.stop();
     }
     
     return result;
@@ -202,7 +203,7 @@ String Nimbits::readLine() {
     String line = "";
     char character;
     
-    while(_client.available() > 0 && (character = _client.read()) != '\n') {
+    while(ethernetClient.available() > 0 && (character = ethernetClient.read()) != '\n') {
         if (character != '\r' && character != -1) {
             line += character;
         }
@@ -211,8 +212,233 @@ String Nimbits::readLine() {
     return line;
 }
 
-void Nimbits::send (String data) {
-    _client.print((char)0);
-	_client.print(data);
-    _client.print((char)255);
+void Nimbits::sendSocketMessage (String data) {
+    ethernetClient.print((char)0);
+	ethernetClient.print(data);
+    ethernetClient.print((char)255);
+}
+
+//REST API
+
+
+String Nimbits::login(String email, String password) {
+  EthernetClient client;
+  _email = email;
+  _password = password;
+  String content;
+  content = "email=";
+  content += _email;
+  content += "&password=";
+  content += _password;
+
+  String response = "";
+
+
+  if (client.connect(_hostname.c_str(), _port)) {
+
+    client.println("POST " + SESSION_API + " HTTP/1.1");
+    client.println("Accept: */*");
+    client.println("Host: " + _hostname + ":" + _port);
+    client.println("Connection: close");
+    client.println("User-Agent: Arduino/1.0");
+    client.println("Cache-Control: max-age=0");
+    client.println("Content-Type: application/x-www-form-urlencoded");
+    client.print("Content-Length: ");
+    client.println(content.length());
+    client.println();
+    client.println(content);
+
+    while(client.connected() && !client.available()) delay(1);
+    while (client.available() ) {
+      char c = client.read();
+      response += c;
+
+    }
+    String str;
+     int contentBodyIndex = response.lastIndexOf('\n\n');
+            if (contentBodyIndex > 0) {
+              str = response.substring(contentBodyIndex);
+
+            }
+
+    client.stop();
+
+          int str_len = str.length() + 1;
+
+          StaticJsonBuffer<1024> jsonBuffer;
+          char char_array[str_len];
+
+          // Copy it over
+          str.toCharArray(char_array, str_len);
+
+          JsonObject& root = jsonBuffer.parseObject(char_array);
+
+      if (!root.success()) {
+        _authToken = "";
+        return "";
+
+      }
+
+      _authToken = root["authToken"];
+
+  }
+  else {
+
+    client.stop();
+  }
+  return _authToken;
+
+
+
+}
+
+
+void Nimbits::recordValue(double value, String pointId) {
+  EthernetClient client;
+
+ String json;
+json =  "{\"d\":\"";
+ json += floatToString(value, 4);
+
+json +=  "\"}";
+  String content;
+
+  content += "&json=";
+  content += json;
+  content += "&id=";
+  content +=  pointId;
+
+
+
+  if (client.connect(_hostname.c_str(), _port)) {
+
+    client.println("POST " + VALUE_API + " HTTP/1.1");
+    client.println("Accept: */*");
+    client.println("Host: " + _hostname + ":" + _port);
+    client.println("Connection: close");
+    client.println("User-Agent: Arduino/1.0");
+    client.println("Cache-Control: max-age=0");
+    client.println("Content-Type: application/x-www-form-urlencoded");
+    client.println("AuthToken: " + _authToken);
+    client.print("Content-Length: ");
+    client.println(content.length());
+    client.println();
+    client.println(content);
+
+    while(client.connected() && !client.available()) delay(1);
+    while (client.available() ) {
+      char c = client.read();
+
+    }
+    client.stop();
+  }
+  else {
+
+    client.stop();
+  }
+
+}
+
+double Nimbits::getValue(String point) {
+  EthernetClient client;
+
+  String content;
+
+  content += "&id=";
+  content +=  (_email + "/" + point);
+
+  if (client.connect(_hostname.c_str(), _port)) {
+
+    client.println("GET " + VALUE_API + "?" + content + " HTTP/1.1");
+    client.println("Accept: */*");
+    client.println("Host: " + _hostname + ":" + _port);
+    client.println("Connection: close");
+    client.println("User-Agent: Arduino/1.0");
+    client.println("AuthToken: " + _authToken);
+    client.println("Cache-Control: max-age=0");
+    client.println("Content-Type: application/x-www-form-urlencoded");
+
+    client.println();
+    client.println();
+    String str = "";
+    String response = "";
+
+    char c;
+    while(client.connected() && !client.available()) delay(1);
+    while (client.available()) {
+           c = client.read();
+           response += c;
+         }
+        int contentBodyIndex = response.lastIndexOf('\n\n');
+        if (contentBodyIndex > 0) {
+          str = response.substring(contentBodyIndex);
+
+        }
+
+      client.stop();
+
+
+      int str_len = str.length() + 1;
+      StaticJsonBuffer<256> jsonBuffer;
+      char char_array[str_len];
+
+      // Copy it over
+      str.toCharArray(char_array, str_len);
+
+      JsonObject& root = jsonBuffer.parseObject(char_array);
+
+  if (!root.success()) {
+
+    return -1.0;
+
+  }
+
+  double d = root["d"];
+
+  return d;
+
+
+  }
+  else {
+
+    client.stop();
+    return 0;
+  }
+
+}
+
+String Nimbits::floatToString(double number, uint8_t digits) {
+  String resultString = "";
+  // Handle negative numbers
+  if (number < 0.0)
+  {
+    resultString += "-";
+    number = -number;
+  }
+
+  // Round correctly so that print(1.999, 2) prints as "2.00"
+  double rounding = 0.5;
+  for (uint8_t i=0; i<digits; ++i)
+    rounding /= 10.0;
+
+  number += rounding;
+
+  // Extract the integer part of the number and print it
+  unsigned long int_part = (unsigned long)number;
+  double remainder = number - (double)int_part;
+  resultString += int_part;
+
+  // Print the decimal point, but only if there are digits beyond
+  if (digits > 0)
+    resultString += ".";
+
+  // Extract digits from the remainder one at a time
+  while (digits-- > 0)
+  {
+    remainder *= 10.0;
+    int toPrint = int(remainder);
+    resultString += toPrint;
+    remainder -= toPrint;
+  }
+  return resultString;
 }

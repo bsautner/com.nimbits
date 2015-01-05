@@ -306,7 +306,7 @@
 
     <build>
         <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
-        <finalName>nimbits_gae_3.7.9</finalName>
+        <finalName>nimbits_gae_3.8.0</finalName>
         <plugins>
 
             <plugin>
@@ -353,11 +353,11 @@
                 <artifactId>appengine-maven-plugin</artifactId>
                 <version>${appengine.target.version}</version>
                 <configuration>
-                    <port>8080</port>
+                    <port>8085</port>
 
                     <jvmFlags>
                         <jvmFlag>-Xdebug</jvmFlag>
-                        <jvmFlag>-agentlib:jdwp=transport=dt_socket,address=5008,server=y,suspend=n</jvmFlag>
+                        <jvmFlag>-agentlib:jdwp=transport=dt_socket,address=5009,server=y,suspend=n</jvmFlag>
                     </jvmFlags>
                 </configuration>
             </plugin>

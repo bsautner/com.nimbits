@@ -71,7 +71,7 @@ public class AuthServiceImpl implements AuthService {
             }
         }
 
-        //todo - use filter to check here for auth token and query dao for user if provided
+
 
 
         return result;

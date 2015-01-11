@@ -30,8 +30,8 @@ public class SimpleJavaSample {
     private static final String ACCESS_KEY = "key";
 
     //set this to your appid.appspot.com if on google app engine, cloud.nimbits.com for the public cloud,
-    //and localhost:8080/nimbits if that's your jetty local instance for example.
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080/nimbits");
+    //and localhost:8080 if that's your jetty local instance for example.
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost");
     private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL);
 
 

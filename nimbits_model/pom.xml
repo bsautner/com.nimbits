@@ -83,8 +83,21 @@
         </plugins>
     </reporting>
 
+    <repositories>
+        <repository>
+            <id>nimbits.com</id>
+            <name>Nimbits Public Maven Repository</name>
+            <url>http://nimbits.com/maven</url>
+        </repository>
+    </repositories>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.nimbits</groupId>
+            <artifactId>nimbits_proc</artifactId>
+            <version>3.8.0</version>
+        </dependency>
 
         <dependency>
             <groupId>com.google.code.gson</groupId>

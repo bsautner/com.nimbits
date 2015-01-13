@@ -30,6 +30,7 @@ public class ApplicationListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         log.info("NIMBITS Context Initialised" );
 
+
     }
 
 

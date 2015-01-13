@@ -56,6 +56,13 @@
             <name>Google Releases</name>
             <url>https://oss.sonatype.org/content/repositories/google-releases</url>
         </repository>
+
+        <repository>
+            <id>nimbits.com</id>
+            <name>Nimbits Public Maven Repository</name>
+            <url>http://nimbits.com/maven</url>
+        </repository>
+
     </repositories>
 
     <pluginRepositories>
@@ -72,7 +79,11 @@
 
     <dependencies>
 
-
+        <dependency>
+            <groupId>com.nimbits</groupId>
+            <artifactId>nimbits_internal</artifactId>
+            <version>3.8.0-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>com.nimbits</groupId>

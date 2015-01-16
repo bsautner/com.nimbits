@@ -6,7 +6,7 @@
     <packaging>war</packaging>
     <groupId>com.nimbits</groupId>
     <artifactId>nimbits_server</artifactId>
-    <version>3.8.0-SNAPSHOT</version>
+    <version>${nimbits_version}-SNAPSHOT</version>
     <name>Nimbits Server</name>
     <url>http://nimbits.com</url>
 
@@ -42,6 +42,7 @@
         <spring.version>4.1.1.RELEASE</spring.version>
 
         <jetty-jmx.version>8.1.15.v20140411</jetty-jmx.version>
+        <nimbits_version>3.8.1</nimbits_version>
     </properties>
 
     <repositories>
@@ -84,27 +85,27 @@
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_internal</artifactId>
-            <version>3.8.0-SNAPSHOT</version>
+            <version>${nimbits_version}-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_model</artifactId>
-            <version>3.8.0-SNAPSHOT</version>
+            <version>${nimbits_version}-SNAPSHOT</version>
 
         </dependency>
 
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_core</artifactId>
-            <version>3.8.0-SNAPSHOT</version>
+            <version>${nimbits_version}-SNAPSHOT</version>
 
         </dependency>
 
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_io</artifactId>
-            <version>3.8.0-SNAPSHOT</version>
+            <version>${nimbits_version}-SNAPSHOT</version>
 
         </dependency>
 
@@ -345,7 +346,7 @@
     </dependencies>
     <build>
         <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
-        <finalName>nimbits_server_3.8.0</finalName>
+        <finalName>nimbits_server_${nimbits_version}</finalName>
 
         <testResources>
             <testResource>

@@ -6,7 +6,10 @@
 
     <groupId>com.nimbits</groupId>
     <artifactId>nimbits_sample_java</artifactId>
-    <version>3.8.0-SNAPSHOT</version>
+    <version>${nimbits_version}-SNAPSHOT</version>
+    <properties>
+        <nimbits_version>3.8.1</nimbits_version>
+    </properties>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -30,14 +33,14 @@
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_model</artifactId>
-            <version>3.8.0-SNAPSHOT</version>
+            <version>${nimbits_version}-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_io</artifactId>
-            <version>3.8.0-SNAPSHOT</version>
+            <version>${nimbits_version}-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 

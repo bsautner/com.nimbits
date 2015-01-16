@@ -13,6 +13,8 @@
 package com.nimbits.client.enums;
 
 
+import com.nimbits.client.constants.Const;
+
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +23,7 @@ import java.util.Map;
 public enum ServerSetting {
 
 
-    version(SettingConstants.SETTING_VERSION, SettingConstants.CONST_SERVER_VERSION, true, true, true, false, false),
+    version(SettingConstants.SETTING_VERSION, Const.VERSION, true, true, true, false, false),
     uuid(SettingConstants.SETTING_UUID, SettingConstants.SETTING_UUID_DEFAULT, true, true, true, false, false),
     storeDirectory(SettingConstants.SETTING_STORE_DIRECTORY, SettingConstants.STORE_DIRECTORY_DEFAULT, false, true, false, false, false),
     admin(SettingConstants.SETTING_ADMIN, SettingConstants.SETTING_ADMIN_DEFAULT, false, true, false, false, false),
@@ -108,7 +110,7 @@ public enum ServerSetting {
     }
 
     private static class SettingConstants {
-        static final String CONST_SERVER_VERSION = "3.8.0";
+
         static final String STORE_DIRECTORY_DEFAULT = "/tmp";
         static final String SETTING_ADMIN = "admin";
         static final String SETTING_SMTP = "smtp";

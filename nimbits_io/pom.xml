@@ -89,8 +89,8 @@
                 <configuration>
                     <show>public</show>
                     <nohelp>true</nohelp>
-                    <reportOutputDirectory>/var/lib/tomcat7/webapps/apidocs</reportOutputDirectory>
-                    <destDir>/var/lib/tomcat7/webapps/apidocs/nimbits_io</destDir>
+                    <reportOutputDirectory>/data/webapps/apidocs</reportOutputDirectory>
+                    <destDir>/data/webapps/apidocs/nimbits_io</destDir>
                 </configuration>
                 <executions>
                     <execution>

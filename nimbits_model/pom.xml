@@ -189,7 +189,7 @@
                     <show>public</show>
                     <nohelp>true</nohelp>
                     <reportOutputDirectory>/data/webapps/apidocs</reportOutputDirectory>
-                    <destDir>/data/apidocs/nimbits_model</destDir>
+                    <destDir>/data/webapps/apidocs/nimbits_model</destDir>
                 </configuration>
                 <executions>
                     <execution>

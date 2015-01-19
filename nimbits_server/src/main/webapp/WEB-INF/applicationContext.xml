@@ -67,7 +67,7 @@
                 <prop key="javax.jdo.PersistenceManagerFactoryClass">
                     org.datanucleus.api.jdo.JDOPersistenceManagerFactory
                 </prop>
-                <prop key="javax.jdo.option.ConnectionURL">jdbc:h2:./database/db;MV_STORE=FALSE;MVCC=FALSE;;FILE_LOCK=NO</prop>
+                <prop key="javax.jdo.option.ConnectionURL">jdbc:h2:./database/db2;MV_STORE=FALSE;MVCC=FALSE;;FILE_LOCK=NO</prop>
                 <prop key="javax.jdo.option.ConnectionUserName">sa</prop>
                 <prop key="javax.jdo.option.ConnectionPassword"></prop>
                 <prop key="javax.jdo.option.ConnectionDriverName">org.h2.Driver</prop>

@@ -59,7 +59,7 @@
     <bean id="entityCache" class="com.nimbits.server.transaction.entity.cache.EntityCacheImpl"/>
 
     <bean id="stringEncryption" class="com.nimbits.server.secure.StringEncryption"/>
-
+    <bean id="serverInfo" class="com.nimbits.server.system.ServerInfo"/>
 
     <bean id="pmf" class="org.springframework.orm.jdo.LocalPersistenceManagerFactoryBean">
         <property name="jdoProperties">

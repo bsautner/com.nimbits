@@ -1,21 +1,25 @@
+/**
+ * Connects an arduino to a nimbits server running on a linux server (not a cloud) using websockets so it can recieve push notifications
+ * this watches a nimbits data point called switch1 and turns someone on or off based on the value. 
+ * see the switch tutorial on nimbits.com 
+ **/
+ 
+
 #include "Arduino.h"
 #include <Ethernet.h>
 #include <SPI.h>
 #include <Nimbits.h>
 #include <ArduinoJson.h>
 
-/**
- * watched a nimbits data point called switch1 and turns someone on or off based on the value. 
- * see the switch tutorial on nimbits.com
- **/
+
 #define POINT_COUNT 1
 
 byte mac[] = { 
   0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 char server[] ="192.168.1.21"; 
 
-char email[] = "bsautner@gmail.com";
-char password[] ="b";
+char email[] = "test@example.com";
+char password[] ="password or key";
 char clientId[] = "some_unique_string1";
 int port = 8080;
 

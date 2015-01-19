@@ -31,12 +31,22 @@ String _clientId;
 
 String _authToken;
 
+String _key;
+
 Nimbits::Nimbits(String  hostname, int port, String clientId){
   _hostname = hostname;
 
   _port = port;
   _clientId = clientId;
 
+}
+
+
+void Nimbits::setDataArrivedDelegate(DataArrivedDelegate dataArrivedDelegate) {
+	  _dataArrivedDelegate = dataArrivedDelegate;
+}
+void Nimbits::setStatusDelegate(StatusDelegate statusDelegate) {
+	  _statusDelegate = statusDelegate;
 }
 
 String Nimbits::arrayToJson(String points[], int count) {
@@ -116,12 +126,6 @@ void Nimbits::monitorSocket () {
             }
         }
 
-         // if (str == "close_op") {
-          Serial.println(str);
-         // return;
-         //// }
-         // else {
-
          int str_len = str.length() + 1;
          StaticJsonBuffer<256> jsonBuffer;
          char char_array[str_len];
@@ -142,7 +146,7 @@ void Nimbits::monitorSocket () {
 
         if (_dataArrivedDelegate != NULL) {
             _dataArrivedDelegate(name, d);
-            }
+         }
 
       }
   //  }
@@ -150,9 +154,6 @@ void Nimbits::monitorSocket () {
 }
 
 
-void Nimbits::setDataArrivedDelegate(DataArrivedDelegate dataArrivedDelegate) {
-	  _dataArrivedDelegate = dataArrivedDelegate;
-}
 
 
 void Nimbits::sendHandshake(char path[]) {
@@ -227,40 +228,19 @@ String Nimbits::login(String email, String password) {
   _password = password;
   String content;
   content = "email=";
-  content += _email;
+  content += email;
   content += "&password=";
   content += _password;
 
-  String response = "";
+
 
 
   if (client.connect(_hostname.c_str(), _port)) {
 
-    client.println("POST " + SESSION_API + " HTTP/1.1");
-    client.println("Accept: */*");
-    client.println("Host: " + _hostname + ":" + _port);
-    client.println("Connection: close");
-    client.println("User-Agent: Arduino/1.0");
-    client.println("Cache-Control: max-age=0");
-    client.println("Content-Type: application/x-www-form-urlencoded");
-    client.print("Content-Length: ");
-    client.println(content.length());
-    client.println();
-    client.println(content);
-
-    while(client.connected() && !client.available()) delay(1);
-    while (client.available() ) {
-      char c = client.read();
-      response += c;
-
-    }
-    String str;
-     int contentBodyIndex = response.lastIndexOf('\n\n');
-            if (contentBodyIndex > 0) {
-              str = response.substring(contentBodyIndex);
-
-            }
-
+    doPost(client, SESSION_API, content);
+    String response = getFullResponse(client);
+    String str = getContent(response);
+  Serial.println(str);
     client.stop();
 
           int str_len = str.length() + 1;
@@ -292,12 +272,16 @@ String Nimbits::login(String email, String password) {
 
 }
 
+void Nimbits::setAuthToken(String token) {
 
+_authToken = token;
+
+}
 void Nimbits::recordValue(double value, String pointId) {
   EthernetClient client;
 
  String json;
-json =  "{\"d\":\"";
+ json =  "{\"d\":\"";
  json += floatToString(value, 4);
 
 json +=  "\"}";
@@ -312,24 +296,11 @@ json +=  "\"}";
 
   if (client.connect(_hostname.c_str(), _port)) {
 
-    client.println("POST " + VALUE_API + " HTTP/1.1");
-    client.println("Accept: */*");
-    client.println("Host: " + _hostname + ":" + _port);
-    client.println("Connection: close");
-    client.println("User-Agent: Arduino/1.0");
-    client.println("Cache-Control: max-age=0");
-    client.println("Content-Type: application/x-www-form-urlencoded");
-    client.println("AuthToken: " + _authToken);
-    client.print("Content-Length: ");
-    client.println(content.length());
-    client.println();
-    client.println(content);
+    doPost(client, VALUE_API, content);
 
-    while(client.connected() && !client.available()) delay(1);
-    while (client.available() ) {
-      char c = client.read();
+    String response = getFullResponse(client);
 
-    }
+
     client.stop();
   }
   else {
@@ -349,31 +320,12 @@ double Nimbits::getValue(String point) {
 
   if (client.connect(_hostname.c_str(), _port)) {
 
-    client.println("GET " + VALUE_API + "?" + content + " HTTP/1.1");
-    client.println("Accept: */*");
-    client.println("Host: " + _hostname + ":" + _port);
-    client.println("Connection: close");
-    client.println("User-Agent: Arduino/1.0");
-    client.println("AuthToken: " + _authToken);
-    client.println("Cache-Control: max-age=0");
-    client.println("Content-Type: application/x-www-form-urlencoded");
 
-    client.println();
-    client.println();
-    String str = "";
-    String response = "";
+    doGet(client, VALUE_API, content);
+    String response = getFullResponse(client);
 
-    char c;
-    while(client.connected() && !client.available()) delay(1);
-    while (client.available()) {
-           c = client.read();
-           response += c;
-         }
-        int contentBodyIndex = response.lastIndexOf('\n\n');
-        if (contentBodyIndex > 0) {
-          str = response.substring(contentBodyIndex);
 
-        }
+    String str = getContent(response);
 
       client.stop();
 
@@ -405,6 +357,79 @@ double Nimbits::getValue(String point) {
     return 0;
   }
 
+}
+
+void Nimbits::doGet(EthernetClient client, String service, String content) {
+
+    client.println("GET " + service + "?" + content + " HTTP/1.1");
+    client.println("Accept: */*");
+    client.println("Host: " + _hostname + ":" + _port);
+    client.println("Connection: close");
+    client.println("User-Agent: Arduino/1.0");
+    client.println("AuthToken: " + _authToken);
+    client.println("Cache-Control: max-age=0");
+    client.println("Content-Type: application/x-www-form-urlencoded");
+
+    client.println();
+    client.println();
+}
+
+void Nimbits::doPost(EthernetClient client, String service, String content) {
+
+    client.println("POST " + service + " HTTP/1.1");
+    client.println("Accept: */*");
+    client.println("Host: " + _hostname + ":" + _port);
+    client.println("Connection: close");
+    client.println("User-Agent: Arduino/1.0");
+    client.println("Cache-Control: max-age=0");
+    client.println("Content-Type: application/x-www-form-urlencoded");
+    client.println("AuthToken: " + _authToken);
+    client.print("Content-Length: ");
+    client.println(content.length());
+    client.println();
+    client.println(content);
+
+}
+
+String Nimbits::getContent(String response) {
+     String str;
+     int contentBodyIndex = response.lastIndexOf('\n\n');
+            if (contentBodyIndex > 0) {
+              str = response.substring(contentBodyIndex);
+
+            }
+     return str;
+
+}
+
+String Nimbits::getFullResponse(EthernetClient client) {
+  char c;
+  String response;
+    while(client.connected() && !client.available()) delay(1);
+    while (client.available()) {
+           c = client.read();
+           response += c;
+
+         }
+
+Serial.println(response);
+
+    int responseCode = getResponseCode(response);
+    return response;
+
+}
+
+int Nimbits::getResponseCode(String response) {
+
+
+String sub = response.substring(9, 12);
+int code = sub.toInt();
+
+   if (_statusDelegate != NULL) {
+        _statusDelegate(code, response.substring(12, response.lastIndexOf("\n")));
+   }
+
+   return code;
 }
 
 String Nimbits::floatToString(double number, uint8_t digits) {

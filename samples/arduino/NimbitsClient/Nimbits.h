@@ -30,26 +30,37 @@ class Nimbits {
 	public:
 	    Nimbits(String  hostname, int port, String  clientId);
 		typedef void (*DataArrivedDelegate)(String data, double value);
+		typedef void (*StatusDelegate)(int statusCode, String statusText);
 		bool connectSocket(String points[], int count);
         bool connected();
         void disconnect();
 		void monitorSocket();
 		void setDataArrivedDelegate(DataArrivedDelegate dataArrivedDelegate);
+		void setStatusDelegate(StatusDelegate statusDelegate);
 		void sendSocketMessage(String data);
 		void recordValue(double value, String pointId);
 		double getValue(String point);
 		String login(String email, String password);
+		void setAuthToken(String token);
 
 	private:
+
+	 DataArrivedDelegate _dataArrivedDelegate;
+	 StatusDelegate _statusDelegate;
         String getStringTableItem(int index);
         void sendHandshake(char path[]);
         EthernetClient ethernetClient;
-        DataArrivedDelegate _dataArrivedDelegate;
+
         bool readHandshake();
         String readLine();
         char* parseJson(char *jsonString);
         String arrayToJson(String points[], int count);
         String floatToString(double number, uint8_t digits);
+        String getFullResponse(EthernetClient client);
+        String getContent(String response);
+        void doPost(EthernetClient client, String service, String content);
+        void doGet(EthernetClient client, String service, String content);
+        int getResponseCode(String response);
 
 };
 

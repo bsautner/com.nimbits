@@ -28,7 +28,7 @@ import java.util.List;
 
 public class UserModel extends EntityModel implements Serializable, User {
 
-    @Expose
+
     private Date lastLoggedIn;
 
     @Expose

@@ -7,8 +7,6 @@ import com.nimbits.io.NimbitsClient;
 import com.nimbits.io.helper.UserHelper;
 import com.nimbits.io.http.NimbitsClientFactory;
 
-import java.util.List;
-
 
 /**
  * Helper class to download a user's session data
@@ -33,13 +31,8 @@ public class UserHelperImpl implements UserHelper {
 
     @Override
     public User getSession() {
-        List<User> result = client.getSession();
-        if (result.isEmpty()) {
-            throw new IllegalArgumentException("User not found or access denied.");
-        }
-        else {
-            return result.get(0);
-        }
+        return client.getSession();
+
 
     }
 

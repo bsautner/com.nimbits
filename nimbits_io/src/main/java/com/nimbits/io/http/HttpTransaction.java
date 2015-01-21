@@ -43,7 +43,7 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
-
+@Deprecated
 public class HttpTransaction {
 
     private static final int INT_OK = 200;

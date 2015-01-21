@@ -39,7 +39,7 @@ public interface NimbitsClient {
 
      * @return A list with a valid user or an empty list if authentication fails.
      */
-    List<User> getSession();
+    User getSession();
 
     List<Value> getValue(Entity entity);
 

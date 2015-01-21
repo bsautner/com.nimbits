@@ -32,21 +32,29 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
     @Expose
     private String name;
-
+    @Expose
     private String key;
+    @Expose
     private String description;
+    @Expose
     private int entityType;
+    @Expose
     private int protectionLevel;
+
     private int alertType;
+    @Expose
     private String parent;
+    @Expose
     private String owner;
     private boolean readOnly = false;
+    @Expose
     private String uuid;
     private Date dateCreated;
     private static final long serialVersionUID =3455345354L;
     private List<Point> children;
     private String instanceUrl;
     private boolean isCached = false;
+    @Expose
     private String id;
     private String action;
 
@@ -280,7 +288,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     @Override
     public Date getDateCreated() {
 
-        return new Date(dateCreated.getTime());
+        return dateCreated != null ? new Date(dateCreated.getTime()) : new Date();
     }
 
     @Override

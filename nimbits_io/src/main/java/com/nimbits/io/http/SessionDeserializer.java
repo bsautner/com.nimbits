@@ -10,7 +10,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.gson;
+package com.nimbits.io.http;
 
 import com.google.gson.*;
 import com.nimbits.client.model.user.User;
@@ -18,14 +18,15 @@ import com.nimbits.client.model.user.UserModel;
 
 import java.lang.reflect.Type;
 
-@Deprecated //see session deserializer in nimbits_io
-public class UserDeserializer implements JsonDeserializer<User> {
+
+public class SessionDeserializer implements JsonDeserializer<User> {
     @Override
     public User deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 
-        final JsonPrimitive jsonPrimitive = (JsonPrimitive) jsonElement;
-        final String json = jsonPrimitive.getAsString();
-        return GsonFactory.getInstance().fromJson(json, UserModel.class);
+
+        final String json = jsonElement.toString();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        return gson.fromJson(json, UserModel.class);
 
 
     }

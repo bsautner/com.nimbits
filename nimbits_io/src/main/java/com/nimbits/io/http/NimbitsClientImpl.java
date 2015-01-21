@@ -33,7 +33,6 @@ import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.io.NimbitsClient;
@@ -58,11 +57,11 @@ public class NimbitsClientImpl implements NimbitsClient {
 
 
 
-    private static final UrlContainer MOVE_CRON = UrlContainer.getInstance("/cron/moveCron");
+
     private static final UrlContainer VALUE_SERVICE = UrlContainer.getInstance("/service/v2/value");
-    private static final UrlContainer SESSION_SERVICE = UrlContainer.getInstance("/service/v2/session");
+
     private static final UrlContainer SERIES_SERVICE = UrlContainer.getInstance("/service/v2/series");
-    private static final UrlContainer TREE_SERVICE = UrlContainer.getInstance("/service/v2/tree");
+
     private static final UrlContainer ENTITY_SERVICE = UrlContainer.getInstance("/service/v2/entity");
     private static final UrlContainer HB_SERVICE = UrlContainer.getInstance("/service/v2/hb");
     public static final String HTTP_NIMBITS_GCM_APPSPOT_COM_ANDROID = "http://nimbits-gcm.appspot.com/android";
@@ -95,17 +94,28 @@ public class NimbitsClientImpl implements NimbitsClient {
     }
 
     @Override
-    public List<User> getSession() {
+    public User getSession() {
 
-        UrlContainer path = UrlContainer.combine(instanceUrl, SESSION_SERVICE);
-        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(1);
-        if (accessKey != null) {
-            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
-        }
-        return helper.doGet(UserModel.class,
-                path,
-                params,
-                UserModel.class, false);
+        final Gson gson = new GsonBuilder().registerTypeAdapter(User.class, new SessionDeserializer()).create();
+
+        RequestInterceptor requestInterceptor = new RequestInterceptor() {
+            @Override
+            public void intercept(RequestInterceptor.RequestFacade request) {
+                if (!server.getApiKey().isEmpty()) {
+                    request.addHeader(Parameters.apikey.getText(), server.getApiKey().getValue());
+                }
+            }
+        };
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(instanceUrl.getUrl())
+                .setRequestInterceptor(requestInterceptor)
+                .setConverter(new GsonConverter(gson))
+                .build();
+
+        SessionApi api = restAdapter.create(SessionApi.class);
+
+        User user =  api.login(email.getValue());
+        return user;
     }
 
 
@@ -147,15 +157,25 @@ public class NimbitsClientImpl implements NimbitsClient {
     }
 
     @Override
-    public <T> List<T> getTree() {
+    public List<Entity> getTree() {
 
-        UrlContainer path = UrlContainer.combine(instanceUrl, TREE_SERVICE);
-        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(1);
-        if (accessKey != null) {
-            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
-        }
-        return helper.doGet(EntityModel.class, path, params,
-                entityListType, true);
+        RequestInterceptor requestInterceptor = new RequestInterceptor() {
+            @Override
+            public void intercept(RequestInterceptor.RequestFacade request) {
+                if (!server.getApiKey().isEmpty()) {
+                    request.addHeader(Parameters.apikey.getText(), server.getApiKey().getValue());
+                }
+            }
+        };
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(instanceUrl.getUrl())
+                .setRequestInterceptor(requestInterceptor)
+                .setConverter(new GsonConverter(GsonFactory.getInstance()))
+                .build();
+
+        TreeApi api = restAdapter.create(TreeApi.class);
+
+        return api.getTree(email.getValue(), accessKey);
 
 
     }
@@ -232,17 +252,7 @@ public class NimbitsClientImpl implements NimbitsClient {
     }
     @Override
     public List<Value> getSeries(final String entity, final Range<Date> range) {
-//        UrlContainer path = UrlContainer.combine(instanceUrl, SERIES_SERVICE);
-//        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(3);
-//
-//        params.add((new BasicNameValuePair(Parameters.id.getText(), entity)));
-//        params.add((new BasicNameValuePair(Parameters.sd.getText(), String.valueOf(range.lowerEndpoint().getTime()))));
-//        params.add((new BasicNameValuePair(Parameters.ed.getText(), String.valueOf(range.upperEndpoint().getTime()))));
-//        if (accessKey != null) {
-//            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
-//        }
-//        List<Value> sample =  helper.doGet(ValueModel.class, path, params, valueListType, true);
-//        return sample;
+
 
         final Gson gson = new GsonBuilder().registerTypeAdapter(Value.class, new ValueDeserializer()).create();
 

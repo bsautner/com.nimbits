@@ -18,15 +18,12 @@ public class UserHelperImpl implements UserHelper {
 
     private final NimbitsClient client;
 
-    public UserHelperImpl(Server server, EmailAddress emailAddress, String accessKey) {
+    public UserHelperImpl(Server server) {
 
-        this.client = NimbitsClientFactory.getInstance(server, emailAddress, accessKey);
+        this.client = NimbitsClientFactory.getInstance(server);
     }
 
-    public UserHelperImpl(Server server, EmailAddress emailAddress) {
 
-        this.client = NimbitsClientFactory.getInstance(server, emailAddress);
-    }
 
 
     @Override

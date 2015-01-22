@@ -58,7 +58,7 @@ public class SocketConnection  {
                 Parameters.email + "=" + email.getValue() +
                 "&" + Parameters.cid +  "=" + connectionid +
                 "&" + Parameters.format +  "=" + "json" +
-                "&" + Parameters.apikey + "=" + server.getApiKey().getValue()
+                "&" + Parameters.apikey + "=" + server.getAccessCode().getValue()
 
 
         ), new WebSocket.OnTextMessage()

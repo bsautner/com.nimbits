@@ -23,7 +23,7 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
-import com.nimbits.client.model.server.apikey.ApiKey;
+import com.nimbits.client.model.server.apikey.AccessCode;
 import com.nimbits.client.model.server.apikey.ApiKeyFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.io.helper.EntityHelper;
@@ -40,7 +40,7 @@ public class CreatePointWithAPIKey {
 
     //you can create this server object with an API KEY you configured your server with to make authentication easy
 
-    private static final ApiKey API_KEY = ApiKeyFactory.createApiKey("API_KEY_DEFAULT");
+    private static final AccessCode API_KEY = ApiKeyFactory.createApiKey("API_KEY_DEFAULT");
     private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL, API_KEY);
     public static void main(String[] args) {
         String name = "test2";

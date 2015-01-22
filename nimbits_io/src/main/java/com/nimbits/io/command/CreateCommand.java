@@ -30,7 +30,7 @@ public class CreateCommand extends AbstractCommand implements Command {
                 String name = args[2];
                 EntityType entityType = EntityType.valueOf(type);
                 if (entityType.equals(EntityType.point)) {
-                    EntityHelper helper = HelperFactory.getEntityHelper(server, user.getEmail(), null);
+                    EntityHelper helper = HelperFactory.getEntityHelper(server);
                     Point point = helper.createPoint(name, entityType,  current);
                     tree.add(point);
                     listener.onTreeUpdated(tree);

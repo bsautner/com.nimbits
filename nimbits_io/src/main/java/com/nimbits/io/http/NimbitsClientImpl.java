@@ -32,6 +32,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.server.Server;
+import com.nimbits.client.model.server.apikey.AccessCode;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueModel;
@@ -44,8 +45,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
+import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
 import retrofit.converter.GsonConverter;
 
 import java.io.IOException;
@@ -74,24 +77,17 @@ public class NimbitsClientImpl implements NimbitsClient {
     }.getType();
     private final EmailAddress email;
     private final UrlContainer instanceUrl;
-    private final String accessKey;
+    private final AccessCode accessCode;
     private final Server server;
 
-    public NimbitsClientImpl(Server server, EmailAddress email, String accessKey) {
+    public NimbitsClientImpl(Server server) {
         this.instanceUrl = UrlContainer.getInstance("http://" + server.getUrl());
-        this.email = email;
+        this.email = server.getEmail();
         this.helper = new HttpHelper(email, server);
-        this.accessKey = accessKey;
+        this.accessCode = server.getAccessCode();
         this.server = server;
     }
 
-    public NimbitsClientImpl(Server server, EmailAddress emailAddress) {
-        this.instanceUrl = UrlContainer.getInstance("http://" + server.getUrl());
-        this.email = emailAddress;
-        this.helper = new HttpHelper(email, server);
-        this.accessKey = null;
-        this.server = server;
-    }
 
     @Override
     public User getSession() {
@@ -101,8 +97,10 @@ public class NimbitsClientImpl implements NimbitsClient {
         RequestInterceptor requestInterceptor = new RequestInterceptor() {
             @Override
             public void intercept(RequestInterceptor.RequestFacade request) {
-                if (!server.getApiKey().isEmpty()) {
-                    request.addHeader(Parameters.apikey.getText(), server.getApiKey().getValue());
+                if (!server.getAccessCode().isEmpty()) {
+                    request.addHeader(Parameters.apikey.getText(), server.getAccessCode().getValue());
+                    request.addQueryParam(Parameters.key.getText(), server.getAccessCode().getValue());
+                    request.addQueryParam(Parameters.password.getText(), server.getAccessCode().getValue());
                 }
             }
         };
@@ -110,12 +108,17 @@ public class NimbitsClientImpl implements NimbitsClient {
                 .setEndpoint(instanceUrl.getUrl())
                 .setRequestInterceptor(requestInterceptor)
                 .setConverter(new GsonConverter(gson))
+                .setErrorHandler(new ErrorHandler() {
+                    @Override
+                    public Throwable handleError(RetrofitError retrofitError) {
+                        throw new NimbitsClientException(retrofitError.getMessage());
+                    }
+                })
                 .build();
 
         SessionApi api = restAdapter.create(SessionApi.class);
 
-        User user =  api.login(email.getValue());
-        return user;
+        return api.login(email.getValue());
     }
 
 
@@ -126,8 +129,8 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(1);
         params.add((new BasicNameValuePair(Parameters.id.getText(), entity.getKey())));
-        if (accessKey != null) {
-            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        if (accessCode != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessCode.getValue()));
         }
         return helper.doGet(ValueModel.class, path, params, valueListType, false);
 
@@ -138,8 +141,8 @@ public class NimbitsClientImpl implements NimbitsClient {
         RequestInterceptor requestInterceptor = new RequestInterceptor() {
             @Override
             public void intercept(RequestInterceptor.RequestFacade request) {
-                if (!server.getApiKey().isEmpty()) {
-                    request.addHeader(Parameters.apikey.getText(), server.getApiKey().getValue());
+                if (!server.getAccessCode().isEmpty()) {
+                    request.addHeader(Parameters.apikey.getText(), server.getAccessCode().getValue());
                 }
             }
         };
@@ -162,8 +165,8 @@ public class NimbitsClientImpl implements NimbitsClient {
         RequestInterceptor requestInterceptor = new RequestInterceptor() {
             @Override
             public void intercept(RequestInterceptor.RequestFacade request) {
-                if (!server.getApiKey().isEmpty()) {
-                    request.addHeader(Parameters.apikey.getText(), server.getApiKey().getValue());
+                if (!server.getAccessCode().isEmpty()) {
+                    request.addHeader(Parameters.apikey.getText(), server.getAccessCode().getValue());
                 }
             }
         };
@@ -175,7 +178,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         TreeApi api = restAdapter.create(TreeApi.class);
 
-        return api.getTree(email.getValue(), accessKey);
+        return api.getTree(email.getValue(), accessCode.getValue());
 
 
     }
@@ -189,8 +192,8 @@ public class NimbitsClientImpl implements NimbitsClient {
         params.add((new BasicNameValuePair(Parameters.id.getText(), entity.getKey())));
         params.add((new BasicNameValuePair(Parameters.json.getText(), content)));
         params.add((new BasicNameValuePair(Parameters.email.getText(), email.getValue())));
-        if (accessKey != null) {
-            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        if (accessCode != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessCode.getValue()));
         }
         return helper.doPost(ValueModel.class, path, params, null, false);
 
@@ -208,8 +211,8 @@ public class NimbitsClientImpl implements NimbitsClient {
         RequestInterceptor requestInterceptor = new RequestInterceptor() {
             @Override
             public void intercept(RequestInterceptor.RequestFacade request) {
-                if (!server.getApiKey().isEmpty()) {
-                    request.addHeader(Parameters.apikey.getText(), server.getApiKey().getValue());
+                if (!server.getAccessCode().isEmpty()) {
+                    request.addHeader(Parameters.apikey.getText(), server.getAccessCode().getValue());
                 }
             }
         };
@@ -221,7 +224,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         SeriesApi seriesApi = restAdapter.create(SeriesApi.class);
 
-        List<Value> sample = seriesApi.getSeries(email.getValue(), accessKey, entity);
+        List<Value> sample = seriesApi.getSeries(email.getValue(), accessCode.getValue(), entity);
 
         List<Value> fixed = new ArrayList<>(sample.size());
         Set<Long> test = new HashSet<>(sample.size());
@@ -243,8 +246,8 @@ public class NimbitsClientImpl implements NimbitsClient {
         List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(2);
         params.add((new BasicNameValuePair(Parameters.id.getText(), entity)));
         params.add((new BasicNameValuePair(Parameters.count.getText(), String.valueOf(count))));
-        if (accessKey != null) {
-            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        if (accessCode != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessCode.getValue()));
         }
         List<Value> sample = helper.doGet(ValueModel.class, path, params, valueListType, true);
         return sample;
@@ -260,8 +263,8 @@ public class NimbitsClientImpl implements NimbitsClient {
         RequestInterceptor requestInterceptor = new RequestInterceptor() {
             @Override
             public void intercept(RequestInterceptor.RequestFacade request) {
-                if (!server.getApiKey().isEmpty()) {
-                    request.addHeader(Parameters.apikey.getText(), server.getApiKey().getValue());
+                if (!server.getAccessCode().isEmpty()) {
+                    request.addHeader(Parameters.apikey.getText(), server.getAccessCode().getValue());
                 }
             }
         };
@@ -273,7 +276,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         SeriesApi seriesApi = restAdapter.create(SeriesApi.class);
 
-        List<Value> sample = seriesApi.getSeries(email.getValue(), accessKey, entity, range.lowerEndpoint().getTime(), range.upperEndpoint().getTime());
+        List<Value> sample = seriesApi.getSeries(email.getValue(), accessCode.getValue(), entity, range.lowerEndpoint().getTime(), range.upperEndpoint().getTime());
 
         List<Value> fixed = new ArrayList<>(sample.size());
         Set<Long> test = new HashSet<>(sample.size());
@@ -295,8 +298,8 @@ public class NimbitsClientImpl implements NimbitsClient {
         params.add((new BasicNameValuePair(Parameters.id.getText(), entity.getKey())));
         params.add((new BasicNameValuePair(Parameters.type.getText(), entity.getEntityType().toString())));
         params.add((new BasicNameValuePair(Parameters.action.getText(), Action.delete.getCode())));
-        if (accessKey != null) {
-            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        if (accessCode != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessCode.getValue()));
         }
         helper.doPost(EntityModel.class, path, params, entityListType, false);
 
@@ -310,8 +313,8 @@ public class NimbitsClientImpl implements NimbitsClient {
         params.add((new BasicNameValuePair(Parameters.json.getText(), json)));
         params.add((new BasicNameValuePair(Parameters.action.getText(), Action.create.getCode())));
         params.add((new BasicNameValuePair(Parameters.email.getText(), email.getValue())));
-        if (accessKey != null) {
-            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        if (accessCode != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessCode.getValue()));
         }
         return helper.doPost(clz, path, params, entityListType, false);
 
@@ -325,8 +328,8 @@ public class NimbitsClientImpl implements NimbitsClient {
         String json = GsonFactory.getInstance().toJson(entity);
         params.add((new BasicNameValuePair(Parameters.json.getText(), json)));
         params.add((new BasicNameValuePair(Parameters.action.getText(), Action.update.getCode())));
-        if (accessKey != null) {
-            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        if (accessCode != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessCode.getValue()));
         }
         return helper.doPost(clz, path, params, entityListType,true);
 
@@ -339,8 +342,8 @@ public class NimbitsClientImpl implements NimbitsClient {
         List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(4);
         params.add(new BasicNameValuePair(Parameters.id.getText(), entityId.getValue()));
         params.add(new BasicNameValuePair(Parameters.type.getText(), String.valueOf(type.getCode())));
-        if (accessKey != null) {
-            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        if (accessCode != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessCode.getValue()));
         }
         return helper.doGet(clz, path, params, EntityModel.class, false);
 
@@ -392,8 +395,8 @@ public class NimbitsClientImpl implements NimbitsClient {
         List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(2);
         params.add((new BasicNameValuePair(Parameters.id.getText(), parent.getKey())));
         params.add((new BasicNameValuePair(Parameters.type.getText(), String.valueOf(parent.getEntityType().getCode()))));
-        if (accessKey != null) {
-            params.add(new BasicNameValuePair(Parameters.key.name(), accessKey));
+        if (accessCode != null) {
+            params.add(new BasicNameValuePair(Parameters.key.name(), accessCode.getValue()));
         }
         helper.doPost(String.class, path, params, entityListType, false);
     }
@@ -416,8 +419,8 @@ public class NimbitsClientImpl implements NimbitsClient {
         RequestInterceptor requestInterceptor = new RequestInterceptor() {
             @Override
             public void intercept(RequestInterceptor.RequestFacade request) {
-                if (!server.getApiKey().isEmpty()) {
-                    request.addHeader(Parameters.apikey.getText(), server.getApiKey().getValue());
+                if (!server.getAccessCode().isEmpty()) {
+                    request.addHeader(Parameters.apikey.getText(), server.getAccessCode().getValue());
                 }
             }
         };
@@ -429,7 +432,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         SeriesApi seriesApi = restAdapter.create(SeriesApi.class);
 
-        seriesApi.recordSeries(point, email, accessKey);
+        seriesApi.recordSeries(point, email, accessCode.getValue());
 
 
 

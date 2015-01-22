@@ -12,93 +12,52 @@ import com.nimbits.io.helper.impl.ValueHelperImpl;
  */
 public class HelperFactory {
 
-    /**
-     * For getting the user session data. Helpful for testing credentials.
-     * @param server A sever object containing the instance url, Optional API KEY etc
-     * @param emailAddress The account owner
-     * @param accessKey nullable access key, optional if you want to provide an access key
-     * @return UserHelper
-     */
-    public static UserHelper getUserHelper(Server server, EmailAddress emailAddress, String accessKey) {
 
-        return new UserHelperImpl(server, emailAddress, accessKey);
-
-    }
 
     /**
      * For getting the user session data. Helpful for testing credentials.
-     * @param server A sever object containing the instance url, MUST CONSTAIN AN API KEY etc
-     * @param emailAddress The account owner
+     * @param server A sever object containing the instance url, email and password, key or api key
+
       * @return UserHelper
      */
-    public static UserHelper getUserHelper(Server server, EmailAddress emailAddress) {
+    public static UserHelper getUserHelper(Server server) {
 
-        return new UserHelperImpl(server, emailAddress);
+        return new UserHelperImpl(server);
 
     }
 
     /**
      * For creating, deleting and updating data points
-     * @param server A sever object containing the instance url, Optional API KEY etc
-     * @param emailAddress The account owner
-     * @param accessKey nullable access key, optional if you want to provide an access key
+     * @param server A sever object containing the instance url, email and password, key or api key
      * @return PointHelper
      */
-    public static PointHelper getPointHelper(Server server, EmailAddress emailAddress, String accessKey) {
+    public static PointHelper getPointHelper(Server server) {
 
-        return new PointHelperImpl(server, emailAddress, accessKey);
-
-    }
-
-    /**
-     * For recording and downloading time series data values
-     * @param server A sever object containing the instance url, Optional API KEY etc
-     * @param emailAddress The account owner
-     * @param accessKey nullable access key, optional if you want to provide an access key
-     * @return ValueHelper
-     */
-    public static ValueHelper getValueHelper(Server server, EmailAddress emailAddress, String accessKey) {
-
-        return new ValueHelperImpl(server, emailAddress, accessKey);
+        return new PointHelperImpl(server);
 
     }
+
 
     /**
      * For recording and downloading time series data values without an API KEY
-     * @param server A sever object containing the instance url, REQUIRES AN API KEY etc
-     * @param emailAddress The account owner
-
+     * @param server A sever object containing the instance url, email and password, key or api key
      * @return ValueHelper
      */
-    public static ValueHelper getValueHelper(Server server, EmailAddress emailAddress ) {
+    public static ValueHelper getValueHelper(Server server) {
 
-        return new ValueHelperImpl(server, emailAddress);
+        return new ValueHelperImpl(server);
 
     }
 
     /**
      * For creating, deleting and updating entities
-     * @param server A sever object containing the instance url, Optional API KEY etc
-     * @param emailAddress The account owner
-     * @param accessKey nullable access key, optional if you want to provide an access key
+     * @param server A sever object containing the instance url, email and password, key or api key
      * @return EntityHelper
      */
-    public static EntityHelper getEntityHelper(Server server, EmailAddress emailAddress, String accessKey) {
+    public static EntityHelper getEntityHelper(Server server) {
 
-        return new EntityHelperImpl(server, emailAddress, accessKey);
+        return new EntityHelperImpl(server);
 
     }
-    /**
-     * For creating, deleting and updating entities
-     * @param server A sever object containing the instance url, MUST BE CONSTRUCTED WITH AN API KEY etc
-     * @param emailAddress The account owner
-     * @return EntityHelper
-     */
-    public static EntityHelper getEntityHelper(Server server, EmailAddress emailAddress) {
-        return new EntityHelperImpl(server, emailAddress, null);
-    }
 
-    public static PointHelper getPointHelper(Server server, EmailAddress emailAddress) {
-        return new PointHelperImpl(server, emailAddress, null);
-    }
 }

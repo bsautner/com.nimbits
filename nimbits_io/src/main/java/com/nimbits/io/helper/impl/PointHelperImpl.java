@@ -44,9 +44,8 @@ public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
 
 
 
-
-    public PointHelperImpl(Server server, EmailAddress email, String accessKey) {
-        super(server, email, accessKey);
+    public PointHelperImpl(Server server) {
+        super(server);
 
     }
 
@@ -59,7 +58,7 @@ public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
         EntityName pointName = CommonFactory.createName(name, EntityType.point);
 
         Entity entity = EntityModelFactory.createEntity(pointName, description, EntityType.point, ProtectionLevel.everyone,
-                email.getValue(),  email.getValue());
+                server.getEmail().getValue(), server.getEmail().getValue());
 
         Point point = PointModelFactory.createPointModel(entity, 0.0, 365, "", 0.0, false, false, false, 0, false, FilterType.none,
                 0.0, false, PointType.basic, 0, false, 0.0, 10);
@@ -86,7 +85,7 @@ public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
     @Override
     public boolean pointExists(final String name)   {
 
-        SimpleValue<String> id = SimpleValue.getInstance(email + "/" + name);
+        SimpleValue<String> id = SimpleValue.getInstance(server.getEmail().getValue() + "/" + name);
         List<Entity> sample;
 
         sample = nimbitsClient.getEntity(id, EntityType.point, PointModel.class);
@@ -100,8 +99,8 @@ public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
     @Override
     public Point getPoint(final String name)   {
         SimpleValue<String> id;
-        if (! name.startsWith(email.getValue())) {
-           id = SimpleValue.getInstance(email + "/" + name);
+        if (! name.startsWith(server.getEmail().getValue())) {
+           id = SimpleValue.getInstance(server.getEmail().getValue()  + "/" + name);
         }
         else {
             id = SimpleValue.getInstance(name);

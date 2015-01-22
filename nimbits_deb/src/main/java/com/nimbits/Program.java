@@ -24,7 +24,7 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
-import com.nimbits.client.model.server.apikey.ApiKey;
+import com.nimbits.client.model.server.apikey.AccessCode;
 import com.nimbits.client.model.server.apikey.ApiKeyFactory;
 import com.nimbits.client.model.user.User;
 import com.nimbits.io.command.CommandListener;
@@ -51,7 +51,7 @@ public class Program   {
 
     public static EmailAddress EMAIL_ADDRESS;
     private static UrlContainer INSTANCE_URL;
-    private static ApiKey API_KEY;
+    private static AccessCode API_KEY;
     private static Server SERVER;
     public static User user;
     public static Entity current;

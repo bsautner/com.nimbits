@@ -24,12 +24,14 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.UrlContainer;
+import com.nimbits.client.model.common.impl.CommonFactory;
+import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
-import com.nimbits.client.model.server.apikey.ApiKey;
+import com.nimbits.client.model.server.apikey.AccessCode;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.io.command.CommandListener;
@@ -133,8 +135,9 @@ public class XMPPReceiverServlet extends ApiBase {
                 TerminalCommand terminalCommand = TerminalCommand.lookup(args[0]);
                 if (terminalCommand != null) {
                     UrlContainer urlContainer = UrlContainer.getInstance(serverInfo.getFullServerURL(req));
-                    ApiKey apiKey = ApiKey.getInstance(settingsService.getSetting(ServerSetting.apiKey));
-                    Server server = ServerFactory.getInstance(urlContainer, apiKey );
+                    AccessCode accessCode = AccessCode.getInstance(settingsService.getSetting(ServerSetting.apiKey));
+                    EmailAddress emailAddress = CommonFactory.createEmailAddress(email);
+                    Server server = ServerFactory.getInstance(urlContainer, emailAddress, accessCode);
                     try {
                         List<Entity> tree;
                         if (cache.contains(getTreeKey(user))) {

@@ -12,25 +12,19 @@
 
 package com.nimbits.client.model.server;
 
-import com.nimbits.client.model.server.apikey.ApiKey;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.server.apikey.AccessCode;
 
 import java.io.Serializable;
 
 
 public interface Server extends Serializable {
 
-    long getId();
-
     String getUrl();
 
-    ApiKey getApiKey();
-
-    boolean isDefault();
+    AccessCode getAccessCode();
 
     Protocol getProtocol();
 
-    boolean isSocketsEnabled();
-
-
-
+    EmailAddress getEmail();
 }

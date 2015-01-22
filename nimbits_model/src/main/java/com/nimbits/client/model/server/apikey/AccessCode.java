@@ -6,24 +6,27 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.Serializable;
 
 /**
- * Container for an API KEY String
+ * Container for an Password KEY String
  *
  */
-public class ApiKey extends SimpleValue<String> implements Serializable {
+public class AccessCode extends SimpleValue<String> implements Serializable {
 
-    protected ApiKey(String aValue) {
+
+
+
+    protected AccessCode(String aValue) {
         super(aValue);
 
     }
 
-    protected ApiKey() {
+    protected AccessCode() {
         super("");
 
     }
 
 
-    public static ApiKey getInstance(final String aValue) {
-        return new ApiKey(aValue);
+    public static AccessCode getInstance(final String aValue) {
+        return new AccessCode(aValue);
     }
 
     public boolean matchesString(final String aValue) {

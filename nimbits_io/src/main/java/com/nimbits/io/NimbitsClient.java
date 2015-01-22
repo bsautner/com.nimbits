@@ -45,7 +45,7 @@ public interface NimbitsClient {
 
     Map<String, Integer> moveCron();
 
-    <T> List<T> getTree();
+    List<Entity> getTree();
 
     List<Value> postValue(Entity entity, Value value);
 

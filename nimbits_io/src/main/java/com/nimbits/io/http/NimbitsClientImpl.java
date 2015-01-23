@@ -242,14 +242,42 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     @Override
     public List<Value> getSeries(final String entity, final int count) {
-        UrlContainer path = UrlContainer.combine(instanceUrl, SERIES_SERVICE);
-        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(2);
-        params.add((new BasicNameValuePair(Parameters.id.getText(), entity)));
-        params.add((new BasicNameValuePair(Parameters.count.getText(), String.valueOf(count))));
-        if (accessCode != null) {
-            params.add(new BasicNameValuePair(Parameters.key.name(), accessCode.getValue()));
+        final Gson gson = new GsonBuilder().registerTypeAdapter(Value.class, new ValueDeserializer()).create();
+
+
+        RequestInterceptor requestInterceptor = new RequestInterceptor() {
+            @Override
+            public void intercept(RequestInterceptor.RequestFacade request) {
+                if (!server.getAccessCode().isEmpty()) {
+                    request.addHeader(Parameters.apikey.getText(), server.getAccessCode().getValue());
+                }
+            }
+        };
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(instanceUrl.getUrl())
+                .setRequestInterceptor(requestInterceptor)
+                .setErrorHandler(new ErrorHandler() {
+                    @Override
+                    public Throwable handleError(RetrofitError retrofitError) {
+                        throw new NimbitsClientException(retrofitError.getMessage());
+                    }
+                })
+                .setConverter(new GsonConverter(gson))
+                .build();
+
+        SeriesApi seriesApi = restAdapter.create(SeriesApi.class);
+
+        List<Value> sample = seriesApi.getSeries(email.getValue(), accessCode.getValue(), entity, count);
+
+        List<Value> fixed = new ArrayList<>(sample.size());
+        Set<Long> test = new HashSet<>(sample.size());
+        for (Value value : sample) {
+            if (! test.contains(value.getTimestamp().getTime())) {
+                fixed.add(value);
+                test.add(value.getTimestamp().getTime());
+            }
+
         }
-        List<Value> sample = helper.doGet(ValueModel.class, path, params, valueListType, true);
         return sample;
 
     }

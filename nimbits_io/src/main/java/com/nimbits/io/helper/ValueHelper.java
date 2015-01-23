@@ -76,4 +76,5 @@ public interface ValueHelper {
      * execute the move cron task.
      */
     Map<String, Integer> moveCron();
+
 }

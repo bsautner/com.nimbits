@@ -24,6 +24,7 @@ import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.user.User;
+import com.nimbits.server.socket.ConnectedClients;
 import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.user.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,9 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private SettingsService settingsService;
+
+
+
 
     @Autowired
     private UserDao userDao;

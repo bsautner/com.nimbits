@@ -72,4 +72,10 @@ public interface NimbitsClient {
     void recordSeries(Point entity);
 
     void recordSeries(List<Point> entity);
+
+    /**
+     * notifies a cloud instance of a socket client
+     * @param user
+      */
+    void notifySocketConnection(String forwardUrl, User user);
 }

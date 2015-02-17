@@ -8,9 +8,13 @@ import com.nimbits.client.model.server.apikey.AccessCode;
 
 import com.nimbits.client.model.user.User;
 import com.nimbits.io.NimbitsClient;
+import com.nimbits.io.helper.HelperFactory;
+import com.nimbits.io.helper.ValueHelper;
 import com.nimbits.io.http.NimbitsClientFactory;
 import com.nimbits.io.socket.SocketConnection;
 import com.nimbits.io.socket.SocketListener;
+
+import java.util.Random;
 
 /**
  * An example of writing values to a data point and also having a web socket open to receive those events.
@@ -26,7 +30,8 @@ public class CloudSocketSample {
     private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("support@nimbits.com");
 
     //a running jetty server with nimbits installed (using root.war)
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("cloud.nimbits.com");//"localhost:8080");
+  //  private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("cloud.nimbits.com");//"localhost:8080");
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8085");//"localhost:8080");
 
     //you can create this server object with an API KEY you configured your server with to make authentication easy
 
@@ -77,5 +82,9 @@ public class CloudSocketSample {
         });
 
         socketConnection.sendMessage("Hello Nimbits Socket! " + System.currentTimeMillis());
+        ValueHelper valueHelper = HelperFactory.getValueHelper(cloudServer);
+        Random random = new Random();
+        valueHelper.recordValue("foo", random.nextDouble() * 100);
+
     }
 }

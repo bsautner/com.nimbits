@@ -473,6 +473,31 @@ public class NimbitsClientImpl implements NimbitsClient {
         recordSeries(points, email.getValue());
     }
 
+    @Override
+    public void notifySocketConnection(String forwardUrl, User user) {
+        RequestInterceptor requestInterceptor = new RequestInterceptor() {
+            @Override
+            public void intercept(RequestInterceptor.RequestFacade request) {
+                if (!server.getAccessCode().isEmpty()) {
+                    request.addHeader(Parameters.apikey.getText(), server.getAccessCode().getValue());
+                }
+            }
+        };
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(forwardUrl)
+                .setRequestInterceptor(requestInterceptor)
+
+                .build();
+
+
+        SocketApi socketApi = restAdapter.create(SocketApi.class);
+        socketApi.notifyConnection(user);
+
+
+
+    }
+
 
     private void recordSeries(final List<Point> point, String email) {
 

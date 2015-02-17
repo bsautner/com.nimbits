@@ -12,11 +12,12 @@
     <bean id="cache" class="com.nimbits.server.transaction.cache.GoogleCache"/>
 
     <bean id="userCache" class="com.nimbits.server.transaction.user.cache.UserCacheImpl"/>
+
     <bean id="userService" class="com.nimbits.server.transaction.user.service.UserServiceImpl"/>
 
-    <bean id="entityService" class=" com.nimbits.server.transaction.entity.EntityServiceImpl"/>
+    <bean id="entityService" class="com.nimbits.server.transaction.entity.EntityServiceImpl"/>
 
-    <bean id="authService" class=" com.nimbits.server.auth.AuthServiceImpl"/>
+
 
     <bean id="settingsService" class="com.nimbits.server.transaction.settings.SettingsServiceImpl"/>
     <bean id="settingsCache" class="com.nimbits.server.transaction.settings.SettingsCacheImpl"/>

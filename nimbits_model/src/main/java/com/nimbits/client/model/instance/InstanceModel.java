@@ -19,7 +19,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.server.Protocol;
 import com.nimbits.client.model.server.apikey.AccessCode;
-import com.nimbits.client.model.server.apikey.ApiKeyFactory;
+
 
 import java.io.Serializable;
 
@@ -90,7 +90,7 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
 
     @Override
     public AccessCode getApiKey() {
-        return ApiKeyFactory.createApiKey(this.apiKey);
+        return AccessCode.getInstance(this.apiKey);
     }
 
     @Override

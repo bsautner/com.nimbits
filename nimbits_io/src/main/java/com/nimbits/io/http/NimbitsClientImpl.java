@@ -90,7 +90,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
 
     @Override
-    public User getSession() {
+    public User login() {
 
         final Gson gson = new GsonBuilder().registerTypeAdapter(User.class, new SessionDeserializer()).create();
 
@@ -121,6 +121,40 @@ public class NimbitsClientImpl implements NimbitsClient {
         return api.login(email.getValue());
     }
 
+
+    @Override
+    public User getSession() {
+
+        final Gson gson = new GsonBuilder().registerTypeAdapter(User.class, new SessionDeserializer()).create();
+
+        RequestInterceptor requestInterceptor = new RequestInterceptor() {
+            @Override
+            public void intercept(RequestInterceptor.RequestFacade request) {
+                if (!server.getAccessCode().isEmpty()) {
+                    request.addHeader(Parameters.apikey.getText(), server.getAccessCode().getValue());
+                    request.addQueryParam(Parameters.key.getText(), server.getAccessCode().getValue());
+                    request.addQueryParam(Parameters.email.getText(), server.getEmail().getValue());
+                    request.addQueryParam(Parameters.password.getText(), server.getAccessCode().getValue());
+                    //TODO collapse all jauth params into one both client and server side
+                }
+            }
+        };
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(instanceUrl.getUrl())
+                .setRequestInterceptor(requestInterceptor)
+                .setConverter(new GsonConverter(gson))
+                .setErrorHandler(new ErrorHandler() {
+                    @Override
+                    public Throwable handleError(RetrofitError retrofitError) {
+                        throw new NimbitsClientException(retrofitError.getMessage());
+                    }
+                })
+                .build();
+
+        SessionApi api = restAdapter.create(SessionApi.class);
+
+        return api.getSession( );
+    }
 
 
     @Override

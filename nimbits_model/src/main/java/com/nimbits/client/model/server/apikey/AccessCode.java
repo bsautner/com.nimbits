@@ -26,7 +26,11 @@ public class AccessCode extends SimpleValue<String> implements Serializable {
 
 
     public static AccessCode getInstance(final String aValue) {
-        return new AccessCode(aValue);
+        return aValue == null ? createEmptyKey() :  new AccessCode(aValue);
+    }
+
+    public static AccessCode createEmptyKey() {
+        return new AccessCode();
     }
 
     public boolean matchesString(final String aValue) {

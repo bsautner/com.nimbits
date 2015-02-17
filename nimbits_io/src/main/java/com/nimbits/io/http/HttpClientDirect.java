@@ -3,7 +3,7 @@ package com.nimbits.io.http;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.server.apikey.AccessCode;
-import com.nimbits.client.model.server.apikey.ApiKeyFactory;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -46,7 +46,7 @@ public class HttpClientDirect {
 
         HttpGet http = new HttpGet(u);
 
-        httpClient = getInstance(ApiKeyFactory.createApiKey(ServerSetting.apiKey.getDefaultValue()));
+        httpClient = getInstance(AccessCode.getInstance(ServerSetting.apiKey.getDefaultValue()));
 
         HttpResponse response = httpClient.execute(http);
 
@@ -79,7 +79,7 @@ public class HttpClientDirect {
         }
 
 
-        httpClient =  getInstance(ApiKeyFactory.createApiKey(ServerSetting.apiKey.getDefaultValue()));
+        httpClient =  getInstance(AccessCode.getInstance(ServerSetting.apiKey.getDefaultValue()));
 
         httppost.setHeader(ServerSetting.apiKey.getName(), ServerSetting.apiKey.getDefaultValue());
 

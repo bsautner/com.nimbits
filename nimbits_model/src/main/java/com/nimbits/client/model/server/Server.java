@@ -27,4 +27,5 @@ public interface Server extends Serializable {
     Protocol getProtocol();
 
     EmailAddress getEmail();
+
 }

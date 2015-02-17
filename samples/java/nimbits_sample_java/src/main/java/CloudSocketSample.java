@@ -1,4 +1,3 @@
-
 import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
@@ -7,35 +6,47 @@ import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
 import com.nimbits.client.model.server.apikey.AccessCode;
 
+import com.nimbits.client.model.user.User;
+import com.nimbits.io.NimbitsClient;
+import com.nimbits.io.http.NimbitsClientFactory;
 import com.nimbits.io.socket.SocketConnection;
 import com.nimbits.io.socket.SocketListener;
 
 /**
- * An example of writing values to a data point and also having a web socket open to recieve those events.
+ * An example of writing values to a data point and also having a web socket open to receive those events.
+ * What is special about this is that it uses the cloud server that relays data through a websocket middle tier.
  * EMAIL_ADDRESS : the account owners email
  * ACCESS_KEY : an access key you created by logging into the web console at INSTANCE_URL
  * INSTANCE_URL : The url to the nimbits server instance
  */
 
-public class SocketSample {
+public class CloudSocketSample {
 
 
     private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("support@nimbits.com");
 
     //a running jetty server with nimbits installed (using root.war)
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080");
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("cloud.nimbits.com");//"localhost:8080");
 
     //you can create this server object with an API KEY you configured your server with to make authentication easy
 
-    private static final AccessCode API_KEY = AccessCode.getInstance("API_KEY_DEFAULT");
-    private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, API_KEY);
+    private static final AccessCode API_KEY = AccessCode.getInstance("key");
+    private static final Server cloudServer = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, API_KEY);
 
 
     public static void main(String[] args) throws Exception {
 
 
+        NimbitsClient client = NimbitsClientFactory.getInstance(cloudServer);
+        User user = client.login();
 
-        SocketConnection socketConnection = new SocketConnection(SERVER, new SocketListener() {
+        System.out.println("Hello " + user.getEmail() + " " + user.getAuthToken());
+
+
+        //connect to the server with your new session token
+        Server authenticationContainer = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, AccessCode.getInstance(user.getAuthToken()));
+
+        SocketConnection socketConnection = new SocketConnection(authenticationContainer, new SocketListener() {
 
 
             public void onOpen(Connection connection)

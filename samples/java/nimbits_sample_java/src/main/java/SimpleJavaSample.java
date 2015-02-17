@@ -3,6 +3,7 @@ import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
+import com.nimbits.client.model.server.apikey.AccessCode;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.io.helper.HelperFactory;
@@ -27,12 +28,12 @@ public class SimpleJavaSample {
 
     //this sample uses an access key, so you've logged into nimbits and right clicked on your account to create this read/write key with user scope.
 
-    private static final String ACCESS_KEY = "key";
+    private static final AccessCode ACCESS_KEY = AccessCode.getInstance("key");
 
     //set this to your appid.appspot.com if on google app engine, cloud.nimbits.com for the public cloud,
     //and localhost:8080 if that's your jetty local instance for example.
     private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost");
-    private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL);
+    private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, ACCESS_KEY);
 
 
     public static void main(String[] args) throws InterruptedException {
@@ -45,7 +46,7 @@ public class SimpleJavaSample {
 
         //use an access key you created via the web console to get your user data
 
-        UserHelper sessionHelper = HelperFactory.getUserHelper(SERVER, EMAIL_ADDRESS, ACCESS_KEY);
+        UserHelper sessionHelper = HelperFactory.getUserHelper(SERVER);
 
         User user = sessionHelper.getSession();
 
@@ -55,7 +56,7 @@ public class SimpleJavaSample {
 
         //Create A Data Point
 
-        PointHelper pointHelper = HelperFactory.getPointHelper(SERVER, EMAIL_ADDRESS, ACCESS_KEY);
+        PointHelper pointHelper = HelperFactory.getPointHelper(SERVER);
 
         pointHelper.createPoint(pointName, "Some Random Description");
 
@@ -66,7 +67,7 @@ public class SimpleJavaSample {
             //record some data!
 
             Random r = new Random();
-            ValueHelper valueHelper = HelperFactory.getValueHelper(SERVER, EMAIL_ADDRESS, ACCESS_KEY);
+            ValueHelper valueHelper = HelperFactory.getValueHelper(SERVER);
             for (int i =0; i < 10; i++) {
 
                 Value value = valueHelper.recordValue(pointName, r.nextDouble() * 100);

@@ -74,4 +74,5 @@ public class ServerModel implements Server, Serializable {
     public EmailAddress getEmail() {
         return CommonFactory.createEmailAddress(email);
     }
+
 }

@@ -1,6 +1,5 @@
 package com.nimbits.io.helper.impl;
 
-import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.user.User;
 import com.nimbits.io.NimbitsClient;
@@ -28,7 +27,7 @@ public class UserHelperImpl implements UserHelper {
 
     @Override
     public User getSession() {
-        return client.getSession();
+        return client.login();
 
 
     }

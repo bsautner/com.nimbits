@@ -6,7 +6,15 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.model.UrlContainer;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.server.Server;
+import com.nimbits.client.model.server.ServerFactory;
+import com.nimbits.client.model.server.apikey.AccessCode;
+import com.nimbits.client.model.user.User;
+import com.nimbits.io.NimbitsClient;
+import com.nimbits.io.http.NimbitsClientFactory;
 import com.nimbits.server.auth.AuthService;
 import com.nimbits.server.transaction.user.dao.UserDao;
 import org.eclipse.jetty.websocket.WebSocket;
@@ -21,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,14 +62,12 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
             getServletContext().getNamedDispatcher("default").forward(request,
                     response);
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, ex.getMessage());
         }
     }
 
     public WebSocket doWebSocketConnect(HttpServletRequest request,
                                         String protocol) {
-
-        System.out.println("CONNECTION INCOMING!");
 
 
 
@@ -68,14 +75,33 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
 
         String authToken = request.getParameter(Parameters.authToken.getText());
 
-        List<EmailAddress> users = authService.getCurrentUser(request);
+        String forwardUrl = request.getParameter(Parameters.forward.getText());
+        String emailParam = request.getParameter(Parameters.email.getText());
+        List<EmailAddress> users;
+
+        if (forwardUrl != null && emailParam != null && authToken != null) {
+            Server server = ServerFactory.getInstance(UrlContainer.getInstance(forwardUrl),
+                    CommonFactory.createEmailAddress(emailParam), AccessCode.getInstance(authToken));
+            NimbitsClient client = NimbitsClientFactory.getInstance(server);
+            User user = client.getSession();
+            users = Arrays.asList(user.getEmail());
+
+        }
+        else {
+
+            users = authService.getCurrentUser(request);
+
+        }
+
+
+
 
         if (users.isEmpty()) {
             throw new SecurityException("Session not found, did you POST to the session api first?");
         }
         else {
             String email = users.get(0).getValue();
-            System.out.println("Connection : " + authToken);
+
             List<String> points;
             if (!Utils.isEmptyString(ids)) {
                 Gson gson = new GsonBuilder().create();
@@ -97,15 +123,6 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
                 }
             }
 
-
-            System.out.println("Connection from : " + email);
-            System.out.println("Connection auth : " + authToken);
-            System.out.println("Connection ids : " + ids);
-
-
-            for (String s : fixed) {
-                System.out.println("Connection id : " + s);
-            }
 
             SocketClient client = new SocketClient(this, users.get(0), fixed, authToken);
 

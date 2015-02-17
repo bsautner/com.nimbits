@@ -43,22 +43,41 @@ public class SocketConnection  {
 
 
 
-    public SocketConnection(Server aServer, EmailAddress email, final SocketListener listener) throws Exception {
+    public SocketConnection(Server aServer, final SocketListener listener) throws Exception {
         this.factory = new WebSocketClientFactory();
         this.factory.start();
         this.client = factory.newWebSocketClient();
         this.server = aServer;
 
-
+       StringBuilder sb = new StringBuilder();
 
         String connectionid = UUID.randomUUID().toString();
 
+        String u;
+        boolean usingCloud = server.getUrl().contains("nimbits.com");
+        if (usingCloud) {
+            u = "192.168.1.21:8080";
+        }
+        else {
+            u = server.getUrl();
+        }
+
+        sb
+                .append("ws://").append(u).append("/socket?")
+                .append(Parameters.email + "=" + server.getEmail().getValue())
+                .append("&" + Parameters.cid + "=" + connectionid)
+                .append("&" + Parameters.format + "=" + "json")
+                .append("&" + Parameters.apikey + "=" + server.getAccessCode().getValue())
+                .append("&" + Parameters.authToken + "=" + server.getAccessCode().getValue());
+
+        if (usingCloud) {
+            sb.append("&" + Parameters.forward + "=" + server.getUrl());
+
+        }
+        System.out.println(sb.toString());
+
         //TODO - pass an array of point id's to limit the points this socket cares about
-        connection = client.open(new URI("ws://" + server.getUrl() + "/socket?" +
-                Parameters.email + "=" + email.getValue() +
-                "&" + Parameters.cid +  "=" + connectionid +
-                "&" + Parameters.format +  "=" + "json" +
-                "&" + Parameters.apikey + "=" + server.getAccessCode().getValue()
+        connection = client.open(new URI(sb.toString()
 
 
         ), new WebSocket.OnTextMessage()

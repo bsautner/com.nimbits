@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.accesskey.AccessKey;
@@ -57,7 +58,7 @@ public class SocketConnection  {
         String u;
         boolean usingCloud = server.getUrl().contains("nimbits.com") || server.getUrl().contains(":8085");
         if (usingCloud) {
-            u = "192.168.1.21:8080";
+            u = Const.SOCKET_RELAY;
         }
         else {
             u = server.getUrl();

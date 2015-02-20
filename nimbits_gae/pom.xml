@@ -33,10 +33,10 @@
         <gwt.version>2.5.1</gwt.version>
         <gxt.version>2.2.5</gxt.version>
         <spring.version>4.1.1.RELEASE</spring.version>
-        <appengine.target.version>1.9.15</appengine.target.version>
+        <appengine.target.version>1.9.17</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <nimbits_version>3.8.1</nimbits_version>
+        <nimbits_version>3.8.3</nimbits_version>
     </properties>
 
     <repositories>

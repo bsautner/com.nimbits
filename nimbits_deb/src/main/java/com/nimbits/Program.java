@@ -24,8 +24,7 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
-import com.nimbits.client.model.server.apikey.ApiKey;
-import com.nimbits.client.model.server.apikey.ApiKeyFactory;
+import com.nimbits.client.model.server.apikey.AccessCode;
 import com.nimbits.client.model.user.User;
 import com.nimbits.io.command.CommandListener;
 import com.nimbits.io.command.TerminalCommand;
@@ -51,7 +50,7 @@ public class Program   {
 
     public static EmailAddress EMAIL_ADDRESS;
     private static UrlContainer INSTANCE_URL;
-    private static ApiKey API_KEY;
+    private static AccessCode API_KEY;
     private static Server SERVER;
     public static User user;
     public static Entity current;
@@ -79,7 +78,7 @@ public class Program   {
 
 
         loadDefaults();
-        UserHelper sessionHelper = HelperFactory.getUserHelper(SERVER, EMAIL_ADDRESS, null);
+        UserHelper sessionHelper = HelperFactory.getUserHelper(SERVER);
         user = sessionHelper.getSession();
         current = user;
         new Thread(new TreeLoader()).run();
@@ -148,7 +147,7 @@ public class Program   {
         @Override
         public void run() {
 
-            EntityHelper helper = HelperFactory.getEntityHelper(SERVER, Program.EMAIL_ADDRESS);
+            EntityHelper helper = HelperFactory.getEntityHelper(SERVER);
             Program.tree = helper.getTree();
 
             try {
@@ -212,7 +211,7 @@ public class Program   {
 
 
         }
-        SERVER =  ServerFactory.getInstance(INSTANCE_URL, API_KEY);
+        SERVER =  ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, API_KEY);
     }
 
     private static void processDefault(String value) {
@@ -224,7 +223,7 @@ public class Program   {
                 EMAIL_ADDRESS = CommonFactory.createEmailAddress(s[1]);
                 break;
             case "APIKEY" :
-                API_KEY = ApiKeyFactory.createApiKey(s[1]);
+                API_KEY = AccessCode.getInstance(s[1]);
                 break;
             case "INSTANCE" :
                 INSTANCE_URL =  UrlContainer.getInstance(s[1]);

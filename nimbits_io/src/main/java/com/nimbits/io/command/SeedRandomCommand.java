@@ -28,7 +28,7 @@ public class SeedRandomCommand extends AbstractCommand implements Command {
                 int count = Integer.parseInt(args[1]);
                 for (int i = 0; i < count; i++) {
                     Random r = new Random();
-                    ValueHelper valueHelper = HelperFactory.getValueHelper(server,  user.getEmail(), null);
+                    ValueHelper valueHelper = HelperFactory.getValueHelper(server);
 
 
                     Value value = valueHelper.recordValue(current.getName().getValue(), r.nextDouble() * 100);

@@ -13,7 +13,6 @@
 package com.nimbits.io.helper.impl;
 
 import com.google.common.collect.Range;
-import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.value.Value;
@@ -29,19 +28,13 @@ import java.util.Map;
 
 public class ValueHelperImpl implements ValueHelper {
     private final Server server;
-    private final EmailAddress email;
-    private final String accessKey;
-    public ValueHelperImpl(Server server, EmailAddress email, String accessKey) {
+  
+    public ValueHelperImpl(Server server) {
         this.server = server;
-        this.email = email;
-        this.accessKey = accessKey;
+
     }
 
-    public ValueHelperImpl(Server server, EmailAddress emailAddress) {
-        this.server = server;
-        this.email = emailAddress;
-        this.accessKey = null;
-    }
+  
 
     @Override
     public Value recordValue(String pointName, double value)  {
@@ -58,9 +51,9 @@ public class ValueHelperImpl implements ValueHelper {
     }
 
     private Value doRecordValue(String name, Value vx) {
-        Point point = HelperFactory.getPointHelper(server, email, accessKey).getPoint(name);
+        Point point = HelperFactory.getPointHelper(server).getPoint(name);
 
-        List<Value> response = NimbitsClientFactory.getInstance(server, email, accessKey).postValue(point, vx);
+        List<Value> response = NimbitsClientFactory.getInstance(server).postValue(point, vx);
         if (response.isEmpty()) {
             throw new RuntimeException("Record Value Failed");
 
@@ -72,9 +65,9 @@ public class ValueHelperImpl implements ValueHelper {
 
     @Override
     public List<Value> getSeries(String name)   {
-        Point point = HelperFactory.getPointHelper(server, email, accessKey).getPoint(name);
+        Point point = HelperFactory.getPointHelper(server).getPoint(name);
 
-        return NimbitsClientFactory.getInstance(server, email, accessKey).getSeries(point.getKey());
+        return NimbitsClientFactory.getInstance(server).getSeries(point.getKey());
 
     }
 
@@ -87,31 +80,35 @@ public class ValueHelperImpl implements ValueHelper {
     @Override
     public List<Value> getSeries(String name, Range<Date> dateRange) {
 
-        return NimbitsClientFactory.getInstance(server, email, accessKey).getSeries(name, dateRange);
+        return NimbitsClientFactory.getInstance(server).getSeries(name, dateRange);
     }
 
     @Override
     public List<Value> getSeries(String name, int count) {
 
-        return NimbitsClientFactory.getInstance(server, email, accessKey).getSeries(name, count);
+        return NimbitsClientFactory.getInstance(server).getSeries(name, count);
     }
 
     @Override
     public void recordValues(String pointName, List<Value> data) {
-        Point point = HelperFactory.getPointHelper(server, email, accessKey).getPoint(pointName);
+        Point point = HelperFactory.getPointHelper(server).getPoint(pointName);
         point.setValues(data);
-        NimbitsClientFactory.getInstance(server, email, accessKey).recordSeries(point);
+        NimbitsClientFactory.getInstance(server).recordSeries(point);
     }
 
     @Override
     public void recordValues(List<Point> points) {
-        NimbitsClientFactory.getInstance(server, email, accessKey).recordSeries(points);
+        NimbitsClientFactory.getInstance(server).recordSeries(points);
     }
 
     @Override
     public Map<String, Integer> moveCron() {
-        return NimbitsClientFactory.getInstance(server, email, accessKey).moveCron();
+        return NimbitsClientFactory.getInstance(server).moveCron();
 
 
     }
+
+
+
+
 }

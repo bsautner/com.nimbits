@@ -33,7 +33,9 @@ import javax.mail.Transport;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.List;
+import java.util.logging.Logger;
 
 @Service
 public class AuthServiceImpl implements AuthService {
@@ -41,8 +43,19 @@ public class AuthServiceImpl implements AuthService {
     @Autowired
     private UserDao userDao;
 
+    private Logger logger = Logger.getLogger(AuthServiceImpl.class.getName());
+
     public List<EmailAddress> getCurrentUser(HttpServletRequest request) {
         com.google.appengine.api.users.UserService googleUserService;
+        logger.info("getCurrentUser");
+
+        Enumeration<String> parameterNames = request.getParameterNames();
+        while (parameterNames.hasMoreElements()) {
+            String key = (String) parameterNames.nextElement();
+            String val = request.getParameter(key);
+            logger.info("A= <" + key + "> Value<" + val + ">");
+        }
+
         googleUserService = UserServiceFactory.getUserService();
         List<EmailAddress> result = new ArrayList<EmailAddress>(1);
 
@@ -54,7 +67,7 @@ public class AuthServiceImpl implements AuthService {
                 authToken = request.getParameter(Parameters.authToken.getText());
             }
             if (authToken != null) {
-
+                logger.info("authToken: " + authToken);
                 User user = userDao.getUserByAuthToken(authToken);
                 if (user != null) {
                     return Arrays.asList(user.getEmail());

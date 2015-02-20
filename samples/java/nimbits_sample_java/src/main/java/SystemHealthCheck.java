@@ -4,6 +4,7 @@ import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
+import com.nimbits.client.model.server.apikey.AccessCode;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.io.helper.HelperFactory;
@@ -29,12 +30,12 @@ public class SystemHealthCheck {
 
     //this sample uses an access key, so you've logged into nimbits and right clicked on your account to create this read/write key with user scope.
 
-    private static final String ACCESS_KEY = "key";
+    private static final AccessCode ACCESS_KEY = AccessCode.getInstance("key");
 
     //set this to your appid.appspot.com if on google app engine, cloud.nimbits.com for the public cloud,
     //and localhost:8080 if that's your jetty local instance for example.
     private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8081");
-    private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL);
+    private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, ACCESS_KEY);
     private static  List<Value> valueList = new ArrayList<Value>();
 
     private static ValueHelper valueHelper;
@@ -48,7 +49,7 @@ public class SystemHealthCheck {
         System.out.println("Welcome To Nimbits!");
         startTime = System.currentTimeMillis();
         //use an access key you created via the web console to get your user data
-        UserHelper sessionHelper = HelperFactory.getUserHelper(SERVER, EMAIL_ADDRESS, ACCESS_KEY);
+        UserHelper sessionHelper = HelperFactory.getUserHelper(SERVER);
 
         User user = sessionHelper.getSession();
         System.out.println("Hello " + user.getEmail());
@@ -56,7 +57,7 @@ public class SystemHealthCheck {
         //record some data!
 
         Random r = new Random();
-        valueHelper = HelperFactory.getValueHelper(SERVER, EMAIL_ADDRESS, ACCESS_KEY);
+        valueHelper = HelperFactory.getValueHelper(SERVER);
         int counter = 0;
         while (! error) {
 

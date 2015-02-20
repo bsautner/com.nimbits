@@ -18,7 +18,7 @@ import com.nimbits.client.model.user.UserModel;
 
 import java.lang.reflect.Type;
 
-
+@Deprecated //see session deserializer in nimbits_io
 public class UserDeserializer implements JsonDeserializer<User> {
     @Override
     public User deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {

@@ -19,7 +19,7 @@ import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.server.Server;
-import com.nimbits.client.model.server.apikey.ApiKey;
+import com.nimbits.client.model.server.apikey.AccessCode;
 import com.nimbits.server.gson.GsonFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpEntity;
@@ -43,7 +43,7 @@ import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
-
+@Deprecated
 public class HttpTransaction {
 
     private static final int INT_OK = 200;
@@ -105,11 +105,11 @@ public class HttpTransaction {
 
             http.addHeader(ACCEPT, APPLICATION_JSON);
             http.addHeader(CONTENT_TYPE, APPLICATION_JSON);
-            if (server.getApiKey() != null && ! server.getApiKey().isEmpty()) {
+            if (server.getAccessCode() != null && ! server.getAccessCode().isEmpty()) {
 
-                http.addHeader(Parameters.apikey.getText(),server.getApiKey().getValue());
+                http.addHeader(Parameters.apikey.getText(),server.getAccessCode().getValue());
             }
-            HttpResponse response = getClient(server.getApiKey()).execute(http);
+            HttpResponse response = getClient(server.getAccessCode()).execute(http);
             HttpEntity entity = response.getEntity();
 
             if (response.getStatusLine().getStatusCode() == INT_OK) {
@@ -142,10 +142,10 @@ public class HttpTransaction {
         HttpPost http = new HttpPost(postUrl.getUrl());
         try {
             addParameters(parameters, http);
-            if (! server.getApiKey().isEmpty()) {
-                http.addHeader(Parameters.apikey.getText(),server.getApiKey().getValue());
+            if (! server.getAccessCode().isEmpty()) {
+                http.addHeader(Parameters.apikey.getText(),server.getAccessCode().getValue());
             }
-            HttpResponse response = getClient(server.getApiKey()).execute(http);
+            HttpResponse response = getClient(server.getAccessCode()).execute(http);
 
             HttpEntity entity = response.getEntity();
             InputStream inputStream = entity.getContent();
@@ -194,13 +194,13 @@ public class HttpTransaction {
     }
 
 
-    private DefaultHttpClient getClient(final ApiKey apiKey) {
+    private DefaultHttpClient getClient(final AccessCode accessCode) {
 
             HttpParams headerParams = new BasicHttpParams();
             headerParams.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
             headerParams.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, true);
-            if (apiKey != null && ! apiKey.isEmpty()) {
-                headerParams.setParameter(ServerSetting.apiKey.getName(), apiKey);
+            if (accessCode != null && ! accessCode.isEmpty()) {
+                headerParams.setParameter(ServerSetting.apiKey.getName(), accessCode);
             }
             int timeoutConnection = 15000;
             HttpConnectionParams.setConnectionTimeout(headerParams, timeoutConnection);

@@ -23,12 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 12/17/11
- * Time: 10:10 AM
- */
+
 public class DateDeserializer implements JsonDeserializer<Date> {
     private static SimpleDateFormat format = new SimpleDateFormat(Const.GSON_DATE_FORMAT);
 

@@ -29,15 +29,15 @@ import java.util.List;
 import java.util.UUID;
 
 public class EntityHelperImpl implements EntityHelper {
-    protected final EmailAddress email;
+
     protected final NimbitsClient nimbitsClient;
     protected final Server server;
-    protected final String accessKey;
-    public EntityHelperImpl(Server server, EmailAddress email, String accessKey) {
-        this.email = email;
+
+    public EntityHelperImpl(Server server) {
+
         this.server = server;
-        this.accessKey = accessKey;
-        this.nimbitsClient = NimbitsClientFactory.getInstance(server, email, accessKey);
+
+        this.nimbitsClient = NimbitsClientFactory.getInstance(server);
     }
 
     @Override
@@ -91,7 +91,7 @@ public class EntityHelperImpl implements EntityHelper {
     public Point createPoint(String name, EntityType entityType, Entity parent) {
         Entity entity = EntityModelFactory.createEntity(name, entityType);
         entity.setParent(parent.getKey());
-        entity.setOwner(email.getValue());
+        entity.setOwner(server.getEmail().getValue());
 
         Point point =  PointModelFactory.createPoint(entity);
         List<Entity> sample = addEntity(point,  PointModel.class);
@@ -109,7 +109,7 @@ public class EntityHelperImpl implements EntityHelper {
     public Point createPoint(String name, int expire, FilterType filterType, EntityType entityType, Entity parent) {
         Entity entity = EntityModelFactory.createEntity(name, entityType);
         entity.setParent(parent.getKey());
-        entity.setOwner(email.getValue());
+        entity.setOwner(server.getEmail().getValue());
 
         Point point =  PointModelFactory.createPoint(entity);
         point.setExpire(expire);
@@ -128,8 +128,8 @@ public class EntityHelperImpl implements EntityHelper {
     @Override
     public void deleteEntity(String name, EntityType type) {
         SimpleValue<String> id;
-        if (! name.startsWith(email.getValue())) {
-            id = SimpleValue.getInstance(email + "/" + name);
+        if (! name.startsWith(server.getEmail().getValue())) {
+            id = SimpleValue.getInstance(server.getEmail().getValue() + "/" + name);
         }
         else {
             id = SimpleValue.getInstance(name);
@@ -151,7 +151,7 @@ public class EntityHelperImpl implements EntityHelper {
 
     @Override
     public Calculation createCalculation(String name, String trigger, String target, String formula, String xVar, String yVar, String zVar) {
-        PointHelper helper = HelperFactory.getPointHelper(this.server, this.email, this.accessKey);
+        PointHelper helper = HelperFactory.getPointHelper(this.server);
         Point triggerPoint = helper.getPoint(trigger);
         Point targetPoint = helper.getPoint(target);
         String x = null;
@@ -178,7 +178,7 @@ public class EntityHelperImpl implements EntityHelper {
         TargetEntity targetEntity = EntityModelFactory.createTarget(targetPoint.getKey());
         Calculation calculation =  CalculationModelFactory.createCalculation(entity, trigger1, true, formula, targetEntity, x, y, z);
         calculation.setParent(triggerPoint.getKey());
-        calculation.setOwner(email.getValue());
+        calculation.setOwner(server.getEmail().getValue());
         List<Entity> result  =  addEntity(calculation, CalculationModel.class);
         if (result.isEmpty()) {
             throw new RuntimeException("failed to create calculation");

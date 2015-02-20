@@ -2,8 +2,8 @@ package com.nimbits.io.http;
 
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.ServerSetting;
-import com.nimbits.client.model.server.apikey.ApiKey;
-import com.nimbits.client.model.server.apikey.ApiKeyFactory;
+import com.nimbits.client.model.server.apikey.AccessCode;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
@@ -46,7 +46,7 @@ public class HttpClientDirect {
 
         HttpGet http = new HttpGet(u);
 
-        httpClient = getInstance(ApiKeyFactory.createApiKey(ServerSetting.apiKey.getDefaultValue()));
+        httpClient = getInstance(AccessCode.getInstance(ServerSetting.apiKey.getDefaultValue()));
 
         HttpResponse response = httpClient.execute(http);
 
@@ -79,7 +79,7 @@ public class HttpClientDirect {
         }
 
 
-        httpClient =  getInstance(ApiKeyFactory.createApiKey(ServerSetting.apiKey.getDefaultValue()));
+        httpClient =  getInstance(AccessCode.getInstance(ServerSetting.apiKey.getDefaultValue()));
 
         httppost.setHeader(ServerSetting.apiKey.getName(), ServerSetting.apiKey.getDefaultValue());
 
@@ -96,13 +96,13 @@ public class HttpClientDirect {
 
     }
 
-    public static DefaultHttpClient getInstance(final ApiKey apiKey) {
+    public static DefaultHttpClient getInstance(final AccessCode accessCode) {
         DefaultHttpClient httpClient;
         HttpParams headerParams = new BasicHttpParams();
         headerParams.setParameter(CoreProtocolPNames.PROTOCOL_VERSION, HttpVersion.HTTP_1_1);
         headerParams.setBooleanParameter(ClientPNames.HANDLE_REDIRECTS, true);
-        if (! apiKey.isEmpty()) {
-            headerParams.setParameter(ServerSetting.apiKey.getName(), apiKey);
+        if (! accessCode.isEmpty()) {
+            headerParams.setParameter(ServerSetting.apiKey.getName(), accessCode);
         }
         int timeoutConnection = 3000;
         HttpConnectionParams.setConnectionTimeout(headerParams, timeoutConnection);

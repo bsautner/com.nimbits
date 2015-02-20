@@ -12,15 +12,22 @@
 
 package com.nimbits.io.http;
 
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.server.Server;
-import com.nimbits.io.NimbitsClient;
+import com.google.gson.*;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.UserModel;
+
+import java.lang.reflect.Type;
 
 
-public class NimbitsClientFactory {
+public class SessionDeserializer implements JsonDeserializer<User> {
+    @Override
+    public User deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 
-    public static NimbitsClient getInstance(final Server server)  {
-        return new NimbitsClientImpl(server);
+
+        final String json = jsonElement.toString();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        return gson.fromJson(json, UserModel.class);
+
+
     }
-
 }

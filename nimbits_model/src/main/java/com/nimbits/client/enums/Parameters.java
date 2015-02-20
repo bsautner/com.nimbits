@@ -108,6 +108,7 @@ public enum Parameters {
     cid(ParamConstants.CID),
     type(ParamConstants.TYPE),
     gae(ParamConstants.GAE),
+    forward(ParamConstants.FORWARD),
     connectionId(ParamConstants.CONNECTION_ID);
 
     private static final Map<String, Parameters> lookup = new HashMap<String, Parameters>(100);
@@ -226,6 +227,7 @@ public enum Parameters {
         private static final String CID = "cid";
         private static final String TYPE = "type";
         private static final String GAE = "gae";
+        private static final String FORWARD = "forward";
         public static final String CONNECTION_ID = "connection" ;
         public static final String PARAM_AUTH_TOKEN = "AuthToken";
 

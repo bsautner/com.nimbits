@@ -19,7 +19,7 @@ public class RemoveCommand extends AbstractCommand implements Command {
     @Override
     public void doCommand(CommandListener listener, String[] args) {
            boolean recursive = false;
-           EntityHelper helper = HelperFactory.getEntityHelper(server, user.getEmail(), null);
+           EntityHelper helper = HelperFactory.getEntityHelper(server);
            if (args.length < 2) {
                listener.onMessage(getUsage());
 

@@ -39,13 +39,15 @@ public interface NimbitsClient {
 
      * @return A list with a valid user or an empty list if authentication fails.
      */
-    List<User> getSession();
+    User login();
+
+    User getSession();
 
     List<Value> getValue(Entity entity);
 
     Map<String, Integer> moveCron();
 
-    <T> List<T> getTree();
+    List<Entity> getTree();
 
     List<Value> postValue(Entity entity, Value value);
 
@@ -70,4 +72,10 @@ public interface NimbitsClient {
     void recordSeries(Point entity);
 
     void recordSeries(List<Point> entity);
+
+    /**
+     * notifies a cloud instance of a socket client
+     * @param user
+      */
+    void notifySocketConnection(String forwardUrl, User user);
 }

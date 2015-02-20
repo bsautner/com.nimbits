@@ -13,61 +13,36 @@
 package com.nimbits.client.model.server;
 
 import com.nimbits.client.model.UrlContainer;
-import com.nimbits.client.model.server.apikey.ApiKey;
-import com.nimbits.client.model.server.apikey.ApiKeyFactory;
+import com.nimbits.client.model.common.impl.CommonFactory;
+import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.server.apikey.AccessCode;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 
-@Deprecated
+
 public class ServerModel implements Server, Serializable {
 
     private UrlContainer url;
-    private long id;
-    private ApiKey apiKey;
-    private boolean isDefault;
+    private AccessCode accessCode;
     private Protocol protocol;
-    private boolean socketsEnabled;
+    private String email;
 
 
 
-    public ServerModel(final UrlContainer url, final long id, final ApiKey apiKey, boolean socketsEnabled,  boolean isDefault) {
+    public ServerModel(final UrlContainer url, EmailAddress emailAddress, final AccessCode accessCode) {
         if (StringUtils.isEmpty(url.getUrl())) {
             throw new IllegalArgumentException("url was null");
         }
         this.url = removeProtocol(url);
 
-        this.id = id;
-        this.apiKey = apiKey;
-        this.isDefault = isDefault;
+        this.accessCode = accessCode;
+
         this.protocol = Protocol.http;
-        this.socketsEnabled = socketsEnabled;
+        this.email = emailAddress.getValue();
     }
 
 
-    public ServerModel(final UrlContainer url, final ApiKey apiKey) {
-        if (StringUtils.isEmpty(url.getUrl())) {
-            throw new IllegalArgumentException("url was null");
-        }
-        this.url = removeProtocol(url);
-
-        this.id = 0;
-        this.apiKey = apiKey;
-        this.isDefault = true;
-        this.protocol = Protocol.http;
-    }
-
-    public ServerModel(final UrlContainer url) {
-        if (StringUtils.isEmpty(url.getUrl())) {
-            throw new IllegalArgumentException("url was null");
-        }
-        this.url = removeProtocol(url);
-
-        this.id = 0;
-        this.apiKey = ApiKeyFactory.createEmptyKey();
-        this.isDefault = true;
-        this.protocol = Protocol.http;
-    }
 
     protected UrlContainer removeProtocol(UrlContainer url) {
         return UrlContainer.getInstance(url.getUrl().replace("http://", "").replace("https://", ""));
@@ -83,29 +58,21 @@ public class ServerModel implements Server, Serializable {
     }
 
 
-
     @Override
-    public long getId() {
-        return id;
+    public AccessCode getAccessCode() {
+        return accessCode;
     }
 
-    @Override
-    public ApiKey getApiKey() {
-        return apiKey;
-    }
-
-    @Override
-    public boolean isDefault() {
-        return isDefault;
-    }
 
     @Override
     public Protocol getProtocol() {
         return protocol;
     }
 
+
     @Override
-    public boolean isSocketsEnabled() {
-        return socketsEnabled;
+    public EmailAddress getEmail() {
+        return CommonFactory.createEmailAddress(email);
     }
+
 }

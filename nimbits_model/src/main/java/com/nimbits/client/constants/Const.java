@@ -15,7 +15,7 @@ package com.nimbits.client.constants;
 
 public class Const {
 
-    public static final String VERSION = "3.8.2";
+    public static final String VERSION = "3.8.3";
 
     public static final String WEBSITE = "http://www.nimbits.com";
     public static final String LOGGED_IN_EMAIL = "LOGGED_IN_EMAIL";

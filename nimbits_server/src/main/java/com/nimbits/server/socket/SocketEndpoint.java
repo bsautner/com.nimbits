@@ -143,7 +143,7 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
         connectedClients.remove(emailAddress, authToken);
         userDao.deleteAuthToken(authToken);
         if (request != null) {
-            request.getSession().invalidate();
+            request.getSession().invalidate();  //TODO notify cloud
         }
         System.out.println("socket event listener - on close.");
     }

@@ -45,7 +45,7 @@ public class CloudSocketSample {
         NimbitsClient client = NimbitsClientFactory.getInstance(cloudServer);
         User user = client.login();
 
-        System.out.println("Hello " + user.getEmail() + " " + user.getAuthToken());
+        System.out.println("Hello " + user.getEmail() + " " + user.getAuthToken() + " " + cloudServer.getUrl());
 
 
         //connect to the server with your new session token

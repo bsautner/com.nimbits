@@ -54,7 +54,7 @@ public class SocketEndpoint  extends HttpServlet {
         Gson gson = new GsonBuilder().registerTypeAdapter(User.class, new SessionDeserializer()).create();
         User user = gson.fromJson(payload, UserModel.class);
         if (user != null) {
-            System.out.println(payload);
+
             userDao.startSocketSession(user);
         }
         else {

@@ -53,10 +53,8 @@ public class SocketConnection  {
 
         StringBuilder sb = new StringBuilder();
 
-        String connectionid = UUID.randomUUID().toString();
-
         String u;
-        boolean usingCloud = server.getUrl().contains("nimbits.com") || server.getUrl().contains(":8085");
+        boolean usingCloud = server.getUrl().contains("nimbits.com");
         if (usingCloud) {
             u = Const.SOCKET_RELAY;
         }
@@ -67,13 +65,12 @@ public class SocketConnection  {
         sb
                 .append("ws://").append(u).append("/socket?")
                 .append(Parameters.email + "=" + server.getEmail().getValue())
-                .append("&" + Parameters.cid + "=" + connectionid)
                 .append("&" + Parameters.format + "=" + "json")
                 .append("&" + Parameters.apikey + "=" + server.getAccessCode().getValue())
                 .append("&" + Parameters.authToken + "=" + server.getAccessCode().getValue());
 
         if (usingCloud) {
-            sb.append("&" + Parameters.forward + "=" + server.getUrl());
+            sb.append("&" + Parameters.forward + "=" + "http://" + server.getUrl());
 
         }
         System.out.println(sb.toString());

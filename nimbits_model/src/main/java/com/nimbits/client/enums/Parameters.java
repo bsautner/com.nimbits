@@ -105,7 +105,6 @@ public enum Parameters {
     preferedValue(ParamConstants.PREFERRED_VALUE),
     owner(ParamConstants.OWNER),
     session(ParamConstants.SESSION),
-    cid(ParamConstants.CID),
     type(ParamConstants.TYPE),
     gae(ParamConstants.GAE),
     forward(ParamConstants.FORWARD),
@@ -224,7 +223,6 @@ public enum Parameters {
         private static final String PREFERRED_VALUE = "PREFERRED_VALUE";
         private static final String OWNER = "owner";
         private static final String SESSION = "session";
-        private static final String CID = "cid";
         private static final String TYPE = "type";
         private static final String GAE = "gae";
         private static final String FORWARD = "forward";

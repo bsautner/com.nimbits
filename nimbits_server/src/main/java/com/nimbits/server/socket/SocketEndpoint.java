@@ -81,7 +81,7 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
 
         if (forwardUrl != null && emailParam != null && authToken != null) {
             //should only be called on the socket relay server
-            forwardUrl = "http://localhost:8085";
+          //  forwardUrl = "http://localhost:8085";
             Server server = ServerFactory.getInstance(UrlContainer.getInstance(forwardUrl),
                     CommonFactory.createEmailAddress(emailParam), AccessCode.getInstance(authToken));
             NimbitsClient client = NimbitsClientFactory.getInstance(server);

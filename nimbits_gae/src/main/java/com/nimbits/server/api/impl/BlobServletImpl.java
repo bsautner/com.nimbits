@@ -16,12 +16,14 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ExportType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.server.api.ApiServlet;
+import com.nimbits.client.model.user.User;
+import com.nimbits.server.api.ApiBase;
+import com.nimbits.server.process.task.TaskService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -29,25 +31,24 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 5/20/11
- * Time: 3:43 PM
- */
-
-
-public class BlobServletImpl extends ApiServlet {
+public class BlobServletImpl extends ApiBase {
     private final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
 
+    private Logger logger = Logger.getLogger(BlobServletImpl.class.getName());
+
+    @Autowired
+    private TaskService taskService;
 
     @Override
-    public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
 
         try {
-            doInit(req, res, ExportType.plain);
+            addHeaders(resp);
+            User user = (User) req.getAttribute(Parameters.user.getText());
+
 
 
             final Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(req);
@@ -71,9 +72,7 @@ public class BlobServletImpl extends ApiServlet {
 
 
         } catch (Exception e) {
-            if (user != null) {
-
-            }
+            logger.severe(e.getMessage());
         }
 
 

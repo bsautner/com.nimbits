@@ -164,7 +164,8 @@
 
     <servlet>
         <servlet-name>blob</servlet-name>
-        <servlet-class>com.nimbits.server.api.BlobApi</servlet-class>
+
+        <servlet-class>com.nimbits.server.api.impl.BlobServletImpl</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>blob</servlet-name>

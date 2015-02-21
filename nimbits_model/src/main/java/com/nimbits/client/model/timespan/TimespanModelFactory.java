@@ -12,7 +12,7 @@
 
 package com.nimbits.client.model.timespan;
 
-import java.util.*;
+import java.util.Date;
 
 /**
  * Created by Benjamin Sautner
@@ -25,6 +25,7 @@ public class TimespanModelFactory {
     public static Timespan createTimespan(Date start, Date end) {
         return new TimespanModel(start, end, false, false);
     }
+
     public static Timespan createTimespan(Date start, Date end, boolean startRequiresOffset, boolean endRequiresOffset) {
         return new TimespanModel(start, end, startRequiresOffset, endRequiresOffset);
     }

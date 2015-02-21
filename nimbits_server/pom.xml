@@ -110,7 +110,6 @@
         </dependency>
 
 
-
         <dependency>
             <groupId>log4j</groupId>
             <artifactId>log4j</artifactId>
@@ -248,10 +247,6 @@
             <classifier>sources</classifier>
             <scope>provided</scope>
         </dependency>
-
-
-
-
 
 
         <dependency>
@@ -419,8 +414,6 @@
                 <!--<webappDirectory>/var/lib/tomcat7/webapps</webappDirectory>-->
                 <!--</configuration>-->
             </plugin>
-
-
 
 
         </plugins>

@@ -3,17 +3,14 @@ package com.nimbits.server.api.impl;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.ValueException;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
@@ -40,7 +37,7 @@ public class ValueApiTest extends NimbitsServletTest {
 
         point.setPointType(PointType.cumulative);
         point.setFilterType(FilterType.none);
-       //TODO spring EntityServiceFactory.getInstance(engine).addUpdateEntity(Arrays.<Entity>asList(pointChild));
+        //TODO spring EntityServiceFactory.getInstance(engine).addUpdateEntity(Arrays.<Entity>asList(pointChild));
         Value v = ValueFactory.createValueModel(1);
         for (int i = 0; i < 3; i++) {
             valueService.recordValue(user, point, v, false);

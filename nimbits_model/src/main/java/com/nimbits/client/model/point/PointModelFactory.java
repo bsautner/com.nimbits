@@ -23,7 +23,6 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 
 
-
 public class PointModelFactory {
 
 
@@ -31,11 +30,12 @@ public class PointModelFactory {
     }
 
 
-    public static Point createPointModel(final Point point)  {
+    public static Point createPointModel(final Point point) {
 
         return new PointModel(point);
 
     }
+
     public static Point createPointModel(final Entity entity,
                                          final double highAlarm,
                                          final int expire,
@@ -55,13 +55,13 @@ public class PointModelFactory {
                                          final double deltaAlarm,
                                          final int precision
 
-                                        )   {
+    ) {
         return new PointModel(
-                entity,  highAlarm,
-                expire,  unit,  lowAlarm,
-                highAlarmOn,  lowAlarmOn,
-                idleAlarmOn,  idleSeconds,  idleAlarmSent,
-                filterType,  filterValue, inferLocation, pointType,deltaAlarm, deltaAlarmOn, deltaAlarmSeconds, precision);
+                entity, highAlarm,
+                expire, unit, lowAlarm,
+                highAlarmOn, lowAlarmOn,
+                idleAlarmOn, idleSeconds, idleAlarmSent,
+                filterType, filterValue, inferLocation, pointType, deltaAlarm, deltaAlarmOn, deltaAlarmSeconds, precision);
     }
 
 

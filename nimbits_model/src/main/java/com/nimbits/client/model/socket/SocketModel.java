@@ -8,7 +8,7 @@ import com.nimbits.client.model.entity.EntityModel;
 
 import java.io.Serializable;
 
-public class SocketModel extends EntityModel implements Serializable, Socket  {
+public class SocketModel extends EntityModel implements Serializable, Socket {
 
     private String targetApiKey;
     private String targetUrl;
@@ -54,14 +54,17 @@ public class SocketModel extends EntityModel implements Serializable, Socket  {
     public String getTargetApiKey() {
         return targetApiKey;
     }
+
     @Override
     public String getTargetUrl() {
         return targetUrl;
     }
+
     @Override
     public String getTargetPath() {
         return targetPath;
     }
+
     @Override
     public String getExtraParams() {
         return extraParams;
@@ -92,7 +95,6 @@ public class SocketModel extends EntityModel implements Serializable, Socket  {
         result = 31 * result + (extraParams != null ? extraParams.hashCode() : 0);
         return result;
     }
-
 
 
 }

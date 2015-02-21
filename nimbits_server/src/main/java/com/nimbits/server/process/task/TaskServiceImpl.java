@@ -18,7 +18,6 @@ import com.google.gson.GsonBuilder;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
@@ -32,7 +31,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -84,9 +82,6 @@ public class TaskServiceImpl implements TaskService {
     public void startUploadTask(User user, Point entity, String blobKey) {
 
     }
-
-
-
 
 
     @Override

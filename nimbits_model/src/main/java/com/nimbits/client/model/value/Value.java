@@ -18,7 +18,7 @@ import com.nimbits.client.model.location.Location;
 import java.io.Serializable;
 import java.util.Date;
 
- 
+
 public interface Value extends Serializable, Comparable<Value> {
 
     double getDoubleValue();

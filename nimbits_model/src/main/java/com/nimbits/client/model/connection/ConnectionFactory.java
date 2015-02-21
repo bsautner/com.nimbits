@@ -23,6 +23,7 @@ public class ConnectionFactory {
     public static Connection getInstance(Entity en, String e) {
         return new ConnectionModel(en, e);
     }
+
     public static Connection getInstance(Connection connection) {
 
         return new ConnectionModel(connection);

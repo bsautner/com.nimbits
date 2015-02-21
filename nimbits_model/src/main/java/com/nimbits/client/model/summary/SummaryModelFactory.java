@@ -32,7 +32,7 @@ public class SummaryModelFactory {
     private SummaryModelFactory() {
     }
 
-    public static SummaryModel createSummary(Summary model)  {
+    public static SummaryModel createSummary(Summary model) {
         return new SummaryModel(model);
     }
 
@@ -44,12 +44,12 @@ public class SummaryModelFactory {
             final boolean enabled,
             final SummaryType summaryType,
             final long summaryIntervalMs,
-            final Date lastProcessed)  {
+            final Date lastProcessed) {
         return new SummaryModel(e, entity, target, enabled, summaryType, summaryIntervalMs, lastProcessed);
 
     }
 
-    public static List<Summary> createSummaries(List<Summary> result)  {
+    public static List<Summary> createSummaries(List<Summary> result) {
         List<Summary> retObj = new ArrayList<Summary>(result.size());
         for (Summary s : result) {
             retObj.add(createSummary(s));

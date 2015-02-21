@@ -20,7 +20,6 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.NimbitsServletTest;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

@@ -20,7 +20,6 @@ package com.nimbits.server.socket;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.io.http.SessionDeserializer;
@@ -28,7 +27,6 @@ import com.nimbits.server.transaction.user.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
-import javax.servlet.Servlet;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +34,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 
-public class SocketEndpoint  extends HttpServlet {
+public class SocketEndpoint extends HttpServlet {
 
     @Autowired
     private UserDao userDao;
@@ -56,8 +54,7 @@ public class SocketEndpoint  extends HttpServlet {
         if (user != null) {
 
             userDao.startSocketSession(user);
-        }
-        else {
+        } else {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST);
         }
 

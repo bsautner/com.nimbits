@@ -46,5 +46,5 @@ public interface Subscription extends Entity, Serializable {
     void setSubscriptionType(SubscriptionType subscriptionType);
 
     @Override
-    void update(Entity update) ;
+    void update(Entity update);
 }

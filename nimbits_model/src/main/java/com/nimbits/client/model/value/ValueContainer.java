@@ -22,7 +22,7 @@ public interface ValueContainer extends Serializable {
 
     String getId();
 
-    Value  getValue();
+    Value getValue();
 
 
     void setValue(Value value);

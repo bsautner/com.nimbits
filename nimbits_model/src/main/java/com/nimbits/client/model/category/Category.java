@@ -14,7 +14,7 @@ package com.nimbits.client.model.category;
 
 import com.nimbits.client.model.entity.Entity;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * Created by Benjamin Sautner

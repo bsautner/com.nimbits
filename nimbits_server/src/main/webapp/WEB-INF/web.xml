@@ -122,7 +122,6 @@
     </servlet-mapping>
 
 
-
     <!--gwt rpc services -->
     <servlet>
         <servlet-name>com.nimbits EntityService</servlet-name>

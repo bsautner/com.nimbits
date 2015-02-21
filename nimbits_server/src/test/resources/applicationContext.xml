@@ -23,10 +23,9 @@
     <bean id="settingsDao" class="com.nimbits.server.transaction.settings.SettingsDaoImpl">
 
 
-
         <property name="persistenceManagerFactory" ref="pmf"/>
     </bean>
-    <bean id="emailService" class="com.nimbits.server.communication.mail.EmailServiceImpl" />
+    <bean id="emailService" class="com.nimbits.server.communication.mail.EmailServiceImpl"/>
 
     <bean id="blobStore" class="com.nimbits.server.io.BlobStoreImpl">
         <property name="persistenceManagerFactory" ref="pmf"/>
@@ -67,7 +66,9 @@
                 <prop key="javax.jdo.PersistenceManagerFactoryClass">
                     org.datanucleus.api.jdo.JDOPersistenceManagerFactory
                 </prop>
-                <prop key="javax.jdo.option.ConnectionURL">jdbc:h2:./database/db;MV_STORE=FALSE;MVCC=FALSE;;FILE_LOCK=NO</prop>
+                <prop key="javax.jdo.option.ConnectionURL">
+                    jdbc:h2:./database/db;MV_STORE=FALSE;MVCC=FALSE;;FILE_LOCK=NO
+                </prop>
                 <prop key="javax.jdo.option.ConnectionUserName">sa</prop>
                 <prop key="javax.jdo.option.ConnectionPassword"></prop>
                 <prop key="javax.jdo.option.ConnectionDriverName">org.h2.Driver</prop>
@@ -77,7 +78,6 @@
             </props>
         </property>
     </bean>
-
 
 
 </beans>

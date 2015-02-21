@@ -52,7 +52,7 @@ public class IdlePointCronTest extends NimbitsServletTest {
         point.setIdleSeconds(1);
         entityService.addUpdateEntity(user, Arrays.<Entity>asList(point));
         Value vx = ValueFactory.createValueModel(1.2);
-        valueService.recordValue( user, point, vx, false);
+        valueService.recordValue(user, point, vx, false);
         Thread.sleep(2000);
         assertTrue(valueService.checkIdle(user, point));
         Point up = (Point) entityService.getEntityByKey(user, point.getKey(), EntityType.point).get(0);

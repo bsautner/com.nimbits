@@ -12,14 +12,12 @@
 
 package com.nimbits.client.model.sync;
 
-import com.nimbits.client.enums.SummaryType;
 import com.nimbits.client.model.trigger.Trigger;
 
 import java.io.Serializable;
-import java.util.Date;
 
 
-public interface Sync  extends Trigger, Serializable {
+public interface Sync extends Trigger, Serializable {
 
 
     String getTargetInstance();

@@ -12,7 +12,9 @@
 
 package com.nimbits.client.enums;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by bsautner

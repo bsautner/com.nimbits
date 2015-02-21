@@ -12,7 +12,9 @@
 
 package com.nimbits.client.enums;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -26,8 +28,7 @@ public enum FeedType {
     system(2, "System Messages"),
     info(3, "Info"),
     data(4, "Subscription Data"),
-    all(5, "Everything"),
-    ;
+    all(5, "Everything"),;
 
 
     private static final Map<Integer, FeedType> lookup = new HashMap<Integer, FeedType>(5);

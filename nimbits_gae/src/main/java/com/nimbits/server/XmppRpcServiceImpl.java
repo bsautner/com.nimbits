@@ -17,7 +17,6 @@ import com.google.appengine.api.xmpp.XMPPServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.xmpp.XmppRpcService;
-
 import com.nimbits.server.transaction.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,10 +25,10 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import javax.servlet.ServletException;
 
 @Service
-public class XmppRpcServiceImpl extends RemoteServiceServlet  implements XmppRpcService {
+public class XmppRpcServiceImpl extends RemoteServiceServlet implements XmppRpcService {
 
-   @Autowired
-   private UserService userService;
+    @Autowired
+    private UserService userService;
 
     @Override
     public void init() throws ServletException {

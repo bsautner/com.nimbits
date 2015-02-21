@@ -34,7 +34,7 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
     private AccessKeyModel() {
     }
 
-    public AccessKeyModel(final AccessKey anEntity)  {
+    public AccessKeyModel(final AccessKey anEntity) {
         super(anEntity);
         this.code = anEntity.getCode();
         this.scope = anEntity.getScope();
@@ -47,7 +47,7 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
         return code;
     }
 
-    public AccessKeyModel(final Entity anEntity, final String code, final String scope, final AuthLevel level)  {
+    public AccessKeyModel(final Entity anEntity, final String code, final String scope, final AuthLevel level) {
         super(anEntity);
         this.code = code;
         this.scope = scope;
@@ -66,7 +66,7 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
 
     @Override
     public void setScope(String scope) {
-      this.scope = scope;
+        this.scope = scope;
     }
 
     @Override
@@ -76,6 +76,6 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
 
     @Override
     public void setAuthLevel(AuthLevel level) {
-       this.authLevel = level.getCode();
+        this.authLevel = level.getCode();
     }
 }

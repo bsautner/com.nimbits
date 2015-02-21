@@ -87,7 +87,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
                       final double deltaAlarm,
                       final boolean deltaAlarmOn,
                       final int deltaSeconds,
-                      final int precision)   {
+                      final int precision) {
         super(entity);
         this.highAlarm = highAlarm;
         this.expire = expire;
@@ -109,7 +109,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
     }
 
     // Constructors
-    public PointModel(final Point point)  {
+    public PointModel(final Point point) {
         super(point);
         this.highAlarm = point.getHighAlarm();
         this.expire = point.getExpire();
@@ -145,7 +145,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
         return highAlarm;
     }
 
-     @Override
+    @Override
     public double getLowAlarm() {
         return lowAlarm;
     }
@@ -157,7 +157,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
     }
 
 
-   @Override
+    @Override
     public Value getValue() {
         return value;
     }
@@ -230,7 +230,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
     @Override
     public void setFilterType(final FilterType filterType) {
-       this.filterType = filterType.getCode();
+        this.filterType = filterType.getCode();
     }
 
     @Override
@@ -240,7 +240,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
     @Override
     public void setFilterValue(final double value) {
-      this.filterValue = value;
+        this.filterValue = value;
     }
 
     @Override
@@ -273,10 +273,12 @@ public class PointModel extends EntityModel implements Serializable, Point {
     public void setIdleAlarmSent(final boolean idleAlarmSent) {
         this.idleAlarmSent = idleAlarmSent;
     }
+
     @Override
     public boolean inferLocation() {
         return inferLocation;
     }
+
     @Override
     public void setInferLocation(boolean inferLocation) {
         this.inferLocation = inferLocation;
@@ -289,28 +291,34 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
     @Override
     public void setPointType(PointType type) {
-       this.pointType = type.getCode();
+        this.pointType = type.getCode();
     }
+
     @Override
     public double getDeltaAlarm() {
         return deltaAlarm;
     }
+
     @Override
     public void setDeltaAlarm(double deltaAlarm) {
         this.deltaAlarm = deltaAlarm;
     }
+
     @Override
     public boolean isDeltaAlarmOn() {
         return deltaAlarmOn;
     }
+
     @Override
     public void setDeltaAlarmOn(boolean deltaAlarmOn) {
         this.deltaAlarmOn = deltaAlarmOn;
     }
+
     @Override
     public int getDeltaSeconds() {
         return deltaSeconds;
     }
+
     @Override
     public void setDeltaSeconds(int deltaSeconds) {
         this.deltaSeconds = deltaSeconds;
@@ -320,6 +328,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
     public int getPrecision() {
         return precision;
     }
+
     @Override
     public void setPrecision(int precision) {
         this.precision = precision;

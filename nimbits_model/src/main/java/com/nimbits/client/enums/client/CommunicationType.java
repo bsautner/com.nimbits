@@ -25,7 +25,7 @@ import java.util.Map;
  */
 public enum CommunicationType {
 
-   devRequest(1);
+    devRequest(1);
 
 
     private static final Map<Integer, CommunicationType> lookup = new HashMap<Integer, CommunicationType>(1);
@@ -40,6 +40,7 @@ public enum CommunicationType {
     public static CommunicationType get(int code) {
         return lookup.get(code);
     }
+
     private CommunicationType(int aCode) {
         this.code = aCode;
 

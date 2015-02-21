@@ -15,7 +15,7 @@ package com.nimbits.client.model.common;
 import java.io.Serializable;
 
 
-public interface CommonIdentifier extends Serializable{
+public interface CommonIdentifier extends Serializable {
 
     String getValue();
 

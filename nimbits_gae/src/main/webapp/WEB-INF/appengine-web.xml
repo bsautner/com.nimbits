@@ -7,7 +7,7 @@
     <application>nimbits-02</application>
 
 
-    <version>870</version>
+    <version>873</version>
 
     <sessions-enabled>true</sessions-enabled>
     <precompilation-enabled>false</precompilation-enabled>
@@ -16,7 +16,8 @@
         <property name="appengine.orm.disable.duplicate.pmf.exception" value="false"/>
     </system-properties>
     <static-files>
-        <include path="/bootstrap/css/**.css"/>
+        <!--<include path="/bootstrap/css/**.css"/>-->
+        <include path="/favicon.ico"/>
         <include path="/**.css"/>
         <include path="/**.html"/>
         <include path="/**.jsp"/>

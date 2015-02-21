@@ -25,7 +25,6 @@ public enum SubscriptionNotifyMethod {
     socket(6, "Connected Sockets", true);
 
 
-
     private static final Map<Integer, SubscriptionNotifyMethod> lookup = new HashMap<Integer, SubscriptionNotifyMethod>(5);
 
     static {
@@ -56,7 +55,7 @@ public enum SubscriptionNotifyMethod {
     }
 
     public static SubscriptionNotifyMethod get(int code) {
-        SubscriptionNotifyMethod method =  lookup.get(code);
+        SubscriptionNotifyMethod method = lookup.get(code);
         return method == null ? SubscriptionNotifyMethod.none : method;
     }
 

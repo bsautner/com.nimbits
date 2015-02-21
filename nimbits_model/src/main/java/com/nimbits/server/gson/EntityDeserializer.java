@@ -25,9 +25,8 @@ public class EntityDeserializer implements JsonDeserializer<Entity> {
         final String json;
         if (jsonElement.isJsonPrimitive()) {
             final JsonPrimitive jsonPrimitive = (JsonPrimitive) jsonElement;
-           json = jsonPrimitive.getAsString();
-        }
-        else {
+            json = jsonPrimitive.getAsString();
+        } else {
             json = jsonElement.toString();
         }
         return new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create().fromJson(json, EntityModel.class);

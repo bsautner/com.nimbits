@@ -7,11 +7,8 @@ import java.io.Serializable;
 
 /**
  * Container for an Password KEY String
- *
  */
 public class AccessCode extends SimpleValue<String> implements Serializable {
-
-
 
 
     protected AccessCode(String aValue) {
@@ -26,7 +23,7 @@ public class AccessCode extends SimpleValue<String> implements Serializable {
 
 
     public static AccessCode getInstance(final String aValue) {
-        return aValue == null ? createEmptyKey() :  new AccessCode(aValue);
+        return aValue == null ? createEmptyKey() : new AccessCode(aValue);
     }
 
     public static AccessCode createEmptyKey() {
@@ -46,7 +43,6 @@ public class AccessCode extends SimpleValue<String> implements Serializable {
         return aValue.equals(getValue());
 
     }
-
 
 
 }

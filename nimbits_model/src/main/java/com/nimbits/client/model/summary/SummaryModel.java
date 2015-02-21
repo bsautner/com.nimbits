@@ -40,7 +40,7 @@ public class SummaryModel extends TriggerModel implements Summary {
             final boolean enabled,
             final SummaryType summaryType,
             final long summaryIntervalMs,
-            final Date lastProcessed )  {
+            final Date lastProcessed) {
         super(entity, trigger, target, enabled);
 
         this.summaryType = summaryType.getCode();
@@ -49,8 +49,8 @@ public class SummaryModel extends TriggerModel implements Summary {
 
     }
 
-    public SummaryModel(Summary summary)  {
-       super(summary);
+    public SummaryModel(Summary summary) {
+        super(summary);
 
         this.summaryType = summary.getSummaryType().getCode();
         this.summaryIntervalMs = summary.getSummaryIntervalMs();

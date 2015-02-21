@@ -23,14 +23,13 @@ import java.io.Serializable;
  * Date: 8/10/12
  * Time: 3:25 PM
  */
-public class MqttModel  implements Serializable, Mqtt {
+public class MqttModel implements Serializable, Mqtt {
 
 
     private final String email;
     private final String uuid;
     private final String message;
     private final String host;
-
 
 
     public MqttModel(final String host, final EmailAddress email, final String uuid, final String message) {
@@ -42,7 +41,7 @@ public class MqttModel  implements Serializable, Mqtt {
 
 
     @Override
-    public EmailAddress getEmail()  {
+    public EmailAddress getEmail() {
         return CommonFactory.createEmailAddress(email);
     }
 

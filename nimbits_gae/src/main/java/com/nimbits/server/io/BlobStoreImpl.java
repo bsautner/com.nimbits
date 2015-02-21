@@ -99,7 +99,6 @@ public class BlobStoreImpl implements BlobStore {
     }
 
 
-
     @Override
     public List<Value> getTopDataSeries(final Entity entity, final int maxValues) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -121,7 +120,7 @@ public class BlobStoreImpl implements BlobStore {
 
                 for (final Value vx : values) {
 
-                        retObj.add(vx);
+                    retObj.add(vx);
 
                     if (retObj.size() >= maxValues) {
                         break;
@@ -136,6 +135,7 @@ public class BlobStoreImpl implements BlobStore {
         return retObj;
 
     }
+
     @Override
     public List<Value> getDataSegment(final Entity entity, final Range<Date> timespan) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();

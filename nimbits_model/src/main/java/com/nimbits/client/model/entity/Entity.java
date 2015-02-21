@@ -23,14 +23,14 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public interface Entity  extends Serializable, Comparable<Entity> {
+public interface Entity extends Serializable, Comparable<Entity> {
     EntityName getName();
 
     String getUUID();
 
     void setUUID(String uuid);
 
-    void setName(EntityName name) ;
+    void setName(EntityName name);
 
     String getDescription();
 
@@ -64,27 +64,27 @@ public interface Entity  extends Serializable, Comparable<Entity> {
 
     void setChildren(List<Point> children);
 
-    void update(Entity update) ;
+    void update(Entity update);
 
     List<Point> getChildren();
 
     boolean isOwner(User user);
 
-    boolean entityIsReadable(User user) ;
+    boolean entityIsReadable(User user);
 
     Date getDateCreated();
 
-    void validate(User user) ;
+    void validate(User user);
 
     void setDateCreated(Date dateCreated);
 
-    void setKey(String key) ;
+    void setKey(String key);
 
     String getInstanceUrl();
 
     boolean isCached();
 
-    void setIsCached(boolean isCached) ;
+    void setIsCached(boolean isCached);
 
     Action getAction();
 

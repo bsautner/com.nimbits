@@ -15,7 +15,7 @@ package com.nimbits.client.android;
 import java.io.Serializable;
 
 
-public class AndroidControlImpl implements AndroidControl, Serializable{
+public class AndroidControlImpl implements AndroidControl, Serializable {
 
 
     private int timer;
@@ -38,10 +38,12 @@ public class AndroidControlImpl implements AndroidControl, Serializable{
     public int getTimer() {
         return timer;
     }
+
     @Override
     public int getChartValues() {
         return chartValues;
     }
+
     @Override
     public double getMinVersion() {
         return minVersion;

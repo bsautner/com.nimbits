@@ -13,7 +13,6 @@
 package com.nimbits.server.transactions.user;
 
 import com.nimbits.server.NimbitsServletTest;
-
 import com.nimbits.server.transaction.user.service.UserService;
 import org.junit.Test;
 
@@ -23,7 +22,7 @@ import static junit.framework.Assert.assertEquals;
 public class UserTransactionImplTest extends NimbitsServletTest {
     @Test
     public void testGetHttpRequestUser() throws Exception {
-        UserService t =null;
+        UserService t = null;
         t.getHttpRequestUser(req);
         assertEquals(user.getEmail(), t.getHttpRequestUser(req).getEmail());
 

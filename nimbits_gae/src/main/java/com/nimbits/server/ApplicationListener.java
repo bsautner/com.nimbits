@@ -13,7 +13,6 @@
 package com.nimbits.server;
 
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.util.logging.Logger;

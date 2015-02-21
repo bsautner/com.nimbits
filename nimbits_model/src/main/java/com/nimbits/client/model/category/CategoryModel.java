@@ -28,15 +28,15 @@ public class CategoryModel extends EntityModel implements Serializable, Category
 
     }
 
-    public CategoryModel(Entity entity)  {
+    public CategoryModel(Entity entity) {
         super(entity);
     }
 
-    public CategoryModel(User user, Entity parent, String categoryName)  {
+    public CategoryModel(User user, Entity parent, String categoryName) {
 
         super(CommonFactory.createName(categoryName, EntityType.category),
                 "", EntityType.category, ProtectionLevel.everyone, parent.getKey(), user.getEmail().getValue(), ""
-                );
+        );
 
     }
 

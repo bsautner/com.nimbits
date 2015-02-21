@@ -18,23 +18,17 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.regex.Pattern;
 
 
 @Service
 public class XMPPPresenceAvailableServlet extends ApiBase {
 
 
-
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 
 
-
     }
-
-
-
 
 
 }

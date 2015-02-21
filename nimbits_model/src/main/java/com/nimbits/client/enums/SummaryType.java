@@ -12,7 +12,9 @@
 
 package com.nimbits.client.enums;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -28,10 +30,7 @@ public enum SummaryType {
     variance(4, "Variance"),
     max(6, "Max"),
     min(7, "Min"),
-    delta(8, "Delta")
-
-
-    ;
+    delta(8, "Delta");
 
     private static final Map<Integer, SummaryType> lookup = new HashMap<Integer, SummaryType>(8);
 

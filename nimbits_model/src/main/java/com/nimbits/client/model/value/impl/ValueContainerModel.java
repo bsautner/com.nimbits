@@ -12,18 +12,18 @@
 
 package com.nimbits.client.model.value.impl;
 
-import com.nimbits.client.model.value.ValueContainer;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueContainer;
 
 public class ValueContainerModel implements ValueContainer {
 
-     String owner;
+    String owner;
 
-     String id;
+    String id;
 
-     String accessKey;
+    String accessKey;
 
-     Value value;
+    Value value;
 
     @SuppressWarnings("unused")
     public ValueContainerModel() {
@@ -53,7 +53,7 @@ public class ValueContainerModel implements ValueContainer {
     }
 
     @Override
-    public Value  getValue() {
+    public Value getValue() {
         return value;
     }
 

@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 
 
-public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
+public class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
 
     @Expose
@@ -50,14 +50,13 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     @Expose
     private String uuid;
     private Date dateCreated;
-    private static final long serialVersionUID =3455345354L;
+    private static final long serialVersionUID = 3455345354L;
     private List<Point> children;
     private String instanceUrl;
     private boolean isCached = false;
     @Expose
     private String id;
     private String action;
-
 
 
     public EntityModel(final CommonIdentifier name,
@@ -84,7 +83,8 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
             key = id;
         }
     }
-    public EntityModel(final Entity anEntity)  {
+
+    public EntityModel(final Entity anEntity) {
         if (anEntity != null) {
             this.dateCreated = new Date(anEntity.getDateCreated().getTime());
             this.key = anEntity.getKey();
@@ -128,13 +128,13 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
     @Override
     public Action getAction() {
-        Action a =   Action.get(this.action);
+        Action a = Action.get(this.action);
         return a == null ? Action.none : a;
     }
 
     @Override
     public void setAction(Action action) {
-       this.action = action.getCode();
+        this.action = action.getCode();
     }
 
     @Override
@@ -158,9 +158,9 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
 
     @Override
-    public EntityName getName()   {
+    public EntityName getName() {
 
-            return CommonFactory.createName(name, EntityType.get(entityType));
+        return CommonFactory.createName(name, EntityType.get(entityType));
 
     }
 
@@ -258,13 +258,12 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     }
 
 
-
     @SuppressWarnings("MethodWithMultipleReturnPoints")
     @Override
     public int compareTo(final Entity that) {
         final int type = EntityType.get(this.entityType).getOrder().compareTo(that.getEntityType().getOrder());
 
-            return type == 0 ? this.name.compareTo(that.getName().getValue()) : type;
+        return type == 0 ? this.name.compareTo(that.getName().getValue()) : type;
 
     }
 
@@ -292,7 +291,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     }
 
     @Override
-    public void validate(User user)  {
+    public void validate(User user) {
         if (Utils.isEmptyString(this.owner) || Utils.isEmptyString(this.name) || Utils.isEmptyString(this.parent)) {
             throw new IllegalArgumentException("Entity was missing required data, validation failed"
                     + "owner=" + owner + "name=" + this.name + "parent:" + this.parent);
@@ -301,7 +300,7 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
         if (Utils.isEmptyString(this.owner)) {
             throw new IllegalArgumentException("Owner must not be null");
         }
-        if (! this.owner.equals(user.getKey()) &&   this.entityType != EntityType.user.getCode()) {
+        if (!this.owner.equals(user.getKey()) && this.entityType != EntityType.user.getCode()) {
             throw new IllegalArgumentException("You can't create an entity with an owner other than yourself!");
         }
     }
@@ -309,10 +308,8 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
     @Override
     public void setDateCreated(Date dateCreated) {
         if (dateCreated != null) {
-        this.dateCreated = new Date(dateCreated.getTime());
-        }
-        else {
-
+            this.dateCreated = new Date(dateCreated.getTime());
+        } else {
 
 
             this.dateCreated = null;
@@ -321,7 +318,6 @@ public class EntityModel  implements Serializable, Comparable<Entity>, Entity {
 
     @Override
     public boolean entityIsReadable(final User user) {
-
 
 
         boolean retVal = this.getEntityType().equals(EntityType.user) ||

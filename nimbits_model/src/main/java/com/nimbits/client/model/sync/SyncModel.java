@@ -16,8 +16,6 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.trigger.TriggerEntity;
 import com.nimbits.client.model.trigger.TriggerModel;
 
-import java.util.Date;
-
 
 public class SyncModel extends TriggerModel implements Sync {
 
@@ -39,10 +37,12 @@ public class SyncModel extends TriggerModel implements Sync {
     public void setTargetInstance(String targetInstance) {
         this.targetInstance = targetInstance;
     }
+
     @Override
     public String getTargetPoint() {
         return targetPoint;
     }
+
     @Override
     public void setTargetPoint(String targetPoint) {
         this.targetPoint = targetPoint;
@@ -53,7 +53,7 @@ public class SyncModel extends TriggerModel implements Sync {
             final TriggerEntity trigger,
             final String targetInstance,
             final String targetPoint,
-            final String accessKey)  {
+            final String accessKey) {
         super(entity, trigger, null, true);
         this.targetInstance = targetInstance;
         this.targetPoint = targetPoint;
@@ -61,10 +61,10 @@ public class SyncModel extends TriggerModel implements Sync {
 
     }
 
-    public SyncModel(Sync sync)  {
-       super(sync);
-       this.targetPoint = sync.getTargetPoint();
-       this.targetInstance = sync.getTargetInstance();
+    public SyncModel(Sync sync) {
+        super(sync);
+        this.targetPoint = sync.getTargetPoint();
+        this.targetInstance = sync.getTargetInstance();
         this.accessKey = sync.getAccessKey();
 
 
@@ -73,7 +73,6 @@ public class SyncModel extends TriggerModel implements Sync {
     @SuppressWarnings("unused")
     public SyncModel() {
     }
-
 
 
 }

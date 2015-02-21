@@ -13,7 +13,6 @@
 package com.nimbits.client.enums;
 
 
-
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,26 +27,23 @@ public enum MemCacheKey {
 
     activePoints(0, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_ACTIVE_POINTS),
     hotPoints(0, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_HOT_POINTS),
-    valueCache(1, ServerSetting.version.getDefaultValue()  + KeyConstants.KEY_VALUE),
-    allSettings(2, ServerSetting.version.getDefaultValue()  + KeyConstants.KEY_ALL_SETTINGS),
-    setting(3, ServerSetting.version.getDefaultValue()  + KeyConstants.KEY_SETTING),
-    userNamespace(4, ServerSetting.version.getDefaultValue()  + KeyConstants.KEY_USER_NAMESPACE),
+    valueCache(1, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_VALUE),
+    allSettings(2, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_ALL_SETTINGS),
+    setting(3, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_SETTING),
+    userNamespace(4, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_USER_NAMESPACE),
     defaultNamespace(5, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_DEFAULT_NAMESPACE),
-    entityMap(6, ServerSetting.version.getDefaultValue()  + KeyConstants.KEY_ENTITY_MAP),
+    entityMap(6, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_ENTITY_MAP),
     userPointNamespace(7, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_USER_POINT_NAMESPACE),
     preload(10, ServerSetting.version.getDefaultValue() + KeyConstants.PRE_LOAD),
     allUsers(11, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_ALL_USERS),
     users(12, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_USER),
-    triggers(13, ServerSetting.version.getDefaultValue()  + KeyConstants.KEY_TRIGGERS),
-    userEntityTree(15, ServerSetting.version.getDefaultValue()  + KeyConstants.KEY_USER_ENTITY_TREE),
+    triggers(13, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_TRIGGERS),
+    userEntityTree(15, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_USER_ENTITY_TREE),
     subscribedEntity(17, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_SUBSCRIBED_ENTITY),
     entityNameCache(18, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_ENTITY_NAME),
     docService(20, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_DOC_SERVICE),
     userTempCacheKey(21, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_USER_TEMP_CACHE_KEY),
-    userReport(22, ServerSetting.version.getDefaultValue() + KeyConstants.USER_REPORT_STATUS_GRID_KEY)
-
-    ;
-
+    userReport(22, ServerSetting.version.getDefaultValue() + KeyConstants.USER_REPORT_STATUS_GRID_KEY);
 
 
     private static final Map<Integer, MemCacheKey> lookup = new HashMap<Integer, MemCacheKey>(MemCacheKey.values().length);
@@ -58,7 +54,6 @@ public enum MemCacheKey {
         for (MemCacheKey s : EnumSet.allOf(MemCacheKey.class))
             lookup.put(s.code, s);
     }
-
 
 
     private MemCacheKey(final int code, final String text) {
@@ -77,8 +72,6 @@ public enum MemCacheKey {
     public String getText() {
         return text;
     }
-
-
 
 
     private static class KeyConstants {
@@ -101,6 +94,7 @@ public enum MemCacheKey {
         static final String KEY_DOC_SERVICE = "KEY_DOC_SERVICE";
         static final String KEY_USER_TEMP_CACHE_KEY = "KEY_USER_TEMP_CACHE_KEY";
         static final String USER_REPORT_STATUS_GRID_KEY = "USER_REPORT_STATUS_GRID_KEY";
+
         private KeyConstants() {
         }
     }

@@ -14,7 +14,7 @@
         "http://google-web-toolkit.googlecode.com/svn/releases/2.0/distro-source/core/src/gwt-module.dtd">
 <module rename-to="nimbits">
     <entry-point class='com.nimbits.client.NimbitsEntryPoint'/>
-    
+
     <inherits name='com.google.gwt.visualization.Visualization'/>
     <inherits name="com.google.gwt.resources.Resources"/>
     <inherits name='com.google.gwt.user.User'/>
@@ -23,7 +23,7 @@
     <!-- Inherit the default GWT style sheet. You can change -->
     <!-- the theme of your GWT application by uncommenting -->
     <!-- any one of the following lines. -->
-     <inherits name='com.google.gwt.user.theme.standard.Standard'/>
+    <inherits name='com.google.gwt.user.theme.standard.Standard'/>
     <!-- <inherits name="com.google.gwt.user.theme.chrome.Chrome"/> -->
 
     <inherits name="com.google.gwt.json.JSON"/>

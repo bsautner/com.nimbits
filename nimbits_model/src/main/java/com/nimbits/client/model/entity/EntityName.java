@@ -20,6 +20,6 @@ import com.nimbits.client.model.common.CommonIdentifier;
  * Date: 2/6/12
  * Time: 6:38 PM
  */
-public interface EntityName  extends CommonIdentifier  {
+public interface EntityName extends CommonIdentifier {
 
 }

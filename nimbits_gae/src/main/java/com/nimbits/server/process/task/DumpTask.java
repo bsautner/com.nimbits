@@ -19,6 +19,7 @@ import com.google.appengine.api.files.FileServiceFactory;
 import com.google.appengine.api.files.FileWriteChannel;
 import com.google.common.collect.Range;
 import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.common.impl.CommonFactory;
@@ -28,10 +29,11 @@ import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.system.ServerInfo;
 import com.nimbits.server.communication.mail.EmailService;
 import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.system.ServerInfo;
 import com.nimbits.server.transaction.cache.NimbitsCache;
+import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
@@ -73,6 +75,8 @@ public class DumpTask extends HttpServlet {
     @Autowired
     protected EntityService entityService;
 
+    @Autowired
+    protected EntityDao entityDao;
     @Override
     public void init() throws ServletException {
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
@@ -86,46 +90,47 @@ public class DumpTask extends HttpServlet {
         final String json = request.getParameter(Parameters.entity.getText());
         final String sd = request.getParameter(Parameters.sd.getText());
         final String ed = request.getParameter(Parameters.ed.getText());
-        final String userJson = request.getParameter(Parameters.user.getText());
+        final String email = request.getParameter(Parameters.email.getText());
         final Entity entity = GsonFactory.getInstance().fromJson(json, EntityModel.class);
         final long sl = Long.valueOf(sd);
         final long el = Long.valueOf(ed);
 
-        User user = GsonFactory.getInstance().fromJson(userJson, UserModel.class);
+        List<User> user = userService.getUserByKey(email, AuthLevel.restricted);
+
+        if (! user.isEmpty()) {
+            final Range timespan = Range.closed(new Date(sl), new Date(el));
+
+            List<Entity> points = entityService.getEntityByKey(user.get(0), entity.getKey(), EntityType.point);
+            if (!points.isEmpty()) {
+                final List<Value> values = valueService.getDataSegment(points.get(0), timespan);
+
+                try {
+
+                    final FileService fileService = FileServiceFactory.getFileService();
+                    final AppEngineFile file = fileService.createNewBlobFile(Const.CONTENT_TYPE_PLAIN);
+                    final FileWriteChannel writeChannel = fileService.openWriteChannel(file, true);
+                    final PrintWriter out = new PrintWriter(Channels.newWriter(writeChannel, "UTF8"));
+                    for (final Value v : values) {
+                        out.println(v.getTimestamp().getTime() + "," + v.getDoubleValue() + "," + v.getData() + "," + v.getLocation().getLat() + "," + v.getLocation().getLng());
+                    }
 
 
-        final Range timespan = Range.closed(new Date(sl), new Date(el));
+                    out.close();
+                    writeChannel.closeFinally();
+                    final BlobKey key = fileService.getBlobKey(file);
+                    final EmailAddress emailAddress = CommonFactory.createEmailAddress(entity.getOwner());
 
-        List<Entity> points = entityService.getEntityByKey(user, entity.getKey(), EntityType.point);
-        if (!points.isEmpty()) {
-            final List<Value> values = valueService.getDataSegment(points.get(0), timespan);
 
-            try {
+                    final String m = serverInfo.getFullServerURL(request) + "/service/blob?" + Parameters.blobkey.getText() + "=" + key.getKeyString();
 
-                final FileService fileService = FileServiceFactory.getFileService();
-                final AppEngineFile file = fileService.createNewBlobFile(Const.CONTENT_TYPE_PLAIN);
-                final FileWriteChannel writeChannel = fileService.openWriteChannel(file, true);
-                final PrintWriter out = new PrintWriter(Channels.newWriter(writeChannel, "UTF8"));
-                for (final Value v : values) {
-                    out.println(v.getTimestamp().getTime() + "," + v.getDoubleValue() + "," + v.getData() + "," + v.getLocation().getLat() + "," + v.getLocation().getLng());
+
+                    emailService.sendEmail(emailAddress, m, "Your extracted data for " + entity.getName().getValue() + " is ready");
+
+                } catch (IOException ex) {
+
+                } finally {
+                    response.setStatus(HttpServletResponse.SC_OK);
                 }
-
-
-                out.close();
-                writeChannel.closeFinally();
-                final BlobKey key = fileService.getBlobKey(file);
-                final EmailAddress emailAddress = CommonFactory.createEmailAddress(entity.getOwner());
-
-
-                final String m = serverInfo.getFullServerURL(request) + "/service/blob?" + Parameters.blobkey.getText() + "=" + key.getKeyString();
-
-
-                emailService.sendEmail(emailAddress, m, "Your extracted data for " + entity.getName().getValue() + " is ready");
-
-            } catch (IOException ex) {
-
-            } finally {
-                response.setStatus(HttpServletResponse.SC_OK);
             }
         }
 

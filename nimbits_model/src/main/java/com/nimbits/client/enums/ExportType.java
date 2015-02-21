@@ -23,8 +23,8 @@ public enum ExportType {
 
     text_csv("text/csv", "csv"),
     csvSeparateColumns("text/csv", "csv"),
-    descriptiveStatistics(Const.CONTENT_TYPE_HTML,"html"),
-    possibleContinuation(Const.CONTENT_TYPE_HTML,"html"),
+    descriptiveStatistics(Const.CONTENT_TYPE_HTML, "html"),
+    possibleContinuation(Const.CONTENT_TYPE_HTML, "html"),
     png("image/png", "png"),
     table(Const.CONTENT_TYPE_PLAIN, "html"),
     plain("text/plain", "txt"),

@@ -20,6 +20,7 @@ public class EntityKeyImpl implements EntityKey {
     public EntityKeyImpl(String value) {
         this.value = value;
     }
+
     @Override
     public String getValue() {
         return value;

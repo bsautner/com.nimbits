@@ -21,12 +21,12 @@ public class CalculationModelFactory {
     private CalculationModelFactory() {
     }
 
-    public static Calculation createCalculation(Calculation calculation)  {
+    public static Calculation createCalculation(Calculation calculation) {
         return new CalculationModel(calculation);
     }
 
-    public static Calculation createCalculation(Entity entity, final TriggerEntity trigger, final boolean enabled, final String f, final TargetEntity target, final String x, final String y, final String z)  {
-        return new CalculationModel(entity, trigger,  enabled, f, target,  x,y, z);
+    public static Calculation createCalculation(Entity entity, final TriggerEntity trigger, final boolean enabled, final String f, final TargetEntity target, final String x, final String y, final String z) {
+        return new CalculationModel(entity, trigger, enabled, f, target, x, y, z);
 
     }
 }

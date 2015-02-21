@@ -20,7 +20,6 @@ import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.server.Protocol;
 import com.nimbits.client.model.server.apikey.AccessCode;
 
-
 import java.io.Serializable;
 
 
@@ -35,7 +34,7 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
 
     private String version;
 
-    private String  apiKey;
+    private String apiKey;
 
     private boolean isDefault;
 
@@ -44,14 +43,14 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
     private boolean socketsEnabled;
 
 
-    public InstanceModel(final Entity baseEntity, final String baseUrl, final EmailAddress ownerEmail, final String serverVersion)  {
+    public InstanceModel(final Entity baseEntity, final String baseUrl, final EmailAddress ownerEmail, final String serverVersion) {
         super(baseEntity);
         this.baseUrl = baseUrl;
         this.adminEmail = ownerEmail.getValue();
         this.version = serverVersion;
     }
 
-    public InstanceModel(final Instance server)  {
+    public InstanceModel(final Instance server) {
         super(server);
         this.serverId = server.getServerId();
         this.baseUrl = server.getBaseUrl().getUrl();
@@ -79,7 +78,7 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
     }
 
     @Override
-    public EmailAddress getAdminEmail()  {
+    public EmailAddress getAdminEmail() {
         return CommonFactory.createEmailAddress(adminEmail);
     }
 

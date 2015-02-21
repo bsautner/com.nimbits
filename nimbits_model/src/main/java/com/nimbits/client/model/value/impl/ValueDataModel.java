@@ -27,20 +27,22 @@ public class ValueDataModel implements ValueData, Serializable {
     }
 
     private ValueDataModel(SimpleValue<String> data) {
-        if  (! data.isEmpty()) {
+        if (!data.isEmpty()) {
             this.data = data.getValue();
         }
     }
 
     public static ValueData getInstance(SimpleValue<String> data) {
-       return  new ValueDataModel(data);
+        return new ValueDataModel(data);
 
     }
-    public static ValueData getEmptyInstance( ) {
-        return  new ValueDataModel();
+
+    public static ValueData getEmptyInstance() {
+        return new ValueDataModel();
 
 
     }
+
     @Override
     public String getContent() {
         return this.data == null ? "" : this.data;

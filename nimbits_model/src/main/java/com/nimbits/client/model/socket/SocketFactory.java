@@ -12,7 +12,7 @@ public class SocketFactory {
 
     public static Socket getInstance(Entity anEntity, String targetApiKey, String targetUrl, String targetPath, String extraParams) {
 
-       return new SocketModel(anEntity, targetApiKey, targetUrl, targetPath, extraParams);
+        return new SocketModel(anEntity, targetApiKey, targetUrl, targetPath, extraParams);
 
     }
 }

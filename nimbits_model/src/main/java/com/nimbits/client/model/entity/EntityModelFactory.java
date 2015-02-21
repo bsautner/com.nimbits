@@ -28,15 +28,15 @@ public class EntityModelFactory {
     private EntityModelFactory() {
     }
 
-    public static Entity createEntity(final User user, final Entity entity)  {
+    public static Entity createEntity(final User user, final Entity entity) {
         final Entity r = new EntityModel(entity);
-        final boolean isOwner =  (user != null && entity.getOwner().equals(user.getKey()));
+        final boolean isOwner = (user != null && entity.getOwner().equals(user.getKey()));
         r.setReadOnly(!isOwner);
         return r;
 
     }
 
-    public static Entity createEntity(final Entity entity)  {
+    public static Entity createEntity(final Entity entity) {
 
         return new EntityModel(entity);
 
@@ -49,10 +49,9 @@ public class EntityModelFactory {
                                       final String parentUUID,
                                       final String ownerUUID,
                                       final String uuid) {
-        return new EntityModel(name, description, entityType, protectionLevel,  parentUUID,
+        return new EntityModel(name, description, entityType, protectionLevel, parentUUID,
                 ownerUUID, uuid);
     }
-
 
 
     public static Entity createEntity(final EntityName name,
@@ -61,30 +60,28 @@ public class EntityModelFactory {
                                       final ProtectionLevel protectionLevel,
                                       final String parentUUID,
                                       final String ownerUUID) {
-        return new EntityModel(name, description, entityType, protectionLevel,  parentUUID,
+        return new EntityModel(name, description, entityType, protectionLevel, parentUUID,
                 ownerUUID, "");
     }
+
     public static Entity createEntity(final String name,
                                       final String description,
                                       final EntityType entityType,
                                       final ProtectionLevel protectionLevel,
                                       final String parent,
-                                      final String owner)  {
+                                      final String owner) {
         EntityName entityName = CommonFactory.createName(name, entityType);
-        return new EntityModel(entityName, description, entityType, protectionLevel,  parent,
+        return new EntityModel(entityName, description, entityType, protectionLevel, parent,
                 owner, "");
     }
-    public static Entity createEntity(final User user)  {
+
+    public static Entity createEntity(final User user) {
         final EntityName name = CommonFactory.createName(user.getEmail().getValue(), EntityType.user);
 
         return createEntity(name, "", EntityType.user, ProtectionLevel.onlyMe,
-                user.getKey(), user.getKey(),null);
+                user.getKey(), user.getKey(), null);
 
     }
-
-
-
-
 
 
     public static Entity createEntity(final EntityName name, final EntityType entityType) {
@@ -111,20 +108,21 @@ public class EntityModelFactory {
                 :
 
                 new EntityModel(name,
-                "",
-                EntityType.point,
-                ProtectionLevel.everyone,
-                null,
-                null,null 
+                        "",
+                        EntityType.point,
+                        ProtectionLevel.everyone,
+                        null,
+                        null, null
 
                 );
     }
 
     public static TriggerEntity createTrigger(final String key) {
-        return  new TriggerEntityImpl(key);
+        return new TriggerEntityImpl(key);
     }
+
     public static TargetEntity createTarget(final String key) {
-        return   new TargetEntityImpl(key);
+        return new TargetEntityImpl(key);
     }
 
     public static Entity createEntity(String name, EntityType entityType) {

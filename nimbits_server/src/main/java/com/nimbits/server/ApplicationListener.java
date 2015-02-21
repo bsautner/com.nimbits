@@ -28,7 +28,7 @@ public class ApplicationListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        log.info("NIMBITS Context Initialised" );
+        log.info("NIMBITS Context Initialised");
 
 
     }

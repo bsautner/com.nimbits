@@ -70,7 +70,6 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
                                         String protocol) {
 
 
-
         String ids = request.getParameter(Parameters.points.getText());
 
         String authToken = request.getParameter(Parameters.authToken.getText());
@@ -81,7 +80,7 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
 
         if (forwardUrl != null && emailParam != null && authToken != null) {
             //should only be called on the socket relay server
-          //  forwardUrl = "http://localhost:8085";
+            //  forwardUrl = "http://localhost:8085";
             Server server = ServerFactory.getInstance(UrlContainer.getInstance(forwardUrl),
                     CommonFactory.createEmailAddress(emailParam), AccessCode.getInstance(authToken));
             NimbitsClient client = NimbitsClientFactory.getInstance(server);
@@ -91,20 +90,16 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
             //notify cloud of socket
             client.notifySocketConnection(forwardUrl, user);
 
-        }
-        else {
+        } else {
 
             users = authService.getCurrentUser(request);
 
         }
 
 
-
-
         if (users.isEmpty()) {
             throw new SecurityException("Session not found, did you POST to the session api first?");
-        }
-        else {
+        } else {
             String email = users.get(0).getValue();
 
             List<String> points;

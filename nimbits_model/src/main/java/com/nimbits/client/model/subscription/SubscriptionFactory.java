@@ -25,7 +25,7 @@ public class SubscriptionFactory {
     private SubscriptionFactory() {
     }
 
-    public static Subscription createSubscription(Subscription subscription)  {
+    public static Subscription createSubscription(Subscription subscription) {
         return new SubscriptionModel(subscription);
 
     }
@@ -37,7 +37,7 @@ public class SubscriptionFactory {
             final SubscriptionNotifyMethod method,
             final int maxRepeatSeconds,
             final boolean formatJson,
-            final boolean enabled)  {
+            final boolean enabled) {
         return new SubscriptionModel(entity,
                 subscribedEntity,
                 type,
@@ -47,7 +47,8 @@ public class SubscriptionFactory {
         );
 
     }
-    public static List<Subscription> createSubscriptions(Collection<Subscription> subscriptions)  {
+
+    public static List<Subscription> createSubscriptions(Collection<Subscription> subscriptions) {
         final List<Subscription> retObj = new ArrayList<Subscription>(subscriptions.size());
         for (final Subscription s : subscriptions) {
             retObj.add(createSubscription(s));

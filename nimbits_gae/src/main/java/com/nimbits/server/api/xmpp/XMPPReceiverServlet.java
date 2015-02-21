@@ -36,11 +36,11 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.io.command.CommandListener;
 import com.nimbits.io.command.TerminalCommand;
-import com.nimbits.server.system.ServerInfo;
 import com.nimbits.server.api.ApiBase;
 import com.nimbits.server.communication.xmpp.XmppService;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.json.JsonHelper;
+import com.nimbits.server.system.ServerInfo;
 import com.nimbits.server.transaction.cache.NimbitsCache;
 import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.user.service.UserService;
@@ -123,7 +123,7 @@ public class XMPPReceiverServlet extends ApiBase {
 
                     @Override
                     public void setCurrent(Entity newCurrent) {
-                      cache.put(getCurrentKey(user), newCurrent);
+                        cache.put(getCurrentKey(user), newCurrent);
                     }
 
                     @Override
@@ -142,9 +142,7 @@ public class XMPPReceiverServlet extends ApiBase {
                         List<Entity> tree;
                         if (cache.contains(getTreeKey(user))) {
                             tree = (List<Entity>) cache.get(getTreeKey(user));
-                        }
-
-                        else {
+                        } else {
                             tree = Collections.<Entity>emptyList();
                         }
                         if (tree == null || tree.isEmpty() && terminalCommand.usesTree()) {
@@ -163,9 +161,6 @@ public class XMPPReceiverServlet extends ApiBase {
             }
         }
     }
-
-
-
 
 
     private void processJson(final User u, final String body) {
@@ -201,9 +196,6 @@ public class XMPPReceiverServlet extends ApiBase {
                 break;
         }
     }
-
-
-
 
 
 }

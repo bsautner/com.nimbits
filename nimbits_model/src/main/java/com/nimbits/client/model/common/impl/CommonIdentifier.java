@@ -11,10 +11,11 @@
  */
 
 package com.nimbits.client.model.common.impl;
+
 import java.io.Serializable;
 
 
-public class CommonIdentifier implements  Serializable{
+public class CommonIdentifier implements Serializable {
 
     private String value;
 
@@ -30,11 +31,11 @@ public class CommonIdentifier implements  Serializable{
 
 
     public String toString() {
-        return  this.value;
+        return this.value;
     }
 
     protected CommonIdentifier() {
-         value = null;
+        value = null;
     }
 
 

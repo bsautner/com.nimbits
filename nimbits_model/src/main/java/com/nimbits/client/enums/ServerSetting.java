@@ -31,9 +31,7 @@ public enum ServerSetting {
     smtp(SettingConstants.SETTING_SMTP, SettingConstants.SETTING_SMTP_DEFAULT, false, true, false, false, false),
     smtpPassword(SettingConstants.SETTING_SMTP_PASSWORD, SettingConstants.SETTING_SMTP_PASSWORD_DEFAULT, false, true, false, true, false),
 
-    stats(SettingConstants.SETTING_STATS, SettingConstants.SETTING_STATS_DEFAULT, false, true, false, false, true)
-
-    ;
+    stats(SettingConstants.SETTING_STATS, SettingConstants.SETTING_STATS_DEFAULT, false, true, false, false, true);
 
 
     private static final Map<String, ServerSetting> lookup = new HashMap<String, ServerSetting>();
@@ -124,8 +122,9 @@ public enum ServerSetting {
         static final String SETTING_SMTP_PASSWORD_DEFAULT = "";
         static final String SETTING_STATS = "upload stats to nimbits.com";
         static final String SETTING_STATS_DEFAULT = Boolean.TRUE.toString();
-        static final String SETTING_UUID= "uuid";
+        static final String SETTING_UUID = "uuid";
         static final String SETTING_UUID_DEFAULT = "";
+
         private SettingConstants() {
         }
     }

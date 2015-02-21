@@ -404,22 +404,22 @@
                 </configuration>
             </plugin>
             <!--<plugin>-->
-                <!--<groupId>org.apache.maven.plugins</groupId>-->
-                <!--<artifactId>maven-war-plugin</artifactId>-->
-                <!--<version>2.4</version>-->
-                <!--<configuration>-->
-                    <!--<webResources>-->
-                        <!--&lt;!&ndash;<resource>&ndash;&gt;-->
-                            <!--&lt;!&ndash;<exclude>**/web.xml</exclude>&ndash;&gt;-->
-                            <!--&lt;!&ndash;&lt;!&ndash; this is relative to the pom.xml directory &ndash;&gt;&ndash;&gt;-->
-                            <!--&lt;!&ndash;<directory>../nimbits_server/src/main/webapp</directory>&ndash;&gt;-->
-                        <!--&lt;!&ndash;</resource>&ndash;&gt;-->
-                    <!--</webResources>-->
-                <!--</configuration>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-war-plugin</artifactId>-->
+            <!--<version>2.4</version>-->
+            <!--<configuration>-->
+            <!--<webResources>-->
+            <!--&lt;!&ndash;<resource>&ndash;&gt;-->
+            <!--&lt;!&ndash;<exclude>**/web.xml</exclude>&ndash;&gt;-->
+            <!--&lt;!&ndash;&lt;!&ndash; this is relative to the pom.xml directory &ndash;&gt;&ndash;&gt;-->
+            <!--&lt;!&ndash;<directory>../nimbits_server/src/main/webapp</directory>&ndash;&gt;-->
+            <!--&lt;!&ndash;</resource>&ndash;&gt;-->
+            <!--</webResources>-->
+            <!--</configuration>-->
 
-                <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
-                <!--&lt;!&ndash;<webappDirectory>/var/lib/tomcat7/webapps</webappDirectory>&ndash;&gt;-->
-                <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
+            <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
+            <!--&lt;!&ndash;<webappDirectory>/var/lib/tomcat7/webapps</webappDirectory>&ndash;&gt;-->
+            <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
             <!--</plugin>-->
 
         </plugins>

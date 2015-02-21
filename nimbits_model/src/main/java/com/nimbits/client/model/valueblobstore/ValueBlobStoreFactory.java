@@ -31,7 +31,7 @@ public class ValueBlobStoreFactory {
     }
 
     public static List<ValueBlobStore> createValueBlobStore(final ValueBlobStore store) {
-        ValueBlobStore model =new ValueBlobStoreModel(store);
+        ValueBlobStore model = new ValueBlobStoreModel(store);
         return Arrays.asList(model);
 
     }

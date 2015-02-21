@@ -16,13 +16,13 @@ import java.io.Serializable;
 
 public class ValueException extends Exception implements Serializable {
 
-     public ValueException(String message) {
-         super(message);
-     }
+    public ValueException(String message) {
+        super(message);
+    }
 
-     public ValueException(String message, Throwable cause) {
-         super(message, cause);
-     }
+    public ValueException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
     public ValueException() {
     }

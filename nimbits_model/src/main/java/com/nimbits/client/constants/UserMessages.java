@@ -22,10 +22,9 @@ public class UserMessages {
     public static final String MESSAGE_ADD_CATEGORY = "Add a new data point Category";
 
 
-
     public static final String MESSAGE_NEW_POINT_PROMPT = "Please enter the name of the new data point.";
     public static final String MESSAGE_SELECT_POINT = "Select a Data Point";
 
-    public static final String MESSAGE_CONNECTION_REQUEST_TITLE="Send a Connection Request";
+    public static final String MESSAGE_CONNECTION_REQUEST_TITLE = "Send a Connection Request";
     public static final String MESSAGE_CONNECTION_REQUEST_SUCCESS = "Connection Request Sent!";
 }

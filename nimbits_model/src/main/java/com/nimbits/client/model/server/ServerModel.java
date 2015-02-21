@@ -29,7 +29,6 @@ public class ServerModel implements Server, Serializable {
     private String email;
 
 
-
     public ServerModel(final UrlContainer url, EmailAddress emailAddress, final AccessCode accessCode) {
         if (StringUtils.isEmpty(url.getUrl())) {
             throw new IllegalArgumentException("url was null");
@@ -41,7 +40,6 @@ public class ServerModel implements Server, Serializable {
         this.protocol = Protocol.http;
         this.email = emailAddress.getValue();
     }
-
 
 
     protected UrlContainer removeProtocol(UrlContainer url) {

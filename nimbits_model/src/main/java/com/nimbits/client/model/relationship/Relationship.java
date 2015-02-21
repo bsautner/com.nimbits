@@ -12,7 +12,7 @@
 
 package com.nimbits.client.model.relationship;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * Created by Benjamin Sautner

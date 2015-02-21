@@ -71,7 +71,7 @@ public class RecordedValueServiceImplTest extends NimbitsServletTest {
         point.setFilterType(FilterType.percentageHysteresis);
         entityService.addUpdateSingleEntity(user, point);
         //  pointService.updatePoint(point);
-        valueService.recordValue( user, point, ValueFactory.createValueModel(100), false);
+        valueService.recordValue(user, point, ValueFactory.createValueModel(100), false);
         Thread.sleep(10);
         assertTrue(valueService.ignoreByFilter(point, ValueFactory.createValueModel(105)));
         assertTrue(valueService.ignoreByFilter(point, ValueFactory.createValueModel(95)));

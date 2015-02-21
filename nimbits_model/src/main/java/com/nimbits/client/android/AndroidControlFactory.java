@@ -17,7 +17,8 @@ public class AndroidControlFactory {
 
     public static final int SLOW_TIMER = 60000;
     public static final int SMALL_CHART_VALUES = 10;
-    public static final double CRAZY_VERSION =  0;
+    public static final double CRAZY_VERSION = 0;
+
     public static AndroidControl getInstance(int timer, int chart, double minVersion) {
         return new AndroidControlImpl(timer, chart, minVersion);
     }

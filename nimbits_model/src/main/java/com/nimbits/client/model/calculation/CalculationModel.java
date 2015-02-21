@@ -26,7 +26,7 @@ import java.io.Serializable;
  * Time: 4:53 PM
  */
 public class CalculationModel extends TriggerModel implements Serializable, Calculation {
-    private static final long serialVersionUID =1L;
+    private static final long serialVersionUID = 1L;
 
 
     private String formula;
@@ -35,13 +35,12 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
     private String z;
 
 
-
     @SuppressWarnings("unused")
     private CalculationModel() {
         super();
     }
 
-    public CalculationModel(final Calculation calculation)   {
+    public CalculationModel(final Calculation calculation) {
         super(calculation);
 
         this.formula = calculation.getFormula();
@@ -52,7 +51,6 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
     }
 
 
-
     public CalculationModel(final Entity entity,
                             final TriggerEntity trigger,
                             final boolean enabled,
@@ -60,7 +58,7 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
                             final TargetEntity target,
                             final String x,
                             final String y,
-                            final String z)   {
+                            final String z) {
         super(entity, trigger, target, enabled);
         this.formula = f;
         this.x = x;
@@ -72,14 +70,17 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
     public void setFormula(String formula) {
         this.formula = formula;
     }
+
     @Override
     public void setX(String x) {
         this.x = x;
     }
+
     @Override
     public void setY(String y) {
         this.y = y;
     }
+
     @Override
     public void setZ(String z) {
         this.z = z;
@@ -113,15 +114,12 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
 
         if (var.equals("x")) {
             return getX();
-        }
-        else if (var.equals("y")) {
+        } else if (var.equals("y")) {
             return getY();
-        }
-        else if (var.equals("z")) {
+        } else if (var.equals("z")) {
             return getZ();
-        }
-        else {
-            return  "";
+        } else {
+            return "";
         }
 
 

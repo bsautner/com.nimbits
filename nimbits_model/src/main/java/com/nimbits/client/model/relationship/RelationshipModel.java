@@ -31,6 +31,7 @@ public class RelationshipModel implements Relationship {
         this.foreignKey = relationship.getForeignKey();
         this.key = relationship.getKey();
     }
+
     @Override
     public String getKey() {
         return key;

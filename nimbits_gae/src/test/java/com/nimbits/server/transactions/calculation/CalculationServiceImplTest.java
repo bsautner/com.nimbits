@@ -18,7 +18,6 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.point.PointType;
-import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.calculation.CalculationModelFactory;
 import com.nimbits.client.model.common.impl.CommonFactory;
@@ -28,10 +27,7 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.server.NimbitsServletTest;
-
 import com.nimbits.server.transaction.calculation.CalculationService;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -39,7 +35,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 
@@ -50,79 +45,6 @@ public class CalculationServiceImplTest extends NimbitsServletTest {
 
     private static final double DELTA = 0.0001;
 
-    @Test
-    public void testCalcs() throws InterruptedException, ValueException {
-
-
-        final EntityName targetName = CommonFactory.createName("TARGET" + UUID.randomUUID().toString(), EntityType.point);
-        final EntityName triggerName = CommonFactory.createName("TRIGGER" + UUID.randomUUID().toString(), EntityType.point);
-
-        final EntityName yName = CommonFactory.createName(UUID.randomUUID().toString(), EntityType.point);
-        final EntityName zName = CommonFactory.createName(UUID.randomUUID().toString(), EntityType.point);
-
-
-        //final EntityName cName = CommonFactory.createName(UUID.randomUUID().toString(), EntityType.calculation);
-        // Category c = ClientHelper.client().addCategory(cName);
-        // assertNotNull(c);
-        final Point trigger = addPoint(triggerName);
-        final Point target = addPoint(targetName);
-
-        final Point y = addPoint(yName);
-        final Point z = addPoint(zName);
-
-        org.junit.Assert.assertNotNull(y);
-        org.junit.Assert.assertNotNull(z);
-        org.junit.Assert.assertNotNull(trigger);
-        org.junit.Assert.assertNotNull(trigger.getKey());
-        org.junit.Assert.assertNotNull(target);
-        org.junit.Assert.assertNotNull(EntityModelFactory.createTarget(target.getKey()));
-        final Random r = new Random();
-        final double r1 = r.nextDouble();
-        final double r2 = r.nextDouble();
-        final double ry = r.nextDouble();
-        final double rz = r.nextDouble();
-
-        EntityName name = CommonFactory.createName("Calc 1", EntityType.calculation);
-        Entity en = EntityModelFactory.createEntity(name, "", EntityType.calculation, ProtectionLevel.onlyMe, trigger.getKey(),
-                user.getKey());
-
-        final Calculation calculation = CalculationModelFactory.createCalculation(en, EntityModelFactory.createTrigger(trigger.getKey()),
-                true, "x+y+z+" + r1, EntityModelFactory.createTarget((target.getKey())), (trigger.getKey()), y.getKey(), z.getKey());
-
-        final Entity ce = entityService.addUpdateSingleEntity(user, calculation);
-
-        org.junit.Assert.assertNotNull(ce);
-
-        final List<Entity> c = entityService.getEntityByKey(user, ce.getKey(), EntityType.calculation);
-        org.junit.Assert.assertNotNull(c);
-        org.junit.Assert.assertFalse(c.isEmpty());
-
-        entityService.addUpdateSingleEntity(user, trigger);
-
-
-        valueService.recordValue(  user, yName, ValueFactory.createValueModel(ry), false);
-
-        valueService.recordValue(  user, zName, ValueFactory.createValueModel(rz), false);
-        Thread.sleep(200);
-        final Value vt = valueService.recordValue( user, triggerName, ValueFactory.createValueModel(r2), false);
-
-        org.junit.Assert.assertEquals(vt.getDoubleValue(), r2, DELTA);
-
-        final List<Value> vy = valueService.getCurrentValue(y);// ClientHelper.client().getCurrentRecordedValue(yName);
-        org.junit.Assert.assertEquals(vy.get(0).getDoubleValue(), ry, DELTA);
-
-        final List<Value> vz = valueService.getCurrentValue(z);
-        org.junit.Assert.assertEquals(vz.get(0).getDoubleValue(), rz, DELTA);
-
-        Thread.sleep(1000);
-        //added dummy value to end here - calc service now uses a value to preserve time
-        calculationService.process( user, trigger, ValueFactory.createValueModel(123.00));
-        Thread.sleep(1000);
-        final List<Value> endResult = valueService.getCurrentValue(target);
-        org.junit.Assert.assertNotNull(endResult);
-        org.junit.Assert.assertEquals(r1 + r2 + ry + rz, endResult.get(0).getDoubleValue(), DELTA);
-
-    }
 
     @Test(expected = Exception.class)
     public void testCalcLoop() throws Exception {

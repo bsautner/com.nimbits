@@ -50,7 +50,7 @@ import java.util.Date;
 import java.util.List;
 
 
-public class UploadTask   extends HttpServlet {
+public class UploadTask extends HttpServlet {
 
     @Autowired
     protected EntityService entityService;
@@ -74,6 +74,7 @@ public class UploadTask   extends HttpServlet {
 
 
     }
+
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         final String key = request.getParameter(Parameters.blobkey.getText());

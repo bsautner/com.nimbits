@@ -13,8 +13,8 @@
 
 package com.nimbits.server.transactions.calculation;
 
+import com.nimbits.server.math.MathEvaluatorImpl;
 import com.nimbits.server.transaction.calculation.MathEvaluator;
-import com.nimbits.server.transaction.calculation.MathEvaluatorImpl;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

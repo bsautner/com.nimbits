@@ -26,13 +26,13 @@ public class AccessKeyFactory {
     private AccessKeyFactory() {
     }
 
-    public static AccessKey createAccessKey(AccessKey key)  {
+    public static AccessKey createAccessKey(AccessKey key) {
 
         return new AccessKeyModel(key);
 
     }
 
-    public static AccessKey createAccessKey(Entity en, String code, String scope, AuthLevel level)  {
+    public static AccessKey createAccessKey(Entity en, String code, String scope, AuthLevel level) {
         return new AccessKeyModel(en, code, scope, level);
     }
 }

@@ -14,9 +14,9 @@ package com.nimbits.server.gson;
 
 import com.google.gson.*;
 import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.location.LocationFactory;
-import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueData;
 import com.nimbits.client.model.value.impl.ValueDataModel;
@@ -38,27 +38,24 @@ public class ValueDeserializer implements JsonDeserializer<Value> {
         JsonElement lngElement = jsonObject.get("lg");
         JsonElement timestampElement = jsonObject.get("t");
         String data = dataElement == null ? null : dataElement.getAsString();
-        Double lat = latElement == null ||  latElement.isJsonNull() ? null : latElement.getAsDouble();
-        Double lng = lngElement == null ||  lngElement.isJsonNull()? null : lngElement.getAsDouble();
-        Double value =  valueElement == null ||  valueElement.isJsonNull()? null : valueElement.getAsDouble();
-        Long timestamp =  timestampElement == null ||  timestampElement.isJsonNull() ? 0 :  timestampElement.getAsLong();
+        Double lat = latElement == null || latElement.isJsonNull() ? null : latElement.getAsDouble();
+        Double lng = lngElement == null || lngElement.isJsonNull() ? null : lngElement.getAsDouble();
+        Double value = valueElement == null || valueElement.isJsonNull() ? null : valueElement.getAsDouble();
+        Long timestamp = timestampElement == null || timestampElement.isJsonNull() ? 0 : timestampElement.getAsLong();
 
 
         if (lat != null && lng != null) {
             location = LocationFactory.createLocation(lat, lng);
-        }
-        else {
+        } else {
             location = LocationFactory.createEmptyLocation();
         }
-
 
 
         Date time = timestamp > 0 ? new Date(timestamp) : new Date();
         ValueData valueData;
         if (data != null && data.length() > 0) {
             valueData = ValueDataModel.getInstance(SimpleValue.getInstance(data));
-        }
-        else {
+        } else {
             valueData = ValueDataModel.getEmptyInstance();
         }
 

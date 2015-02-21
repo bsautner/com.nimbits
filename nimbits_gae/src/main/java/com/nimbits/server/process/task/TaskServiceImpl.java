@@ -32,7 +32,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
 
 @Service
@@ -106,10 +105,10 @@ public class TaskServiceImpl implements TaskService {
     public void startDataDumpTask(User user, final Entity entity, final Timespan timespan) {
         final Queue queue = QueueFactory.getQueue(DUMP);
         final String json = GsonFactory.getInstance().toJson(entity);
-        final String userJson = GsonFactory.getInstance().toJson(user);
+        final String email = user.getEmail().getValue();
         queue.add(TaskOptions.Builder.withUrl(PATH_TASK_DUMP_TASK)
                         .param(Parameters.entity.getText(), json)
-                        .param(Parameters.user.getText(), userJson)
+                        .param(Parameters.email.getText(), email)
                         .param(Parameters.sd.getText(),
                                 String.valueOf(timespan.getStart().getTime()))
                         .param(Parameters.ed.getText(),
@@ -180,7 +179,6 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void startMoveCachedValuesToStoreTask(final User user, final Entity point) {
-
 
 
         final String id = point.getKey();

@@ -23,5 +23,4 @@ public interface Location extends Serializable {
     boolean isEmpty();
 
 
-
 }

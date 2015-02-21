@@ -24,7 +24,6 @@ import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.socket.ConnectedClients;
 import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.user.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,16 +33,16 @@ import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private SettingsService settingsService;
-
-
-
 
     @Autowired
     private UserDao userDao;
@@ -70,12 +69,10 @@ public class AuthServiceImpl implements AuthService {
         if (request.getSession() != null) {
             String email = (String) request.getSession().getAttribute(Const.LOGGED_IN_EMAIL);
             if (email != null) {
-                emailAddress =  CommonFactory.createEmailAddress(email);
+                emailAddress = CommonFactory.createEmailAddress(email);
                 result.add(emailAddress);
             }
         }
-
-
 
 
         return result;

@@ -24,20 +24,20 @@ public class CategoryFactory {
     private CategoryFactory() {
     }
 
-    public static Category createCategory(Category e)  {
+    public static Category createCategory(Category e) {
         return new CategoryModel(e);
     }
 
-    public static Category createCategory(User user, Entity parent, String categoryName)  {
-        return new CategoryModel( user, parent, categoryName);
+    public static Category createCategory(User user, Entity parent, String categoryName) {
+        return new CategoryModel(user, parent, categoryName);
     }
 
-    public static Category createCategory(Entity parent, String categoryName)  {
+    public static Category createCategory(Entity parent, String categoryName) {
         return new CategoryModel(parent, categoryName);
     }
 
     @Deprecated
-    public static Category createCategory(Entity e)  {
+    public static Category createCategory(Entity e) {
         return new CategoryModel(e);
     }
 

@@ -20,7 +20,7 @@ import com.nimbits.client.model.entity.EntityModel;
 import java.io.Serializable;
 
 
-public class SubscriptionModel extends EntityModel implements Serializable, Subscription  {
+public class SubscriptionModel extends EntityModel implements Serializable, Subscription {
 
 
     private String subscribedEntity;
@@ -34,7 +34,7 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
     private SubscriptionModel() {
     }
 
-    public SubscriptionModel(Subscription subscription)  {
+    public SubscriptionModel(Subscription subscription) {
         super(subscription);
         this.subscribedEntity = subscription.getSubscribedEntity();
         this.notifyMethod = subscription.getNotifyMethod().getCode();
@@ -48,11 +48,11 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
     public SubscriptionModel(
             Entity entity,
             String subscribedEntity,
-                             SubscriptionType subscriptionType,
-                             SubscriptionNotifyMethod subscriptionNotifyMethod,
-                             int maxRepeat,
-                             boolean formatJson,
-                             boolean enabled)  {
+            SubscriptionType subscriptionType,
+            SubscriptionNotifyMethod subscriptionNotifyMethod,
+            int maxRepeat,
+            boolean formatJson,
+            boolean enabled) {
         super(entity);
         this.subscribedEntity = subscribedEntity;
         this.subscriptionType = subscriptionType.getCode();
@@ -63,15 +63,14 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
     }
 
 
-
     @Override
     public String getSubscribedEntity() {
-     return this.subscribedEntity;
+        return this.subscribedEntity;
     }
 
     @Override
     public void setSubscribedEntity(String uuid) {
-      this.subscribedEntity = uuid;
+        this.subscribedEntity = uuid;
     }
 
     @Override
@@ -91,20 +90,24 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
 
     @Override
     public void setEnabled(boolean enabled) {
-       this.enabled = enabled;
+        this.enabled = enabled;
     }
+
     @Override
     public SubscriptionNotifyMethod getNotifyMethod() {
         return SubscriptionNotifyMethod.get(this.notifyMethod);
     }
+
     @Override
     public void setNotifyMethod(SubscriptionNotifyMethod notifyMethod) {
         this.notifyMethod = notifyMethod.getCode();
     }
+
     @Override
     public SubscriptionType getSubscriptionType() {
         return SubscriptionType.get(subscriptionType);
     }
+
     @Override
     public void setSubscriptionType(SubscriptionType subscriptionType) {
         this.subscriptionType = subscriptionType.getCode();

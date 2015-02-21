@@ -22,8 +22,6 @@ package com.nimbits.client.constants;
 public class Words {
 
 
-
-
     public static final String WORD_TRUE = "true";
 
     public static final String WORD_COOKIE = "Cookie";

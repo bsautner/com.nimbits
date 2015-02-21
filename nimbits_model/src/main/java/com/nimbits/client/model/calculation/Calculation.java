@@ -36,7 +36,6 @@ public interface Calculation extends Trigger, Serializable {
     void setX(final String x);
 
 
-
     void setFormula(final String formula);
 
 }

@@ -120,7 +120,6 @@ public enum Parameters {
     private final String text;
 
 
-
     private Parameters(String text) {
         this.text = text;
     }
@@ -226,7 +225,7 @@ public enum Parameters {
         private static final String TYPE = "type";
         private static final String GAE = "gae";
         private static final String FORWARD = "forward";
-        public static final String CONNECTION_ID = "connection" ;
+        public static final String CONNECTION_ID = "connection";
         public static final String PARAM_AUTH_TOKEN = "AuthToken";
 
         private ParamConstants() {

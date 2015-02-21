@@ -15,9 +15,9 @@ package com.nimbits.client.model.value.impl;
 
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.location.LocationFactory;
-import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueData;
 
@@ -56,8 +56,9 @@ public class ValueFactory {
         if (dx == null) {
             dx = "";
         }
-        return new ValueModel(LocationFactory.createEmptyLocation(), d, timestamp,  ValueDataModel.getInstance(SimpleValue.getInstance(dx)), AlertType.OK);
+        return new ValueModel(LocationFactory.createEmptyLocation(), d, timestamp, ValueDataModel.getInstance(SimpleValue.getInstance(dx)), AlertType.OK);
     }
+
     public static ValueModel createValueModel(final Value v) {
 
         return new ValueModel(v);
@@ -107,13 +108,11 @@ public class ValueFactory {
     }
 
 
-
     public static ValueModel createValueModel(final double d, final Date timestamp) {
 
-        return new ValueModel(LocationFactory.createEmptyLocation(), d, timestamp,  ValueDataModel.getEmptyInstance(), null);
+        return new ValueModel(LocationFactory.createEmptyLocation(), d, timestamp, ValueDataModel.getEmptyInstance(), null);
 
     }
-
 
 
     public static Value createValueModel(Value value, Date date) {

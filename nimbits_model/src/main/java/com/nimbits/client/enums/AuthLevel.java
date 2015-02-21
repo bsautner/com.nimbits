@@ -12,7 +12,9 @@
 
 package com.nimbits.client.enums;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -24,11 +26,10 @@ public enum AuthLevel {
 
     restricted(1, "Read Only Public Data", false),
     readPoint(2, "Read Single Point", true),
-    readWritePoint(3, "Read/Write To Single Point",true),
+    readWritePoint(3, "Read/Write To Single Point", true),
     readAll(4, "Read all points", true),
     readWriteAll(5, "Read/Write to all points", true),
-    admin(6, "Admin - Read/Write/Delete all",false);
-
+    admin(6, "Admin - Read/Write/Delete all", false);
 
 
     private static final Map<Integer, AuthLevel> lookup = new HashMap<Integer, AuthLevel>(3);

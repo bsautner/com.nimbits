@@ -23,6 +23,6 @@ public class MqttHelper {
 
     private static final String BROKER = "mqtt.nimbits.com";
     private static final int PORT = 1883;
-    public static final String  url = "tcp://"+BROKER+":"+ PORT;
+    public static final String url = "tcp://" + BROKER + ":" + PORT;
 
 }

@@ -76,7 +76,6 @@
     </servlet-mapping>
 
 
-
     <servlet>
         <servlet-name>versionApi</servlet-name>
         <servlet-class>com.nimbits.server.api.VersionApi</servlet-class>
@@ -163,7 +162,14 @@
         <url-pattern>/_ah/xmpp/presence/unavailable/</url-pattern>
     </servlet-mapping>
 
-
+    <servlet>
+        <servlet-name>blob</servlet-name>
+        <servlet-class>com.nimbits.server.api.BlobApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>blob</servlet-name>
+        <url-pattern>/service/v2/blob</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>remote_api</servlet-name>
@@ -336,9 +342,6 @@
     </servlet-mapping>
 
 
-
-
-
     <servlet>
         <servlet-name>storage</servlet-name>
         <servlet-class>com.nimbits.server.io.storage.StorageServlet</servlet-class>
@@ -427,17 +430,27 @@
 
     <servlet-mapping>
         <servlet-name>unavailableApis</servlet-name>
-        <url-pattern>/service/batch</url-pattern>
-        <url-pattern>/service/currentValue</url-pattern>
+        <url-pattern>/service/currentvalue</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>unavailableApis</servlet-name>
+        <url-pattern>/service/batch</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>unavailableApis</servlet-name>
+        <url-pattern>/service/value</url-pattern>
+    </servlet-mapping>
+
+
     <!--<security-constraint>-->
-        <!--<web-resource-collection>-->
-            <!--<url-pattern>/cron/*</url-pattern>-->
-        <!--</web-resource-collection>-->
-        <!--<auth-constraint>-->
-            <!--<role-name>admin</role-name>-->
-        <!--</auth-constraint>-->
+    <!--<web-resource-collection>-->
+    <!--<url-pattern>/cron/*</url-pattern>-->
+    <!--</web-resource-collection>-->
+    <!--<auth-constraint>-->
+    <!--<role-name>admin</role-name>-->
+    <!--</auth-constraint>-->
     <!--</security-constraint>-->
 
     <security-constraint>

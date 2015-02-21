@@ -37,6 +37,6 @@ public class Utils {
 
 
     public static boolean isNotEmpty(String string) {
-        return ! isEmptyString(string);
+        return !isEmptyString(string);
     }
 }

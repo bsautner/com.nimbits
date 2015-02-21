@@ -27,6 +27,7 @@ public class TimespanModel implements Timespan {
     private long end;
     private boolean endRequiresOffset;
     private boolean startRequiresOffset;
+
     public TimespanModel(Date start, Date end, boolean startRequiresOffset, boolean endRequiresOffset) {
         this.start = start.getTime();
         this.end = end.getTime();

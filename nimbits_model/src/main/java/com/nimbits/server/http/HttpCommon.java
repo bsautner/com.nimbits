@@ -13,7 +13,6 @@
 package com.nimbits.server.http;
 
 import java.io.IOException;
-import java.net.ProtocolException;
 
 /**
  * Created by Benjamin Sautner
@@ -24,7 +23,7 @@ import java.net.ProtocolException;
 public interface HttpCommon {
 
 
-    String doGet(final String postUrl, final String params, final String authCookie) ;
+    String doGet(final String postUrl, final String params, final String authCookie);
 
     String doPost(final String postUrl, final String params, final String authCookie) throws IOException;
 

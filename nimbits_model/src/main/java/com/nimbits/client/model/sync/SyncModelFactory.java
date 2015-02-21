@@ -15,9 +15,6 @@ package com.nimbits.client.model.sync;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.trigger.TriggerEntity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by Benjamin Sautner
  * User: bsautner
@@ -29,7 +26,7 @@ public class SyncModelFactory {
     private SyncModelFactory() {
     }
 
-    public static SyncModel createSync(Sync model)  {
+    public static SyncModel createSync(Sync model) {
         return new SyncModel(model);
     }
 
@@ -39,7 +36,7 @@ public class SyncModelFactory {
             final TriggerEntity entity,
             final String targetInstance,
             final String targetPoint,
-            final String accessKey)  {
+            final String accessKey) {
         return new SyncModel(e, entity, targetInstance, targetPoint, accessKey);
 
     }

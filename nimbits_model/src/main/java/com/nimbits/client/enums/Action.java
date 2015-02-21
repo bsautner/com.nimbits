@@ -13,9 +13,9 @@
 package com.nimbits.client.enums;
 
 
-
-
-import java.util.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 public enum Action {
     admin(ActionConstants.ACTION_ADMIN),
@@ -65,7 +65,6 @@ public enum Action {
     }
 
 
-
     private final String code;
 
     private Action(String code) {
@@ -77,7 +76,7 @@ public enum Action {
     }
 
     public static Action get(String code) {
-        Action action =  lookup.get(code);
+        Action action = lookup.get(code);
         return action == null ? none : action;
     }
 
@@ -110,7 +109,7 @@ public enum Action {
         protected static final String ACTION_USER = "user";
         protected static final String ACTION_CATEGORY = "category";
         protected static final String ACTION_POINT = "point";
-        protected static final String ACTION_REFRESH = "refresh" ;
+        protected static final String ACTION_REFRESH = "refresh";
         protected static final String ACTION_EXPAND = "expand";
         protected static final String ACTION_LOGOUT = "logout";
         protected static final String ACTION_XMPP = "xmpp";

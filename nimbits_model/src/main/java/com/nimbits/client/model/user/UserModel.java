@@ -74,7 +74,7 @@ public class UserModel extends EntityModel implements Serializable, User {
             this.passwordSalt = u.getPasswordSalt();
             this.source = u.getSource().name();
             this.isAdmin = u.getIsAdmin();
-            this.passwordResetTokenTimestamp =u.getPasswordResetTokenTimestamp();
+            this.passwordResetTokenTimestamp = u.getPasswordResetTokenTimestamp();
             this.passwordResetToken = u.getPasswordResetToken();
 
         }
@@ -101,6 +101,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     public String getPassword() {
         return password;
     }
+
     @Override
     public String getPasswordSalt() {
         return passwordSalt;
@@ -108,12 +109,12 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     @Override
     public UserSource getSource() {
-        return source == null ? UserSource.google: UserSource.valueOf( source);
+        return source == null ? UserSource.google : UserSource.valueOf(source);
     }
 
     @Override
     public Date getLastLoggedIn() {
-        return   new Date(lastLoggedIn.getTime());
+        return new Date(lastLoggedIn.getTime());
     }
 
     @Override
@@ -121,8 +122,6 @@ public class UserModel extends EntityModel implements Serializable, User {
 
         this.lastLoggedIn = new Date(lastLoggedIn.getTime());
     }
-
-
 
 
     @Override
@@ -151,7 +150,6 @@ public class UserModel extends EntityModel implements Serializable, User {
         }
         accessKeys.add(key);
     }
-
 
 
     @Override
@@ -222,6 +220,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     public void setPassword(String cryptPassword) {
         this.password = cryptPassword;
     }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -20,13 +20,13 @@ import com.nimbits.client.model.server.apikey.AccessCode;
 
 import java.io.Serializable;
 
-public interface Instance  extends Entity, Serializable {
+public interface Instance extends Entity, Serializable {
 
     long getServerId();
 
     UrlContainer getBaseUrl();
 
-    EmailAddress getAdminEmail() ;
+    EmailAddress getAdminEmail();
 
     String getVersion();
 

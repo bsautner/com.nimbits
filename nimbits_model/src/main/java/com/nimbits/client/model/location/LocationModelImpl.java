@@ -15,7 +15,7 @@ package com.nimbits.client.model.location;
 import java.io.Serializable;
 
 
-public class LocationModelImpl implements Serializable, Location{
+public class LocationModelImpl implements Serializable, Location {
 
     private Double _lat;
     private Double _lng;
@@ -31,8 +31,7 @@ public class LocationModelImpl implements Serializable, Location{
         if (r.length == 2) {
             _lat = Double.valueOf(r[0].trim());
             _lng = Double.valueOf(r[1].trim());
-        }
-        else {
+        } else {
             _lat = null;
             _lng = null;
         }
@@ -47,6 +46,7 @@ public class LocationModelImpl implements Serializable, Location{
     public void setLat(double _lat) {
         this._lat = _lat;
     }
+
     @Override
     public Double getLng() {
         return _lng;
@@ -64,7 +64,7 @@ public class LocationModelImpl implements Serializable, Location{
 
     @Override
     public String toString() {
-        return _lat +", " + _lng;
+        return _lat + ", " + _lng;
     }
 
     @Override

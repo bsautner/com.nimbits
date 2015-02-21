@@ -30,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 
-public class DeleteBlobTask   extends HttpServlet {
+public class DeleteBlobTask extends HttpServlet {
 
     @Autowired
     protected EntityService entityService;
@@ -58,7 +58,6 @@ public class DeleteBlobTask   extends HttpServlet {
 
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
-
 
 
         final String key = req.getParameter(Parameters.key.getText());

@@ -35,5 +35,4 @@ public interface AccessKey extends Entity, Serializable {
     void setAuthLevel(AuthLevel level);
 
 
-
 }

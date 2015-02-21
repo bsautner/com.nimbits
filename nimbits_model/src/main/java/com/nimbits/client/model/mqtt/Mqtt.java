@@ -23,7 +23,7 @@ import com.nimbits.client.model.email.EmailAddress;
 public interface Mqtt {
     String getUuid();
 
-    EmailAddress getEmail() ;
+    EmailAddress getEmail();
 
     String getMessage();
 

@@ -59,18 +59,22 @@ public class TriggerModel extends EntityModel implements Serializable, Trigger {
     public String getTrigger() {
         return trigger;
     }
+
     @Override
     public boolean isEnabled() {
         return enabled;
     }
+
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+
     @Override
     public void setTarget(String target) {
         this.target = target;
     }
+
     @Override
     public void setTrigger(String trigger) {
         this.trigger = trigger;

@@ -29,7 +29,7 @@ public class ConnectionModel extends EntityModel implements Serializable, Connec
 
     }
 
-    public ConnectionModel(final Connection c)  {
+    public ConnectionModel(final Connection c) {
         super(c);
         this.approvalKey = c.getApprovalKey();
         this.approved = c.isApproved();
@@ -47,10 +47,12 @@ public class ConnectionModel extends EntityModel implements Serializable, Connec
     public String getApprovalKey() {
         return approvalKey;
     }
+
     @Override
     public boolean isApproved() {
         return approved;
     }
+
     @Override
     public String getTargetEmail() {
         return targetEmail;
@@ -58,6 +60,6 @@ public class ConnectionModel extends EntityModel implements Serializable, Connec
 
     @Override
     public void setApproved(boolean approved) {
-       this.approved = approved;
+        this.approved = approved;
     }
 }

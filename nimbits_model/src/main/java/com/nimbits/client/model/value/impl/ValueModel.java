@@ -16,9 +16,9 @@ package com.nimbits.client.model.value.impl;
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.AlertType;
+import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.location.Location;
 import com.nimbits.client.model.location.LocationFactory;
-import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.ValueData;
 
@@ -54,19 +54,16 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         return ValueFactory.createValueFromString(valueAndNote, timestamp);
 
     }
+
     public static Value getInstance(final Value value, final Date timestamp) {
         return new ValueModel(value.getLocation(), value.getDoubleValue(), timestamp, value.getData(), value.getAlertState());
 
     }
+
     public static Value getInstance(Value value, double v) {
-        return new ValueModel(value.getLocation(), v, new Date(),  value.getData(), AlertType.OK);
+        return new ValueModel(value.getLocation(), v, new Date(), value.getData(), AlertType.OK);
 
     }
-
-
-
-
-
 
 
     @Override
@@ -78,8 +75,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     public Location getLocation() {
         if (lt == null || lg == null) {
             return LocationFactory.createEmptyLocation();
-        }
-        else {
+        } else {
             return LocationFactory.createLocation(lt, lg);
         }
     }
@@ -120,8 +116,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         if (location.isEmpty()) {
             this.lg = null;
             this.lt = null;
-        }
-        else {
+        } else {
             this.lt = location.getLat();
             this.lg = location.getLng();
         }
@@ -131,8 +126,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         }
         if (alert != null) {
             this.st = alert.getCode();
-        }
-        else {
+        } else {
             this.st = AlertType.OK.getCode();
         }
 
@@ -165,12 +159,12 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     @Override
     public Date getTimestamp() {
-        return this.t == null ? new Date() :  new Date(this.t);
+        return this.t == null ? new Date() : new Date(this.t);
     }
 
     @Override
     public void initTimestamp() {
-        if (this.t == null ) {
+        if (this.t == null) {
             this.t = System.currentTimeMillis();
         }
     }

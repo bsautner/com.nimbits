@@ -45,7 +45,7 @@ public class SettingModel implements Setting {
 
     @Override
     public void setValue(final String newValue) {
-         this.value = newValue;
+        this.value = newValue;
 
     }
 }

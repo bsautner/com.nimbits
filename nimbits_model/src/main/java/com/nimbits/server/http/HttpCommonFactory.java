@@ -17,7 +17,6 @@ package com.nimbits.server.http;
  * User: benjamin
  * Date: 3/28/11
  * Time: 2:25 PM
- *
  */
 public class HttpCommonFactory {
 

@@ -64,17 +64,17 @@
     <bean id="chartHelper" class="com.nimbits.server.chart.ChartHelper"/>
 
     <bean id="connectedClients" class="com.nimbits.server.socket.ConnectedClients"
-            factory-method="getInstance"
+          factory-method="getInstance"
 
             />
 
     <bean id="transactionManager" class="org.springframework.orm.jdo.JdoTransactionManager"
-          p:persistenceManagerFactory-ref="pmf" />
+          p:persistenceManagerFactory-ref="pmf"/>
 
     <!--<bean id="transactionAwarePersistenceManagerFactoryProxy"-->
-          <!--class="org.springframework.orm.jdo.TransactionAwarePersistenceManagerFactoryProxy"-->
-          <!--p:targetPersistenceManagerFactory-ref="pmf"-->
-          <!--p:allowCreate="false" />-->
+    <!--class="org.springframework.orm.jdo.TransactionAwarePersistenceManagerFactoryProxy"-->
+    <!--p:targetPersistenceManagerFactory-ref="pmf"-->
+    <!--p:allowCreate="false" />-->
 
     <bean id="pmf"
           class="org.springframework.orm.jdo.LocalPersistenceManagerFactoryBean">

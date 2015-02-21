@@ -21,13 +21,14 @@ public class InstanceModelFactory {
     private InstanceModelFactory() {
     }
 
-    public static Instance createInstance(final Instance server)  {
+    public static Instance createInstance(final Instance server) {
 
         return new InstanceModel(server);
 
     }
-      public static Instance createInstance(final Entity baseEntity, final String baseUrl, final EmailAddress ownerEmail, final String serverVersion)  {
-         return new InstanceModel(baseEntity, baseUrl, ownerEmail, serverVersion);
+
+    public static Instance createInstance(final Entity baseEntity, final String baseUrl, final EmailAddress ownerEmail, final String serverVersion) {
+        return new InstanceModel(baseEntity, baseUrl, ownerEmail, serverVersion);
 
     }
 

@@ -19,12 +19,11 @@ import com.nimbits.client.model.value.impl.ValueModel;
 import java.lang.reflect.Type;
 
 
-public class GsonFactory2  {
-
+public class GsonFactory2 {
 
 
     public static Gson getInstance() {
-       return new GsonBuilder().registerTypeAdapter(Value.class, new ValueDeserializer()).create();
+        return new GsonBuilder().registerTypeAdapter(Value.class, new ValueDeserializer()).create();
     }
 
 

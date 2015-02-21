@@ -24,7 +24,7 @@ import java.util.Date;
  * Date: 3/16/12
  * Time: 9:59 AM
  */
-public interface Summary  extends Trigger, Serializable {
+public interface Summary extends Trigger, Serializable {
 
     SummaryType getSummaryType();
 

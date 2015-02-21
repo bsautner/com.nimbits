@@ -12,7 +12,8 @@
 
 package com.nimbits.client.model.relationship;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Benjamin Sautner
@@ -31,6 +32,7 @@ public class RelationshipFactory {
         return new RelationshipModel(relationship);
 
     }
+
     public static List<Relationship> createRelationships(List<Relationship> relationships) {
         List<Relationship> retObj = new ArrayList<Relationship>(relationships.size());
         for (Relationship r : relationships) {

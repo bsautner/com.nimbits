@@ -12,7 +12,9 @@
 
 package com.nimbits.client.enums.subscription;
 
-import java.util.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Benjamin Sautner
@@ -31,8 +33,7 @@ public enum SubscriptionType {
     changed(6, "Any Updates"),
     deltaAlert(7, "Delta Alert"),
     increase(8, "Value Increases"),
-    decrease(9, "Value Decreases")
-    ;
+    decrease(9, "Value Decreases");
 
     private static final Map<Integer, SubscriptionType> lookup = new HashMap<Integer, SubscriptionType>(7);
 

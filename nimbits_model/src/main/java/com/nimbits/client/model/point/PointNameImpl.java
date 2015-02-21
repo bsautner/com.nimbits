@@ -23,7 +23,7 @@ import java.io.Serializable;
  * Time: 6:21 PM
  */
 public class PointNameImpl extends CommonIdentifierImpl implements PointName, Serializable {
-    private static final long serialVersionUID =1L;
+    private static final long serialVersionUID = 1L;
 
     public PointNameImpl(final String value) {
         super(value);

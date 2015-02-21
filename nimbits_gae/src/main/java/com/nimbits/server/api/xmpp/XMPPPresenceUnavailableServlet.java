@@ -24,16 +24,11 @@ import java.io.IOException;
 public class XMPPPresenceUnavailableServlet extends ApiBase {
 
 
-
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 
 
-
     }
-
-
-
 
 
 }

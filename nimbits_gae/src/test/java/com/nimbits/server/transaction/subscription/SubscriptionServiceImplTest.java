@@ -23,7 +23,6 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.subscription.SubscriptionFactory;
 import com.nimbits.server.NimbitsServletTest;
-
 import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;

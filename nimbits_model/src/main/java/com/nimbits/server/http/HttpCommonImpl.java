@@ -37,34 +37,33 @@ public class HttpCommonImpl implements HttpCommon {
 
     @Override
     public String doPost(final String postUrl, final String params, final String authCookie) throws IOException {
-       // String retVal = "";
+        // String retVal = "";
         // String postParams = params;
 
-            final URL url = new URL(postUrl);
-            final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod(Const.METHOD_POST);
-            connection.setReadTimeout(Const.DEFAULT_HTTP_TIMEOUT);
+        final URL url = new URL(postUrl);
+        final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setDoOutput(true);
+        connection.setRequestMethod(Const.METHOD_POST);
+        connection.setReadTimeout(Const.DEFAULT_HTTP_TIMEOUT);
 
-            if (Utils.isNotEmpty(authCookie)) {
-                connection.addRequestProperty(Words.WORD_COOKIE, authCookie);
+        if (Utils.isNotEmpty(authCookie)) {
+            connection.addRequestProperty(Words.WORD_COOKIE, authCookie);
+        }
+
+
+        final OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
+        writer.write(params);
+        writer.close();
+        StringBuilder sv = new StringBuilder(DEFAULT_BUILDER_SIZE);
+        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sv.append(line);
             }
-
-
-            final OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-            writer.write(params);
-            writer.close();
-            StringBuilder sv = new StringBuilder(DEFAULT_BUILDER_SIZE);
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    sv.append(line);
-                }
-                reader.close();
-            }
-            return sv.toString();
-
+            reader.close();
+        }
+        return sv.toString();
 
 
     }
@@ -72,7 +71,7 @@ public class HttpCommonImpl implements HttpCommon {
     @Override
     public String doGet(final String postUrl, final String params) {
 
-            return doGet(postUrl, params, null);
+        return doGet(postUrl, params, null);
 
     }
 
@@ -147,7 +146,7 @@ public class HttpCommonImpl implements HttpCommon {
     }
 
     @Override
-    public String doGet(final String postUrl, final String params, final String authCookie)  {
+    public String doGet(final String postUrl, final String params, final String authCookie) {
         final StringBuilder sb = new StringBuilder(DEFAULT_BUILDER_SIZE);
         HttpURLConnection connection;
 
@@ -155,31 +154,31 @@ public class HttpCommonImpl implements HttpCommon {
 
         try {
 
-        final URL url = new URL((postUrl + "?" + params));
-        connection = (HttpURLConnection) url.openConnection();
-        // connection.setDoOutput(true);
-        //connection.setReadTimeout(15000);
+            final URL url = new URL((postUrl + "?" + params));
+            connection = (HttpURLConnection) url.openConnection();
+            // connection.setDoOutput(true);
+            //connection.setReadTimeout(15000);
 
             connection.setRequestMethod(Const.METHOD_GET);
 
-        if (Utils.isNotEmpty(authCookie)) {
-            connection.addRequestProperty(Words.WORD_COOKIE, authCookie);
-        }
-      //  connection.addRequestProperty(ACCEPT, APPLICATION_JSON);
-       // connection.addRequestProperty(CONTENT_TYPE, APPLICATION_JSON);
-       // connection.addRequestProperty("X-Requested-With", "XMLHttpRequest");
-        // connection.addRequestProperty("user-agent", "Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405");
-        final BufferedReader reader = new BufferedReader(new InputStreamReader(
-                connection.getInputStream()));
+            if (Utils.isNotEmpty(authCookie)) {
+                connection.addRequestProperty(Words.WORD_COOKIE, authCookie);
+            }
+            //  connection.addRequestProperty(ACCEPT, APPLICATION_JSON);
+            // connection.addRequestProperty(CONTENT_TYPE, APPLICATION_JSON);
+            // connection.addRequestProperty("X-Requested-With", "XMLHttpRequest");
+            // connection.addRequestProperty("user-agent", "Mozilla/5.0 (iPad; U; CPU OS 3_2_1 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Mobile/7B405");
+            final BufferedReader reader = new BufferedReader(new InputStreamReader(
+                    connection.getInputStream()));
 
-        String line;
+            String line;
 
-        while ((line = reader.readLine()) != null) {
+            while ((line = reader.readLine()) != null) {
 
-            sb.append(line);
-        }
-        reader.close();
-        connection.disconnect();
+                sb.append(line);
+            }
+            reader.close();
+            connection.disconnect();
         } catch (ProtocolException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (MalformedURLException e) {
@@ -190,10 +189,6 @@ public class HttpCommonImpl implements HttpCommon {
 
 
         return sb.toString();
-
-
-
-
 
 
     }

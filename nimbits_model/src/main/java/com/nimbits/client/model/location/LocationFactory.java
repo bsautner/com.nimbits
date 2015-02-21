@@ -16,12 +16,12 @@ package com.nimbits.client.model.location;
 public class LocationFactory {
 
 
-
     public static Location createLocation(String locationString) {
 
         return new LocationModelImpl(locationString);
 
     }
+
     public static Location createEmptyLocation() {
 
         return new LocationModelImpl(null, null);

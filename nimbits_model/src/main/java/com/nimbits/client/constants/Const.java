@@ -17,7 +17,7 @@ public class Const {
 
     public static final String VERSION = "3.8.3";
 
-    public static final String SOCKET_RELAY= "130.211.147.107:8080";
+    public static final String SOCKET_RELAY = "130.211.147.107:8080";
 
     public static final String WEBSITE = "http://www.nimbits.com";
     public static final String LOGGED_IN_EMAIL = "LOGGED_IN_EMAIL";
@@ -34,7 +34,7 @@ public class Const {
 
     public static final String DELIMITER_COMMA = ",";
     public static final String DELIMITER_BAR = "|";
- ;
+    ;
     public static final String CONTENT_TYPE_HTML = "text/html";
     public static final String CONTENT_TYPE_PLAIN = "text/plain";
 

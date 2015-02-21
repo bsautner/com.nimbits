@@ -13,19 +13,18 @@ import java.util.Date;
 import static org.junit.Assert.assertFalse;
 
 
-
 public class SummaryModelTest {
     @Test
     public void testIsReady() throws Exception {
-          Entity e = EntityModelFactory.createEntity(CommonFactory.createName("test", EntityType.summary),
-                  "", EntityType.summary, ProtectionLevel.everyone, "me", "me");
-          SummaryModel model = new SummaryModel();
-          model.setLastProcessed(new Date());
-          model.setSummaryIntervalMs(1000L);
-          model.setSummaryType(SummaryType.average.getCode());
-          assertFalse(model.isReady());
-       //   Thread.sleep(1000);
-      //    assertTrue(model.isReady());
+        Entity e = EntityModelFactory.createEntity(CommonFactory.createName("test", EntityType.summary),
+                "", EntityType.summary, ProtectionLevel.everyone, "me", "me");
+        SummaryModel model = new SummaryModel();
+        model.setLastProcessed(new Date());
+        model.setSummaryIntervalMs(1000L);
+        model.setSummaryType(SummaryType.average.getCode());
+        assertFalse(model.isReady());
+        //   Thread.sleep(1000);
+        //    assertTrue(model.isReady());
 
     }
 }

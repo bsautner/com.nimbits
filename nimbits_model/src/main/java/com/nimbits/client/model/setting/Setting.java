@@ -14,7 +14,7 @@ package com.nimbits.client.model.setting;
 
 import com.nimbits.client.enums.ServerSetting;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * Created by Benjamin Sautner

@@ -4,7 +4,7 @@ import com.nimbits.client.model.entity.Entity;
 
 import java.io.Serializable;
 
-public interface Socket  extends Entity, Serializable {
+public interface Socket extends Entity, Serializable {
     String getTargetApiKey();
 
     String getTargetUrl();

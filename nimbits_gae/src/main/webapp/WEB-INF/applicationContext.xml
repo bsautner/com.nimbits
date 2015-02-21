@@ -52,7 +52,7 @@
     <bean id="syncService" class="com.nimbits.server.transaction.sync.SyncServiceImpl"/>
     <bean id="subscriptionService" class="com.nimbits.server.transaction.subscription.SubscriptionServiceImpl"/>
 
-
+    <bean id="serverInfo" class="com.nimbits.server.system.ServerInfo"/>
 
     <bean id="xmppService" class="com.nimbits.server.communication.xmpp.XmppServiceImpl"/>
 

@@ -10,7 +10,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.api.impl;
+package com.nimbits.server.api.xmpp;
 
 import com.google.appengine.api.xmpp.JID;
 import com.google.appengine.api.xmpp.Message;
@@ -62,7 +62,7 @@ public class XMPPReceiverServlet extends ApiBase {
 
 
     private static final Pattern COMPILE = Pattern.compile("/");
-    private static final Pattern PATTERN = Pattern.compile("=");
+
 
     @Autowired
     private ServerInfo serverInfo;
@@ -112,7 +112,7 @@ public class XMPPReceiverServlet extends ApiBase {
             user.addAccessKey(userService.authenticatedKey(user));
 
             if (JsonHelper.isJson(body)) {
-                processJson(req, user, body);
+                processJson(user, body);
             } else {
 
                 CommandListener listener = new CommandListener() {
@@ -168,7 +168,7 @@ public class XMPPReceiverServlet extends ApiBase {
 
 
 
-    private void processJson(HttpServletRequest req, final User u, final String body) {
+    private void processJson(final User u, final String body) {
 
 
         Gson gson = GsonFactory.getInstance();

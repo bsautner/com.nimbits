@@ -79,7 +79,7 @@
 
     <servlet>
         <servlet-name>versionApi</servlet-name>
-        <servlet-class>com.nimbits.server.api.impl.VersionApi</servlet-class>
+        <servlet-class>com.nimbits.server.api.VersionApi</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>versionApi</servlet-name>
@@ -125,9 +125,10 @@
     <!--end v2 services-->
 
 
+    <!--XMPP-->
     <servlet>
         <servlet-name>xmpp</servlet-name>
-        <servlet-class>com.nimbits.server.api.impl.XMPPReceiverServlet</servlet-class>
+        <servlet-class>com.nimbits.server.api.xmpp.XMPPReceiverServlet</servlet-class>
     </servlet>
 
     <servlet-mapping>
@@ -135,16 +136,33 @@
         <url-pattern>/_ah/xmpp/message/chat/</url-pattern>
     </servlet-mapping>
 
-
     <servlet>
-        <servlet-name>blob</servlet-name>
-
-        <servlet-class>com.nimbits.server.api.impl.BlobServletImpl</servlet-class>
+        <servlet-name>xmppPresenceAvailable</servlet-name>
+        <servlet-class>com.nimbits.server.api.xmpp.XMPPPresenceAvailableServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>blob</servlet-name>
-        <url-pattern>/service/blob</url-pattern>
+        <servlet-name>xmppPresenceAvailable</servlet-name>
+        <url-pattern>/_ah/xmpp/presence/available/</url-pattern>
     </servlet-mapping>
+
+    <servlet>
+        <servlet-name>xmppPresenceProbe</servlet-name>
+        <servlet-class>com.nimbits.server.api.xmpp.XMPPPresenceProbeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>xmppPresenceProbe</servlet-name>
+        <url-pattern>/_ah/xmpp/presence/probe/</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>xmppPresenceUnavailable</servlet-name>
+        <servlet-class>com.nimbits.server.api.xmpp.XMPPPresenceUnavailableServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>xmppPresenceUnavailable</servlet-name>
+        <url-pattern>/_ah/xmpp/presence/unavailable/</url-pattern>
+    </servlet-mapping>
+
 
 
     <servlet>
@@ -401,6 +419,18 @@
         <url-pattern>/nimbits/rpc/xmppService</url-pattern>
     </servlet-mapping>
 
+
+    <servlet>
+        <servlet-name>unavailableApis</servlet-name>
+        <servlet-class>com.nimbits.server.api.UnavailableApi</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>unavailableApis</servlet-name>
+        <url-pattern>/service/batch</url-pattern>
+        <url-pattern>/service/currentValue</url-pattern>
+    </servlet-mapping>
+
     <!--<security-constraint>-->
         <!--<web-resource-collection>-->
             <!--<url-pattern>/cron/*</url-pattern>-->
@@ -412,6 +442,7 @@
 
     <security-constraint>
         <web-resource-collection>
+            <web-resource-name>admin</web-resource-name>
             <url-pattern>/admin/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
@@ -422,6 +453,7 @@
 
     <security-constraint>
         <web-resource-collection>
+            <web-resource-name>task</web-resource-name>
             <url-pattern>/task/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>
@@ -431,6 +463,7 @@
 
     <security-constraint>
         <web-resource-collection>
+            <web-resource-name>appstats</web-resource-name>
             <url-pattern>/appstats/*</url-pattern>
         </web-resource-collection>
         <auth-constraint>

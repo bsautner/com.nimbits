@@ -16,12 +16,7 @@ import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
 import com.nimbits.client.enums.Parameters;
-import com.nimbits.server.transaction.cache.NimbitsCache;
-import com.nimbits.server.transaction.entity.service.EntityService;
-import com.nimbits.server.transaction.user.service.UserService;
-import com.nimbits.server.transaction.value.service.ValueService;
-import com.nimbits.shared.Utils;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.ServletException;
@@ -32,20 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 
 public class DeleteBlobTask extends HttpServlet {
 
-    @Autowired
-    protected EntityService entityService;
 
-    @Autowired
-    protected ValueService valueService;
-
-    @Autowired
-    public NimbitsCache cache;
-
-    @Autowired
-    public TaskService taskService;
-
-    @Autowired
-    public UserService userService;
 
     @Override
     public void init() throws ServletException {
@@ -54,15 +36,13 @@ public class DeleteBlobTask extends HttpServlet {
 
     }
 
-    private static final long serialVersionUID = 1L;
-
     @Override
     public void doPost(final HttpServletRequest req, final HttpServletResponse resp) {
 
 
         final String key = req.getParameter(Parameters.key.getText());
 
-        if (!Utils.isEmptyString(key)) {
+        if (! StringUtils.isEmpty(key)) {
             final BlobKey blobKey = new BlobKey(key);
             final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
             blobstoreService.delete(blobKey);

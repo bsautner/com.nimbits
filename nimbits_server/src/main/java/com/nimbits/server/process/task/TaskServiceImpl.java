@@ -64,8 +64,8 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
-    public void startDeleteDataTask(Entity point, boolean onlyExpired, int exp) {
-
+    public void startDeleteDataTask(Point point) {
+        valueService.deleteExpiredData(point);
     }
 
     @Override
@@ -117,39 +117,6 @@ public class TaskServiceImpl implements TaskService {
         valueService.moveValuesFromCacheToStore(point);
     }
 
-    @Override
-    public void startHeartbeatTask(HttpServletRequest req, User user, List<Point> entities, Action update) {
-        Gson gson = new GsonBuilder()
-                .setDateFormat(Const.GSON_DATE_FORMAT)
-                .serializeNulls()
-                .registerTypeAdapter(Value.class, new ValueSerializer())
-                .registerTypeAdapter(Point.class, new PointSerializer())
-                .registerTypeAdapter(Entity.class, new EntitySerializer())
-                .registerTypeAdapter(AccessKey.class, new AccessKeySerializer())
-                .registerTypeAdapter(User.class, new UserSerializer())
-                .registerTypeAdapter(Date.class, new DateSerializer())
-                .create();
-        final String json = gson.toJson(entities);
-        final String userJson = gson.toJson(user);
-        final String actionStr = update.getCode();
-
-
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-
-        params.add(new BasicNameValuePair(Parameters.json.getText(), json));
-        params.add(new BasicNameValuePair(Parameters.user.getText(), userJson));
-        params.add(new BasicNameValuePair(Parameters.action.getText(), actionStr));
-        params.add(new BasicNameValuePair(Parameters.gae.getText(), "false"));
-        postTask(req, params, PATH_HB_TASK);
-
-
-    }
-
-    @Override
-    public void processNewValueTask(Value v, User user, Point point) {
-
-    }
 
     protected void postTask(HttpServletRequest req, List<NameValuePair> params, String path) {
         String request = req.getScheme() + "://" +

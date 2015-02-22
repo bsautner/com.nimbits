@@ -39,7 +39,7 @@ public class TaskServiceImpl implements TaskService {
 
     private static final String IN_CONTENT = "inContent";
     private static final String QUEUE_DELETE_BLOB = "blob";
-    private static final String HB_QUEUE = "hb";
+    private static final String DELETE_DATA_QUEUE = "deletedata";
     private static final String DEFAULT = "default";
     private static final String PATH_DELETE_BLOB_TASK = "/task/deleteBlobTask";
     private static final String PATH_POINT_MAINT_TASK = "/task/pointTask";
@@ -60,23 +60,15 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
-    public void startDeleteDataTask(final Entity point,
-                                    final boolean onlyExpired,
-                                    final int exp) {
+    public void startDeleteDataTask(final Point point) {
 
 
-        final Queue queue = QueueFactory.getQueue(DEFAULT);
-        if (onlyExpired) {
+        final Queue queue = QueueFactory.getQueue(DELETE_DATA_QUEUE);
+
             queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_DATA_TASK)
-                            .param(Parameters.json.getText(), GsonFactory.getInstance().toJson(point))
-                            .param(Parameters.exp.getText(), Long.toString(exp))
+                            .param(Parameters.json.getText(), GsonFactory.getInstance().toJson(point)));
 
-            );
-        } else {
-            queue.add(TaskOptions.Builder.withUrl(PATH_DELETE_DATA_TASK)
-                            .param(Parameters.json.getText(), GsonFactory.getInstance().toJson(point))
-            );
-        }
+
 
 
     }
@@ -129,29 +121,6 @@ public class TaskServiceImpl implements TaskService {
         );
     }
 
-
-//    @Override
-//    public void startRecordValueTask(HttpServletRequest req, final User u, final Entity point, final Value value) {
-//
-//        if (Double.valueOf(value.getDoubleValue()).isInfinite()) {
-//            return;
-//        }
-////        final Queue queue = QueueFactory.getQueue(DEFAULT);
-////        final String userJson = GsonFactory.getInstance().toJson(u);
-////        final String pointId = point.getKey();
-////        final String valueJson = GsonFactory.getInstance().toJson(value);
-//
-////        queue.add(TaskOptions.Builder
-////                .withUrl(PATH_TASK_RECORD_VALUE)
-////                .param(Parameters.pointUser.getText(), userJson)
-////                .param(Parameters.point.getText(), pointId)
-////                .param(Parameters.valueJson.getText(), valueJson));
-//
-//
-//
-//    }
-
-
     @Override
     public void startIncomingMailTask(final String fromAddress, final String inContent) {
 
@@ -192,37 +161,7 @@ public class TaskServiceImpl implements TaskService {
                 .param(Parameters.id.getText(), id));
     }
 
-    @Override
-    public void startHeartbeatTask(HttpServletRequest req, User user, List<Point> entities, Action update) {
-        Gson gson = new GsonBuilder()
-                .setDateFormat(Const.GSON_DATE_FORMAT)
-                .serializeNulls()
-                .registerTypeAdapter(Value.class, new ValueSerializer())
-                .registerTypeAdapter(Point.class, new PointSerializer())
-                .registerTypeAdapter(Entity.class, new EntitySerializer())
-                .registerTypeAdapter(AccessKey.class, new AccessKeySerializer())
-                .registerTypeAdapter(User.class, new UserSerializer())
-                .registerTypeAdapter(Date.class, new DateSerializer())
-                .create();
-        final String json = gson.toJson(entities);
-        final String userJson = gson.toJson(user);
-        final String actionStr = update.getCode();
 
-        final Queue queue = QueueFactory.getQueue(HB_QUEUE);
-
-        queue.add(TaskOptions.Builder.withUrl(PATH_HB_TASK)
-                        .param(Parameters.json.getText(), json)
-                        .param(Parameters.user.getText(), userJson)
-                        .param(Parameters.action.getText(), actionStr)
-                        .param(Parameters.gae.getText(), "true")
-        );
-
-    }
-
-    @Override
-    public void processNewValueTask(Value v, User user, Point point) {
-
-    }
 
 
 }

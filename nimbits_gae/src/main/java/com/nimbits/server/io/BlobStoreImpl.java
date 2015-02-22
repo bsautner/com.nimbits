@@ -223,29 +223,34 @@ public class BlobStoreImpl implements BlobStore {
 
 
     @Override
-    public void deleteExpiredData(final Entity entity) {
+    public int deleteExpiredData(final Entity entity) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
 
         int exp = ((Point) entity).getExpire();
+        int deleted = 0;
         if (exp > 0) {
             Calendar c = Calendar.getInstance();
             c.add(Calendar.DATE, exp * -1);
-            try {
+
                 final Query q = pm.newQuery(ValueBlobStoreEntity.class);
                 q.setFilter("entity == k && maxTimestamp <= et");
                 q.declareParameters("String k, Long et");
+                q.setRange(0, 1000);
+
 
                 final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(
                         entity.getKey(), c.getTime().getTime());
+                 deleted = result.size();
+
                 delete(result);
                 pm.deletePersistentAll(result);
-            } finally {
 
-            }
+
 
         }
+        return deleted;
     }
 
     @Override

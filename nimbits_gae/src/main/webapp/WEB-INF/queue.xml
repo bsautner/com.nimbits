@@ -58,7 +58,7 @@
     </queue>
     <queue>
         <name>deletedata</name>
-        <rate>5/s</rate>
+        <rate>10/s</rate>
         <bucket-size>10</bucket-size>
         <max-concurrent-requests>50</max-concurrent-requests>
     </queue>

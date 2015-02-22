@@ -121,7 +121,7 @@ public class DumpTask extends HttpServlet {
                     final EmailAddress emailAddress = CommonFactory.createEmailAddress(entity.getOwner());
 
 
-                    final String m = serverInfo.getFullServerURL(request) + "/service/blob?" + Parameters.blobkey.getText() + "=" + key.getKeyString();
+                    final String m = serverInfo.getFullServerURL(request) + "/service/v2/blob?" + Parameters.blobkey.getText() + "=" + key.getKeyString();
 
 
                     emailService.sendEmail(emailAddress, m, "Your extracted data for " + entity.getName().getValue() + " is ready");

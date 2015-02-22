@@ -162,17 +162,6 @@
     </servlet-mapping>
 
 
-    <servlet>
-        <servlet-name>heartbeatTask</servlet-name>
-
-        <servlet-class>com.nimbits.server.process.task.HeartbeatTask</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>heartbeatTask</servlet-name>
-        <url-pattern>/task/hb</url-pattern>
-    </servlet-mapping>
-
-
     <!--tasks-->
 
 

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public interface SystemDetails extends Serializable {
 
-    boolean isGAE();
+    Boolean isGAE();
 
     String getVersion();
 }

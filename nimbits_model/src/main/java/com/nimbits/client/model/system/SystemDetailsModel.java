@@ -17,7 +17,7 @@ public class SystemDetailsModel implements SystemDetails, Serializable {
     }
 
     @Override
-    public boolean isGAE() {
+    public Boolean isGAE() {
         return this.isGAE;
     }
 

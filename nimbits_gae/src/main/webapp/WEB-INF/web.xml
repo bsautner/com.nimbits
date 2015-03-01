@@ -76,6 +76,16 @@
     </servlet-mapping>
 
     <servlet>
+        <servlet-name>gcs</servlet-name>
+        <servlet-class>com.nimbits.server.api.GCSServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>gcs</servlet-name>
+        <url-pattern>/service/v2/gcs</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
         <servlet-name>timeApi</servlet-name>
         <servlet-class>com.nimbits.server.api.TimeApi</servlet-class>
     </servlet>

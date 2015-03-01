@@ -139,29 +139,27 @@ public class BlobStoreImpl implements BlobStore {
     @Override
     public List<Value> getDataSegment(final Entity entity, final Range<Date> timespan) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-        try {
-            final List<Value> retObj = new ArrayList<Value>();
-            final Query q = pm.newQuery(ValueBlobStoreEntity.class);
-            q.setFilter("entity == k && minTimestamp <= et && minTimestamp >= st ");
-            q.declareParameters("String k, Long et, Long st");
-            q.setOrdering("minTimestamp desc");
 
-            final Iterable<ValueBlobStore> result = (Iterable<ValueBlobStore>) q.execute(entity.getKey(), timespan.upperEndpoint().getTime(), timespan.lowerEndpoint().getTime());
-            for (final ValueBlobStore e : result) {    //todo break out of loop when range is met
-                if (validateOwnership(entity, e)) {
-                    List<Value> values = readValuesFromFile(e.getBlobKey(), e.getLength());
-                    for (final Value vx : values) {
-                        if (timespan.contains(vx.getTimestamp())) {
-                            // if (vx.getTimestamp().getTime() <= timespan.upperEndpoint().getTime() && vx.getTimestamp().getTime() >= timespan.lowerEndpoint()) {
-                            retObj.add(vx);
-                        }
+        final List<Value> retObj = new ArrayList<Value>();
+        final Query q = pm.newQuery(ValueBlobStoreEntity.class);
+        q.setFilter("entity == k && minTimestamp <= et && minTimestamp >= st ");
+        q.declareParameters("String k, Long et, Long st");
+        q.setOrdering("minTimestamp desc");
+
+        final Iterable<ValueBlobStore> result = (Iterable<ValueBlobStore>) q.execute(entity.getKey(), timespan.upperEndpoint().getTime(), timespan.lowerEndpoint().getTime());
+        for (final ValueBlobStore e : result) {    //todo break out of loop when range is met
+            if (validateOwnership(entity, e)) {
+                List<Value> values = readValuesFromFile(e.getBlobKey(), e.getLength());
+                for (final Value vx : values) {
+                    if (timespan.contains(vx.getTimestamp())) {
+                        // if (vx.getTimestamp().getTime() <= timespan.upperEndpoint().getTime() && vx.getTimestamp().getTime() >= timespan.lowerEndpoint()) {
+                        retObj.add(vx);
                     }
                 }
             }
-            return retObj;
-        } finally {
-
         }
+        return retObj;
+
     }
 
     private boolean validateOwnership(Entity entity, ValueBlobStore e) {
@@ -197,28 +195,26 @@ public class BlobStoreImpl implements BlobStore {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
 
-        try {
 
-            final Query q = pm.newQuery(ValueBlobStoreEntity.class);
-            q.setFilter("timestamp == t && entity == k");
-            q.declareParameters("String k, Long t");
-            final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(entity.getKey(), timestamp.getTime());
+        final Query q = pm.newQuery(ValueBlobStoreEntity.class);
+        q.setFilter("timestamp == t && entity == k");
+        q.declareParameters("String k, Long t");
+        final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(entity.getKey(), timestamp.getTime());
 
-            final List<Value> values = new ArrayList<Value>(Const.CONST_DEFAULT_LIST_SIZE);
-            for (final ValueBlobStore store : result) {
-                if (validateOwnership(entity, store)) {
-                    values.addAll(readValuesFromFile((store.getBlobKey()), store.getLength()));
-                }
+        final List<Value> values = new ArrayList<Value>(Const.CONST_DEFAULT_LIST_SIZE);
+        for (final ValueBlobStore store : result) {
+            if (validateOwnership(entity, store)) {
+                values.addAll(readValuesFromFile((store.getBlobKey()), store.getLength()));
             }
-
-            deleteBlobs(result);
-
-            pm.deletePersistentAll(result);
-            return values;
-
-        } finally {
-
         }
+
+        deleteBlobs(result);
+
+        pm.deletePersistentAll(result);
+
+        return values;
+
+
     }
 
 
@@ -234,18 +230,18 @@ public class BlobStoreImpl implements BlobStore {
             Calendar c = Calendar.getInstance();
             c.add(Calendar.DATE, exp * -1);
 
-                final Query q = pm.newQuery(ValueBlobStoreEntity.class);
-                q.setFilter("entity == k && maxTimestamp <= et");
-                q.declareParameters("String k, Long et");
-                q.setRange(0, 1000);
+            final Query q = pm.newQuery(ValueBlobStoreEntity.class);
+            q.setFilter("entity == k && maxTimestamp <= et");
+            q.declareParameters("String k, Long et");
+            q.setRange(0, 1000);
 
 
-                final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(
-                        entity.getKey(), c.getTime().getTime());
-                 deleted = result.size();
+            final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(
+                    entity.getKey(), c.getTime().getTime());
+            deleted = result.size();
 
-                delete(result);
-                pm.deletePersistentAll(result);
+            delete(result);
+            pm.deletePersistentAll(result);
 
 
 
@@ -301,7 +297,7 @@ public class BlobStoreImpl implements BlobStore {
     public List<ValueBlobStore> createBlobStoreEntity(final Entity entity, final ValueDayHolder holder) throws IOException {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-        try {
+
             final String json = gson.toJson(holder.getValues());
             final FileService fileService = FileServiceFactory.getFileService();
             final AppEngineFile file = fileService.createNewBlobFile(Const.CONTENT_TYPE_PLAIN);
@@ -332,10 +328,6 @@ public class BlobStoreImpl implements BlobStore {
             out.close();
             return result;
 
-        } finally {
-
-
-        }
 
     }
 

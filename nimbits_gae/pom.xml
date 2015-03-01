@@ -180,8 +180,15 @@
             <groupId>com.google.appengine.orm</groupId>
             <artifactId>datanucleus-appengine</artifactId>
             <version>2.1.2</version>
-            <scope>compile</scope>
+
         </dependency>
+
+        <dependency>
+            <groupId>com.google.appengine.tools</groupId>
+            <artifactId>appengine-gcs-client</artifactId>
+            <version>0.4.4</version>
+        </dependency>
+
 
         <!--test dep-->
         <dependency>

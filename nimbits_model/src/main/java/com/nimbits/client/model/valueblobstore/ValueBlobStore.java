@@ -18,6 +18,8 @@ import java.util.Date;
 
 public interface ValueBlobStore extends Serializable, Comparable<ValueBlobStore> {
 
+    long getId();
+
     String getEntity();
 
     Date getTimestamp();

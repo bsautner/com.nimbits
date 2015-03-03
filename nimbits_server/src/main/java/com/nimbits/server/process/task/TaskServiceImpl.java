@@ -25,6 +25,8 @@ import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.gson.*;
+import com.nimbits.server.transaction.entity.dao.EntityDao;
+import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -45,17 +47,21 @@ import java.util.logging.Logger;
 
 @Service
 public class TaskServiceImpl implements TaskService {
-    private final Logger log = Logger.getLogger(TaskServiceImpl.class.getName());
 
-    private static final String PATH_HB_TASK = "/task/hb";
-
-    private static final String PATH_POINT_MAINT_TASK = "/task/pointTask";
-
-    public static final String UTF_8 = "UTF-8";
 
 
     @Autowired
     private ValueService valueService;
+
+    @Autowired
+    private EntityService entityService;
+
+    @Autowired
+    private EntityDao entityDao;
+
+    @Autowired
+    private ValueTask valueTask;
+
 
 
     public TaskServiceImpl() {
@@ -89,26 +95,15 @@ public class TaskServiceImpl implements TaskService {
 
     }
 
+
+
     @Override
-    public void startPointMaintTask(HttpServletRequest req, Entity e) {
-        Gson gson = new GsonBuilder()
-                .setDateFormat(Const.GSON_DATE_FORMAT)
-                .serializeNulls()
-                .registerTypeAdapter(Value.class, new ValueSerializer())
-                .registerTypeAdapter(Point.class, new PointSerializer())
-                .registerTypeAdapter(Entity.class, new EntitySerializer())
-                .registerTypeAdapter(AccessKey.class, new AccessKeySerializer())
-                .registerTypeAdapter(User.class, new UserSerializer())
-                .registerTypeAdapter(Date.class, new DateSerializer())
-                .create();
-        final String json = gson.toJson(e);
-        List<NameValuePair> params = new ArrayList<NameValuePair>();
-
-        params.add(new BasicNameValuePair(Parameters.json.getText(), json));
-
-        postTask(req, params, PATH_POINT_MAINT_TASK);
-
-
+    public void startPointTask(long pos) {
+        List<Point> sample = entityDao.getPoint(pos);
+        if (! sample.isEmpty()) {
+            entityService.doPointMaint(sample.get(0));
+            startPointTask(++pos);
+        }
     }
 
     @Override
@@ -117,48 +112,16 @@ public class TaskServiceImpl implements TaskService {
         valueService.moveValuesFromCacheToStore(point);
     }
 
+    @Override
+    public void startRecordValueTask(final User user, final Point entity, final Value value, final boolean preAuthorised) {
+      //  new Thread(new Runnable() {
+       //     @Override
+       //     public void run() {
+                valueTask.recordValue(value, user, entity, preAuthorised);
+        //    }
+       // }).run();
 
-    protected void postTask(HttpServletRequest req, List<NameValuePair> params, String path) {
-        String request = req.getScheme() + "://" +
-                req.getServerName() +
-                ":" + req.getServerPort() +
-                req.getContextPath() +
-                "" + path;
-
-        try {
-            log.info("Post Task: " + request);
-            URL url = new URL(request);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
-
-
-            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-            writer.write(getQuery(params));
-
-            writer.close();
-            int r = connection.getResponseCode();
-            log.info("Post Task Respond" + r);
-        } catch (IOException ex) {
-            log.severe(ex.getMessage());
-        }
     }
 
-    private String getQuery(final List<NameValuePair> params) throws UnsupportedEncodingException {
-        StringBuilder result = new StringBuilder();
-        boolean first = true;
 
-        for (NameValuePair pair : params) {
-            if (first)
-                first = false;
-            else
-                result.append("&");
-
-            result.append(URLEncoder.encode(pair.getName(), UTF_8));
-            result.append("=");
-            result.append(URLEncoder.encode(pair.getValue(), UTF_8));
-        }
-
-        return result.toString();
-    }
 }

@@ -181,11 +181,11 @@ public class XMPPReceiverServlet extends ApiBase {
 
                 if (point != null) {
 
-                    final Value v;
-                    try {
-                        v = valueService.recordValue(u, point, p.getValue(), false);
 
-                        point.setValue(v);
+                    try {
+                        valueService.recordValue(u, point, p.getValue(), false);
+
+
                         String result = gson.toJson(point);
                         xmppService.sendMessage(result, u.getEmail());
                     } catch (ValueException e) {

@@ -80,8 +80,8 @@ public class ValueBlobStoreEntity implements ValueBlobStore {
         this.entityUUID = entityUUID;
     }
 
-    public Key getKey() {
-        return key;
+    public long getId() {
+        return  key.getId();
     }
 
     @Override

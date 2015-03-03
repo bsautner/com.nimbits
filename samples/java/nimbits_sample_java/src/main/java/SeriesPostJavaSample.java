@@ -49,7 +49,8 @@ import java.util.*;
 public class SeriesPostJavaSample {
     private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("support@nimbits.com");
     private static final AccessCode ACCESS_KEY = AccessCode.getInstance("key");
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080");
+     private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080");
+   // private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("cloud.nimbits.com");
     private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, ACCESS_KEY);
     protected static final int COUNT = 10;
     public static final int VCOUNT = 1000;
@@ -104,6 +105,7 @@ public class SeriesPostJavaSample {
             }
 
             valueHelper.recordValues(points);
+            Thread.sleep(2000);
 
             for (Point point : points) {
                 List<Value> recordedValues = valueHelper.getSeries(point.getName().getValue());

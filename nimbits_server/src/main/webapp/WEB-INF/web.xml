@@ -36,6 +36,16 @@
 
     </filter-mapping>
 
+    <filter>
+        <filter-name>datastoreFilter</filter-name>
+        <filter-class>com.nimbits.server.api.filter.DatastoreFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>datastoreFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+
+    </filter-mapping>
+
 
     <servlet>
         <servlet-name>WebSocket</servlet-name>
@@ -168,7 +178,7 @@
 
     <servlet>
         <servlet-name>pointTask</servlet-name>
-        <servlet-class>com.nimbits.server.process.task.PointMaintTask</servlet-class>
+        <servlet-class>com.nimbits.server.process.task.PointTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>pointTask</servlet-name>

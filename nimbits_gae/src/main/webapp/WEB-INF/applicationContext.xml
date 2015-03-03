@@ -10,7 +10,9 @@
     <beans:import resource="context.xml"/>
 
     <bean id="dataProcessor" class="com.nimbits.server.data.DataProcessor"/>
-
+    <bean id="datastoreProvider" class="com.nimbits.server.transaction.DatastoreProvider">
+        <property name="persistenceManagerFactory" ref="pmf"/>
+    </bean>
     <bean id="cache" class="com.nimbits.server.transaction.cache.GoogleCache"/>
 
     <bean id="userCache" class="com.nimbits.server.transaction.user.cache.UserCacheImpl"/>
@@ -63,6 +65,8 @@
 
     <bean id="chartHelper" class="com.nimbits.server.chart.ChartHelper"/>
 
+    <bean id="valueTask" class="com.nimbits.server.process.task.ValueTask"/>
+
     <bean id="connectedClients" class="com.nimbits.server.socket.ConnectedClients"
           factory-method="getInstance"
 
@@ -89,6 +93,7 @@
                 <prop key="javax.jdo.option.RetainValues">false</prop>
                 <prop key="javax.jdo.option.DetachAllOnCommit">true</prop>
                 <prop key="javax.jdo.option.Multithreaded">true</prop>
+                <prop key="datanucleus.appengine.datastoreEnableXGTransactions">true</prop>
                 <prop key="datanucleus.appengine.ignorableMetaDataBehavior">NONE</prop>
                 <prop key="datanucleus.appengine.autoCreateDatastoreTxns">true</prop>
             </props>

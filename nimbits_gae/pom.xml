@@ -36,7 +36,7 @@
         <appengine.target.version>1.9.18</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-        <nimbits_version>3.8.3</nimbits_version>
+        <nimbits_version>3.8.4</nimbits_version>
     </properties>
 
     <repositories>

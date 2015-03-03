@@ -14,7 +14,7 @@ package com.nimbits.server.api.impl;
 
 import com.nimbits.client.constants.Words;
 import com.nimbits.client.enums.ExportType;
-import com.nimbits.server.admin.logging.LogHelper;
+
 import com.nimbits.server.api.ApiServlet;
 import com.nimbits.server.process.task.TaskService;
 
@@ -63,9 +63,9 @@ public class MailHandlerServletImpl extends ApiServlet {
 
             }
         } catch (MessagingException e) {
-            LogHelper.logException(this.getClass(), e);
+          e.printStackTrace();
         } catch (Exception e) {
-            LogHelper.logException(this.getClass(), e);
+          e.printStackTrace();
         }
     }
 

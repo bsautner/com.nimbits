@@ -34,12 +34,6 @@
         <schedule>every 1 hours</schedule>
         <timezone>America/New_York</timezone>
     </cron>
-    <cron>
-        <url>/cron/moveCron</url>
-        <description>Report Stats</description>
-        <schedule>every 24 hours</schedule>
-        <timezone>America/New_York</timezone>
-    </cron>
 
     <cron>
         <url>/cron/idleCron</url>

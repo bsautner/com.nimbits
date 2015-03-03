@@ -7,6 +7,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <beans:import resource="context.xml"/>
+
+    <bean id="valueTask" class="com.nimbits.server.process.task.ValueTask"/>
     <bean id="dataProcessor" class="com.nimbits.server.data.DataProcessor"/>
     <bean id="chartHelper" class="com.nimbits.server.chart.ChartHelper"/>
     <bean id="cache" class="com.nimbits.server.transaction.cache.GoogleCache"/>
@@ -35,6 +37,10 @@
     </bean>
 
     <bean id="userDao" class="com.nimbits.server.transaction.user.dao.UserDaoImpl">
+        <property name="persistenceManagerFactory" ref="pmf"/>
+    </bean>
+
+    <bean id="datastoreProvider" class="com.nimbits.server.transaction.DatastoreProvider">
         <property name="persistenceManagerFactory" ref="pmf"/>
     </bean>
 

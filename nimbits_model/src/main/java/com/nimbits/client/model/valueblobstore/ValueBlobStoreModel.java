@@ -21,6 +21,8 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
 
     private String entity;
 
+    private long id;
+
     private Date timestamp;
 
     private long maxTimestamp;
@@ -50,6 +52,11 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
     }
 
     public ValueBlobStoreModel() {
+    }
+
+    @Override
+    public long getId() {
+        return this.id;
     }
 
     @Override

@@ -36,6 +36,7 @@ import org.springframework.stereotype.Repository;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
+import javax.jdo.Transaction;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -100,7 +101,7 @@ public class BlobStoreImpl implements BlobStore {
             }
             return retObj;
         } finally {
-            pm.close();
+           pm.close();
         }
     }
 
@@ -135,7 +136,7 @@ public class BlobStoreImpl implements BlobStore {
             }
             return retObj;
         } finally {
-            pm.close();
+           pm.close();
         }
     }
 
@@ -194,6 +195,11 @@ public class BlobStoreImpl implements BlobStore {
     }
 
     @Override
+    public List<ValueBlobStore> getLegacy() {
+        return Collections.emptyList();
+    }
+
+    @Override
     public List<Value> consolidateDate(final Entity entity, final Date timestamp) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
@@ -218,7 +224,7 @@ public class BlobStoreImpl implements BlobStore {
             return values;
 
         } finally {
-            pm.close();
+             pm.close();
         }
     }
 
@@ -291,14 +297,10 @@ public class BlobStoreImpl implements BlobStore {
         }
     }
 
-    /**
-     * @param key
-     * @param unused - used in gae version for blobstoreservice
-     * @return
-     */
+
     @Override
-    public List<Value> readValuesFromFile(final String key, long unused) {
-        return readValuesFromFile(key);
+    public List<Value> readValuesFromFile(ValueBlobStore store) {
+        return readValuesFromFile(store.getBlobKey());
     }
 
 
@@ -480,5 +482,31 @@ public class BlobStoreImpl implements BlobStore {
             delete(store.getBlobKey());
         }
     }
+
+    @Override
+    public void deleteBlobStoreEntity(List<ValueBlobStore> s) {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+        try {
+            Transaction tx =  pm.currentTransaction();
+            tx.begin();
+            ValueBlobStore st = s.get(0);
+            final ValueBlobStore result =   pm.getObjectById(ValueBlobStoreEntity.class, st.getId());
+            pm.deletePersistent(result);
+
+            tx.commit();
+
+
+
+        } finally {
+           pm.close();
+        }
+    }
+
+    @Override
+    public List<Value> upgradeStore(Entity entity, ValueBlobStore v) {
+        return null;
+    }
+
 
 }

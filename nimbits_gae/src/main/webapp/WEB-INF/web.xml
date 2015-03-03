@@ -81,7 +81,7 @@
     </servlet>
     <servlet-mapping>
         <servlet-name>gcs</servlet-name>
-        <url-pattern>/service/v2/gcs</url-pattern>
+        <url-pattern>/service/backend/gcs</url-pattern>
     </servlet-mapping>
 
 
@@ -223,6 +223,15 @@
         <url-pattern>/task/uploadTask</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>valueTask</servlet-name>
+
+        <servlet-class>com.nimbits.server.process.task.ValueTask</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>valueTask</servlet-name>
+        <url-pattern>/task/value</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>dumpTask</servlet-name>
@@ -263,11 +272,11 @@
 
     <servlet>
         <servlet-name>pointTask</servlet-name>
-        <servlet-class>com.nimbits.server.process.task.PointMaintTask</servlet-class>
+        <servlet-class>com.nimbits.server.process.task.PointTask</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>pointTask</servlet-name>
-        <url-pattern>/task/pointTask</url-pattern>
+        <url-pattern>/task/point</url-pattern>
     </servlet-mapping>
 
     <servlet>

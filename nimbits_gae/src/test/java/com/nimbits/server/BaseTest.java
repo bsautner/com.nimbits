@@ -13,7 +13,7 @@
 package com.nimbits.server;
 
 import com.nimbits.server.process.cron.IdlePointCron;
-import com.nimbits.server.process.task.PointMaintTask;
+import com.nimbits.server.process.task.PointTask;
 import org.junit.AfterClass;
 import org.junit.Test;
 
@@ -24,7 +24,7 @@ public class BaseTest {
 
 
     public static IdlePointCron idleCron;
-    public static PointMaintTask pointTask;
+    public static PointTask pointTask;
 
     @AfterClass
     public static void tearDown() {

@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Parameters {
-
+    cursor(ParamConstants.PARAM_CURSOR),
     authToken(ParamConstants.PARAM_AUTH_TOKEN),
     apikey(ParamConstants.PARAM_API_KEY),
     action(ParamConstants.PARAM_ACTION),
@@ -227,6 +227,7 @@ public enum Parameters {
         private static final String FORWARD = "forward";
         public static final String CONNECTION_ID = "connection";
         public static final String PARAM_AUTH_TOKEN = "AuthToken";
+        public static final String PARAM_CURSOR = "cursor";
 
         private ParamConstants() {
         }

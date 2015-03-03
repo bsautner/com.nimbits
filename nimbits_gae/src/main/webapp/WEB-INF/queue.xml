@@ -22,10 +22,10 @@
     </queue>
 
     <queue>
-        <name>hb</name>
+        <name>point</name>
         <rate>10/s</rate>
         <retry-parameters>
-            <task-retry-limit>3</task-retry-limit>
+            <task-retry-limit>1</task-retry-limit>
 
         </retry-parameters>
     </queue>
@@ -33,6 +33,16 @@
     <queue>
         <name>blob</name>
         <rate>1/s</rate>
+        <retry-parameters>
+            <task-retry-limit>2</task-retry-limit>
+
+        </retry-parameters>
+    </queue>
+
+    <queue>
+        <name>value</name>
+        <rate>50/s</rate>
+        <bucket-size>100</bucket-size>
         <retry-parameters>
             <task-retry-limit>2</task-retry-limit>
 

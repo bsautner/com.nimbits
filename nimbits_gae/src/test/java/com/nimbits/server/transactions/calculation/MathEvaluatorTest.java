@@ -13,18 +13,14 @@
 
 package com.nimbits.server.transactions.calculation;
 
+import com.nimbits.server.math.MathEvaluator;
 import com.nimbits.server.math.MathEvaluatorImpl;
-import com.nimbits.server.transaction.calculation.MathEvaluator;
+
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 4/11/12
- * Time: 5:11 PM
- */
+
 public class MathEvaluatorTest {
 
     @Test

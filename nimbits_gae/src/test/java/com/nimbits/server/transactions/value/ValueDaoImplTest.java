@@ -69,65 +69,34 @@ public class ValueDaoImplTest extends NimbitsServletTest {
     }
 
 
-    @Test
-    public void testConsolidateDate() throws Exception {
-        Date zero = TimespanService.zeroOutDateToStart(new Date());
-        Point newPoint = createRandomPoint();
-        for (int i = 1; i < 11; i++) {
-            List<Value> values = new ArrayList<Value>(3);
-            values.add(ValueFactory.createValueModel(1));
-            values.add(ValueFactory.createValueModel(1));
-            values.add(ValueFactory.createValueModel(1));
-            valueDao.recordValues(newPoint, values);
-            assertEquals(i, blobStore.getAllStores(newPoint).size());
-        }
+//    @Test
+//    public void testConsolidateDate() throws Exception {
+//        Date zero = TimespanService.zeroOutDateToStart(new Date());
+//        Point newPoint = createRandomPoint();
+//        for (int i = 1; i < 11; i++) {
+//            List<Value> values = new ArrayList<Value>(3);
+//            values.add(ValueFactory.createValueModel(1));
+//            values.add(ValueFactory.createValueModel(1));
+//            values.add(ValueFactory.createValueModel(1));
+//            valueDao.recordValues(newPoint, values);
+//            assertEquals(i, blobStore.getAllStores(newPoint).size());
+//        }
+//
+//
+//        List<Value> consolidated = blobStore.consolidateDate(newPoint, zero);
+//        valueDao.recordValues(newPoint, consolidated);
+//        assertEquals(1, blobStore.getAllStores(newPoint).size());
+//
+//        List<Value> result = valueDao.getTopDataSeries(newPoint, 100);
+//        double total = 0.0;
+//        for (Value v : result) {
+//            total += v.getDoubleValue();
+//
+//        }
+//        assertEquals(30.0, total, 0.0);
+//
+//    }
 
-
-        List<Value> consolidated = blobStore.consolidateDate(newPoint, zero);
-        valueDao.recordValues(newPoint, consolidated);
-        assertEquals(1, blobStore.getAllStores(newPoint).size());
-
-        List<Value> result = valueDao.getTopDataSeries(newPoint, 100);
-        double total = 0.0;
-        for (Value v : result) {
-            total += v.getDoubleValue();
-
-        }
-        assertEquals(30.0, total, 0.0);
-
-    }
-
-    @Test
-    public void testMissingBlobRecovery() throws Exception {
-        Date zero = TimespanServiceFactory.getInstance().zeroOutDateToStart(new Date());
-        String key = null;
-        final BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-        for (int i = 1; i < 11; i++) {
-            List<Value> values = new ArrayList<Value>(3);
-            values.add(ValueFactory.createValueModel(1));
-            values.add(ValueFactory.createValueModel(1));
-            values.add(ValueFactory.createValueModel(1));
-            List<ValueBlobStore> d = valueDao.recordValues(point, values);
-            assertFalse(d.isEmpty());
-            assertEquals(i, blobStore.getAllStores(point).size());
-            key = d.get(0).getBlobKey();
-        }
-
-        blobstoreService.delete(new BlobKey(key));
-
-        List<Value> values = blobStore.consolidateDate(point, zero);
-        valueService.recordValues(user, point, values);
-        assertEquals(1, blobStore.getAllStores(point).size());
-
-        List<Value> result = valueDao.getTopDataSeries(point, 100);
-        double total = 0.0;
-        for (Value v : result) {
-            total += v.getDoubleValue();
-
-        }
-        assertEquals(27.0, total, 0.0);
-
-    }
 
 //    @Test
 //    public void testGetBlobStoreByBlobKey()  {

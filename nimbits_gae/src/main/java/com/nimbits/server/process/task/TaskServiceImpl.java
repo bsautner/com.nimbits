@@ -41,15 +41,18 @@ public class TaskServiceImpl implements TaskService {
     private static final String QUEUE_DELETE_BLOB = "blob";
     private static final String DELETE_DATA_QUEUE = "deletedata";
     private static final String DEFAULT = "default";
+    private static final String VALUE = "value";
     private static final String PATH_DELETE_BLOB_TASK = "/task/deleteBlobTask";
-    private static final String PATH_POINT_MAINT_TASK = "/task/pointTask";
-    private static final String PATH_MOVE_TASK = "/task/moveTask";
 
+    private static final String PATH_MOVE_TASK = "/task/moveTask";
+    private static final String PATH_POINT_TASK = "/task/point";
+
+    private static final String PATH_VALUE_TASK = "/task/value";
     private static final String PATH_TASK_DUMP_TASK = "/task/dumpTask";
     private static final String PATH_TASK_UPLOAD_TASK = "/task/uploadTask";
     private static final String PATH_INCOMING_MAIL_QUEUE = "/task/mailTask";
     private static final String PATH_DELETE_DATA_TASK = "/task/deleteTask";
-    private static final String PATH_HB_TASK = "/task/hb";
+
     private static final String DUMP = "dump";
 
 
@@ -134,15 +137,11 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Override
-    public void startPointMaintTask(HttpServletRequest req, final Entity e) {
+    public void startPointTask(long pos) {
+        final Queue queue = QueueFactory.getQueue("point");
 
-        final String json = GsonFactory.getInstance().toJson(e);
-
-        final Queue queue = QueueFactory.getQueue(DEFAULT);
-
-        queue.add(TaskOptions.Builder.withUrl(PATH_POINT_MAINT_TASK)
-                .param(Parameters.json.getText(), json));
-
+        queue.add(TaskOptions.Builder.withUrl(PATH_POINT_TASK)
+                .param(Parameters.cursor.getText(), String.valueOf(pos)));
     }
 
 
@@ -161,7 +160,21 @@ public class TaskServiceImpl implements TaskService {
                 .param(Parameters.id.getText(), id));
     }
 
+    @Override
+    public void startRecordValueTask(User user, Point entity, Value value, boolean preAuthorised) {
+        String u = user.getKey();
+        String p = entity.getKey();
+        Gson gson = new GsonBuilder().create();
+        String json = gson.toJson(value);
+        String pr = gson.toJson(preAuthorised);
+        final Queue queue = QueueFactory.getQueue(VALUE);
 
+        queue.add(TaskOptions.Builder.withUrl(PATH_VALUE_TASK)
+                .param(Parameters.user.getText(), u)
+                .param(Parameters.json.getText(), json)
+                .param(Parameters.isLoggedIn.getText(), pr)
+                .param(Parameters.id.getText(), p));
+    }
 
 
 }

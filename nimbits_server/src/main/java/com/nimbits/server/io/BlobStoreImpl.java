@@ -40,6 +40,7 @@ import javax.jdo.Transaction;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Repository
@@ -200,34 +201,71 @@ public class BlobStoreImpl implements BlobStore {
     }
 
     @Override
+    public void deleteStores(final Entity entity, final Date timestamp) {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+
+        final Query q = pm.newQuery(ValueBlobStoreEntity.class);
+        q.setFilter("timestamp == t && entity == k");
+        q.declareParameters("String k, Long t");
+
+        //  Transaction tx = pm.currentTransaction();
+        try {
+
+            //   tx.begin();
+            final List<ValueBlobStoreEntity> result = (List<ValueBlobStoreEntity>) q.execute(entity.getKey(), timestamp.getTime());
+             pm.deletePersistentAll(result);
+
+            //  tx.commit();
+
+        }
+        catch (Exception ex) {
+              ex.printStackTrace();
+            //  tx.rollback();
+
+
+        } finally {
+            pm.close();
+        }
+    }
+
+    @Override
     public List<Value> consolidateDate(final Entity entity, final Date timestamp) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
 
+        final Query q = pm.newQuery(ValueBlobStoreEntity.class);
+        q.setFilter("timestamp == t && entity == k");
+        q.declareParameters("String k, Long t");
+        q.setOrdering("timestamp desc");
+
+
+
         try {
 
-            final Query q = pm.newQuery(ValueBlobStoreEntity.class);
-            q.setFilter("timestamp == t && entity == k");
-            q.declareParameters("String k, Long t");
             final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(entity.getKey(), timestamp.getTime());
 
-            final List<Value> values = new ArrayList<Value>();
-            for (final ValueBlobStore e : result) {
-                if (validateOwnership(entity, e)) {
-                    values.addAll(readValuesFromFile(e.getBlobKey()));
+            final List<Value> values = new ArrayList<>(Const.CONST_DEFAULT_LIST_SIZE);
+            for (final ValueBlobStore store : result) {
+                if (validateOwnership(entity, store)) {
+                    values.addAll(readValuesFromFile(store));
                 }
             }
 
             deleteBlobs(result);
 
-            pm.deletePersistentAll(result);
+
             return values;
+        }
+        catch (Exception ex) {
+             return Collections.emptyList();  //TODO if anything goes wrong with this process you'll lose an entire day's worth of data
 
         } finally {
-             pm.close();
+            pm.close();
         }
-    }
 
+
+    }
 
     @Override
     public int deleteExpiredData(final Entity entity ) {

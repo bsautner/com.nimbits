@@ -13,37 +13,19 @@
 package com.nimbits.server.process.task;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.enums.Action;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.gson.*;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.value.service.ValueService;
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
 
 @Service
 public class TaskServiceImpl implements TaskService {

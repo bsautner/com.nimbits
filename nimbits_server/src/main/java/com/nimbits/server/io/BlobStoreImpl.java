@@ -51,6 +51,7 @@ public class BlobStoreImpl implements BlobStore {
 
     @Autowired
     private SettingsService settingsService;
+
     private final Gson gson = new GsonBuilder()
             .setDateFormat(Const.GSON_DATE_FORMAT)
             .registerTypeAdapter(Value.class, new ValueDeserializer())
@@ -252,7 +253,7 @@ public class BlobStoreImpl implements BlobStore {
                 }
             }
 
-            deleteBlobs(result);
+            deleteGcs(result);
 
 
             return values;
@@ -342,6 +343,8 @@ public class BlobStoreImpl implements BlobStore {
     }
 
 
+
+
     private List<Value> readValuesFromFile(final String key) {
 
         final Type valueListType = new TypeToken<List<ValueModel>>() {
@@ -372,7 +375,7 @@ public class BlobStoreImpl implements BlobStore {
     }
 
     @Override
-    public void deleteBlobs(List<ValueBlobStore> result) {
+    public void deleteGcs(List<ValueBlobStore> result) {
         for (ValueBlobStore store : result) {
             final String blobKey = store.getBlobKey();
             File file = new File(getFolder() + blobKey);
@@ -382,7 +385,7 @@ public class BlobStoreImpl implements BlobStore {
     }
 
     @Override
-    public void delete(final String key) {
+    public void deleteBlobStore(final String key) {
         File file = new File(getFolder() + key);
         file.delete();
 
@@ -465,7 +468,7 @@ public class BlobStoreImpl implements BlobStore {
                 }
                 List<Value> read = readValuesFromFile((store.getBlobKey()));
                 combined.addAll(read);
-                delete(store.getBlobKey());
+                deleteBlobStore(store.getBlobKey());
 
             }
 
@@ -517,7 +520,7 @@ public class BlobStoreImpl implements BlobStore {
     @Override
     public void delete(List<ValueBlobStore> result) {
         for (ValueBlobStore store : result) {
-            delete(store.getBlobKey());
+            deleteBlobStore(store.getBlobKey());
         }
     }
 
@@ -543,6 +546,11 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public List<Value> upgradeStore(Entity entity, ValueBlobStore v) {
+        return null;
+    }
+
+    @Override
+    public List<Value> getLegacyStores(Point point) {
         return null;
     }
 

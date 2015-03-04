@@ -2988,7 +2988,7 @@ jetty-6.1.4rc0 - 01 June 2007
  + Reorganized import of contrib modules
  + Unified JMX configuration
  + Updated slf4j version to 1.3.1
- + Updated junit to 3.8.4
+ + Updated junit to 3.8.5
  + Allow XmlConfiguration properties to be configured
  + Add (commented out) jspc precompile to test-webapp
  + Add slf4j-api for upgraded version

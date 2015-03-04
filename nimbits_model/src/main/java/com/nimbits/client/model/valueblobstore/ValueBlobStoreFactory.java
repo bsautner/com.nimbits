@@ -20,7 +20,7 @@ import java.util.List;
 
 public class ValueBlobStoreFactory {
     public static List<ValueBlobStore> createValueBlobStores(final Collection<ValueBlobStore> store) {
-        final List<ValueBlobStore> retObj = new ArrayList<ValueBlobStore>(store.size());
+        final List<ValueBlobStore> retObj = new ArrayList<>(store.size());
         for (final ValueBlobStore v : store) {
             if (v.getLength() > 0) {
                 retObj.addAll(createValueBlobStore(v));

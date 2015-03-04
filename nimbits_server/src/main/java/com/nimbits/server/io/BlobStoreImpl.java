@@ -26,10 +26,11 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.client.model.valueblobstore.ValueBlobStoreFactory;
+import com.nimbits.server.defrag.ValueDayHolder;
 import com.nimbits.server.gson.ValueDeserializer;
 import com.nimbits.server.orm.store.ValueBlobStoreEntity;
 import com.nimbits.server.transaction.settings.SettingsService;
-import com.nimbits.server.transaction.value.dao.ValueDayHolder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 

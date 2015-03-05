@@ -21,12 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/16/12
- * Time: 10:02 AM
- */
+
 public class SummaryModelFactory {
 
     private SummaryModelFactory() {
@@ -49,11 +44,5 @@ public class SummaryModelFactory {
 
     }
 
-    public static List<Summary> createSummaries(List<Summary> result) {
-        List<Summary> retObj = new ArrayList<Summary>(result.size());
-        for (Summary s : result) {
-            retObj.add(createSummary(s));
-        }
-        return retObj;
-    }
+
 }

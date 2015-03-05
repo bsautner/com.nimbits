@@ -58,10 +58,10 @@ public class EntityModelFactory {
                                       final String description,
                                       final EntityType entityType,
                                       final ProtectionLevel protectionLevel,
-                                      final String parentUUID,
-                                      final String ownerUUID) {
-        return new EntityModel(name, description, entityType, protectionLevel, parentUUID,
-                ownerUUID, "");
+                                      final String parent,
+                                      final String owner) {
+        return new EntityModel(name, description, entityType, protectionLevel, parent,
+                owner , "");
     }
 
     public static Entity createEntity(final String name,

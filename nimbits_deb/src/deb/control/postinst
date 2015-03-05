@@ -12,7 +12,7 @@ chmod +x /etc/init.d/nimbits
 useradd nimbits -U -s /bin/false
 chown -R nimbits:nimbits /opt/nimbits
 cd /opt/nimbits/webapps
-wget http://www.nimbits.com/download/nimbits_server_3.8.5.war -O root.war
+wget http://www.nimbits.com/download/nimbits_server_3.8.6.war -O root.war
 sudo update-rc.d nimbits defaults
 if [ -f "$H2" ]; then
     if [ -f "$F" ]; then

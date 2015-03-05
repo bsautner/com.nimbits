@@ -27,7 +27,9 @@ public enum EntityType implements Serializable {
     accessKey(13, false, false, false, true, true, false, 13, "com.nimbits.server.orm.AccessKeyEntity"),
     instance(14, true, false, false, true, false, false, 14, "com.nimbits.server.orm.InstanceEntity"),
     socket(19, false, false, false, true, true, false, 19, "com.nimbits.server.orm.SocketEntity"),
-    connection(20, false, false, false, true, true, false, 20, "com.nimbits.server.orm.ConnectionEntity");
+    connection(20, false, false, false, true, true, false, 20, "com.nimbits.server.orm.ConnectionEntity"),
+    schedule(21, false, false, false, false, true, false, 21, "com.nimbits.server.orm.ScheduleEntity"),
+    ;
 
     private static final Map<Integer, EntityType> lookup = new HashMap<Integer, EntityType>(EntityType.values().length);
 
@@ -39,7 +41,7 @@ public enum EntityType implements Serializable {
     }
 
     public static List<String> classList() {
-        List<String> retObj = new ArrayList<String>(12);
+        List<String> retObj = new ArrayList<String>();
         for (final EntityType e : EntityType.values()) {
             if (!retObj.contains(e.className)) {
                 retObj.add(e.className);

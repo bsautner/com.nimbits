@@ -38,6 +38,7 @@ public class SubscriptionFactory {
             final int maxRepeatSeconds,
             final boolean formatJson,
             final boolean enabled) {
+
         return new SubscriptionModel(entity,
                 subscribedEntity,
                 type,
@@ -48,12 +49,6 @@ public class SubscriptionFactory {
 
     }
 
-    public static List<Subscription> createSubscriptions(Collection<Subscription> subscriptions) {
-        final List<Subscription> retObj = new ArrayList<Subscription>(subscriptions.size());
-        for (final Subscription s : subscriptions) {
-            retObj.add(createSubscription(s));
-        }
-        return retObj;
-    }
+
 
 }

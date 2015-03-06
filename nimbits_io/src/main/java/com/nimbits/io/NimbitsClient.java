@@ -63,7 +63,7 @@ public interface NimbitsClient {
 
     <T> List<T> updateEntity(Entity entity, Class<T> clz);
 
-    <T, K> List<T> getEntity(SimpleValue<String> entityId, EntityType type, Class<K> clz);
+    List<Entity> getEntity(SimpleValue<String> entityId, EntityType type, Class clz);
 
     List<AndroidControl> getControl();
 

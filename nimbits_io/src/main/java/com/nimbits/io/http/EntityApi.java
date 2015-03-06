@@ -19,7 +19,7 @@
 package com.nimbits.io.http;
 
 
-import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.entity.Entity;
 import retrofit.http.GET;
 import retrofit.http.Query;
 
@@ -31,7 +31,7 @@ public interface EntityApi {
 
 
     @GET(API)
-    List<Point> getPoint(@Query("email") String email, @Query("key") String key, @Query("id") String id);
+    List<Entity> getEntity(@Query("email") String email, @Query("key") String key, @Query("id") String id);
 
 
 }

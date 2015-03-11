@@ -37,6 +37,7 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.io.NimbitsClient;
+import com.nimbits.server.gson.EntityDeserializer;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.gson.ValueDeserializer;
 import org.apache.http.HttpEntity;
@@ -301,18 +302,19 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         SeriesApi seriesApi = restAdapter.create(SeriesApi.class);
 
-        List<Value> sample = seriesApi.getSeries(email.getValue(), accessCode.getValue(), entity, count);
+            List<Value> sample = seriesApi.getSeries(email.getValue(), accessCode.getValue(), entity, count);
 
-        List<Value> fixed = new ArrayList<>(sample.size());
-        Set<Long> test = new HashSet<>(sample.size());
-        for (Value value : sample) {
-            if (! test.contains(value.getTimestamp().getTime())) {
-                fixed.add(value);
-                test.add(value.getTimestamp().getTime());
+            List<Value> fixed = new ArrayList<>(sample.size());
+            Set<Long> test = new HashSet<>(sample.size());
+            for (Value value : sample) {
+                if (!test.contains(value.getTimestamp().getTime())) {
+                    fixed.add(value);
+                    test.add(value.getTimestamp().getTime());
+                }
+
             }
+            return sample;
 
-        }
-        return sample;
 
     }
     @Override
@@ -399,15 +401,33 @@ public class NimbitsClientImpl implements NimbitsClient {
     }
 
     @Override
-    public <T, K> List<T> getEntity(final SimpleValue<String> entityId, final EntityType type, final Class<K> clz) {
-        UrlContainer path = UrlContainer.combine(instanceUrl, ENTITY_SERVICE);
-        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(4);
-        params.add(new BasicNameValuePair(Parameters.id.getText(), entityId.getValue()));
-        params.add(new BasicNameValuePair(Parameters.type.getText(), String.valueOf(type.getCode())));
-        if (accessCode != null) {
-            params.add(new BasicNameValuePair(Parameters.key.name(), accessCode.getValue()));
-        }
-        return helper.doGet(clz, path, params, EntityModel.class, false);
+    public List<Entity> getEntity (final SimpleValue<String> entityId, final EntityType type, final Class clz) {
+       // UrlContainer path = UrlContainer.combine(instanceUrl, ENTITY_SERVICE);
+       // List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(4);
+      //  params.add(new BasicNameValuePair(Parameters.id.getText(), entityId.getValue()));
+      //  params.add(new BasicNameValuePair(Parameters.type.getText(), String.valueOf(type.getCode())));
+        final Gson gson = new GsonBuilder().registerTypeAdapter(clz, new EntityDeserializer()).create();
+
+
+        RequestInterceptor requestInterceptor = new RequestInterceptor() {
+            @Override
+            public void intercept(RequestInterceptor.RequestFacade request) {
+                if (!server.getAccessCode().isEmpty()) {
+                    request.addHeader(Parameters.apikey.getText(), server.getAccessCode().getValue());
+                }
+            }
+        };
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(instanceUrl.getUrl())
+                .setRequestInterceptor(requestInterceptor)
+                .setConverter(new GsonConverter(gson))
+                .build();
+
+        EntityApi api = restAdapter.create(EntityApi.class);
+        List<Entity> result = api.getEntity(server.getEmail().getValue(), server.getAccessCode().getValue(), entityId.getValue());
+
+
+        return result;
 
 
     }

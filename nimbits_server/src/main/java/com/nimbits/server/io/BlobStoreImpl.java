@@ -555,5 +555,10 @@ public class BlobStoreImpl implements BlobStore {
         return null;
     }
 
+    @Override
+    public int doClean() {
+return 0;
+    }
+
 
 }

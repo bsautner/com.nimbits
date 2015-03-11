@@ -10,9 +10,9 @@ public class ScheduleFactory {
 
     }
 
-    public static Schedule getInstance(Entity anEntity, Boolean enabled, Long interval, String source, String target) {
+    public static Schedule getInstance(Entity anEntity, Boolean enabled, Long interval, String source, String target, Long lastProcessed) {
 
-       return new ScheduleModel(anEntity, enabled, interval, source, target);
+       return new ScheduleModel(anEntity, enabled, interval, source, target, lastProcessed);
 
     }
 }

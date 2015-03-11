@@ -28,15 +28,16 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
         this.interval = interval;
         this.source = source;
         this.target = target;
-        this.lastProcessed = new Date().getTime();
+
     }
 
-    public ScheduleModel(Entity anEntity, Boolean enabled, Long interval, String source, String target) {
+    public ScheduleModel(Entity anEntity, Boolean enabled, Long interval, String source, String target, Long lastProcessed) {
         super(anEntity);
         this.enabled = enabled;
         this.interval = interval;
         this.source = source;
         this.target = target;
+        this.lastProcessed = lastProcessed;
 
     }
 
@@ -46,6 +47,7 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
         this.interval = schedule.getInterval();
         this.source = schedule.getSource();
         this.target = schedule.getTarget();
+        this.lastProcessed = schedule.getLastProcessed();
     }
 
     @Override

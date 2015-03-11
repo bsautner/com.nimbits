@@ -135,7 +135,7 @@ public class EntityHelperImpl implements EntityHelper {
             id = SimpleValue.getInstance(name);
         }
 
-        List<Point> sample;
+        List<Entity> sample;
 
         sample = nimbitsClient.getEntity(id, type, EntityModel.class);
 

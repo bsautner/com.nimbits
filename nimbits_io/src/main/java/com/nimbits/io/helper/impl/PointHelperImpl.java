@@ -106,7 +106,7 @@ public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
             id = SimpleValue.getInstance(name);
         }
 
-        List<Point> sample;
+        List<Entity> sample;
 
         sample = nimbitsClient.getEntity(id, EntityType.point, PointModel.class);
 
@@ -114,7 +114,7 @@ public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
             throw new IllegalStateException("Point Not Found");
         }
         else {
-            return sample.get(0);
+            return (Point) sample.get(0);
         }
 
 

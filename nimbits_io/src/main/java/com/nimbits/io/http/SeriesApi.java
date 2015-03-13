@@ -38,7 +38,6 @@ public interface SeriesApi {
     @GET(SERIES_API)
     List<Value>  getSeries(@Query("email") String email, @Query("key") String key, @Query("id") String id);
 
-
     @GET(SERIES_API)
     List<Value>  getSeries(@Query("email") String email, @Query("key") String key, @Query("id") String id, @Query("count") int count);
 

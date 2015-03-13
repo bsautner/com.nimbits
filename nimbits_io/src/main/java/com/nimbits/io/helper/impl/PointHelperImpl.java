@@ -86,38 +86,31 @@ public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
     public boolean pointExists(final String name)   {
 
         SimpleValue<String> id = SimpleValue.getInstance(server.getEmail().getValue() + "/" + name);
-        List<Entity> sample;
+        Entity sample;
+        try {
+            sample = nimbitsClient.getEntity(id, EntityType.point);
+        } catch (Throwable ex) {
+            return false;
+        }
 
-        sample = nimbitsClient.getEntity(id, EntityType.point, PointModel.class);
-
-        return ! sample.isEmpty();
+        return sample != null;
 
 
 
     }
 
     @Override
-    public Point getPoint(final String name)   {
+    public Point getPoint(final String name) {
+
         SimpleValue<String> id;
         if (! name.startsWith(server.getEmail().getValue())) {
-           id = SimpleValue.getInstance(server.getEmail().getValue()  + "/" + name);
+            id = SimpleValue.getInstance(server.getEmail().getValue()  + "/" + name);
         }
         else {
             id = SimpleValue.getInstance(name);
         }
 
-        List<Entity> sample;
-
-        sample = nimbitsClient.getEntity(id, EntityType.point, PointModel.class);
-
-        if (sample.isEmpty()) {
-            throw new IllegalStateException("Point Not Found");
-        }
-        else {
-            return (Point) sample.get(0);
-        }
-
-
+        return (Point) nimbitsClient.getEntity(id, EntityType.point);
 
     }
 

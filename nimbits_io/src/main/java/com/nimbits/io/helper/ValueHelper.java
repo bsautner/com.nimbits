@@ -22,7 +22,7 @@ public interface ValueHelper {
      * @param value any double value
      * @return the newly recorded value pojo with a timestamp of the current time the value was recorded.
      */
-    Value recordValue(String pointName, double value);
+    void recordValue(String pointName, double value);
 
     /**
      *
@@ -30,7 +30,7 @@ public interface ValueHelper {
      * @param value any a Value Model Object @see ValueModel implements Value
      * @return the newly recorded value pojo with a timestamp of the current time the value was recorded.
      */
-    Value recordValue(String pointName, Value value);
+    void recordValue(String pointName, Value value);
 
     /**
      *
@@ -46,7 +46,7 @@ public interface ValueHelper {
      * @param time the timestamp for this point
      * @return the recorded value
      */
-    Value recordValue(String name, double value, Date time);
+    void recordValue(String name, double value, Date time);
 
 
     List<Value> getSeries(String name, Range<Date> dateRange);

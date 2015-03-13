@@ -10,22 +10,24 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.gson;
+package com.nimbits.server.gson.deserializer;
 
 import com.google.gson.*;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModel;
+import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.accesskey.AccessKeyModel;
+import com.nimbits.server.gson.GsonFactory;
 
 import java.lang.reflect.Type;
 
 
-public class PointDeserializer implements JsonDeserializer<Point> {
+public class AccessKeyDeserializer implements JsonDeserializer<AccessKey> {
     @Override
-    public Point deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public AccessKey deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 
-      //  final JsonPrimitive jsonPrimitive = (JsonPrimitive) jsonElement;
-      //  final String json = jsonElement.getAsString();
-        Point retObj =  GsonFactory.getInstance().fromJson(jsonElement, PointModel.class);
-        return retObj;
+        final JsonPrimitive jsonPrimitive = (JsonPrimitive) jsonElement;
+        final String json = jsonPrimitive.getAsString();
+        return GsonFactory.getSimpleInstance().fromJson(json, AccessKeyModel.class);
+
+
     }
 }

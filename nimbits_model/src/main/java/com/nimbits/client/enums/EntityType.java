@@ -12,23 +12,37 @@
 
 package com.nimbits.client.enums;
 
+import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.connection.Connection;
+import com.nimbits.client.model.instance.Instance;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.schedule.Schedule;
+import com.nimbits.client.model.socket.Socket;
+import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.summary.Summary;
+import com.nimbits.client.model.sync.Sync;
+import com.nimbits.client.model.user.User;
+
+
 import java.io.Serializable;
 import java.util.*;
 
 
 public enum EntityType implements Serializable {
-    user(0, false, false, false, true, true, false, 0, "com.nimbits.server.orm.UserEntity"),
-    point(1, true, false, true, true, true, true, 1, "com.nimbits.server.orm.PointEntity"),
-    category(2, true, false, true, false, true, false, 2, "com.nimbits.server.orm.CategoryEntity"),
-    subscription(5, false, false, false, false, true, false, 4, "com.nimbits.server.orm.SubscriptionEntity"),
-    sync(15, false, false, false, false, true, false, 5, "com.nimbits.server.orm.SyncEntity"),
-    calculation(7, false, true, true, false, true, false, 6, "com.nimbits.server.orm.CalcEntity"),
-    summary(11, false, true, false, false, true, false, 11, "com.nimbits.server.orm.SummaryEntity"),
-    accessKey(13, false, false, false, true, true, false, 13, "com.nimbits.server.orm.AccessKeyEntity"),
-    instance(14, true, false, false, true, false, false, 14, "com.nimbits.server.orm.InstanceEntity"),
-    socket(19, false, false, false, true, true, false, 19, "com.nimbits.server.orm.SocketEntity"),
-    connection(20, false, false, false, true, true, false, 20, "com.nimbits.server.orm.ConnectionEntity"),
-    schedule(21, false, false, false, false, true, false, 21, "com.nimbits.server.orm.ScheduleEntity"),
+    user(0, false, false, false, true, true, false, 0, "com.nimbits.server.orm.UserEntity", User.class),
+    point(1, true, false, true, true, true, true, 1, "com.nimbits.server.orm.PointEntity", Point.class),
+    category(2, true, false, true, false, true, false, 2, "com.nimbits.server.orm.CategoryEntity", Category.class),
+    subscription(5, false, false, false, false, true, false, 4, "com.nimbits.server.orm.SubscriptionEntity", Subscription.class),
+    sync(15, false, false, false, false, true, false, 5, "com.nimbits.server.orm.SyncEntity", Sync.class),
+    calculation(7, false, true, true, false, true, false, 6, "com.nimbits.server.orm.CalcEntity", Calculation.class),
+    summary(11, false, true, false, false, true, false, 11, "com.nimbits.server.orm.SummaryEntity", Summary.class),
+    accessKey(13, false, false, false, true, true, false, 13, "com.nimbits.server.orm.AccessKeyEntity", AccessKey.class),
+    instance(14, true, false, false, true, false, false, 14, "com.nimbits.server.orm.InstanceEntity", Instance.class),
+    socket(19, false, false, false, true, true, false, 19, "com.nimbits.server.orm.SocketEntity", Socket.class),
+    connection(20, false, false, false, true, true, false, 20, "com.nimbits.server.orm.ConnectionEntity", Connection.class),
+    schedule(21, false, false, false, false, true, false, 21, "com.nimbits.server.orm.ScheduleEntity", Schedule.class),
     ;
 
     private static final Map<Integer, EntityType> lookup = new HashMap<Integer, EntityType>(EntityType.values().length);
@@ -39,6 +53,8 @@ public enum EntityType implements Serializable {
 
         }
     }
+
+    private final Class<?> clz;
 
     public static List<String> classList() {
         List<String> retObj = new ArrayList<String>();
@@ -69,7 +85,8 @@ public enum EntityType implements Serializable {
                        final boolean isTreeGridItem,
                        final boolean recordsData,
                        final int order,
-                       final String className) {
+                       final String className,
+                       final Class<?> clz) {
         this.code = code;
         this.isAndroidReady = isAndroidReady;
         this.uniqueNameFlag = uniqueNameFlag;
@@ -79,6 +96,8 @@ public enum EntityType implements Serializable {
         this.sendUpdatesToCore = sendUpdatesToCore;
         this.recordsData = recordsData;
         this.isTrigger = isTrigger;
+        this.clz = clz;
+
     }
 
     public boolean isSendUpdatesToCore() {
@@ -153,5 +172,10 @@ public enum EntityType implements Serializable {
         }
 
         return values;
+    }
+
+
+    public Class<?> getClz() {
+        return clz;
     }
 }

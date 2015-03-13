@@ -10,22 +10,25 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.gson;
+package com.nimbits.server.gson.deserializer;
 
 import com.google.gson.*;
-import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.accesskey.AccessKeyModel;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.category.CategoryModel;
+import com.nimbits.client.model.sync.Sync;
+import com.nimbits.client.model.sync.SyncModel;
 
 import java.lang.reflect.Type;
 
 
-public class AccessKeyDeserializer implements JsonDeserializer<AccessKey> {
+public class SyncDeserializer implements JsonDeserializer<Sync> {
     @Override
-    public AccessKey deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+    public Sync deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 
-        final JsonPrimitive jsonPrimitive = (JsonPrimitive) jsonElement;
-        final String json = jsonPrimitive.getAsString();
-        return GsonFactory.getSimpleInstance().fromJson(json, AccessKeyModel.class);
+
+        final String json = jsonElement.toString();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        return gson.fromJson(json, SyncModel.class);
 
 
     }

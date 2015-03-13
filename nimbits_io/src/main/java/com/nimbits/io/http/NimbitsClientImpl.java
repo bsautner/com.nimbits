@@ -37,9 +37,9 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.io.NimbitsClient;
-import com.nimbits.server.gson.EntityDeserializer;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.gson.ValueDeserializer;
+import com.nimbits.server.gson.deserializer.SessionDeserializer;
+import com.nimbits.server.gson.deserializer.ValueDeserializer;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -63,14 +63,10 @@ public class NimbitsClientImpl implements NimbitsClient {
 
 
     private static final UrlContainer VALUE_SERVICE = UrlContainer.getInstance("/service/v2/value");
-
-    private static final UrlContainer SERIES_SERVICE = UrlContainer.getInstance("/service/v2/series");
-
-    private static final UrlContainer ENTITY_SERVICE = UrlContainer.getInstance("/service/v2/entity");
+     private static final UrlContainer ENTITY_SERVICE = UrlContainer.getInstance("/service/v2/entity");
     private static final UrlContainer HB_SERVICE = UrlContainer.getInstance("/service/v2/hb");
     public static final String HTTP_NIMBITS_GCM_APPSPOT_COM_ANDROID = "http://nimbits-gcm.appspot.com/android";
 
-    public static final int MAX_COUNT = 1000;
     private final HttpHelper helper;
     public final static Type valueListType = new TypeToken<List<ValueModel>>() {
     }.getType();
@@ -219,18 +215,25 @@ public class NimbitsClientImpl implements NimbitsClient {
     }
 
     @Override
-    public List<Value> postValue(final Entity entity, final Value value) {
-        UrlContainer path = UrlContainer.combine(instanceUrl, VALUE_SERVICE);
+    public void postValue(final Entity entity, final Value value) {
+        RequestInterceptor requestInterceptor = new RequestInterceptor() {
+            @Override
+            public void intercept(RequestInterceptor.RequestFacade request) {
+                if (!server.getAccessCode().isEmpty()) {
+                    request.addHeader(Parameters.apikey.getText(), server.getAccessCode().getValue());
+                }
+            }
+        };
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(instanceUrl.getUrl())
+                .setRequestInterceptor(requestInterceptor)
 
-        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(4);
-        String content = new GsonBuilder().create().toJson(value);
-        params.add((new BasicNameValuePair(Parameters.id.getText(), entity.getKey())));
-        params.add((new BasicNameValuePair(Parameters.json.getText(), content)));
-        params.add((new BasicNameValuePair(Parameters.email.getText(), email.getValue())));
-        if (accessCode != null) {
-            params.add(new BasicNameValuePair(Parameters.key.name(), accessCode.getValue()));
-        }
-        return helper.doPost(ValueModel.class, path, params, null, false);
+                .build();
+
+        ValueApi valueApi = restAdapter.create(ValueApi.class);
+        valueApi.postValue(value, server.getEmail().getValue(), accessCode.getValue(), entity.getKey());
+
+
 
 
     }
@@ -401,12 +404,13 @@ public class NimbitsClientImpl implements NimbitsClient {
     }
 
     @Override
-    public List<Entity> getEntity (final SimpleValue<String> entityId, final EntityType type, final Class clz) {
-       // UrlContainer path = UrlContainer.combine(instanceUrl, ENTITY_SERVICE);
-       // List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(4);
-      //  params.add(new BasicNameValuePair(Parameters.id.getText(), entityId.getValue()));
-      //  params.add(new BasicNameValuePair(Parameters.type.getText(), String.valueOf(type.getCode())));
-        final Gson gson = new GsonBuilder().registerTypeAdapter(clz, new EntityDeserializer()).create();
+    public  Entity  getEntity (final SimpleValue<String> entityId, final EntityType entityType) {
+
+
+        final Gson g = new GsonBuilder()
+                .registerTypeAdapter(entityType.getClz(), SerializationHelper.getDeserializer(entityType))
+
+                .create();
 
 
         RequestInterceptor requestInterceptor = new RequestInterceptor() {
@@ -417,22 +421,82 @@ public class NimbitsClientImpl implements NimbitsClient {
                 }
             }
         };
-        RestAdapter restAdapter = new RestAdapter.Builder()
+        RestAdapter adapter = new RestAdapter.Builder()
                 .setEndpoint(instanceUrl.getUrl())
                 .setRequestInterceptor(requestInterceptor)
-                .setConverter(new GsonConverter(gson))
+                .setConverter(new GsonConverter(g))
                 .build();
 
-        EntityApi api = restAdapter.create(EntityApi.class);
-        List<Entity> result = api.getEntity(server.getEmail().getValue(), server.getAccessCode().getValue(), entityId.getValue());
+        EntityApi entityApi = adapter.create(EntityApi.class);
+        Entity result = null;
+
+        switch (entityType) {
+
+            case user:
+                result = entityApi.getUser(server.getEmail().getValue(), server.getAccessCode().getValue(), entityId.getValue());
+
+                break;
+            case point:
+
+                result = entityApi.getPoint(server.getEmail().getValue(), server.getAccessCode().getValue(), entityId.getValue());
+
+                break;
+            case category:
+
+                result = entityApi.getCategory(server.getEmail().getValue(), server.getAccessCode().getValue(), entityId.getValue());
+
+                break;
+            case subscription:
+
+                result = entityApi.getSubscription(server.getEmail().getValue(), server.getAccessCode().getValue(), entityId.getValue());
+
+                break;
+            case sync:
+
+                result = entityApi.getSync(server.getEmail().getValue(), server.getAccessCode().getValue(), entityId.getValue());
+
+                break;
+            case calculation:
+
+                result = entityApi.getCalc(server.getEmail().getValue(), server.getAccessCode().getValue(), entityId.getValue());
+
+                break;
+            case summary:
+
+                result = entityApi.getSummary(server.getEmail().getValue(), server.getAccessCode().getValue(), entityId.getValue());
+
+                break;
+            case accessKey:
+
+                result = entityApi.getToken(server.getEmail().getValue(), server.getAccessCode().getValue(), entityId.getValue());
+
+                break;
+            case instance:
+                result = entityApi.getInstance(server.getEmail().getValue(), server.getAccessCode().getValue(), entityId.getValue());
+
+                break;
+            case socket:
+
+                result = entityApi.getSocket(server.getEmail().getValue(), server.getAccessCode().getValue(), entityId.getValue());
+
+                break;
+            case connection:
+
+                result = entityApi.getConnection(server.getEmail().getValue(), server.getAccessCode().getValue(), entityId.getValue());
+
+                break;
+            case schedule:
+
+                result = entityApi.getSchedule(server.getEmail().getValue(), server.getAccessCode().getValue(), entityId.getValue());
+
+                break;
+        }
 
 
         return result;
 
 
     }
-
-
 
 
     @Override

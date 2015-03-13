@@ -37,30 +37,24 @@ public class ValueHelperImpl implements ValueHelper {
   
 
     @Override
-    public Value recordValue(String pointName, double value)  {
+    public void recordValue(String pointName, double value)  {
         Value vx = ValueFactory.createValueModel(value);
-        return doRecordValue(pointName, vx);
+        doRecordValue(pointName, vx);
 
     }
 
     @Override
-    public Value recordValue(String pointName, Value value)  {
+    public void recordValue(String pointName, Value value)  {
 
-        return doRecordValue(pointName, value);
+         doRecordValue(pointName, value);
 
     }
 
-    private Value doRecordValue(String name, Value vx) {
+    private void doRecordValue(String name, Value vx) {
         Point point = HelperFactory.getPointHelper(server).getPoint(name);
 
-        List<Value> response = NimbitsClientFactory.getInstance(server).postValue(point, vx);
-        if (response.isEmpty()) {
-            throw new RuntimeException("Record Value Failed");
+        NimbitsClientFactory.getInstance(server).postValue(point, vx);
 
-        }
-        else {
-            return response.get(0);
-        }
     }
 
     @Override
@@ -72,9 +66,9 @@ public class ValueHelperImpl implements ValueHelper {
     }
 
     @Override
-    public Value recordValue(String name, double v, Date time) {
+    public void recordValue(String name, double v, Date time) {
         Value vx = ValueFactory.createValueModel(v, time);
-        return doRecordValue(name, vx);
+         doRecordValue(name, vx);
     }
 
     @Override

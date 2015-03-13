@@ -3,30 +3,27 @@ package com.nimbits.io.socket;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.constants.Const;
-import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.io.http.SessionDeserializer;
+import com.nimbits.server.gson.deserializer.SessionDeserializer;
 import com.nimbits.server.gson.*;
+import com.nimbits.server.gson.deserializer.AccessKeyDeserializer;
+import com.nimbits.server.gson.deserializer.DateDeserializer;
+import com.nimbits.server.gson.deserializer.ValueDeserializer;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketClient;
 import org.eclipse.jetty.websocket.WebSocketClientFactory;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**

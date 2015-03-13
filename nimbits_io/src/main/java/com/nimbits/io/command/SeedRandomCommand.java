@@ -31,8 +31,8 @@ public class SeedRandomCommand extends AbstractCommand implements Command {
                     ValueHelper valueHelper = HelperFactory.getValueHelper(server);
 
 
-                    Value value = valueHelper.recordValue(current.getName().getValue(), r.nextDouble() * 100);
-                    listener.onMessage("Recorded Value: " + value.getValueWithData());
+                    valueHelper.recordValue(current.getName().getValue(), r.nextDouble() * 100);
+                    listener.onMessage("Recorded Value: ");
 
                     try {
                         Thread.sleep(10);

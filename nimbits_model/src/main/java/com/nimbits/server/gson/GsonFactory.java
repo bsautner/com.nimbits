@@ -21,6 +21,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.server.gson.deserializer.*;
 
 
 public enum GsonFactory {
@@ -48,9 +49,7 @@ public enum GsonFactory {
                     .registerTypeAdapter(Calculation.class, new CalculationSerializer())
                     .registerTypeAdapter(Calculation.class, new CalculationDeserializer())
                     .registerTypeAdapter(User.class, new UserSerializer())
-                    .registerTypeAdapter(User.class, new UserDeserializer())
-//                     .registerTypeAdapter(Date.class, new DateDeserializer())
-//                      .registerTypeAdapter(Date.class, new DateSerializer())
+                    .registerTypeAdapter(User.class, new SessionDeserializer())
                     .create();
 
         }

@@ -15,7 +15,7 @@ package com.nimbits.client.constants;
 
 public class Const {
 
-    public static final String VERSION = "3.8.6";
+    public static final String VERSION = "3.8.7";
 
     public static final String SOCKET_RELAY = "130.211.147.107:8080";
 
@@ -32,9 +32,6 @@ public class Const {
 
     public static final int DEFAULT_HTTP_TIMEOUT = 15000;
 
-    public static final String DELIMITER_COMMA = ",";
-    public static final String DELIMITER_BAR = "|";
-    ;
     public static final String CONTENT_TYPE_HTML = "text/html";
     public static final String CONTENT_TYPE_PLAIN = "text/plain";
 
@@ -46,13 +43,9 @@ public class Const {
 
 
     @Deprecated //delete when all blobstores have length
-    public static final long CONST_DEFAULT_BLOB_LENGTH = 100000;
+
     public static final int CONST_DEFAULT_LIST_SIZE = 1024;
     public static final String CONST_ANON_EMAIL = "uncle_nobody@nimbits.com";
-    public static String CONST_ARDUINO_DATA_SEPARATOR = "|";
-    public static final int HTTP_STATUS_INTERNAL_SERVER_ERROR = 500;
-    public static final int HTTP_STATUS_OK = 200;
-    public static final int HTTP_STATUS_UNAUTHORISED = 401;
 
 
     private Const() {

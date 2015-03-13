@@ -19,19 +19,60 @@
 package com.nimbits.io.http;
 
 
+import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.connection.Connection;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.instance.Instance;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.schedule.Schedule;
+import com.nimbits.client.model.socket.Socket;
+import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.summary.Summary;
+import com.nimbits.client.model.sync.Sync;
+import com.nimbits.client.model.user.User;
 import retrofit.http.GET;
 import retrofit.http.Query;
 
-import java.util.List;
-
-public interface EntityApi {
+public interface EntityApi  {
 
     final String API ="/service/v2/entity";
 
 
     @GET(API)
-    List<Entity> getEntity(@Query("email") String email, @Query("key") String key, @Query("id") String id);
+    Point getPoint(@Query("email") String email, @Query("key") String key, @Query("id") String id);
 
+    @GET(API)
+    User getUser(@Query("email") String email, @Query("key") String key, @Query("id") String id);
 
+    @GET(API)
+    Category getCategory(@Query("email") String email, @Query("key") String key, @Query("id") String id);
+
+    @GET(API)
+    Subscription getSubscription(@Query("email") String email, @Query("key") String key, @Query("id") String id);
+
+    @GET(API)
+    Sync getSync(@Query("email") String email, @Query("key") String key, @Query("id") String id);
+
+    @GET(API)
+    Calculation getCalc(@Query("email") String email, @Query("key") String key, @Query("id") String id);
+
+    @GET(API)
+    Summary getSummary(@Query("email") String email, @Query("key") String key, @Query("id") String id);
+
+    @GET(API)
+    AccessKey getToken(@Query("email") String email, @Query("key") String key, @Query("id") String id);
+
+    @GET(API)
+    Instance getInstance(@Query("email") String email, @Query("key") String key, @Query("id") String id);
+
+    @GET(API)
+    Socket getSocket(@Query("email") String email, @Query("key") String key, @Query("id") String id);
+
+    @GET(API)
+    Connection getConnection(@Query("email") String email, @Query("key") String key, @Query("id") String id);
+
+    @GET(API)
+    Schedule getSchedule(@Query("email") String email, @Query("key") String key, @Query("id") String id);
 }

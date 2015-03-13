@@ -8,7 +8,7 @@
     <artifactId>com.nimbits.nimbits_client</artifactId>
     <version>${nimbits_version}-SNAPSHOT</version>
     <properties>
-        <nimbits_version>3.8.6</nimbits_version>
+        <nimbits_version>3.8.7</nimbits_version>
     </properties>
 
     <packaging>jar</packaging>

@@ -27,7 +27,7 @@ import com.nimbits.client.model.value.impl.ValueModel;
 import com.nimbits.client.model.valueblobstore.ValueBlobStore;
 import com.nimbits.client.model.valueblobstore.ValueBlobStoreFactory;
 import com.nimbits.server.defrag.ValueDayHolder;
-import com.nimbits.server.gson.ValueDeserializer;
+import com.nimbits.server.gson.deserializer.ValueDeserializer;
 import com.nimbits.server.orm.store.ValueBlobStoreEntity;
 import com.nimbits.server.transaction.settings.SettingsService;
 
@@ -41,7 +41,6 @@ import javax.jdo.Transaction;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Repository
@@ -552,7 +551,7 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public List<Value> getLegacyStores(Point point) {
-        return null;
+        return Collections.emptyList();
     }
 
     @Override

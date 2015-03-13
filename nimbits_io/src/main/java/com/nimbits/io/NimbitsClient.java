@@ -49,7 +49,7 @@ public interface NimbitsClient {
 
     List<Entity> getTree();
 
-    List<Value> postValue(Entity entity, Value value);
+    void postValue(Entity entity, Value value);
 
     List<Value> getSeries(String entity);
 
@@ -63,7 +63,7 @@ public interface NimbitsClient {
 
     <T> List<T> updateEntity(Entity entity, Class<T> clz);
 
-    List<Entity> getEntity(SimpleValue<String> entityId, EntityType type, Class clz);
+    Entity getEntity(SimpleValue<String> entityId, EntityType type);
 
     List<AndroidControl> getControl();
 

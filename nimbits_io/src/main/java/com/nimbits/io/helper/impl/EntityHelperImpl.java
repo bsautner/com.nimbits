@@ -75,15 +75,10 @@ public class EntityHelperImpl implements EntityHelper {
 
     @Override
     public Entity getCategory(String key) {
-        List<Entity> sample = nimbitsClient.getEntity(
-                SimpleValue.getInstance(key), EntityType.category, CategoryModel.class);
-        if (sample.isEmpty()) {
-            throw new RuntimeException("Category not found");
+        Entity  sample = nimbitsClient.getEntity(
+                SimpleValue.getInstance(key), EntityType.category );
 
-        }
-        else {
-            return  sample.get(0);
-        }
+        return sample;
 
     }
 
@@ -135,16 +130,9 @@ public class EntityHelperImpl implements EntityHelper {
             id = SimpleValue.getInstance(name);
         }
 
-        List<Entity> sample;
+        Entity sample = nimbitsClient.getEntity(id, type );
+        deleteEntity(sample);
 
-        sample = nimbitsClient.getEntity(id, type, EntityModel.class);
-
-        if (sample.isEmpty()) {
-            throw new IllegalStateException("Entity Not Found");
-        }
-        else {
-             deleteEntity(sample.get(0));
-        }
 
     }
 

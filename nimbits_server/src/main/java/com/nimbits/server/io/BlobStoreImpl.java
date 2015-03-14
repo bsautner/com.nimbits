@@ -13,6 +13,7 @@
 package com.nimbits.server.io;
 
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -136,7 +137,7 @@ public class BlobStoreImpl implements BlobStore {
                     }
                 }
             }
-            return retObj;
+            return ImmutableList.copyOf(retObj);
         } finally {
            pm.close();
         }

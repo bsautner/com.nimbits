@@ -55,8 +55,8 @@ public class RandomLoopSample {
         while (true) {
 
             try {
-                Value value = valueHelper.recordValue(pointName, r.nextDouble() * 100);
-                System.out.println("Recorded Value: " + value.getValueWithData());
+                valueHelper.recordValue(pointName, r.nextDouble() * 100);
+                System.out.println("Recorded Value: "  );
 
             } catch (Exception e) {
                //let's just keep on trucking for this sample.

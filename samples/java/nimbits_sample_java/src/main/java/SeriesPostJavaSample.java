@@ -47,13 +47,13 @@ import java.util.*;
  *
  */
 public class SeriesPostJavaSample {
-    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("support@nimbits.com");
-    private static final AccessCode ACCESS_KEY = AccessCode.getInstance("key");
-     private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080");
+    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("pi@localhost.com");
+    private static final AccessCode ACCESS_KEY = AccessCode.getInstance("pi");
+     private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("192.168.1.24:8080");
    // private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("cloud.nimbits.com");
     private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, ACCESS_KEY);
-    protected static final int COUNT = 10;
-    public static final int VCOUNT = 1000;
+    protected static final int COUNT = 5;
+    public static final int VCOUNT = 100;
     public static final int ROUNDS = 100;
 
     public static void main(String[] args) throws InterruptedException {

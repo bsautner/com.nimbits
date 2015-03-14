@@ -70,8 +70,8 @@ public class SimpleJavaSample {
             ValueHelper valueHelper = HelperFactory.getValueHelper(SERVER);
             for (int i =0; i < 10; i++) {
 
-                Value value = valueHelper.recordValue(pointName, r.nextDouble() * 100);
-                System.out.println("Recorded Value: " + value.toString());
+                valueHelper.recordValue(pointName, r.nextDouble() * 100);
+                System.out.println("Recorded Value: " + i);
                 Thread.sleep(10);
 
 

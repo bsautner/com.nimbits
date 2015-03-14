@@ -62,12 +62,12 @@ public class SystemHealthCheck {
         while (! error) {
 
             long s = System.currentTimeMillis();
-            Value value = valueHelper.recordValue(pointName, r.nextDouble() * 10000 * r.nextDouble());
+            valueHelper.recordValue(pointName, r.nextDouble() * 10000 * r.nextDouble());
             long e = System.currentTimeMillis();
             long elapsed = e - s;
             valueHelper.recordValue(valueBenchmark, (double) elapsed);
 
-            valueList.add(value);
+
 
             Thread.sleep(100);
             if (++counter >= 10) {

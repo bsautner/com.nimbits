@@ -24,7 +24,7 @@ import com.nimbits.client.model.entity.EntityModel;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
+
 
 public class UserModel extends EntityModel implements Serializable, User {
 
@@ -34,7 +34,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     @Expose
     private String emailAddress;
 
-    private List<AccessKey> accessKeys;
+    private ArrayList<AccessKey> accessKeys;
 
     @Expose
     private Boolean isAdmin;
@@ -139,7 +139,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     }
 
     @Override
-    public List<AccessKey> getAccessKeys() {
+    public ArrayList<AccessKey> getAccessKeys() {
         return this.accessKeys == null ? new ArrayList<AccessKey>(1) : this.accessKeys;
     }
 

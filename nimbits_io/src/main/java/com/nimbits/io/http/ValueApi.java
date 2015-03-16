@@ -2,6 +2,7 @@ package com.nimbits.io.http;
 
 import com.nimbits.client.model.value.Value;
 import retrofit.http.Body;
+import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Query;
 
@@ -11,4 +12,7 @@ public interface ValueApi {
 
     @POST(API)
     String postValue(@Body Value value, @Query("email") String email, @Query("key") String token, @Query("id") String id);
+
+    @GET(API)
+    Value getValue(@Query("id") String name);
 }

@@ -62,7 +62,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
 
 
-    private static final UrlContainer VALUE_SERVICE = UrlContainer.getInstance("/service/v2/value");
+
      private static final UrlContainer ENTITY_SERVICE = UrlContainer.getInstance("/service/v2/entity");
     private static final UrlContainer HB_SERVICE = UrlContainer.getInstance("/service/v2/hb");
     public static final String HTTP_NIMBITS_GCM_APPSPOT_COM_ANDROID = "http://nimbits-gcm.appspot.com/android";
@@ -155,15 +155,42 @@ public class NimbitsClientImpl implements NimbitsClient {
 
 
     @Override
-    public List<Value> getValue(final Entity entity) {
-        UrlContainer path = UrlContainer.combine(instanceUrl, VALUE_SERVICE);
+    public Value getValue(final String entityName) {
+        final Gson gson = new GsonBuilder().registerTypeAdapter(Value.class, new ValueDeserializer()).create();
 
-        List<BasicNameValuePair> params = new ArrayList<BasicNameValuePair>(1);
-        params.add((new BasicNameValuePair(Parameters.id.getText(), entity.getKey())));
-        if (accessCode != null) {
-            params.add(new BasicNameValuePair(Parameters.key.name(), accessCode.getValue()));
+        RequestInterceptor requestInterceptor = new RequestInterceptor() {
+            @Override
+            public void intercept(RequestInterceptor.RequestFacade request) {
+                if (!server.getAccessCode().isEmpty()) {
+                    request.addHeader(Parameters.apikey.getText(), server.getAccessCode().getValue());
+                    request.addQueryParam(Parameters.key.getText(), server.getAccessCode().getValue());
+                    request.addQueryParam(Parameters.email.getText(), server.getEmail().getValue());
+                    request.addQueryParam(Parameters.password.getText(), server.getAccessCode().getValue());
+
+                }
+            }
+        };
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(instanceUrl.getUrl())
+                .setRequestInterceptor(requestInterceptor)
+                .setConverter(new GsonConverter(gson))
+                .setErrorHandler(new ErrorHandler() {
+                    @Override
+                    public Throwable handleError(RetrofitError retrofitError) {
+                        throw new NimbitsClientException(retrofitError.getMessage());
+                    }
+                })
+                .build();
+
+        ValueApi api = restAdapter.create(ValueApi.class);
+        String fixed;
+        if (! entityName.startsWith(server.getEmail().getValue())) {
+            fixed = server.getEmail().getValue() + "/" + entityName;
         }
-        return helper.doGet(ValueModel.class, path, params, valueListType, false);
+        else {
+            fixed = entityName;
+        }
+        return api.getValue(fixed);
 
     }
 

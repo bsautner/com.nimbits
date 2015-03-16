@@ -77,4 +77,5 @@ public interface ValueHelper {
      */
     Map<String, Integer> moveCron();
 
+    Value getValue(String name);
 }

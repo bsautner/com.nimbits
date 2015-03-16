@@ -102,7 +102,11 @@ public class ValueHelperImpl implements ValueHelper {
 
     }
 
-
+    @Override
+    public Value getValue(String name) {
+       // Point point = HelperFactory.getPointHelper(server).getPoint(name);
+        return  NimbitsClientFactory.getInstance(server).getValue(name);
+    }
 
 
 }

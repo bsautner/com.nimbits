@@ -43,7 +43,7 @@ public interface NimbitsClient {
 
     User getSession();
 
-    List<Value> getValue(Entity entity);
+    Value  getValue(String entityName);
 
     Map<String, Integer> moveCron();
 

@@ -57,7 +57,7 @@ public class SeriesPostJavaSample {
     private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("192.168.1.21:8080");
    // private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("cloud.nimbits.com");
     private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, TOKEN);
-    protected static final int COUNT = 5;
+    protected static final int COUNT = 100;
     public static final int VCOUNT = 100;
     public static final int ROUNDS = 100;
 

@@ -15,12 +15,7 @@ package com.nimbits.client.model.accesskey;
 import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.model.entity.Entity;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 4/16/12
- * Time: 2:24 PM
- */
+
 public class AccessKeyFactory {
 
     private AccessKeyFactory() {

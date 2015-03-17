@@ -53,9 +53,9 @@ public class AuthServiceImpl implements AuthService {
 
         EmailAddress emailAddress;
 
-        String authToken = request.getHeader(Parameters.authToken.getText());
+        String authToken = request.getHeader(Parameters.token.getText());
         if (authToken == null) {
-            authToken = request.getParameter(Parameters.authToken.getText());
+            authToken = request.getParameter(Parameters.token.getText());
         }
         if (authToken != null) {
 

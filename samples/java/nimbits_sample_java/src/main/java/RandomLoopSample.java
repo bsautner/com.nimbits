@@ -3,9 +3,8 @@ import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
-import com.nimbits.client.model.server.apikey.AccessCode;
+import com.nimbits.client.model.server.apikey.AccessToken;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
 import com.nimbits.io.helper.HelperFactory;
 import com.nimbits.io.helper.UserHelper;
 import com.nimbits.io.helper.ValueHelper;
@@ -24,7 +23,7 @@ public class RandomLoopSample {
 
     //this sample uses an access key, so you've logged into nimbits and right clicked on your account to create this read/write key with user scope.
 
-    private static final AccessCode ACCESS_KEY = AccessCode.getInstance("key");
+    private static final AccessToken ACCESS_KEY = AccessToken.getInstance("key");
 
 
     private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("192.168.1.15:8080");

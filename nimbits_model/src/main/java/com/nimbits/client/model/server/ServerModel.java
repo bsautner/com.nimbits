@@ -15,7 +15,7 @@ package com.nimbits.client.model.server;
 import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.server.apikey.AccessCode;
+import com.nimbits.client.model.server.apikey.AccessToken;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -24,18 +24,18 @@ import java.io.Serializable;
 public class ServerModel implements Server, Serializable {
 
     private UrlContainer url;
-    private AccessCode accessCode;
+    private AccessToken accessToken;
     private Protocol protocol;
     private String email;
 
 
-    public ServerModel(final UrlContainer url, EmailAddress emailAddress, final AccessCode accessCode) {
+    public ServerModel(final UrlContainer url, EmailAddress emailAddress, final AccessToken accessToken) {
         if (StringUtils.isEmpty(url.getUrl())) {
             throw new IllegalArgumentException("url was null");
         }
         this.url = removeProtocol(url);
 
-        this.accessCode = accessCode;
+        this.accessToken = accessToken;
 
         this.protocol = Protocol.http;
         this.email = emailAddress.getValue();
@@ -57,8 +57,8 @@ public class ServerModel implements Server, Serializable {
 
 
     @Override
-    public AccessCode getAccessCode() {
-        return accessCode;
+    public AccessToken getAccessToken() {
+        return accessToken;
     }
 
 

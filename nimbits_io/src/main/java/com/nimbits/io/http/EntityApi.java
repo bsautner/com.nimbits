@@ -32,7 +32,9 @@ import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.sync.Sync;
 import com.nimbits.client.model.user.User;
+import retrofit.http.Body;
 import retrofit.http.GET;
+import retrofit.http.POST;
 import retrofit.http.Query;
 
 public interface EntityApi  {
@@ -75,4 +77,41 @@ public interface EntityApi  {
 
     @GET(API)
     Schedule getSchedule(@Query("email") String email, @Query("key") String key, @Query("id") String id);
+
+    @POST(API)
+    Entity addEntity(@Body Entity entity);
+
+
+    @POST(API)
+    Point addPoint(@Body Entity entity);
+
+    @POST(API)
+    Category addCategory(@Body Entity entity);
+
+    @POST(API)
+    Subscription addSubscription(@Body Entity entity);
+
+    @POST(API)
+    Sync addSync(@Body Entity entity);
+
+    @POST(API)
+    Calculation addCalculation(@Body Entity entity);
+
+    @POST(API)
+    Summary addSummaryentity(@Body Entity entity);
+
+    @POST(API)
+    AccessKey addAccessToken(@Body Entity entity);
+
+    @POST(API)
+    Instance addInstance(@Body Entity entity);
+
+    @POST(API)
+    Socket addSocket(@Body Entity entity);
+
+    @POST(API)
+    Connection addConnection(@Body Entity entity);
+
+    @POST(API)
+    Schedule addSchedule(@Body Entity entity);
 }

@@ -16,7 +16,7 @@ import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.server.Protocol;
-import com.nimbits.client.model.server.apikey.AccessCode;
+import com.nimbits.client.model.server.apikey.AccessToken;
 
 import java.io.Serializable;
 
@@ -30,7 +30,7 @@ public interface Instance extends Entity, Serializable {
 
     String getVersion();
 
-    AccessCode getApiKey();
+    AccessToken getApiKey();
 
     boolean isDefault();
 

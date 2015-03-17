@@ -16,12 +16,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 4/10/12
- * Time: 2:26 PM
- */
+
 public enum AuthLevel {
 
     restricted(1, "Read Only Public Data", false),

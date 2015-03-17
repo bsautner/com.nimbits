@@ -23,7 +23,7 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
-import com.nimbits.client.model.server.apikey.AccessCode;
+import com.nimbits.client.model.server.apikey.AccessToken;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
@@ -47,11 +47,16 @@ import java.util.*;
  *
  */
 public class SeriesPostJavaSample {
-    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("pi@localhost.com");
-    private static final AccessCode ACCESS_KEY = AccessCode.getInstance("pi");
-     private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("192.168.1.24:8080");
+    //private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("pi@localhost.com");
+//    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("bsautner@gmail.com");
+//    private static final AccessToken TOKEN = AccessToken.getInstance("key");
+//     private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8085");
+
+    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("support@nimbits.com");
+    private static final AccessToken TOKEN = AccessToken.getInstance("key");
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("192.168.1.21:8080");
    // private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("cloud.nimbits.com");
-    private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, ACCESS_KEY);
+    private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, TOKEN);
     protected static final int COUNT = 5;
     public static final int VCOUNT = 100;
     public static final int ROUNDS = 100;
@@ -67,7 +72,7 @@ public class SeriesPostJavaSample {
         User user = sessionHelper.getSession();
 
 
-        System.out.println("Hello " + user.getEmail());
+        System.out.println("Hello " + user.getEmail() + " " + user.getToken());
 
 
         List<Point> points = new ArrayList<>(COUNT);

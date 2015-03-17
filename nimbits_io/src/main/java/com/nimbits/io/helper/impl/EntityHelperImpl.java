@@ -26,7 +26,7 @@ import com.nimbits.io.helper.PointHelper;
 import com.nimbits.io.http.NimbitsClientFactory;
 
 import java.util.List;
-import java.util.UUID;
+
 
 public class EntityHelperImpl implements EntityHelper {
 
@@ -46,9 +46,9 @@ public class EntityHelperImpl implements EntityHelper {
     }
 
     @Override
-    public List<Entity> addEntity(Entity e, Class clz) {
+    public Entity addEntity(Entity e) {
 
-        return nimbitsClient.addEntity(e, clz);
+        return nimbitsClient.addEntity(e);
     }
 
     @Override
@@ -63,14 +63,8 @@ public class EntityHelperImpl implements EntityHelper {
 
     @Override
     public Category addCategory(Category category) {
-        List<Entity> sample = addEntity(category,  CategoryModel.class);
-        if (sample.isEmpty()) {
-            throw new RuntimeException("Couldn't create category");
+        return (Category) addEntity(category);
 
-        }
-        else {
-            return (Category) sample.get(0);
-        }
     }
 
     @Override
@@ -89,14 +83,8 @@ public class EntityHelperImpl implements EntityHelper {
         entity.setOwner(server.getEmail().getValue());
 
         Point point =  PointModelFactory.createPoint(entity);
-        List<Entity> sample = addEntity(point,  PointModel.class);
-        if (sample.isEmpty()) {
-            throw new RuntimeException("Couldn't create point");
+        return (Point) addEntity(point);
 
-        }
-        else {
-            return (Point) sample.get(0);
-        }
 
     }
 
@@ -109,14 +97,8 @@ public class EntityHelperImpl implements EntityHelper {
         Point point =  PointModelFactory.createPoint(entity);
         point.setExpire(expire);
         point.setFilterType(filterType);
-        List<Entity> sample = addEntity(point,  PointModel.class);
-        if (sample.isEmpty()) {
-            throw new RuntimeException("Couldn't create point");
+        return (Point) addEntity(point);
 
-        }
-        else {
-            return (Point) sample.get(0);
-        }
 
     }
 
@@ -167,14 +149,8 @@ public class EntityHelperImpl implements EntityHelper {
         Calculation calculation =  CalculationModelFactory.createCalculation(entity, trigger1, true, formula, targetEntity, x, y, z);
         calculation.setParent(triggerPoint.getKey());
         calculation.setOwner(server.getEmail().getValue());
-        List<Entity> result  =  addEntity(calculation, CalculationModel.class);
-        if (result.isEmpty()) {
-            throw new RuntimeException("failed to create calculation");
+        return (Calculation) addEntity(calculation);
 
-        }
-        else {
-            return (Calculation) result.get(0);
-        }
 
     }
 

@@ -11,7 +11,7 @@ import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
-import com.nimbits.client.model.server.apikey.AccessCode;
+import com.nimbits.client.model.server.apikey.AccessToken;
 import com.nimbits.client.model.user.User;
 import com.nimbits.io.NimbitsClient;
 import com.nimbits.io.http.NimbitsClientFactory;
@@ -72,7 +72,7 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
 
         String ids = request.getParameter(Parameters.points.getText());
 
-        String authToken = request.getParameter(Parameters.authToken.getText());
+        String authToken = request.getParameter(Parameters.token.getText());
 
         String forwardUrl = request.getParameter(Parameters.forward.getText());
         String emailParam = request.getParameter(Parameters.email.getText());
@@ -82,7 +82,7 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
             //should only be called on the socket relay server
             //  forwardUrl = "http://localhost:8085";
             Server server = ServerFactory.getInstance(UrlContainer.getInstance(forwardUrl),
-                    CommonFactory.createEmailAddress(emailParam), AccessCode.getInstance(authToken));
+                    CommonFactory.createEmailAddress(emailParam), AccessToken.getInstance(authToken));
             NimbitsClient client = NimbitsClientFactory.getInstance(server);
             User user = client.getSession();
             users = Arrays.asList(user.getEmail());

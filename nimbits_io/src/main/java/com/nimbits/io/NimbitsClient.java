@@ -59,15 +59,13 @@ public interface NimbitsClient {
 
     void deleteEntity(Entity entity);
 
-    <T, K> List<T> addEntity(Entity entity, Class<K> clz);
+    Entity addEntity(Entity entity);
 
     <T> List<T> updateEntity(Entity entity, Class<T> clz);
 
     Entity getEntity(SimpleValue<String> entityId, EntityType type);
 
     List<AndroidControl> getControl();
-
-    void doHeartbeat(Entity parent);
 
     void recordSeries(Point entity);
 

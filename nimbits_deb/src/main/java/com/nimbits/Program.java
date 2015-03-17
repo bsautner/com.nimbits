@@ -24,7 +24,7 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
-import com.nimbits.client.model.server.apikey.AccessCode;
+import com.nimbits.client.model.server.apikey.AccessToken;
 import com.nimbits.client.model.user.User;
 import com.nimbits.io.command.CommandListener;
 import com.nimbits.io.command.TerminalCommand;
@@ -50,7 +50,7 @@ public class Program   {
 
     public static EmailAddress EMAIL_ADDRESS;
     private static UrlContainer INSTANCE_URL;
-    private static AccessCode API_KEY;
+    private static AccessToken accessToken;
     private static Server SERVER;
     public static User user;
     public static Entity current;
@@ -211,7 +211,7 @@ public class Program   {
 
 
         }
-        SERVER =  ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, API_KEY);
+        SERVER =  ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, accessToken);
     }
 
     private static void processDefault(String value) {
@@ -223,7 +223,7 @@ public class Program   {
                 EMAIL_ADDRESS = CommonFactory.createEmailAddress(s[1]);
                 break;
             case "APIKEY" :
-                API_KEY = AccessCode.getInstance(s[1]);
+                accessToken = AccessToken.getInstance(s[1]);
                 break;
             case "INSTANCE" :
                 INSTANCE_URL =  UrlContainer.getInstance(s[1]);

@@ -11,7 +11,7 @@ public interface ValueApi {
     final String API ="/service/v2/value";
 
     @POST(API)
-    String postValue(@Body Value value, @Query("email") String email, @Query("key") String token, @Query("id") String id);
+    String postValue(@Body Value value, @Query("id") String id);
 
     @GET(API)
     Value getValue(@Query("id") String name);

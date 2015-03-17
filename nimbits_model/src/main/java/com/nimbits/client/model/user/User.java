@@ -41,15 +41,15 @@ public interface User extends Entity, Serializable {
 
     void addAccessKey(AccessKey key);
 
-    ArrayList<AccessKey> getAccessKeys();
+    List<AccessKey> getAccessKeys();
 
     boolean getIsAdmin();
 
     void setIsAdmin(boolean userAdmin);
 
-    void setAuthToken(String authToken);
+    void setToken(String authToken);
 
-    String getAuthToken();
+    String getToken();
 
     void setEmail(EmailAddress emailAddress);
 

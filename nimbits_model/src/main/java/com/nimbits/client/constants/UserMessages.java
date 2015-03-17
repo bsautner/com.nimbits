@@ -15,7 +15,7 @@ package com.nimbits.client.constants;
 
 public class UserMessages {
     public static final String RESPONSE_PERMISSION_DENIED = "Permission Denied";
-    public static final String RESPONSE_PROTECTED_POINT = "Unable to process. You didn't provide an oauth token or secret, and the point you requested is not public";
+    public static final String RESPONSE_PROTECTED_POINT = "Unable to process. You didn't provide a token, and the point you requested is not public";
     public static final String ERROR_POINT_NOT_FOUND = "Point not found";
 
     public static final String COPYRIGHT = "Copyright (c) 2015 Nimbits Inc.  Unless required by applicable law or agreed to in writing, software distributed under the license is distributed on an \\\"AS IS\\\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.";

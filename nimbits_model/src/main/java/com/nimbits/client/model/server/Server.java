@@ -13,7 +13,7 @@
 package com.nimbits.client.model.server;
 
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.server.apikey.AccessCode;
+import com.nimbits.client.model.server.apikey.AccessToken;
 
 import java.io.Serializable;
 
@@ -22,7 +22,7 @@ public interface Server extends Serializable {
 
     String getUrl();
 
-    AccessCode getAccessCode();
+    AccessToken getAccessToken();
 
     Protocol getProtocol();
 

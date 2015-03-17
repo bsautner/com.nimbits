@@ -24,7 +24,7 @@ public interface EntityHelper {
     void deleteEntity(Entity entity);
 
 
-    List<Entity> addEntity(Entity e, Class clz);
+    Entity addEntity(Entity e);
 
     List<Entity> updateEntity(Entity e, Class clz);
 
@@ -39,7 +39,7 @@ public interface EntityHelper {
      * @param category a new category (folder) for keeping things in.
      *      *
      */
-    Category addCategory(Category category);
+    Entity addCategory(Category category);
 
     /**
      *

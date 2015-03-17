@@ -10,5 +10,5 @@ public interface TreeApi {
     final String TREE_API = "/service/v2/tree";
 
     @GET(TREE_API)
-    List<Entity> getTree(@Query("email") String email, @Query("key") String key);
+    List<Entity> getTree();
 }

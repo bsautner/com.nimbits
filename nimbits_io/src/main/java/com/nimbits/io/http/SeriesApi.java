@@ -33,18 +33,16 @@ public interface SeriesApi {
     final String SERIES_API ="/service/v2/series";
 
     @POST(SERIES_API)
-    String recordSeries(@Body final List<Point> point, @Query("email") String email, @Query("key") String key);
+    String recordSeries(@Body final List<Point> point);
 
     @GET(SERIES_API)
-    List<Value>  getSeries(@Query("email") String email, @Query("key") String key, @Query("id") String id);
+    List<Value>  getSeries(@Query("id") String id);
 
     @GET(SERIES_API)
-    List<Value>  getSeries(@Query("email") String email, @Query("key") String key, @Query("id") String id, @Query("count") int count);
+    List<Value>  getSeries(@Query("id") String id, @Query("count") int count);
 
     @GET(SERIES_API)
-    List<Value>  getSeries(@Query("email") String email,
-                           @Query("key") String key,
-                           @Query("id") String id,
+    List<Value>  getSeries(@Query("id") String id,
                            @Query("count") long sd,
                            @Query("ed") long ed);
 }

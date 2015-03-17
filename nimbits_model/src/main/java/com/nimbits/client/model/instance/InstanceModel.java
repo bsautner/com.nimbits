@@ -18,7 +18,7 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.server.Protocol;
-import com.nimbits.client.model.server.apikey.AccessCode;
+import com.nimbits.client.model.server.apikey.AccessToken;
 
 import java.io.Serializable;
 
@@ -88,8 +88,8 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
     }
 
     @Override
-    public AccessCode getApiKey() {
-        return AccessCode.getInstance(this.apiKey);
+    public AccessToken getApiKey() {
+        return AccessToken.getInstance(this.apiKey);
     }
 
     @Override

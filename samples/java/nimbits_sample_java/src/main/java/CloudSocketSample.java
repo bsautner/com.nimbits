@@ -4,7 +4,7 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
-import com.nimbits.client.model.server.apikey.AccessCode;
+import com.nimbits.client.model.server.apikey.AccessToken;
 
 import com.nimbits.client.model.user.User;
 import com.nimbits.io.NimbitsClient;
@@ -35,7 +35,7 @@ public class CloudSocketSample {
 
     //you can create this server object with an API KEY you configured your server with to make authentication easy
 
-    private static final AccessCode API_KEY = AccessCode.getInstance("key");
+    private static final AccessToken API_KEY = AccessToken.getInstance("key");
     private static final Server cloudServer = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, API_KEY);
 
 
@@ -45,11 +45,11 @@ public class CloudSocketSample {
         NimbitsClient client = NimbitsClientFactory.getInstance(cloudServer);
         User user = client.login();
 
-        System.out.println("Hello " + user.getEmail() + " " + user.getAuthToken() + " " + cloudServer.getUrl());
+        System.out.println("Hello " + user.getEmail() + " " + user.getToken() + " " + cloudServer.getUrl());
 
 
         //connect to the server with your new session token
-        Server authenticationContainer = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, AccessCode.getInstance(user.getAuthToken()));
+        Server authenticationContainer = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, AccessToken.getInstance(user.getToken()));
 
         SocketConnection socketConnection = new SocketConnection(authenticationContainer, new SocketListener() {
 

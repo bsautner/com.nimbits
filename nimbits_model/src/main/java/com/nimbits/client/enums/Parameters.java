@@ -17,9 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public enum Parameters {
+    token(ParamConstants.PARAM_TOKEN),
     cursor(ParamConstants.PARAM_CURSOR),
-    authToken(ParamConstants.PARAM_AUTH_TOKEN),
-    apikey(ParamConstants.PARAM_API_KEY),
     action(ParamConstants.PARAM_ACTION),
     autoscale(ParamConstants.PARAM_AUTO_SCALE),
     blobkey(ParamConstants.PARAM_BLOB_KEY),
@@ -54,11 +53,12 @@ public enum Parameters {
     path(ParamConstants.PARAM_PATH),
     point(ParamConstants.PARAM_POINT),
     points(ParamConstants.PARAM_POINTS),
+    @Deprecated
     secret(ParamConstants.PARAM_SECRET),
     seg(ParamConstants.PARAM_SEGMENT),
     sd(ParamConstants.PARAM_START_DATE),
     timestamp(ParamConstants.PARAM_TIMESTAMP),
-    rToken(ParamConstants.PARAM_TOKEN),
+    rToken(ParamConstants.PARAM_RTOKEN),
     contentType(ParamConstants.PARAM_CONTENT_TYPE),
     html(ParamConstants.PARAM_HTML),
     no(ParamConstants.PARAM_NO),
@@ -104,7 +104,6 @@ public enum Parameters {
     refresh(ParamConstants.REFRESH),
     preferedValue(ParamConstants.PREFERRED_VALUE),
     owner(ParamConstants.OWNER),
-    session(ParamConstants.SESSION),
     type(ParamConstants.TYPE),
     gae(ParamConstants.GAE),
     forward(ParamConstants.FORWARD),
@@ -138,7 +137,7 @@ public enum Parameters {
     }
 
     private static class ParamConstants {
-        private static final String PARAM_API_KEY = ServerSetting.apiKey.getName();
+        private static final String PARAM_TOKEN =  ServerSetting.token.getName();
         private static final String PARAM_ACTION = "action";
         private static final String PARAM_AUTO_SCALE = "autoscale";
         private static final String PARAM_BLOB_KEY = "blob-key";
@@ -173,11 +172,12 @@ public enum Parameters {
         private static final String PARAM_PATH = "path";
         private static final String PARAM_POINT = "point";
         private static final String PARAM_POINTS = "points";
+        @Deprecated
         private static final String PARAM_SECRET = "secret";
         private static final String PARAM_SEGMENT = "seg";
         private static final String PARAM_START_DATE = "sd";
         private static final String PARAM_TIMESTAMP = "timestamp";
-        private static final String PARAM_TOKEN = "rToken";
+        private static final String PARAM_RTOKEN = "rToken";
         private static final String PARAM_CONTENT_TYPE = "Content-Type";
         private static final String PARAM_HTML = "html";
         private static final String PARAM_NO = "no";
@@ -221,12 +221,10 @@ public enum Parameters {
         private static final String REFRESH = "refresh";
         private static final String PREFERRED_VALUE = "PREFERRED_VALUE";
         private static final String OWNER = "owner";
-        private static final String SESSION = "session";
         private static final String TYPE = "type";
         private static final String GAE = "gae";
         private static final String FORWARD = "forward";
         public static final String CONNECTION_ID = "connection";
-        public static final String PARAM_AUTH_TOKEN = "AuthToken";
         public static final String PARAM_CURSOR = "cursor";
 
         private ParamConstants() {

@@ -63,21 +63,10 @@ public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
         Point point = PointModelFactory.createPointModel(entity, 0.0, 365, "", 0.0, false, false, false, 0, false, FilterType.none,
                 0.0, false, PointType.basic, 0, false, 0.0, 10);
 
-        List<Point> sample;
 
-        sample = nimbitsClient.addEntity(point, PointModel.class);
 
-        if (sample.isEmpty()) {
-            if (pointExists(name)) {
-                throw new IllegalStateException("Creating point failed - point already exists");
-            }
-            else {
-                throw new IllegalStateException("Creating point failed");
-            }
-        }
-        else {
-            return sample.get(0);
-        }
+        return (Point) nimbitsClient.addEntity(point);
+
 
 
     }

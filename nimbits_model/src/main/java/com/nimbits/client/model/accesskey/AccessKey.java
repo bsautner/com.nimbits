@@ -24,11 +24,9 @@ public interface AccessKey extends Entity, Serializable {
 
     void setCode(final String code);
 
-
     String getScope();
 
     void setScope(final String scope);
-
 
     AuthLevel getAuthLevel();
 

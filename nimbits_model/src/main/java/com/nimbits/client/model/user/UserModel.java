@@ -24,6 +24,7 @@ import com.nimbits.client.model.entity.EntityModel;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 public class UserModel extends EntityModel implements Serializable, User {
@@ -40,7 +41,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     private Boolean isAdmin;
 
     @Expose
-    private String authToken;
+    private String token;
 
     private String password;
 
@@ -68,7 +69,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         super(u);
         if (u != null) {
             this.lastLoggedIn = u.getLastLoggedIn();
-            this.accessKeys = u.getAccessKeys();
+            this.accessKeys = (ArrayList<AccessKey>) u.getAccessKeys();
             this.emailAddress = u.getEmail().getValue();
             this.password = u.getPassword();
             this.passwordSalt = u.getPasswordSalt();
@@ -139,7 +140,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     }
 
     @Override
-    public ArrayList<AccessKey> getAccessKeys() {
+    public List<AccessKey> getAccessKeys() {
         return this.accessKeys == null ? new ArrayList<AccessKey>(1) : this.accessKeys;
     }
 
@@ -167,8 +168,8 @@ public class UserModel extends EntityModel implements Serializable, User {
         return CommonFactory.createEmailAddress(emailAddress);
     }
 
-    public String getAuthToken() {
-        return authToken;
+    public String getToken() {
+        return token;
     }
 
     @Override
@@ -207,8 +208,8 @@ public class UserModel extends EntityModel implements Serializable, User {
     }
 
     @Override
-    public void setAuthToken(String authToken) {
-        this.authToken = authToken;
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @Override

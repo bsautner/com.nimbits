@@ -1,3 +1,3 @@
 INSTANCE=localhost:8080
 EMAIL=support@nimbits.com
-API_KEY=DEFAULT_API_KEY
+TOKEN=DEFAULT_API_KEY

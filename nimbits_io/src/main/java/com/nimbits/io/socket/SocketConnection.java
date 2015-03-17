@@ -63,8 +63,8 @@ public class SocketConnection  {
                 .append("ws://").append(u).append("/socket?")
                 .append(Parameters.email + "=" + server.getEmail().getValue())
                 .append("&" + Parameters.format + "=" + "json")
-                .append("&" + Parameters.apikey + "=" + server.getAccessCode().getValue())
-                .append("&" + Parameters.authToken + "=" + server.getAccessCode().getValue());
+                .append("&" + Parameters.token + "=" + server.getAccessToken().getValue());
+
 
         if (usingCloud) {
             sb.append("&" + Parameters.forward + "=" + "http://" + server.getUrl());

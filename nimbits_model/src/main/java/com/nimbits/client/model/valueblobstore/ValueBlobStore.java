@@ -28,10 +28,6 @@ public interface ValueBlobStore extends Serializable, Comparable<ValueBlobStore>
 
     Date getMinTimestamp();
 
-    String getBlobKey();
-
-    long getLength();
-
     void validate();
 
     Integer getVersion();

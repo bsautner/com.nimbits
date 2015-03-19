@@ -29,12 +29,6 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
 
     private long minTimestamp;
 
-    private long length;
-
-    //  private String path;
-
-    private String key;
-
     private Integer version;
 
     private String entityUUID;
@@ -45,8 +39,7 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
         // this.path = store.getPath();
         this.maxTimestamp = store.getMaxTimestamp().getTime();
         this.minTimestamp = store.getMinTimestamp().getTime();
-        this.key = store.getBlobKey();
-        this.length = store.getLength();
+
         this.version = store.getVersion();
         this.entityUUID = store.getEntityUUID();
     }
@@ -86,16 +79,6 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
     }
 
     @Override
-    public String getBlobKey() {
-        return key;
-    }
-
-    @Override
-    public long getLength() {
-        return length;
-    }
-
-    @Override
     public void validate() {
 
     }
@@ -125,11 +108,11 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
         ValueBlobStoreModel that = (ValueBlobStoreModel) o;
 
         if (version != that.version) return false;
-        if (length != that.length) return false;
+
         if (maxTimestamp != that.maxTimestamp) return false;
         if (minTimestamp != that.minTimestamp) return false;
         if (!entity.equals(that.entity)) return false;
-        if (!key.equals(that.key)) return false;
+
         // if (path != null ? !path.equals(that.path) : that.path != null) return false;
         if (!timestamp.equals(that.timestamp)) return false;
 
@@ -142,9 +125,6 @@ public class ValueBlobStoreModel implements Serializable, Comparable<ValueBlobSt
         result = 31 * result + timestamp.hashCode();
         result = 31 * result + (int) (maxTimestamp ^ (maxTimestamp >>> 32));
         result = 31 * result + (int) (minTimestamp ^ (minTimestamp >>> 32));
-        result = 31 * result + (int) (length ^ (length >>> 32));
-        // result = 31 * result + (path != null ? path.hashCode() : 0);
-        result = 31 * result + key.hashCode();
         result = 31 * result + (version ^ (version >>> 32));
         return result;
     }

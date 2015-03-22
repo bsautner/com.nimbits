@@ -46,6 +46,14 @@
 
     </filter-mapping>
 
+    <servlet>
+        <servlet-name>dataTableApi</servlet-name>
+        <servlet-class>com.nimbits.server.api.DataTableApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dataTableApi</servlet-name>
+        <url-pattern>/service/v2/datatable</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>WebSocket</servlet-name>

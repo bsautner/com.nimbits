@@ -13,6 +13,7 @@
 package com.nimbits.io.http;
 
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -180,7 +181,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         TreeApi api = restAdapter.create(TreeApi.class);
 
-        return api.getTree();
+        return ImmutableList.copyOf(api.getTree());
 
 
     }
@@ -230,7 +231,7 @@ public class NimbitsClientImpl implements NimbitsClient {
             }
 
         }
-        return sample;
+        return ImmutableList.copyOf(sample);
 
     }
 
@@ -264,7 +265,7 @@ public class NimbitsClientImpl implements NimbitsClient {
                 }
 
             }
-            return sample;
+            return ImmutableList.copyOf(sample);
 
 
     }
@@ -293,7 +294,7 @@ public class NimbitsClientImpl implements NimbitsClient {
             }
 
         }
-        return sample;
+        return ImmutableList.copyOf(sample);
 
     }
     @Override

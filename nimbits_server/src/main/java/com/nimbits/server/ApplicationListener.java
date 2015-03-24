@@ -12,6 +12,10 @@
 
 package com.nimbits.server;
 
+import com.dmurph.tracking.AnalyticsConfigData;
+import com.dmurph.tracking.JGoogleAnalyticsTracker;
+import com.nimbits.client.constants.Const;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.sql.Driver;
@@ -29,6 +33,15 @@ public class ApplicationListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         log.info("NIMBITS Context Initialised");
+
+        AnalyticsConfigData config = new AnalyticsConfigData("UA-11739682-14");
+
+
+        config.populateFromSystem();
+        JGoogleAnalyticsTracker tracker = new JGoogleAnalyticsTracker(config, JGoogleAnalyticsTracker.GoogleAnalyticsVersion.V_4_7_2);
+
+
+        tracker.trackEvent("System", "contextInitialized", Const.VERSION);
 
 
     }

@@ -18,22 +18,25 @@ byte mac[] = {
   0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 char server[] ="192.168.1.21"; 
 
-char email[] = "test@example.com";
-char password[] ="password or key";
-char clientId[] = "some_unique_string1";
+char email[] = "x@x.xom";
+
+//this can be your password, a user token, server token or session token.
+//see http://nimbits.com/howto_security.jsp
+char password[] ="x";
+ 
 int port = 8080;
 
 String switchPoint = "switch1";
 String points[POINT_COUNT] = { 
   switchPoint };
-
+ 
 
 const int ledPin =  8;      // the number of the LED pin
 int ledState = HIGH;
 unsigned long previousMillis = 0; 
 const long interval = 5000; 
 
-Nimbits client(server, port, clientId);
+Nimbits client(server, port);
 
 void setup() {
   pinMode(ledPin, OUTPUT);    
@@ -42,6 +45,7 @@ void setup() {
   Ethernet.begin(mac);
 
   Serial.println("Logging in...");
+  //after using the password for the first time, switch to using the session token which is safer.
   String authToken = client.login(email, password);
   Serial.println("Got Auth Token: " + authToken);
   double currentSwitch = client.getValue(switchPoint);

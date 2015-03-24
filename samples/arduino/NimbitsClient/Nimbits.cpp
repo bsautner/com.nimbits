@@ -27,17 +27,15 @@ String _hostname;
 String _email;
 String _password;
 int _port;
-String _clientId;
 
 String _authToken;
 
 String _key;
 
-Nimbits::Nimbits(String  hostname, int port, String clientId){
+Nimbits::Nimbits(String  hostname, int port){
   _hostname = hostname;
 
   _port = port;
-  _clientId = clientId;
 
 }
 
@@ -80,7 +78,7 @@ bool Nimbits::connectSocket(String points[], int count) {
 
 
 
-     strcat(path, "/socket?AuthToken=");
+     strcat(path, "/socket?token=");
      strcat(path, _authToken.c_str());
      if (count > 0) {
         strcat(path, "&points=");
@@ -229,7 +227,7 @@ String Nimbits::login(String email, String password) {
   String content;
   content = "email=";
   content += email;
-  content += "&password=";
+  content += "&token=";
   content += _password;
 
 
@@ -259,7 +257,7 @@ String Nimbits::login(String email, String password) {
 
       }
 
-      _authToken = root["authToken"];
+      _authToken = root["token"];
 
   }
   else {
@@ -366,7 +364,7 @@ void Nimbits::doGet(EthernetClient client, String service, String content) {
     client.println("Host: " + _hostname + ":" + _port);
     client.println("Connection: close");
     client.println("User-Agent: Arduino/1.0");
-    client.println("AuthToken: " + _authToken);
+    client.println("token: " + _authToken);
     client.println("Cache-Control: max-age=0");
     client.println("Content-Type: application/x-www-form-urlencoded");
 
@@ -383,7 +381,7 @@ void Nimbits::doPost(EthernetClient client, String service, String content) {
     client.println("User-Agent: Arduino/1.0");
     client.println("Cache-Control: max-age=0");
     client.println("Content-Type: application/x-www-form-urlencoded");
-    client.println("AuthToken: " + _authToken);
+    client.println("token: " + _authToken);
     client.print("Content-Length: ");
     client.println(content.length());
     client.println();

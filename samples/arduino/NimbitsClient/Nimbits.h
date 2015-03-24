@@ -28,7 +28,7 @@
 
 class Nimbits {
 	public:
-	    Nimbits(String  hostname, int port, String  clientId);
+	    Nimbits(String  hostname, int port);
 		typedef void (*DataArrivedDelegate)(String data, double value);
 		typedef void (*StatusDelegate)(int statusCode, String statusText);
 		bool connectSocket(String points[], int count);

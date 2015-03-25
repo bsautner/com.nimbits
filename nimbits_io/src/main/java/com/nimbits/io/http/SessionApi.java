@@ -13,7 +13,7 @@ public interface SessionApi {
     User login(@Query("email") String email, @Query("password") String key);
 
     @POST(SESSION_API)
-    User login(@Query("email") String email);
+    User login();
 
     @GET(SESSION_API)
     User  getSession();

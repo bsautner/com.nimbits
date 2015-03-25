@@ -13,7 +13,9 @@
 package com.nimbits.client.model.common;
 
 
-public class SimpleValue<T> {
+import java.io.Serializable;
+
+public class SimpleValue<T> implements Serializable {
 
     private final T value;
 

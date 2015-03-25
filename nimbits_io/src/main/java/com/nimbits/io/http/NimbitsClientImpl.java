@@ -97,7 +97,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         SessionApi api = restAdapter.create(SessionApi.class);
 
-        return api.login(server.getEmail().getValue());
+        return api.login();
     }
 
 

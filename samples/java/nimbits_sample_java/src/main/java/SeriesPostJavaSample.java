@@ -131,7 +131,7 @@ public class SeriesPostJavaSample {
 
 
             Map<String, Integer> verify = valueHelper.moveCron();
-            System.out.println("verify move cron empty (should be zero)" + verify.size());
+            System.out.println("verify execute cron empty (should be zero)" + verify.size());
             if (verify.size() > 0) {
               //  return;
             }

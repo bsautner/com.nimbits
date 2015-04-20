@@ -163,9 +163,9 @@ public class NimbitsClientImpl implements NimbitsClient {
 
                 .build();
 
-        MoveCron cron = restAdapter.create(MoveCron.class);
+        SystemCron cron = restAdapter.create(SystemCron.class);
 
-        return cron.move();
+        return cron.execute();
 
 
     }

@@ -19,14 +19,14 @@ import java.util.Random;
  *
  */
 public class RandomLoopSample {
-    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("support@nimbits.com");
+    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("bsautner@gmail.com");
 
     //this sample uses an access key, so you've logged into nimbits and right clicked on your account to create this read/write key with user scope.
 
     private static final AccessToken ACCESS_KEY = AccessToken.getInstance("key");
 
 
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("192.168.1.15:8080");
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("cloud.nimbits.com");
     private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, ACCESS_KEY);
 
 
@@ -34,7 +34,7 @@ public class RandomLoopSample {
         System.out.println("Welcome To Nimbits!");
 
 
-        String pointName = "foo";
+        String pointName = "P6";
 
 
 
@@ -49,20 +49,21 @@ public class RandomLoopSample {
 
         //record some data!
 
-        Random r = new Random();
+       // Random r = new Random();
         ValueHelper valueHelper = HelperFactory.getValueHelper(SERVER);
-        while (true) {
+        for (int i = 0; i < 10; i++)
 
             try {
-                valueHelper.recordValue(pointName, r.nextDouble() * 100);
-                System.out.println("Recorded Value: "  );
+                valueHelper.recordValue(pointName, i * 10);
+                System.out.println("Recorded Value: " + i );
+                Thread.sleep(1000);
 
             } catch (Exception e) {
                //let's just keep on trucking for this sample.
             }
-            Thread.sleep(5000);
+           // Thread.sleep(5000);
 
-        }
+
 
 
 

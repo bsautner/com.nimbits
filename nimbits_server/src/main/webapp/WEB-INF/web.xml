@@ -196,14 +196,6 @@
 
 
     <!--cron-->
-    <servlet>
-        <servlet-name>moveCron</servlet-name>
-        <servlet-class>com.nimbits.server.process.cron.MoveCron</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>moveCron</servlet-name>
-        <url-pattern>/cron/moveCron</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>pointCron</servlet-name>

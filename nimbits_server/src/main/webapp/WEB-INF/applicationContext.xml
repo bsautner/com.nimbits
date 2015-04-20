@@ -11,7 +11,7 @@
     <bean id="valueTask" class="com.nimbits.server.process.task.ValueTask"/>
     <bean id="dataProcessor" class="com.nimbits.server.data.DataProcessor"/>
     <bean id="chartHelper" class="com.nimbits.server.chart.ChartHelper"/>
-    <bean id="cache" class="com.nimbits.server.transaction.cache.GoogleCache"/>
+    <bean id="nimbitsCache" class="com.nimbits.server.transaction.cache.NimbitsCacheImpl"/>
 
     <bean id="userCache" class="com.nimbits.server.transaction.user.cache.UserCacheImpl"/>
 

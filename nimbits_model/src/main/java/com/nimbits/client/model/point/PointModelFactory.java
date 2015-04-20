@@ -22,7 +22,7 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 
-
+@Deprecated //TODO - move all factories to sigle class and inject em
 public class PointModelFactory {
 
 

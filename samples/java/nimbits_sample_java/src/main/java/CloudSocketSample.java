@@ -30,8 +30,8 @@ public class CloudSocketSample {
     private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("bsautner@gmail.com");
 
     //a running jetty server with nimbits installed (using root.war)
-   private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("cloud.nimbits.com");//"localhost:8080");
-  //  private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8085");//"localhost:8080");
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("cloud.nimbits.com");//"localhost:8080");
+    //  private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8085");//"localhost:8080");
 
     //you can create this server object with an API KEY you configured your server with to make authentication easy
 
@@ -69,7 +69,7 @@ public class CloudSocketSample {
                 System.out.println("A subscription to a point's events has been processed");
                 System.out.println(point.getName().getValue());
                 System.out.println(point.getValue().getAlertState().name());
-               // System.out.println(point.getValue().getData());
+                // System.out.println(point.getValue().getData());
             }
 
             @Override
@@ -77,7 +77,7 @@ public class CloudSocketSample {
                 System.out.println("A point was updated");
                 System.out.println(point.getName().getValue());
                 System.out.println(point.getValue().getAlertState().name());
-               // System.out.println(point.getValue().getData());
+                // System.out.println(point.getValue().getData());
             }
         });
 

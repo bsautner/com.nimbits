@@ -73,7 +73,7 @@ public interface ValueHelper {
     void recordValues(List<Point> points);
 
     /**
-     * execute the move cron task.
+     * execute the execute cron task.
      */
     Map<String, Integer> moveCron();
 

@@ -19,6 +19,7 @@ import com.nimbits.client.model.user.User;
 /**
  * Creates a category entity
  */
+@Deprecated //TODO = create one factory class for all models, and inject it
 public class CategoryFactory {
 
     private CategoryFactory() {

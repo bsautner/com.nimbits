@@ -9,7 +9,7 @@
     <beans:import resource="context.xml"/>
 
     <bean id="chartHelper" class="com.nimbits.server.chart.ChartHelper"/>
-    <bean id="cache" class="com.nimbits.server.transaction.cache.GoogleCache"/>
+    <bean id="cache" class="com.nimbits.server.transaction.cache.NimbitsCacheImpl"/>
 
     <bean id="userCache" class="com.nimbits.server.transaction.user.cache.UserCacheImpl"/>
     <bean id="userService" class="com.nimbits.server.transaction.user.service.UserServiceImpl"/>
@@ -38,7 +38,7 @@
         <property name="persistenceManagerFactory" ref="pmf"/>
     </bean>
 
-    <bean id="counterService" class="com.nimbits.server.counter.CounterServiceImpl"/>
+
     <bean id="recursionValidation" class="com.nimbits.server.orm.validation.RecursionValidation"/>
     <bean id="valueService" class="com.nimbits.server.transaction.value.service.ValueServiceImpl"/>
     <bean id="valueCache" class="com.nimbits.server.transaction.value.cache.ValueCacheImpl"/>

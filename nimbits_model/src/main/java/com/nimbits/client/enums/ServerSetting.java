@@ -32,7 +32,7 @@ public enum ServerSetting {
     smtpPassword(SettingConstants.SETTING_SMTP_PASSWORD, SettingConstants.SETTING_SMTP_PASSWORD_DEFAULT, false, true, false, true, false),
 
     stats(SettingConstants.SETTING_STATS, SettingConstants.SETTING_STATS_DEFAULT, false, true, false, false, true),
-    apiLimit(SettingConstants.SETTING_API_LIMIT, SettingConstants.SETTING_API_LIMIT_DEFAULT, false, true, false, false, true);
+    apiLimit(SettingConstants.SETTING_API_LIMIT, SettingConstants.SETTING_API_LIMIT_DEFAULT, false, true, false, false, false);
 
 
     private static final Map<String, ServerSetting> lookup = new HashMap<String, ServerSetting>();

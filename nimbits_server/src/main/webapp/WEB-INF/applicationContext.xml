@@ -13,8 +13,6 @@
     <bean id="chartHelper" class="com.nimbits.server.chart.ChartHelper"/>
     <bean id="nimbitsCache" class="com.nimbits.server.transaction.cache.NimbitsCacheImpl"/>
 
-    <bean id="userCache" class="com.nimbits.server.transaction.user.cache.UserCacheImpl"/>
-
     <bean id="userService" class="com.nimbits.server.transaction.user.service.UserServiceImpl"/>
 
     <bean id="entityService" class="com.nimbits.server.transaction.entity.EntityServiceImpl"/>
@@ -60,8 +58,6 @@
 
     <bean id="taskService" name="taskService" class="com.nimbits.server.process.task.TaskServiceImpl"/>
 
-
-    <bean id="entityCache" class="com.nimbits.server.transaction.entity.cache.EntityCacheImpl"/>
 
     <bean id="stringEncryption" class="com.nimbits.server.secure.StringEncryption"/>
     <bean id="serverInfo" class="com.nimbits.server.system.ServerInfo"/>

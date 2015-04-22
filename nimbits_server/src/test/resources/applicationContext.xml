@@ -11,7 +11,6 @@
     <bean id="chartHelper" class="com.nimbits.server.chart.ChartHelper"/>
     <bean id="cache" class="com.nimbits.server.transaction.cache.NimbitsCacheImpl"/>
 
-    <bean id="userCache" class="com.nimbits.server.transaction.user.cache.UserCacheImpl"/>
     <bean id="userService" class="com.nimbits.server.transaction.user.service.UserServiceImpl"/>
 
     <bean id="entityService" class=" com.nimbits.server.transaction.entity.EntityServiceImpl"/>

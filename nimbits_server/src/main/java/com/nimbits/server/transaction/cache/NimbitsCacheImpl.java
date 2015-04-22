@@ -22,10 +22,13 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.RemovalListener;
 import com.google.common.cache.RemovalNotification;
+import com.google.common.collect.ImmutableSet;
 import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.server.api.UsageTracker;
+import org.apache.http.annotation.Immutable;
 import org.springframework.stereotype.Component;
 
+import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Logger;
 
@@ -33,6 +36,7 @@ import java.util.logging.Logger;
 public class NimbitsCacheImpl extends BaseCache implements NimbitsCache {
     private Cache<Object, Object> cache;
     private Cache<String, UsageTracker> usageCache;
+    private Cache<String, String> activeCache;
 
     private final Logger logger = Logger.getLogger(NimbitsCacheImpl.class.getName());
 
@@ -47,6 +51,9 @@ public class NimbitsCacheImpl extends BaseCache implements NimbitsCache {
                 })
 
                 .build();
+
+
+        activeCache = CacheBuilder.newBuilder().build();
 
 
     }
@@ -125,5 +132,20 @@ public class NimbitsCacheImpl extends BaseCache implements NimbitsCache {
     @Override
     public void delete(String key) {
         remove(generateKey(key));
+    }
+
+    @Override
+    public Set getActivePoints() {
+        return ImmutableSet.of(activeCache.asMap().values());
+    }
+
+    @Override
+    public void flushActivePoints() {
+        activeCache.invalidateAll();
+    }
+
+    @Override
+    public long getStats() {
+        return 0;
     }
 }

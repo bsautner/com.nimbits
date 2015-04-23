@@ -91,7 +91,7 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void startMoveCachedValuesToStoreTask(User user, Entity point) throws IOException {
 
-        valueService.moveValuesFromCacheToStore(point);
+        //valueService.moveValuesFromCacheToStore(point);
     }
 
     @Override

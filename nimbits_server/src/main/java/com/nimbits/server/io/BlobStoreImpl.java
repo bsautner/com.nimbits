@@ -90,7 +90,7 @@ public class BlobStoreImpl implements BlobStore {
             for (final ValueBlobStoreEntity e : result) {
                 if (validateOwnership(entity, e)) {
                     List<Value> values = readValuesFromFile(e);
-                    logger.info("reading values from blob " + values.size());
+
                     for (final Value vx : values) {
                         if (vx.getTimestamp().getTime() <= endDate.getTime()) {
                             retObj.add(vx);
@@ -127,7 +127,7 @@ public class BlobStoreImpl implements BlobStore {
             for (final ValueBlobStoreEntity e : result) {
                 if (validateOwnership(entity, e)) {
                     List<Value> values = readValuesFromFile(e);
-                    logger.info("reading values from blob " + values.size());
+
                     for (final Value vx : values) {
                         retObj.add(vx);
 

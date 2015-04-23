@@ -66,7 +66,7 @@ public class NimbitsClientImpl implements NimbitsClient {
             @Override
             public void intercept(RequestInterceptor.RequestFacade request) {
                 if (!  server.getAccessToken().isEmpty()) {
-                    request.addHeader(Parameters.token.getText(), server.getAccessToken().getValue());
+                    request.addHeader(Parameters.token.getText(), theServer.getAccessToken().getValue());
 
                 }
                 request.addQueryParam(Parameters.email.getText(), theServer.getEmail().getValue());

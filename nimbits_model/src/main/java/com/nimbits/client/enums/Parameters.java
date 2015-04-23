@@ -43,6 +43,7 @@ public enum Parameters {
     pointJson(ParamConstants.PARAM_JSON_POINT),
     pointUser(ParamConstants.PARAM_JSON_USER),
     valueJson(ParamConstants.PARAM_JSON_VALUE),
+    @Deprecated
     key(ParamConstants.PARAM_KEY),
     lat(ParamConstants.PARAM_LAT),
     lng(ParamConstants.PARAM_LNG),

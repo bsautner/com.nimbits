@@ -83,9 +83,19 @@ public class TaskServiceImpl implements TaskService {
     public void startPointTask(long pos) {
         List<Point> sample = entityDao.getPoint(pos);
         if (! sample.isEmpty()) {
-            entityService.doPointMaint(sample.get(0));
+            entityService.doPointMaint(sample.get(0), true);
             startPointTask(++pos);
         }
+    }
+
+    @Override
+    public void startPointTask(String cursor) {
+
+    }
+
+    @Override
+    public void startPointTask(Entity entity) {
+
     }
 
     @Override

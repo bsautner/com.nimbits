@@ -43,7 +43,6 @@ import java.util.logging.Logger;
 public class NimbitsCacheImpl extends BaseCache implements NimbitsCache {
     private Cache<Object, Object> cache;
     private Cache<String, UsageTracker> usageCache;
-    private Cache<String, String> activeCache;
     private Cache<String, List<Value>> valueCache;
 
     @Autowired
@@ -59,8 +58,6 @@ public class NimbitsCacheImpl extends BaseCache implements NimbitsCache {
         cache = CacheBuilder.newBuilder().build();
         usageCache = CacheBuilder.newBuilder().build();
 
-
-        activeCache = CacheBuilder.newBuilder().build();
 
         valueCache = CacheBuilder.newBuilder()
                 .maximumSize(1000)
@@ -93,7 +90,7 @@ public class NimbitsCacheImpl extends BaseCache implements NimbitsCache {
     }
 
     @Override
-    public void bufferValue(Entity entity, Value value, String key) {
+    public void bufferValue(Entity entity, Value value) {
         if (valueCache.getIfPresent(entity.getKey()) != null) {
             valueCache.getIfPresent(entity.getKey()).add(value);
         }
@@ -109,10 +106,6 @@ public class NimbitsCacheImpl extends BaseCache implements NimbitsCache {
         return usageCache.asMap();
     }
 
-    @Override
-    public boolean containsKey(String key) {
-        return cache.asMap().containsKey(generateKey(key));
-    }
 
     @Override
     public void remove(String key) {
@@ -140,63 +133,14 @@ public class NimbitsCacheImpl extends BaseCache implements NimbitsCache {
     }
 
     @Override
-    public void reloadCache() {
-        cache.invalidateAll();
-    }
-
-    @Override
-    public boolean confirmCached(String key) {
-        return cache.asMap().containsKey(generateKey(key));
-    }
-
-    @Override
-    public boolean contains(MemCacheKey key) {
-        return containsKey(key.getText());
-    }
-
-    @Override
-    public Object get(MemCacheKey key) {
-        return get(key.getText());
-    }
-
-    @Override
-    public void delete(MemCacheKey key) {
-        remove(key.getText());
-    }
-
-    @Override
-    public void put(MemCacheKey key, Object newMap) {
-        put(key.getText(), newMap);
-    }
-
-    @Override
-    public boolean contains(String key) {
-        return containsKey(generateKey(key));
-    }
-
-    @Override
     public void delete(String key) {
         remove(generateKey(key));
-    }
-
-    @Override
-    public Set<String> getActivePoints() {
-//        Set<String> set = new HashSet<>();
-//        for (String s : activeCache.asMap().values()) {
-//            set.add(s);
-//            logger.info("getting active point " +  s);
-//        }
-//        return set;
-        return Collections.emptySet();
-    }
-
-    @Override
-    public void flushActivePoints() {
-        activeCache.invalidateAll();
     }
 
     @Override
     public long getStats() {
         return 0;
     }
+
+
 }

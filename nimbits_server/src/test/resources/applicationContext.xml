@@ -19,7 +19,8 @@
 
 
     <bean id="settingsService" class="com.nimbits.server.transaction.settings.SettingsServiceImpl"/>
-    <bean id="settingsCache" class="com.nimbits.server.transaction.settings.SettingsCacheImpl"/>
+
+
     <bean id="settingsDao" class="com.nimbits.server.transaction.settings.SettingsDaoImpl">
 
 

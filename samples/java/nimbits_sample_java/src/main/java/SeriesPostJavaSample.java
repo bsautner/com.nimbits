@@ -54,9 +54,10 @@ public class SeriesPostJavaSample {
 
     private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("x@x.com");
     private static final AccessToken TOKEN = AccessToken.getInstance("x");
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080");
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("192.168.1.21:8080");
    // private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("cloud.nimbits.com");
-    private static final Server SERVER = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, TOKEN);
+    private static final Server SESSION_START = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, TOKEN);
+
     protected static final int COUNT = 100;
     public static final int VCOUNT = 100;
     public static final int ROUNDS = 100;
@@ -66,12 +67,14 @@ public class SeriesPostJavaSample {
 
         //some random name - can be anything but duplicates are not allowed.
 
-        ValueHelper valueHelper = HelperFactory.getValueHelper(SERVER);
-        UserHelper sessionHelper = HelperFactory.getUserHelper(SERVER);
-        PointHelper pointHelper = HelperFactory.getPointHelper(SERVER);
+
+        UserHelper sessionHelper = HelperFactory.getUserHelper(SESSION_START);
+
         User user = sessionHelper.getSession();
-
-
+        AccessToken sessionToken = AccessToken.getInstance(user.getToken());
+        Server loggedInServer = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, sessionToken);
+        ValueHelper valueHelper = HelperFactory.getValueHelper(loggedInServer);
+        PointHelper pointHelper = HelperFactory.getPointHelper(loggedInServer);
         System.out.println("Hello " + user.getEmail() + " " + user.getToken());
 
 
@@ -120,24 +123,24 @@ public class SeriesPostJavaSample {
                 }
             }
 
-            Map<String, Integer> moveMap = valueHelper.moveCron();
-            System.out.println("moveMap contained (should be " + COUNT + ") " + moveMap.size());
-            if (moveMap.size() != COUNT) {
-               // return;
-            }
-            for (String name : moveMap.keySet()) {
-                System.out.println(name + " moved " + moveMap.get(name));
-            }
+//            Map<String, Integer> moveMap = valueHelper.moveCron();
+//            System.out.println("moveMap contained (should be " + COUNT + ") " + moveMap.size());
+//            if (moveMap.size() != COUNT) {
+//               // return;
+//            }
+//            for (String name : moveMap.keySet()) {
+//                System.out.println(name + " moved " + moveMap.get(name));
+//            }
 
 
-            Map<String, Integer> verify = valueHelper.moveCron();
-            System.out.println("verify execute cron empty (should be zero)" + verify.size());
-            if (verify.size() > 0) {
-              //  return;
-            }
-            for (String name : verify.keySet()) {
-                System.out.println(name + " moved " + verify.get(name));
-            }
+//            Map<String, Integer> verify = valueHelper.moveCron();
+//            System.out.println("verify execute cron empty (should be zero)" + verify.size());
+//            if (verify.size() > 0) {
+//              //  return;
+//            }
+//            for (String name : verify.keySet()) {
+//                System.out.println(name + " moved " + verify.get(name));
+//            }
 
             for (Point point : points) {
                 List<Value> recordedValues = valueHelper.getSeries(point.getName().getValue());

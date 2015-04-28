@@ -23,7 +23,7 @@ public class Const {
     public static final String LOGGED_IN_EMAIL = "LOGGED_IN_EMAIL";
     public static final String CONTENT_TYPE_JSON = "application/json";
 
-    public static final int DEFAULT_TIMER_UPDATE_SPEED = 5000;
+    public static final int DEFAULT_TIMER_UPDATE_SPEED = 30000;
     public static final String METHOD_GET = "GET";
     public static final String METHOD_POST = "POST";
     public static final String FORMAT_DATE_TIME = "MM/dd/y HH:mm:ss";
@@ -35,14 +35,10 @@ public class Const {
     public static final String CONTENT_TYPE_HTML = "text/html";
     public static final String CONTENT_TYPE_PLAIN = "text/plain";
 
-    public static final int CONST_QUERY_CHUNK_SIZE = 50;
-
     public static final double CONST_IGNORED_NUMBER_VALUE = -9999999.9999999;
 
     public static final int CONST_MAX_NAME_LENGTH = 250;
 
-
-    @Deprecated //delete when all blobstores have length
 
     public static final int CONST_DEFAULT_LIST_SIZE = 1024;
     public static final String CONST_ANON_EMAIL = "uncle_nobody@nimbits.com";

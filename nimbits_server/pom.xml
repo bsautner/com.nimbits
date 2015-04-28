@@ -43,6 +43,7 @@
 
         <jetty-jmx.version>8.1.15.v20140411</jetty-jmx.version>
         <nimbits_version>3.9.0</nimbits_version>
+        <datanucleus.version>3.1.2</datanucleus.version>
     </properties>
 
     <repositories>
@@ -127,7 +128,7 @@
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
-            <version>1.4.186</version>
+            <version>1.4.187</version>
         </dependency>
 
         <dependency>
@@ -224,14 +225,21 @@
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-api-jdo</artifactId>
-            <version>3.1.2</version>
+            <version>${datanucleus.version}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-rdbms</artifactId>
-            <version>3.1.2</version>
+            <version>${datanucleus.version}</version>
             <scope>compile</scope>
+
+
+        </dependency>
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-cache</artifactId>
+            <version>${datanucleus.version}</version>
         </dependency>
 
         <dependency>
@@ -387,7 +395,7 @@
             <plugin>
                 <groupId>org.datanucleus</groupId>
                 <artifactId>maven-datanucleus-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>${datanucleus.version}</version>
                 <configuration>
                     <verbose>false</verbose>
                     <fork>false</fork>

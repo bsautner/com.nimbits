@@ -84,7 +84,7 @@ public class PointTask extends HttpServlet {
         if (! points.isEmpty()) {
             logger.info("Point Maint: " + position);
 
-            entityService.doPointMaint(points.get(0));
+            entityService.doPointMaint(points.get(0), true);
 
 
         }

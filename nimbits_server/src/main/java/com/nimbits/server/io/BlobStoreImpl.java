@@ -81,7 +81,7 @@ public class BlobStoreImpl implements BlobStore {
     }
 
     @Override
-    public List<Value> getTopDataSeries(final Entity entity, final int maxValues, final Date endDate) {
+    public List<Value> getTopDataSeries(final Entity entity, final int maxValues, final Date endDate, int maxStores) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
 
@@ -91,7 +91,7 @@ public class BlobStoreImpl implements BlobStore {
             q.setFilter("minTimestamp <= t && entity == k");
             q.declareParameters("String k, Long t");
             q.setOrdering("minTimestamp desc");
-            q.setRange(0, maxValues);
+            q.setRange(0, maxStores);
 
             final List<ValueBlobStoreEntity> result = (List<ValueBlobStoreEntity>) q.execute(entity.getKey(), endDate.getTime());
 
@@ -180,60 +180,6 @@ public class BlobStoreImpl implements BlobStore {
     }
 
 
-    @Override
-    public List<ValueBlobStore> getTopStores(final Entity entity) {
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-        try {
-
-            final Query q = pm.newQuery(ValueBlobStoreEntity.class);
-            q.setFilter("entity == k");
-            q.declareParameters("String k");
-            q.setOrdering("timestamp descending");
-            q.setRange(0, 1000);
-
-            final Collection<ValueBlobStore> result = (Collection<ValueBlobStore>) q.execute(entity.getKey());
-            List<ValueBlobStore> checked = new ArrayList<>(result.size());
-            {
-                for (ValueBlobStore e : result) {
-                    if (validateOwnership(entity, e)) {
-                        checked.add(e);
-                    }
-                }
-            }
-            return ValueBlobStoreFactory.createValueBlobStores(checked);
-        } finally {
-            pm.close();
-        }
-    }
-
-    @Override
-    public void deleteStores(final Entity entity, final Date timestamp) {
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
-
-        final Query q = pm.newQuery(ValueBlobStoreEntity.class);
-        q.setFilter("timestamp == t && entity == k");
-        q.declareParameters("String k, Long t");
-
-        //  Transaction tx = pm.currentTransaction();
-        try {
-
-            //   tx.begin();
-            final List<ValueBlobStoreEntity> result = (List<ValueBlobStoreEntity>) q.execute(entity.getKey(), timestamp.getTime());
-             pm.deletePersistentAll(result);
-
-            //  tx.commit();
-
-        }
-        catch (Exception ex) {
-              ex.printStackTrace();
-            //  tx.rollback();
-
-
-        } finally {
-            pm.close();
-        }
-    }
 
     @Override
     public void consolidateDate(final Entity entity, final Date timestamp) {

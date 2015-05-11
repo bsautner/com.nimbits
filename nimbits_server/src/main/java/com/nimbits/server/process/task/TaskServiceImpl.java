@@ -56,10 +56,6 @@ public class TaskServiceImpl implements TaskService {
         valueService.deleteExpiredData(point);
     }
 
-    @Override
-    public void startDeleteBlobTask(String key) {
-
-    }
 
     @Override
     public void startDataDumpTask(User user, Entity entity, Timespan timespan) {
@@ -96,12 +92,6 @@ public class TaskServiceImpl implements TaskService {
     @Override
     public void startPointTask(Entity entity) {
 
-    }
-
-    @Override
-    public void startMoveCachedValuesToStoreTask(User user, Entity point) throws IOException {
-
-        //valueService.moveValuesFromCacheToStore(point);
     }
 
     @Override

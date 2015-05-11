@@ -42,7 +42,7 @@ import java.util.logging.Logger;
 @Component
 public class NimbitsCacheImpl extends BaseCache implements NimbitsCache {
     private Cache<Object, Object> cache;
-    private Cache<String, UsageTracker> usageCache;
+
     private Cache<String, List<Value>> valueCache;
 
     @Autowired
@@ -56,8 +56,6 @@ public class NimbitsCacheImpl extends BaseCache implements NimbitsCache {
 
     public NimbitsCacheImpl() {
         cache = CacheBuilder.newBuilder().build();
-        usageCache = CacheBuilder.newBuilder().build();
-
 
         valueCache = CacheBuilder.newBuilder()
                 .maximumSize(1000)
@@ -101,11 +99,6 @@ public class NimbitsCacheImpl extends BaseCache implements NimbitsCache {
         }
     }
 
-    @Override
-    public ConcurrentMap<String, UsageTracker> getUsageMap() {
-        return usageCache.asMap();
-    }
-
 
     @Override
     public void remove(String key) {
@@ -117,15 +110,6 @@ public class NimbitsCacheImpl extends BaseCache implements NimbitsCache {
         return cache.getIfPresent(generateKey(key));
     }
 
-    @Override
-    public void putUsage(String key, UsageTracker object) {
-        usageCache.put(generateKey(key), object);
-    }
-
-    @Override
-    public UsageTracker getUsage(String key) {
-        return usageCache.getIfPresent(generateKey(key));
-    }
 
     @Override
     public void put(String key, Object object) {
@@ -135,11 +119,6 @@ public class NimbitsCacheImpl extends BaseCache implements NimbitsCache {
     @Override
     public void delete(String key) {
         remove(generateKey(key));
-    }
-
-    @Override
-    public long getStats() {
-        return 0;
     }
 
 

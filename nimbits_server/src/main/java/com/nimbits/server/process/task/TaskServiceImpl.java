@@ -105,5 +105,10 @@ public class TaskServiceImpl implements TaskService {
 
     }
 
+    @Override
+    public void startDefragTask(String cursor, Entity entity) {
+
+    }
+
 
 }

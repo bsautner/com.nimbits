@@ -192,6 +192,8 @@
         <servlet-name>pointTask</servlet-name>
         <url-pattern>/task/pointTask</url-pattern>
     </servlet-mapping>
+
+
     <!--end tasks-->
 
 

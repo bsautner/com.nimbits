@@ -56,10 +56,6 @@ public class TaskServiceImpl implements TaskService {
         valueService.deleteExpiredData(point);
     }
 
-    @Override
-    public void startDeleteBlobTask(String key) {
-
-    }
 
     @Override
     public void startDataDumpTask(User user, Entity entity, Timespan timespan) {
@@ -83,15 +79,19 @@ public class TaskServiceImpl implements TaskService {
     public void startPointTask(long pos) {
         List<Point> sample = entityDao.getPoint(pos);
         if (! sample.isEmpty()) {
-            entityService.doPointMaint(sample.get(0));
+            entityService.doPointMaint(sample.get(0), true);
             startPointTask(++pos);
         }
     }
 
     @Override
-    public void startMoveCachedValuesToStoreTask(User user, Entity point) throws IOException {
+    public void startPointTask(String cursor) {
 
-        valueService.moveValuesFromCacheToStore(point);
+    }
+
+    @Override
+    public void startPointTask(Entity entity) {
+
     }
 
     @Override
@@ -102,6 +102,11 @@ public class TaskServiceImpl implements TaskService {
                 valueTask.recordValue(value, user, entity, preAuthorised);
         //    }
        // }).run();
+
+    }
+
+    @Override
+    public void startDefragTask(String cursor, Entity entity) {
 
     }
 

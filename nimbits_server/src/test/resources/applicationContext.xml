@@ -7,19 +7,20 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <beans:import resource="context.xml"/>
-
+    <bean id="defragmenter" class="com.nimbits.server.defrag.Defragmenter"/>
+    <bean id="valueTask" class="com.nimbits.server.process.task.ValueTask"/>
+    <bean id="dataProcessor" class="com.nimbits.server.data.DataProcessor"/>
     <bean id="chartHelper" class="com.nimbits.server.chart.ChartHelper"/>
-    <bean id="cache" class="com.nimbits.server.transaction.cache.NimbitsCacheImpl"/>
+    <bean id="nimbitsCache" class="com.nimbits.server.transaction.cache.NimbitsCacheImpl"/>
 
-    <bean id="userCache" class="com.nimbits.server.transaction.user.cache.UserCacheImpl"/>
     <bean id="userService" class="com.nimbits.server.transaction.user.service.UserServiceImpl"/>
 
-    <bean id="entityService" class=" com.nimbits.server.transaction.entity.EntityServiceImpl"/>
+    <bean id="entityService" class="com.nimbits.server.transaction.entity.EntityServiceImpl"/>
 
-    <bean id="authService" class=" com.nimbits.server.auth.AuthServiceImpl"/>
 
     <bean id="settingsService" class="com.nimbits.server.transaction.settings.SettingsServiceImpl"/>
-    <bean id="settingsCache" class="com.nimbits.server.transaction.settings.SettingsCacheImpl"/>
+
+
     <bean id="settingsDao" class="com.nimbits.server.transaction.settings.SettingsDaoImpl">
 
 
@@ -35,6 +36,10 @@
     </bean>
 
     <bean id="userDao" class="com.nimbits.server.transaction.user.dao.UserDaoImpl">
+        <property name="persistenceManagerFactory" ref="pmf"/>
+    </bean>
+
+    <bean id="datastoreProvider" class="com.nimbits.server.transaction.DatastoreProvider">
         <property name="persistenceManagerFactory" ref="pmf"/>
     </bean>
 
@@ -55,8 +60,6 @@
     <bean id="taskService" name="taskService" class="com.nimbits.server.process.task.TaskServiceImpl"/>
 
 
-    <bean id="entityCache" class="com.nimbits.server.transaction.entity.cache.EntityCacheImpl"/>
-
     <bean id="stringEncryption" class="com.nimbits.server.secure.StringEncryption"/>
     <bean id="serverInfo" class="com.nimbits.server.system.ServerInfo"/>
 
@@ -67,7 +70,7 @@
                     org.datanucleus.api.jdo.JDOPersistenceManagerFactory
                 </prop>
                 <prop key="javax.jdo.option.ConnectionURL">
-                    jdbc:h2:./database/db;MV_STORE=FALSE;MVCC=FALSE;;FILE_LOCK=NO
+                    jdbc:h2:./database/db2;MV_STORE=FALSE;MVCC=FALSE;;FILE_LOCK=NO
                 </prop>
                 <prop key="javax.jdo.option.ConnectionUserName">sa</prop>
                 <prop key="javax.jdo.option.ConnectionPassword"></prop>
@@ -75,6 +78,8 @@
                 <prop key="org.jpox.autoCreateSchema">true</prop>
                 <prop key="org.jpox.identifier.case">PreserveCase</prop>
                 <prop key="datanucleus.autoCreateTables">true</prop>
+                <prop key="datanucleus.cache.level2.type">javax.cache</prop>
+                <prop key="datanucleus.cache.level2.cacheName">nimbitsCache</prop>
             </props>
         </property>
     </bean>

@@ -30,7 +30,9 @@ import com.nimbits.client.model.valueblobstore.ValueBlobStoreFactory;
 import com.nimbits.server.defrag.ValueDayHolder;
 import com.nimbits.server.gson.deserializer.ValueDeserializer;
 import com.nimbits.server.orm.store.ValueBlobStoreEntity;
+import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.transaction.settings.SettingsService;
+import com.nimbits.server.transaction.value.dao.ValueDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -53,6 +55,12 @@ public class BlobStoreImpl implements BlobStore {
     @Autowired
     private SettingsService settingsService;
 
+    @Autowired
+    private ValueDao valueDao;
+
+    @Autowired
+    private TaskService taskService;
+
     private final Gson gson = new GsonBuilder()
             .setDateFormat(Const.GSON_DATE_FORMAT)
             .registerTypeAdapter(Value.class, new ValueDeserializer())
@@ -73,7 +81,7 @@ public class BlobStoreImpl implements BlobStore {
     }
 
     @Override
-    public List<Value> getTopDataSeries(final Entity entity, final int maxValues, final Date endDate) {
+    public List<Value> getTopDataSeries(final Entity entity, final int maxValues, final Date endDate, int maxStores) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
 
@@ -83,14 +91,14 @@ public class BlobStoreImpl implements BlobStore {
             q.setFilter("minTimestamp <= t && entity == k");
             q.declareParameters("String k, Long t");
             q.setOrdering("minTimestamp desc");
-            q.setRange(0, maxValues);
+            q.setRange(0, maxStores);
 
             final List<ValueBlobStoreEntity> result = (List<ValueBlobStoreEntity>) q.execute(entity.getKey(), endDate.getTime());
 
             for (final ValueBlobStoreEntity e : result) {
                 if (validateOwnership(entity, e)) {
                     List<Value> values = readValuesFromFile(e);
-                    logger.info("reading values from blob " + values.size());
+
                     for (final Value vx : values) {
                         if (vx.getTimestamp().getTime() <= endDate.getTime()) {
                             retObj.add(vx);
@@ -127,7 +135,7 @@ public class BlobStoreImpl implements BlobStore {
             for (final ValueBlobStoreEntity e : result) {
                 if (validateOwnership(entity, e)) {
                     List<Value> values = readValuesFromFile(e);
-                    logger.info("reading values from blob " + values.size());
+
                     for (final Value vx : values) {
                         retObj.add(vx);
 
@@ -172,69 +180,18 @@ public class BlobStoreImpl implements BlobStore {
     }
 
 
-    @Override
-    public List<ValueBlobStore> getAllStores(final Entity entity) {
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-        try {
-
-            final Query q = pm.newQuery(ValueBlobStoreEntity.class);
-            q.setFilter("entity == k");
-            q.declareParameters("String k");
-            q.setOrdering("timestamp descending");
-
-            final Collection<ValueBlobStore> result = (Collection<ValueBlobStore>) q.execute(entity.getKey());
-            List<ValueBlobStore> checked = new ArrayList<>(result.size());
-            {
-                for (ValueBlobStore e : result) {
-                    if (validateOwnership(entity, e)) {
-                        checked.add(e);
-                    }
-                }
-            }
-            return ValueBlobStoreFactory.createValueBlobStores(checked);
-        } finally {
-            pm.close();
-        }
-    }
 
     @Override
-    public void deleteStores(final Entity entity, final Date timestamp) {
+    public void consolidateDate(final Entity entity, final Date timestamp) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
-
-        final Query q = pm.newQuery(ValueBlobStoreEntity.class);
-        q.setFilter("timestamp == t && entity == k");
-        q.declareParameters("String k, Long t");
-
-        //  Transaction tx = pm.currentTransaction();
-        try {
-
-            //   tx.begin();
-            final List<ValueBlobStoreEntity> result = (List<ValueBlobStoreEntity>) q.execute(entity.getKey(), timestamp.getTime());
-             pm.deletePersistentAll(result);
-
-            //  tx.commit();
-
-        }
-        catch (Exception ex) {
-              ex.printStackTrace();
-            //  tx.rollback();
-
-
-        } finally {
-            pm.close();
-        }
-    }
-
-    @Override
-    public List<Value> consolidateDate(final Entity entity, final Date timestamp) {
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
+        logger.info("consolidating " + entity.getName().getValue());
 
         final Query q = pm.newQuery(ValueBlobStoreEntity.class);
         q.setFilter("timestamp == t && entity == k");
         q.declareParameters("String k, Long t");
         q.setOrdering("timestamp desc");
+        q.setRange(0, 1000);
 
 
 
@@ -242,20 +199,30 @@ public class BlobStoreImpl implements BlobStore {
 
             final List<ValueBlobStore> result = (List<ValueBlobStore>) q.execute(entity.getKey(), timestamp.getTime());
 
-            final List<Value> values = new ArrayList<>();
-            for (final ValueBlobStore store : result) {
-                if (validateOwnership(entity, store)) {
-                    values.addAll(readValuesFromFile(store));
+            if (result.size() > 1) {
+                logger.info("consolidating " + result.size());
+
+                final List<Value> values = new ArrayList<>(1000);
+                for (final ValueBlobStore store : result) {
+                    if (validateOwnership(entity, store)) {
+                        values.addAll(readValuesFromFile(store));
+                    }
                 }
+
+                deleteFiles(result);
+                pm.deletePersistentAll(result);
+                if (! values.isEmpty()) {
+                    logger.info("storing: " + values.size());
+                    valueDao.recordValues(entity, values);
+                }
+
+                logger.info("defragmenting " + values.size());
+                taskService.startPointTask(entity);
+
             }
-
-            deleteFiles(result);
-
-
-            return values;
         }
         catch (Exception ex) {
-             return Collections.emptyList();  //TODO if anything goes wrong with this process you'll lose an entire day's worth of data
+            logger.log(Level.SEVERE, ex.getMessage(), ex);
 
         } finally {
             pm.close();

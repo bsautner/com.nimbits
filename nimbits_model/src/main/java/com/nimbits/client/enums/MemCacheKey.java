@@ -17,15 +17,10 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/14/12
- * Time: 4:02 PM
- */
+@Deprecated //get rid of caching this way
 public enum MemCacheKey {
 
-    activePoints(0, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_ACTIVE_POINTS),
+
     hotPoints(0, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_HOT_POINTS),
     valueCache(1, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_VALUE),
     allSettings(2, ServerSetting.version.getDefaultValue() + KeyConstants.KEY_ALL_SETTINGS),

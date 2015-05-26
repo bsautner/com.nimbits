@@ -106,9 +106,10 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void startDefragTask(String cursor, Entity entity) {
+    public void startDefragTask(String cursor, String id, Long date) {
 
     }
+
 
 
 }

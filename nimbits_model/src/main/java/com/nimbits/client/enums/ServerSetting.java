@@ -110,7 +110,7 @@ public enum ServerSetting {
 
     private static class SettingConstants {
 
-        static final String STORE_DIRECTORY_DEFAULT = "/tmp";
+        static final String STORE_DIRECTORY_DEFAULT = "/opt/nimbits/data";
         static final String SETTING_ADMIN = "admin";
         static final String SETTING_SMTP = "smtp";
         static final String SETTING_SMTP_PASSWORD = "smtp password";

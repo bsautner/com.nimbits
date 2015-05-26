@@ -76,7 +76,8 @@ public class BlobStoreImpl implements BlobStore {
         this.persistenceManagerFactory = persistenceManagerFactory;
     }
 
-    private boolean validateOwnership(Entity entity, ValueBlobStore e) {
+    @Override
+    public boolean validateOwnership(Entity entity, ValueBlobStore e) {
         return e.getEntityUUID().equals("") || e.getEntityUUID().equals(entity.getUUID());
     }
 
@@ -302,7 +303,8 @@ public class BlobStoreImpl implements BlobStore {
 
 
 
-    private List<Value> readValuesFromFile(final ValueBlobStore store) {
+    @Override
+    public List<Value> readValuesFromFile(final ValueBlobStore store) {
 
         final Type valueListType = new TypeToken<List<ValueModel>>() {
         }.getType();

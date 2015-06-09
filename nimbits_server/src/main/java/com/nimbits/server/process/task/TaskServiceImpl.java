@@ -13,6 +13,7 @@
 package com.nimbits.server.process.task;
 
 
+import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.timespan.Timespan;
@@ -33,15 +34,6 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Autowired
-    private ValueService valueService;
-
-    @Autowired
-    private EntityService entityService;
-
-    @Autowired
-    private EntityDao entityDao;
-
-    @Autowired
     private ValueTask valueTask;
 
 
@@ -50,11 +42,6 @@ public class TaskServiceImpl implements TaskService {
 
     }
 
-
-    @Override
-    public void startDeleteDataTask(Point point) {
-        valueService.deleteExpiredData(point);
-    }
 
 
     @Override
@@ -77,11 +64,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void startPointTask(long pos) {
-        List<Point> sample = entityDao.getPoint(pos);
-        if (! sample.isEmpty()) {
-            entityService.doPointMaint(sample.get(0), true);
-            startPointTask(++pos);
-        }
+
     }
 
     @Override
@@ -89,27 +72,20 @@ public class TaskServiceImpl implements TaskService {
 
     }
 
-    @Override
-    public void startPointTask(Entity entity) {
 
-    }
 
     @Override
     public void startRecordValueTask(final User user, final Point entity, final Value value, final boolean preAuthorised) {
-      //  new Thread(new Runnable() {
-       //     @Override
-       //     public void run() {
-                valueTask.recordValue(value, user, entity, preAuthorised);
-        //    }
-       // }).run();
+
+        try {
+            valueTask.recordValue(value, user, entity, preAuthorised);
+        } catch (ValueException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
     }
-
-    @Override
-    public void startDefragTask(String cursor, String id, Long date) {
-
-    }
-
-
 
 }

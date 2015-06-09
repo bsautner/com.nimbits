@@ -46,8 +46,7 @@
 
     <bean id="recursionValidation" class="com.nimbits.server.orm.validation.RecursionValidation"/>
     <bean id="valueService" class="com.nimbits.server.transaction.value.service.ValueServiceImpl"/>
-    <bean id="valueCache" class="com.nimbits.server.transaction.value.cache.ValueCacheImpl"/>
-    <bean id="valueDao" class="com.nimbits.server.transaction.value.dao.ValueDaoImpl"/>
+
 
     <bean id="calculationService" class="com.nimbits.server.transaction.calculation.CalculationServiceImpl"/>
     <bean id="summaryService" class="com.nimbits.server.transaction.summary.SummaryServiceImpl"/>

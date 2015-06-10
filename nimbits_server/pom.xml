@@ -42,7 +42,7 @@
         <spring.version>4.1.1.RELEASE</spring.version>
 
         <jetty-jmx.version>8.1.15.v20140411</jetty-jmx.version>
-        <nimbits_version>3.9.1</nimbits_version>
+        <nimbits_version>3.9.3</nimbits_version>
         <datanucleus.version>3.1.2</datanucleus.version>
     </properties>
 

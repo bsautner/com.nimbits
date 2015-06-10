@@ -37,14 +37,15 @@ public class SubscriptionFactory {
             final SubscriptionNotifyMethod method,
             final int maxRepeatSeconds,
             final boolean formatJson,
-            final boolean enabled) {
+            final boolean enabled,
+            final String target) {
 
         return new SubscriptionModel(entity,
                 subscribedEntity,
                 type,
                 method,
                 maxRepeatSeconds,
-                formatJson, enabled
+                formatJson, enabled, target
         );
 
     }

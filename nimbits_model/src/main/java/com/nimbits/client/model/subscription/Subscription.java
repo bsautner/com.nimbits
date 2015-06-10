@@ -47,4 +47,8 @@ public interface Subscription extends Entity, Serializable {
 
     @Override
     void update(Entity update);
+
+    String getTarget();
+
+    void setTarget(String target);
 }

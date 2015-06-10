@@ -139,6 +139,16 @@ public class BlobStoreImpl implements BlobStore {
     }
 
     @Override
+    public Value getSnapshot(Entity entity) {
+        return null;
+    }
+
+    @Override
+    public void saveSnapshot(Entity entity, Value value) {
+
+    }
+
+    @Override
     public List<Value> getDataSegment(final Entity entity, final Range<Date> timespan) {
         return Collections.emptyList();
 //        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();

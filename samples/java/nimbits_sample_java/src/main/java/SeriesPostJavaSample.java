@@ -52,15 +52,15 @@ public class SeriesPostJavaSample {
 //    private static final AccessToken TOKEN = AccessToken.getInstance("key");
 //     private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8085");
 
-    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("b@b.com");
-    private static final AccessToken TOKEN = AccessToken.getInstance("b");
+    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("x@x.com");
+    private static final AccessToken TOKEN = AccessToken.getInstance("x");
     private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080");
    // private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("cloud.nimbits.com");
     private static final Server SESSION_START = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, TOKEN);
 
-    protected static final int COUNT = 100;
-    public static final int VCOUNT = 100;
-    public static final int ROUNDS = 100;
+    protected static final int COUNT = 10;
+    public static final int VCOUNT = 1000;
+    public static final int ROUNDS = 10;
 
     public static void main(String[] args) throws InterruptedException {
         System.out.println("Welcome To Nimbits!");
@@ -117,7 +117,7 @@ public class SeriesPostJavaSample {
 
             for (Point point : points) {
                 List<Value> recordedValues = valueHelper.getSeries(point.getName().getValue());
-                System.out.println("downloaded " + recordedValues.size() + " Cached Values.");
+                System.out.println("downloaded " + recordedValues.size() + " Stored Values.");
                 if (recordedValues.size() != VCOUNT) {
                    // /return;
                 }

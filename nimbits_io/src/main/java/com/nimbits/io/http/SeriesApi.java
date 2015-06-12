@@ -30,7 +30,7 @@ import java.util.List;
 
 public interface SeriesApi {
 
-    final String SERIES_API ="/service/v2/series";
+    String SERIES_API ="/service/v2/series";
 
     @POST(SERIES_API)
     String recordSeries(@Body final List<Point> point);

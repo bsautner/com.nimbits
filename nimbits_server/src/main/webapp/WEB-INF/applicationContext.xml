@@ -29,7 +29,7 @@
     <bean id="emailService" class="com.nimbits.server.communication.mail.EmailServiceImpl"/>
 
     <bean id="blobStore" class="com.nimbits.server.io.BlobStoreImpl">
-        <property name="persistenceManagerFactory" ref="pmf"/>
+
     </bean>
     <bean id="entityDao" class="com.nimbits.server.transaction.entity.dao.EntityDaoImpl">
         <property name="persistenceManagerFactory" ref="pmf"/>

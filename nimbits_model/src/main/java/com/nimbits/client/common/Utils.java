@@ -13,12 +13,8 @@
 package com.nimbits.client.common;
 
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 6/11/11
- * Time: 9:04 AM
- */
+
+@Deprecated
 public class Utils {
 
     private static final double DOUBLE = 100.0;

@@ -228,6 +228,7 @@ public enum Parameters {
         public static final String CONNECTION_ID = "connection";
         public static final String PARAM_CURSOR = "cursor";
 
+
         private ParamConstants() {
         }
     }

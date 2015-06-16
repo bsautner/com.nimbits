@@ -36,15 +36,15 @@
 
     </filter-mapping>
 
-    <filter>
-        <filter-name>datastoreFilter</filter-name>
-        <filter-class>com.nimbits.server.api.filter.DatastoreFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>datastoreFilter</filter-name>
-        <url-pattern>/*</url-pattern>
+    <!--<filter>-->
+        <!--<filter-name>datastoreFilter</filter-name>-->
+        <!--<filter-class>com.nimbits.server.api.filter.DatastoreFilter</filter-class>-->
+    <!--</filter>-->
+    <!--<filter-mapping>-->
+        <!--<filter-name>datastoreFilter</filter-name>-->
+        <!--<url-pattern>/*</url-pattern>-->
 
-    </filter-mapping>
+    <!--</filter-mapping>-->
 
     <servlet>
         <servlet-name>dataTableApi</servlet-name>

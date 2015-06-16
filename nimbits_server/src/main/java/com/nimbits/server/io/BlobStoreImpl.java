@@ -38,7 +38,6 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -84,27 +83,27 @@ public class BlobStoreImpl implements BlobStore {
         File file = new File(path);
         if (file.exists()) {
 
-            List<String> names = new ArrayList<>();
+            List<String> dailyFolderPaths = new ArrayList<>();
 
-            for (String name : file.list()) {
+            for (String dailyFolderPath : file.list()) {
 
-                File node = new File(name);
-                logger.info("found: " + name + " " + node.isDirectory());
+                File node = new File(dailyFolderPath);
+                logger.info("found: " + dailyFolderPath + " " + node.isDirectory());
 
                 if (! node.getName().endsWith(SNAPSHOT)) {
 
-                    names.add(root + "/" + entity.getKey() + "/" + name);
+                    dailyFolderPaths.add(root + "/" + entity.getKey() + "/" + dailyFolderPath);
 
                 }
 
 
             }
 
-            if (!names.isEmpty()) {
-                Collections.sort(names);
-                Collections.reverse(names);
+            if (!dailyFolderPaths.isEmpty()) {
+                Collections.sort(dailyFolderPaths);
+                Collections.reverse(dailyFolderPaths);
 
-                for (String sortedDayPath : names) {
+                for (String sortedDayPath : dailyFolderPaths) {
                     logger.info("processing sub directory: " + sortedDayPath);
                     Iterator result2 = FileUtils.iterateFiles(new File(sortedDayPath), null, false);
                     List<String> filePaths = new ArrayList<>();
@@ -129,7 +128,8 @@ public class BlobStoreImpl implements BlobStore {
                         retObj.addAll(values);
 
                         allReadFiles.add(sortedFilePath);
-                        if (retObj.size() > INITIAL_CAPACITY) {
+                        //DEFRAG IF over 1000 values are contained in over 1000 files
+                        if (retObj.size() > INITIAL_CAPACITY && filePaths.size() > INITIAL_CAPACITY) {
                             deleteAndRestore(entity, retObj, allReadFiles);
                             return retObj;
                         }

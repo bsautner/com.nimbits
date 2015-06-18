@@ -22,6 +22,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.value.impl.ValueModel;
@@ -283,6 +284,11 @@ public class BlobStoreImpl implements BlobStore {
         String FILENAME =  root + "/" + entity.getKey() + "/" + holder.getStartOfDay().getTime() + "/" + earliestForDay.getTime();//store.getId();
         // GcsService gcsService = GcsServiceFactory.createGcsService();
         writeFile(json, FILENAME);
+    }
+
+    @Override
+    public void deleteAllData(Point point) throws IOException {
+        FileUtils.deleteDirectory(new File(root + "/" + point.getKey()));
     }
 
     private void writeFile(String json, String FILENAME) {

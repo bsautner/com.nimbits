@@ -16,7 +16,7 @@ public class ExitCommand extends AbstractCommand implements Command {
 
     @Override
     public void doCommand(CommandListener listener, String[] args) {
-       listener.onMessage("bye!");
+        listener.onMessage("bye!");
         System.exit(0);
     }
 

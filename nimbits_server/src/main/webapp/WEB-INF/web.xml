@@ -36,15 +36,6 @@
 
     </filter-mapping>
 
-    <!--<filter>-->
-        <!--<filter-name>datastoreFilter</filter-name>-->
-        <!--<filter-class>com.nimbits.server.api.filter.DatastoreFilter</filter-class>-->
-    <!--</filter>-->
-    <!--<filter-mapping>-->
-        <!--<filter-name>datastoreFilter</filter-name>-->
-        <!--<url-pattern>/*</url-pattern>-->
-
-    <!--</filter-mapping>-->
 
     <servlet>
         <servlet-name>dataTableApi</servlet-name>
@@ -198,16 +189,6 @@
 
 
     <!--cron-->
-
-    <servlet>
-        <servlet-name>pointCron</servlet-name>
-        <servlet-class>com.nimbits.server.process.cron.PointCron</servlet-class>
-        <!--<servlet-class>PointCron</servlet-class>-->
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>pointCron</servlet-name>
-        <url-pattern>/cron/pointCron</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>systemCron</servlet-name>

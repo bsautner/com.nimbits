@@ -3,7 +3,6 @@ package com.nimbits.io.command;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
 import com.nimbits.io.helper.HelperFactory;
 import com.nimbits.io.helper.ValueHelper;
 
@@ -23,8 +22,7 @@ public class SeedRandomCommand extends AbstractCommand implements Command {
         if (current.getEntityType().recordsData()) {
             if (args.length != 2) {
                 listener.onMessage("try: \"seed 10\" to seed 10 random values");
-            }
-            else {
+            } else {
                 int count = Integer.parseInt(args[1]);
                 for (int i = 0; i < count; i++) {
                     Random r = new Random();
@@ -42,8 +40,7 @@ public class SeedRandomCommand extends AbstractCommand implements Command {
                 }
             }
 
-        }
-        else {
+        } else {
             listener.onMessage("The current entity type: " + current.getEntityType().name() + " is not something that records data");
         }
     }

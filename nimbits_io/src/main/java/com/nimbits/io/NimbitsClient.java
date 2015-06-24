@@ -27,6 +27,7 @@ import java.util.Map;
 
 /**
  * Basic Input and Output for the Nimbits API.
+ *
  * @see com.nimbits.client.model package for the varios POJOs this api returns.
  */
 
@@ -35,15 +36,15 @@ public interface NimbitsClient {
 
     /**
      * Returns the authenticated user for that session.  Response is a JSON formated User object in a list.
-     * @see com.nimbits.client.model.user.User
-
+     *
      * @return A list with a valid user or an empty list if authentication fails.
+     * @see com.nimbits.client.model.user.User
      */
     User login();
 
     User getSession();
 
-    Value  getValue(String entityName);
+    Value getValue(String entityName);
 
     Map<String, Integer> moveCron();
 
@@ -57,7 +58,7 @@ public interface NimbitsClient {
 
     List<Value> getSeries(String entity, int count);
 
-    void deleteEntity(Entity entity);
+    String deleteEntity(Entity entity);
 
     Entity addEntity(Entity entity);
 
@@ -73,7 +74,8 @@ public interface NimbitsClient {
 
     /**
      * notifies a cloud instance of a socket client
+     *
      * @param user
-      */
+     */
     void notifySocketConnection(String forwardUrl, User user);
 }

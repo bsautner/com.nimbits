@@ -15,8 +15,6 @@ package com.nimbits.server.gson.deserializer;
 import com.google.gson.*;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.category.CategoryModel;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserModel;
 
 import java.lang.reflect.Type;
 

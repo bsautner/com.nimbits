@@ -13,8 +13,6 @@
 package com.nimbits.server.gson.deserializer;
 
 import com.google.gson.*;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryModel;
 import com.nimbits.client.model.sync.Sync;
 import com.nimbits.client.model.sync.SyncModel;
 

@@ -56,9 +56,6 @@
 
     <bean id="xmppService" class="com.nimbits.server.communication.xmpp.XmppServiceImpl"/>
 
-    <bean id="taskService" name="taskService" class="com.nimbits.server.process.task.TaskServiceImpl"/>
-
-
     <bean id="stringEncryption" class="com.nimbits.server.secure.StringEncryption"/>
     <bean id="serverInfo" class="com.nimbits.server.system.ServerInfo"/>
 

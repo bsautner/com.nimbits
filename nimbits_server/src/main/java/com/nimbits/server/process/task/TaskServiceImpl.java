@@ -14,19 +14,13 @@ package com.nimbits.server.process.task;
 
 
 import com.nimbits.client.exception.ValueException;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.entity.service.EntityService;
-import com.nimbits.server.transaction.value.service.ValueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -44,33 +38,6 @@ public class TaskServiceImpl implements TaskService {
 
 
 
-    @Override
-    public void startDataDumpTask(User user, Entity entity, Timespan timespan) {
-
-    }
-
-    @Override
-    public void startUploadTask(User user, Point entity, String blobKey) {
-
-    }
-
-
-    @Override
-    public void startIncomingMailTask(String fromAddress, String inContent) {
-
-    }
-
-
-
-    @Override
-    public void startPointTask(long pos) {
-
-    }
-
-    @Override
-    public void startPointTask(String cursor) {
-
-    }
 
 
 

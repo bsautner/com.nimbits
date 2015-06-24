@@ -17,38 +17,38 @@ public class ChangeDirectoryCommand extends AbstractCommand implements Command {
     @Override
     public void doCommand(CommandListener listener, String[] args) {
 
-            String name = args.length > 1 ? args[1] : "";
+        String name = args.length > 1 ? args[1] : "";
 
-            switch (name) {
-                case "~":
-                    listener.setCurrent(user);
-                    break;
-                case "..":
-                    for (Entity entity : tree) {
-                        if (entity.getKey().equals(current.getParent())) {
-                            listener.setCurrent(entity);
-                            return;
-                        }
+        switch (name) {
+            case "~":
+                listener.setCurrent(user);
+                break;
+            case "..":
+                for (Entity entity : tree) {
+                    if (entity.getKey().equals(current.getParent())) {
+                        listener.setCurrent(entity);
+                        return;
+                    }
+
+                }
+                listener.setCurrent(user);
+
+
+                break;
+            default:
+                for (Entity entity : tree) {
+                    if (entity.getParent().equals(current.getKey()) && entity.getName().getValue().equals(name)) {
+
+                        listener.setCurrent(entity);
+                        return;
+
 
                     }
-                    listener.setCurrent(user);
 
-
-                    break;
-                default:
-                    for (Entity entity : tree) {
-                        if (entity.getParent().equals(current.getKey()) && entity.getName().getValue().equals(name)) {
-
-                            listener.setCurrent(entity);
-                            return;
-
-
-                        }
-
-                    }
-                   listener.onMessage("entity not found");
-                    break;
-            }
+                }
+                listener.onMessage("entity not found");
+                break;
+        }
 
 
     }

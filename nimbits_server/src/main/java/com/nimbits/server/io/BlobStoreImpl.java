@@ -17,6 +17,7 @@ package com.nimbits.server.io;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
+import com.google.common.io.Closer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -36,9 +37,10 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Type;
+import java.net.DatagramSocket;
+import java.net.Socket;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -51,11 +53,7 @@ public class BlobStoreImpl implements BlobStore {
     public static final String SNAPSHOT = "SNAPSHOT";
     public static final int INITIAL_CAPACITY = 1000;
     private final Logger logger = Logger.getLogger(BlobStoreImpl.class.getName());
-
-
     private final Gson gson = new GsonBuilder().create();
-
-
 
 
     @Autowired
@@ -230,8 +228,12 @@ public class BlobStoreImpl implements BlobStore {
 
 
 
+
         try {
-            String segment = FileUtils.readFileToString(new File(path));
+            File file = new File(path);
+          //  boolean isCompressed = isGzipped(file);
+          //  System.out.println("******ISCOMPRESSED: " + isCompressed);
+            String segment = FileUtils.readFileToString(file);
             List<Value> models;
             if (! StringUtils.isEmpty(segment)) {
                 models = gson.fromJson(segment, valueListType);
@@ -304,5 +306,47 @@ public class BlobStoreImpl implements BlobStore {
         }
     }
 
+
+//    public static boolean isGzipped(File f) {
+//
+//        InputStream is = null;
+//        try {
+//            is = new FileInputStream(f);
+//            byte [] signature = new byte[2];
+//            int nread = is.read( signature ); //read the gzip signature
+//            return nread == 2 && signature[ 0 ] == (byte) 0x1f && signature[ 1 ] == (byte) 0x8b;
+//        } catch (IOException e) {
+//
+//            return false;
+//        } finally {
+//            Closer.closeSilently(is);
+//        }
+//    }
+
+    private static class Closer {
+
+        public static void closeSilently(Object... xs) {
+            // Note: on Android API levels prior to 19 Socket does not implement Closeable
+            for (Object x : xs) {
+                if (x != null) {
+                    try {
+
+                        if (x instanceof Closeable) {
+                            ((Closeable)x).close();
+                        } else if (x instanceof Socket) {
+                            ((Socket)x).close();
+                        } else if (x instanceof DatagramSocket) {
+                            ((DatagramSocket)x).close();
+                        } else {
+
+                            throw new RuntimeException("cannot close "+x);
+                        }
+                    } catch (Throwable e) {
+
+                    }
+                }
+            }
+        }
+    }
 
 }

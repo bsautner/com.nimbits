@@ -17,9 +17,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.trigger.TargetEntity;
 import com.nimbits.client.model.trigger.TriggerEntity;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 
 public class SummaryModelFactory {

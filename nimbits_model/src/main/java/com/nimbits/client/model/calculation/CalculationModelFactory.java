@@ -16,6 +16,8 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.trigger.TargetEntity;
 import com.nimbits.client.model.trigger.TriggerEntity;
 
+
+@Deprecated
 public class CalculationModelFactory {
 
     private CalculationModelFactory() {

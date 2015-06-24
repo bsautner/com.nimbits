@@ -6,7 +6,7 @@ import java.util.Map;
 
 public interface SystemCron {
 
-    final String CRON ="/cron/systemCron";
+    final String CRON = "/cron/systemCron";
 
 
     @GET(CRON)

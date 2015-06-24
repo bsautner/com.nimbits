@@ -16,12 +16,7 @@ import com.nimbits.client.model.entity.Entity;
 
 import java.io.Serializable;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 4/19/12
- * Time: 12:22 PM
- */
+
 public interface Trigger extends Entity, Serializable {
 
     String getTarget();

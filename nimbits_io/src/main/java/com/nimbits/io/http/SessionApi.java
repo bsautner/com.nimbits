@@ -7,7 +7,7 @@ import retrofit.http.Query;
 
 public interface SessionApi {
 
-    final String SESSION_API ="/service/v2/session";
+    final String SESSION_API = "/service/v2/session";
 
     @POST(SESSION_API)
     User login(@Query("email") String email, @Query("password") String key);
@@ -16,7 +16,7 @@ public interface SessionApi {
     User login();
 
     @GET(SESSION_API)
-    User  getSession();
+    User getSession();
 
 
 }

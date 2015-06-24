@@ -30,19 +30,19 @@ import java.util.List;
 
 public interface SeriesApi {
 
-    String SERIES_API ="/service/v2/series";
+    String SERIES_API = "/service/v2/series";
 
     @POST(SERIES_API)
     String recordSeries(@Body final List<Point> point);
 
     @GET(SERIES_API)
-    List<Value>  getSeries(@Query("id") String id);
+    List<Value> getSeries(@Query("id") String id);
 
     @GET(SERIES_API)
-    List<Value>  getSeries(@Query("id") String id, @Query("count") int count);
+    List<Value> getSeries(@Query("id") String id, @Query("count") int count);
 
     @GET(SERIES_API)
-    List<Value>  getSeries(@Query("id") String id,
-                           @Query("count") long sd,
-                           @Query("ed") long ed);
+    List<Value> getSeries(@Query("id") String id,
+                          @Query("count") long sd,
+                          @Query("ed") long ed);
 }

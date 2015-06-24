@@ -13,7 +13,6 @@
 package com.nimbits.client.common;
 
 
-
 @Deprecated
 public class Utils {
 

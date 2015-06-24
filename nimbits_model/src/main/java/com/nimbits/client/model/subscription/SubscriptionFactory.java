@@ -16,10 +16,6 @@ import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.model.entity.Entity;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 public class SubscriptionFactory {
 
     private SubscriptionFactory() {
@@ -49,7 +45,6 @@ public class SubscriptionFactory {
         );
 
     }
-
 
 
 }

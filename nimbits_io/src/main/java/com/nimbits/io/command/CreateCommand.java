@@ -23,25 +23,22 @@ public class CreateCommand extends AbstractCommand implements Command {
 
         if (args.length != 3) {
             System.out.println(USAGE);
-        }
-        else {
+        } else {
             try {
                 String type = args[1];
                 String name = args[2];
                 EntityType entityType = EntityType.valueOf(type);
                 if (entityType.equals(EntityType.point)) {
                     EntityHelper helper = HelperFactory.getEntityHelper(server);
-                    Point point = helper.createPoint(name, entityType,  current);
+                    Point point = helper.createPoint(name, entityType, current);
                     tree.add(point);
                     listener.onTreeUpdated(tree);
                     listener.setCurrent(current);
 
-                }
-                else {
+                } else {
                     listener.onMessage("you can only create a type point for now.");
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 listener.onMessage(ex.getMessage());
             }
 
@@ -49,7 +46,6 @@ public class CreateCommand extends AbstractCommand implements Command {
 
 
     }
-
 
 
     @Override

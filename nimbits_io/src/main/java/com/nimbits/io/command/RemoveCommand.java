@@ -18,41 +18,38 @@ public class RemoveCommand extends AbstractCommand implements Command {
 
     @Override
     public void doCommand(CommandListener listener, String[] args) {
-           boolean recursive = false;
-           EntityHelper helper = HelperFactory.getEntityHelper(server);
-           if (args.length < 2) {
-               listener.onMessage(getUsage());
+        boolean recursive = false;
+        EntityHelper helper = HelperFactory.getEntityHelper(server);
+        if (args.length < 2) {
+            listener.onMessage(getUsage());
 
-           }
-        else {
-               Entity entity = getEntity(args[1]);
-               if (entity == null) {
-                   listener.onMessage(args[1] + " not found");
-               }
-               else {
+        } else {
+            Entity entity = getEntity(args[1]);
+            if (entity == null) {
+                listener.onMessage(args[1] + " not found");
+            } else {
 
-                   for (String s : args) {
-                       if (s.equals("-R")) {
-                           recursive = true;
-                           break;
-                       }
-                   }
-                   boolean hc = hasChildren(entity);
+                for (String s : args) {
+                    if (s.equals("-R")) {
+                        recursive = true;
+                        break;
+                    }
+                }
+                boolean hc = hasChildren(entity);
 
-                   if (hc && !recursive) {
+                if (hc && !recursive) {
 
-                       listener.onMessage("entity has children. Use -R to delete it and all children.");
-                   }
-                   else  {
-                       tree.remove(entity);
-                       helper.deleteEntity(entity);
-                       listener.onTreeUpdated(tree);
+                    listener.onMessage("entity has children. Use -R to delete it and all children.");
+                } else {
+                    tree.remove(entity);
+                    helper.deleteEntity(entity);
+                    listener.onTreeUpdated(tree);
 
-                   }
+                }
 
-               }
+            }
 
-           }
+        }
 
     }
 
@@ -67,13 +64,14 @@ public class RemoveCommand extends AbstractCommand implements Command {
         return false;
 
     }
+
     private Entity getEntity(String name) {
         for (Entity entity : tree) {
-            if (entity.getName().getValue().equals(name)){
+            if (entity.getName().getValue().equals(name)) {
                 return entity;
             }
         }
-        return  null;
+        return null;
     }
 
     @Override

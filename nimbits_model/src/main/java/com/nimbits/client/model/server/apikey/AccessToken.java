@@ -30,6 +30,4 @@ public class AccessToken extends SimpleValue<String> implements Serializable {
     }
 
 
-
-
 }

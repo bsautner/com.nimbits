@@ -18,7 +18,7 @@ public class HelpCommand extends AbstractCommand implements Command {
     public void doCommand(CommandListener listener, String[] args) {
         for (TerminalCommand command : TerminalCommand.values()) {
             try {
-              listener.onMessage(command.name() + "\t\t\t\t" + command.init(user, current, server, tree).getUsage());
+                listener.onMessage(command.name() + "\t\t\t\t" + command.init(user, current, server, tree).getUsage());
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -28,25 +28,24 @@ import java.util.Map;
 
 public class ValueHelperImpl implements ValueHelper {
     private final Server server;
-  
+
     public ValueHelperImpl(Server server) {
         this.server = server;
 
     }
 
-  
 
     @Override
-    public void recordValue(String pointName, double value)  {
+    public void recordValue(String pointName, double value) {
         Value vx = ValueFactory.createValueModel(value);
         doRecordValue(pointName, vx);
 
     }
 
     @Override
-    public void recordValue(String pointName, Value value)  {
+    public void recordValue(String pointName, Value value) {
 
-         doRecordValue(pointName, value);
+        doRecordValue(pointName, value);
 
     }
 
@@ -58,7 +57,7 @@ public class ValueHelperImpl implements ValueHelper {
     }
 
     @Override
-    public List<Value> getSeries(String name)   {
+    public List<Value> getSeries(String name) {
         Point point = HelperFactory.getPointHelper(server).getPoint(name);
 
         return NimbitsClientFactory.getInstance(server).getSeries(point.getKey());
@@ -68,7 +67,7 @@ public class ValueHelperImpl implements ValueHelper {
     @Override
     public void recordValue(String name, double v, Date time) {
         Value vx = ValueFactory.createValueModel(v, time);
-         doRecordValue(name, vx);
+        doRecordValue(name, vx);
     }
 
     @Override
@@ -104,8 +103,8 @@ public class ValueHelperImpl implements ValueHelper {
 
     @Override
     public Value getValue(String name) {
-       // Point point = HelperFactory.getPointHelper(server).getPoint(name);
-        return  NimbitsClientFactory.getInstance(server).getValue(name);
+        // Point point = HelperFactory.getPointHelper(server).getPoint(name);
+        return NimbitsClientFactory.getInstance(server).getValue(name);
     }
 
 

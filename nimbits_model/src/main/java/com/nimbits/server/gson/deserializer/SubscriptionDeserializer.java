@@ -13,8 +13,6 @@
 package com.nimbits.server.gson.deserializer;
 
 import com.google.gson.*;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryModel;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.subscription.SubscriptionModel;
 
@@ -28,7 +26,7 @@ public class SubscriptionDeserializer implements JsonDeserializer<Subscription> 
 
         final String json = jsonElement.toString();
         Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        return gson.fromJson(json,SubscriptionModel.class);
+        return gson.fromJson(json, SubscriptionModel.class);
 
 
     }

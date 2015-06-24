@@ -19,10 +19,7 @@ import com.nimbits.client.model.entity.EntityModel;
 import java.io.Serializable;
 
 /**
- *
  * The POJO that represents access keys entities stored in the database
- *
- *
  */
 public class AccessKeyModel extends EntityModel implements AccessKey, Serializable {
 

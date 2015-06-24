@@ -13,8 +13,6 @@
 package com.nimbits.server.gson.deserializer;
 
 import com.google.gson.*;
-import com.nimbits.client.model.connection.Connection;
-import com.nimbits.client.model.connection.ConnectionModel;
 import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.schedule.ScheduleModel;
 

@@ -17,21 +17,27 @@
  */
 
 import com.google.common.collect.Range;
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.UrlContainer;
+import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.calculation.CalculationModelFactory;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
 import com.nimbits.client.model.server.apikey.AccessToken;
+import com.nimbits.client.model.trigger.TargetEntity;
+import com.nimbits.client.model.trigger.TriggerEntity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.io.helper.HelperFactory;
-import com.nimbits.io.helper.PointHelper;
-import com.nimbits.io.helper.UserHelper;
-import com.nimbits.io.helper.ValueHelper;
+import com.nimbits.io.helper.*;
+import org.apache.commons.io.FileUtils;
 
+import java.io.File;
 import java.util.*;
 
 /**
@@ -52,17 +58,26 @@ public class SeriesPostJavaSample {
 //    private static final AccessToken TOKEN = AccessToken.getInstance("key");
 //     private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8085");
 
-    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("x@x.com");
-    private static final AccessToken TOKEN = AccessToken.getInstance("x");
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080");
-   // private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("cloud.nimbits.com");
+    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("b@b.com");
+    private static final AccessToken TOKEN = AccessToken.getInstance("b");
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("192.168.1.24:8080");
+    // private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080");
+    // private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("cloud.nimbits.com");
     private static final Server SESSION_START = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, TOKEN);
 
     protected static final int COUNT = 10;
-    public static final int VCOUNT = 1000;
-    public static final int ROUNDS = 10;
+    public static final int VCOUNT = 10;
+    public static final int ROUNDS = 10000;
+
+    static ValueHelper valueHelper;
+    static PointHelper pointHelper;
+    static EntityHelper entityHelper;
+    static User user;
+    static int calcErrors = 0;
 
     public static void main(String[] args) throws InterruptedException {
+
+
         System.out.println("Welcome To Nimbits!");
 
         //some random name - can be anything but duplicates are not allowed.
@@ -70,22 +85,51 @@ public class SeriesPostJavaSample {
 
         UserHelper sessionHelper = HelperFactory.getUserHelper(SESSION_START);
 
-        User user = sessionHelper.getSession();
+        user = sessionHelper.getSession();
         AccessToken sessionToken = AccessToken.getInstance(user.getToken());
         Server loggedInServer = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, sessionToken);
-        ValueHelper valueHelper = HelperFactory.getValueHelper(loggedInServer);
-        PointHelper pointHelper = HelperFactory.getPointHelper(loggedInServer);
+        valueHelper = HelperFactory.getValueHelper(loggedInServer);
+        pointHelper = HelperFactory.getPointHelper(loggedInServer);
+        entityHelper = HelperFactory.getEntityHelper(loggedInServer);
         System.out.println("Hello " + user.getEmail() + " " + user.getToken());
 
+        long size = FileUtils.sizeOfDirectory(new File("/opt/nimbits/data/" + user.getEmail()));
+        deleteEverything();
+        go();
+        deleteEverything();
+        long size2 = FileUtils.sizeOfDirectory(new File("/opt/nimbits/data/" + user.getEmail()));
+        List<Entity> stree = entityHelper.getTree();
+        System.out.println("Start dir size: " + size + " end " + size2 + " junk: " + (size2 - size));
+        System.out.println("Entities Left: " + stree.size());
+
+    }
+
+    private static void deleteEverything() {
+        List<Entity> stree = entityHelper.getTree();
+        System.out.println("Items in Tree" + stree.size());
+        for (Entity e : stree) {
+
+            if (!e.getEntityType().equals(EntityType.user)) {
+                System.out.println("Deleting " + e.getName().getValue());
+                if (e.getParent().equals(user.getEmail().getValue())) {
+                    entityHelper.deleteEntity(e);
+                }
+            }
+        }
+    }
+
+    private static void go() {
 
         List<Point> points = new ArrayList<>(COUNT);
+
         for (int i = 0; i < COUNT; i++) {
             String pointName = UUID.randomUUID().toString();
             Point point = pointHelper.createPoint(pointName, "Some Random Description");
             points.add(point);
-            System.out.println("Created Point " + pointName);
+            System.out.println("Created Point " + point.getKey());
 
         }
+
 
         //  boolean success = pointHelper.pointExists(pointName);
         Calendar calendar = Calendar.getInstance();
@@ -95,8 +139,9 @@ public class SeriesPostJavaSample {
         System.out.println(calendar.getTime());
         Random r = new Random();
 
+
         for (int repeat = 0; repeat < ROUNDS; repeat++) {
-            System.out.println("ROUND: " + repeat);
+            System.out.println("ROUND: " + repeat + " CALC ERRORS: " + calcErrors);
 
             for (Point point : points) {
                 point.getValues().clear();
@@ -113,34 +158,27 @@ public class SeriesPostJavaSample {
             }
 
             valueHelper.recordValues(points);
-            Thread.sleep(2000);
+
+
 
             for (Point point : points) {
                 List<Value> recordedValues = valueHelper.getSeries(point.getName().getValue());
                 System.out.println("downloaded " + recordedValues.size() + " Stored Values.");
-                if (recordedValues.size() != VCOUNT) {
-                   // /return;
+                if (recordedValues.size() !=  VCOUNT - 1) {
+
                 }
             }
 
-//            Map<String, Integer> moveMap = valueHelper.moveCron();
-//            System.out.println("moveMap contained (should be " + COUNT + ") " + moveMap.size());
-//            if (moveMap.size() != COUNT) {
-//               // return;
-//            }
-//            for (String name : moveMap.keySet()) {
-//                System.out.println(name + " moved " + moveMap.get(name));
-//            }
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
 
-//            Map<String, Integer> verify = valueHelper.moveCron();
-//            System.out.println("verify execute cron empty (should be zero)" + verify.size());
-//            if (verify.size() > 0) {
-//              //  return;
-//            }
-//            for (String name : verify.keySet()) {
-//                System.out.println(name + " moved " + verify.get(name));
-//            }
+            testCalculations( );
+
+
 
             for (Point point : points) {
                 List<Value> recordedValues = valueHelper.getSeries(point.getName().getValue());
@@ -156,7 +194,73 @@ public class SeriesPostJavaSample {
 
         }
 
+
+
+        List<Entity> tree2 = entityHelper.getTree();
+
+
+        System.out.println("Items left in Tree After Purge " + tree2.size());
+
+        for (Entity e : tree2) {
+            System.out.println("Remaining:: " + e.getParent() + "/" + e.getName().getValue() + " " + e.getEntityType().name());
+
+        }
         System.out.println("Done!");
+
+    }
+
+    private static void testCalculations() {
+        List<Point> cvs = new ArrayList<>(3);
+        Random r = new Random();
+        String[] xyz = {"x", "y", "z"};
+        for (int i = 0; i < 3; i++) {
+            String pointName = xyz[i] + "CV" + UUID.randomUUID().toString();
+            Point point = pointHelper.createPoint(pointName, "Some Random Description");
+            cvs.add(point);
+            System.out.println("Created Point " + point.getKey());
+
+
+        }
+
+        String targetPointName = "TARGET" + UUID.randomUUID().toString();
+        Point targetPoint = pointHelper.createPoint(targetPointName, "Some Random Description");
+
+
+        Calculation calculation = entityHelper.createCalculation("CALC" + UUID.randomUUID().toString(), cvs.get(2).getKey(),
+                targetPoint.getKey(), "x+y+z", cvs.get(0).getKey(), cvs.get(1).getKey(), cvs.get(2).getKey());
+
+
+        System.out.println("created calc" + calculation.getKey());
+        Double c = 0.0;
+        for (int i = 0; i < 3; i++) {
+            double d = r.nextDouble() * 100;
+            c += d;
+            valueHelper.recordValue(cvs.get(i).getName().getValue(), d);
+            System.out.println("Recording " + d  + " cuml: " + c);
+
+        }
+        System.out.println("Calc Result should be " + c);
+
+
+        Value value = valueHelper.getValue(targetPoint.getName().getValue());
+
+        Value v1 = valueHelper.getValue(cvs.get(0).getName().getValue());
+
+        Value v2 = valueHelper.getValue(cvs.get(1).getName().getValue());
+
+        Value v3 = valueHelper.getValue(cvs.get(2).getName().getValue());
+
+        System.out.println("Calculated Value = " + value.getDoubleValue());
+        System.out.println("Calculated Value Should be = " + (v1.getDoubleValue() + v2.getDoubleValue() + v3.getDoubleValue()));
+        if (Double.compare(value.getDoubleValue(), c) != 0) {
+            calcErrors++;
+        }
+        for (Point point : cvs) {
+            entityHelper.deleteEntity(point);
+        }
+        entityHelper.deleteEntity(targetPoint);
+
+
 
     }
 

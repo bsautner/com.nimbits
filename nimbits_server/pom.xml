@@ -42,7 +42,7 @@
         <spring.version>4.1.1.RELEASE</spring.version>
 
         <jetty-jmx.version>8.1.15.v20140411</jetty-jmx.version>
-        <nimbits_version>3.9.4</nimbits_version>
+        <nimbits_version>3.9.5</nimbits_version>
         <datanucleus.version>3.1.2</datanucleus.version>
     </properties>
 
@@ -281,6 +281,12 @@
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpcore</artifactId>
             <version>4.3.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.9</version>
         </dependency>
 
 

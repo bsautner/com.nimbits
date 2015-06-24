@@ -37,7 +37,6 @@ import com.nimbits.client.model.sync.SyncModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 
-
 import java.io.Serializable;
 import java.util.*;
 
@@ -54,8 +53,7 @@ public enum EntityType implements Serializable {
     instance(14, true, false, false, true, false, false, 14, "com.nimbits.server.orm.InstanceEntity", Instance.class, InstanceModel.class),
     socket(19, false, false, false, true, true, false, 19, "com.nimbits.server.orm.SocketEntity", Socket.class, SocketModel.class),
     connection(20, false, false, false, true, true, false, 20, "com.nimbits.server.orm.ConnectionEntity", Connection.class, ConnectionModel.class),
-    schedule(21, false, false, false, false, true, false, 21, "com.nimbits.server.orm.ScheduleEntity", Schedule.class, ScheduleModel.class),
-    ;
+    schedule(21, false, false, false, false, true, false, 21, "com.nimbits.server.orm.ScheduleEntity", Schedule.class, ScheduleModel.class),;
 
     private static final Map<Integer, EntityType> lookup = new HashMap<Integer, EntityType>(EntityType.values().length);
     private static final Map<String, EntityType> lookupName = new HashMap<String, EntityType>(EntityType.values().length);
@@ -94,17 +92,17 @@ public enum EntityType implements Serializable {
 
     private final Class<?> model;
 
-     EntityType(final int code,
-                       final boolean isAndroidReady,
-                       final boolean isTrigger,
-                       final boolean sendUpdatesToCore,
-                       final boolean uniqueNameFlag,
-                       final boolean isTreeGridItem,
-                       final boolean recordsData,
-                       final int order,
-                       final String className,
-                       final Class<?> clz,
-                       final Class<?> model) {
+    EntityType(final int code,
+               final boolean isAndroidReady,
+               final boolean isTrigger,
+               final boolean sendUpdatesToCore,
+               final boolean uniqueNameFlag,
+               final boolean isTreeGridItem,
+               final boolean recordsData,
+               final int order,
+               final String className,
+               final Class<?> clz,
+               final Class<?> model) {
         this.code = code;
         this.isAndroidReady = isAndroidReady;
         this.uniqueNameFlag = uniqueNameFlag;
@@ -115,7 +113,7 @@ public enum EntityType implements Serializable {
         this.recordsData = recordsData;
         this.isTrigger = isTrigger;
         this.clz = clz;
-         this.model = model;
+        this.model = model;
 
     }
 
@@ -134,8 +132,7 @@ public enum EntityType implements Serializable {
     public static EntityType getName(String name) {
         if (lookupName.containsKey(name)) {
             return lookupName.get(name);
-        }
-        else {
+        } else {
             return null;
         }
     }

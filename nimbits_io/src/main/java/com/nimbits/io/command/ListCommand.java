@@ -11,6 +11,7 @@ public class ListCommand extends AbstractCommand implements Command {
 
     private final static String USAGE = "list child entities";
     private final static Logger logger = Logger.getLogger(ListCommand.class.getName());
+
     public ListCommand(User user, Entity current, Server server, List<Entity> tree) {
         super(user, current, server, tree);
     }
@@ -22,9 +23,8 @@ public class ListCommand extends AbstractCommand implements Command {
         for (Entity entity : tree) {
             if (entity.getParent().equals(current.getKey())) {
                 if (contains.equals("")) {
-                   listener.onMessage(entity.getName().getValue());
-                }
-                else {
+                    listener.onMessage(entity.getName().getValue());
+                } else {
                     if (entity.getName().toString().contains(contains)) {
                         listener.onMessage(entity.getName().getValue());
                     }

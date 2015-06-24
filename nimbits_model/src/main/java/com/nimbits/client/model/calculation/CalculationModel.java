@@ -12,6 +12,7 @@
 
 package com.nimbits.client.model.calculation;
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.trigger.TargetEntity;
 import com.nimbits.client.model.trigger.TriggerEntity;
@@ -29,9 +30,16 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
     private static final long serialVersionUID = 1L;
 
 
+    @Expose
     private String formula;
+
+    @Expose
     private String x;
+
+    @Expose
     private String y;
+
+    @Expose
     private String z;
 
 

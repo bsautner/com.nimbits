@@ -3,18 +3,13 @@ package com.nimbits.io.helper.impl;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.calculation.CalculationModel;
 import com.nimbits.client.model.calculation.CalculationModelFactory;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.category.CategoryFactory;
-import com.nimbits.client.model.category.CategoryModel;
 import com.nimbits.client.model.common.SimpleValue;
-import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.trigger.TargetEntity;
@@ -69,8 +64,8 @@ public class EntityHelperImpl implements EntityHelper {
 
     @Override
     public Entity getCategory(String key) {
-        Entity  sample = nimbitsClient.getEntity(
-                SimpleValue.getInstance(key), EntityType.category );
+        Entity sample = nimbitsClient.getEntity(
+                SimpleValue.getInstance(key), EntityType.category);
 
         return sample;
 
@@ -82,7 +77,7 @@ public class EntityHelperImpl implements EntityHelper {
         entity.setParent(parent.getKey());
         entity.setOwner(server.getEmail().getValue());
 
-        Point point =  PointModelFactory.createPoint(entity);
+        Point point = PointModelFactory.createPoint(entity);
         return (Point) addEntity(point);
 
 
@@ -94,7 +89,7 @@ public class EntityHelperImpl implements EntityHelper {
         entity.setParent(parent.getKey());
         entity.setOwner(server.getEmail().getValue());
 
-        Point point =  PointModelFactory.createPoint(entity);
+        Point point = PointModelFactory.createPoint(entity);
         point.setExpire(expire);
         point.setFilterType(filterType);
         return (Point) addEntity(point);
@@ -105,14 +100,13 @@ public class EntityHelperImpl implements EntityHelper {
     @Override
     public void deleteEntity(String name, EntityType type) {
         SimpleValue<String> id;
-        if (! name.startsWith(server.getEmail().getValue())) {
+        if (!name.startsWith(server.getEmail().getValue())) {
             id = SimpleValue.getInstance(server.getEmail().getValue() + "/" + name);
-        }
-        else {
+        } else {
             id = SimpleValue.getInstance(name);
         }
 
-        Entity sample = nimbitsClient.getEntity(id, type );
+        Entity sample = nimbitsClient.getEntity(id, type);
         deleteEntity(sample);
 
 
@@ -144,9 +138,9 @@ public class EntityHelperImpl implements EntityHelper {
         }
 
         Entity entity = EntityModelFactory.createEntity(name, EntityType.calculation);
-        TriggerEntity trigger1 =EntityModelFactory.createTrigger(triggerPoint.getKey());
+        TriggerEntity trigger1 = EntityModelFactory.createTrigger(triggerPoint.getKey());
         TargetEntity targetEntity = EntityModelFactory.createTarget(targetPoint.getKey());
-        Calculation calculation =  CalculationModelFactory.createCalculation(entity, trigger1, true, formula, targetEntity, x, y, z);
+        Calculation calculation = CalculationModelFactory.createCalculation(entity, trigger1, true, formula, targetEntity, x, y, z);
         calculation.setParent(triggerPoint.getKey());
         calculation.setOwner(server.getEmail().getValue());
         return (Calculation) addEntity(calculation);
@@ -157,7 +151,6 @@ public class EntityHelperImpl implements EntityHelper {
     @Override
     public Category createFolder(Entity parent, String name) {
         Category category = CategoryFactory.createCategory(parent, name);
-
 
 
         return addCategory(category);

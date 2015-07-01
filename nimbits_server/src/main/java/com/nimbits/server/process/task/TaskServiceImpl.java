@@ -21,6 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -31,6 +33,7 @@ public class TaskServiceImpl implements TaskService {
     private ValueTask valueTask;
 
 
+    Logger logger = Logger.getLogger(TaskService.class.getName());
 
     public TaskServiceImpl() {
 
@@ -46,10 +49,9 @@ public class TaskServiceImpl implements TaskService {
 
         try {
             valueTask.recordValue(value, user, entity, preAuthorised);
-        } catch (ValueException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+
+            logger.log(Level.SEVERE,"Error running value task", e);
         }
 
 

@@ -60,7 +60,7 @@ public class SeriesPostJavaSample {
 
     private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("b@b.com");
     private static final AccessToken TOKEN = AccessToken.getInstance("b");
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("192.168.1.24:8080");
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080");
     // private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080");
     // private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("cloud.nimbits.com");
     private static final Server SESSION_START = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, TOKEN);

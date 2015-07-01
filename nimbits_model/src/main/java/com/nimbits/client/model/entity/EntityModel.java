@@ -201,8 +201,12 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
     @Override
     public String getKey() {
-        if (id != null && key == null) {
+        if (id != null && this.key == null) {
             key = id;
+        }
+        //sometimes incoming json omits the full key so we add it if missing
+        if (getEntityType() != null && getEntityType().equals(EntityType.point) && this.key != null && ! key.startsWith(owner)) {
+            this.key = owner + "/" + this.key;
         }
         return this.key;
     }

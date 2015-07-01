@@ -172,20 +172,7 @@
     </servlet-mapping>
 
 
-    <!--tasks-->
 
-
-    <servlet>
-        <servlet-name>pointTask</servlet-name>
-        <servlet-class>com.nimbits.server.process.task.PointTask</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>pointTask</servlet-name>
-        <url-pattern>/task/pointTask</url-pattern>
-    </servlet-mapping>
-
-
-    <!--end tasks-->
 
 
     <!--cron-->

@@ -8,7 +8,7 @@
     <artifactId>nimbits_sample_java</artifactId>
     <version>${nimbits_version}-SNAPSHOT</version>
     <properties>
-        <nimbits_version>3.9.5</nimbits_version>
+        <nimbits_version>3.9.6</nimbits_version>
     </properties>
 
     <parent>

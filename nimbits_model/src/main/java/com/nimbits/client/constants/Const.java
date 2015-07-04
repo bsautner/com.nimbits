@@ -15,7 +15,7 @@ package com.nimbits.client.constants;
 
 public class Const {
 
-    public static final String VERSION = "3.9.7";
+    public static final String VERSION = "3.9.8";
 
     public static final String SOCKET_RELAY = "130.211.147.107:8080";
 

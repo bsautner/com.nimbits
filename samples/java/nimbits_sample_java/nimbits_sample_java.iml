@@ -9,13 +9,15 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: com.nimbits:nimbits_model:3.9.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: com.nimbits:nimbits_io:3.9.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:18.0" level="project" />
     <orderEntry type="library" name="Maven: javax.websocket:javax.websocket-api:1.0" level="project" />
-    <orderEntry type="library" name="Maven: com.nimbits:nimbits_model:3.9.0-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="nimbits_model" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.3.1" level="project" />
     <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.9" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.3.2" level="project" />
-    <orderEntry type="library" name="Maven: com.nimbits:nimbits_io:3.9.0-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="nimbits_io" />
     <orderEntry type="library" name="Maven: com.squareup.retrofit:retrofit:1.7.0" level="project" />
     <orderEntry type="library" name="Maven: com.squareup.okhttp:okhttp:2.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.squareup.okio:okio:1.0.0" level="project" />
@@ -26,6 +28,8 @@
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-websocket:8.1.15.v20140411" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-io:8.1.15.v20140411" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-http:8.1.15.v20140411" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.directory.studio:org.apache.commons.io:2.4" level="project" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-util:8.1.15.v20140411" level="project" />
   </component>
 </module>

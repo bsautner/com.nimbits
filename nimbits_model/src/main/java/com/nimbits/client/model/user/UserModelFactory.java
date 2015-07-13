@@ -13,7 +13,10 @@
 package com.nimbits.client.model.user;
 
 import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.entity.EntityName;
 
 
 public class UserModelFactory {
@@ -27,15 +30,28 @@ public class UserModelFactory {
         return new UserModel(u);
     }
 
-    public static User createUnauthenticatedUserModel(final Entity entity) {
+    public static User createUnauthenticatedUserModel(final EntityName name,
+                                                      final String description,
+                                                      final EntityType entityType,
+                                                      final ProtectionLevel protectionLevel,
+                                                      final String parent,
+                                                      final String owner) {
 
-        return new UserModel(entity);
+        return new UserModel(name, description, entityType, protectionLevel, parent,
+                owner);
     }
 
-    public static User createUserModel(final Entity entity, final String password, final String salt, final UserSource source) {
+    public static User createUserModel(final EntityName name,
+                                       final String description,
+                                       final EntityType entityType,
+                                       final ProtectionLevel protectionLevel,
+                                       final String parent,
+                                       final String owner,
+                                       final String password, final String salt, final UserSource source) {
 
 
-        return new UserModel(entity, password, salt, source);
+        return new UserModel(name, description, entityType, protectionLevel, parent,
+                owner, password, salt, source);
     }
 
     public static LoginInfo createLoginInfo(String loginUrl, String logoutUrl, UserStatus userStatus, boolean isGAE) {

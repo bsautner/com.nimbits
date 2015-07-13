@@ -68,4 +68,5 @@ public interface User extends Entity, Serializable {
     void setPasswordSalt(String passwordSalt);
 
     void setPassword(String cryptPassword);
+
 }

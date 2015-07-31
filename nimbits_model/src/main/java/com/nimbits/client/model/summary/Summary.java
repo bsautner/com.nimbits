@@ -18,12 +18,7 @@ import com.nimbits.client.model.trigger.Trigger;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/16/12
- * Time: 9:59 AM
- */
+
 public interface Summary extends Trigger, Serializable {
 
     SummaryType getSummaryType();

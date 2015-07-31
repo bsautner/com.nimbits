@@ -12,6 +12,7 @@
 
 package com.nimbits.client.model.subscription;
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.model.entity.Entity;
@@ -22,13 +23,19 @@ import java.io.Serializable;
 
 public class SubscriptionModel extends EntityModel implements Serializable, Subscription {
 
-
+    @Expose
     private String subscribedEntity;
+    @Expose
     private int notifyMethod;
+    @Expose
     private int subscriptionType;
+    @Expose
     private int maxRepeat;
+    @Expose
     private String target;
+    @Expose
     private boolean notifyFormatJson;
+    @Expose
     private boolean enabled;
 
     @SuppressWarnings("unused")

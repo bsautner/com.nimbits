@@ -2,10 +2,12 @@ package com.nimbits.io.helper;
 
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.enums.SummaryType;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.summary.Summary;
 
 import java.util.List;
 
@@ -87,4 +89,15 @@ public interface EntityHelper {
      * @param parent the parent entity, can be a user, point, another folder etc.
      */
     Category createFolder(Entity parent, String name);
+
+    /**
+     * Creates a summary trigger which will calculate an average, min, max, std dev etc of a point over time
+     * @param name the name of the entity
+     * @param trigger the existing data point id that will trigger this summary to run when data is recorded
+     * @param target the existing target point the new
+
+     * @return
+     */
+    Summary createSummary(String name, String trigger, String target, SummaryType summaryType, long intervalMs);
+
 }

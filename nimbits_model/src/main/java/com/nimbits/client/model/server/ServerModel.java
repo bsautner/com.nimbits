@@ -12,6 +12,7 @@
 
 package com.nimbits.client.model.server;
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
@@ -22,10 +23,13 @@ import java.io.Serializable;
 
 
 public class ServerModel implements Server, Serializable {
-
+    @Expose
     private UrlContainer url;
+    @Expose
     private AccessToken accessToken;
+    @Expose
     private Protocol protocol;
+    @Expose
     private String email;
 
 

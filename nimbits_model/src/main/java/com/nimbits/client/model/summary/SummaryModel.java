@@ -12,6 +12,7 @@
 
 package com.nimbits.client.model.summary;
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.SummaryType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.trigger.TargetEntity;
@@ -20,16 +21,14 @@ import com.nimbits.client.model.trigger.TriggerModel;
 
 import java.util.Date;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/16/12
- * Time: 9:59 AM
- */
+
 public class SummaryModel extends TriggerModel implements Summary {
 
+    @Expose
     private Integer summaryType;
+    @Expose
     private Long summaryIntervalMs;
+
     private Date lastProcessed;
 
 

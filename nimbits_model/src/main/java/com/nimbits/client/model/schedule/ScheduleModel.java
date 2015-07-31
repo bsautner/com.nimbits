@@ -1,5 +1,6 @@
 package com.nimbits.client.model.schedule;
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.common.CommonIdentifier;
@@ -9,11 +10,15 @@ import com.nimbits.client.model.entity.EntityModel;
 import java.io.Serializable;
 
 public class ScheduleModel extends EntityModel implements Serializable, Schedule {
-
+    @Expose
     private Boolean enabled;
+    @Expose
     private Long interval;
+    @Expose
     private String source;
+    @Expose
     private String target;
+    @Expose
     private Long lastProcessed;
 
 

@@ -12,6 +12,7 @@
 
 package com.nimbits.client.model.accesskey;
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
@@ -23,8 +24,11 @@ import java.io.Serializable;
  */
 public class AccessKeyModel extends EntityModel implements AccessKey, Serializable {
 
+    @Expose
     private String code;
+    @Expose
     private String scope;
+    @Expose
     private int authLevel;
 
     @SuppressWarnings("unused")

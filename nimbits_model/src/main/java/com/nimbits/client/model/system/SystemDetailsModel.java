@@ -1,11 +1,14 @@
 package com.nimbits.client.model.system;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.Serializable;
 
 public class SystemDetailsModel implements SystemDetails, Serializable {
 
-
+    @Expose
     private String version;
+    @Expose
     private boolean isGAE;
 
     public SystemDetailsModel(String version, boolean isGAE) {

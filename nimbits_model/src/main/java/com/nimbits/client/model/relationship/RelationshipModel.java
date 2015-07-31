@@ -12,15 +12,12 @@
 
 package com.nimbits.client.model.relationship;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 4/4/12
- * Time: 9:48 AM
- */
-public class RelationshipModel implements Relationship {
+import com.google.gson.annotations.Expose;
 
+public class RelationshipModel implements Relationship {
+    @Expose
     private String key;
+    @Expose
     private String foreignKey;
 
 

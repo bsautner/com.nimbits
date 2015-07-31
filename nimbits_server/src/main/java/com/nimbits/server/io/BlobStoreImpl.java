@@ -17,7 +17,6 @@ package com.nimbits.server.io;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
-import com.google.common.io.Closer;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
@@ -27,6 +26,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
 import com.nimbits.client.model.value.impl.ValueModel;
+import com.nimbits.server.defrag.Defragmenter;
 import com.nimbits.server.defrag.ValueDayHolder;
 import com.nimbits.server.transaction.cache.NimbitsCache;
 import com.nimbits.server.transaction.settings.SettingsService;
@@ -37,7 +37,9 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.*;
+import java.io.Closeable;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.net.DatagramSocket;
 import java.net.Socket;
@@ -51,13 +53,16 @@ public class BlobStoreImpl implements BlobStore {
     private NimbitsCache nimbitsCache;
 
     public static final String SNAPSHOT = "SNAPSHOT";
-    public static final int INITIAL_CAPACITY = 1000;
+    public static final int INITIAL_CAPACITY = 10000;
     private final Logger logger = Logger.getLogger(BlobStoreImpl.class.getName());
     private final Gson gson = new GsonBuilder().create();
 
 
     @Autowired
     private ValueService valueService;
+
+    @Autowired
+    private Defragmenter defragmenter;
 
     private final String root;
 
@@ -216,7 +221,89 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public List<Value> getDataSegment(final Entity entity, final Range<Date> timespan) {
-        return Collections.emptyList();
+
+
+        String path = root + "/" + entity.getKey();
+        logger.info("path=" + path);
+        List<Value> allvalues = new ArrayList<>(INITIAL_CAPACITY);
+        List<String> allReadFiles = new ArrayList<>(INITIAL_CAPACITY);
+        File file = new File(path);
+        Range<Date> maxRange = Range.closed(defragmenter.zeroOutDateToStart(timespan.lowerEndpoint()), defragmenter.zeroOutDateToStart(timespan.upperEndpoint()));
+        if (file.exists()) {
+
+            List<String> dailyFolderPaths = new ArrayList<>();
+
+            for (String dailyFolderPath : file.list()) {
+
+                File node = new File(dailyFolderPath);
+                logger.info("found: " + dailyFolderPath + " " + node.isDirectory());
+
+                if (! node.getName().endsWith(SNAPSHOT)) {
+                    Long timestamp = Long.valueOf(dailyFolderPath);
+                    if (maxRange.contains(new Date(timestamp))) {
+
+                        dailyFolderPaths.add(root + "/" + entity.getKey() + "/" + dailyFolderPath);
+                    }
+
+                }
+
+
+            }
+
+            if (!dailyFolderPaths.isEmpty()) {
+                Collections.sort(dailyFolderPaths);
+                Collections.reverse(dailyFolderPaths);
+
+                for (String sortedDayPath : dailyFolderPaths) {
+                    logger.info("processing sub directory: " + sortedDayPath);
+                    Iterator result2 = FileUtils.iterateFiles(new File(sortedDayPath), null, false);
+                    List<String> filePaths = new ArrayList<>();
+
+                    while (result2.hasNext()) {
+
+                        File listItem = (File) result2.next();
+                        String filePath = listItem.getName();
+                        logger.info("found data file: " + filePath);
+                        if (!filePath.endsWith(SNAPSHOT)) {
+                            filePaths.add(sortedDayPath + "/" + filePath);
+                        }
+
+
+                    }
+                    Collections.sort(filePaths);
+                    Collections.reverse(filePaths);
+
+                    for (String sortedFilePath : filePaths) {
+                        logger.info(sortedFilePath);
+                        List<Value> values = readValuesFromFile(sortedFilePath);
+                        allvalues.addAll(values);
+
+                        allReadFiles.add(sortedFilePath);
+
+                    }
+
+
+                }
+
+
+            }
+
+            List<Value> filtered = new ArrayList<>(allvalues.size());
+            for (Value value : allvalues) {
+                if (timespan.contains(value.getTimestamp())) {
+                    filtered.add(value);
+                }
+            }
+            if (allReadFiles.size() > INITIAL_CAPACITY) {  //TODO will break if # of days = initial capacity
+                deleteAndRestore(entity, allvalues, allReadFiles);
+            }
+            return ImmutableList.copyOf(filtered);
+        }
+        else {
+            logger.info("file not found");
+            return Collections.emptyList();
+        }
+
 
     }
 

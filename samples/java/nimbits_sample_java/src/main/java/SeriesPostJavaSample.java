@@ -18,19 +18,17 @@
 
 import com.google.common.collect.Range;
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.SummaryType;
 import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.calculation.CalculationModelFactory;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
 import com.nimbits.client.model.server.apikey.AccessToken;
-import com.nimbits.client.model.trigger.TargetEntity;
-import com.nimbits.client.model.trigger.TriggerEntity;
+import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.value.impl.ValueFactory;
@@ -43,7 +41,7 @@ import java.util.*;
 /**
  * This program will create 10 data points, add 1000 values to each point, and post all 10,000 values to
  * a local nimbits server using the Batch API.  It will repeat the process 100 times, and then verify the
- * 1 Million Values are available for download.  Buckle Up.
+ * 1 Million Values are available for download. We run this against new builds to ensure data integrity Buckle Up.
  *
  * How to Use:
  *
@@ -54,7 +52,7 @@ import java.util.*;
  */
 public class SeriesPostJavaSample {
     //private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("pi@localhost.com");
-//    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("bsautner@gmail.com");
+//    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("test@example.com");
 //    private static final AccessToken TOKEN = AccessToken.getInstance("key");
 //     private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8085");
 
@@ -95,7 +93,8 @@ public class SeriesPostJavaSample {
 
         long size = FileUtils.sizeOfDirectory(new File("/opt/nimbits/data/" + user.getEmail()));
         deleteEverything();
-        go();
+        //   go();
+        testStats();
         deleteEverything();
         long size2 = FileUtils.sizeOfDirectory(new File("/opt/nimbits/data/" + user.getEmail()));
         List<Entity> stree = entityHelper.getTree();
@@ -177,6 +176,7 @@ public class SeriesPostJavaSample {
 
 
             testCalculations( );
+            testStats();
 
 
 
@@ -206,6 +206,59 @@ public class SeriesPostJavaSample {
 
         }
         System.out.println("Done!");
+
+    }
+
+
+    /**
+     Creates two data points and a summary trigger to compute an average etc
+     **/
+    private static void testStats() {
+        List<Point> cvs = new ArrayList<>(3);
+
+        String targetPointName = "STAT_TARGET" + UUID.randomUUID().toString();
+        Point targetPoint = pointHelper.createPoint(targetPointName, "Some Random Description");
+
+        String triggerPointName = "STAT_TRIGGER" + UUID.randomUUID().toString();
+        Point triggerPoint = pointHelper.createPoint(triggerPointName, "Some Random Description");
+
+
+
+        Summary summary = entityHelper.createSummary(UUID.randomUUID().toString(), triggerPoint.getKey(), targetPoint.getKey(), SummaryType.average, 1000);
+
+        Random r = new Random();
+
+        System.out.println("created summary" + summary.getKey());
+        Double c = 0.0;
+        long time = System.currentTimeMillis() + 60000;
+        int count = 0;
+        while (System.currentTimeMillis() < time) {
+
+            double d = r.nextDouble() * 100;
+
+            valueHelper.recordValue(triggerPointName, d);
+            System.out.println("Recording " + count++ + " " + d);
+        }
+        List<Value> values = valueHelper.getSeries(targetPointName);
+        for (Value value : values) {
+            System.out.println("Result " + value.getDoubleValue());
+        }
+
+        System.out.println("Stat Result should be " + c);
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Value value = valueHelper.getValue(targetPoint.getName().getValue());
+        System.out.println("avg for target point = " + value.getDoubleValue());
+
+
+        entityHelper.deleteEntity(targetPoint);
+        entityHelper.deleteEntity(triggerPoint);
+
+
 
     }
 

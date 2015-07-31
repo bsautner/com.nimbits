@@ -2,6 +2,7 @@ package com.nimbits.io.helper.impl;
 
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.enums.SummaryType;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.calculation.CalculationModelFactory;
 import com.nimbits.client.model.category.Category;
@@ -12,6 +13,8 @@ import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.server.Server;
+import com.nimbits.client.model.summary.Summary;
+import com.nimbits.client.model.summary.SummaryModelFactory;
 import com.nimbits.client.model.trigger.TargetEntity;
 import com.nimbits.client.model.trigger.TriggerEntity;
 import com.nimbits.io.NimbitsClient;
@@ -20,6 +23,7 @@ import com.nimbits.io.helper.HelperFactory;
 import com.nimbits.io.helper.PointHelper;
 import com.nimbits.io.http.NimbitsClientFactory;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -154,6 +158,23 @@ public class EntityHelperImpl implements EntityHelper {
 
 
         return addCategory(category);
+
+    }
+
+    @Override
+    public Summary createSummary(String name, String trigger, String target, SummaryType summaryType, long intervalMs) {
+        PointHelper helper = HelperFactory.getPointHelper(this.server);
+        Point triggerPoint = helper.getPoint(trigger);
+        Point targetPoint = helper.getPoint(target);
+
+        Entity entity = EntityModelFactory.createEntity(name, EntityType.summary);
+        TriggerEntity trigger1 = EntityModelFactory.createTrigger(triggerPoint.getKey());
+        TargetEntity targetEntity = EntityModelFactory.createTarget(targetPoint.getKey());
+        Summary summary = SummaryModelFactory.createSummary(entity, trigger1, targetEntity, true, summaryType, intervalMs,new Date());
+        summary.setParent(triggerPoint.getKey());
+        summary.setOwner(server.getEmail().getValue());
+        return (Summary) addEntity(summary);
+
 
     }
 

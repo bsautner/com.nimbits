@@ -12,23 +12,22 @@
 
 package com.nimbits.client.model.mqtt;
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 
 import java.io.Serializable;
 
-/**
- * Created with IntelliJ IDEA.
- * User: benjamin
- * Date: 8/10/12
- * Time: 3:25 PM
- */
+
 public class MqttModel implements Serializable, Mqtt {
 
-
+    @Expose
     private final String email;
+    @Expose
     private final String uuid;
+    @Expose
     private final String message;
+    @Expose
     private final String host;
 
 

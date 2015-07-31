@@ -20,7 +20,7 @@
 //or if posting to your server, 192.168.1.100:8080/nimbits for example.
 #define PORT 80
 String instance = "nimbits-02"; 
-String owner = "bsautner@gmail.com";
+String owner = "test@example.com";
 String readWriteKey = "key";
 const char *URL = "nimbits-02.appspot.com";
 

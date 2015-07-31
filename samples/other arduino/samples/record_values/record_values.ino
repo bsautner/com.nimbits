@@ -20,7 +20,7 @@
  
 //nimbits settings, set the instance name (nimbits-02 is the public cloud on https://cloud.nimbits.com) the email of the account owner, and a read write key they have created.
 String instance = "nimbits-02";
-char owner[] = "bsautner@gmail.com";
+char owner[] = "test@example.com";
 String readWriteKey = "key";
 byte mac[] = {0x90, 0xA2, 0xDA, 0x00, 0x54, 0x39}; //this ethernet shield's MAC address
 
@@ -39,7 +39,7 @@ void setup() {
 
 void loop() { 
     delay(1000);
-    nimbits.recordValue(random(300),"","bsautner@gmail.com/lab_temp"); 
+    nimbits.recordValue(random(300),"","test@example.com/lab_temp");
 }
 
  

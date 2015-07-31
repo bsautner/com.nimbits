@@ -1,5 +1,6 @@
 package com.nimbits.client.model.socket;
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.common.CommonIdentifier;
@@ -9,10 +10,13 @@ import com.nimbits.client.model.entity.EntityModel;
 import java.io.Serializable;
 
 public class SocketModel extends EntityModel implements Serializable, Socket {
-
+    @Expose
     private String targetApiKey;
+    @Expose
     private String targetUrl;
+    @Expose
     private String targetPath;
+    @Expose
     private String extraParams;
 
     public SocketModel(CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String targetApiKey, String targetUrl, String targetPath, String extraParams) {

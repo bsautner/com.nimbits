@@ -12,6 +12,7 @@
 
 package com.nimbits.client.model.instance;
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
@@ -25,21 +26,21 @@ import java.io.Serializable;
 
 public class InstanceModel extends EntityModel implements Serializable, Instance {
 
-
+    @Expose
     private long serverId;
-
+    @Expose
     private String baseUrl;
-
+    @Expose
     private String adminEmail;
-
+    @Expose
     private String version;
-
+    @Expose
     private String apiKey;
-
+    @Expose
     private boolean isDefault;
-
+    @Expose
     private String protocol;
-
+    @Expose
     private boolean socketsEnabled;
 
 

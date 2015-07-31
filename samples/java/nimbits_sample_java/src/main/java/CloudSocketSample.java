@@ -27,7 +27,7 @@ import java.util.Random;
 public class CloudSocketSample {
 
 
-    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("bsautner@gmail.com");
+    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("test@example.com");
 
     //a running jetty server with nimbits installed (using root.war)
     private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("cloud.nimbits.com");//"localhost:8080");

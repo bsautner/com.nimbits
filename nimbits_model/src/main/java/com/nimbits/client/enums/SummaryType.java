@@ -16,12 +16,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/16/12
- * Time: 9:54 AM
- */
+
 public enum SummaryType {
     average(0, "Average"),
     standardDeviation(1, "Standard Deviation"),

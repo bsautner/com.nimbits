@@ -12,6 +12,7 @@
 
 package com.nimbits.client.model.connection;
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 
@@ -19,9 +20,11 @@ import java.io.Serializable;
 
 
 public class ConnectionModel extends EntityModel implements Serializable, Connection {
-
+    @Expose
     private String approvalKey;
+    @Expose
     private boolean approved;
+    @Expose
     private String targetEmail;
 
 

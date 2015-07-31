@@ -19,7 +19,7 @@ import java.util.Random;
  *
  */
 public class RandomLoopSample {
-    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("bsautner@gmail.com");
+    private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("test@example.com");
 
     //this sample uses an access key, so you've logged into nimbits and right clicked on your account to create this read/write key with user scope.
 

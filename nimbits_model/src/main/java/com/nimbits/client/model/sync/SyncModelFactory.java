@@ -15,12 +15,7 @@ package com.nimbits.client.model.sync;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.trigger.TriggerEntity;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 3/16/12
- * Time: 10:02 AM
- */
+
 public class SyncModelFactory {
 
     private SyncModelFactory() {

@@ -35,6 +35,8 @@ public class SerializationHelper {
                 return new ConnectionDeserializer();
             case schedule:
                 return new ScheduleDeserializer();
+            case webhook:
+                return new WebHookDeserializer();
             default:
                 return new EntityDeserializer();
         }

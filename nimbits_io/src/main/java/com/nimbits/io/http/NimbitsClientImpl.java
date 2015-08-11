@@ -352,6 +352,8 @@ public class NimbitsClientImpl implements NimbitsClient {
                 return api.addConnection(entity);
             case schedule:
                 return api.addSchedule(entity);
+            case webhook:
+                return api.addWebHook(entity);
             default:
                 return api.addEntity(entity);
         }
@@ -443,6 +445,11 @@ public class NimbitsClientImpl implements NimbitsClient {
             case schedule:
 
                 result = entityApi.getSchedule(server.getEmail().getValue(), server.getAccessToken().getValue(), entityId.getValue());
+
+                break;
+            case webhook:
+
+                result = entityApi.getWebHook(server.getEmail().getValue(), server.getAccessToken().getValue(), entityId.getValue());
 
                 break;
         }

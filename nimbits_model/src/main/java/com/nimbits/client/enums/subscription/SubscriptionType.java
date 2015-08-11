@@ -16,12 +16,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 2/15/12
- * Time: 1:36 PM
- */
+
 public enum SubscriptionType {
 
     none(-1, "None"),

@@ -36,6 +36,8 @@ import com.nimbits.client.model.sync.Sync;
 import com.nimbits.client.model.sync.SyncModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
+import com.nimbits.client.model.webhook.WebHook;
+import com.nimbits.client.model.webhook.WebHookModel;
 
 import java.io.Serializable;
 import java.util.*;
@@ -53,7 +55,8 @@ public enum EntityType implements Serializable {
     instance(14, true, false, false, true, false, false, 14, "com.nimbits.server.orm.InstanceEntity", Instance.class, InstanceModel.class),
     socket(19, false, false, false, true, true, false, 19, "com.nimbits.server.orm.SocketEntity", Socket.class, SocketModel.class),
     connection(20, false, false, false, true, true, false, 20, "com.nimbits.server.orm.ConnectionEntity", Connection.class, ConnectionModel.class),
-    schedule(21, false, false, false, false, true, false, 21, "com.nimbits.server.orm.ScheduleEntity", Schedule.class, ScheduleModel.class),;
+    schedule(21, false, false, false, false, true, false, 21, "com.nimbits.server.orm.ScheduleEntity", Schedule.class, ScheduleModel.class),
+    webhook(22, false, false, false, false, true, false, 22, "com.nimbits.server.orm.WebHookEntity", WebHook.class, WebHookModel.class);
 
     private static final Map<Integer, EntityType> lookup = new HashMap<Integer, EntityType>(EntityType.values().length);
     private static final Map<String, EntityType> lookupName = new HashMap<String, EntityType>(EntityType.values().length);

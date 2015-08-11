@@ -22,7 +22,9 @@ public enum SubscriptionNotifyMethod {
     email(0, "Email", true),
     instantMessage(3, "Instant Message (XMPP)", true),
     cloud(5, "Android Notification (GCM)", true),
-    socket(6, "Connected Sockets", true);
+    socket(6, "Connected Sockets", true),
+    webhook(7, "Web Hook", true);
+
 
 
     private static final Map<Integer, SubscriptionNotifyMethod> lookup = new HashMap<Integer, SubscriptionNotifyMethod>(5);

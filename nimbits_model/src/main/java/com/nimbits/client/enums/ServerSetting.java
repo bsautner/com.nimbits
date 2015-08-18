@@ -52,7 +52,7 @@ public enum ServerSetting {
     private final boolean encrypt;
     private final boolean isFlag;
 
-    private ServerSetting(final String name,
+    ServerSetting(final String name,
                           final String defaultValue,
                           final boolean update,
                           final boolean create,

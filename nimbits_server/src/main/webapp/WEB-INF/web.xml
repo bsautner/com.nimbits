@@ -38,6 +38,15 @@
 
 
     <servlet>
+        <servlet-name>rest api</servlet-name>
+        <servlet-class>com.nimbits.server.api.v3.RestApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>rest api</servlet-name>
+        <url-pattern>/service/v3/rest/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>dataTableApi</servlet-name>
         <servlet-class>com.nimbits.server.api.DataTableApi</servlet-class>
     </servlet>

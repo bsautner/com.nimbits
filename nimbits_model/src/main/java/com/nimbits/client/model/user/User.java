@@ -30,10 +30,6 @@ public interface User extends Entity, Serializable {
 
     UserSource getSource();
 
-    Date getLastLoggedIn();
-
-    void setLastLoggedIn(final Date lastLoggedIn);
-
     EmailAddress getEmail();
 
     boolean isRestricted();

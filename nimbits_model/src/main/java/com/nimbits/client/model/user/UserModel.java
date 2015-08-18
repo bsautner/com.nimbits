@@ -32,7 +32,6 @@ import java.util.List;
 public class UserModel extends EntityModel implements Serializable, User {
 
 
-    private Date lastLoggedIn;
 
     @Expose
     private String emailAddress;
@@ -70,7 +69,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     public UserModel(final User u) {
         super(u);
         if (u != null) {
-            this.lastLoggedIn = u.getLastLoggedIn();
+
             this.accessKeys = (ArrayList<AccessKey>) u.getAccessKeys();
             this.emailAddress = u.getEmail().getValue();
             this.password = u.getPassword();
@@ -92,7 +91,7 @@ public class UserModel extends EntityModel implements Serializable, User {
                      final String owner) {
         super(name, description, entityType, protectionLevel, parent,
                 owner, "");
-        this.lastLoggedIn = new Date();
+
         this.emailAddress = name.getValue();
 
 
@@ -106,7 +105,7 @@ public class UserModel extends EntityModel implements Serializable, User {
                      final String parent,
                      final String owner, final String password, final String salt, final UserSource source) {
         super(name, description, entityType, protectionLevel, parent, owner, "");
-        this.lastLoggedIn = new Date();
+
         this.emailAddress = name.getValue();
         this.password = password;
         this.passwordSalt = salt;
@@ -129,16 +128,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         return source == null ? UserSource.google : UserSource.valueOf(source);
     }
 
-    @Override
-    public Date getLastLoggedIn() {
-        return new Date(lastLoggedIn.getTime());
-    }
 
-    @Override
-    public void setLastLoggedIn(final Date lastLoggedIn) {
-
-        this.lastLoggedIn = new Date(lastLoggedIn.getTime());
-    }
 
 
     @Override
@@ -252,8 +242,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         if (accessKeys != null ? !accessKeys.equals(userModel.accessKeys) : userModel.accessKeys != null) return false;
         if (emailAddress != null ? !emailAddress.equals(userModel.emailAddress) : userModel.emailAddress != null)
             return false;
-        if (lastLoggedIn != null ? !lastLoggedIn.equals(userModel.lastLoggedIn) : userModel.lastLoggedIn != null)
-            return false;
+
 
         return true;
     }
@@ -261,7 +250,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (lastLoggedIn != null ? lastLoggedIn.hashCode() : 0);
+
         result = 31 * result + emailAddress.hashCode();
         result = 31 * result + (accessKeys != null ? accessKeys.hashCode() : 0);
 

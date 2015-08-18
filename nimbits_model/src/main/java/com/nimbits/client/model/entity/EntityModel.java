@@ -58,6 +58,23 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
     private String id;
     private String action;
 
+    @Expose
+    private String nextEntityCursor;
+
+    @Expose
+    private String selfLink;
+
+    @Expose
+    private String childrenLink;
+
+    @Expose
+    private String valueLink;
+
+    @Expose
+    private String parentLink;
+
+
+
 
     public EntityModel(final CommonIdentifier name,
                        final String description,
@@ -101,6 +118,18 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
 
         }
+    }
+
+    @Override
+    public void setHAL(String nextEntityCursor, String parentLink, String selfLink, String childrenLink, String valueLink) {
+        this.nextEntityCursor = nextEntityCursor;
+        this.selfLink = selfLink;
+        this.childrenLink = childrenLink;
+        if (this.entityType == EntityType.point.getCode()) {
+            this.valueLink = valueLink;
+        }
+
+        this.parentLink = parentLink;
     }
 
 

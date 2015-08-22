@@ -14,12 +14,7 @@ package com.nimbits.client.model.entity;
 
 import com.nimbits.client.model.common.CommonIdentifier;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 2/6/12
- * Time: 6:38 PM
- */
+
 public interface EntityName extends CommonIdentifier {
 
 }

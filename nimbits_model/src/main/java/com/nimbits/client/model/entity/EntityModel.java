@@ -14,17 +14,18 @@ package com.nimbits.client.model.entity;
 
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
+import com.nimbits.client.model.hal.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 public class EntityModel implements Serializable, Comparable<Entity>, Entity {
@@ -42,6 +43,7 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
     private int protectionLevel;
 
     private int alertType;
+
     @Expose
     private String parent;
     @Expose
@@ -50,29 +52,24 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
     @Expose
     private String uuid;
     private Date dateCreated;
-    private static final long serialVersionUID = 3455345354L;
-    private List<Point> children;
+
+    private ArrayList<Point> children;
+
     private String instanceUrl;
     private boolean isCached = false;
     @Expose
     private String id;
     private String action;
 
-    @Expose
-    private String nextEntityCursor;
 
-    @Expose
-    private String selfLink;
 
+    //HAL
+    @SerializedName("_links")
     @Expose
-    private String childrenLink;
-
+    private Links links;
+    @SerializedName("_embedded")
     @Expose
-    private String valueLink;
-
-    @Expose
-    private String parentLink;
-
+    private Embedded<EntityChild> embedded;
 
 
 
@@ -121,15 +118,55 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
     }
 
     @Override
-    public void setHAL(String nextEntityCursor, String parentLink, String selfLink, String childrenLink, String valueLink) {
-        this.nextEntityCursor = nextEntityCursor;
-        this.selfLink = selfLink;
-        this.childrenLink = childrenLink;
-        if (this.entityType == EntityType.point.getCode()) {
-            this.valueLink = valueLink;
+    public void setHAL(User user, Entity entity, List<Entity> entities, String path) {
+
+        Map<String, Entity> entityMap = new HashMap<>();
+        for (Entity e : entities) {
+
+            entityMap.put(e.getKey(), e);
+
+
         }
 
-        this.parentLink = parentLink;
+        Entity rootParentEntity = entityMap.get(entity.getParent());
+        Parent parent = new Parent(path + rootParentEntity.getUUID());
+        Self self = new Self(path + entity.getUUID());
+        Data data = null;
+        if (entity.getEntityType().equals(EntityType.point)) {
+            data =new Data(path + entity.getUUID() + "/data");
+        }
+        links = new Links(self, parent, data);
+        List<EntityChild> entityChildren = new ArrayList<>();
+
+
+
+        for (Entity entity1 : entities) {
+            if (entity1.getParent().equals(entity.getKey()) && ! entity1.getKey().equals(entity.getKey())) {
+
+                Self eSelf = new Self(path + entity1.getUUID());
+                Data dx = null;
+                if (entity1.getEntityType().equals(EntityType.point)) {
+                    dx =new Data(path + entity1.getUUID() + "/data");
+                }
+                Entity parentEntity = entityMap.get(entity1.getParent());
+
+                Parent eParent;
+                if (entity1.getParent().equals(user.getKey())) {
+                    eParent = new Parent(path + "me");
+                }
+                else {
+                    eParent  = new Parent(path + parentEntity.getUUID());
+                }
+
+                Links eLinks = new Links(eSelf, eParent, dx);
+
+                entityChildren.add(new EntityChild(eLinks, entity1.getName().getValue()));
+            }
+
+        }
+        embedded = new Embedded<>(entityChildren);
+
+
     }
 
 
@@ -173,7 +210,7 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
     @Override
     public void setChildren(final List<Point> someChildren) {
-        this.children = someChildren;
+        this.children = (ArrayList<Point>) someChildren;
     }
 
     @Override

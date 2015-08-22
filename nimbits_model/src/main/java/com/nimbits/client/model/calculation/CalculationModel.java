@@ -20,12 +20,7 @@ import com.nimbits.client.model.trigger.TriggerModel;
 
 import java.io.Serializable;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 12/24/11
- * Time: 4:53 PM
- */
+
 public class CalculationModel extends TriggerModel implements Serializable, Calculation {
     private static final long serialVersionUID = 1L;
 

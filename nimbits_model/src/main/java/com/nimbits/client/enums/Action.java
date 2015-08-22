@@ -13,11 +13,12 @@
 package com.nimbits.client.enums;
 
 
+import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum Action {
+public enum Action implements Serializable {
     admin(ActionConstants.ACTION_ADMIN),
     calculation(ActionConstants.ACTION_CALC),
     record(ActionConstants.ACTION_RECORD),

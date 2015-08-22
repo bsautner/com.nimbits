@@ -44,6 +44,7 @@ import java.util.*;
 
 
 public enum EntityType implements Serializable {
+
     user(0, false, false, false, true, true, false, 0, "com.nimbits.server.orm.UserEntity", User.class, UserModel.class),
     point(1, true, false, true, true, true, true, 1, "com.nimbits.server.orm.PointEntity", Point.class, PointModel.class),
     category(2, true, false, true, false, true, false, 2, "com.nimbits.server.orm.CategoryEntity", Category.class, CategoryModel.class),

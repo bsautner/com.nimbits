@@ -90,6 +90,6 @@ public interface Entity extends Serializable, Comparable<Entity> {
 
     void setAction(Action action);
 
-    void setHAL(String nextEntityCursor, String parentLink, String selfLink, String childrenLink, String valueLink);
+    void setHAL(User user, Entity entity, List<Entity> children, String path);
 
 }

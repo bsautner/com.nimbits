@@ -59,7 +59,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     /**
      *
      */
-    private static final long serialVersionUID = 4L;
+    private static final long serialVersionUID = 5L;
 
     @SuppressWarnings("unused")
     public UserModel() {
@@ -96,6 +96,11 @@ public class UserModel extends EntityModel implements Serializable, User {
 
 
 
+    }
+
+    public UserModel(String emailAddress, String password) {
+        this.emailAddress = emailAddress;
+        this.password = password;
     }
 
     public UserModel(final EntityName name,

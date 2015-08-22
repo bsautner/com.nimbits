@@ -14,8 +14,11 @@ package com.nimbits.client.model.point;
 
 
 import com.google.gson.annotations.Expose;
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
+import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.point.PointType;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.value.Value;
@@ -132,7 +135,35 @@ public class PointModel extends EntityModel implements Serializable, Point {
         this.precision = point.getPrecision();
     }
 
+    @SuppressWarnings("unused")
     protected PointModel() {
+
+
+
+    }
+
+    public PointModel(Entity parent, String name) {
+        super(CommonFactory.createName(name, EntityType.point), "", EntityType.point, ProtectionLevel.everyone
+        , parent.getKey(), "", "" );
+        this.highAlarm = 0;
+        this.expire = 365;
+        this.unit = "";
+        this.lowAlarm =0;
+        this.highAlarmOn = false;
+        this.lowAlarmOn = false;
+        this.idleAlarmOn = false;
+        this.idleSeconds = 0;
+        this.idleAlarmSent =false;
+        this.values = null;
+        this.value =null;
+        this.filterType = FilterType.none.getCode();
+        this.filterValue = 0;
+        this.inferLocation = false;
+        this.pointType = PointType.basic.getCode();
+        this.deltaSeconds = 0;
+        this.deltaAlarm =  0;
+        this.deltaAlarmOn = false;
+        this.precision = 5;
     }
 
     @Override

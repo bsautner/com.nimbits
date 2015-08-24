@@ -12,6 +12,9 @@ public class Data implements Serializable {
     @Expose
     private String href;
 
+    public Data() {
+    }
+
     public Data(String href) {
         this.href = href;
     }

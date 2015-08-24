@@ -1,3 +1,4 @@
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
@@ -5,6 +6,7 @@ import com.nimbits.client.model.user.UserModel;
 import com.nimbits.io.Nimbits;
 
 import java.util.Date;
+import java.util.UUID;
 
 /**
  * Exercises the V3 Rest API - designed to run continuously against a server as an integration test.
@@ -50,8 +52,9 @@ public class RestClientTester {
         private void createPoints() {
 
             for (int i = 0; i < 10; i++) {
-                Point point = new PointModel(user, "point " + i);
-                nimbits.addEntity(user, point);
+                Point point = new PointModel(user, UUID.randomUUID().toString() + " point name " + i);
+                Entity newPoint =  nimbits.addEntity(user, point);
+                o("Created : " + newPoint.getName().getValue());
             }
 
         }
@@ -71,7 +74,7 @@ public class RestClientTester {
             } catch (Throwable throwable) {
                 //user not found, let's create on - the first user will be an admin of the server
                 o("Server returned error - creating user instead " + throwable.getMessage());
-                return createUser(throwable);
+                return createUser();
 
             }
         }
@@ -79,14 +82,13 @@ public class RestClientTester {
         /**
          * Creates a new user, if this is the first user on the system, it will be the admin
          *
-         * @param throwable
+         *
          */
-        private User createUser(Throwable throwable) {
-            o(throwable.getMessage());
+        private User createUser() {
+
             User postObject = new UserModel(EMAIL_ADDRESS, PASSWORD);
             User newUser = nimbits.addUser(postObject);
-            if (newUser == null || newUser.getEmail().getValue().equals(EMAIL_ADDRESS)) {
-
+            if (newUser == null || ! newUser.getEmail().getValue().equals(EMAIL_ADDRESS)) {
                 throw new RuntimeException("Could not create a new user");
             }
             else {

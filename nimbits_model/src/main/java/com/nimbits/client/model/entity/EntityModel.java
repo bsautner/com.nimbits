@@ -48,9 +48,12 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
     private String parent;
     @Expose
     private String owner;
+
     private boolean readOnly = false;
+
     @Expose
     private String uuid;
+
     private Date dateCreated;
 
     private ArrayList<Point> children;
@@ -67,9 +70,10 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
     @SerializedName("_links")
     @Expose
     private Links links;
+
     @SerializedName("_embedded")
     @Expose
-    private Embedded<EntityChild> embedded;
+    private Embedded embedded;
 
 
 
@@ -118,56 +122,19 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
     }
 
     @Override
-    public void setHAL(User user, Entity entity, List<Entity> entities, String path) {
-
-        Map<String, Entity> entityMap = new HashMap<>();
-        for (Entity e : entities) {
-
-            entityMap.put(e.getKey(), e);
-
-
-        }
-
-        Entity rootParentEntity = entityMap.get(entity.getParent());
-        Parent parent = new Parent(path + rootParentEntity.getUUID());
-        Self self = new Self(path + entity.getUUID());
-        Data data = null;
-        if (entity.getEntityType().equals(EntityType.point)) {
-            data =new Data(path + entity.getUUID() + "/data");
-        }
-        links = new Links(self, parent, data);
-        List<EntityChild> entityChildren = new ArrayList<>();
-
-
-
-        for (Entity entity1 : entities) {
-            if (entity1.getParent().equals(entity.getKey()) && ! entity1.getKey().equals(entity.getKey())) {
-
-                Self eSelf = new Self(path + entity1.getUUID());
-                Data dx = null;
-                if (entity1.getEntityType().equals(EntityType.point)) {
-                    dx =new Data(path + entity1.getUUID() + "/data");
-                }
-                Entity parentEntity = entityMap.get(entity1.getParent());
-
-                Parent eParent;
-                if (entity1.getParent().equals(user.getKey())) {
-                    eParent = new Parent(path + "me");
-                }
-                else {
-                    eParent  = new Parent(path + parentEntity.getUUID());
-                }
-
-                Links eLinks = new Links(eSelf, eParent, dx);
-
-                entityChildren.add(new EntityChild(eLinks, entity1.getName().getValue()));
-            }
-
-        }
-        embedded = new Embedded<>(entityChildren);
-
-
+    public void setEmbedded(Embedded embedded) {
+        this.embedded = embedded;
     }
+
+    @Override
+    public void setLinks(Links links) {
+        this.links = links;
+    }
+
+
+
+
+
 
 
     @Override

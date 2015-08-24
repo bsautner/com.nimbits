@@ -12,6 +12,9 @@ public class Self implements Serializable {
     @Expose
     private String href;
 
+    public Self() {
+    }
+
     public Self(String href) {
         this.href = href;
     }

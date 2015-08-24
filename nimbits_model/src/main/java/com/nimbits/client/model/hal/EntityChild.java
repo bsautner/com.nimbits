@@ -17,6 +17,8 @@ public class EntityChild  implements Serializable {
     @Expose
     private String name;
 
+    public EntityChild() {
+    }
 
     public EntityChild(Links links, String name) {
         this.links = links;

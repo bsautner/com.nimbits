@@ -14,13 +14,16 @@ public class ValueContainer implements Serializable {
     private Links links;
     @SerializedName("_embedded")
     @Expose
-    private Embedded embedded;
+    private EmbeddedValues embedded;
 
     @Expose
     private Value snapshot;
 
 
-    public ValueContainer(Links links, Embedded embedded, Value snapshot) {
+    public ValueContainer() {
+    }
+
+    public ValueContainer(Links links, EmbeddedValues embedded, Value snapshot) {
         this.links = links;
         this.embedded = embedded;
         this.snapshot = snapshot;

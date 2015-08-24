@@ -1,10 +1,13 @@
 SeriesPostJavaSample.class
 SocketSample.class
+CloudSocketSample$1.class
+RestClientTester$1.class
 SystemHealthCheck.class
 CloudSocketSample.class
-SimpleJavaSample.class
-ReadStoredFiles.class
+RestClientTester$NimbitsLoadTester.class
 RandomLoopSample.class
+ReadStoredFiles.class
+SimpleJavaSample.class
 CreatePointWithAPIKey.class
-CloudSocketSample$1.class
+RestClientTester.class
 SocketSample$1.class

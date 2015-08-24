@@ -14,7 +14,8 @@ public class Sample  implements Serializable {
     @Expose
     private String description;
 
-
+    public Sample() {
+    }
 
     public Sample(String href, String description) {
         this.href = href;

@@ -21,6 +21,9 @@ public class Links implements Serializable {
     @Expose
     private Sample sample;
 
+    public Links() {
+    }
+
     public Links(Self self, Parent parent, Data data) {
         this.self = self;
         this.data = data;

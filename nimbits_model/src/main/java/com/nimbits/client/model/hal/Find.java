@@ -12,6 +12,9 @@ public class Find  implements Serializable {
     @Expose
     private String href;
 
+    public Find() {
+    }
+
     public Find(String s) {
         href = s;
     }

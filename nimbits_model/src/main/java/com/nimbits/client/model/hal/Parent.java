@@ -13,6 +13,9 @@ public class Parent  implements Serializable {
     private String href;
 
 
+    public Parent() {
+    }
+
     public Parent(String href) {
         this.href = href;
     }

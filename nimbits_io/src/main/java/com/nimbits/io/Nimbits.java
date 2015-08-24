@@ -2,12 +2,17 @@ package com.nimbits.io;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.nimbits.client.constants.Const;
+import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
 import com.nimbits.io.http.NimbitsClientException;
 import com.nimbits.io.http.rest.RestClient;
-import com.nimbits.server.gson.deserializer.SessionDeserializer;
+import com.nimbits.server.gson.*;
+import com.nimbits.server.gson.deserializer.*;
 import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -34,7 +39,24 @@ public class Nimbits {
         this.token = token;
         this.instance = instance;
 
-        final Gson gson = new GsonBuilder().registerTypeAdapter(User.class, new SessionDeserializer()).create();
+        final Gson gson =new GsonBuilder()
+                .setDateFormat(Const.GSON_DATE_FORMAT)
+                .serializeNulls()
+
+                .registerTypeAdapter(AccessKey.class, new AccessKeySerializer())
+                .registerTypeAdapter(AccessKey.class, new AccessKeyDeserializer())
+                .registerTypeAdapter(Value.class, new ValueDeserializer())
+                .registerTypeAdapter(Value.class, new ValueSerializer())
+                .registerTypeAdapter(Point.class, new PointSerializer())
+                .registerTypeAdapter(Point.class, new PointDeserializer())
+                .registerTypeAdapter(Entity.class, new EntitySerializer())
+                .registerTypeAdapter(Entity.class, new EntityDeserializer())
+                .registerTypeAdapter(Calculation.class, new CalculationSerializer())
+                .registerTypeAdapter(Calculation.class, new CalculationDeserializer())
+                .registerTypeAdapter(User.class, new UserSerializer())
+                .registerTypeAdapter(User.class, new SessionDeserializer())
+                .create();
+
 
 
         this.requestInterceptor = new RequestInterceptor() {
@@ -86,6 +108,8 @@ public class Nimbits {
 
 
     public Entity addEntity(Entity parent, Point point) {
-        return api.addEntity(parent.getUUID(), point);
+
+        Entity e  =  api.addEntity(parent.getUUID(), point);
+        return  e;
     }
 }

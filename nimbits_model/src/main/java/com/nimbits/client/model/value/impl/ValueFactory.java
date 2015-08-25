@@ -123,4 +123,9 @@ public class ValueFactory {
     public static Value createValueModel(Double d, Date date, AlertType alertType) {
         return new ValueModel(LocationFactory.createEmptyLocation(), d, date, ValueDataModel.getEmptyInstance(), alertType);
     }
+
+    public static Value createValueModel(double v, String data, String metadata, Date time) {
+
+        return new ValueModel(  v, time, data, metadata );
+    }
 }

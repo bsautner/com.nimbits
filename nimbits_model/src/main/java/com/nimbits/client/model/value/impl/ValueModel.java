@@ -40,6 +40,8 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     Long t;
     @Expose
     String dx;
+    @Expose
+    String m;
 
     Integer st;
 
@@ -48,6 +50,14 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
     protected ValueModel() {
 
     }
+
+    public ValueModel(double v, Date time, String data, String metadata) {
+        this.d = v;
+        this.t = time.getTime();
+        this.dx = data;
+        this.m = metadata;
+    }
+
 
 
     public static Value getInstance(final SimpleValue<String> valueAndNote, final Date timestamp) {
@@ -93,6 +103,8 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
         this.st = v.getAlertState().getCode();
 
+        this.m = v.getMetaData();
+
     }
 
     private void setValues(Value v) {
@@ -108,6 +120,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         setValues(v);
         this.dx = dataOverride;
         this.st = v.getAlertState().getCode();
+        this.m = v.getMetaData();
 
     }
 
@@ -124,6 +137,8 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
             this.lt = location.getLat();
             this.lg = location.getLng();
         }
+
+
 
         if (d != null) {
             this.d = d;
@@ -198,6 +213,8 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         ValueModel that = (ValueModel) o;
 
         if (d != null ? !d.equals(that.d) : that.d != null) return false;
+        if (m != null ? !m.equals(that.m) : that.m != null) return false;
+
         if (dx != null ? !dx.equals(that.dx) : that.dx != null) return false;
         if (lg != null ? !lg.equals(that.lg) : that.lg != null) return false;
         if (lt != null ? !lt.equals(that.lt) : that.lt != null) return false;
@@ -214,10 +231,16 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         result = 31 * result + (lg != null ? lg.hashCode() : 0);
         result = 31 * result + (d != null ? d.hashCode() : 0);
         result = 31 * result + (t != null ? t.hashCode() : 0);
+        result = 31 * result + (m != null ? m.hashCode() : 0);
 
         result = 31 * result + (dx != null ? dx.hashCode() : 0);
         result = 31 * result + (st != null ? st.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String getMetaData() {
+        return m;
     }
 
     @Override
@@ -228,6 +251,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
                 ", d=" + d +
                 ", t=" + t +
                 ", dx='" + dx + '\'' +
+                ", m='" + m + '\'' +
                 ", st=" + st +
                 '}';
     }

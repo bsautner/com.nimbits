@@ -15,11 +15,13 @@ package com.nimbits.client.model.user;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.AuthLevel;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.entity.EntityName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -30,7 +32,6 @@ import java.util.List;
 public class UserModel extends EntityModel implements Serializable, User {
 
 
-    private Date lastLoggedIn;
 
     @Expose
     private String emailAddress;
@@ -58,7 +59,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     /**
      *
      */
-    private static final long serialVersionUID = 4L;
+    private static final long serialVersionUID = 5L;
 
     @SuppressWarnings("unused")
     public UserModel() {
@@ -68,7 +69,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     public UserModel(final User u) {
         super(u);
         if (u != null) {
-            this.lastLoggedIn = u.getLastLoggedIn();
+
             this.accessKeys = (ArrayList<AccessKey>) u.getAccessKeys();
             this.emailAddress = u.getEmail().getValue();
             this.password = u.getPassword();
@@ -78,20 +79,39 @@ public class UserModel extends EntityModel implements Serializable, User {
             this.passwordResetTokenTimestamp = u.getPasswordResetTokenTimestamp();
             this.passwordResetToken = u.getPasswordResetToken();
 
+
         }
     }
 
-    public UserModel(final Entity entity) {
-        super(entity);
-        this.lastLoggedIn = new Date();
-        this.emailAddress = entity.getName().getValue();
+    public UserModel(final EntityName name,
+                     final String description,
+                     final EntityType entityType,
+                     final ProtectionLevel protectionLevel,
+                     final String parent,
+                     final String owner) {
+        super(name, description, entityType, protectionLevel, parent,
+                owner, "");
+
+        this.emailAddress = name.getValue();
+
+
 
     }
 
-    public UserModel(final Entity entity, final String password, final String salt, final UserSource source) {
-        super(entity);
-        this.lastLoggedIn = new Date();
-        this.emailAddress = entity.getName().getValue();
+    public UserModel(String emailAddress, String password) {
+        this.emailAddress = emailAddress;
+        this.password = password;
+    }
+
+    public UserModel(final EntityName name,
+                     final String description,
+                     final EntityType entityType,
+                     final ProtectionLevel protectionLevel,
+                     final String parent,
+                     final String owner, final String password, final String salt, final UserSource source) {
+        super(name, description, entityType, protectionLevel, parent, owner, "");
+
+        this.emailAddress = name.getValue();
         this.password = password;
         this.passwordSalt = salt;
         this.source = source.name();
@@ -113,16 +133,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         return source == null ? UserSource.google : UserSource.valueOf(source);
     }
 
-    @Override
-    public Date getLastLoggedIn() {
-        return new Date(lastLoggedIn.getTime());
-    }
 
-    @Override
-    public void setLastLoggedIn(final Date lastLoggedIn) {
-
-        this.lastLoggedIn = new Date(lastLoggedIn.getTime());
-    }
 
 
     @Override
@@ -222,6 +233,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         this.password = cryptPassword;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -235,8 +247,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         if (accessKeys != null ? !accessKeys.equals(userModel.accessKeys) : userModel.accessKeys != null) return false;
         if (emailAddress != null ? !emailAddress.equals(userModel.emailAddress) : userModel.emailAddress != null)
             return false;
-        if (lastLoggedIn != null ? !lastLoggedIn.equals(userModel.lastLoggedIn) : userModel.lastLoggedIn != null)
-            return false;
+
 
         return true;
     }
@@ -244,7 +255,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + (lastLoggedIn != null ? lastLoggedIn.hashCode() : 0);
+
         result = 31 * result + emailAddress.hashCode();
         result = 31 * result + (accessKeys != null ? accessKeys.hashCode() : 0);
 

@@ -12,6 +12,7 @@
 
 package com.nimbits.client.model.subscription;
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.model.entity.Entity;
@@ -22,12 +23,19 @@ import java.io.Serializable;
 
 public class SubscriptionModel extends EntityModel implements Serializable, Subscription {
 
-
+    @Expose
     private String subscribedEntity;
+    @Expose
     private int notifyMethod;
+    @Expose
     private int subscriptionType;
+    @Expose
     private int maxRepeat;
+    @Expose
+    private String target;
+    @Expose
     private boolean notifyFormatJson;
+    @Expose
     private boolean enabled;
 
     @SuppressWarnings("unused")
@@ -42,6 +50,7 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
         this.maxRepeat = subscription.getMaxRepeat();
         this.notifyFormatJson = subscription.getNotifyFormatJson();
         this.enabled = subscription.getEnabled();
+        this.target = subscription.getTarget();
 
     }
 
@@ -52,7 +61,8 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
             SubscriptionNotifyMethod subscriptionNotifyMethod,
             int maxRepeat,
             boolean formatJson,
-            boolean enabled) {
+            boolean enabled,
+            String target) {
         super(entity);
         this.subscribedEntity = subscribedEntity;
         this.subscriptionType = subscriptionType.getCode();
@@ -60,6 +70,7 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
         this.maxRepeat = maxRepeat;
         this.enabled = enabled;
         this.notifyFormatJson = formatJson;
+        this.target = target;
     }
 
 
@@ -123,5 +134,13 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
         this.maxRepeat = maxRepeat;
     }
 
+    @Override
+    public String getTarget() {
+        return target == null ? "" : target;
+    }
 
+    @Override
+    public void setTarget(String target) {
+        this.target = target;
+    }
 }

@@ -20,47 +20,29 @@ package com.nimbits.server.transaction.cache;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.RemovalListener;
-import com.google.common.cache.RemovalNotification;
-import com.nimbits.client.enums.MemCacheKey;
-import com.nimbits.server.api.UsageTracker;
+import com.nimbits.client.model.value.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.ConcurrentMap;
+import java.util.List;
 import java.util.logging.Logger;
 
 @Component
 public class NimbitsCacheImpl extends BaseCache implements NimbitsCache {
     private Cache<Object, Object> cache;
-    private Cache<String, UsageTracker> usageCache;
+
 
     private final Logger logger = Logger.getLogger(NimbitsCacheImpl.class.getName());
 
     public NimbitsCacheImpl() {
         cache = CacheBuilder.newBuilder().build();
-        usageCache = CacheBuilder.newBuilder()
-                .removalListener(new RemovalListener<String, UsageTracker>() {
-                    @Override
-                    public void onRemoval(RemovalNotification<String, UsageTracker> removalNotification) {
-                        logger.severe("removing " + removalNotification.getValue().toGson());
-                    }
-                })
 
-                .build();
+
 
 
     }
 
 
-    @Override
-    public ConcurrentMap<String, UsageTracker> getUsageMap() {
-        return usageCache.asMap();
-    }
 
-    @Override
-    public boolean containsKey(String key) {
-        return cache.asMap().containsKey(generateKey(key));
-    }
 
     @Override
     public void remove(String key) {
@@ -72,15 +54,6 @@ public class NimbitsCacheImpl extends BaseCache implements NimbitsCache {
         return cache.getIfPresent(generateKey(key));
     }
 
-    @Override
-    public void putUsage(String key, UsageTracker object) {
-        usageCache.put(generateKey(key), object);
-    }
-
-    @Override
-    public UsageTracker getUsage(String key) {
-        return usageCache.getIfPresent(generateKey(key));
-    }
 
     @Override
     public void put(String key, Object object) {
@@ -88,42 +61,9 @@ public class NimbitsCacheImpl extends BaseCache implements NimbitsCache {
     }
 
     @Override
-    public void reloadCache() {
-        cache.invalidateAll();
-    }
-
-    @Override
-    public boolean confirmCached(String key) {
-        return cache.asMap().containsKey(generateKey(key));
-    }
-
-    @Override
-    public boolean contains(MemCacheKey key) {
-        return containsKey(key.getText());
-    }
-
-    @Override
-    public Object get(MemCacheKey key) {
-        return get(key.getText());
-    }
-
-    @Override
-    public void delete(MemCacheKey key) {
-        remove(key.getText());
-    }
-
-    @Override
-    public void put(MemCacheKey key, Object newMap) {
-        put(key.getText(), newMap);
-    }
-
-    @Override
-    public boolean contains(String key) {
-        return containsKey(generateKey(key));
-    }
-
-    @Override
     public void delete(String key) {
         remove(generateKey(key));
     }
+
+
 }

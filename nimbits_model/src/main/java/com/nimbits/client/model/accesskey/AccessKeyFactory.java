@@ -15,8 +15,10 @@ package com.nimbits.client.model.accesskey;
 import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.model.entity.Entity;
 
+import java.io.Serializable;
 
-public class AccessKeyFactory {
+
+public class AccessKeyFactory{
 
     private AccessKeyFactory() {
     }

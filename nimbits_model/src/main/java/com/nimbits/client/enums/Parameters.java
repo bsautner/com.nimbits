@@ -43,6 +43,7 @@ public enum Parameters {
     pointJson(ParamConstants.PARAM_JSON_POINT),
     pointUser(ParamConstants.PARAM_JSON_USER),
     valueJson(ParamConstants.PARAM_JSON_VALUE),
+    @Deprecated
     key(ParamConstants.PARAM_KEY),
     lat(ParamConstants.PARAM_LAT),
     lng(ParamConstants.PARAM_LNG),
@@ -137,7 +138,7 @@ public enum Parameters {
     }
 
     private static class ParamConstants {
-        private static final String PARAM_TOKEN =  ServerSetting.token.getName();
+        private static final String PARAM_TOKEN = ServerSetting.token.getName();
         private static final String PARAM_ACTION = "action";
         private static final String PARAM_AUTO_SCALE = "autoscale";
         private static final String PARAM_BLOB_KEY = "blob-key";
@@ -226,6 +227,7 @@ public enum Parameters {
         private static final String FORWARD = "forward";
         public static final String CONNECTION_ID = "connection";
         public static final String PARAM_CURSOR = "cursor";
+
 
         private ParamConstants() {
         }

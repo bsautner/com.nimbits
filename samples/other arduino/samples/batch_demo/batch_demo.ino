@@ -35,16 +35,16 @@ void loop() {
   String val2Str = floatToString(val2, 4);
 
   json = "[{";
-  json += "\"id\":\"bsautner@gmail.com/lab_temp\",";
+  json += "\"id\":\"test@example.com/lab_temp\",";
   json += "\"values\":";
   json += "[{\"d\":100}]},";
-  json += "{\"id\":\"bsautner@gmail.com/lab_humidity\",";
+  json += "{\"id\":\"test@example.com/lab_humidity\",";
   json += "\"values\":";
   json += "[{\"d\":42}]";
   json += "}]";
   
   String content;
-  content = "email=bsautner@gmail.com";
+  content = "email=test@example.com";
   content += "&key=key";
   content += "&json=";
   content += json;

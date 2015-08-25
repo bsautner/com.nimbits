@@ -16,12 +16,7 @@ import com.nimbits.client.model.common.impl.CommonIdentifierImpl;
 
 import java.io.Serializable;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 2/6/12
- * Time: 6:39 PM
- */
+
 public class EntityNameImpl extends CommonIdentifierImpl implements EntityName, Serializable {
 
     public EntityNameImpl(final String value) {

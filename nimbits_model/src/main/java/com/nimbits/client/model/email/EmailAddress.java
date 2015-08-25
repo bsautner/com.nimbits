@@ -14,8 +14,10 @@ package com.nimbits.client.model.email;
 
 import com.nimbits.client.model.common.CommonIdentifier;
 
+import java.io.Serializable;
 
-public interface EmailAddress extends CommonIdentifier {
+
+public interface EmailAddress extends CommonIdentifier, Serializable {
 
 
 }

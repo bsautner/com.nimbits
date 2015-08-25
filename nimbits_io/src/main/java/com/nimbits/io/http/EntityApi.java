@@ -37,9 +37,9 @@ import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.Query;
 
-public interface EntityApi  {
+public interface EntityApi {
 
-    final String API ="/service/v2/entity";
+    String API = "/service/v2/entity";
 
 
     @GET(API)
@@ -78,6 +78,10 @@ public interface EntityApi  {
     @GET(API)
     Schedule getSchedule(@Query("email") String email, @Query("key") String key, @Query("id") String id);
 
+    @GET(API)
+    Schedule getWebHook(@Query("email") String email, @Query("key") String key, @Query("id") String id);
+
+
     @POST(API)
     Entity addEntity(@Body Entity entity);
 
@@ -114,4 +118,10 @@ public interface EntityApi  {
 
     @POST(API)
     Schedule addSchedule(@Body Entity entity);
+
+    @POST(API)
+    Schedule addWebHook(@Body Entity entity);
+
+    @POST(API)
+    String deleteEntity(@Body Entity entity, @Query("id") String id, @Query("action") String action, @Query("type") String type);
 }

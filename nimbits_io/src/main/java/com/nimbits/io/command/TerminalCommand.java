@@ -39,7 +39,6 @@ public enum TerminalCommand {
     }
 
 
-
     public AbstractCommand init(User user, Entity current, Server server, List<Entity> tree) throws Exception {
         return (AbstractCommand) constructor.newInstance(user, current, server, tree);
     }
@@ -47,8 +46,7 @@ public enum TerminalCommand {
     public static TerminalCommand lookup(String value) {
         if (lookupMap.containsKey(value)) {
             return lookupMap.get(value);
-        }
-        else {
+        } else {
             return null;
         }
     }

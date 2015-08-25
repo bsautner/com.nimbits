@@ -16,6 +16,8 @@ import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.model.hal.Embedded;
+import com.nimbits.client.model.hal.Links;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 
@@ -78,6 +80,10 @@ public interface Entity extends Serializable, Comparable<Entity> {
 
     void setDateCreated(Date dateCreated);
 
+    void setEmbedded(Embedded embedded);
+
+    void setLinks(Links links);
+
     void setKey(String key);
 
     String getInstanceUrl();
@@ -89,5 +95,6 @@ public interface Entity extends Serializable, Comparable<Entity> {
     Action getAction();
 
     void setAction(Action action);
+
 
 }

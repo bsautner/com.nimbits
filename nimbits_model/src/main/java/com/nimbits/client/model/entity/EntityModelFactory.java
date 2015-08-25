@@ -61,7 +61,7 @@ public class EntityModelFactory {
                                       final String parent,
                                       final String owner) {
         return new EntityModel(name, description, entityType, protectionLevel, parent,
-                owner , "");
+                owner, "");
     }
 
     public static Entity createEntity(final String name,

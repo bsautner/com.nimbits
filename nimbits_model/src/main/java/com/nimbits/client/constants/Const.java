@@ -15,7 +15,7 @@ package com.nimbits.client.constants;
 
 public class Const {
 
-    public static final String VERSION = "3.9.0";
+    public static final String VERSION = "3.9.11";
 
     public static final String SOCKET_RELAY = "130.211.147.107:8080";
 
@@ -35,16 +35,11 @@ public class Const {
     public static final String CONTENT_TYPE_HTML = "text/html";
     public static final String CONTENT_TYPE_PLAIN = "text/plain";
 
-    public static final int CONST_QUERY_CHUNK_SIZE = 50;
-
     public static final double CONST_IGNORED_NUMBER_VALUE = -9999999.9999999;
 
     public static final int CONST_MAX_NAME_LENGTH = 250;
 
 
-    @Deprecated //delete when all blobstores have length
-
-    public static final int CONST_DEFAULT_LIST_SIZE = 1024;
     public static final String CONST_ANON_EMAIL = "uncle_nobody@nimbits.com";
 
 

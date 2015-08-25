@@ -14,7 +14,6 @@ public abstract class AbstractCommand implements Command {
     protected final List<Entity> tree;
 
 
-
     public AbstractCommand(User user, Entity current, Server server, List<Entity> tree) {
         this.server = server;
         this.user = user;

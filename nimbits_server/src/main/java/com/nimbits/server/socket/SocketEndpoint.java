@@ -17,6 +17,7 @@ import com.nimbits.io.NimbitsClient;
 import com.nimbits.io.http.NimbitsClientFactory;
 import com.nimbits.server.auth.AuthService;
 import com.nimbits.server.transaction.user.dao.UserDao;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketServlet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,7 +104,7 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
             String email = users.get(0).getValue();
 
             List<String> points;
-            if (!Utils.isEmptyString(ids)) {
+            if (! StringUtils.isEmpty(ids)) {
                 Gson gson = new GsonBuilder().create();
                 Type type = new TypeToken<List<String>>() {
                 }.getType();

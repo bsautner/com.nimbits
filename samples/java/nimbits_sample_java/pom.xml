@@ -8,7 +8,7 @@
     <artifactId>nimbits_sample_java</artifactId>
     <version>${nimbits_version}-SNAPSHOT</version>
     <properties>
-        <nimbits_version>3.9.0</nimbits_version>
+        <nimbits_version>3.9.11</nimbits_version>
     </properties>
 
     <parent>
@@ -50,7 +50,12 @@
             <version>8.1.15.v20140411</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.directory.studio</groupId>
+            <artifactId>org.apache.commons.io</artifactId>
+            <version>2.4</version>
 
+        </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>

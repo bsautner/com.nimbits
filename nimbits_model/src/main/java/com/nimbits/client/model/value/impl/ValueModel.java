@@ -65,6 +65,10 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
 
     }
 
+    public static Value getInstance(String data) {
+        return new ValueModel(null, null, new Date(), ValueDataModel.getInstance(SimpleValue.getInstance(data)), null);
+    }
+
 
     @Override
     public ValueData getData() {
@@ -113,7 +117,7 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
                       final ValueData data,
                       final AlertType alert) {
 
-        if (location.isEmpty()) {
+        if (location == null || location.isEmpty()) {
             this.lg = null;
             this.lt = null;
         } else {
@@ -214,5 +218,17 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         result = 31 * result + (dx != null ? dx.hashCode() : 0);
         result = 31 * result + (st != null ? st.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public String toString() {
+        return "ValueModel{" +
+                "lt=" + lt +
+                ", lg=" + lg +
+                ", d=" + d +
+                ", t=" + t +
+                ", dx='" + dx + '\'' +
+                ", st=" + st +
+                '}';
     }
 }

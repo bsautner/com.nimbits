@@ -12,21 +12,22 @@
 
 package com.nimbits.client.model.trigger;
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 
 import java.io.Serializable;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 4/19/12
- * Time: 12:30 PM
- */
+
 public class TriggerModel extends EntityModel implements Serializable, Trigger {
 
+    @Expose
     private String target;
+
+    @Expose
     private String trigger;
+
+    @Expose
     private boolean enabled;
 
     @SuppressWarnings("unused")

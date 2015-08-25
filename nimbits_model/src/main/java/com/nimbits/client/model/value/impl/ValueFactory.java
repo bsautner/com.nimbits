@@ -28,6 +28,7 @@ public class ValueFactory {
     private ValueFactory() {
     }
 
+    @Deprecated
     public static Value createValueFromString(final SimpleValue<String> valueAndNote, final Date timestamp) {
         double d = 0;
         String dx = null;

@@ -14,17 +14,18 @@ package com.nimbits.client.model.entity;
 
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.*;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
+import com.nimbits.client.model.hal.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 
 public class EntityModel implements Serializable, Comparable<Entity>, Entity {
@@ -42,21 +43,38 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
     private int protectionLevel;
 
     private int alertType;
+
     @Expose
     private String parent;
     @Expose
     private String owner;
+
     private boolean readOnly = false;
+
     @Expose
     private String uuid;
+
     private Date dateCreated;
-    private static final long serialVersionUID = 3455345354L;
-    private List<Point> children;
+
+    private ArrayList<Point> children;
+
     private String instanceUrl;
     private boolean isCached = false;
     @Expose
     private String id;
     private String action;
+
+
+
+    //HAL
+    @SerializedName("_links")
+    @Expose
+    private Links links;
+
+    @SerializedName("_embedded")
+    @Expose
+    private Embedded embedded;
+
 
 
     public EntityModel(final CommonIdentifier name,
@@ -103,6 +121,21 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
         }
     }
 
+    @Override
+    public void setEmbedded(Embedded embedded) {
+        this.embedded = embedded;
+    }
+
+    @Override
+    public void setLinks(Links links) {
+        this.links = links;
+    }
+
+
+
+
+
+
 
     @Override
     public void setKey(final String key) {
@@ -144,7 +177,7 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
     @Override
     public void setChildren(final List<Point> someChildren) {
-        this.children = someChildren;
+        this.children = (ArrayList<Point>) someChildren;
     }
 
     @Override
@@ -201,8 +234,12 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
     @Override
     public String getKey() {
-        if (id != null && key == null) {
+        if (id != null && this.key == null) {
             key = id;
+        }
+        //sometimes incoming json omits the full key so we add it if missing
+        if (getEntityType() != null && getEntityType().equals(EntityType.point) && this.key != null && ! key.startsWith(owner)) {
+            this.key = owner + "/" + this.key;
         }
         return this.key;
     }

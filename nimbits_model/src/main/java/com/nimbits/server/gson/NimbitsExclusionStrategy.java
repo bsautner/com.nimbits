@@ -19,7 +19,7 @@ import com.google.gson.FieldAttributes;
 public class NimbitsExclusionStrategy implements ExclusionStrategy {
     private final Class<?> typeToSkip;
 
-    NimbitsExclusionStrategy(Class<?> typeToSkip) {
+    public NimbitsExclusionStrategy(Class<?> typeToSkip) {
         this.typeToSkip = typeToSkip;
     }
 

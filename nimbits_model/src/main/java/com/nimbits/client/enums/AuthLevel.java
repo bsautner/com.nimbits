@@ -12,12 +12,13 @@
 
 package com.nimbits.client.enums;
 
+import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
 
-public enum AuthLevel {
+public enum AuthLevel implements Serializable {
 
     restricted(1, "Read Only Public Data", false),
     readPoint(2, "Read Single Point", true),
@@ -38,7 +39,7 @@ public enum AuthLevel {
     private final String text;
     private final boolean userVisible;
 
-    private AuthLevel(int aCode, String aText, boolean userVisible) {
+    AuthLevel(int aCode, String aText, boolean userVisible) {
         this.code = aCode;
         this.text = aText;
         this.userVisible = userVisible;

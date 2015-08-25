@@ -12,17 +12,15 @@
 
 package com.nimbits.client.model.setting;
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.ServerSetting;
 
-/**
- * Created by Benjamin Sautner
- * User: benjamin
- * Date: 5/5/11
- * Time: 3:41 PM
- */
+
 public class SettingModel implements Setting {
     private static final long serialVersionUID = 4376024128461099128L;
+    @Expose
     private String name;
+    @Expose
     private String value;
 
     public SettingModel(final Setting setting) {

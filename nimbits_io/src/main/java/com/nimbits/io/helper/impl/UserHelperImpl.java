@@ -9,8 +9,8 @@ import com.nimbits.io.http.NimbitsClientFactory;
 
 /**
  * Helper class to download a user's session data
- * @see com.nimbits.client.model.user.User
  *
+ * @see com.nimbits.client.model.user.User
  */
 public class UserHelperImpl implements UserHelper {
 
@@ -23,18 +23,12 @@ public class UserHelperImpl implements UserHelper {
     }
 
 
-
-
     @Override
     public User getSession() {
         return client.login();
 
 
     }
-
-
-
-
 
 
 }

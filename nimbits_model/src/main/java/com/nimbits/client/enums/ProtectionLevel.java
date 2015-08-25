@@ -12,17 +12,13 @@
 
 package com.nimbits.client.enums;
 
+import java.io.Serializable;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 12/28/11
- * Time: 7:57 PM
- */
-public enum ProtectionLevel {
+
+public enum ProtectionLevel implements Serializable {
     onlyMe(0, "Only Me"),
     onlyConnection(1, "Connections"),
     everyone(2, "Everyone");
@@ -38,7 +34,7 @@ public enum ProtectionLevel {
     private final int code;
     private final String text;
 
-    private ProtectionLevel(int code, String text) {
+    ProtectionLevel(int code, String text) {
         this.code = code;
         this.text = text;
     }

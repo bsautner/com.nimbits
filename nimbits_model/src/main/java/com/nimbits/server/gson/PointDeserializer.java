@@ -12,7 +12,10 @@
 
 package com.nimbits.server.gson;
 
-import com.google.gson.*;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 
@@ -23,9 +26,9 @@ public class PointDeserializer implements JsonDeserializer<Point> {
     @Override
     public Point deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 
-      //  final JsonPrimitive jsonPrimitive = (JsonPrimitive) jsonElement;
-      //  final String json = jsonElement.getAsString();
-        Point retObj =  GsonFactory.getInstance().fromJson(jsonElement, PointModel.class);
+        //  final JsonPrimitive jsonPrimitive = (JsonPrimitive) jsonElement;
+        //  final String json = jsonElement.getAsString();
+        Point retObj = GsonFactory.getInstance().fromJson(jsonElement, PointModel.class);
         return retObj;
     }
 }

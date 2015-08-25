@@ -14,12 +14,7 @@ package com.nimbits.client.model.point;
 
 import com.nimbits.client.model.common.CommonIdentifier;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 7/15/11
- * Time: 6:01 PM
- */
+
 public interface PointName extends CommonIdentifier {
 
 }

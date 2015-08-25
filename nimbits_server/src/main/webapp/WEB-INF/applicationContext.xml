@@ -13,15 +13,14 @@
     <bean id="chartHelper" class="com.nimbits.server.chart.ChartHelper"/>
     <bean id="nimbitsCache" class="com.nimbits.server.transaction.cache.NimbitsCacheImpl"/>
 
-    <bean id="userCache" class="com.nimbits.server.transaction.user.cache.UserCacheImpl"/>
-
     <bean id="userService" class="com.nimbits.server.transaction.user.service.UserServiceImpl"/>
 
     <bean id="entityService" class="com.nimbits.server.transaction.entity.EntityServiceImpl"/>
 
 
     <bean id="settingsService" class="com.nimbits.server.transaction.settings.SettingsServiceImpl"/>
-    <bean id="settingsCache" class="com.nimbits.server.transaction.settings.SettingsCacheImpl"/>
+
+
     <bean id="settingsDao" class="com.nimbits.server.transaction.settings.SettingsDaoImpl">
 
 
@@ -30,7 +29,7 @@
     <bean id="emailService" class="com.nimbits.server.communication.mail.EmailServiceImpl"/>
 
     <bean id="blobStore" class="com.nimbits.server.io.BlobStoreImpl">
-        <property name="persistenceManagerFactory" ref="pmf"/>
+
     </bean>
     <bean id="entityDao" class="com.nimbits.server.transaction.entity.dao.EntityDaoImpl">
         <property name="persistenceManagerFactory" ref="pmf"/>
@@ -47,8 +46,7 @@
 
     <bean id="recursionValidation" class="com.nimbits.server.orm.validation.RecursionValidation"/>
     <bean id="valueService" class="com.nimbits.server.transaction.value.service.ValueServiceImpl"/>
-    <bean id="valueCache" class="com.nimbits.server.transaction.value.cache.ValueCacheImpl"/>
-    <bean id="valueDao" class="com.nimbits.server.transaction.value.dao.ValueDaoImpl"/>
+
 
     <bean id="calculationService" class="com.nimbits.server.transaction.calculation.CalculationServiceImpl"/>
     <bean id="summaryService" class="com.nimbits.server.transaction.summary.SummaryServiceImpl"/>
@@ -60,8 +58,6 @@
 
     <bean id="taskService" name="taskService" class="com.nimbits.server.process.task.TaskServiceImpl"/>
 
-
-    <bean id="entityCache" class="com.nimbits.server.transaction.entity.cache.EntityCacheImpl"/>
 
     <bean id="stringEncryption" class="com.nimbits.server.secure.StringEncryption"/>
     <bean id="serverInfo" class="com.nimbits.server.system.ServerInfo"/>

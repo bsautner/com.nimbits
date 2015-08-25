@@ -16,12 +16,6 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 3/30/12
- * Time: 9:02 AM
- */
 public enum FilterType {
 
     fixedHysteresis(0, "Fixed Hysteresis"),
@@ -40,7 +34,7 @@ public enum FilterType {
     private final int code;
     private final String text;
 
-    private FilterType(int code, String text) {
+    FilterType(int code, String text) {
         this.code = code;
         this.text = text;
 

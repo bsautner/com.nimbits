@@ -22,6 +22,7 @@ import com.nimbits.client.android.AndroidControl;
 import com.nimbits.client.android.AndroidControlFactory;
 import com.nimbits.client.android.AndroidControlImpl;
 import com.nimbits.client.common.Utils;
+import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.UrlContainer;
@@ -65,8 +66,8 @@ public class NimbitsClientImpl implements NimbitsClient {
         this.requestInterceptor = new RequestInterceptor() {
             @Override
             public void intercept(RequestInterceptor.RequestFacade request) {
-                if (!  server.getAccessToken().isEmpty()) {
-                    request.addHeader(Parameters.token.getText(), server.getAccessToken().getValue());
+                if (!server.getAccessToken().isEmpty()) {
+                    request.addHeader(Parameters.token.getText(), theServer.getAccessToken().getValue());
 
                 }
                 request.addQueryParam(Parameters.email.getText(), theServer.getEmail().getValue());
@@ -121,7 +122,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         SessionApi api = restAdapter.create(SessionApi.class);
 
-        return api.getSession( );
+        return api.getSession();
     }
 
 
@@ -144,10 +145,9 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         ValueApi api = restAdapter.create(ValueApi.class);
         String fixed;
-        if (! entityName.startsWith(server.getEmail().getValue())) {
+        if (!entityName.startsWith(server.getEmail().getValue())) {
             fixed = server.getEmail().getValue() + "/" + entityName;
-        }
-        else {
+        } else {
             fixed = entityName;
         }
         return api.getValue(fixed);
@@ -199,17 +199,13 @@ public class NimbitsClientImpl implements NimbitsClient {
         valueApi.postValue(value, entity.getKey());
 
 
-
-
     }
 
     @Override
     public List<Value> getSeries(final String entity) {
 
 
-
         final Gson gson = new GsonBuilder().registerTypeAdapter(Value.class, new ValueDeserializer()).create();
-
 
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -225,7 +221,7 @@ public class NimbitsClientImpl implements NimbitsClient {
         List<Value> fixed = new ArrayList<>(sample.size());
         Set<Long> test = new HashSet<>(sample.size());
         for (Value value : sample) {
-            if (! test.contains(value.getTimestamp().getTime())) {
+            if (!test.contains(value.getTimestamp().getTime())) {
                 fixed.add(value);
                 test.add(value.getTimestamp().getTime());
             }
@@ -254,21 +250,22 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         SeriesApi seriesApi = restAdapter.create(SeriesApi.class);
 
-            List<Value> sample = seriesApi.getSeries(entity, count);
+        List<Value> sample = seriesApi.getSeries(entity, count);
 
-            List<Value> fixed = new ArrayList<>(sample.size());
-            Set<Long> test = new HashSet<>(sample.size());
-            for (Value value : sample) {
-                if (!test.contains(value.getTimestamp().getTime())) {
-                    fixed.add(value);
-                    test.add(value.getTimestamp().getTime());
-                }
-
+        List<Value> fixed = new ArrayList<>(sample.size());
+        Set<Long> test = new HashSet<>(sample.size());
+        for (Value value : sample) {
+            if (!test.contains(value.getTimestamp().getTime())) {
+                fixed.add(value);
+                test.add(value.getTimestamp().getTime());
             }
-            return ImmutableList.copyOf(sample);
+
+        }
+        return ImmutableList.copyOf(sample);
 
 
     }
+
     @Override
     public List<Value> getSeries(final String entity, final Range<Date> range) {
 
@@ -283,12 +280,12 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         SeriesApi seriesApi = restAdapter.create(SeriesApi.class);
 
-        List<Value> sample = seriesApi.getSeries( entity, range.lowerEndpoint().getTime(), range.upperEndpoint().getTime());
+        List<Value> sample = seriesApi.getSeries(entity, range.lowerEndpoint().getTime(), range.upperEndpoint().getTime());
 
         List<Value> fixed = new ArrayList<>(sample.size());
         Set<Long> test = new HashSet<>(sample.size());
         for (Value value : sample) {
-            if (! test.contains(value.getTimestamp().getTime())) {
+            if (!test.contains(value.getTimestamp().getTime())) {
                 fixed.add(value);
                 test.add(value.getTimestamp().getTime());
             }
@@ -297,16 +294,28 @@ public class NimbitsClientImpl implements NimbitsClient {
         return ImmutableList.copyOf(sample);
 
     }
-    @Override
-    public void deleteEntity(final Entity entity) {
 
+    @Override
+    public String deleteEntity(final Entity entity) {
+        final Gson gson = new GsonBuilder()
+                .registerTypeAdapter(entity.getEntityType().getClz(), SerializationHelper.getDeserializer(entity.getEntityType()))
+                .excludeFieldsWithoutExposeAnnotation().create();
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(instanceUrl.getUrl())
+                .setRequestInterceptor(requestInterceptor)
+                .setConverter(new GsonConverter(gson))
+                .build();
+        EntityApi api = restAdapter.create(EntityApi.class);
+        return api.deleteEntity(entity, entity.getKey(), Action.delete.name(), entity.getEntityType().name());
 
     }
 
     @Override
     public Entity addEntity(Entity entity) {
         final Gson gson = new GsonBuilder()
-                .registerTypeAdapter(entity.getEntityType().getClz(), SerializationHelper.getDeserializer(entity.getEntityType()))
+                .registerTypeAdapter(entity.getEntityType().getClz(),
+                        SerializationHelper.getDeserializer(entity.getEntityType()))
                 .excludeFieldsWithoutExposeAnnotation().create();
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -343,6 +352,8 @@ public class NimbitsClientImpl implements NimbitsClient {
                 return api.addConnection(entity);
             case schedule:
                 return api.addSchedule(entity);
+            case webhook:
+                return api.addWebHook(entity);
             default:
                 return api.addEntity(entity);
         }
@@ -353,13 +364,13 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     @Override
     public <T> List<T> updateEntity(Entity entity, Class<T> clz) {
-      return  null;
+        return null;
 
 
     }
 
     @Override
-    public  Entity  getEntity (final SimpleValue<String> entityId, final EntityType entityType) {
+    public Entity getEntity(final SimpleValue<String> entityId, final EntityType entityType) {
 
 
         final Gson g = new GsonBuilder()
@@ -436,6 +447,11 @@ public class NimbitsClientImpl implements NimbitsClient {
                 result = entityApi.getSchedule(server.getEmail().getValue(), server.getAccessToken().getValue(), entityId.getValue());
 
                 break;
+            case webhook:
+
+                result = entityApi.getWebHook(server.getEmail().getValue(), server.getAccessToken().getValue(), entityId.getValue());
+
+                break;
         }
 
 
@@ -483,7 +499,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     @Override
     public void recordSeries(final Point point) {
-        recordSeries( Arrays.asList(point));
+        recordSeries(Arrays.asList(point));
     }
 
 
@@ -502,14 +518,12 @@ public class NimbitsClientImpl implements NimbitsClient {
         socketApi.notifyConnection(user);
 
 
-
     }
 
 
     @Override
 
     public void recordSeries(final List<Point> point) {
-
 
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -523,10 +537,7 @@ public class NimbitsClientImpl implements NimbitsClient {
         seriesApi.recordSeries(point);
 
 
-
-
     }
-
 
 
 }

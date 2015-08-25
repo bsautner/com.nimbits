@@ -36,15 +36,15 @@
 
     </filter-mapping>
 
-    <filter>
-        <filter-name>datastoreFilter</filter-name>
-        <filter-class>com.nimbits.server.api.filter.DatastoreFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>datastoreFilter</filter-name>
-        <url-pattern>/*</url-pattern>
 
-    </filter-mapping>
+    <servlet>
+        <servlet-name>rest api</servlet-name>
+        <servlet-class>com.nimbits.server.api.v3.RestApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>rest api</servlet-name>
+        <url-pattern>/service/v3/rest/*</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>dataTableApi</servlet-name>
@@ -181,31 +181,10 @@
     </servlet-mapping>
 
 
-    <!--tasks-->
 
-
-    <servlet>
-        <servlet-name>pointTask</servlet-name>
-        <servlet-class>com.nimbits.server.process.task.PointTask</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>pointTask</servlet-name>
-        <url-pattern>/task/pointTask</url-pattern>
-    </servlet-mapping>
-    <!--end tasks-->
 
 
     <!--cron-->
-
-    <servlet>
-        <servlet-name>pointCron</servlet-name>
-        <servlet-class>com.nimbits.server.process.cron.PointCron</servlet-class>
-        <!--<servlet-class>PointCron</servlet-class>-->
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>pointCron</servlet-name>
-        <url-pattern>/cron/pointCron</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>systemCron</servlet-name>

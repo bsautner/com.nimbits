@@ -14,12 +14,7 @@ package com.nimbits.client.model.trigger;
 
 import com.nimbits.client.model.EntityKey;
 
-/**
- * Created with IntelliJ IDEA.
- * User: benjamin
- * Date: 10/15/12
- * Time: 3:18 PM
- */
+
 public interface TriggerEntity extends EntityKey {
 
 }

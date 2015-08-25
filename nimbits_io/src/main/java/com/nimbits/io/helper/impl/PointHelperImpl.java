@@ -17,31 +17,18 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.point.PointType;
-import com.nimbits.client.model.calculation.Calculation;
-import com.nimbits.client.model.calculation.CalculationModel;
-import com.nimbits.client.model.calculation.CalculationModelFactory;
 import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.common.impl.CommonFactory;
-import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModelFactory;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.server.Server;
-import com.nimbits.client.model.trigger.TargetEntity;
-import com.nimbits.client.model.trigger.Trigger;
-import com.nimbits.client.model.trigger.TriggerEntity;
-import com.nimbits.io.helper.HelperFactory;
 import com.nimbits.io.helper.PointHelper;
-
-import java.util.List;
-import java.util.UUID;
 
 
 public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
-
 
 
     public PointHelperImpl(Server server) {
@@ -50,10 +37,8 @@ public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
     }
 
 
-
-
     @Override
-    public Point createPoint(final String name, final String description)   {
+    public Point createPoint(final String name, final String description) {
 
         EntityName pointName = CommonFactory.createName(name, EntityType.point);
 
@@ -64,15 +49,13 @@ public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
                 0.0, false, PointType.basic, 0, false, 0.0, 10);
 
 
-
         return (Point) nimbitsClient.addEntity(point);
-
 
 
     }
 
     @Override
-    public boolean pointExists(final String name)   {
+    public boolean pointExists(final String name) {
 
         SimpleValue<String> id = SimpleValue.getInstance(server.getEmail().getValue() + "/" + name);
         Entity sample;
@@ -85,24 +68,21 @@ public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
         return sample != null;
 
 
-
     }
 
     @Override
     public Point getPoint(final String name) {
 
         SimpleValue<String> id;
-        if (! name.startsWith(server.getEmail().getValue())) {
-            id = SimpleValue.getInstance(server.getEmail().getValue()  + "/" + name);
-        }
-        else {
+        if (!name.startsWith(server.getEmail().getValue())) {
+            id = SimpleValue.getInstance(server.getEmail().getValue() + "/" + name);
+        } else {
             id = SimpleValue.getInstance(name);
         }
 
         return (Point) nimbitsClient.getEntity(id, EntityType.point);
 
     }
-
 
 
 }

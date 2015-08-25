@@ -8,7 +8,7 @@ import retrofit.http.Query;
 
 public interface ValueApi {
 
-    final String API ="/service/v2/value";
+    final String API = "/service/v2/value";
 
     @POST(API)
     String postValue(@Body Value value, @Query("id") String id);

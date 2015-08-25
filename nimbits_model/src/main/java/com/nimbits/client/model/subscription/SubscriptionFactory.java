@@ -16,10 +16,6 @@ import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.model.entity.Entity;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 public class SubscriptionFactory {
 
     private SubscriptionFactory() {
@@ -37,18 +33,18 @@ public class SubscriptionFactory {
             final SubscriptionNotifyMethod method,
             final int maxRepeatSeconds,
             final boolean formatJson,
-            final boolean enabled) {
+            final boolean enabled,
+            final String target) {
 
         return new SubscriptionModel(entity,
                 subscribedEntity,
                 type,
                 method,
                 maxRepeatSeconds,
-                formatJson, enabled
+                formatJson, enabled, target
         );
 
     }
-
 
 
 }

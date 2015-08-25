@@ -13,19 +13,16 @@
 package com.nimbits.server.process.task;
 
 
-import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.timespan.Timespan;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.entity.service.EntityService;
-import com.nimbits.server.transaction.value.service.ValueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -33,77 +30,31 @@ public class TaskServiceImpl implements TaskService {
 
 
     @Autowired
-    private ValueService valueService;
-
-    @Autowired
-    private EntityService entityService;
-
-    @Autowired
-    private EntityDao entityDao;
-
-    @Autowired
     private ValueTask valueTask;
 
 
+    Logger logger = Logger.getLogger(TaskService.class.getName());
 
     public TaskServiceImpl() {
 
     }
 
 
-    @Override
-    public void startDeleteDataTask(Point point) {
-        valueService.deleteExpiredData(point);
-    }
-
-    @Override
-    public void startDeleteBlobTask(String key) {
-
-    }
-
-    @Override
-    public void startDataDumpTask(User user, Entity entity, Timespan timespan) {
-
-    }
-
-    @Override
-    public void startUploadTask(User user, Point entity, String blobKey) {
-
-    }
-
-
-    @Override
-    public void startIncomingMailTask(String fromAddress, String inContent) {
-
-    }
 
 
 
-    @Override
-    public void startPointTask(long pos) {
-        List<Point> sample = entityDao.getPoint(pos);
-        if (! sample.isEmpty()) {
-            entityService.doPointMaint(sample.get(0));
-            startPointTask(++pos);
-        }
-    }
-
-    @Override
-    public void startMoveCachedValuesToStoreTask(User user, Entity point) throws IOException {
-
-        valueService.moveValuesFromCacheToStore(point);
-    }
 
     @Override
     public void startRecordValueTask(final User user, final Point entity, final Value value, final boolean preAuthorised) {
-      //  new Thread(new Runnable() {
-       //     @Override
-       //     public void run() {
-                valueTask.recordValue(value, user, entity, preAuthorised);
-        //    }
-       // }).run();
+
+        try {
+            valueTask.recordValue(value, user, entity, preAuthorised);
+        } catch (Exception e) {
+
+            logger.log(Level.SEVERE,"Error running value task", e);
+        }
+
 
     }
-
 
 }

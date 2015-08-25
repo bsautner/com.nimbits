@@ -39,6 +39,7 @@ class Nimbits {
 		void setStatusDelegate(StatusDelegate statusDelegate);
 		void sendSocketMessage(String data);
 		void recordValue(double value, String pointId);
+
 		double getValue(String point);
 		String login(String email, String password);
 		void setAuthToken(String token);

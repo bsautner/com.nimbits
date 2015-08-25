@@ -1,6 +1,5 @@
 package com.nimbits.io.helper;
 
-import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.io.helper.impl.EntityHelperImpl;
 import com.nimbits.io.helper.impl.PointHelperImpl;
@@ -13,12 +12,11 @@ import com.nimbits.io.helper.impl.ValueHelperImpl;
 public class HelperFactory {
 
 
-
     /**
      * For getting the user session data. Helpful for testing credentials.
+     *
      * @param server A sever object containing the instance url, email and password, key or api key
-
-      * @return UserHelper
+     * @return UserHelper
      */
     public static UserHelper getUserHelper(Server server) {
 
@@ -28,6 +26,7 @@ public class HelperFactory {
 
     /**
      * For creating, deleting and updating data points
+     *
      * @param server A sever object containing the instance url, email and password, key or api key
      * @return PointHelper
      */
@@ -40,6 +39,7 @@ public class HelperFactory {
 
     /**
      * For recording and downloading time series data values without an API KEY
+     *
      * @param server A sever object containing the instance url, email and password, key or api key
      * @return ValueHelper
      */
@@ -51,6 +51,7 @@ public class HelperFactory {
 
     /**
      * For creating, deleting and updating entities
+     *
      * @param server A sever object containing the instance url, email and password, key or api key
      * @return EntityHelper
      */

@@ -12,14 +12,13 @@
 
 package com.nimbits.io.http;
 
-import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.io.NimbitsClient;
 
 
 public class NimbitsClientFactory {
 
-    public static NimbitsClient getInstance(final Server server)  {
+    public static NimbitsClient getInstance(final Server server) {
         return new NimbitsClientImpl(server);
     }
 

@@ -15,23 +15,21 @@ package com.nimbits.server.gson.deserializer;
 import com.google.gson.*;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.calculation.CalculationModel;
-import com.nimbits.server.gson.GsonFactory;
 
 import java.lang.reflect.Type;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 11/10/11
- * Time: 7:11 PM
- */
+
 public class CalculationDeserializer implements JsonDeserializer<Calculation> {
     @Override
     public Calculation deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
 
-        final JsonPrimitive jsonPrimitive = (JsonPrimitive) jsonElement;
-        final String json = jsonPrimitive.getAsString();
-        return GsonFactory.getSimpleInstance().fromJson(json, CalculationModel.class);
+//        final JsonPrimitive jsonPrimitive = (JsonPrimitive) jsonElement;
+//        final String json = jsonPrimitive.getAsString();
+//        return GsonFactory.getSimpleInstance().fromJson(json, CalculationModel.class);
+
+        final String json = jsonElement.toString();
+        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+        return gson.fromJson(json, CalculationModel.class);
 
 
     }

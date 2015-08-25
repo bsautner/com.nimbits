@@ -20,6 +20,9 @@ import java.lang.reflect.Type;
 
 
 public class EntityDeserializer implements JsonDeserializer<Entity> {
+
+
+
     @Override
     public Entity deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         final String json;

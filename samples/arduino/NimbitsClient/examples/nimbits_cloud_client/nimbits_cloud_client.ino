@@ -18,7 +18,7 @@ Also, remember to import the ArduinoJson library: https://github.com/bblanchon/A
 byte mac[] = { 
   0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 char server[] = "cloud.nimbits.com";
-char email[] = "bsautner@gmail.com";
+char email[] = "test@example.com";
 
 //This can be your password if you created an account and set a password, or an access key if you 
 //logged into the server and created a key - use an access key if you log into nimbits with a google account, for example.

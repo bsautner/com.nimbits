@@ -35,5 +35,7 @@ public interface Value extends Serializable, Comparable<Value> {
 
     Location getLocation();
 
+    String getMetaData();
+
 
 }

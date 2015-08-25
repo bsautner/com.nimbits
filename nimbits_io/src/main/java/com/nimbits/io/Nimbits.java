@@ -144,4 +144,5 @@ public class Nimbits {
     public List<Value> getValues(Entity entity, Date start, Date end) {
         return api.getData(entity.getUUID(), start.getTime(), end.getTime());
     }
+
 }

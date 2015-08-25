@@ -16,7 +16,7 @@ import java.util.*;
  */
 public class RestClientTester {
     private static final String EMAIL_ADDRESS ="test@example.com";
-    private static final String INSTANCE_URL = "http://localhost:8888";
+    private static final String INSTANCE_URL = "http://192.168.1.11:8080";
     private static final String PASSWORD = "password1234";
     private static final Nimbits nimbits = new Nimbits(EMAIL_ADDRESS, PASSWORD, INSTANCE_URL);
 
@@ -41,6 +41,9 @@ public class RestClientTester {
             //Get or Create this user account, when created it will be the system admin
             user = verifyUser();
 
+            //reset the users password to test that
+            user.setPassword(UUID.randomUUID().toString());
+
 
             if (user != null) {
                 o("Continuing with user: " + user.getEmail() + " " + user.getUUID());
@@ -52,6 +55,9 @@ public class RestClientTester {
             }
 
             o("Done!");
+
+
+
 
 
 
@@ -126,7 +132,8 @@ public class RestClientTester {
                 for (int i = 0; i < 1000; i++) {
 
                     calendar.add(Calendar.SECOND, 1);
-                    values.add(ValueFactory.createValueModel(r.nextDouble() * 1000, calendar.getTime()));
+                    values.add(ValueFactory.createValueModel(r.nextDouble() * 1000, "{foo:bar}", "Meta Data" + UUID.randomUUID().toString(),
+                            calendar.getTime()));
                 }
                 nimbits.recordValues(entity, values);
                 o("Recorded : " + values.size() + " for " + entity.getName());
@@ -154,6 +161,9 @@ public class RestClientTester {
                 List<Value> stored = storedValues.get(entity);
                 Collections.sort(stored);
                 Collections.sort(downloadedValues);
+                for (Value v : downloadedValues) {
+                    o(entity.getName() + " " + v.toString());
+                }
                 for (Value value : stored) {
                     if (! downloadedValues.contains(value)) {
                         o("R Range: " + stored.get(0).getTimestamp() + " to " +

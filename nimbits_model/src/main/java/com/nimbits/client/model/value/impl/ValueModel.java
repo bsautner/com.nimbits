@@ -220,5 +220,15 @@ public class ValueModel implements Serializable, Comparable<Value>, Value {
         return result;
     }
 
-
+    @Override
+    public String toString() {
+        return "ValueModel{" +
+                "lt=" + lt +
+                ", lg=" + lg +
+                ", d=" + d +
+                ", t=" + t +
+                ", dx='" + dx + '\'' +
+                ", st=" + st +
+                '}';
+    }
 }

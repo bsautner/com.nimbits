@@ -13,11 +13,12 @@ import com.nimbits.io.http.NimbitsClientException;
 import com.nimbits.io.http.rest.RestClient;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.gson.deserializer.*;
-import retrofit.ErrorHandler;
-import retrofit.RequestInterceptor;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
+import retrofit.*;
+import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
+
+import java.util.Date;
+import java.util.List;
 
 /**
  * A simpler java client for interacting with the V3 REST API using hal+json
@@ -107,9 +108,40 @@ public class Nimbits {
     }
 
 
+    /**
+     * Add an entity as a child of a parent
+     *
+     * @param parent
+     * @param point
+     * @return
+     */
     public Entity addEntity(Entity parent, Point point) {
 
         Entity e  =  api.addEntity(parent.getUUID(), point);
         return  e;
+    }
+
+    /**
+     * Record a series of values to a data point
+     *
+     * @param entity
+     * @param values
+     */
+    public void recordValues(Entity entity, List<Value> values) {
+        api.recordData(entity.getUUID(), values, new Callback<Void>() {
+            @Override
+            public void success(Void aVoid, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                throw new RuntimeException(retrofitError);
+            }
+        });
+    }
+
+    public List<Value> getValues(Entity entity, Date start, Date end) {
+        return api.getData(entity.getUUID(), start.getTime(), end.getTime());
     }
 }

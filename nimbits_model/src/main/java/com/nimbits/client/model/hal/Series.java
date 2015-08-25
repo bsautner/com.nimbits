@@ -7,15 +7,15 @@ import javax.annotation.Generated;
 import java.io.Serializable;
 
 @Generated("org.jsonschema2pojo")
-public class Data implements Serializable {
+public class Series implements Serializable {
 
     @Expose
     private String href;
 
-    public Data() {
+    public Series() {
     }
 
-    public Data(String href) {
+    public Series(String href) {
         this.href = href;
     }
 

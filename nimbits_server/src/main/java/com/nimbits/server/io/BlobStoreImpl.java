@@ -295,8 +295,10 @@ public class BlobStoreImpl implements BlobStore {
                 }
             }
             if (allReadFiles.size() > INITIAL_CAPACITY) {  //TODO will break if # of days = initial capacity
+                logger.info("Defragmenting " + allReadFiles.size());
                 deleteAndRestore(entity, allvalues, allReadFiles);
             }
+            logger.info("****** returning " + filtered.size());
             return ImmutableList.copyOf(filtered);
         }
         else {

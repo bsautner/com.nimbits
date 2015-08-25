@@ -8,7 +8,7 @@
     <artifactId>nimbits_io</artifactId>
     <version>${nimbits_version}-SNAPSHOT</version>
     <properties>
-        <nimbits_version>3.9.10</nimbits_version>
+        <nimbits_version>3.9.11</nimbits_version>
     </properties>
     <name>Nimbits IO</name>
     <description>Nimbits Client Input Output Library</description>

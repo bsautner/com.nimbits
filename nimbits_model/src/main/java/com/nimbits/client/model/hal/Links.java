@@ -13,7 +13,13 @@ public class Links implements Serializable {
     private Self self;
 
     @Expose
-    private Data data;
+    private Series series;
+
+    @Expose
+    private Snapshot snapshot;
+
+    @Expose
+    private DataTable datatable;
 
     @Expose
     private Parent parent;
@@ -24,9 +30,11 @@ public class Links implements Serializable {
     public Links() {
     }
 
-    public Links(Self self, Parent parent, Data data) {
+    public Links(Self self, Parent parent, Series series, Snapshot snapshot, DataTable datatable ) {
         this.self = self;
-        this.data = data;
+        this.series = series;
+        this.snapshot = snapshot;
+        this.datatable = datatable;
         this.parent = parent;
     }
 

@@ -11,13 +11,11 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
 import com.nimbits.server.gson.EntityDeserializer;
 import com.nimbits.server.gson.PointDeserializer;
 import com.nimbits.server.gson.deserializer.AccessKeyDeserializer;
 import com.nimbits.server.gson.deserializer.DateDeserializer;
 import com.nimbits.server.gson.deserializer.SessionDeserializer;
-import com.nimbits.server.gson.deserializer.ValueDeserializer;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketClient;
 import org.eclipse.jetty.websocket.WebSocketClientFactory;
@@ -90,9 +88,6 @@ public class SocketConnection {
                 try {
                     Gson gson = new GsonBuilder()
                             .setDateFormat(GSON_DATE_FORMAT)
-                            .serializeNulls()
-
-                            .registerTypeAdapter(Value.class, new ValueDeserializer())
                             .registerTypeAdapter(Point.class, new PointDeserializer())
                             .registerTypeAdapter(AccessKey.class, new AccessKeyDeserializer())
                             .registerTypeAdapter(Entity.class, new EntityDeserializer())

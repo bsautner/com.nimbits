@@ -20,8 +20,10 @@ import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.server.gson.deserializer.*;
+import com.nimbits.server.gson.deserializer.AccessKeyDeserializer;
+import com.nimbits.server.gson.deserializer.CalculationDeserializer;
+import com.nimbits.server.gson.deserializer.CalculationSerializer;
+import com.nimbits.server.gson.deserializer.SessionDeserializer;
 
 
 public enum GsonFactory {
@@ -36,12 +38,10 @@ public enum GsonFactory {
 
             gInstance = new GsonBuilder()
                     .setDateFormat(Const.GSON_DATE_FORMAT)
-                    .serializeNulls()
+
                     .addSerializationExclusionStrategy(new NimbitsExclusionStrategy(null))
                     .registerTypeAdapter(AccessKey.class, new AccessKeySerializer())
                     .registerTypeAdapter(AccessKey.class, new AccessKeyDeserializer())
-                    .registerTypeAdapter(Value.class, new ValueDeserializer())
-                    .registerTypeAdapter(Value.class, new ValueSerializer())
                     .registerTypeAdapter(Point.class, new PointSerializer())
                     .registerTypeAdapter(Point.class, new PointDeserializer())
                     .registerTypeAdapter(Entity.class, new EntitySerializer())

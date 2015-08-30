@@ -12,20 +12,20 @@
 
 package com.nimbits.client.model.point;
 
-import com.nimbits.client.model.value.impl.ValueModel;
+import com.nimbits.client.model.value.Value;
 
 import java.util.List;
 
 public class ValueCollection {
 
     String pointId;
-    List<ValueModel> values;
+    List<Value> values;
 
     public String getPointId() {
         return pointId;
     }
 
-    public List<ValueModel> getValues() {
+    public List<Value> getValues() {
         return values;
     }
 }

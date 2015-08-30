@@ -16,7 +16,7 @@ import com.google.common.collect.Range;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.impl.ValueFactory;
+
 import com.nimbits.io.helper.HelperFactory;
 import com.nimbits.io.helper.ValueHelper;
 import com.nimbits.io.http.NimbitsClientFactory;
@@ -37,7 +37,7 @@ public class ValueHelperImpl implements ValueHelper {
 
     @Override
     public void recordValue(String pointName, double value) {
-        Value vx = ValueFactory.createValueModel(value);
+        Value vx = new Value.ValueBuilder().doubleValue(value).createValue();
         doRecordValue(pointName, vx);
 
     }
@@ -66,7 +66,7 @@ public class ValueHelperImpl implements ValueHelper {
 
     @Override
     public void recordValue(String name, double v, Date time) {
-        Value vx = ValueFactory.createValueModel(v, time);
+        Value vx = new Value.ValueBuilder().doubleValue(v).timestamp(time).createValue();
         doRecordValue(name, vx);
     }
 

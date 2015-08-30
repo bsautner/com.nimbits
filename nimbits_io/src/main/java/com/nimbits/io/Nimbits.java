@@ -35,19 +35,16 @@ public class Nimbits {
     private final RestAdapter restAdapter;
     private final RestClient api;
 
-    public Nimbits(final String email, final String token, String instance) {
+    private Nimbits(final String email, final String token, String instance) {
         this.email = email;
         this.token = token;
         this.instance = instance;
 
         final Gson gson =new GsonBuilder()
                 .setDateFormat(Const.GSON_DATE_FORMAT)
-                .serializeNulls()
-
                 .registerTypeAdapter(AccessKey.class, new AccessKeySerializer())
                 .registerTypeAdapter(AccessKey.class, new AccessKeyDeserializer())
-                .registerTypeAdapter(Value.class, new ValueDeserializer())
-                .registerTypeAdapter(Value.class, new ValueSerializer())
+
                 .registerTypeAdapter(Point.class, new PointSerializer())
                 .registerTypeAdapter(Point.class, new PointDeserializer())
                 .registerTypeAdapter(Entity.class, new EntitySerializer())
@@ -82,7 +79,7 @@ public class Nimbits {
                 })
                 .build();
 
-         api = restAdapter.create(RestClient.class);
+        api = restAdapter.create(RestClient.class);
     }
 
     public void connect() {
@@ -144,5 +141,34 @@ public class Nimbits {
     public List<Value> getValues(Entity entity, Date start, Date end) {
         return api.getData(entity.getUUID(), start.getTime(), end.getTime());
     }
+
+    public static class NimbitsBuilder {
+
+        private String email;
+        private String token;
+        private String instance;
+
+
+        public NimbitsBuilder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public NimbitsBuilder token(String token) {
+            this.token = token;
+            return this;
+        }
+
+        public NimbitsBuilder instance(String instance) {
+            this.instance = instance;
+            return this;
+        }
+
+        public Nimbits create() {
+            return new Nimbits(email, token, instance);
+        }
+    }
+
+
 
 }

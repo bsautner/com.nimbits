@@ -18,6 +18,7 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.point.PointType;
+import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
@@ -92,6 +93,52 @@ public class PointModel extends EntityModel implements Serializable, Point {
                       final int deltaSeconds,
                       final int precision) {
         super(entity);
+        this.highAlarm = highAlarm;
+        this.expire = expire;
+        this.unit = unit;
+        this.lowAlarm = lowAlarm;
+        this.highAlarmOn = highAlarmOn;
+        this.lowAlarmOn = lowAlarmOn;
+        this.idleAlarmOn = idleAlarmOn;
+        this.idleSeconds = idleSeconds;
+        this.idleAlarmSent = idleAlarmSent;
+        this.filterType = filterType.getCode();
+        this.filterValue = filterValue;
+        this.inferLocation = inferLocation;
+        this.pointType = pointType.getCode();
+        this.deltaAlarm = deltaAlarm;
+        this.deltaAlarmOn = deltaAlarmOn;
+        this.deltaSeconds = deltaSeconds;
+        this.precision = precision;
+    }
+    public PointModel(final String key,
+            final CommonIdentifier name,
+                       final String description,
+                       final EntityType entityType,
+                       final ProtectionLevel protectionLevel,
+                       final String parent,
+                       final String owner,
+                       final String uuid,
+
+                      final double highAlarm,
+                      final int expire,
+                      final String unit,
+                      final double lowAlarm,
+                      final boolean highAlarmOn,
+                      final boolean lowAlarmOn,
+                      final boolean idleAlarmOn,
+                      final Integer idleSeconds,
+                      final boolean idleAlarmSent,
+                      final FilterType filterType,
+                      final double filterValue,
+                      final boolean inferLocation,
+                      final PointType pointType,
+                      final double deltaAlarm,
+                      final boolean deltaAlarmOn,
+                      final int deltaSeconds,
+                      final int precision) {
+
+        super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
         this.highAlarm = highAlarm;
         this.expire = expire;
         this.unit = unit;
@@ -363,5 +410,161 @@ public class PointModel extends EntityModel implements Serializable, Point {
     @Override
     public void setPrecision(int precision) {
         this.precision = precision;
+    }
+
+
+    public static class PointBuilder extends EntityBuilder {
+
+
+
+        private double highAlarm = 0.0;
+
+        private double lowAlarm = 0.0;
+
+        private double deltaAlarm = 0.0;
+
+        private int deltaSeconds = 0;
+
+        private int expire = DEFAULT_EXPIRE;
+
+        private String unit;
+
+        private boolean highAlarmOn;
+
+        private boolean lowAlarmOn;
+
+        private boolean idleAlarmOn;
+
+        private boolean deltaAlarmOn;
+
+        private int idleSeconds = 0;
+
+        //reset on any data write
+        private boolean idleAlarmSent;
+
+        private FilterType filterType;
+
+        private double filterValue;
+
+        private boolean inferLocation;
+
+        private PointType pointType;
+
+        private int precision;
+
+
+
+        public PointBuilder highAlarm(double highAlarm) {
+            this.highAlarm = highAlarm;
+            return this;
+        }
+
+        public PointBuilder lowAlarm(double lowAlarm) {
+            this.lowAlarm = lowAlarm;
+            return this;
+        }
+
+        public PointBuilder deltaAlarm(double deltaAlarm) {
+            this.deltaAlarm = deltaAlarm;
+            return this;
+        }
+
+        public PointBuilder deltaSeconds(int deltaSeconds) {
+            this.deltaSeconds = deltaSeconds;
+            return this;
+        }
+
+        public PointBuilder expire(int expire) {
+            this.expire = expire;
+            return this;
+        }
+
+        public PointBuilder unit(String unit) {
+            this.unit = unit;
+            return this;
+        }
+
+        public PointBuilder highAlarmOn(boolean highAlarm) {
+            this.highAlarmOn = highAlarmOn;
+            return this;
+        }
+
+        public PointBuilder lowAlarmOn(boolean lowAlarmOn) {
+            this.lowAlarmOn = lowAlarmOn;
+            return this;
+        }
+        public PointBuilder idleAlarmOn(boolean idleAlarmOn) {
+            this.idleAlarmOn = idleAlarmOn;
+            return this;
+        }
+
+        public PointBuilder deltaAlarmOn(boolean deltaAlarmOn) {
+            this.deltaAlarmOn = deltaAlarmOn;
+            return this;
+        }
+
+
+        public PointBuilder idleSeconds(int idleSeconds) {
+            this.idleSeconds = idleSeconds;
+            return this;
+        }
+
+        public PointBuilder idleAlarmSent(boolean idleAlarmSent) {
+            this.idleAlarmSent = idleAlarmSent;
+            return this;
+        }
+
+
+        public PointBuilder filterType(FilterType filterType) {
+            this.filterType = filterType;
+            return this;
+        }
+
+        public PointBuilder pointType(PointType pointType) {
+            this.pointType = pointType;
+            return this;
+        }
+
+        public PointBuilder precision(int precision) {
+            this.precision = precision;
+            return this;
+        }
+
+
+
+        public PointBuilder inferLocation(boolean inferLocation) {
+            this.inferLocation = inferLocation;
+            return this;
+        }
+
+        public PointBuilder init(Point point) {
+            super.init(point);
+            this.highAlarm = point.getHighAlarm();
+            this.expire = point.getExpire();
+            this.unit = point.getUnit();
+            this.lowAlarm = point.getLowAlarm();
+            this.highAlarmOn = point.isHighAlarmOn();
+            this.lowAlarmOn = point.isLowAlarmOn();
+            this.idleAlarmOn = point.isIdleAlarmOn();
+            this.idleSeconds = point.getIdleSeconds();
+            this.idleAlarmSent = point.getIdleAlarmSent();
+
+            this.filterType = point.getFilterType();
+            this.filterValue = point.getFilterValue();
+            this.inferLocation = point.inferLocation();
+            this.pointType = point.getPointType();
+            this.deltaSeconds = point.getDeltaSeconds();
+            this.deltaAlarm = point.getDeltaAlarm();
+            this.deltaAlarmOn = point.isDeltaAlarmOn();
+            this.precision = point.getPrecision();
+            return this;
+        }
+
+        public Point create() {
+            return new PointModel(key, name, description, entityType, protectionLevel, parent, owner, uuid, highAlarm, expire
+            , unit, lowAlarm, highAlarmOn, lowAlarmOn, idleAlarmOn, idleSeconds, idleAlarmSent, filterType,filterValue, inferLocation,
+                    pointType, deltaAlarm, deltaAlarmOn, deltaSeconds, precision);
+        }
+
     }
 }

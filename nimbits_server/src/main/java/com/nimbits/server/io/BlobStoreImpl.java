@@ -24,8 +24,7 @@ import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.impl.ValueFactory;
-import com.nimbits.client.model.value.impl.ValueModel;
+
 import com.nimbits.server.defrag.Defragmenter;
 import com.nimbits.server.defrag.ValueDayHolder;
 import com.nimbits.server.transaction.cache.NimbitsCache;
@@ -186,7 +185,7 @@ public class BlobStoreImpl implements BlobStore {
             List<Value> values = readValuesFromFile(root + "/" + entity.getKey() + "/" + SNAPSHOT);
 
             if (values.isEmpty()) {
-                value = ValueFactory.createValueModel(0.0, new Date());
+                value = new Value.ValueBuilder().doubleValue(0.0).timestamp(new Date()).createValue();
                 createSnapshot(entity, value);
             } else {
                 value = values.get(0);
@@ -312,7 +311,7 @@ public class BlobStoreImpl implements BlobStore {
 
     private List<Value> readValuesFromFile(String path) {
 
-        final Type valueListType = new TypeToken<List<ValueModel>>() {
+        final Type valueListType = new TypeToken<List<Value>>() {
         }.getType();
 
 

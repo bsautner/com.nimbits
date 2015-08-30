@@ -12,17 +12,11 @@
 
 package com.nimbits.client.model.point;
 
-import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
-import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.point.PointType;
-import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModelFactory;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.user.User;
 
-@Deprecated //TODO - move all factories to sigle class and inject em
+@Deprecated
 public class PointModelFactory {
 
 
@@ -30,11 +24,6 @@ public class PointModelFactory {
     }
 
 
-    public static Point createPointModel(final Point point) {
-
-        return new PointModel(point);
-
-    }
 
     public static Point createPointModel(final Entity entity,
                                          final double highAlarm,
@@ -65,18 +54,7 @@ public class PointModelFactory {
     }
 
 
-    public static Point createPointModel(User user, String name) {
 
-        EntityName pointName;
-        pointName = CommonFactory.createName(name, EntityType.point);
-        Entity pointEntity = EntityModelFactory.createEntity(pointName, "", EntityType.point, ProtectionLevel.everyone, user.getKey(), user.getKey(), "");
-        Point newPoint = createPoint(pointEntity);
-        newPoint.setExpire(5);
-
-        return newPoint;
-
-
-    }
 
     public static Point createPoint(Entity base) {
 

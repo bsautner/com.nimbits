@@ -4,7 +4,7 @@ import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.impl.ValueFactory;
+
 import com.nimbits.io.Nimbits;
 
 import java.util.*;
@@ -15,10 +15,11 @@ import java.util.*;
  *
  */
 public class RestClientTester {
-    private static final String EMAIL_ADDRESS ="test@example.com";
-    private static final String INSTANCE_URL = "http://192.168.1.11:8080";
+    private static final String EMAIL_ADDRESS ="test5@example.com";
+    private static final String INSTANCE_URL = "http://localhost:8888";
     private static final String PASSWORD = "password1234";
-    private static final Nimbits nimbits = new Nimbits(EMAIL_ADDRESS, PASSWORD, INSTANCE_URL);
+    private static final Nimbits nimbits = new Nimbits.NimbitsBuilder()
+            .email(EMAIL_ADDRESS).token(PASSWORD).instance(INSTANCE_URL).create();
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -55,12 +56,6 @@ public class RestClientTester {
             }
 
             o("Done!");
-
-
-
-
-
-
         }
 
 
@@ -132,8 +127,8 @@ public class RestClientTester {
                 for (int i = 0; i < 1000; i++) {
 
                     calendar.add(Calendar.SECOND, 1);
-                    values.add(ValueFactory.createValueModel(r.nextDouble() * 1000, "{foo:bar}", "Meta Data" + UUID.randomUUID().toString(),
-                            calendar.getTime()));
+                    values.add(new Value.ValueBuilder().timestamp(calendar.getTime()).doubleValue(r.nextDouble() * 1000).meta("Meta Data" + UUID.randomUUID().toString()).data("{}").createValue());
+
                 }
                 nimbits.recordValues(entity, values);
                 o("Recorded : " + values.size() + " for " + entity.getName());
@@ -161,9 +156,9 @@ public class RestClientTester {
                 List<Value> stored = storedValues.get(entity);
                 Collections.sort(stored);
                 Collections.sort(downloadedValues);
-                for (Value v : downloadedValues) {
-                    o(entity.getName() + " " + v.toString());
-                }
+//                for (Value v : downloadedValues) {
+//                    o(entity.getName() + " " + v.toString());
+//                }
                 for (Value value : stored) {
                     if (! downloadedValues.contains(value)) {
                         o("R Range: " + stored.get(0).getTimestamp() + " to " +
@@ -172,7 +167,7 @@ public class RestClientTester {
 
 
                         throw new RuntimeException(
-                                "Downloaded Values did not contain stored value.");
+                                "downloaded values did not contain expected posted value. " + value.toString());
 
 
 

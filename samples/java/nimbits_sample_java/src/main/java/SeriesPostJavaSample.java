@@ -31,7 +31,7 @@ import com.nimbits.client.model.server.apikey.AccessToken;
 import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.model.value.impl.ValueFactory;
+
 import com.nimbits.io.helper.*;
 import org.apache.commons.io.FileUtils;
 
@@ -58,7 +58,7 @@ public class SeriesPostJavaSample {
 
     private static final EmailAddress EMAIL_ADDRESS = CommonFactory.createEmailAddress("b@b.com");
     private static final AccessToken TOKEN = AccessToken.getInstance("b");
-    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080");
+    private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8888");
     // private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("localhost:8080");
     // private static final UrlContainer INSTANCE_URL = UrlContainer.getInstance("cloud.nimbits.com");
     private static final Server SESSION_START = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, TOKEN);
@@ -148,7 +148,7 @@ public class SeriesPostJavaSample {
                 List<Value> values = new ArrayList<>();
                 for (int i = 0; i < VCOUNT; i++) {
 
-                    Value value = ValueFactory.createValueModel(r.nextDouble() * 100, calendar.getTime());
+                    Value value = new Value.ValueBuilder().doubleValue(r.nextDouble() * 100).timestamp(calendar.getTime()).createValue();
                     values.add(value);
                     point.getValues().add(value);
                     calendar.add(Calendar.SECOND, 1);

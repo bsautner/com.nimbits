@@ -96,6 +96,27 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
     }
 
+    public EntityModel(final String key,
+                       final CommonIdentifier name,
+                       final String description,
+                       final EntityType entityType,
+                       final ProtectionLevel protectionLevel,
+                       final String parent,
+                       final String owner,
+                       final String uuid) {
+        this.key = key;
+        this.name = name.getValue();
+        this.description = description;
+        this.entityType = entityType.getCode();
+        this.parent = parent;
+        this.owner = owner;
+        this.protectionLevel = protectionLevel.getCode();
+        this.alertType = AlertType.OK.getCode();
+        this.uuid = uuid;
+        this.dateCreated = new Date();
+
+    }
+
     public EntityModel() {
         if (id != null && key == null) {
             key = id;
@@ -424,6 +445,122 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
                 ", key='" + key + '\'' +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+
+    public static abstract class EntityBuilder {
+
+        protected EntityName name;
+
+        protected String key;
+
+        protected String description;
+
+        protected EntityType entityType;
+
+        protected ProtectionLevel protectionLevel;
+
+        protected int alertType;
+
+
+        protected String parent;
+
+        protected String owner;
+
+        protected boolean readOnly = false;
+
+
+        protected String uuid;
+
+
+        protected String id;
+
+        protected String action;
+
+
+        public EntityBuilder() {
+        }
+
+        public EntityBuilder name(EntityName name) {
+            this.name = name;
+            return this;
+        }
+
+        public EntityBuilder key(String key) {
+            this.key = key;
+            return this;
+        }
+
+        public EntityBuilder description(String description) {
+            this.description = description;
+            return this;
+        }
+        public EntityBuilder entityType(EntityType entityType) {
+            this.entityType = entityType;
+            return this;
+        }
+        public EntityBuilder protectionLevel(ProtectionLevel protectionLevel) {
+            this.protectionLevel = protectionLevel;
+            return this;
+        }
+        public EntityBuilder alertType(int alertType) {
+            this.alertType = alertType;
+            return this;
+        }
+        public EntityBuilder parent(String parent) {
+            this.parent = parent;
+            return this;
+        }
+        public EntityBuilder owner(String owner) {
+            this.owner = owner;
+            return this;
+        }
+        public EntityBuilder readOnly(boolean readOnly) {
+            this.readOnly = readOnly;
+            return this;
+        }
+
+        public EntityBuilder id(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public EntityBuilder uuid(String uuid) {
+            this.uuid = uuid;
+            return this;
+        }
+
+
+        public EntityBuilder action(String action) {
+            this.action = action;
+            return this;
+        }
+
+        public EntityBuilder init(Entity anEntity) {
+
+            this.key = anEntity.getKey();
+            this.id = anEntity.getKey();
+            this.name = anEntity.getName();
+            this.description = anEntity.getDescription();
+            this.entityType = anEntity.getEntityType();
+            this.parent = anEntity.getParent();
+            this.owner = anEntity.getOwner();
+            this.protectionLevel = anEntity.getProtectionLevel();
+            this.alertType = anEntity.getAlertType().getCode();
+            this.uuid = anEntity.getUUID();
+
+            return this;
+        }
+
+        public Entity create() {
+            return new EntityModel(key, name, description, entityType, protectionLevel, parent, owner, uuid );
+        }
+
+
+
+
+
+
     }
 
 

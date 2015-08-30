@@ -35,7 +35,6 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.io.NimbitsClient;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.gson.deserializer.SessionDeserializer;
-import com.nimbits.server.gson.deserializer.ValueDeserializer;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -128,7 +127,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     @Override
     public Value getValue(final String entityName) {
-        final Gson gson = new GsonBuilder().registerTypeAdapter(Value.class, new ValueDeserializer()).create();
+        final Gson gson = new GsonBuilder().create();
 
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -205,7 +204,7 @@ public class NimbitsClientImpl implements NimbitsClient {
     public List<Value> getSeries(final String entity) {
 
 
-        final Gson gson = new GsonBuilder().registerTypeAdapter(Value.class, new ValueDeserializer()).create();
+        final Gson gson = new GsonBuilder().create();
 
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -234,7 +233,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     @Override
     public List<Value> getSeries(final String entity, final int count) {
-        final Gson gson = new GsonBuilder().registerTypeAdapter(Value.class, new ValueDeserializer()).create();
+        final Gson gson = new GsonBuilder().create();
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(instanceUrl.getUrl())
@@ -270,7 +269,7 @@ public class NimbitsClientImpl implements NimbitsClient {
     public List<Value> getSeries(final String entity, final Range<Date> range) {
 
 
-        final Gson gson = new GsonBuilder().registerTypeAdapter(Value.class, new ValueDeserializer()).create();
+        final Gson gson = new GsonBuilder().create();
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(instanceUrl.getUrl())

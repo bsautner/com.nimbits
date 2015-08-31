@@ -4,10 +4,13 @@ import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.value.Value;
-
 import com.nimbits.io.Nimbits;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Exercises the V3 Rest API - designed to run continuously against a server as an integration test.
@@ -15,7 +18,7 @@ import java.util.*;
  *
  */
 public class RestClientTester {
-    private static final String EMAIL_ADDRESS ="test5@example.com";
+    private static final String EMAIL_ADDRESS ="admin@example.com";
     private static final String INSTANCE_URL = "http://localhost:8888";
     private static final String PASSWORD = "password1234";
     private static final Nimbits nimbits = new Nimbits.NimbitsBuilder()
@@ -25,6 +28,9 @@ public class RestClientTester {
 
 
         o("Starting up");
+
+
+
 
         NimbitsLoadTester loadTester = new NimbitsLoadTester();
         loadTester.execute();
@@ -48,6 +54,8 @@ public class RestClientTester {
 
             if (user != null) {
                 o("Continuing with user: " + user.getEmail() + " " + user.getUUID());
+
+                createRegularUsers();
                 createPoints();
                 recordSeriesData();
             }
@@ -58,6 +66,12 @@ public class RestClientTester {
             o("Done!");
         }
 
+        private void createRegularUsers() {
+
+            for (int i = 0; i < 10; i++) {
+                createUser(i + "@example.com", "foobar");
+            }
+        }
 
 
         /**
@@ -75,7 +89,7 @@ public class RestClientTester {
             } catch (Throwable throwable) {
                 //user not found, let's create on - the first user will be an admin of the server
                 o("Server returned error - creating user instead " + throwable.getMessage());
-                return createUser();
+                return createUser(EMAIL_ADDRESS, PASSWORD);
 
             }
         }
@@ -85,11 +99,11 @@ public class RestClientTester {
          *
          *
          */
-        private User createUser() {
+        private User createUser(String email, String password) {
 
-            User postObject = new UserModel(EMAIL_ADDRESS, PASSWORD);
+            User postObject = new UserModel(email, password);
             User newUser = nimbits.addUser(postObject);
-            if (newUser == null || ! newUser.getEmail().getValue().equals(EMAIL_ADDRESS)) {
+            if (newUser == null || ! newUser.getEmail().getValue().equals(email)) {
                 throw new RuntimeException("Could not create a new user");
             }
             else {
@@ -119,6 +133,8 @@ public class RestClientTester {
         private void recordSeriesData() throws InterruptedException {
             o("Recording Data");
             Random r = new Random();
+            String[] meta = {"foo", "bar"};
+
             for (Entity entity : pointList) {
 
                 List<Value> values = new ArrayList<>();
@@ -127,7 +143,8 @@ public class RestClientTester {
                 for (int i = 0; i < 1000; i++) {
 
                     calendar.add(Calendar.SECOND, 1);
-                    values.add(new Value.ValueBuilder().timestamp(calendar.getTime()).doubleValue(r.nextDouble() * 1000).meta("Meta Data" + UUID.randomUUID().toString()).data("{}").createValue());
+                    String metavalue = meta[(i & 1) == 0 ? 0 : 1]; //flip between meta values for testing search
+                    values.add(new Value.ValueBuilder().timestamp(calendar.getTime()).doubleValue(r.nextDouble() * 1000).meta(metavalue).data("{}").createValue());
 
                 }
                 nimbits.recordValues(entity, values);
@@ -137,48 +154,85 @@ public class RestClientTester {
             }
 
             o("Verifying Data");
-            verifySeriesData();
+            verifySeriesData(null);
 
             Thread.sleep(1000);
             o("Verifying Data again!");
-            verifySeriesData();
+            verifySeriesData("");
+
+            o("Verifying Data again with perfect match mask!");
+            verifySeriesData(meta[0]);
+
+            o("Verifying Data again with other perfect match mask mask!");
+            verifySeriesData(meta[1]);
+
+            o("Verifying Data again with regex mask!");
+            verifySeriesData("[o]+");
 
 
         }
 
-        private void verifySeriesData() {
+        private void verifySeriesData(String mask) {
             for (Entity entity : pointList) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.DAY_OF_YEAR, -31);
                 o(entity.getUUID());
-                List<Value> downloadedValues = nimbits.getValues(entity, calendar.getTime(), new Date());
+                List<Value> downloadedValues = nimbits.getValues(entity, calendar.getTime(), new Date(), mask);
                 o("Downloaded " + downloadedValues.size() + " for " + entity.getName());
                 List<Value> stored = storedValues.get(entity);
                 Collections.sort(stored);
                 Collections.sort(downloadedValues);
-//                for (Value v : downloadedValues) {
-//                    o(entity.getName() + " " + v.toString());
-//                }
-                for (Value value : stored) {
-                    if (! downloadedValues.contains(value)) {
-                        o("R Range: " + stored.get(0).getTimestamp() + " to " +
-                                stored.get(stored.size()-1).getTimestamp());
-                        o("Q Range: " + calendar.getTime() + " to " + new Date());
 
 
-                        throw new RuntimeException(
-                                "downloaded values did not contain expected posted value. " + value.toString());
+                    for (Value value : stored) {
+                        if (StringUtils.isEmpty(mask) || mask.equals(value.getMetaData()) || containsMask(value, mask))
+                        if (!downloadedValues.contains(value)) {
+                            o("R Range: " + stored.get(0).getTimestamp() + " to " +
+                                    stored.get(stored.size() - 1).getTimestamp());
+                            o("Q Range: " + calendar.getTime() + " to " + new Date());
 
 
+                            throw new RuntimeException(
+                                    "downloaded values did not contain expected posted value. " + value.toString());
 
+
+                        }
                     }
-                }
+
+
+
+
             }
         }
 
     }
 
+    public static boolean containsMask(Value value, String mask) {
 
+        if (StringUtils.isEmpty(mask)) {
+            return true;
+        }
+        else if (! StringUtils.isEmpty(mask) && mask.equals(value.getMetaData()) ) {
+
+            return true;
+        }
+        else if (! StringUtils.isEmpty(mask)) {
+            try {
+                Pattern p = Pattern.compile(mask);
+                Matcher m = p.matcher(value.getMetaData());
+                return m.find();
+            }
+            catch (PatternSyntaxException ex) {
+
+                return false;
+            }
+
+
+        }
+
+        return false;
+
+    }
 
 
     private static void o(String msg) {

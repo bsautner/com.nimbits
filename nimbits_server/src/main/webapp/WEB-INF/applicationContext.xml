@@ -31,6 +31,10 @@
     <bean id="blobStore" class="com.nimbits.server.io.BlobStoreImpl">
 
     </bean>
+
+    <bean id="storageIO" class="com.nimbits.server.io.StorageIOImpl">
+
+    </bean>
     <bean id="entityDao" class="com.nimbits.server.transaction.entity.dao.EntityDaoImpl">
         <property name="persistenceManagerFactory" ref="pmf"/>
     </bean>

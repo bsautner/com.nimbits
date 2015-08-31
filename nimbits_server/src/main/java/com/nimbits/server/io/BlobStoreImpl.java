@@ -51,6 +51,9 @@ public class BlobStoreImpl implements BlobStore {
     @Autowired
     private NimbitsCache nimbitsCache;
 
+    @Autowired
+    private StorageIOImpl storageIO;
+
     public static final String SNAPSHOT = "SNAPSHOT";
     public static final int INITIAL_CAPACITY = 10000;
     private final Logger logger = Logger.getLogger(BlobStoreImpl.class.getName());
@@ -76,8 +79,6 @@ public class BlobStoreImpl implements BlobStore {
     public List<Value> getTopDataSeries(final Entity entity)  {
 
         logger.info("getTopDataSeries 3");
-
-
 
         String path = root + "/" + entity.getKey();
         logger.info("path=" + path);
@@ -219,7 +220,7 @@ public class BlobStoreImpl implements BlobStore {
     }
 
     @Override
-    public List<Value> getDataSegment(final Entity entity, final Range<Date> timespan) {
+    public List<Value> getDataSegment(final Entity entity, final Range<Date> timespan, String mask) {
 
 
         String path = root + "/" + entity.getKey();
@@ -287,12 +288,7 @@ public class BlobStoreImpl implements BlobStore {
 
             }
 
-            List<Value> filtered = new ArrayList<>(allvalues.size());
-            for (Value value : allvalues) {
-                if (timespan.contains(value.getTimestamp())) {
-                    filtered.add(value);
-                }
-            }
+            List<Value> filtered = storageIO.filterValues(timespan, mask, allvalues);
             if (allReadFiles.size() > INITIAL_CAPACITY) {  //TODO will break if # of days = initial capacity
                 logger.info("Defragmenting " + allReadFiles.size());
                 deleteAndRestore(entity, allvalues, allReadFiles);

@@ -18,8 +18,8 @@ import java.util.regex.PatternSyntaxException;
  *
  */
 public class RestClientTester {
-    private static final String EMAIL_ADDRESS ="admin@example.com";
-    private static final String INSTANCE_URL = "http://localhost:8888";
+    private static final String EMAIL_ADDRESS ="admin0@example.com";
+    private static final String INSTANCE_URL = "http://192.168.1.11:8080";
     private static final String PASSWORD = "password1234";
     private static final Nimbits nimbits = new Nimbits.NimbitsBuilder()
             .email(EMAIL_ADDRESS).token(PASSWORD).instance(INSTANCE_URL).create();
@@ -69,7 +69,7 @@ public class RestClientTester {
         private void createRegularUsers() {
 
             for (int i = 0; i < 10; i++) {
-                createUser(i + "@example.com", "foobar");
+                createUser(UUID.randomUUID().toString() + "@example.com", "foobar");
             }
         }
 

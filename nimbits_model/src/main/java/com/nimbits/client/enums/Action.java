@@ -46,6 +46,7 @@ public enum Action implements Serializable {
     refresh(ActionConstants.ACTION_REFRESH),
     expand(ActionConstants.ACTION_EXPAND),
     logout(ActionConstants.ACTION_LOGOUT),
+    rest(ActionConstants.ACTION_REST),
     xmpp(ActionConstants.ACTION_XMPP),
     save(ActionConstants.ACTION_SAVE),
     alert(ActionConstants.ACTION_ALERT),
@@ -113,6 +114,7 @@ public enum Action implements Serializable {
         protected static final String ACTION_REFRESH = "refresh";
         protected static final String ACTION_EXPAND = "expand";
         protected static final String ACTION_LOGOUT = "logout";
+        protected static final String ACTION_REST = "rest";
         protected static final String ACTION_XMPP = "xmpp";
         protected static final String ACTION_ADD_CHART = "addchart";
         protected static final String ACTION_SAVE = "save";

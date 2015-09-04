@@ -18,8 +18,8 @@ import java.util.regex.PatternSyntaxException;
  *
  */
 public class RestClientTester {
-    private static final String EMAIL_ADDRESS ="admin0@example.com";
-    private static final String INSTANCE_URL = "http://192.168.1.11:8080";
+    private static final String EMAIL_ADDRESS ="adminxxzz1x@example.com";
+    private static final String INSTANCE_URL = "http://localhost:8888";
     private static final String PASSWORD = "password1234";
     private static final Nimbits nimbits = new Nimbits.NimbitsBuilder()
             .email(EMAIL_ADDRESS).token(PASSWORD).instance(INSTANCE_URL).create();
@@ -46,7 +46,7 @@ public class RestClientTester {
         public void execute() throws InterruptedException {
 
             //Get or Create this user account, when created it will be the system admin
-            user = verifyUser();
+            user = verifyAdminUser();
 
             //reset the users password to test that
             user.setPassword(UUID.randomUUID().toString());
@@ -69,7 +69,21 @@ public class RestClientTester {
         private void createRegularUsers() {
 
             for (int i = 0; i < 10; i++) {
-                createUser(UUID.randomUUID().toString() + "@example.com", "foobar");
+                o("Creating regular user " + i);
+                String password = UUID.randomUUID().toString();
+                User regularUser = createUser(UUID.randomUUID().toString() + "@example.com", password);
+
+                Nimbits nonAdminClient = new Nimbits.NimbitsBuilder()
+                        .email(regularUser.getEmail().getValue()).token(password).instance(INSTANCE_URL).create();
+                User verify = nonAdminClient.getMe();
+                if (verify.equals(regularUser)) {
+                    o("Verified Creating Regular " + i + " User can login ");
+                }
+                else {
+                    throw new RuntimeException("Could not verify regular user");
+                }
+
+
             }
         }
 
@@ -79,19 +93,28 @@ public class RestClientTester {
          * /service/v2/rest
          */
 
-        private User verifyUser() {
+        private User verifyAdminUser() {
             //See if my user id and password get me my user
+            User user;
 
             try {
 
                 o("Trying to get existing user info");
-                return nimbits.getMe();
+                user = nimbits.getMe();
             } catch (Throwable throwable) {
                 //user not found, let's create on - the first user will be an admin of the server
                 o("Server returned error - creating user instead " + throwable.getMessage());
-                return createUser(EMAIL_ADDRESS, PASSWORD);
+                user =  createUser(EMAIL_ADDRESS, PASSWORD);
 
             }
+
+            o("Got User:" + user.toString());
+
+            User verify = nimbits.getMe();
+            return verify;
+
+
+
         }
 
         /**
@@ -153,6 +176,8 @@ public class RestClientTester {
 
             }
 
+            o("Waiting for things to settle down server side");
+            Thread.sleep(5000);
             o("Verifying Data");
             verifySeriesData(null);
 

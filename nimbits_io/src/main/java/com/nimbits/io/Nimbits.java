@@ -138,8 +138,17 @@ public class Nimbits {
         });
     }
 
-    public List<Value> getValues(Entity entity, Date start, Date end) {
-        return api.getData(entity.getUUID(), start.getTime(), end.getTime());
+    /**
+     *
+     *
+     * @param entity
+     * @param start
+     * @param end
+     * @param mask nullable - if present, will be used to filter values based on the mask string - can be null, string or regex
+     * @return
+     */
+    public List<Value> getValues(Entity entity, Date start, Date end, String mask) {
+        return api.getData(entity.getUUID(), start.getTime(), end.getTime(), mask);
     }
 
     public static class NimbitsBuilder {

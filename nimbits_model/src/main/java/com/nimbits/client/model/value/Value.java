@@ -61,7 +61,7 @@ public class Value implements Serializable, Comparable<Value> {
 
 
     public String getData() {
-        return dx == null ? "" : dx;
+        return dx;
     }
 
     public Double getLatitude() {
@@ -235,10 +235,6 @@ public class Value implements Serializable, Comparable<Value> {
 
         public ValueBuilder doubleWithData(final String valueAndNote) {
 
-
-
-
-
             if (valueAndNote != null && valueAndNote.trim().length() > 0) {
 
                 if (valueAndNote.contains(" ")) {
@@ -253,7 +249,7 @@ public class Value implements Serializable, Comparable<Value> {
                 } else {
                     try {
                         this.doubleValue = Double.parseDouble(valueAndNote);
-                        this.data = "";
+                        this.data = null;
                     } catch (NumberFormatException ex) {
                         this.data = valueAndNote;
 

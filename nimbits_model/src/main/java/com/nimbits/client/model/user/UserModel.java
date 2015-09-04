@@ -263,4 +263,10 @@ public class UserModel extends EntityModel implements Serializable, User {
 
         return result;
     }
+
+    public static class UserBuilder {
+
+
+
+    }
 }

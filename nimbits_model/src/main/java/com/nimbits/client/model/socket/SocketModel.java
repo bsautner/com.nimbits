@@ -1,9 +1,6 @@
 package com.nimbits.client.model.socket;
 
 import com.google.gson.annotations.Expose;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 
@@ -19,20 +16,7 @@ public class SocketModel extends EntityModel implements Serializable, Socket {
     @Expose
     private String extraParams;
 
-    public SocketModel(CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String targetApiKey, String targetUrl, String targetPath, String extraParams) {
-        super(name, description, entityType, protectionLevel, parent, owner, uuid);
-        this.targetApiKey = targetApiKey;
-        this.targetUrl = targetUrl;
-        this.targetPath = targetPath;
-        this.extraParams = extraParams;
-    }
 
-    public SocketModel(String targetApiKey, String targetUrl, String targetPath, String extraParams) {
-        this.targetApiKey = targetApiKey;
-        this.targetUrl = targetUrl;
-        this.targetPath = targetPath;
-        this.extraParams = extraParams;
-    }
 
     public SocketModel(Entity anEntity, String targetApiKey, String targetUrl, String targetPath, String extraParams) {
         super(anEntity);

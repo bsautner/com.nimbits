@@ -36,7 +36,15 @@
 
     </filter-mapping>
 
+    <filter>
+        <filter-name>rest filter</filter-name>
+        <filter-class>com.nimbits.server.api.v3.filter.RestApiAuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>rest filter</filter-name>
+        <url-pattern>/service/v3/rest/*</url-pattern>
 
+    </filter-mapping>
     <servlet>
         <servlet-name>rest api</servlet-name>
         <servlet-class>com.nimbits.server.api.v3.RestApi</servlet-class>

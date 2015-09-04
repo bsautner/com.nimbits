@@ -27,15 +27,19 @@ public class Links implements Serializable {
     @Expose
     private Sample sample;
 
+    @Expose
+    private Next next;
+
     public Links() {
     }
 
-    public Links(Self self, Parent parent, Series series, Snapshot snapshot, DataTable datatable ) {
+    public Links(Self self, Parent parent, Series series, Snapshot snapshot, DataTable datatable, Next next ) {
         this.self = self;
         this.series = series;
         this.snapshot = snapshot;
         this.datatable = datatable;
         this.parent = parent;
+        this.next = next;
     }
 
     public Links(Self self, Parent parent, Sample sample) {

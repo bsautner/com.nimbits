@@ -17,6 +17,7 @@ import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 
 import java.io.Serializable;
@@ -40,10 +41,32 @@ public class CategoryModel extends EntityModel implements Serializable, Category
 
     }
 
+    public CategoryModel(EntityName categoryName) {
+
+        super(categoryName,
+                "", EntityType.category, ProtectionLevel.everyone, "", "", ""
+        );
+    }
+
     public CategoryModel(Entity parent, String categoryName) {
 
         super(CommonFactory.createName(categoryName, EntityType.category),
                 "", EntityType.category, ProtectionLevel.everyone, parent.getKey(), parent.getOwner(), ""
         );
     }
-}
+
+    public static class CategoryBuilder extends EntityBuilder {
+
+        public CategoryBuilder name(String name) {
+            this.name = CommonFactory.createName(name, EntityType.category);
+            return this;
+        }
+
+        public Category create() {
+
+
+            return new CategoryModel(name);
+        }
+    }
+
+    }

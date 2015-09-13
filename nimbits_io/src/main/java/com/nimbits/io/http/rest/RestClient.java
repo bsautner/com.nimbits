@@ -1,9 +1,13 @@
 package com.nimbits.io.http.rest;
 
+import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.hal.ValueContainer;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.webhook.WebHook;
 import retrofit.Callback;
 import retrofit.http.*;
 
@@ -26,7 +30,13 @@ public interface RestClient {
     User addUser(@Body User newUser);
 
     @POST(API + "/{uuid}")
-    Entity addEntity(@Path("uuid") String uuid,  @Body Point point);
+    Entity addEntity(@Path("uuid") String parent,  @Body Point point);
+
+    @POST(API + "/{uuid}")
+    Point addPoint(@Path("uuid") String parent,  @Body Point point);
+
+    @POST(API + "/{uuid}")
+    Category addCategory(@Path("uuid") String parent,  @Body Category category);
 
     @POST(API + "/{uuid}/series")
     void recordData(@Path("uuid") String uuid,  @Body List<Value> values, Callback<Void> callback);
@@ -38,5 +48,14 @@ public interface RestClient {
     void updateSnapshot(@Path("uuid") String uuid,  @Body Value values, Callback<Void> callback);
 
     @GET(API + "/{uuid}/snapshot")
-    List<Value> getSnapshot(@Path("uuid") String uuid);
+    ValueContainer getSnapshot(@Path("uuid") String uuid);
+
+    @GET(API + "/{uuid}")
+    Point getPoint(@Path("uuid") String uuid);
+
+    @POST(API + "/{uuid}")
+    WebHook addWebhook(@Path("uuid") String parent,  @Body WebHook webHook);
+
+    @POST(API + "/{uuid}")
+    Subscription addSubscription(@Path("uuid") String parent,  @Body Subscription subscription);
 }

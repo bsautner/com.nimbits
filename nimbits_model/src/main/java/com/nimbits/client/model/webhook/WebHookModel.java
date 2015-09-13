@@ -1,9 +1,11 @@
 package com.nimbits.client.model.webhook;
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.CommonIdentifier;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.EntityModel;
 
 import java.io.Serializable;
@@ -11,9 +13,13 @@ import java.io.Serializable;
 public class WebHookModel extends EntityModel implements Serializable, WebHook {
 
 
+    @Expose
     private int method;
+    @Expose
     private String url;
+    @Expose
     private boolean enabled;
+    @Expose
     private String downloadTarget;
 
 
@@ -21,7 +27,8 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
     public WebHookModel(final CommonIdentifier name,
                         final String description,
                         final String parent
-                , HttpMethod method, UrlContainer url, boolean enabled, String downloadTarget) {
+                , HttpMethod method,
+                        UrlContainer url, boolean enabled, String downloadTarget) {
         super(name, description, EntityType.webhook, ProtectionLevel.everyone, parent, null, null);
         this.method = method.getCode();
         this.url = url.getUrl();
@@ -75,5 +82,44 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
         this.downloadTarget = downloadTarget;
     }
 
+
+    public static class Builder extends EntityBuilder  {
+
+        private HttpMethod method;
+        private UrlContainer url;
+
+
+        private String downloadTarget;
+
+
+        public Builder setMethod(HttpMethod method) {
+            this.method = method;
+            return this;
+        }
+
+
+        public Builder setUrl(String url) {
+            this.url = UrlContainer.getInstance(url);
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name(CommonFactory.createName(name, EntityType.webhook));
+            return this;
+
+        }
+
+
+
+        public Builder setDownloadTarget(String downloadTarget) {
+            this.downloadTarget = downloadTarget;
+            return this;
+        }
+
+
+        public WebHook create() {
+            return new WebHookModel(name, description, parent, method, url, true, downloadTarget );
+        }
+    }
 
 }

@@ -13,10 +13,14 @@
 package com.nimbits.client.model.subscription;
 
 import com.google.gson.annotations.Expose;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.entity.EntityName;
 
 import java.io.Serializable;
 
@@ -53,6 +57,27 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
         this.target = subscription.getTarget();
 
     }
+
+    public SubscriptionModel(
+            EntityName name,
+            String parent,
+            String subscribedEntity,
+            SubscriptionType subscriptionType,
+            SubscriptionNotifyMethod subscriptionNotifyMethod,
+            int maxRepeat,
+            boolean formatJson,
+            boolean enabled,
+            String target) {
+        super(name, "", EntityType.subscription, ProtectionLevel.everyone, parent, "", "");
+        this.subscribedEntity = subscribedEntity;
+        this.subscriptionType = subscriptionType.getCode();
+        this.notifyMethod = subscriptionNotifyMethod.getCode();
+        this.maxRepeat = maxRepeat;
+        this.enabled = enabled;
+        this.notifyFormatJson = formatJson;
+        this.target = target;
+    }
+
 
     public SubscriptionModel(
             Entity entity,
@@ -142,5 +167,56 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
     @Override
     public void setTarget(String target) {
         this.target = target;
+    }
+
+
+    public static class Builder extends EntityBuilder {
+
+
+        private String subscribedEntity;
+
+        private SubscriptionNotifyMethod notifyMethod;
+
+        private SubscriptionType subscriptionType;
+
+        private int maxRepeat;
+
+        private String target;
+
+        public Builder subscribedEntity(String subscribedEntity) {
+            this.subscribedEntity = subscribedEntity;
+            return this;
+        }
+
+        public Builder notifyMethod(SubscriptionNotifyMethod notifyMethod) {
+            this.notifyMethod = notifyMethod;
+            return this;
+        }
+
+        public Builder subscriptionType(SubscriptionType subscriptionType) {
+            this.subscriptionType = subscriptionType;
+            return this;
+        }
+
+        public Builder maxRepeat(int maxRepeat) {
+            this.maxRepeat = maxRepeat;
+            return this;
+        }
+
+        public Builder target(String target) {
+            this.target = target;
+            return this;
+        }
+
+        public Subscription create() {
+            return new SubscriptionModel(name, parent, subscribedEntity, subscriptionType, notifyMethod, maxRepeat, true, true, target);
+
+        }
+
+
+        public Builder name(String name) {
+            this.name = CommonFactory.createName(name, EntityType.subscription);
+            return this;
+        }
     }
 }

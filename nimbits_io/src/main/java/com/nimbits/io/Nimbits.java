@@ -5,10 +5,14 @@ import com.google.gson.GsonBuilder;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.hal.ValueContainer;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.io.http.NimbitsClientException;
 import com.nimbits.io.http.rest.RestClient;
 import com.nimbits.server.gson.*;
@@ -44,7 +48,7 @@ public class Nimbits {
                 .setDateFormat(Const.GSON_DATE_FORMAT)
                 .registerTypeAdapter(AccessKey.class, new AccessKeySerializer())
                 .registerTypeAdapter(AccessKey.class, new AccessKeyDeserializer())
-
+                .registerTypeAdapter(Category.class, new CategoryDeserializer())
                 .registerTypeAdapter(Point.class, new PointSerializer())
                 .registerTypeAdapter(Point.class, new PointDeserializer())
                 .registerTypeAdapter(Entity.class, new EntitySerializer())
@@ -53,6 +57,9 @@ public class Nimbits {
                 .registerTypeAdapter(Calculation.class, new CalculationDeserializer())
                 .registerTypeAdapter(User.class, new UserSerializer())
                 .registerTypeAdapter(User.class, new SessionDeserializer())
+                .registerTypeAdapter(WebHook.class, new WebHookDeserializer())
+                .registerTypeAdapter(WebHook.class, new WebHookSerializer())
+                .registerTypeAdapter(Subscription.class, new SubscriptionDeserializer())
                 .create();
 
 
@@ -112,11 +119,27 @@ public class Nimbits {
      * @param point
      * @return
      */
+    @Deprecated //we'll be creating individual methods for creating different types of entities
     public Entity addEntity(Entity parent, Point point) {
 
         Entity e  =  api.addEntity(parent.getUUID(), point);
         return  e;
     }
+
+
+    /**
+     * Add an point as a child of a parent
+     *
+     * @param parent
+     * @param point
+     * @return
+     */
+    public Point addPoint(Entity parent, Point point) {
+
+        return api.addPoint(parent.getUUID(), point);
+
+    }
+
 
     /**
      * Record a series of values to a data point
@@ -149,6 +172,35 @@ public class Nimbits {
      */
     public List<Value> getValues(Entity entity, Date start, Date end, String mask) {
         return api.getData(entity.getUUID(), start.getTime(), end.getTime(), mask);
+    }
+
+    public Point getPoint(String uuid) {
+        return api.getPoint(uuid);
+    }
+
+    public Category addCategory(User me, Category category) {
+        return api.addCategory(me.getUUID(), category);
+    }
+
+    public WebHook addWebHook(Entity parent, WebHook webHook) {
+        return api.addWebhook(parent.getUUID(), webHook);
+    }
+
+    public Subscription addSubscription(Category parent, Subscription subscription) {
+        return api.addSubscription(parent.getUUID(), subscription);
+
+    }
+
+    public Value getSnapshot(Point point) {
+        ValueContainer valueContainer =  api.getSnapshot(point.getUUID());
+        return valueContainer.getSnapshot();
+//        if (list.isEmpty()) {
+//            throw new RuntimeException("Point did not contain a snapshot");
+//        }
+//        else {
+//            return list.get(0);
+//        }
+
     }
 
     public static class NimbitsBuilder {

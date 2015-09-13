@@ -28,4 +28,16 @@ public class ValueContainer implements Serializable {
         this.embedded = embedded;
         this.snapshot = snapshot;
     }
+
+    public Links getLinks() {
+        return links;
+    }
+
+    public EmbeddedValues getEmbedded() {
+        return embedded;
+    }
+
+    public Value getSnapshot() {
+        return snapshot;
+    }
 }

@@ -77,6 +77,7 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
 
 
+
     public EntityModel(final CommonIdentifier name,
                        final String description,
                        final EntityType entityType,
@@ -104,13 +105,19 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
                        final String parent,
                        final String owner,
                        final String uuid) {
+        if (protectionLevel == null) {
+            this.protectionLevel = ProtectionLevel.everyone.getCode();
+        }
+        else {
+            this.protectionLevel = protectionLevel.getCode();
+        }
         this.key = key;
         this.name = name.getValue();
         this.description = description;
         this.entityType = entityType.getCode();
         this.parent = parent;
         this.owner = owner;
-        this.protectionLevel = protectionLevel.getCode();
+
         this.alertType = AlertType.OK.getCode();
         this.uuid = uuid;
         this.dateCreated = new Date();
@@ -448,7 +455,7 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
     }
 
 
-    public static abstract class EntityBuilder {
+    public static abstract class EntityBuilder  {
 
         protected EntityName name;
 

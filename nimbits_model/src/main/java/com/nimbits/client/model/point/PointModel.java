@@ -213,6 +213,8 @@ public class PointModel extends EntityModel implements Serializable, Point {
         this.precision = 5;
     }
 
+
+
     @Override
     public int getExpire() {
         return expire;
@@ -413,7 +415,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
     }
 
 
-    public static class PointBuilder extends EntityBuilder {
+    public static class Builder extends EntityBuilder {
 
 
 
@@ -454,90 +456,94 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
 
 
-        public PointBuilder highAlarm(double highAlarm) {
+        public Builder name(String name) {
+            this.name = CommonFactory.createName(name, EntityType.point);
+            return this;
+        }
+        public Builder highAlarm(double highAlarm) {
             this.highAlarm = highAlarm;
             return this;
         }
 
-        public PointBuilder lowAlarm(double lowAlarm) {
+        public Builder lowAlarm(double lowAlarm) {
             this.lowAlarm = lowAlarm;
             return this;
         }
 
-        public PointBuilder deltaAlarm(double deltaAlarm) {
+        public Builder deltaAlarm(double deltaAlarm) {
             this.deltaAlarm = deltaAlarm;
             return this;
         }
 
-        public PointBuilder deltaSeconds(int deltaSeconds) {
+        public Builder deltaSeconds(int deltaSeconds) {
             this.deltaSeconds = deltaSeconds;
             return this;
         }
 
-        public PointBuilder expire(int expire) {
+        public Builder expire(int expire) {
             this.expire = expire;
             return this;
         }
 
-        public PointBuilder unit(String unit) {
+        public Builder unit(String unit) {
             this.unit = unit;
             return this;
         }
 
-        public PointBuilder highAlarmOn(boolean highAlarm) {
+        public Builder highAlarmOn(boolean highAlarm) {
             this.highAlarmOn = highAlarmOn;
             return this;
         }
 
-        public PointBuilder lowAlarmOn(boolean lowAlarmOn) {
+        public Builder lowAlarmOn(boolean lowAlarmOn) {
             this.lowAlarmOn = lowAlarmOn;
             return this;
         }
-        public PointBuilder idleAlarmOn(boolean idleAlarmOn) {
+        public Builder idleAlarmOn(boolean idleAlarmOn) {
             this.idleAlarmOn = idleAlarmOn;
             return this;
         }
 
-        public PointBuilder deltaAlarmOn(boolean deltaAlarmOn) {
+        public Builder deltaAlarmOn(boolean deltaAlarmOn) {
             this.deltaAlarmOn = deltaAlarmOn;
             return this;
         }
 
 
-        public PointBuilder idleSeconds(int idleSeconds) {
+        public Builder idleSeconds(int idleSeconds) {
             this.idleSeconds = idleSeconds;
             return this;
         }
 
-        public PointBuilder idleAlarmSent(boolean idleAlarmSent) {
+        public Builder idleAlarmSent(boolean idleAlarmSent) {
             this.idleAlarmSent = idleAlarmSent;
             return this;
         }
 
 
-        public PointBuilder filterType(FilterType filterType) {
+        public Builder filterType(FilterType filterType) {
             this.filterType = filterType;
             return this;
         }
 
-        public PointBuilder pointType(PointType pointType) {
+        public Builder pointType(PointType pointType) {
             this.pointType = pointType;
             return this;
         }
 
-        public PointBuilder precision(int precision) {
+        public Builder precision(int precision) {
             this.precision = precision;
             return this;
         }
 
 
 
-        public PointBuilder inferLocation(boolean inferLocation) {
+        public Builder inferLocation(boolean inferLocation) {
             this.inferLocation = inferLocation;
             return this;
         }
 
-        public PointBuilder init(Point point) {
+        public Builder init(Point point) {
             super.init(point);
             this.highAlarm = point.getHighAlarm();
             this.expire = point.getExpire();
@@ -561,6 +567,15 @@ public class PointModel extends EntityModel implements Serializable, Point {
         }
 
         public Point create() {
+             entityType = EntityType.point;
+
+            if (pointType == null) {
+                pointType = PointType.basic;
+            }
+            if (filterType == null) {
+                filterType = FilterType.none;
+            }
+
             return new PointModel(key, name, description, entityType, protectionLevel, parent, owner, uuid, highAlarm, expire
             , unit, lowAlarm, highAlarmOn, lowAlarmOn, idleAlarmOn, idleSeconds, idleAlarmSent, filterType,filterValue, inferLocation,
                     pointType, deltaAlarm, deltaAlarmOn, deltaSeconds, precision);

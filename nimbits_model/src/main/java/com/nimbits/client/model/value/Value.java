@@ -17,7 +17,6 @@ import com.google.gson.annotations.Expose;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.AlertType;
 
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -165,8 +164,6 @@ public class Value implements Serializable, Comparable<Value> {
                 ", st=" + st +
                 '}';
     }
-
-
 
     public static class ValueBuilder {
 

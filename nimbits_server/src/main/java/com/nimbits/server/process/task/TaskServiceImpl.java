@@ -13,14 +13,12 @@
 package com.nimbits.server.process.task;
 
 
-import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

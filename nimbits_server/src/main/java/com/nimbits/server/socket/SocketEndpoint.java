@@ -4,7 +4,6 @@ package com.nimbits.server.socket;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
-import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.impl.CommonFactory;
@@ -115,7 +114,7 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
             }
             List<String> fixed = new ArrayList<>(points.size());
             for (String p : points) {
-                if (Utils.isNotEmpty(p)) {
+                if (StringUtils.isNotEmpty(p)) {
                     if (!p.startsWith(email)) {
                         fixed.add(email + "/" + p);
                     } else {

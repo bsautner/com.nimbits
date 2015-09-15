@@ -73,8 +73,8 @@ public class Value implements Serializable, Comparable<Value> {
     }
 
 
-    public double getDoubleValue() {
-        return this.d == null ? 0.0 : this.d;
+    public Double getDoubleValue() {
+        return this.d;
 
     }
 
@@ -165,7 +165,7 @@ public class Value implements Serializable, Comparable<Value> {
                 '}';
     }
 
-    public static class ValueBuilder {
+    public static class Builder {
 
         Double lat;
 
@@ -181,34 +181,34 @@ public class Value implements Serializable, Comparable<Value> {
 
         Integer alertType;
 
-        public Value createValue() {
+        public Value create() {
 
             return new Value(lat, lng, doubleValue, timestamp, data, meta, alertType );
         }
 
-        public ValueBuilder lat(Double lat) {
+        public Builder lat(Double lat) {
             this.lat = lat;
             return this;
         }
 
-        public ValueBuilder alertType(AlertType alertType) {
+        public Builder alertType(AlertType alertType) {
             this.alertType = alertType.getCode();
             return this;
         }
 
 
-        public ValueBuilder lng(Double lng) {
+        public Builder lng(Double lng) {
             this.lng = lng;
             return this;
         }
 
 
-        public ValueBuilder doubleValue(double doubleValue) {
+        public Builder doubleValue(double doubleValue) {
             this.doubleValue = doubleValue;
             return this;
         }
 
-        public ValueBuilder initValue(Value value) {
+        public Builder initValue(Value value) {
             this.doubleValue = value.getDoubleValue();
             this.timestamp = value.getTimestamp();
             this.lng = value.getLongitude();
@@ -219,18 +219,18 @@ public class Value implements Serializable, Comparable<Value> {
         }
 
 
-        public ValueBuilder data(String data) {
+        public Builder data(String data) {
             this.data = data;
             return this;
         }
 
 
-        public ValueBuilder meta(String meta) {
+        public Builder meta(String meta) {
             this.meta = meta;
             return this;
         }
 
-        public ValueBuilder doubleWithData(final String valueAndNote) {
+        public Builder doubleWithData(final String valueAndNote) {
 
             if (valueAndNote != null && valueAndNote.trim().length() > 0) {
 
@@ -257,7 +257,7 @@ public class Value implements Serializable, Comparable<Value> {
             return this;
         }
 
-        public ValueBuilder timestamp(Date time) {
+        public Builder timestamp(Date time) {
             this.timestamp = time;
             return this;
         }

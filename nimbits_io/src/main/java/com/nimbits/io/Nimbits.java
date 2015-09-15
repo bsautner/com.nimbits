@@ -21,6 +21,7 @@ import retrofit.*;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -174,6 +175,19 @@ public class Nimbits {
         return api.getData(entity.getUUID(), start.getTime(), end.getTime(), mask);
     }
 
+    /**
+     *
+     *
+     * @param entity
+     * @param start
+     * @param end
+
+     * @return
+     */
+    public List<Value> getValues(Entity entity, Date start, Date end) {
+        return api.getData(entity.getUUID(), start.getTime(), end.getTime());
+    }
+
     public Point getPoint(String uuid) {
         return api.getPoint(uuid);
     }
@@ -194,13 +208,12 @@ public class Nimbits {
     public Value getSnapshot(Point point) {
         ValueContainer valueContainer =  api.getSnapshot(point.getUUID());
         return valueContainer.getSnapshot();
-//        if (list.isEmpty()) {
-//            throw new RuntimeException("Point did not contain a snapshot");
-//        }
-//        else {
-//            return list.get(0);
-//        }
 
+
+    }
+
+    public void recordValue(Point point, Value newValue) {
+        recordValues(point, Collections.singletonList(newValue));
     }
 
     public static class NimbitsBuilder {

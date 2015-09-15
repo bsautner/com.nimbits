@@ -559,14 +559,6 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
             return this;
         }
 
-        public Entity create() {
-            return new EntityModel(key, name, description, entityType, protectionLevel, parent, owner, uuid );
-        }
-
-
-
-
-
 
     }
 

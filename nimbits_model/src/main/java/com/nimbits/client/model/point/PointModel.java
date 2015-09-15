@@ -575,7 +575,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
             if (filterType == null) {
                 filterType = FilterType.none;
             }
-
+ 
             return new PointModel(key, name, description, entityType, protectionLevel, parent, owner, uuid, highAlarm, expire
             , unit, lowAlarm, highAlarmOn, lowAlarmOn, idleAlarmOn, idleSeconds, idleAlarmSent, filterType,filterValue, inferLocation,
                     pointType, deltaAlarm, deltaAlarmOn, deltaSeconds, precision);

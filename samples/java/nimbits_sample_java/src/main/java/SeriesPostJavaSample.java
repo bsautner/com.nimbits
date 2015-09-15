@@ -148,10 +148,11 @@ public class SeriesPostJavaSample {
                 List<Value> values = new ArrayList<>();
                 for (int i = 0; i < VCOUNT; i++) {
 
-                    Value value = new Value.ValueBuilder().doubleValue(r.nextDouble() * 100).timestamp(calendar.getTime()).createValue();
+                    Value value = new Value.Builder().doubleValue(r.nextDouble() * 100).timestamp(calendar.getTime()).create();
                     values.add(value);
                     point.getValues().add(value);
                     calendar.add(Calendar.SECOND, 1);
+
                 }
 
             }

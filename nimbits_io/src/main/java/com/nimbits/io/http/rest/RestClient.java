@@ -44,6 +44,10 @@ public interface RestClient {
     @GET(API + "/{uuid}/series")
     List<Value> getData(@Path("uuid") String uuid, @Query("start") long start, @Query("end") long end, @Query("mask") String mask);
 
+    @GET(API + "/{uuid}/series")
+    List<Value> getData(@Path("uuid") String uuid, @Query("start") long start, @Query("end") long end);
+
+
     @POST(API + "/{uuid}/snapshot")
     void updateSnapshot(@Path("uuid") String uuid,  @Body Value values, Callback<Void> callback);
 

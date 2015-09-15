@@ -264,9 +264,24 @@ public class UserModel extends EntityModel implements Serializable, User {
         return result;
     }
 
-    public static class UserBuilder {
+    public static class Builder {
 
+        private String email;
+        private String password;
 
+        public Builder email(String email) {
+            this.email = email;
+            return this;
+        }
 
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+
+        }
+
+        public User create() {
+            return new UserModel(email, password);
+        }
     }
 }

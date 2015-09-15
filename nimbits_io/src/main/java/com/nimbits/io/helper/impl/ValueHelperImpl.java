@@ -37,7 +37,7 @@ public class ValueHelperImpl implements ValueHelper {
 
     @Override
     public void recordValue(String pointName, double value) {
-        Value vx = new Value.ValueBuilder().doubleValue(value).createValue();
+        Value vx = new Value.Builder().doubleValue(value).create();
         doRecordValue(pointName, vx);
 
     }
@@ -66,7 +66,7 @@ public class ValueHelperImpl implements ValueHelper {
 
     @Override
     public void recordValue(String name, double v, Date time) {
-        Value vx = new Value.ValueBuilder().doubleValue(v).timestamp(time).createValue();
+        Value vx = new Value.Builder().doubleValue(v).timestamp(time).create();
         doRecordValue(name, vx);
     }
 

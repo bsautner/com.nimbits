@@ -167,7 +167,7 @@ public class RestClientTester {
 
                     calendar.add(Calendar.SECOND, 1);
                     String metavalue = meta[(i & 1) == 0 ? 0 : 1]; //flip between meta values for testing search
-                    values.add(new Value.ValueBuilder().timestamp(calendar.getTime()).doubleValue(r.nextDouble() * 1000).meta(metavalue).data("{}").createValue());
+                    values.add(new Value.Builder().timestamp(calendar.getTime()).doubleValue(r.nextDouble() * 1000).meta(metavalue).data("{}").create());
 
                 }
                 nimbits.recordValues(entity, values);

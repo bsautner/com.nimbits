@@ -21,7 +21,7 @@ import com.nimbits.client.model.trigger.TriggerEntity;
 import com.nimbits.client.model.trigger.TriggerEntityImpl;
 import com.nimbits.client.model.user.User;
 
-
+@Deprecated
 public class EntityModelFactory {
 
 

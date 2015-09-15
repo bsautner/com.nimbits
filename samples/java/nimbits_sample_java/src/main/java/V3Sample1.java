@@ -1,3 +1,4 @@
+import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.model.category.Category;
@@ -14,8 +15,7 @@ import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
 import com.nimbits.io.Nimbits;
 
-import java.util.Collections;
-import java.util.UUID;
+import java.util.*;
 
 
 public class V3Sample1 {
@@ -31,7 +31,7 @@ public class V3Sample1 {
      * 6. Create a WebHook using code
      * 7. Create Subscriptions for those points that uses that webhook
      * 8. Write some data and verify the subscriptions
-     *
+     * 9. Record Some data over a period of time and verify the data using meta data and masks
      *
      *
      * Note:
@@ -61,41 +61,61 @@ public class V3Sample1 {
     public static void main(String[] args) throws InterruptedException {
 
 
-        //1: Create a client using the admin credentials.
+        /*
+        Step 1
+
+        Create a client using the admin credentials.
+
+         */
 
         Nimbits adminClient = new Nimbits.NimbitsBuilder()
                 .email(adminEmail).token(adminPassword).instance(server).create();
 
 
         /*
-        1.a : Note that we're pointing to a new server, so we're posting a new admin with the same credentials
-         We're surrounding things with try catch blocks so we can run this code without having to clear out the server every time
+
+        Step 1.a
+        Note that we're pointing to a new server, so we're posting a new admin with the same credentials
+        We're surrounding things with try catch blocks so we can run this code without having to clear out the server every time
+
         */
         try {
-            User admin = new UserModel(adminEmail, adminPassword);
+
+            User admin = new UserModel.Builder().email(adminEmail).password(adminPassword).create();
             admin = adminClient.addUser(admin);
 
             Log("Created Admin: " + admin.toString());
         } catch (Throwable throwable) {
+            //this will throw an exception if their already is an admin on this box
             Log(throwable.getMessage());
         }
 
 
-        //2: Create a new user using the admin client, only admins can create users:
+        /*
+        Step 2:
+
+        Create a new user using the admin client, only admins can create users:
+         */
         String email = "user1@example.com";
         String password = "userpassword1234";
         try {
 
-            User basicUser = new UserModel(email, password);
+            User basicUser = new UserModel.Builder().email(email).password(password).create();
             basicUser = adminClient.addUser(basicUser);
 
             Log("Created User: " + basicUser.toString());
         } catch (Throwable throwable) {
+            //This will throw if the user already exists
+
             Log(throwable.getMessage());
         }
 
 
-        //3: Create a new client with the user's credentials instead:
+        /*
+        Step 3
+
+        Create a new client with the user's credentials instead:
+         */
 
         Nimbits client = new Nimbits.NimbitsBuilder()
                 .email(email).token(password).instance(server).create();
@@ -112,8 +132,10 @@ public class V3Sample1 {
         Log("created folder: " + folder.toString());
 
 
-        /* 5:
-         Create some datapoints - one will be a subscription trigger, so when it's writen to it'll fire off a web hook we're going to create below
+        /*
+        Step 5:
+
+         Create some data points - one will be a subscription trigger, so when it's writen to it'll fire off a web hook we're going to create below
          the other will be a target, which is an optional setting for a webhook where the result of the http call will be stored in the dx channel as a new value
          we add the current time to the point name so it's always unique
 
@@ -137,7 +159,14 @@ public class V3Sample1 {
 
 
 
-        //6 Let's create a webhook!
+        /*
+        Step 6
+
+        Let's create a webhook!  The webhook will contain a base url - when a point is written to the data will be uses as a post body
+        or querystring
+
+
+        */
 
         String timeApi = "http://cloud.nimbits.com/service/v2/time";
         WebHook webHook = new WebHookModel.Builder()
@@ -154,8 +183,12 @@ public class V3Sample1 {
 
 
 
+        /*
+        Step 7
 
-        //7: create a subscription so when the trigger point gets new data, webhook will be used
+        Create a subscription so when the trigger point gets new data, webhook will be used
+
+         */
 
         Subscription subscription = new SubscriptionModel.Builder()
                 .subscriptionType(SubscriptionType.newValue)
@@ -170,12 +203,18 @@ public class V3Sample1 {
         Log("Created Subscription: " + subscription.toString());
 
 
-        //8: Write some data to the trigger point, which will cause the subscription to run - using the webhook to download the current time from the time api
+        /*
+        Step 8:
 
-        //8.a Write the data - if the webhook was a post, the data in this value could be the post body and contain JSON. In a GET the data will be the query string
-        //in our case, the time api doesn't require any data, but we want to write something so the data isn't filtered out as noise.
+        Write some data to the trigger point, which will cause the subscription to run - using the webhook to download the current time from the time api
 
-        Value value = new Value.ValueBuilder().data("?foo=" + UUID.randomUUID().toString()).createValue();
+        Write the data - if the webhook was a post, the data in this value could be the post body and contain JSON. In a GET the data will be the query string
+        in our case, the time api doesn't require any data, but we want to write something so the data isn't filtered out as noise.
+
+
+         */
+
+        Value value = new Value.Builder().data("?foo=" + UUID.randomUUID().toString()).create();
 
         client.recordValues(newTrigger, Collections.singletonList(value));
 
@@ -191,6 +230,94 @@ public class V3Sample1 {
         Value targetSnapshot = client.getSnapshot(newTarget);
 
         Log("Verified Webhook Result: " + targetSnapshot.toString());
+
+
+
+        /*
+        Step 9: record some values and test they are being saved and query by meta data
+
+
+        Setting expire very high and filtertype to none will ensure data is recorded
+        usig dog and cat as two random words
+
+         */
+
+        Point testPoint1 = new PointModel.Builder()
+                .name("Meta Data Point Test " + System.currentTimeMillis())
+                .expire(999999)
+                .filterType(FilterType.none)
+                .create();
+        testPoint1 = client.addPoint(folder, testPoint1);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, -1); //start in some time in the past
+
+        //we're going to store the values we record locally so we can compare them with what we download
+        List<Value> dogs = new ArrayList<>();
+        List<Value> cats = new ArrayList<>();
+
+        String DOG = "dog";
+        String CAT = "cat";
+
+        for (int i = 0; i < 100; i++) {
+            Value newValue = new Value.Builder()
+                    .data("Some Random Data " + i)
+                    .meta(i % 2 == 1 ? DOG : CAT) //alternate recording different meta values
+                    .timestamp(calendar.getTime())
+
+                    .create();
+
+            if (DOG.equals(newValue.getMetaData())) {
+                dogs.add(newValue);
+            }
+            else if (CAT.equals(newValue.getMetaData())) {
+                cats.add(newValue);
+            }
+
+            client.recordValue(testPoint1, newValue);
+            calendar.add(Calendar.SECOND, 1);
+            Log("Recorded: " + newValue.toString() + " " + newValue.hashCode());
+
+        }
+
+        Thread.sleep(2000);
+        //if you want everything, use a large data range, but avoid Date(0) or you'll get the init null value
+
+        List<Value> storedValues = client.getValues(testPoint1, new Date(1), new Date(99999999999999L));
+        Log("Downloaded " + storedValues.size());
+        for (Value d : storedValues) {
+            Log("Downloaded: " + d.toString() + " " + d.hashCode());
+        }
+
+        for (Value dog : dogs) {
+            if (! storedValues.contains(dog)) {
+                throw new RuntimeException("Missing Data in dog List: " + dog.toString() + dog.hashCode());
+            }
+        }
+        for (Value cat : cats) {
+            if (! storedValues.contains(cat)) {
+                throw new RuntimeException("Missing Data in cat List");
+            }
+        }
+
+
+        //Let's query with meta data and make sure we get what we expect
+        List<Value> storedCats = client.getValues(testPoint1, new Date(1), new Date(99999999999999L), CAT);
+
+        List<Value> storedDogs = client.getValues(testPoint1, new Date(1), new Date(99999999999999L), DOG);
+        if (! storedCats.containsAll(cats)) {
+            throw new RuntimeException("Missing some cats");
+        }
+
+        if (! storedDogs.containsAll(dogs)) {
+            throw new RuntimeException("Missing some dogs");
+        }
+
+        Log("Done!");
+
+
+
+
 
 
 

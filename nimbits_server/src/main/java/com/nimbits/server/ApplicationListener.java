@@ -34,7 +34,7 @@ public class ApplicationListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         log.info("NIMBITS Context Initialised");
 
-        if (! Config.EE) {
+
 
             AnalyticsConfigData config = new AnalyticsConfigData("UA-11739682-14");
 
@@ -44,7 +44,7 @@ public class ApplicationListener implements ServletContextListener {
 
 
             tracker.trackEvent("System", "contextInitialized", Const.VERSION);
-        }
+
 
     }
 

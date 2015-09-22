@@ -32,7 +32,7 @@ public class V3Sample1 {
      * 7. Create Subscriptions for those points that uses that webhook
      * 8. Write some data and verify the subscriptions
      * 9. Record Some data over a period of time and verify the data using meta data and masks
-     *
+     * 10. Verify Snapshots by writing single and series of data - the most recent value should always be available in the snapshot
      *
      * Note:
 
@@ -313,17 +313,86 @@ public class V3Sample1 {
             throw new RuntimeException("Missing some dogs");
         }
 
-        Log("Done!");
+
+
+        /*
+        10.
+
+        Verify the snapshot is updated and available
+
+         */
+
+        Value snap;
+        Point snapshotTestPoint = new PointModel.Builder()
+                .name("Snapshot Point Test " + System.currentTimeMillis())
+                .expire(999999)
+                .filterType(FilterType.none)
+                .create();
+        snapshotTestPoint = client.addPoint(folder, snapshotTestPoint);
 
 
 
 
+        snap = client.getSnapshot(snapshotTestPoint);
+        Log("Snapshot on a newly created point: " + snap.toString()  + " timestamp:" + snap.getTimestamp());
+        if (snap.getTimestamp().getTime() != 0) {
+            throw new RuntimeException("Snapshot on newly created point wasn't at unix epoch");
+        }
 
 
+        Value test1 = new Value.Builder().data("Test Snapshot 1").timestamp(new Date()).create();
+        Log("Recording new Value: " + test1);
+        client.recordValue(snapshotTestPoint, test1);
+
+        Thread.sleep(1000);
+
+        snap = client.getSnapshot(snapshotTestPoint);
+        Log("Snapshot on a newly recorded value: " + snap.toString()  + " timestamp:" + snap.getTimestamp());
+
+        if (! snap.getData().equals(test1.getData())) {
+
+            throw new RuntimeException("Snapshot on newly recorded value didn't match");
+
+        }
 
 
+        /*
+        10.1
+
+        Let's record a series of values and make sure the snapshot results in the most recent time
+
+         */
+
+        Point seriesSnapshotTestPoint = new PointModel.Builder()
+                .name("Snapshot Point Test " + System.currentTimeMillis())
+                .expire(999999)
+                .filterType(FilterType.none)
+                .create();
+        seriesSnapshotTestPoint = client.addPoint(folder, seriesSnapshotTestPoint);
 
 
+        List<Value> seriesSnapshotTest = new ArrayList<>();
+        Calendar c = Calendar.getInstance();
+
+        c.add(Calendar.YEAR, -1);
+        for (int i = 0; i < 10; i++) {  //add 10 values with increasing dates
+            Value testValue = new Value.Builder().data("Test Snapshot " + i).timestamp(c.getTime()).create();
+            c.add(Calendar.DAY_OF_YEAR, 1);
+            seriesSnapshotTest.add(testValue);
+        }
+
+
+        Log("Recording new Value: " + test1);
+        client.recordValues(seriesSnapshotTestPoint, seriesSnapshotTest);
+
+        Thread.sleep(1000);
+        snap = client.getSnapshot(seriesSnapshotTestPoint);
+        Value last = seriesSnapshotTest.get(seriesSnapshotTest.size()-1);
+        Log(snap.toString());
+        Log(last.toString());
+        if (! snap.getData().equals(last.getData())) {
+            throw new RuntimeException("Most recent recorded value in series was not the snapshot");
+        }
 
 
 

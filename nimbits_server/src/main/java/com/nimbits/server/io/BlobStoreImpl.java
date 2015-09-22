@@ -186,7 +186,7 @@ public class BlobStoreImpl implements BlobStore {
             List<Value> values = readValuesFromFile(root + "/" + entity.getKey() + "/" + SNAPSHOT);
 
             if (values.isEmpty()) {
-                value = new Value.Builder().doubleValue(0.0).timestamp(new Date()).create();
+                value = new Value.Builder().doubleValue(0.0).timestamp(new Date(0)).create();
                 createSnapshot(entity, value);
             } else {
                 value = values.get(0);

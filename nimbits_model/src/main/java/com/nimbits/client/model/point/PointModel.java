@@ -112,13 +112,13 @@ public class PointModel extends EntityModel implements Serializable, Point {
         this.precision = precision;
     }
     public PointModel(final String key,
-            final CommonIdentifier name,
-                       final String description,
-                       final EntityType entityType,
-                       final ProtectionLevel protectionLevel,
-                       final String parent,
-                       final String owner,
-                       final String uuid,
+                      final CommonIdentifier name,
+                      final String description,
+                      final EntityType entityType,
+                      final ProtectionLevel protectionLevel,
+                      final String parent,
+                      final String owner,
+                      final String uuid,
 
                       final double highAlarm,
                       final int expire,
@@ -191,7 +191,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
     public PointModel(Entity parent, String name) {
         super(CommonFactory.createName(name, EntityType.point), "", EntityType.point, ProtectionLevel.everyone
-        , parent.getKey(), "", "" );
+                , parent.getKey(), "", "" );
         this.highAlarm = 0;
         this.expire = 365;
         this.unit = "";
@@ -415,7 +415,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
     }
 
 
-    public static class Builder extends EntityBuilder {
+    public static class Builder extends EntityBuilder<Builder> {
 
 
 
@@ -567,7 +567,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
         }
 
         public Point create() {
-             entityType = EntityType.point;
+            entityType = EntityType.point;
 
             if (pointType == null) {
                 pointType = PointType.basic;
@@ -575,11 +575,24 @@ public class PointModel extends EntityModel implements Serializable, Point {
             if (filterType == null) {
                 filterType = FilterType.none;
             }
- 
+
             return new PointModel(key, name, description, entityType, protectionLevel, parent, owner, uuid, highAlarm, expire
-            , unit, lowAlarm, highAlarmOn, lowAlarmOn, idleAlarmOn, idleSeconds, idleAlarmSent, filterType,filterValue, inferLocation,
+                    , unit, lowAlarm, highAlarmOn, lowAlarmOn, idleAlarmOn, idleSeconds, idleAlarmSent, filterType,filterValue, inferLocation,
                     pointType, deltaAlarm, deltaAlarmOn, deltaSeconds, precision);
         }
 
+        @Override
+        public Builder parent(String parent) {
+
+            this.parent = parent;
+            return this;
+        }
+
+
+        @Override
+        public Builder entityType(EntityType entityType) {
+            this.entityType = entityType;
+            return this;
+        }
     }
 }

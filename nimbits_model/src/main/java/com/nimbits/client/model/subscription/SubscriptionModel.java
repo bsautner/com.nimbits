@@ -218,5 +218,19 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
             this.name = CommonFactory.createName(name, EntityType.subscription);
             return this;
         }
+
+        @Override
+        public Builder parent(String parent) {
+
+            this.parent = parent;
+            return this;
+        }
+
+
+        @Override
+        public Builder entityType(EntityType entityType) {
+            this.entityType = entityType;
+            return this;
+        }
     }
 }

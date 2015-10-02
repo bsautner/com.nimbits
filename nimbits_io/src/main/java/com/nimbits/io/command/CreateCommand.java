@@ -3,6 +3,7 @@ package com.nimbits.io.command;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.user.User;
 import com.nimbits.io.helper.EntityHelper;
@@ -29,8 +30,8 @@ public class CreateCommand extends AbstractCommand implements Command {
                 String name = args[2];
                 EntityType entityType = EntityType.valueOf(type);
                 if (entityType.equals(EntityType.point)) {
-                    EntityHelper helper = HelperFactory.getEntityHelper(server);
-                    Point point = helper.createPoint(name, entityType, current);
+
+                    Point point = new PointModel.Builder().name(name).entityType(entityType).parent(current.getKey()).create();// helper.createPoint(name, entityType, current);
                     tree.add(point);
                     listener.onTreeUpdated(tree);
                     listener.setCurrent(current);

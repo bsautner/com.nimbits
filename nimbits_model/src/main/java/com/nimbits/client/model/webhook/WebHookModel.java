@@ -120,6 +120,20 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
         public WebHook create() {
             return new WebHookModel(name, description, parent, method, url, true, downloadTarget );
         }
+
+        @Override
+        public Builder parent(String parent) {
+
+            this.parent = parent;
+            return this;
+        }
+
+
+        @Override
+        public Builder entityType(EntityType entityType) {
+            this.entityType = entityType;
+            return this;
+        }
     }
 
 }

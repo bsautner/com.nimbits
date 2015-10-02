@@ -27,8 +27,6 @@ public interface EntityHelper {
 
     Entity addEntity(Entity e);
 
-    List<Entity> updateEntity(Entity e, Class clz);
-
     /**
      * @return all of the entities belonging to the user
      */
@@ -40,12 +38,6 @@ public interface EntityHelper {
      */
     Entity addCategory(Category category);
 
-    /**
-     * @param key the id of the category
-     * @return the entity if it exists
-     */
-    Entity getCategory(String key);
-
 
     /**
      * Creates a new Data Point
@@ -56,17 +48,7 @@ public interface EntityHelper {
      */
     Point createPoint(String name, EntityType entityType, Entity parent);
 
-    /**
-     * Creates a new Data Point
-     *
-     * @param name       a valid point name
-     * @param entityType @see EntityType
-     * @param filterType the type of filter to use. @See FilterType
-     * @param expire     how many days old data can be before being purged
-     * @param parent     the id of the parent entity
-     * @return new point
-     */
-    Point createPoint(String name, int expire, FilterType filterType, EntityType entityType, Entity parent);
+
 
     void deleteEntity(String name, EntityType type);
 

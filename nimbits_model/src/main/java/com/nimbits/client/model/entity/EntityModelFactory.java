@@ -96,26 +96,7 @@ public class EntityModelFactory {
     }
 
 
-    public static Entity createEntity(final Entity user, final EntityName name) {
-        return user != null ? new EntityModel(name,
-                "",
-                EntityType.point,
-                ProtectionLevel.everyone,
-                user.getKey(),
-                user.getKey(),
-                user.getKey())
 
-                :
-
-                new EntityModel(name,
-                        "",
-                        EntityType.point,
-                        ProtectionLevel.everyone,
-                        null,
-                        null, null
-
-                );
-    }
 
     public static TriggerEntity createTrigger(final String key) {
         return new TriggerEntityImpl(key);

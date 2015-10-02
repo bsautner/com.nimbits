@@ -37,8 +37,7 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
     private String key;
     @Expose
     private String description;
-    @Expose
-    private int entityType;
+    @Expose protected int entityType;
     @Expose
     private int protectionLevel;
 
@@ -455,7 +454,7 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
     }
 
 
-    public static abstract class EntityBuilder  {
+    public static abstract class EntityBuilder<T>  {
 
         protected EntityName name;
 
@@ -488,7 +487,7 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
         public EntityBuilder() {
         }
 
-        public EntityBuilder name(EntityName name) {
+        public EntityBuilder<T> name(EntityName name) {
             this.name = name;
             return this;
         }
@@ -502,10 +501,9 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
             this.description = description;
             return this;
         }
-        public EntityBuilder entityType(EntityType entityType) {
-            this.entityType = entityType;
-            return this;
-        }
+
+        public abstract T entityType(EntityType entityType);
+
         public EntityBuilder protectionLevel(ProtectionLevel protectionLevel) {
             this.protectionLevel = protectionLevel;
             return this;
@@ -514,10 +512,10 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
             this.alertType = alertType;
             return this;
         }
-        public EntityBuilder parent(String parent) {
-            this.parent = parent;
-            return this;
-        }
+
+        public abstract T parent(String parent);
+
+
         public EntityBuilder owner(String owner) {
             this.owner = owner;
             return this;

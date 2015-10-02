@@ -58,7 +58,7 @@ public class V3Sample1 {
 
 
 
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String... args) throws InterruptedException {
 
 
         /*
@@ -127,7 +127,7 @@ public class V3Sample1 {
 
         //4: Create a folder (aka category) with the user entity (me) as the parent (this won't throw an error if a duplicate folder is added, since you can have folders with the same name)
 
-        Category folder = new CategoryModel.CategoryBuilder().name("my folder 6").create();
+        Category folder = new CategoryModel.Builder().name("my folder 6").create();
         folder = client.addCategory(me, folder);
         Log("created folder: " + folder.toString());
 

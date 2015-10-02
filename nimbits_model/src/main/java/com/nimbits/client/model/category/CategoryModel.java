@@ -55,9 +55,9 @@ public class CategoryModel extends EntityModel implements Serializable, Category
         );
     }
 
-    public static class CategoryBuilder extends EntityBuilder {
+    public static class Builder extends EntityBuilder {
 
-        public CategoryBuilder name(String name) {
+        public Builder name(String name) {
             this.name = CommonFactory.createName(name, EntityType.category);
             return this;
         }
@@ -66,6 +66,20 @@ public class CategoryModel extends EntityModel implements Serializable, Category
 
 
             return new CategoryModel(name);
+        }
+
+        @Override
+        public Builder parent(String parent) {
+
+            this.parent = parent;
+            return this;
+        }
+
+
+        @Override
+        public Builder entityType(EntityType entityType) {
+            this.entityType = entityType;
+            return this;
         }
     }
 

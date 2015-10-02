@@ -51,11 +51,6 @@ public class EntityHelperImpl implements EntityHelper {
     }
 
     @Override
-    public List<Entity> updateEntity(Entity e, Class clz) {
-        return nimbitsClient.updateEntity(e, clz);
-    }
-
-    @Override
     public List<Entity> getTree() {
         return nimbitsClient.getTree();
     }
@@ -66,14 +61,6 @@ public class EntityHelperImpl implements EntityHelper {
 
     }
 
-    @Override
-    public Entity getCategory(String key) {
-        Entity sample = nimbitsClient.getEntity(
-                SimpleValue.getInstance(key), EntityType.category);
-
-        return sample;
-
-    }
 
     @Override
     public Point createPoint(String name, EntityType entityType, Entity parent) {
@@ -87,19 +74,6 @@ public class EntityHelperImpl implements EntityHelper {
 
     }
 
-    @Override
-    public Point createPoint(String name, int expire, FilterType filterType, EntityType entityType, Entity parent) {
-        Entity entity = EntityModelFactory.createEntity(name, entityType);
-        entity.setParent(parent.getKey());
-        entity.setOwner(server.getEmail().getValue());
-
-        Point point = PointModelFactory.createPoint(entity);
-        point.setExpire(expire);
-        point.setFilterType(filterType);
-        return (Point) addEntity(point);
-
-
-    }
 
     @Override
     public void deleteEntity(String name, EntityType type) {

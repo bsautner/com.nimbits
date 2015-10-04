@@ -7,6 +7,7 @@ import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.entity.EntityName;
 
 import java.io.Serializable;
 
@@ -132,6 +133,58 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
         @Override
         public Builder entityType(EntityType entityType) {
             this.entityType = entityType;
+            return this;
+        }
+
+        @Override
+        public Builder name(EntityName name) {
+            this.name = name;
+            return this;
+        }
+        @Override
+        public Builder key(String key) {
+            this.key = key;
+            return this;
+        }
+        @Override
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+        @Override
+        public Builder protectionLevel(ProtectionLevel protectionLevel) {
+            this.protectionLevel = protectionLevel;
+            return this;
+        }
+        @Override
+        public Builder alertType(int alertType) {
+            this.alertType = alertType;
+            return this;
+        }
+        @Override
+        public Builder owner(String owner) {
+            this.owner = owner;
+            return this;
+        }
+        @Override
+        public Builder readOnly(boolean readOnly) {
+            this.readOnly = readOnly;
+            return this;
+        }
+        @Override
+        public Builder id(String id) {
+            this.id = id;
+            return this;
+        }
+        @Override
+        public Builder uuid(String uuid) {
+            this.uuid = uuid;
+            return this;
+        }
+
+        @Override
+        public Builder action(String action) {
+            this.action = action;
             return this;
         }
     }

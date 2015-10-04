@@ -468,16 +468,13 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
         protected int alertType;
 
-
         protected String parent;
 
         protected String owner;
 
         protected boolean readOnly = false;
 
-
         protected String uuid;
-
 
         protected String id;
 
@@ -487,76 +484,29 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
         public EntityBuilder() {
         }
 
-        public EntityBuilder<T> name(EntityName name) {
-            this.name = name;
-            return this;
-        }
-
-        public EntityBuilder key(String key) {
-            this.key = key;
-            return this;
-        }
-
-        public EntityBuilder description(String description) {
-            this.description = description;
-            return this;
-        }
+        public abstract T parent(String parent);
 
         public abstract T entityType(EntityType entityType);
 
-        public EntityBuilder protectionLevel(ProtectionLevel protectionLevel) {
-            this.protectionLevel = protectionLevel;
-            return this;
-        }
-        public EntityBuilder alertType(int alertType) {
-            this.alertType = alertType;
-            return this;
-        }
+        public abstract T  name(EntityName name);
 
-        public abstract T parent(String parent);
+        public abstract T key(String key);
 
+        public abstract T description(String description);
 
-        public EntityBuilder owner(String owner) {
-            this.owner = owner;
-            return this;
-        }
-        public EntityBuilder readOnly(boolean readOnly) {
-            this.readOnly = readOnly;
-            return this;
-        }
+        public abstract T protectionLevel(ProtectionLevel protectionLevel);
 
-        public EntityBuilder id(String id) {
-            this.id = id;
-            return this;
-        }
+        public abstract T alertType(int alertType);
 
-        public EntityBuilder uuid(String uuid) {
-            this.uuid = uuid;
-            return this;
-        }
+        public abstract T owner(String owner);
 
+        public abstract T readOnly(boolean readOnly);
 
-        public EntityBuilder action(String action) {
-            this.action = action;
-            return this;
-        }
+        public abstract T id(String id);
 
-        public EntityBuilder init(Entity anEntity) {
+        public abstract T uuid(String uuid);
 
-            this.key = anEntity.getKey();
-            this.id = anEntity.getKey();
-            this.name = anEntity.getName();
-            this.description = anEntity.getDescription();
-            this.entityType = anEntity.getEntityType();
-            this.parent = anEntity.getParent();
-            this.owner = anEntity.getOwner();
-            this.protectionLevel = anEntity.getProtectionLevel();
-            this.alertType = anEntity.getAlertType().getCode();
-            this.uuid = anEntity.getUUID();
-
-            return this;
-        }
-
+        public abstract T action(String action);
 
     }
 

@@ -81,6 +81,74 @@ public class CategoryModel extends EntityModel implements Serializable, Category
             this.entityType = entityType;
             return this;
         }
+
+        private Builder initEntity(Entity anEntity) {
+
+            this.key = anEntity.getKey();
+            this.id = anEntity.getKey();
+            this.name = anEntity.getName();
+            this.description = anEntity.getDescription();
+            this.entityType = anEntity.getEntityType();
+            this.parent = anEntity.getParent();
+            this.owner = anEntity.getOwner();
+            this.protectionLevel = anEntity.getProtectionLevel();
+            this.alertType = anEntity.getAlertType().getCode();
+            this.uuid = anEntity.getUUID();
+
+            return this;
+        }
+
+        @Override
+        public Builder name(EntityName name) {
+            this.name = name;
+            return this;
+        }
+        @Override
+        public Builder key(String key) {
+            this.key = key;
+            return this;
+        }
+        @Override
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+        @Override
+        public Builder protectionLevel(ProtectionLevel protectionLevel) {
+            this.protectionLevel = protectionLevel;
+            return this;
+        }
+        @Override
+        public Builder alertType(int alertType) {
+            this.alertType = alertType;
+            return this;
+        }
+        @Override
+        public Builder owner(String owner) {
+            this.owner = owner;
+            return this;
+        }
+        @Override
+        public Builder readOnly(boolean readOnly) {
+            this.readOnly = readOnly;
+            return this;
+        }
+        @Override
+        public Builder id(String id) {
+            this.id = id;
+            return this;
+        }
+        @Override
+        public Builder uuid(String uuid) {
+            this.uuid = uuid;
+            return this;
+        }
+
+        @Override
+        public Builder action(String action) {
+            this.action = action;
+            return this;
+        }
     }
 
     }

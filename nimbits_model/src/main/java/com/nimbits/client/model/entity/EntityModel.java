@@ -20,12 +20,14 @@ import com.nimbits.client.enums.*;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
-import com.nimbits.client.model.hal.*;
-import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.hal.Embedded;
+import com.nimbits.client.model.hal.Links;
 import com.nimbits.client.model.user.User;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 
 public class EntityModel implements Serializable, Comparable<Entity>, Entity {
@@ -55,7 +57,8 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
     private Date dateCreated;
 
-    private ArrayList<Point> children;
+    @Expose
+    private ArrayList<Entity> children;
 
     private String instanceUrl;
     private boolean isCached = false;
@@ -198,13 +201,13 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
     }
 
     @Override
-    public List<Point> getChildren() {
+    public List<Entity> getChildren() {
         return children;
     }
 
     @Override
-    public void setChildren(final List<Point> someChildren) {
-        this.children = (ArrayList<Point>) someChildren;
+    public void setChildren(final List<Entity> someChildren) {
+        this.children = (ArrayList<Entity>) someChildren;
     }
 
     @Override

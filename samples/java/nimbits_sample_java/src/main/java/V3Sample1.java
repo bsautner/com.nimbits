@@ -52,9 +52,10 @@ public class V3Sample1 {
      */
 
 
-    private static final String server = "http://localhost:8888";
-    private static final String adminEmail = "admin@example.com";
-    private static final String adminPassword = "password12345";
+    private static final String server = "http://localhost:8080";
+    private static final String adminEmail = "root@example.com";
+    private static final String adminPassword = "12345";
+
 
 
 
@@ -395,6 +396,7 @@ public class V3Sample1 {
         }
 
 
+        Log("Done!");
 
 
 

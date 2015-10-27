@@ -65,6 +65,7 @@ public enum GsonFactory {
     public static Gson getSimpleInstance() {
         return new GsonBuilder()
                 .setDateFormat(Const.GSON_DATE_FORMAT)
+                .excludeFieldsWithoutExposeAnnotation()
                 .serializeNulls()
                 .create();
     }

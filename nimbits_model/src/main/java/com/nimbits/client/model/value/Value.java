@@ -106,7 +106,7 @@ public class Value implements Serializable, Comparable<Value> {
 
 
     public AlertType getAlertState() {
-        return AlertType.get(this.st);
+        return this.st == null ? AlertType.OK : AlertType.get(this.st);
     }
 
     @Override

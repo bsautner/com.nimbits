@@ -62,4 +62,13 @@ public interface RestClient {
 
     @POST(API + "/{uuid}")
     Subscription addSubscription(@Path("uuid") String parent,  @Body Subscription subscription);
+
+    @GET(API + "/{uuid}/children")
+    List<Entity> getChildren(@Path("uuid") String uuid);
+
+    @GET(API + "/{uuid}")
+    Entity getEntity(@Path("uuid") String uuid);
+
+    @GET(API + "/{uuid}/nearby")
+    List<Entity> getNearbyPoints(@Path("uuid")String uuid, @Query("meters") double meters);
 }

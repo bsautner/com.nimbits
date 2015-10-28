@@ -18,7 +18,6 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.hal.Embedded;
 import com.nimbits.client.model.hal.Links;
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 
 import java.io.Serializable;
@@ -64,11 +63,11 @@ public interface Entity extends Serializable, Comparable<Entity> {
 
     void setReadOnly(boolean readOnly);
 
-    void setChildren(List<Point> children);
+    void setChildren(List<Entity> children);
 
     void update(Entity update);
 
-    List<Point> getChildren();
+    List<Entity> getChildren();
 
     boolean isOwner(User user);
 

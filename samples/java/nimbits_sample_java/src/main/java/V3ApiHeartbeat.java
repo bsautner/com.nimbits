@@ -5,14 +5,16 @@ import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.io.Nimbits;
 
+import java.util.UUID;
+
 /**
  * Create a point and write the current time in ms to it until stopped
  *
  */
 public class V3ApiHeartbeat {
-    private static final String server = "http://localhost:8888";
-    private static final String adminEmail = "admin@example.com";
-    private static final String adminPassword = "password12345";
+    private static final String server = "http://localhost:8080";
+    private static final String adminEmail = "root@example.com";
+    private static final String adminPassword = "12345";
 
 
     public static void main(String... args) throws InterruptedException {
@@ -35,12 +37,15 @@ public class V3ApiHeartbeat {
 
         System.out.println(me.toString());
 
-        Point point = new PointModel.Builder().name("timestamp").create();
+
+
+        Point point = new PointModel.Builder().name("timestamp_" + UUID.randomUUID()).create();
         point = adminClient.addPoint(me, point);
         while (true) {
 
             adminClient.recordValue(point, new Value.Builder().doubleValue(System.currentTimeMillis()).create());
             Thread.sleep(1000);
+            Log("recorded " + System.currentTimeMillis());
         }
 
     }

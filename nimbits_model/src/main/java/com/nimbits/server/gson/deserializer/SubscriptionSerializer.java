@@ -16,15 +16,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.server.gson.GsonFactory;
 
 import java.lang.reflect.Type;
 
-public class CalculationSerializer implements JsonSerializer<Calculation> {
+public class SubscriptionSerializer implements JsonSerializer<Subscription> {
 
     @Override
-    public JsonElement serialize(final Calculation src, final Type type, final JsonSerializationContext jsonSerializationContext) {
+    public JsonElement serialize(final Subscription src, final Type type, final JsonSerializationContext jsonSerializationContext) {
         final String j = GsonFactory.getSimpleInstance().toJson(src);
         return new JsonPrimitive(j);
     }

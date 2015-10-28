@@ -82,7 +82,7 @@ public class Nimbits {
                 .setErrorHandler(new ErrorHandler() {
                     @Override
                     public Throwable handleError(RetrofitError retrofitError) {
-                        throw new NimbitsClientException(retrofitError.getMessage());
+                        throw new NimbitsClientException("Error in Rest Adapter", retrofitError);
                     }
                 })
                 .build();
@@ -112,6 +112,17 @@ public class Nimbits {
         return api.addUser(newUser);
     }
 
+    public boolean entityExists(String uuid) {
+        Entity e;
+
+        try {
+            e = api.getEntity(uuid);
+            return (e != null);
+        } catch (Exception ex) {
+            return false;
+        }
+
+    }
 
     /**
      * Add an entity as a child of a parent
@@ -139,6 +150,17 @@ public class Nimbits {
 
         return api.addPoint(parent.getUUID(), point);
 
+    }
+
+    /**
+     * get all children under an entity
+     * @param parent
+     * @return
+     */
+
+    public List<Entity> getChildren(Entity parent) {
+
+        return api.getChildren(parent.getUUID());
     }
 
 
@@ -200,7 +222,7 @@ public class Nimbits {
         return api.addWebhook(parent.getUUID(), webHook);
     }
 
-    public Subscription addSubscription(Category parent, Subscription subscription) {
+    public Subscription addSubscription(Entity parent, Subscription subscription) {
         return api.addSubscription(parent.getUUID(), subscription);
 
     }
@@ -214,6 +236,11 @@ public class Nimbits {
 
     public void recordValue(Point point, Value newValue) {
         recordValues(point, Collections.singletonList(newValue));
+    }
+
+
+    public List<Entity> getNearbyPoints(Point localPoint, double meters) {
+        return api.getNearbyPoints(localPoint.getUUID(), meters);
     }
 
     public static class NimbitsBuilder {

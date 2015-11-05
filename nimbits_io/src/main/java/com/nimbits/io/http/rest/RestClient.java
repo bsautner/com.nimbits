@@ -70,5 +70,12 @@ public interface RestClient {
     Entity getEntity(@Path("uuid") String uuid);
 
     @GET(API + "/{uuid}/nearby")
-    List<Entity> getNearbyPoints(@Path("uuid")String uuid, @Query("meters") double meters);
+    List<Point> getNearbyPoints(@Path("uuid")String uuid, @Query("meters") double meters);
+
+    @GET(API + "/me")
+    Point findPoint(@Query("point") String pointName);
+
+    @DELETE(API + "/{uuid}")
+    void deleteEntity(@Path("uuid") String uuid, Callback<Void> callback);
+
 }

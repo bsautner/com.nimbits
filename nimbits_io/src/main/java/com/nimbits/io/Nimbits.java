@@ -214,6 +214,20 @@ public class Nimbits {
         return api.getPoint(uuid);
     }
 
+    public void deleteEntity(Entity entity) {
+        api.deleteEntity(entity.getUUID(), new Callback<Void>() {
+            @Override
+            public void success(Void aVoid, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                throw new RuntimeException(retrofitError);
+            }
+        });
+    }
+
     public Category addCategory(User me, Category category) {
         return api.addCategory(me.getUUID(), category);
     }
@@ -234,12 +248,16 @@ public class Nimbits {
 
     }
 
+    public Point findPointByName(String pointName) {
+        return api.findPoint(pointName);
+    }
+
     public void recordValue(Point point, Value newValue) {
         recordValues(point, Collections.singletonList(newValue));
     }
 
 
-    public List<Entity> getNearbyPoints(Point localPoint, double meters) {
+    public List<Point> getNearbyPoints(Point localPoint, double meters) {
         return api.getNearbyPoints(localPoint.getUUID(), meters);
     }
 

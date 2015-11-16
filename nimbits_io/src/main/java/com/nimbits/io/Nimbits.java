@@ -197,6 +197,10 @@ public class Nimbits {
         return api.getData(entity.getUUID(), start.getTime(), end.getTime(), mask);
     }
 
+    public List<Value> getValues(Entity entity, Integer count) {
+        return api.getData(entity.getUUID(), count);
+    }
+
     /**
      *
      *
@@ -255,7 +259,6 @@ public class Nimbits {
     public void recordValue(Point point, Value newValue) {
         recordValues(point, Collections.singletonList(newValue));
     }
-
 
     public List<Point> getNearbyPoints(Point localPoint, double meters) {
         return api.getNearbyPoints(localPoint.getUUID(), meters);

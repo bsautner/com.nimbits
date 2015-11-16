@@ -18,8 +18,8 @@ import java.util.regex.PatternSyntaxException;
  *
  */
 public class RestClientTester {
-    private static final String EMAIL_ADDRESS ="adminxxzz1x@example.com";
-    private static final String INSTANCE_URL = "http://localhost:8888";
+    private static final String EMAIL_ADDRESS ="admin@example.com";
+    private static final String INSTANCE_URL = "http://localhost:8080";
     private static final String PASSWORD = "password1234";
     private static final Nimbits nimbits = new Nimbits.NimbitsBuilder()
             .email(EMAIL_ADDRESS).token(PASSWORD).instance(INSTANCE_URL).create();
@@ -194,6 +194,10 @@ public class RestClientTester {
             o("Verifying Data again with regex mask!");
             verifySeriesData("[o]+");
 
+            o("Make sure Count param is working");
+            verifyCountParam();
+
+
 
         }
 
@@ -230,7 +234,29 @@ public class RestClientTester {
             }
         }
 
+        private void verifyCountParam() {
+            for (Entity entity : pointList) {
+                for (int i = 1; i < 1000; i++) {
+                    o("getting " + i + " values for " + entity.getName());
+                    List<Value> values = nimbits.getValues(entity, i);
+                    if (values.size() != i) {
+                        throw new RuntimeException("asked for " + i + " values but got " + values.size());
+                    }
+
+                }
+
+
+
+
+
+            }
+        }
+
     }
+
+
+
+
 
     public static boolean containsMask(Value value, String mask) {
 

@@ -45,6 +45,11 @@ public interface RestClient {
     List<Value> getData(@Path("uuid") String uuid, @Query("start") long start, @Query("end") long end, @Query("mask") String mask);
 
     @GET(API + "/{uuid}/series")
+    List<Value> getData(@Path("uuid") String uuid, @Query("count") Integer count);
+
+
+
+    @GET(API + "/{uuid}/series")
     List<Value> getData(@Path("uuid") String uuid, @Query("start") long start, @Query("end") long end);
 
 

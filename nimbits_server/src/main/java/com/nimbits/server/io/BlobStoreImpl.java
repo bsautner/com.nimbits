@@ -15,6 +15,7 @@
 package com.nimbits.server.io;
 
 
+import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import com.google.gson.Gson;
@@ -24,7 +25,6 @@ import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
-
 import com.nimbits.server.defrag.Defragmenter;
 import com.nimbits.server.defrag.ValueDayHolder;
 import com.nimbits.server.transaction.cache.NimbitsCache;
@@ -36,12 +36,9 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.net.DatagramSocket;
-import java.net.Socket;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -76,7 +73,7 @@ public class BlobStoreImpl implements BlobStore {
 
 
     @Override
-    public List<Value> getTopDataSeries(final Entity entity)  {
+    public List<Value> getTopDataSeries(final Entity entity, Optional<Integer> count)  {
 
         logger.info("getTopDataSeries 3");
 
@@ -128,25 +125,30 @@ public class BlobStoreImpl implements BlobStore {
 
                     for (String sortedFilePath : filePaths) {
                         logger.info(sortedFilePath);
-                        List<Value> values = readValuesFromFile(sortedFilePath);
-                        retObj.addAll(values);
+                        if (! count.isPresent() || retObj.size() < count.get()) {
+                            List<Value> values = readValuesFromFile(sortedFilePath);
+                            retObj.addAll(values);
 
-                        allReadFiles.add(sortedFilePath);
-                        //DEFRAG IF over 1000 values are contained in over 1000 files
-                        if (retObj.size() > INITIAL_CAPACITY && filePaths.size() > INITIAL_CAPACITY) {
+                            allReadFiles.add(sortedFilePath);
+                        }
+                        if (count.isPresent() && retObj.size() >= count.get()) {
+                            return retObj;
+                        }
+                        //DEFRAG IF over 1000 values are contained in over 1000 files and we didn't get a segment with a top count (otherwise data loss would occur)
+                        if (! count.isPresent() && retObj.size() > INITIAL_CAPACITY && filePaths.size() > INITIAL_CAPACITY) {
                             deleteAndRestore(entity, retObj, allReadFiles);
                             return retObj;
                         }
                     }
-
-
                 }
 
 
             }
 
 
-            deleteAndRestore(entity, retObj, allReadFiles);
+            if (! count.isPresent()) {
+                deleteAndRestore(entity, retObj, allReadFiles);
+            }
             return retObj;
         }
         else {
@@ -407,30 +409,30 @@ public class BlobStoreImpl implements BlobStore {
 //        }
 //    }
 
-    private static class Closer {
-
-        public static void closeSilently(Object... xs) {
-            // Note: on Android API levels prior to 19 Socket does not implement Closeable
-            for (Object x : xs) {
-                if (x != null) {
-                    try {
-
-                        if (x instanceof Closeable) {
-                            ((Closeable)x).close();
-                        } else if (x instanceof Socket) {
-                            ((Socket)x).close();
-                        } else if (x instanceof DatagramSocket) {
-                            ((DatagramSocket)x).close();
-                        } else {
-
-                            throw new RuntimeException("cannot close "+x);
-                        }
-                    } catch (Throwable e) {
-
-                    }
-                }
-            }
-        }
-    }
+//    private static class Closer {
+//
+//        public static void closeSilently(Object... xs) {
+//            // Note: on Android API levels prior to 19 Socket does not implement Closeable
+//            for (Object x : xs) {
+//                if (x != null) {
+//                    try {
+//
+//                        if (x instanceof Closeable) {
+//                            ((Closeable)x).close();
+//                        } else if (x instanceof Socket) {
+//                            ((Socket)x).close();
+//                        } else if (x instanceof DatagramSocket) {
+//                            ((DatagramSocket)x).close();
+//                        } else {
+//
+//                            throw new RuntimeException("cannot close "+x);
+//                        }
+//                    } catch (Throwable e) {
+//
+//                    }
+//                }
+//            }
+//        }
+//    }
 
 }

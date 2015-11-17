@@ -27,7 +27,7 @@ import com.nimbits.client.model.point.PointModelFactory;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.io.helper.PointHelper;
 
-
+@Deprecated //all helper classes are being replaced with the Nimbits.Builder() client
 public class PointHelperImpl extends EntityHelperImpl implements PointHelper {
 
 

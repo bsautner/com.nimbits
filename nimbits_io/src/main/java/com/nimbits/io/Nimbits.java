@@ -3,6 +3,7 @@ package com.nimbits.io;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.nimbits.client.constants.Const;
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.category.Category;
@@ -30,20 +31,14 @@ import java.util.List;
  * and basic authentication
  *
  */
-
+@SuppressWarnings("unused")
 public class Nimbits {
 
-    private final String email;
-    private final String token;
-    private final String instance;
-    private final RequestInterceptor requestInterceptor;
-    private final RestAdapter restAdapter;
+
     private final RestClient api;
 
     private Nimbits(final String email, final String token, String instance) {
-        this.email = email;
-        this.token = token;
-        this.instance = instance;
+
 
         final Gson gson =new GsonBuilder()
                 .setDateFormat(Const.GSON_DATE_FORMAT)
@@ -64,10 +59,9 @@ public class Nimbits {
                 .create();
 
 
-
-        this.requestInterceptor = new RequestInterceptor() {
+        RequestInterceptor requestInterceptor = new RequestInterceptor() {
             @Override
-            public void intercept(RequestInterceptor.RequestFacade request) {
+            public void intercept(RequestFacade request) {
 
                 request.addHeader("Accept", "application/hal+json");
                 request.addHeader("Authorization", "Basic " + email + ":" + token);  //TODO BASE64 encode this
@@ -75,7 +69,7 @@ public class Nimbits {
             }
         };
 
-        restAdapter = new RestAdapter.Builder()
+        RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(instance)
                 .setRequestInterceptor(requestInterceptor)
                 .setConverter(new GsonConverter(gson))
@@ -104,13 +98,14 @@ public class Nimbits {
 
     /**
      * if you are using an admin id, you can add users here.
-     * @param newUser
+     * @param newUser a complete user object without an id or uuid
      * @return
      */
     public User addUser(User newUser) {
 
         return api.addUser(newUser);
     }
+
 
     public boolean entityExists(String uuid) {
         Entity e;
@@ -256,6 +251,18 @@ public class Nimbits {
         return api.findPoint(pointName);
     }
 
+    /**
+     * Provides a way to search for an entity by the entity name. Note that some some types of entities may have the same name and
+     * this method will return the first one found.
+     * @param entityName
+     * @param entityType
+     * @See EntityType
+     * @return The Entity, which may be downcasted to the type requestes (i.e Point, Calculation which extend Entity)
+     */
+    public Entity findEntityByName(String entityName, EntityType entityType) {
+        return api.findEntity(entityName, entityType.getCode());
+    }
+
     public void recordValue(Point point, Value newValue) {
         recordValues(point, Collections.singletonList(newValue));
     }
@@ -264,6 +271,37 @@ public class Nimbits {
         return api.getNearbyPoints(localPoint.getUUID(), meters);
     }
 
+
+
+
+    public static class Builder {
+
+        private String email;
+        private String token;
+        private String instance;
+
+
+        public Builder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public Builder token(String token) {
+            this.token = token;
+            return this;
+        }
+
+        public Builder instance(String instance) {
+            this.instance = instance;
+            return this;
+        }
+
+        public Nimbits create() {
+            return new Nimbits(email, token, instance);
+        }
+    }
+
+    @Deprecated //user Builder()
     public static class NimbitsBuilder {
 
         private String email;

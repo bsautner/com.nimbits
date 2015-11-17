@@ -83,4 +83,6 @@ public interface RestClient {
     @DELETE(API + "/{uuid}")
     void deleteEntity(@Path("uuid") String uuid, Callback<Void> callback);
 
+    @GET(API + "/me")
+    Entity findEntity(@Query("name") String entityName, @Query("type") int entityType);
 }

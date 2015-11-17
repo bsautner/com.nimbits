@@ -15,6 +15,7 @@ import java.util.Map;
  *
  * @see com.nimbits.client.model.value.Value
  */
+@Deprecated //all helper classes are being replaced with the Nimbits.Builder() client
 public interface ValueHelper {
 
     /**

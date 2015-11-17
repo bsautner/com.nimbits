@@ -8,6 +8,7 @@ import com.nimbits.client.model.user.User;
  *
  * @see com.nimbits.client.model.user.User
  */
+@Deprecated //all helper classes are being replaced with the Nimbits.Builder() client
 public interface UserHelper {
 
     /**

@@ -9,6 +9,7 @@ import com.nimbits.io.helper.impl.ValueHelperImpl;
 /**
  * Convenience class to get helpers for recorded data, getting sessions and points etc.
  */
+@Deprecated //all helper classes are being replaced with the Nimbits.Builder() client
 public class HelperFactory {
 
 

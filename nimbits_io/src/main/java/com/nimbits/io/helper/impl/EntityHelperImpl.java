@@ -1,7 +1,6 @@
 package com.nimbits.io.helper.impl;
 
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.SummaryType;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.calculation.CalculationModelFactory;
@@ -26,7 +25,7 @@ import com.nimbits.io.http.NimbitsClientFactory;
 import java.util.Date;
 import java.util.List;
 
-
+@Deprecated
 public class EntityHelperImpl implements EntityHelper {
 
     protected final NimbitsClient nimbitsClient;

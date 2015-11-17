@@ -26,6 +26,9 @@ public enum Parameters {
     client(ParamConstants.PARAM_CLIENT),
     code(ParamConstants.PARAM_CODE),
     count(ParamConstants.PARAM_COUNT),
+    start(ParamConstants.PARAM_START),
+    end(ParamConstants.PARAM_END),
+    mask(ParamConstants.PARAM_MASK),
     diagram(ParamConstants.PARAM_DIAGRAM),
     blob(ParamConstants.PARAM_BLOB),
     email(ParamConstants.PARAM_EMAIL),
@@ -146,6 +149,9 @@ public enum Parameters {
         private static final String PARAM_CLIENT = "client";
         private static final String PARAM_CODE = "code";
         private static final String PARAM_COUNT = "count";
+        private static final String PARAM_START= "start";
+        private static final String PARAM_END = "end";
+        private static final String PARAM_MASK = "mask";
         private static final String PARAM_DIAGRAM = "diagram";
         private static final String PARAM_BLOB = "blob";
         private static final String PARAM_EMAIL = "email";

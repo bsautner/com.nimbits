@@ -72,16 +72,22 @@ public class BlobStoreImpl implements BlobStore {
     }
 
 
-    @Override
-    public List<Value> getTopDataSeries(final Entity entity, Optional<Integer> count)  {
 
-        logger.info("getTopDataSeries 3");
+
+    @Override
+    public List<Value> getSeries(final Entity entity, final Optional<Range<Date>> timespan, final Optional<Range<Integer>> range, Optional<String> mask) {
+        //TODO - some way to test if a count has been reached before reading all files if no timespan is give - like test the list by processing it to see if it's complete
+        //enough to return while reading other files.
 
         String path = root + "/" + entity.getKey();
-        logger.info("path=" + path);
-        List<Value> retObj = new ArrayList<>(INITIAL_CAPACITY);
+        List<Value> allvalues = new ArrayList<>(INITIAL_CAPACITY);
         List<String> allReadFiles = new ArrayList<>(INITIAL_CAPACITY);
         File file = new File(path);
+
+        Range<Date> maxRange = timespan.isPresent() ?
+                Range.closed(defragmenter.zeroOutDateToStart(timespan.get().lowerEndpoint()), defragmenter.zeroOutDateToStart(timespan.get().upperEndpoint())) :
+                Range.closed(defragmenter.zeroOutDateToStart(new Date(0)), defragmenter.zeroOutDateToStart(new Date())); // all dates
+
         if (file.exists()) {
 
             List<String> dailyFolderPaths = new ArrayList<>();
@@ -89,11 +95,13 @@ public class BlobStoreImpl implements BlobStore {
             for (String dailyFolderPath : file.list()) {
 
                 File node = new File(dailyFolderPath);
-                logger.info("found: " + dailyFolderPath + " " + node.isDirectory());
 
                 if (! node.getName().endsWith(SNAPSHOT)) {
+                    Long timestamp = Long.valueOf(dailyFolderPath);
+                    if (maxRange.contains(new Date(timestamp))) {
 
-                    dailyFolderPaths.add(root + "/" + entity.getKey() + "/" + dailyFolderPath);
+                        dailyFolderPaths.add(root + "/" + entity.getKey() + "/" + dailyFolderPath);
+                    }
 
                 }
 
@@ -105,7 +113,6 @@ public class BlobStoreImpl implements BlobStore {
                 Collections.reverse(dailyFolderPaths);
 
                 for (String sortedDayPath : dailyFolderPaths) {
-                    logger.info("processing sub directory: " + sortedDayPath);
                     Iterator result2 = FileUtils.iterateFiles(new File(sortedDayPath), null, false);
                     List<String> filePaths = new ArrayList<>();
 
@@ -113,7 +120,6 @@ public class BlobStoreImpl implements BlobStore {
 
                         File listItem = (File) result2.next();
                         String filePath = listItem.getName();
-                        logger.info("found data file: " + filePath);
                         if (!filePath.endsWith(SNAPSHOT)) {
                             filePaths.add(sortedDayPath + "/" + filePath);
                         }
@@ -124,32 +130,24 @@ public class BlobStoreImpl implements BlobStore {
                     Collections.reverse(filePaths);
 
                     for (String sortedFilePath : filePaths) {
-                        logger.info(sortedFilePath);
-                        if (! count.isPresent() || retObj.size() < count.get()) {
-                            List<Value> values = readValuesFromFile(sortedFilePath);
-                            retObj.addAll(values);
+                        List<Value> values = readValuesFromFile(sortedFilePath);
+                        allvalues.addAll(values);
+                        allReadFiles.add(sortedFilePath);
 
-                            allReadFiles.add(sortedFilePath);
-                        }
-                        if (count.isPresent() && retObj.size() >= count.get()) {
-                            return retObj;
-                        }
-                        //DEFRAG IF over 1000 values are contained in over 1000 files and we didn't get a segment with a top count (otherwise data loss would occur)
-                        if (! count.isPresent() && retObj.size() > INITIAL_CAPACITY && filePaths.size() > INITIAL_CAPACITY) {
-                            deleteAndRestore(entity, retObj, allReadFiles);
-                            return retObj;
-                        }
                     }
+
+
                 }
-
-
             }
 
+            List<Value> filtered = storageIO.filterValues(allvalues, timespan, range, mask);
 
-            if (! count.isPresent()) {
-                deleteAndRestore(entity, retObj, allReadFiles);
+            if (allReadFiles.size() > INITIAL_CAPACITY) {  //TODO will break if # of days = initial capacity
+                logger.info("Defragmenting " + allReadFiles.size());
+                deleteAndRestore(entity, allvalues, allReadFiles);
             }
-            return retObj;
+            logger.info("****** returning " + filtered.size());
+            return ImmutableList.copyOf(filtered);
         }
         else {
             logger.info("file not found");
@@ -221,90 +219,7 @@ public class BlobStoreImpl implements BlobStore {
 
     }
 
-    @Override
-    public List<Value> getDataSegment(final Entity entity, final Range<Date> timespan, String mask) {
 
-
-        String path = root + "/" + entity.getKey();
-        logger.info("path=" + path);
-        List<Value> allvalues = new ArrayList<>(INITIAL_CAPACITY);
-        List<String> allReadFiles = new ArrayList<>(INITIAL_CAPACITY);
-        File file = new File(path);
-        Range<Date> maxRange = Range.closed(defragmenter.zeroOutDateToStart(timespan.lowerEndpoint()), defragmenter.zeroOutDateToStart(timespan.upperEndpoint()));
-        if (file.exists()) {
-
-            List<String> dailyFolderPaths = new ArrayList<>();
-
-            for (String dailyFolderPath : file.list()) {
-
-                File node = new File(dailyFolderPath);
-                logger.info("found: " + dailyFolderPath + " " + node.isDirectory());
-
-                if (! node.getName().endsWith(SNAPSHOT)) {
-                    Long timestamp = Long.valueOf(dailyFolderPath);
-                    if (maxRange.contains(new Date(timestamp))) {
-
-                        dailyFolderPaths.add(root + "/" + entity.getKey() + "/" + dailyFolderPath);
-                    }
-
-                }
-
-
-            }
-
-            if (!dailyFolderPaths.isEmpty()) {
-                Collections.sort(dailyFolderPaths);
-                Collections.reverse(dailyFolderPaths);
-
-                for (String sortedDayPath : dailyFolderPaths) {
-                    logger.info("processing sub directory: " + sortedDayPath);
-                    Iterator result2 = FileUtils.iterateFiles(new File(sortedDayPath), null, false);
-                    List<String> filePaths = new ArrayList<>();
-
-                    while (result2.hasNext()) {
-
-                        File listItem = (File) result2.next();
-                        String filePath = listItem.getName();
-                        logger.info("found data file: " + filePath);
-                        if (!filePath.endsWith(SNAPSHOT)) {
-                            filePaths.add(sortedDayPath + "/" + filePath);
-                        }
-
-
-                    }
-                    Collections.sort(filePaths);
-                    Collections.reverse(filePaths);
-
-                    for (String sortedFilePath : filePaths) {
-                        logger.info(sortedFilePath);
-                        List<Value> values = readValuesFromFile(sortedFilePath);
-                        allvalues.addAll(values);
-
-                        allReadFiles.add(sortedFilePath);
-
-                    }
-
-
-                }
-
-
-            }
-
-            List<Value> filtered = storageIO.filterValues(timespan, mask, allvalues);
-            if (allReadFiles.size() > INITIAL_CAPACITY) {  //TODO will break if # of days = initial capacity
-                logger.info("Defragmenting " + allReadFiles.size());
-                deleteAndRestore(entity, allvalues, allReadFiles);
-            }
-            logger.info("****** returning " + filtered.size());
-            return ImmutableList.copyOf(filtered);
-        }
-        else {
-            logger.info("file not found");
-            return Collections.emptyList();
-        }
-
-
-    }
 
 
     private List<Value> readValuesFromFile(String path) {

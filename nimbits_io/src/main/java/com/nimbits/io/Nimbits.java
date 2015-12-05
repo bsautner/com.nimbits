@@ -247,6 +247,14 @@ public class Nimbits {
 
     }
 
+    public Value getSnapshot(Entity entity) {
+        ValueContainer valueContainer =  api.getSnapshot(entity.getUUID());
+        return valueContainer.getSnapshot();
+
+
+    }
+
+
     public Point findPointByName(String pointName) {
         return api.findPoint(pointName);
     }

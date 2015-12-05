@@ -30,7 +30,7 @@ import java.util.Map;
  *
  * @see com.nimbits.client.model package for the varios POJOs this api returns.
  */
-
+@Deprecated //please use Nimbits.Builder()
 public interface NimbitsClient {
 
 

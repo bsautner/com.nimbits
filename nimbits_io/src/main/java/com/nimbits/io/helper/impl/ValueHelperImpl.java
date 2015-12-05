@@ -25,7 +25,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-
+@Deprecated //all helper classes are being replaced with the Nimbits.Builder() client
 public class ValueHelperImpl implements ValueHelper {
     private final Server server;
 

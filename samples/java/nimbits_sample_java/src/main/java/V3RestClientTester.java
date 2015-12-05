@@ -17,11 +17,11 @@ import java.util.regex.PatternSyntaxException;
  *
  *
  */
-public class RestClientTester {
+public class V3RestClientTester {
     private static final String EMAIL_ADDRESS ="admin@example.com";
     private static final String INSTANCE_URL = "http://localhost:8080";
     private static final String PASSWORD = "password1234";
-    private static final Nimbits nimbits = new Nimbits.NimbitsBuilder()
+    private static final Nimbits nimbits = new Nimbits.Builder()
             .email(EMAIL_ADDRESS).token(PASSWORD).instance(INSTANCE_URL).create();
 
     public static void main(String[] args) throws InterruptedException {

@@ -1,8 +1,10 @@
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.category.CategoryModel;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.subscription.Subscription;
@@ -14,6 +16,7 @@ import com.nimbits.client.model.webhook.HttpMethod;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
 import com.nimbits.io.Nimbits;
+import com.nimbits.io.http.NimbitsClientException;
 
 import java.util.*;
 
@@ -21,10 +24,10 @@ import java.util.*;
 public class V3Sample1 {
 
     /**
-     * This sample uses nimbits.io to:
+     * This sample is meant to walk through some of the basic nimbits automation features and uses nimbits.io to:
      *
      * 1. Create an admin user on a new nimbits server
-     * 2. Create some regular users using the admin's credentials
+     * 2. Create some regular users using the admin's credentials - then delete some of them
      * 3. Re-Connect to the server as a regular user
      * 4. Create A folder under the user's account
      * 5. Create Some Data Points in that folder
@@ -53,8 +56,8 @@ public class V3Sample1 {
 
 
     private static final String server = "http://localhost:8080";
-    private static final String adminEmail = "root@example.com";
-    private static final String adminPassword = "12345";
+    private static final String adminEmail = "admin@example.com";
+    private static final String adminPassword = "password1234";
 
 
 
@@ -69,7 +72,7 @@ public class V3Sample1 {
 
          */
 
-        Nimbits adminClient = new Nimbits.NimbitsBuilder()
+        Nimbits adminClient = new Nimbits.Builder()
                 .email(adminEmail).token(adminPassword).instance(server).create();
 
 
@@ -111,6 +114,38 @@ public class V3Sample1 {
             Log(throwable.getMessage());
         }
 
+        //create a second user with a random account
+        String email2 = UUID.randomUUID().toString() + "@example.com";
+
+        try {
+
+            User basicUser = new UserModel.Builder().email(email2).password(password).create();
+            basicUser = adminClient.addUser(basicUser);
+
+            Log("Created User: " + basicUser.toString());
+        } catch (Throwable throwable) {
+            //This will throw if the user already exists
+
+            Log(throwable.getMessage());
+        }
+
+        //veryify user exists
+
+        Entity retrieved =  adminClient.findEntityByName(email2, EntityType.user);
+        Log("Downloaded user to make sure it exists: " + retrieved.getUUID());
+        adminClient.deleteEntity(retrieved);
+
+        //make sure it was deleted
+        try {
+            Entity retrieved2 = adminClient.findEntityByName(email2, EntityType.user);
+            Log("should not exist: " + retrieved2.getUUID());
+            throw new RuntimeException("User was not deleted");
+        } catch (NimbitsClientException shouldHappen) {
+            Log("expected entity not found exception");
+        }
+
+
+
 
         /*
         Step 3
@@ -118,7 +153,7 @@ public class V3Sample1 {
         Create a new client with the user's credentials instead:
          */
 
-        Nimbits client = new Nimbits.NimbitsBuilder()
+        Nimbits client = new Nimbits.Builder()
                 .email(email).token(password).instance(server).create();
 
         User me = client.getMe();

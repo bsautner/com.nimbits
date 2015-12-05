@@ -2,7 +2,6 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
-import com.nimbits.client.model.value.Value;
 import com.nimbits.io.Nimbits;
 
 import java.util.UUID;
@@ -11,10 +10,10 @@ import java.util.UUID;
  * Create a point and write the current time in ms to it until stopped
  *
  */
-public class V3ApiHeartbeat {
+public class V3ApiChildrenTest {
     private static final String server = "http://localhost:8080";
-    private static final String adminEmail = "root@example.com";
-    private static final String adminPassword = "12345";
+    private static final String adminEmail = "admin@example.com";
+    private static final String adminPassword = "password1234";
 
 
     public static void main(String... args) throws InterruptedException {
@@ -39,14 +38,15 @@ public class V3ApiHeartbeat {
 
 
 
-        Point point = new PointModel.Builder().name("timestamp_" + UUID.randomUUID()).create();
-        point = adminClient.addPoint(me, point);
-        while (true) {
+        for (int i = 0; i < 10; i++) {
+            Point point = new PointModel.Builder().name("child_" + UUID.randomUUID()).create();
+            point = adminClient.addPoint(me, point);
 
-            adminClient.recordValue(point, new Value.Builder().doubleValue(System.currentTimeMillis()).create());
-            Thread.sleep(1000);
-            Log("recorded " + System.currentTimeMillis());
         }
+
+        me = adminClient.getMe();
+        Log("Got Children: " + me.getChildren().size());
+
 
     }
 

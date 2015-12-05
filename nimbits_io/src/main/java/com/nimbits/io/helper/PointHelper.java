@@ -8,6 +8,7 @@ import com.nimbits.client.model.point.Point;
  *
  * @see com.nimbits.client.model.point.Point
  */
+@Deprecated //all helper classes are being replaced with the Nimbits.Builder() client
 public interface PointHelper extends EntityHelper {
 
     /**

@@ -12,6 +12,7 @@ import com.nimbits.io.http.NimbitsClientFactory;
  *
  * @see com.nimbits.client.model.user.User
  */
+@Deprecated //Please use the Nimbits.Builder() client
 public class UserHelperImpl implements UserHelper {
 
 

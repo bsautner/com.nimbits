@@ -1,7 +1,6 @@
 package com.nimbits.io.helper;
 
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.SummaryType;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.category.Category;
@@ -17,6 +16,7 @@ Helps create various objects on your account, such as points, folders and helps 
 
 
  */
+@Deprecated //all helper classes are being replaced with the Nimbits.Builder() client
 public interface EntityHelper {
 
     /**

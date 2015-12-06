@@ -1,16 +1,16 @@
 public class V3IntegrationTest {
 
 
-    public void main(String ... args) throws InterruptedException {
+    public static void main(String[] args) throws InterruptedException {
 
 
-        Test t = new Test();
-        t.execute();
+
+        Test loadTester = new Test();
+        loadTester.execute();
 
 
     }
-
-    private class Test extends NimbitsTest {
+    private static class Test extends NimbitsTest {
 
         @Override
         public void execute() throws InterruptedException {

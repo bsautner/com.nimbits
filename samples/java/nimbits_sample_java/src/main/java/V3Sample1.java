@@ -289,8 +289,8 @@ public class V3Sample1 {
         calendar.add(Calendar.YEAR, -1); //start in some time in the past
 
         //we're going to store the values we record locally so we can compare them with what we download
-        List<Value> dogs = new ArrayList<>();
-        List<Value> cats = new ArrayList<>();
+        List<Value> dogs = new ArrayList<Value>();
+        List<Value> cats = new ArrayList<Value>();
 
         String DOG = "dog";
         String CAT = "cat";
@@ -407,7 +407,7 @@ public class V3Sample1 {
         seriesSnapshotTestPoint = client.addPoint(folder, seriesSnapshotTestPoint);
 
 
-        List<Value> seriesSnapshotTest = new ArrayList<>();
+        List<Value> seriesSnapshotTest = new ArrayList<Value>();
         Calendar c = Calendar.getInstance();
 
         c.add(Calendar.YEAR, -1);

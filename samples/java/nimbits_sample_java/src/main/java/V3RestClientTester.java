@@ -31,8 +31,8 @@ public class V3RestClientTester  {
 
     private static class NimbitsLoadTester extends NimbitsTest {
 
-        private List<Entity> pointList = new ArrayList<>();
-        private Map<Entity, List<Value>> storedValues = new HashMap<>();
+        private List<Entity> pointList = new ArrayList<Entity>();
+        private Map<Entity, List<Value>> storedValues = new HashMap<Entity, List<Value>>();
 
         public void execute() throws InterruptedException {
 
@@ -100,7 +100,7 @@ public class V3RestClientTester  {
 
             for (Entity entity : pointList) {
 
-                List<Value> values = new ArrayList<>();
+                List<Value> values = new ArrayList<Value>();
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.DAY_OF_YEAR, -30);
                 for (int i = 0; i < 1000; i++) {

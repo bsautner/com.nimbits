@@ -40,7 +40,7 @@ public class V3ApiChildrenTest {
 
         for (int i = 0; i < 10; i++) {
             Point point = new PointModel.Builder().name("child_" + UUID.randomUUID()).create();
-            point = adminClient.addPoint(me, point);
+            adminClient.addPoint(me, point);
 
         }
 

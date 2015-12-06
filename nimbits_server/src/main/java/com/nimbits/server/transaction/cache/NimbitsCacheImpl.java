@@ -20,24 +20,14 @@ package com.nimbits.server.transaction.cache;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.nimbits.client.model.value.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.logging.Logger;
 
 @Component
 public class NimbitsCacheImpl extends BaseCache implements NimbitsCache {
     private Cache<Object, Object> cache;
 
-
-    private final Logger logger = Logger.getLogger(NimbitsCacheImpl.class.getName());
-
     public NimbitsCacheImpl() {
         cache = CacheBuilder.newBuilder().build();
-
-
-
 
     }
 

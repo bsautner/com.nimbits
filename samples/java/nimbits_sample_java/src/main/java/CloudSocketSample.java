@@ -5,16 +5,11 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
 import com.nimbits.client.model.server.apikey.AccessToken;
-
 import com.nimbits.client.model.user.User;
 import com.nimbits.io.NimbitsClient;
-import com.nimbits.io.helper.HelperFactory;
-import com.nimbits.io.helper.ValueHelper;
 import com.nimbits.io.http.NimbitsClientFactory;
 import com.nimbits.io.socket.SocketConnection;
 import com.nimbits.io.socket.SocketListener;
-
-import java.util.Random;
 
 /**
  * An example of writing values to a data point and also having a web socket open to receive those events.
@@ -81,10 +76,10 @@ public class CloudSocketSample {
             }
         });
 
-        socketConnection.sendMessage("Hello Nimbits Socket! " + System.currentTimeMillis());
-        ValueHelper valueHelper = HelperFactory.getValueHelper(cloudServer);
-        Random random = new Random();
-        valueHelper.recordValue("foo", random.nextDouble() * 100);
+//        socketConnection.sendMessage("Hello Nimbits Socket! " + System.currentTimeMillis());
+//        ValueHelper valueHelper = HelperFactory.getValueHelper(cloudServer);
+//        Random random = new Random();
+//        valueHelper.recordValue("foo", random.nextDouble() * 100);100
 
     }
 }

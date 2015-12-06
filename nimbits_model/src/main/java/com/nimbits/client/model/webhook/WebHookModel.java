@@ -6,6 +6,7 @@ import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityName;
 
@@ -23,18 +24,31 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
     @Expose
     private String downloadTarget;
 
+    @Expose
+    private int bodyChannel;
+
+
+    @Expose
+    private int pathChannel;
+
 
 
     public WebHookModel(final CommonIdentifier name,
                         final String description,
-                        final String parent
-                , HttpMethod method,
-                        UrlContainer url, boolean enabled, String downloadTarget) {
+                        final String parent,
+                        final HttpMethod method,
+                        final DataChannel pathChannel,
+                        final DataChannel bodyChannel,
+                        final UrlContainer url,
+                        final boolean enabled,
+                        final String downloadTarget) {
         super(name, description, EntityType.webhook, ProtectionLevel.everyone, parent, null, null);
         this.method = method.getCode();
         this.url = url.getUrl();
         this.enabled = enabled;
         this.downloadTarget = downloadTarget;
+        this.pathChannel = pathChannel == null ? DataChannel.none.getCode() :  pathChannel.getCode();
+        this.bodyChannel = bodyChannel == null ? DataChannel.none.getCode() :  bodyChannel.getCode();
     }
 
     public WebHookModel(WebHook webHook) {
@@ -43,15 +57,52 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
         this.url = webHook.getUrl().getUrl();
         this.enabled = webHook.isEnabled();
         this.downloadTarget = webHook.getDownloadTarget();
+        this.pathChannel = webHook.getPathChannel().getCode();
+        this.bodyChannel = webHook.getBodyChannel().getCode();
     }
     protected WebHookModel() {
+
     }
 
+    @Override
+    public void update(Entity update) {
+        super.update(update);
+        WebHook webHook = (WebHook) update;
+        this.method = webHook.getMethod().getCode();
+        this.url = webHook.getUrl().getUrl();
+        this.enabled = webHook.isEnabled();
+        this.downloadTarget = webHook.getDownloadTarget();
+        this.pathChannel = webHook.getPathChannel().getCode();
+        this.bodyChannel = webHook.getBodyChannel().getCode();
+    }
 
     @Override
     public HttpMethod getMethod() {
         return HttpMethod.lookup(this.method);
     }
+
+    @Override
+    public DataChannel getPathChannel() {
+        return DataChannel.lookup(pathChannel);
+    }
+
+    @Override
+    public void setPathChannel(DataChannel dataChannel) {
+        this.pathChannel = dataChannel.getCode();
+    }
+
+    @Override
+    public DataChannel getBodyChannel() {
+        return DataChannel.lookup(bodyChannel);
+    }
+
+    @Override
+    public void setBodyChannel(DataChannel dataChannel) {
+        this.bodyChannel = dataChannel.getCode();
+
+    }
+
+
     @Override
     public UrlContainer getUrl() {
         return UrlContainer.getInstance(url);
@@ -84,9 +135,13 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
     }
 
 
+
     public static class Builder extends EntityBuilder  {
 
         private HttpMethod method;
+        private DataChannel bodyChannel;
+        private DataChannel pathChannel;
+
         private UrlContainer url;
 
 
@@ -95,6 +150,16 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
 
         public Builder setMethod(HttpMethod method) {
             this.method = method;
+            return this;
+        }
+
+        public Builder bodyChannel(DataChannel channel) {
+            this.bodyChannel = channel;
+            return this;
+        }
+
+        public Builder pathChannel(DataChannel channel) {
+            this.pathChannel = channel;
             return this;
         }
 
@@ -119,7 +184,13 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
 
 
         public WebHook create() {
-            return new WebHookModel(name, description, parent, method, url, true, downloadTarget );
+            if (pathChannel == null) {
+                pathChannel = DataChannel.none;
+            }
+            if (bodyChannel == null) {
+                bodyChannel = DataChannel.none;
+            }
+            return new WebHookModel(name, description, parent, method, pathChannel, bodyChannel, url, true, downloadTarget );
         }
 
         @Override

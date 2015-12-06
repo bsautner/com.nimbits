@@ -6,8 +6,6 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.user.User;
-import com.nimbits.io.helper.EntityHelper;
-import com.nimbits.io.helper.HelperFactory;
 
 import java.util.List;
 

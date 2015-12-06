@@ -1,10 +1,16 @@
 package com.nimbits.io.http.rest;
 
+import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.connection.Connection;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.hal.ValueContainer;
+import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.schedule.Schedule;
+import com.nimbits.client.model.socket.Socket;
 import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.sync.Sync;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.webhook.WebHook;
@@ -80,9 +86,38 @@ public interface RestClient {
     @GET(API + "/me")
     Point findPoint(@Query("point") String pointName);
 
+
+
     @DELETE(API + "/{uuid}")
     void deleteEntity(@Path("uuid") String uuid, Callback<Void> callback);
 
     @GET(API + "/me")
     Entity findEntity(@Query("name") String entityName, @Query("type") int entityType);
+
+    @GET(API + "/me")
+    Category findCategory(@Query("name") String entityName, @Query("type") int entityType);
+
+    @GET(API + "/me")
+    WebHook findWebHook(@Query("name") String entityName, @Query("type") int entityType);
+
+    @GET(API + "/me")
+    Subscription findSubscription(@Query("name") String entityName, @Query("type") int entityType);
+
+    @GET(API + "/me")
+    Sync findSync(@Query("name") String entityName, @Query("type") int entityType);
+
+    @GET(API + "/me")
+    Calculation findCalculation(@Query("name") String entityName, @Query("type") int entityType);
+
+    @GET(API + "/me")
+    Instance findInstance(@Query("name") String entityName, @Query("type") int entityType);
+
+    @GET(API + "/me")
+    Connection findConnection(@Query("name") String entityName, @Query("type") int entityType);
+
+    @GET(API + "/me")
+    Schedule findSchedule(@Query("name") String entityName, @Query("type") int entityType);
+
+    @GET(API + "/me")
+    Socket findSocket(@Query("name") String entityName, @Query("type") int entityType);
 }

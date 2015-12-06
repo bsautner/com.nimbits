@@ -217,8 +217,8 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         List<Value> sample = seriesApi.getSeries(entity);
 
-        List<Value> fixed = new ArrayList<>(sample.size());
-        Set<Long> test = new HashSet<>(sample.size());
+        List<Value> fixed = new ArrayList<Value>(sample.size());
+        Set<Long> test = new HashSet<Long>(sample.size());
         for (Value value : sample) {
             if (!test.contains(value.getTimestamp().getTime())) {
                 fixed.add(value);
@@ -251,8 +251,8 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         List<Value> sample = seriesApi.getSeries(entity, count);
 
-        List<Value> fixed = new ArrayList<>(sample.size());
-        Set<Long> test = new HashSet<>(sample.size());
+        List<Value> fixed = new ArrayList<Value>(sample.size());
+        Set<Long> test = new HashSet<Long>(sample.size());
         for (Value value : sample) {
             if (!test.contains(value.getTimestamp().getTime())) {
                 fixed.add(value);
@@ -281,8 +281,8 @@ public class NimbitsClientImpl implements NimbitsClient {
 
         List<Value> sample = seriesApi.getSeries(entity, range.lowerEndpoint().getTime(), range.upperEndpoint().getTime());
 
-        List<Value> fixed = new ArrayList<>(sample.size());
-        Set<Long> test = new HashSet<>(sample.size());
+        List<Value> fixed = new ArrayList<Value>(sample.size());
+        Set<Long> test = new HashSet<Long>(sample.size());
         for (Value value : sample) {
             if (!test.contains(value.getTimestamp().getTime())) {
                 fixed.add(value);

@@ -1,5 +1,6 @@
 package com.nimbits.io;
 
+import com.google.common.base.Optional;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.nimbits.client.constants.Const;
@@ -7,10 +8,15 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.connection.Connection;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.hal.ValueContainer;
+import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.schedule.Schedule;
+import com.nimbits.client.model.socket.Socket;
 import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.sync.Sync;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.webhook.WebHook;
@@ -107,77 +113,7 @@ public class Nimbits {
     }
 
 
-    public boolean entityExists(String uuid) {
-        Entity e;
-
-        try {
-            e = api.getEntity(uuid);
-            return (e != null);
-        } catch (Exception ex) {
-            return false;
-        }
-
-    }
-
-    /**
-     * Add an entity as a child of a parent
-     *
-     * @param parent
-     * @param point
-     * @return
-     */
-    @Deprecated //we'll be creating individual methods for creating different types of entities
-    public Entity addEntity(Entity parent, Point point) {
-
-        Entity e  =  api.addEntity(parent.getUUID(), point);
-        return  e;
-    }
-
-
-    /**
-     * Add an point as a child of a parent
-     *
-     * @param parent
-     * @param point
-     * @return
-     */
-    public Point addPoint(Entity parent, Point point) {
-
-        return api.addPoint(parent.getUUID(), point);
-
-    }
-
-    /**
-     * get all children under an entity
-     * @param parent
-     * @return
-     */
-
-    public List<Entity> getChildren(Entity parent) {
-
-        return api.getChildren(parent.getUUID());
-    }
-
-
-    /**
-     * Record a series of values to a data point
-     *
-     * @param entity
-     * @param values
-     */
-    public void recordValues(Entity entity, List<Value> values) {
-        api.recordData(entity.getUUID(), values, new Callback<Void>() {
-            @Override
-            public void success(Void aVoid, Response response) {
-
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-                throw new RuntimeException(retrofitError);
-            }
-        });
-    }
+    //READ Data
 
     /**
      *
@@ -209,9 +145,72 @@ public class Nimbits {
         return api.getData(entity.getUUID(), start.getTime(), end.getTime());
     }
 
-    public Point getPoint(String uuid) {
-        return api.getPoint(uuid);
+    public Value getSnapshot(Point point) {
+        ValueContainer valueContainer =  api.getSnapshot(point.getUUID());
+        return valueContainer.getSnapshot();
+
+
     }
+
+    public Value getSnapshot(String pointName) {
+        Optional<Point> pointOptional = findPointByName(pointName);
+        if (pointOptional.isPresent()) {
+            ValueContainer valueContainer = api.getSnapshot(pointOptional.get().getUUID());
+            return valueContainer.getSnapshot();
+        }
+        else {
+            throw new RuntimeException("Point Not Found");
+        }
+
+
+    }
+
+    public Value getSnapshot(Entity entity) {
+        ValueContainer valueContainer =  api.getSnapshot(entity.getUUID());
+        return valueContainer.getSnapshot();
+
+
+    }
+
+
+    //Write Data
+
+    /**
+     * Record a series of values to a data point
+     *
+     * @param entity
+     * @param values
+     */
+    public void recordValues(Entity entity, List<Value> values) {
+        api.recordData(entity.getUUID(), values, new Callback<Void>() {
+            @Override
+            public void success(Void aVoid, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                throw new RuntimeException(retrofitError);
+            }
+        });
+    }
+
+
+    public void recordValue(Point point, Value newValue) {
+        recordValues(point, Collections.singletonList(newValue));
+    }
+
+    public void recordValue(String pointName, Value newValue) {
+        Optional<Point> point = findPointByName(pointName);
+        if (point.isPresent()) {
+            recordValues(point.get(), Collections.singletonList(newValue));
+        }
+        else {
+            throw new RuntimeException("Point Not Found");
+        }
+    }
+
+    //DELETE Entities
 
     public void deleteEntity(Entity entity) {
         api.deleteEntity(entity.getUUID(), new Callback<Void>() {
@@ -227,6 +226,23 @@ public class Nimbits {
         });
     }
 
+    //Create Entity methods
+
+
+    /**
+     * Add an entity as a child of a parent
+     *
+     * @param parent
+     * @param point
+     * @return
+     */
+    @Deprecated //we'll be creating individual methods for creating different types of entities
+    public Entity addEntity(Entity parent, Point point) {
+
+        Entity e  =  api.addEntity(parent.getUUID(), point);
+        return  e;
+    }
+
     public Category addCategory(User me, Category category) {
         return api.addCategory(me.getUUID(), category);
     }
@@ -240,24 +256,155 @@ public class Nimbits {
 
     }
 
-    public Value getSnapshot(Point point) {
-        ValueContainer valueContainer =  api.getSnapshot(point.getUUID());
-        return valueContainer.getSnapshot();
+    /**
+     * Add an point as a child of a parent
+     *
+     * @param parent
+     * @param point
+     * @return
+     */
+    public Point addPoint(Entity parent, Point point) {
 
+        return api.addPoint(parent.getUUID(), point);
 
     }
 
-    public Value getSnapshot(Entity entity) {
-        ValueContainer valueContainer =  api.getSnapshot(entity.getUUID());
-        return valueContainer.getSnapshot();
+    public List<Point> getNearbyPoints(Point localPoint, double meters) {
+        return api.getNearbyPoints(localPoint.getUUID(), meters);
+    }
 
+
+    //find entity methods
+
+    /**
+     * get all children under an entity
+     * @param parent
+     * @return
+     */
+
+    public List<Entity> getChildren(Entity parent) {
+
+        return api.getChildren(parent.getUUID());
+    }
+
+    public Optional<Point> findPointByName(String pointName) {
+        try {
+            Point p =  api.findPoint(pointName);
+
+            if (p != null) {
+                return Optional.of(p);
+            }
+            else {
+                return Optional.absent();
+            }
+
+        } catch (Throwable throwable) {
+            return Optional.absent();
+        }
+
+    }
+
+    public Optional<Category> findCategory(String name) {
+
+        try {
+            return Optional.of(api.findCategory(name, EntityType.category.getCode()));
+        } catch (Throwable e) {
+
+            return Optional.absent();
+        }
+
+    }
+
+    public Optional<WebHook> findWebHook(String name) {
+
+        try {
+            return Optional.of(api.findWebHook(name, EntityType.webhook.getCode()));
+        } catch (Throwable e) {
+
+            return Optional.absent();
+        }
+
+    }
+
+    public Optional<Subscription> findSubscription(String name) {
+
+        try {
+            return Optional.of(api.findSubscription(name, EntityType.subscription.getCode()));
+        } catch (Throwable e) {
+
+            return Optional.absent();
+        }
+
+    }
+
+    public Optional<Sync> findSync(String name) {
+
+        try {
+            return Optional.of(api.findSync(name, EntityType.sync.getCode()));
+        } catch (Throwable e) {
+
+            return Optional.absent();
+        }
+
+    }
+
+    public Optional<Calculation> findCalculation(String name) {
+
+        try {
+            return Optional.of(api.findCalculation(name, EntityType.calculation.getCode()));
+        } catch (Throwable e) {
+
+            return Optional.absent();
+        }
+
+    }
+
+    public Optional<Instance> findInstance(String name) {
+
+        try {
+            return Optional.of(api.findInstance(name, EntityType.instance.getCode()));
+        } catch (Throwable e) {
+
+            return Optional.absent();
+        }
+
+    }
+
+    public Optional<Socket> findSocket(String name) {
+
+        try {
+            return Optional.of(api.findSocket(name, EntityType.socket.getCode()));
+        } catch (Throwable e) {
+
+            return Optional.absent();
+        }
+
+    }
+
+    public Optional<Connection> findConnection(String name) {
+
+        try {
+            return Optional.of(api.findConnection(name, EntityType.connection.getCode()));
+        } catch (Throwable e) {
+
+            return Optional.absent();
+        }
+
+    }
+
+    public Optional<Schedule> findSummary(String name) {
+
+        try {
+            return Optional.of(api.findSchedule(name, EntityType.schedule.getCode()));
+        } catch (Throwable e) {
+
+            return Optional.absent();
+        }
 
     }
 
 
-    public Point findPointByName(String pointName) {
-        return api.findPoint(pointName);
-    }
+
 
     /**
      * Provides a way to search for an entity by the entity name. Note that some some types of entities may have the same name and
@@ -267,20 +414,29 @@ public class Nimbits {
      * @See EntityType
      * @return The Entity, which may be downcasted to the type requestes (i.e Point, Calculation which extend Entity)
      */
-    public Entity findEntityByName(String entityName, EntityType entityType) {
-        return api.findEntity(entityName, entityType.getCode());
+    public Optional<Entity> findEntityByName(String entityName, EntityType entityType) {
+        try {
+            return Optional.of(api.findEntity(entityName, entityType.getCode()));
+        } catch (Throwable e) {
+            return Optional.absent();
+        }
     }
 
-    public void recordValue(Point point, Value newValue) {
-        recordValues(point, Collections.singletonList(newValue));
+    public Point getPoint(String uuid) {
+        return api.getPoint(uuid);
     }
 
-    public List<Point> getNearbyPoints(Point localPoint, double meters) {
-        return api.getNearbyPoints(localPoint.getUUID(), meters);
+    public boolean entityExists(String uuid) {
+        Entity e;
+
+        try {
+            e = api.getEntity(uuid);
+            return (e != null);
+        } catch (Exception ex) {
+            return false;
+        }
+
     }
-
-
-
 
     public static class Builder {
 

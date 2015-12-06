@@ -2,7 +2,6 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.io.Nimbits;
 import org.apache.commons.lang3.StringUtils;
@@ -17,17 +16,9 @@ import java.util.regex.PatternSyntaxException;
  *
  *
  */
-public class V3RestClientTester {
-    private static final String EMAIL_ADDRESS ="admin@example.com";
-    private static final String INSTANCE_URL = "http://localhost:8080";
-    private static final String PASSWORD = "password1234";
-    private static final Nimbits nimbits = new Nimbits.Builder()
-            .email(EMAIL_ADDRESS).token(PASSWORD).instance(INSTANCE_URL).create();
+public class V3RestClientTester  {
 
     public static void main(String[] args) throws InterruptedException {
-
-
-        o("Starting up");
 
 
 
@@ -38,19 +29,15 @@ public class V3RestClientTester {
 
     }
 
-    private static class NimbitsLoadTester {
-        private User user;
+    private static class NimbitsLoadTester extends NimbitsTest {
+
         private List<Entity> pointList = new ArrayList<>();
         private Map<Entity, List<Value>> storedValues = new HashMap<>();
 
         public void execute() throws InterruptedException {
 
-            //Get or Create this user account, when created it will be the system admin
-            user = verifyAdminUser();
-
-            //reset the users password to test that
-            user.setPassword(UUID.randomUUID().toString());
-
+            super.execute();
+            o("Starting up");
 
             if (user != null) {
                 o("Continuing with user: " + user.getEmail() + " " + user.getUUID());
@@ -87,62 +74,15 @@ public class V3RestClientTester {
             }
         }
 
-
-        /**
-         * Try to get my user from the root of the service/v2/rest/me uri - or create it by posting new user credentials to
-         * /service/v2/rest
-         */
-
-        private User verifyAdminUser() {
-            //See if my user id and password get me my user
-            User user;
-
-            try {
-
-                o("Trying to get existing user info");
-                user = nimbits.getMe();
-            } catch (Throwable throwable) {
-                //user not found, let's create on - the first user will be an admin of the server
-                o("Server returned error - creating user instead " + throwable.getMessage());
-                user =  createUser(EMAIL_ADDRESS, PASSWORD);
-
-            }
-
-            o("Got User:" + user.toString());
-
-            User verify = nimbits.getMe();
-            return verify;
-
-
-
-        }
-
-        /**
-         * Creates a new user, if this is the first user on the system, it will be the admin
-         *
-         *
-         */
-        private User createUser(String email, String password) {
-
-            User postObject = new UserModel(email, password);
-            User newUser = nimbits.addUser(postObject);
-            if (newUser == null || ! newUser.getEmail().getValue().equals(email)) {
-                throw new RuntimeException("Could not create a new user");
-            }
-            else {
-                o("Create new user" + newUser.getEmail());
-                return newUser;
-            }
-        }
-
         /**
          * Create some data points with the new user as the parent
          */
         private void createPoints() {
 
             for (int i = 0; i < 10; i++) {
-                Point point = new PointModel(user, UUID.randomUUID().toString() + " point name " + i);
-                Entity newPoint =  nimbits.addEntity(user, point);
+                Point point = new PointModel.Builder().name(UUID.randomUUID().toString()).parent(user.getKey())
+                        .create();
+                Entity newPoint =  nimbits.addPoint(user, point);
                 pointList.add(newPoint);
                 o("Created : " + newPoint.getName().getValue());
             }
@@ -213,8 +153,8 @@ public class V3RestClientTester {
                 Collections.sort(downloadedValues);
 
 
-                    for (Value value : stored) {
-                        if (StringUtils.isEmpty(mask) || mask.equals(value.getMetaData()) || containsMask(value, mask))
+                for (Value value : stored) {
+                    if (StringUtils.isEmpty(mask) || mask.equals(value.getMetaData()) || containsMask(value, mask))
                         if (!downloadedValues.contains(value)) {
                             o("R Range: " + stored.get(0).getTimestamp() + " to " +
                                     stored.get(stored.size() - 1).getTimestamp());
@@ -226,7 +166,7 @@ public class V3RestClientTester {
 
 
                         }
-                    }
+                }
 
 
 
@@ -286,9 +226,7 @@ public class V3RestClientTester {
     }
 
 
-    private static void o(String msg) {
-        System.out.println(new Date() + "  " + msg);
-    }
+
 
 
 }

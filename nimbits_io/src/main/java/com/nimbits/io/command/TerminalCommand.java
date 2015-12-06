@@ -21,7 +21,7 @@ public enum TerminalCommand {
 
     private Constructor constructor;
     private boolean usesTree;
-    public final static Map<String, TerminalCommand> lookupMap = new HashMap<>(TerminalCommand.values().length);
+    public final static Map<String, TerminalCommand> lookupMap = new HashMap<String, TerminalCommand>(TerminalCommand.values().length);
 
     static {
         for (TerminalCommand argument : TerminalCommand.values()) {

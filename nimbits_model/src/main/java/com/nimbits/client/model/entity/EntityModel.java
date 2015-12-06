@@ -32,7 +32,6 @@ import java.util.List;
 
 public class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
-
     @Expose
     private String name;
     @Expose

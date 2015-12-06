@@ -291,7 +291,10 @@ public class BlobStoreImpl implements BlobStore {
 
     @Override
     public void deleteAllData(Point point) throws IOException {
+        final String key = point.getKey() + SNAPSHOT;
         FileUtils.deleteDirectory(new File(root + "/" + point.getKey()));
+        nimbitsCache.delete(key);
+
     }
 
     private void writeFile(String json, String FILENAME) {

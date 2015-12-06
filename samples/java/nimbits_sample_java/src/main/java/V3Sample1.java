@@ -1,3 +1,4 @@
+import com.google.common.base.Optional;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
@@ -16,7 +17,6 @@ import com.nimbits.client.model.webhook.HttpMethod;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
 import com.nimbits.io.Nimbits;
-import com.nimbits.io.http.NimbitsClientException;
 
 import java.util.*;
 
@@ -131,18 +131,18 @@ public class V3Sample1 {
 
         //veryify user exists
 
-        Entity retrieved =  adminClient.findEntityByName(email2, EntityType.user);
+        Entity retrieved =  adminClient.findEntityByName(email2, EntityType.user).get();
         Log("Downloaded user to make sure it exists: " + retrieved.getUUID());
         adminClient.deleteEntity(retrieved);
 
         //make sure it was deleted
-        try {
-            Entity retrieved2 = adminClient.findEntityByName(email2, EntityType.user);
-            Log("should not exist: " + retrieved2.getUUID());
+
+            Optional<Entity> retrieved2 = adminClient.findEntityByName(email2, EntityType.user);
+        if (retrieved2.isPresent()) {
+            Log("should not exist: " + email2);
             throw new RuntimeException("User was not deleted");
-        } catch (NimbitsClientException shouldHappen) {
-            Log("expected entity not found exception");
         }
+
 
 
 

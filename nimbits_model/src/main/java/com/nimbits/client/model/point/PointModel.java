@@ -46,25 +46,6 @@ public class PointModel extends EntityModel implements Serializable, Point {
     private int expire = DEFAULT_EXPIRE;
     @Expose
     private String unit;
-
-    private boolean highAlarmOn;
-
-    private boolean lowAlarmOn;
-
-    private boolean idleAlarmOn;
-
-    private boolean deltaAlarmOn;
-
-    private int idleSeconds = 0;
-
-    //reset on any data write
-    private boolean idleAlarmSent;
-
-    private int filterType;
-
-    private double filterValue;
-
-    private boolean inferLocation;
     @Expose
     private int pointType;
     @Expose
@@ -73,72 +54,56 @@ public class PointModel extends EntityModel implements Serializable, Point {
     private List<Value> values;
     @Expose
     private Value value;
+    @Expose
+    private boolean highAlarmOn;
+    @Expose
+    private boolean lowAlarmOn;
+    @Expose
+    private boolean idleAlarmOn;
+    @Expose
+    private boolean deltaAlarmOn;
+    @Expose
+    private int idleSeconds = 0;
+    @Expose
+    private int filterType;
+    @Expose
+    private double filterValue;
+    @Expose
+    private boolean inferLocation;
+
+    //reset on any data write
+    private boolean idleAlarmSent;
 
 
-    public PointModel(final Entity entity,
-                      final double highAlarm,
-                      final int expire,
-                      final String unit,
-                      final double lowAlarm,
-                      final boolean highAlarmOn,
-                      final boolean lowAlarmOn,
-                      final boolean idleAlarmOn,
-                      final Integer idleSeconds,
-                      final boolean idleAlarmSent,
-                      final FilterType filterType,
-                      final double filterValue,
-                      final boolean inferLocation,
-                      final PointType pointType,
-                      final double deltaAlarm,
-                      final boolean deltaAlarmOn,
-                      final int deltaSeconds,
-                      final int precision) {
-        super(entity);
-        this.highAlarm = highAlarm;
-        this.expire = expire;
-        this.unit = unit;
-        this.lowAlarm = lowAlarm;
-        this.highAlarmOn = highAlarmOn;
-        this.lowAlarmOn = lowAlarmOn;
-        this.idleAlarmOn = idleAlarmOn;
-        this.idleSeconds = idleSeconds;
-        this.idleAlarmSent = idleAlarmSent;
-        this.filterType = filterType.getCode();
-        this.filterValue = filterValue;
-        this.inferLocation = inferLocation;
-        this.pointType = pointType.getCode();
-        this.deltaAlarm = deltaAlarm;
-        this.deltaAlarmOn = deltaAlarmOn;
-        this.deltaSeconds = deltaSeconds;
-        this.precision = precision;
-    }
-    public PointModel(final String key,
-                      final CommonIdentifier name,
-                      final String description,
-                      final EntityType entityType,
-                      final ProtectionLevel protectionLevel,
-                      final String parent,
-                      final String owner,
-                      final String uuid,
 
-                      final double highAlarm,
-                      final int expire,
-                      final String unit,
-                      final double lowAlarm,
-                      final boolean highAlarmOn,
-                      final boolean lowAlarmOn,
-                      final boolean idleAlarmOn,
-                      final Integer idleSeconds,
-                      final boolean idleAlarmSent,
-                      final FilterType filterType,
-                      final double filterValue,
-                      final boolean inferLocation,
-                      final PointType pointType,
-                      final double deltaAlarm,
-                      final boolean deltaAlarmOn,
-                      final int deltaSeconds,
-                      final int precision) {
 
+    protected PointModel(
+
+            final String key,
+            final CommonIdentifier name,
+            final String description,
+            final EntityType entityType,
+            final ProtectionLevel protectionLevel,
+            final String parent,
+            final String owner,
+            final String uuid,
+            final double highAlarm,
+            final int expire,
+            final String unit,
+            final double lowAlarm,
+            final boolean highAlarmOn,
+            final boolean lowAlarmOn,
+            final boolean idleAlarmOn,
+            final Integer idleSeconds,
+            final boolean idleAlarmSent,
+            final FilterType filterType,
+            final double filterValue,
+            final boolean inferLocation,
+            final PointType pointType,
+            final double deltaAlarm,
+            final boolean deltaAlarmOn,
+            final int deltaSeconds,
+            final int precision) {
         super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
         this.highAlarm = highAlarm;
         this.expire = expire;
@@ -160,59 +125,16 @@ public class PointModel extends EntityModel implements Serializable, Point {
     }
 
     // Constructors
-    public PointModel(final Point point) {
-        super(point);
-        this.highAlarm = point.getHighAlarm();
-        this.expire = point.getExpire();
-        this.unit = point.getUnit();
-        this.lowAlarm = point.getLowAlarm();
-        this.highAlarmOn = point.isHighAlarmOn();
-        this.lowAlarmOn = point.isLowAlarmOn();
-        this.idleAlarmOn = point.isIdleAlarmOn();
-        this.idleSeconds = point.getIdleSeconds();
-        this.idleAlarmSent = point.getIdleAlarmSent();
-        this.values = point.getValues();
-        this.value = point.getValue();
-        this.filterType = point.getFilterType().getCode();
-        this.filterValue = point.getFilterValue();
-        this.inferLocation = point.inferLocation();
-        this.pointType = point.getPointType().getCode();
-        this.deltaSeconds = point.getDeltaSeconds();
-        this.deltaAlarm = point.getDeltaAlarm();
-        this.deltaAlarmOn = point.isDeltaAlarmOn();
-        this.precision = point.getPrecision();
-    }
+
 
     @SuppressWarnings("unused")
-    protected PointModel() {
+    private PointModel() {
 
 
 
     }
 
-    public PointModel(Entity parent, String name) {
-        super(CommonFactory.createName(name, EntityType.point), "", EntityType.point, ProtectionLevel.everyone
-                , parent.getKey(), "", "" );
-        this.highAlarm = 0;
-        this.expire = 365;
-        this.unit = "";
-        this.lowAlarm =0;
-        this.highAlarmOn = false;
-        this.lowAlarmOn = false;
-        this.idleAlarmOn = false;
-        this.idleSeconds = 0;
-        this.idleAlarmSent =false;
-        this.values = null;
-        this.value =null;
-        this.filterType = FilterType.none.getCode();
-        this.filterValue = 0;
-        this.inferLocation = false;
-        this.pointType = PointType.basic.getCode();
-        this.deltaSeconds = 0;
-        this.deltaAlarm =  0;
-        this.deltaAlarmOn = false;
-        this.precision = 5;
-    }
+
 
 
 
@@ -457,90 +379,90 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
 
 
-        public Builder name(String name) {
-            this.name = CommonFactory.createName(name, EntityType.point);
+        public Builder name(String v) {
+            this.name = CommonFactory.createName(v, EntityType.point);
             return this;
         }
-        public Builder highAlarm(double highAlarm) {
-            this.highAlarm = highAlarm;
-            return this;
-        }
-
-        public Builder lowAlarm(double lowAlarm) {
-            this.lowAlarm = lowAlarm;
+        public Builder highAlarm(double v) {
+            this.highAlarm = v;
             return this;
         }
 
-        public Builder deltaAlarm(double deltaAlarm) {
-            this.deltaAlarm = deltaAlarm;
+        public Builder lowAlarm(double v) {
+            this.lowAlarm = v;
             return this;
         }
 
-        public Builder deltaSeconds(int deltaSeconds) {
-            this.deltaSeconds = deltaSeconds;
+        public Builder deltaAlarm(double v) {
+            this.deltaAlarm = v;
             return this;
         }
 
-        public Builder expire(int expire) {
-            this.expire = expire;
+        public Builder deltaSeconds(int v) {
+            this.deltaSeconds = v;
             return this;
         }
 
-        public Builder unit(String unit) {
-            this.unit = unit;
+        public Builder expire(int v) {
+            this.expire = v;
             return this;
         }
 
-        public Builder highAlarmOn(boolean highAlarm) {
-            this.highAlarmOn = highAlarmOn;
+        public Builder unit(String v) {
+            this.unit = v;
             return this;
         }
 
-        public Builder lowAlarmOn(boolean lowAlarmOn) {
-            this.lowAlarmOn = lowAlarmOn;
-            return this;
-        }
-        public Builder idleAlarmOn(boolean idleAlarmOn) {
-            this.idleAlarmOn = idleAlarmOn;
+        public Builder highAlarmOn(boolean v) {
+            this.highAlarmOn = v;
             return this;
         }
 
-        public Builder deltaAlarmOn(boolean deltaAlarmOn) {
-            this.deltaAlarmOn = deltaAlarmOn;
+        public Builder lowAlarmOn(boolean v) {
+            this.lowAlarmOn = v;
+            return this;
+        }
+        public Builder idleAlarmOn(boolean v) {
+            this.idleAlarmOn = v;
             return this;
         }
 
-
-        public Builder idleSeconds(int idleSeconds) {
-            this.idleSeconds = idleSeconds;
-            return this;
-        }
-
-        public Builder idleAlarmSent(boolean idleAlarmSent) {
-            this.idleAlarmSent = idleAlarmSent;
+        public Builder deltaAlarmOn(boolean v) {
+            this.deltaAlarmOn = v;
             return this;
         }
 
 
-        public Builder filterType(FilterType filterType) {
-            this.filterType = filterType;
+        public Builder idleSeconds(int v) {
+            this.idleSeconds = v;
             return this;
         }
 
-        public Builder pointType(PointType pointType) {
-            this.pointType = pointType;
-            return this;
-        }
-
-        public Builder precision(int precision) {
-            this.precision = precision;
+        public Builder idleAlarmSent(boolean v) {
+            this.idleAlarmSent = v;
             return this;
         }
 
 
+        public Builder filterType(FilterType v) {
+            this.filterType = v;
+            return this;
+        }
 
-        public Builder inferLocation(boolean inferLocation) {
-            this.inferLocation = inferLocation;
+        public Builder pointType(PointType v) {
+            this.pointType = v;
+            return this;
+        }
+
+        public Builder precision(int v) {
+            this.precision = v;
+            return this;
+        }
+
+
+
+        public Builder inferLocation(boolean v) {
+            this.inferLocation = v;
             return this;
         }
 

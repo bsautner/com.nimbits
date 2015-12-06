@@ -34,17 +34,14 @@ public class ApplicationListener implements ServletContextListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         log.info("NIMBITS Context Initialised");
 
+        AnalyticsConfigData config = new AnalyticsConfigData("UA-11739682-14");
+
+        config.populateFromSystem();
+        JGoogleAnalyticsTracker tracker = new JGoogleAnalyticsTracker(config, JGoogleAnalyticsTracker.GoogleAnalyticsVersion.V_4_7_2);
 
 
-            AnalyticsConfigData config = new AnalyticsConfigData("UA-11739682-14");
-
-
-            config.populateFromSystem();
-            JGoogleAnalyticsTracker tracker = new JGoogleAnalyticsTracker(config, JGoogleAnalyticsTracker.GoogleAnalyticsVersion.V_4_7_2);
-
-
-            tracker.trackEvent("System", "contextInitialized", Const.VERSION);
-
+        tracker.trackEvent("System", "contextInitialized", Const.VERSION);
+        log.info("System Ready");
 
     }
 

@@ -9,6 +9,14 @@ public interface WebHook extends Entity, Serializable {
 
     HttpMethod getMethod();
 
+    DataChannel getPathChannel();
+
+    void setPathChannel(DataChannel dataChannel);
+
+    DataChannel getBodyChannel();
+
+    void setBodyChannel(DataChannel dataChannel);
+
     UrlContainer getUrl();
 
     boolean isEnabled();
@@ -22,4 +30,8 @@ public interface WebHook extends Entity, Serializable {
     String getDownloadTarget();
 
     void setDownloadTarget(String key);
+
+
+
+
 }

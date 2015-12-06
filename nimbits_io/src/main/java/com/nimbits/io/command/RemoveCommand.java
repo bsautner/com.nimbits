@@ -3,8 +3,6 @@ package com.nimbits.io.command;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.user.User;
-import com.nimbits.io.helper.EntityHelper;
-import com.nimbits.io.helper.HelperFactory;
 
 import java.util.List;
 
@@ -19,7 +17,7 @@ public class RemoveCommand extends AbstractCommand implements Command {
     @Override
     public void doCommand(CommandListener listener, String[] args) {
         boolean recursive = false;
-        EntityHelper helper = HelperFactory.getEntityHelper(server);
+
         if (args.length < 2) {
             listener.onMessage(getUsage());
 
@@ -42,7 +40,7 @@ public class RemoveCommand extends AbstractCommand implements Command {
                     listener.onMessage("entity has children. Use -R to delete it and all children.");
                 } else {
                     tree.remove(entity);
-                    helper.deleteEntity(entity);
+                    //helper.deleteEntity(entity);
                     listener.onTreeUpdated(tree);
 
                 }

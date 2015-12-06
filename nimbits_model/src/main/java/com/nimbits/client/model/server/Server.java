@@ -17,7 +17,7 @@ import com.nimbits.client.model.server.apikey.AccessToken;
 
 import java.io.Serializable;
 
-
+@Deprecated
 public interface Server extends Serializable {
 
     String getUrl();

@@ -20,7 +20,7 @@ public abstract class NimbitsTest  {
 
 
 
-    static void o(String msg) {
+    static void log(String msg) {
         System.out.println(new Date() + "  " + msg);
     }
 
@@ -31,16 +31,16 @@ public abstract class NimbitsTest  {
 
         try {
 
-            o("Trying to get existing user info");
+            log("Trying to get existing user info");
             user = nimbits.getMe();
         } catch (Throwable throwable) {
             //user not found, let's create on - the first user will be an admin of the server
-            o("Server returned error - creating user instead " + throwable.getMessage());
+            log("Server returned error - creating user instead " + throwable.getMessage());
             user =  createUser(EMAIL_ADDRESS, PASSWORD);
 
         }
 
-        o("Got User:" + user.toString());
+        log("Got User:" + user.toString());
 
         return nimbits.getMe();
 
@@ -61,7 +61,7 @@ public abstract class NimbitsTest  {
             throw new RuntimeException("Could not create a new user");
         }
         else {
-            o("Create new user" + newUser.getEmail());
+            log("Create new user" + newUser.getEmail());
             return newUser;
         }
     }

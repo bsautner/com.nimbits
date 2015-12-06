@@ -42,7 +42,7 @@
         <spring.version>4.1.1.RELEASE</spring.version>
 
         <jetty-jmx.version>8.1.15.v20140411</jetty-jmx.version>
-        <nimbits_version>3.9.23</nimbits_version>
+        <nimbits_version>3.9.24</nimbits_version>
         <datanucleus.version>3.1.2</datanucleus.version>
     </properties>
 
@@ -82,6 +82,19 @@
 
 
     <dependencies>
+<!--nimbits io will use these if available-->
+        <dependency>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>2.0.0</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>okhttp-urlconnection</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.slf4j</groupId>

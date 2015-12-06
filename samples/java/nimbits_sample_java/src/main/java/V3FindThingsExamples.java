@@ -42,11 +42,11 @@ public class V3FindThingsExamples {
                     .lowAlarm(0.0)
                     .create();
             Entity newPoint =  nimbits.addPoint(user, point);
-            o("Created : " + newPoint.getName().getValue());
+            log("Created : " + newPoint.getName().getValue());
 
             Optional<Point> foundPoint = nimbits.findPointByName(pointName);
             if (foundPoint.isPresent()) {
-                o("verified point");
+                log("verified point");
                 if (! foundPoint.get().isHighAlarmOn() || ! foundPoint.get().isLowAlarmOn()) {
                     throw new RuntimeException(" Alarm was off when it was set to on!");
                 }
@@ -61,7 +61,7 @@ public class V3FindThingsExamples {
                 throw new RuntimeException("Point found that was never created!");
             }
             else {
-                o("verified absent point");
+                log("verified absent point");
             }
 
 
@@ -119,7 +119,7 @@ public class V3FindThingsExamples {
                 throw new RuntimeException("Did NOT find an object that should exist!");
             }
             else {
-                o("Got expected result looking for non existent entity");
+                log("Got expected result looking for non existent entity");
             }
         }
     }

@@ -5,22 +5,11 @@ public class V3IntegrationTest {
 
 
 
-        Test loadTester = new Test();
-        loadTester.execute();
+        V3CreateAndTestWebHooks createAndTestWebHooks = new V3CreateAndTestWebHooks();
+        createAndTestWebHooks.execute();
 
 
     }
-    private static class Test extends NimbitsTest {
 
-        @Override
-        public void execute() throws InterruptedException {
-            super.execute();
-            o("Startup...");
-        }
-
-
-
-
-    }
 
 }

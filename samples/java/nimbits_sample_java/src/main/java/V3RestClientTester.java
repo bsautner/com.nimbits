@@ -37,26 +37,26 @@ public class V3RestClientTester  {
         public void execute() throws InterruptedException {
 
             super.execute();
-            o("Starting up");
+            log("Starting up");
 
             if (user != null) {
-                o("Continuing with user: " + user.getEmail() + " " + user.getUUID());
+                log("Continuing with user: " + user.getEmail() + " " + user.getUUID());
 
                 createRegularUsers();
                 createPoints();
                 recordSeriesData();
             }
             else {
-                o("User was null! Exiting Test");
+                log("User was null! Exiting Test");
             }
 
-            o("Done!");
+            log("Done!");
         }
 
         private void createRegularUsers() {
 
             for (int i = 0; i < 10; i++) {
-                o("Creating regular user " + i);
+                log("Creating regular user " + i);
                 String password = UUID.randomUUID().toString();
                 User regularUser = createUser(UUID.randomUUID().toString() + "@example.com", password);
 
@@ -64,7 +64,7 @@ public class V3RestClientTester  {
                         .email(regularUser.getEmail().getValue()).token(password).instance(INSTANCE_URL).create();
                 User verify = nonAdminClient.getMe();
                 if (verify.equals(regularUser)) {
-                    o("Verified Creating Regular " + i + " User can login ");
+                    log("Verified Creating Regular " + i + " User can login ");
                 }
                 else {
                     throw new RuntimeException("Could not verify regular user");
@@ -84,7 +84,7 @@ public class V3RestClientTester  {
                         .create();
                 Entity newPoint =  nimbits.addPoint(user, point);
                 pointList.add(newPoint);
-                o("Created : " + newPoint.getName().getValue());
+                log("Created : " + newPoint.getName().getValue());
             }
 
         }
@@ -94,7 +94,7 @@ public class V3RestClientTester  {
          */
 
         private void recordSeriesData() throws InterruptedException {
-            o("Recording Data");
+            log("Recording Data");
             Random r = new Random();
             String[] meta = {"foo", "bar"};
 
@@ -111,30 +111,30 @@ public class V3RestClientTester  {
 
                 }
                 nimbits.recordValues(entity, values);
-                o("Recorded : " + values.size() + " for " + entity.getName());
+                log("Recorded : " + values.size() + " for " + entity.getName());
                 storedValues.put(entity, values);
 
             }
 
-            o("Waiting for things to settle down server side");
+            log("Waiting for things to settle down server side");
             Thread.sleep(5000);
-            o("Verifying Data");
+            log("Verifying Data");
             verifySeriesData(null);
 
             Thread.sleep(1000);
-            o("Verifying Data again!");
+            log("Verifying Data again!");
             verifySeriesData("");
 
-            o("Verifying Data again with perfect match mask!");
+            log("Verifying Data again with perfect match mask!");
             verifySeriesData(meta[0]);
 
-            o("Verifying Data again with other perfect match mask mask!");
+            log("Verifying Data again with other perfect match mask mask!");
             verifySeriesData(meta[1]);
 
-            o("Verifying Data again with regex mask!");
+            log("Verifying Data again with regex mask!");
             verifySeriesData("[o]+");
 
-            o("Make sure Count param is working");
+            log("Make sure Count param is working");
             verifyCountParam();
 
 
@@ -145,9 +145,9 @@ public class V3RestClientTester  {
             for (Entity entity : pointList) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.DAY_OF_YEAR, -31);
-                o(entity.getUUID());
+                log(entity.getUUID());
                 List<Value> downloadedValues = nimbits.getValues(entity, calendar.getTime(), new Date(), mask);
-                o("Downloaded " + downloadedValues.size() + " for " + entity.getName());
+                log("Downloaded " + downloadedValues.size() + " for " + entity.getName());
                 List<Value> stored = storedValues.get(entity);
                 Collections.sort(stored);
                 Collections.sort(downloadedValues);
@@ -156,9 +156,9 @@ public class V3RestClientTester  {
                 for (Value value : stored) {
                     if (StringUtils.isEmpty(mask) || mask.equals(value.getMetaData()) || containsMask(value, mask))
                         if (!downloadedValues.contains(value)) {
-                            o("R Range: " + stored.get(0).getTimestamp() + " to " +
+                            log("R Range: " + stored.get(0).getTimestamp() + " to " +
                                     stored.get(stored.size() - 1).getTimestamp());
-                            o("Q Range: " + calendar.getTime() + " to " + new Date());
+                            log("Q Range: " + calendar.getTime() + " to " + new Date());
 
 
                             throw new RuntimeException(
@@ -177,7 +177,7 @@ public class V3RestClientTester  {
         private void verifyCountParam() {
             for (Entity entity : pointList) {
                 for (int i = 1; i < 1000; i++) {
-                    o("getting " + i + " values for " + entity.getName());
+                    log("getting " + i + " values for " + entity.getName());
                     List<Value> values = nimbits.getValues(entity, i);
                     if (values.size() != i) {
                         throw new RuntimeException("asked for " + i + " values but got " + values.size());

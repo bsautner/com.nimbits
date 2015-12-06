@@ -27,7 +27,11 @@ import com.nimbits.server.gson.deserializer.*;
 import retrofit.*;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
+import retrofit.mime.TypedInput;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -82,7 +86,29 @@ public class Nimbits {
                 .setErrorHandler(new ErrorHandler() {
                     @Override
                     public Throwable handleError(RetrofitError retrofitError) {
-                        throw new NimbitsClientException("Error in Rest Adapter", retrofitError);
+
+
+                        StringBuilder out = new StringBuilder();
+                        if (retrofitError.getResponse() != null) {
+                            TypedInput body = retrofitError.getResponse().getBody();
+                            try {
+                                BufferedReader reader = new BufferedReader(new InputStreamReader(body.in()));
+
+                                String newLine = System.getProperty("line.separator");
+                                String line;
+                                while ((line = reader.readLine()) != null) {
+                                    out.append(line);
+                                    out.append(newLine);
+                                }
+
+                                // Prints the correct String representation of body.
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        throw new NimbitsClientException(retrofitError.getMessage() + " " + out, retrofitError);
+
                     }
                 })
                 .build();

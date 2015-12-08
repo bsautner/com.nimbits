@@ -13,7 +13,6 @@
 package com.nimbits.io;
 
 import com.google.common.collect.Range;
-import com.nimbits.client.android.AndroidControl;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.common.SimpleValue;
 import com.nimbits.client.model.entity.Entity;
@@ -65,8 +64,6 @@ public interface NimbitsClient {
     <T> List<T> updateEntity(Entity entity, Class<T> clz);
 
     Entity getEntity(SimpleValue<String> entityId, EntityType type);
-
-    List<AndroidControl> getControl();
 
     void recordSeries(Point entity);
 

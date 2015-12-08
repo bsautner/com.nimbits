@@ -119,7 +119,7 @@ public class V3FindThingsExamples {
                 throw new RuntimeException("Did NOT find an object that should exist!");
             }
             else {
-                log("Got expected result looking for non existent entity");
+                log("Got expected result looking for  entity");
             }
         }
     }

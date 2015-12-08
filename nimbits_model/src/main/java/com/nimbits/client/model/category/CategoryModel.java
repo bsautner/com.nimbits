@@ -14,11 +14,11 @@ package com.nimbits.client.model.category;
 
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.user.User;
 
 import java.io.Serializable;
 
@@ -29,30 +29,9 @@ public class CategoryModel extends EntityModel implements Serializable, Category
 
     }
 
-    public CategoryModel(Entity entity) {
-        super(entity);
-    }
 
-    public CategoryModel(User user, Entity parent, String categoryName) {
-
-        super(CommonFactory.createName(categoryName, EntityType.category),
-                "", EntityType.category, ProtectionLevel.everyone, parent.getKey(), user.getEmail().getValue(), ""
-        );
-
-    }
-
-    public CategoryModel(EntityName categoryName) {
-
-        super(categoryName,
-                "", EntityType.category, ProtectionLevel.everyone, "", "", ""
-        );
-    }
-
-    public CategoryModel(Entity parent, String categoryName) {
-
-        super(CommonFactory.createName(categoryName, EntityType.category),
-                "", EntityType.category, ProtectionLevel.everyone, parent.getKey(), parent.getOwner(), ""
-        );
+    public CategoryModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid) {
+        super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
     }
 
     public static class Builder extends EntityBuilder {
@@ -63,9 +42,12 @@ public class CategoryModel extends EntityModel implements Serializable, Category
         }
 
         public Category create() {
+            if (protectionLevel == null) {
+                protectionLevel = ProtectionLevel.everyone;
+            }
 
 
-            return new CategoryModel(name);
+            return new CategoryModel(key, name, description, EntityType.category, protectionLevel, parent, owner, uuid);
         }
 
         @Override
@@ -82,7 +64,7 @@ public class CategoryModel extends EntityModel implements Serializable, Category
             return this;
         }
 
-        private Builder initEntity(Entity anEntity) {
+        private void initEntity(Entity anEntity) {
 
             this.key = anEntity.getKey();
             this.id = anEntity.getKey();
@@ -95,6 +77,10 @@ public class CategoryModel extends EntityModel implements Serializable, Category
             this.alertType = anEntity.getAlertType().getCode();
             this.uuid = anEntity.getUUID();
 
+        }
+
+        public Builder init(Category category) {
+            initEntity(category);
             return this;
         }
 
@@ -149,6 +135,8 @@ public class CategoryModel extends EntityModel implements Serializable, Category
             this.action = action;
             return this;
         }
+
+
     }
 
     }

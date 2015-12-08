@@ -13,10 +13,8 @@
 package com.nimbits.client.common;
 
 
-@Deprecated
 public class Utils {
 
-    private static final double DOUBLE = 100.0;
 
     private Utils() {
     }
@@ -24,12 +22,6 @@ public class Utils {
     public static boolean isEmptyString(final String string) {
         return string == null || string.trim().isEmpty();
     }
-
-    public static double roundDouble(final double d) {
-        int ix = (int) (d * DOUBLE); // scale it
-        return (double) ix / DOUBLE;
-    }
-
 
     public static boolean isNotEmpty(String string) {
         return !isEmptyString(string);

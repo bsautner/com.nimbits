@@ -17,6 +17,7 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
+import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
@@ -58,46 +59,16 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
 
     }
 
-    public SubscriptionModel(
-            EntityName name,
-            String parent,
-            String subscribedEntity,
-            SubscriptionType subscriptionType,
-            SubscriptionNotifyMethod subscriptionNotifyMethod,
-            int maxRepeat,
-            boolean formatJson,
-            boolean enabled,
-            String target) {
-        super(name, "", EntityType.subscription, ProtectionLevel.everyone, parent, "", "");
+    public SubscriptionModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String subscribedEntity, int notifyMethod, int subscriptionType, int maxRepeat, String target, boolean notifyFormatJson, boolean enabled) {
+        super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
         this.subscribedEntity = subscribedEntity;
-        this.subscriptionType = subscriptionType.getCode();
-        this.notifyMethod = subscriptionNotifyMethod.getCode();
+        this.notifyMethod = notifyMethod;
+        this.subscriptionType = subscriptionType;
         this.maxRepeat = maxRepeat;
-        this.enabled = enabled;
-        this.notifyFormatJson = formatJson;
         this.target = target;
-    }
-
-
-    public SubscriptionModel(
-            Entity entity,
-            String subscribedEntity,
-            SubscriptionType subscriptionType,
-            SubscriptionNotifyMethod subscriptionNotifyMethod,
-            int maxRepeat,
-            boolean formatJson,
-            boolean enabled,
-            String target) {
-        super(entity);
-        this.subscribedEntity = subscribedEntity;
-        this.subscriptionType = subscriptionType.getCode();
-        this.notifyMethod = subscriptionNotifyMethod.getCode();
-        this.maxRepeat = maxRepeat;
+        this.notifyFormatJson = notifyFormatJson;
         this.enabled = enabled;
-        this.notifyFormatJson = formatJson;
-        this.target = target;
     }
-
 
     @Override
     public String getSubscribedEntity() {
@@ -209,7 +180,8 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
         }
 
         public Subscription create() {
-            return new SubscriptionModel(name, parent, subscribedEntity, subscriptionType, notifyMethod, maxRepeat, true, true, target);
+            return new SubscriptionModel(key, name, description, EntityType.subscription, protectionLevel, parent
+            , owner, uuid, subscribedEntity, notifyMethod.getCode(), subscriptionType.getCode(), maxRepeat, target, true, true );
 
         }
 
@@ -282,6 +254,31 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
         public Builder action(String action) {
             this.action = action;
             return this;
+        }
+
+        public Builder init(Subscription entity) {
+            initEntity(entity);
+            this.subscribedEntity = entity.getSubscribedEntity();
+            this.notifyMethod = entity.getNotifyMethod();
+            this.subscriptionType = entity.getSubscriptionType();
+            this.maxRepeat = entity.getMaxRepeat();
+            this.target = entity.getTarget();
+            return this;
+        }
+
+        private void initEntity(Entity anEntity) {
+
+            this.key = anEntity.getKey();
+            this.id = anEntity.getKey();
+            this.name = anEntity.getName();
+            this.description = anEntity.getDescription();
+            this.entityType = anEntity.getEntityType();
+            this.parent = anEntity.getParent();
+            this.owner = anEntity.getOwner();
+            this.protectionLevel = anEntity.getProtectionLevel();
+            this.alertType = anEntity.getAlertType().getCode();
+            this.uuid = anEntity.getUUID();
+
         }
     }
 }

@@ -17,11 +17,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
-import com.nimbits.client.android.AndroidControl;
-import com.nimbits.client.android.AndroidControlFactory;
-import com.nimbits.client.android.AndroidControlImpl;
-import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
@@ -35,24 +30,17 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.io.NimbitsClient;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.gson.deserializer.SessionDeserializer;
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.converter.GsonConverter;
 
-import java.io.IOException;
 import java.util.*;
 
 public class NimbitsClientImpl implements NimbitsClient {
 
 
-    public static final String HTTP_NIMBITS_GCM_APPSPOT_COM_ANDROID = "http://nimbits-gcm.appspot.com/android";
     private final UrlContainer instanceUrl;
     private final Server server;
     private final RequestInterceptor requestInterceptor;
@@ -460,41 +448,7 @@ public class NimbitsClientImpl implements NimbitsClient {
     }
 
 
-    @Override
-    public List<AndroidControl> getControl() {
-        org.apache.http.client.HttpClient client = new DefaultHttpClient();
-        String getURL = HTTP_NIMBITS_GCM_APPSPOT_COM_ANDROID;
-        HttpGet get = new HttpGet(getURL);
-        HttpResponse responseGet;
-        List<AndroidControl> result = new ArrayList<AndroidControl>(1);
 
-        try {
-            responseGet = client.execute(get);
-
-            HttpEntity resEntityGet = responseGet.getEntity();
-            if (resEntityGet != null) {
-
-                String response = EntityUtils.toString(resEntityGet);
-                if (!Utils.isEmptyString(response)) {
-                    Gson gson = new GsonBuilder().create();
-                    AndroidControl c = gson.fromJson(response, AndroidControlImpl.class);
-                    if (c != null) {
-                        result.add(c);
-                    }
-                }
-
-
-            }
-        } catch (IOException e) {
-            result.add(AndroidControlFactory.getConservativeInstance());
-
-        } catch (JsonSyntaxException e) {
-            result.add(AndroidControlFactory.getConservativeInstance());
-        }
-        return result;
-
-
-    }
 
     @Override
     public void recordSeries(final Point point) {

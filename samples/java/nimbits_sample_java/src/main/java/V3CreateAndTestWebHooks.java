@@ -17,6 +17,12 @@ public class V3CreateAndTestWebHooks extends NimbitsTest {
 
     private final static String TAG = V3CreateAndTestWebHooks.class.getName();
 
+    public static void main(String... args) throws InterruptedException {
+
+        V3CreateAndTestWebHooks test = new V3CreateAndTestWebHooks();
+        test.execute();
+    }
+
     @Override
     public void execute() throws InterruptedException {
 

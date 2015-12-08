@@ -506,7 +506,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
                     pointType, deltaAlarm, deltaAlarmOn, deltaSeconds, precision);
         }
 
-        private Builder initEntity(Entity anEntity) {
+        private void initEntity(Entity anEntity) {
 
             this.key = anEntity.getKey();
             this.id = anEntity.getKey();
@@ -519,7 +519,6 @@ public class PointModel extends EntityModel implements Serializable, Point {
             this.alertType = anEntity.getAlertType().getCode();
             this.uuid = anEntity.getUUID();
 
-            return this;
         }
         @Override
         public Builder parent(String parent) {

@@ -13,13 +13,16 @@
 package com.nimbits.client.model.trigger;
 
 import com.google.gson.annotations.Expose;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 
 import java.io.Serializable;
 
 
-public class TriggerModel extends EntityModel implements Serializable, Trigger {
+public abstract class TriggerModel extends EntityModel implements Serializable, Trigger {
 
     @Expose
     private String target;
@@ -51,6 +54,13 @@ public class TriggerModel extends EntityModel implements Serializable, Trigger {
 
     }
 
+    public TriggerModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String target, String trigger, boolean enabled) {
+        super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
+        this.target = target;
+        this.trigger = trigger;
+        this.enabled = enabled;
+    }
+
     @Override
     public String getTarget() {
         return target;
@@ -79,5 +89,26 @@ public class TriggerModel extends EntityModel implements Serializable, Trigger {
     @Override
     public void setTrigger(String trigger) {
         this.trigger = trigger;
+    }
+
+
+    public static abstract class TriggerBuilder<T> extends EntityBuilder {
+
+
+        protected String target;
+
+
+        protected String trigger;
+
+
+        protected boolean enabled;
+
+        public abstract T target(String v);
+
+        public abstract T trigger(String v);
+
+        public abstract T enabled(boolean v);
+
+
     }
 }

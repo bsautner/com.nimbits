@@ -45,9 +45,9 @@ public class V3CreateAndTestWebHooks extends NimbitsTest {
 
         WebHook webHook = nimbits.addWebHook(downloadTarget, new WebHookModel.Builder()
                 .name(TAG + " web hook " + UUID.randomUUID().toString())
-                .setUrl("http://scooterlabs.com/echo.json?")
-                .setMethod(HttpMethod.GET)
-                .setDownloadTarget(downloadTarget.getKey())
+                .url("http://scooterlabs.com/echo.json?")
+                .method(HttpMethod.GET)
+                .downloadTarget(downloadTarget.getKey())
                 .pathChannel(DataChannel.data)
                 .bodyChannel(DataChannel.meta)
                 .create());

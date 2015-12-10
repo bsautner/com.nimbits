@@ -30,15 +30,20 @@ import java.util.Date;
 import java.util.List;
 
 
-public class EntityModel implements Serializable, Comparable<Entity>, Entity {
+public abstract class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
     @Expose
     private String name;
+
     @Expose
     private String key;
+
     @Expose
     private String description;
-    @Expose protected int entityType;
+
+    @Expose
+    protected int entityType;
+
     @Expose
     private int protectionLevel;
 
@@ -46,6 +51,7 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
     @Expose
     private String parent;
+
     @Expose
     private String owner;
 
@@ -61,6 +67,7 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
     private String instanceUrl;
     private boolean isCached = false;
+
     @Expose
     private String id;
     private String action;

@@ -15,7 +15,6 @@ package com.nimbits.client.model.user;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 
 
@@ -23,35 +22,6 @@ public class UserModelFactory {
 
 
     private UserModelFactory() {
-    }
-
-
-    public static User createUserModel(final User u) {
-        return new UserModel(u);
-    }
-
-    public static User createUnauthenticatedUserModel(final EntityName name,
-                                                      final String description,
-                                                      final EntityType entityType,
-                                                      final ProtectionLevel protectionLevel,
-                                                      final String parent,
-                                                      final String owner) {
-
-        return new UserModel(name, description, entityType, protectionLevel, parent,
-                owner);
-    }
-
-    public static User createUserModel(final EntityName name,
-                                       final String description,
-                                       final EntityType entityType,
-                                       final ProtectionLevel protectionLevel,
-                                       final String parent,
-                                       final String owner,
-                                       final String password, final String salt, final UserSource source) {
-
-
-        return new UserModel(name, description, entityType, protectionLevel, parent,
-                owner, password, salt, source);
     }
 
     public static LoginInfo createLoginInfo(String loginUrl, String logoutUrl, UserStatus userStatus, boolean isGAE) {

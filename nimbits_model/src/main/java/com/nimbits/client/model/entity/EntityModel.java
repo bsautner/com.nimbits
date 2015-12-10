@@ -482,7 +482,6 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
         protected String action;
 
-
         public EntityBuilder() {
         }
 

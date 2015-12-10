@@ -14,12 +14,7 @@ package com.nimbits.client.model.trigger;
 
 import com.nimbits.client.model.EntityKeyImpl;
 
-/**
- * Created with IntelliJ IDEA.
- * User: benjamin
- * Date: 10/15/12
- * Time: 5:09 PM
- */
+
 public class TargetEntityImpl extends EntityKeyImpl implements TargetEntity {
     public TargetEntityImpl(String value) {
         super(value);

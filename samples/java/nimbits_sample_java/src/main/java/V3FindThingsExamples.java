@@ -102,8 +102,8 @@ public class V3FindThingsExamples {
 
             WebHook webHook = new WebHookModel.Builder()
                     .name(name)
-                    .setMethod(HttpMethod.GET)
-                    .setUrl("http://www.foo.com")
+                    .method(HttpMethod.GET)
+                    .url("http://www.foo.com")
                     .create();
             nimbits.addWebHook(user, webHook);
 

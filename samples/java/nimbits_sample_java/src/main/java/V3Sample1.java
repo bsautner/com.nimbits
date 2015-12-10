@@ -184,9 +184,9 @@ public class V3Sample1 {
             String timeApi = "http://cloud.nimbits.com/service/v2/time";
             WebHook webHook = new WebHookModel.Builder()
                     .name("Web Hook To Time API")
-                    .setMethod(HttpMethod.GET)
-                    .setDownloadTarget(newTarget.getKey())
-                    .setUrl(timeApi)
+                    .method(HttpMethod.GET)
+                    .downloadTarget(newTarget.getKey())
+                    .url(timeApi)
                     .create();
 
             webHook = client.addWebHook(folder, webHook);

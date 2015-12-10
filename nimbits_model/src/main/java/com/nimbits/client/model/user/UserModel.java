@@ -18,8 +18,12 @@ import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.category.CategoryModel;
+import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityName;
 
@@ -36,7 +40,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     @Expose
     private String emailAddress;
 
-    private ArrayList<AccessKey> accessKeys;
+    private List<AccessKey> accessKeys;
 
     @Expose
     private Boolean isAdmin;
@@ -66,56 +70,21 @@ public class UserModel extends EntityModel implements Serializable, User {
         super();
     }
 
-    public UserModel(final User u) {
-        super(u);
-        if (u != null) {
 
-            this.accessKeys = (ArrayList<AccessKey>) u.getAccessKeys();
-            this.emailAddress = u.getEmail().getValue();
-            this.password = u.getPassword();
-            this.passwordSalt = u.getPasswordSalt();
-            this.source = u.getSource().name();
-            this.isAdmin = u.getIsAdmin();
-            this.passwordResetTokenTimestamp = u.getPasswordResetTokenTimestamp();
-            this.passwordResetToken = u.getPasswordResetToken();
-
-
-        }
-    }
-
-    public UserModel(final EntityName name,
-                     final String description,
-                     final EntityType entityType,
-                     final ProtectionLevel protectionLevel,
-                     final String parent,
-                     final String owner) {
-        super(name, description, entityType, protectionLevel, parent,
-                owner, "");
-
-        this.emailAddress = name.getValue();
-
-
-
-    }
-
-    public UserModel(String emailAddress, String password) {
+    public UserModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String emailAddress,
+                     List<AccessKey> accessKeys, Boolean isAdmin, String token, String password, String passwordSalt, String source, LoginInfo loginInfo, String passwordResetToken,
+                     Date passwordResetTokenTimestamp) {
+        super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
         this.emailAddress = emailAddress;
+        this.accessKeys = accessKeys;
+        this.isAdmin = isAdmin;
+        this.token = token;
         this.password = password;
-    }
-
-    public UserModel(final EntityName name,
-                     final String description,
-                     final EntityType entityType,
-                     final ProtectionLevel protectionLevel,
-                     final String parent,
-                     final String owner, final String password, final String salt, final UserSource source) {
-        super(name, description, entityType, protectionLevel, parent, owner, "");
-
-        this.emailAddress = name.getValue();
-        this.password = password;
-        this.passwordSalt = salt;
-        this.source = source.name();
-
+        this.passwordSalt = passwordSalt;
+        this.source = source;
+        this.loginInfo = loginInfo;
+        this.passwordResetToken = passwordResetToken;
+        this.passwordResetTokenTimestamp = passwordResetTokenTimestamp;
     }
 
     @Override
@@ -264,24 +233,188 @@ public class UserModel extends EntityModel implements Serializable, User {
         return result;
     }
 
-    public static class Builder {
+    public static class Builder extends EntityBuilder {
 
-        private String email;
+
+        private String emailAddress;
+
+        private List<AccessKey> accessKeys;
+
+        private Boolean isAdmin;
+
+        private String token;
+
         private String password;
 
-        public Builder email(String email) {
-            this.email = email;
+        private String passwordSalt;
+
+        private String source;
+
+        private LoginInfo loginInfo;
+
+        private String passwordResetToken;
+
+        private Date passwordResetTokenTimestamp;
+
+        public Builder email(String emailAddress) {
+            this.emailAddress = emailAddress;
+            return this;
+        }
+
+        public Builder setAccessKeys(List<AccessKey> accessKeys) {
+            this.accessKeys = accessKeys;
+            return this;
+        }
+
+        public Builder setIsAdmin(Boolean isAdmin) {
+            this.isAdmin = isAdmin;
+            return this;
+        }
+
+        public Builder setToken(String token) {
+            this.token = token;
             return this;
         }
 
         public Builder password(String password) {
             this.password = password;
             return this;
+        }
 
+        public Builder salt(String passwordSalt) {
+            this.passwordSalt = passwordSalt;
+            return this;
+        }
+
+        public Builder source(String source) {
+            this.source = source;
+            return this;
+        }
+
+        public Builder setLoginInfo(LoginInfo loginInfo) {
+            this.loginInfo = loginInfo;
+            return this;
+        }
+
+        public Builder setPasswordResetToken(String passwordResetToken) {
+            this.passwordResetToken = passwordResetToken;
+            return this;
+        }
+
+        public Builder setPasswordResetTokenTimestamp(Date passwordResetTokenTimestamp) {
+            this.passwordResetTokenTimestamp = passwordResetTokenTimestamp;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = CommonFactory.createName(name, EntityType.user);
+            return this;
         }
 
         public User create() {
-            return new UserModel(email, password);
+            if (protectionLevel == null) {
+                protectionLevel = ProtectionLevel.everyone;
+            }
+
+
+            return new UserModel(key, name, description, EntityType.user, protectionLevel, parent, owner, uuid,
+                    emailAddress, accessKeys,isAdmin, token, password, passwordSalt, source, loginInfo, passwordResetToken, passwordResetTokenTimestamp  );
+        }
+
+        @Override
+        public Builder parent(String parent) {
+
+            this.parent = parent;
+            return this;
+        }
+
+
+        @Override
+        public Builder entityType(EntityType entityType) {
+            this.entityType = entityType;
+            return this;
+        }
+
+        private void initEntity(Entity anEntity) {
+
+            this.key = anEntity.getKey();
+            this.id = anEntity.getKey();
+            this.name = anEntity.getName();
+            this.description = anEntity.getDescription();
+            this.entityType = anEntity.getEntityType();
+            this.parent = anEntity.getParent();
+            this.owner = anEntity.getOwner();
+            this.protectionLevel = anEntity.getProtectionLevel();
+            this.alertType = anEntity.getAlertType().getCode();
+            this.uuid = anEntity.getUUID();
+
+        }
+
+        public Builder init(User u) {
+            initEntity(u);
+            this.emailAddress = u.getEmail().getValue();
+            this.accessKeys = u.getAccessKeys();
+            this.isAdmin = u.getIsAdmin();
+            this.token = u.getToken();
+            this.password = u.getPassword();
+            this.passwordSalt = u.getPasswordSalt();
+            this.source = u.getSource().name();
+            this.loginInfo = u.getLoginInfo();
+            this.passwordResetToken = u.getPasswordResetToken();
+            this.passwordResetTokenTimestamp = u.getPasswordResetTokenTimestamp();
+            return this;
+        }
+
+        @Override
+        public Builder name(EntityName name) {
+            this.name = name;
+            return this;
+        }
+        @Override
+        public Builder key(String key) {
+            this.key = key;
+            return this;
+        }
+        @Override
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+        @Override
+        public Builder protectionLevel(ProtectionLevel protectionLevel) {
+            this.protectionLevel = protectionLevel;
+            return this;
+        }
+        @Override
+        public Builder alertType(int alertType) {
+            this.alertType = alertType;
+            return this;
+        }
+        @Override
+        public Builder owner(String owner) {
+            this.owner = owner;
+            return this;
+        }
+        @Override
+        public Builder readOnly(boolean readOnly) {
+            this.readOnly = readOnly;
+            return this;
+        }
+        @Override
+        public Builder id(String id) {
+            this.id = id;
+            return this;
+        }
+        @Override
+        public Builder uuid(String uuid) {
+            this.uuid = uuid;
+            return this;
+        }
+
+        @Override
+        public Builder action(String action) {
+            this.action = action;
+            return this;
         }
     }
 }

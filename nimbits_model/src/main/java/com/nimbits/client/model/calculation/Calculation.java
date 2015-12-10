@@ -27,8 +27,6 @@ public interface Calculation extends Trigger, Serializable {
 
     String getZ();
 
-    String getVar(String var);
-
     void setZ(final String z);
 
     void setY(final String y);

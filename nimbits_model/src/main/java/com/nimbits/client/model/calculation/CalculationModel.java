@@ -13,9 +13,13 @@
 package com.nimbits.client.model.calculation;
 
 import com.google.gson.annotations.Expose;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.model.common.CommonIdentifier;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.trigger.TargetEntity;
-import com.nimbits.client.model.trigger.TriggerEntity;
+import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.trigger.Trigger;
 import com.nimbits.client.model.trigger.TriggerModel;
 
 import java.io.Serializable;
@@ -43,27 +47,9 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
         super();
     }
 
-    public CalculationModel(final Calculation calculation) {
-        super(calculation);
-
-        this.formula = calculation.getFormula();
-        this.x = calculation.getX();
-        this.y = calculation.getY();
-        this.z = calculation.getZ();
-
-    }
-
-
-    public CalculationModel(final Entity entity,
-                            final TriggerEntity trigger,
-                            final boolean enabled,
-                            final String f,
-                            final TargetEntity target,
-                            final String x,
-                            final String y,
-                            final String z) {
-        super(entity, trigger, target, enabled);
-        this.formula = f;
+    public CalculationModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String target, String trigger, boolean enabled, String formula, String x, String y, String z) {
+        super(key, name, description, entityType, protectionLevel, parent, owner, uuid, target, trigger, enabled);
+        this.formula = formula;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -112,23 +98,6 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
     }
 
     @Override
-    public String getVar(String var) {
-//TODO GWT 2.5.1 does not support java 7 - so no enum yet.
-
-        if (var.equals("x")) {
-            return getX();
-        } else if (var.equals("y")) {
-            return getY();
-        } else if (var.equals("z")) {
-            return getZ();
-        } else {
-            return "";
-        }
-
-
-    }
-
-    @Override
     public void update(Entity update) {
         throw new RuntimeException("Not Implemented");
     }
@@ -157,5 +126,167 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
         result = 31 * result + (y != null ? y.hashCode() : 0);
         result = 31 * result + (z != null ? z.hashCode() : 0);
         return result;
+    }
+
+
+    public static class Builder extends TriggerBuilder {
+
+
+        private String formula;
+
+
+        private String x;
+
+
+        private String y;
+
+
+        private String z;
+
+        public Builder formula(String formula) {
+            this.formula = formula;
+            return this;
+        }
+
+        public Builder x(String x) {
+            this.x = x;
+            return this;
+        }
+
+        public Builder y(String y) {
+            this.y = y;
+            return this;
+        }
+
+        public Builder z(String z) {
+            this.z = z;
+            return this;
+        }
+
+        @Override
+        public Builder target(String v) {
+            this.target = v;
+            return this;
+        }
+
+        @Override
+        public Builder trigger(String v) {
+            this.trigger = v;
+            return this;
+        }
+
+        @Override
+        public Builder enabled(boolean v) {
+            this.enabled = v;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = CommonFactory.createName(name, EntityType.calculation);
+            return this;
+        }
+
+        public Calculation create() {
+            if (protectionLevel == null) {
+                protectionLevel = ProtectionLevel.everyone;
+            }
+
+
+            return new CalculationModel(key, name, description, EntityType.calculation, protectionLevel, parent, owner, uuid,target,
+                    trigger, enabled, formula, x, y, z);
+        }
+
+        @Override
+        public Builder parent(String parent) {
+
+            this.parent = parent;
+            return this;
+        }
+
+
+        @Override
+        public Builder entityType(EntityType entityType) {
+            this.entityType = entityType;
+            return this;
+        }
+
+        private void initEntity(Trigger anEntity) {
+            this.trigger = anEntity.getTrigger();
+            this.target = anEntity.getTarget();
+            this.enabled = anEntity.isEnabled();
+
+            this.key = anEntity.getKey();
+            this.id = anEntity.getKey();
+            this.name = anEntity.getName();
+            this.description = anEntity.getDescription();
+            this.entityType = anEntity.getEntityType();
+            this.parent = anEntity.getParent();
+            this.owner = anEntity.getOwner();
+            this.protectionLevel = anEntity.getProtectionLevel();
+            this.alertType = anEntity.getAlertType().getCode();
+            this.uuid = anEntity.getUUID();
+
+        }
+
+        public Builder init(Calculation c) {
+            initEntity(c);
+            this.formula = c.getFormula();
+            this.x = c.getX();
+            this.y = c.getY();
+            this.z = c.getZ();
+            return this;
+        }
+
+        @Override
+        public Builder name(EntityName name) {
+            this.name = name;
+            return this;
+        }
+        @Override
+        public Builder key(String key) {
+            this.key = key;
+            return this;
+        }
+        @Override
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+        @Override
+        public Builder protectionLevel(ProtectionLevel protectionLevel) {
+            this.protectionLevel = protectionLevel;
+            return this;
+        }
+        @Override
+        public Builder alertType(int alertType) {
+            this.alertType = alertType;
+            return this;
+        }
+        @Override
+        public Builder owner(String owner) {
+            this.owner = owner;
+            return this;
+        }
+        @Override
+        public Builder readOnly(boolean readOnly) {
+            this.readOnly = readOnly;
+            return this;
+        }
+        @Override
+        public Builder id(String id) {
+            this.id = id;
+            return this;
+        }
+        @Override
+        public Builder uuid(String uuid) {
+            this.uuid = uuid;
+            return this;
+        }
+
+        @Override
+        public Builder action(String action) {
+            this.action = action;
+            return this;
+        }
     }
 }

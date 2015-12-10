@@ -41,7 +41,7 @@
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
-    <output url="file://$MODULE_DIR$/target/nimbits_server-3.9.17-SNAPSHOT/WEB-INF/classes" />
+    <output url="file://$MODULE_DIR$/target/nimbits_server-3.9.25-SNAPSHOT/WEB-INF/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
@@ -52,6 +52,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: com.h2database:h2:1.4.188" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.okhttp:okhttp:2.0.0" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.okio:okio:1.0.0" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.okhttp:okhttp-urlconnection:2.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.7.12" level="project" />
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.12" level="project" />
     <orderEntry type="library" name="Maven: com.dmurph:JGoogleAnalyticsTracker:1.2.0" level="project" />
@@ -65,12 +69,9 @@
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="module" module-name="nimbits_io" />
     <orderEntry type="library" name="Maven: com.squareup.retrofit:retrofit:1.7.0" level="project" />
-    <orderEntry type="library" name="Maven: com.squareup.okhttp:okhttp:2.0.0" level="project" />
-    <orderEntry type="library" name="Maven: com.squareup.okio:okio:1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: com.squareup.okhttp:okhttp-urlconnection:2.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.3.6" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
-    <orderEntry type="library" name="Maven: com.h2database:h2:1.4.188" level="project" />
+    <orderEntry type="library" name="Maven: com.h2database:h2:1.4.190" level="project" />
     <orderEntry type="library" name="Maven: com.google.guava:guava:18.0" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-websocket:8.1.15.v20140411" level="project" />
     <orderEntry type="library" name="Maven: org.eclipse.jetty:jetty-io:8.1.15.v20140411" level="project" />

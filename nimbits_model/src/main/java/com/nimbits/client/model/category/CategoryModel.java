@@ -30,14 +30,16 @@ public class CategoryModel extends EntityModel implements Serializable, Category
     }
 
 
-    public CategoryModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid) {
+    protected CategoryModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid) {
         super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
     }
 
     public static class Builder extends EntityBuilder {
 
+        private final EntityType type = EntityType.category;
+
         public Builder name(String name) {
-            this.name = CommonFactory.createName(name, EntityType.category);
+            this.name = CommonFactory.createName(name, type);
             return this;
         }
 
@@ -47,7 +49,7 @@ public class CategoryModel extends EntityModel implements Serializable, Category
             }
 
 
-            return new CategoryModel(key, name, description, EntityType.category, protectionLevel, parent, owner, uuid);
+            return new CategoryModel(key, name, description, type, protectionLevel, parent, owner, uuid);
         }
 
         @Override
@@ -57,12 +59,6 @@ public class CategoryModel extends EntityModel implements Serializable, Category
             return this;
         }
 
-
-        @Override
-        public Builder entityType(EntityType entityType) {
-            this.entityType = entityType;
-            return this;
-        }
 
         private void initEntity(Entity anEntity) {
 

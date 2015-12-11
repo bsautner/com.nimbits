@@ -30,7 +30,7 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
 
     }
 
-    public ScheduleModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, Boolean enabled, Long interval, String source, String target, Long lastProcessed) {
+    protected ScheduleModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, Boolean enabled, Long interval, String source, String target, Long lastProcessed) {
         super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
         this.enabled = enabled;
         this.interval = interval;
@@ -39,14 +39,7 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
         this.lastProcessed = lastProcessed;
     }
 
-    public ScheduleModel(Schedule schedule) {
-        super(schedule);
-        this.enabled = schedule.isEnabled();
-        this.interval = schedule.getInterval();
-        this.source = schedule.getSource();
-        this.target = schedule.getTarget();
-        this.lastProcessed = schedule.getLastProcessed();
-    }
+
 
     @Override
     public Boolean isEnabled() {
@@ -101,6 +94,7 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
 
 
     public static class Builder extends EntityBuilder {
+        private final EntityType type = EntityType.schedule;
 
         private Boolean enabled;
 
@@ -115,7 +109,7 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
 
 
         public Builder name(String name) {
-            this.name = CommonFactory.createName(name, EntityType.schedule);
+            this.name = CommonFactory.createName(name, type);
             return this;
         }
 
@@ -125,7 +119,7 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
             }
 
 
-            return new ScheduleModel(key, name, description, EntityType.schedule, protectionLevel, parent, owner, uuid,
+            return new ScheduleModel(key, name, description,type, protectionLevel, parent, owner, uuid,
                     enabled, interval, source, target, lastProcessed);
         }
 
@@ -136,12 +130,6 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
             return this;
         }
 
-
-        @Override
-        public Builder entityType(EntityType entityType) {
-            this.entityType = entityType;
-            return this;
-        }
 
         private void initEntity(Entity anEntity) {
 

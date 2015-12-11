@@ -33,18 +33,12 @@ public class ConnectionModel extends EntityModel implements Serializable, Connec
     private String targetEmail;
 
 
-    protected ConnectionModel() {
+    private ConnectionModel() {
 
     }
 
-    public ConnectionModel(final Connection c) {
-        super(c);
-        this.approvalKey = c.getApprovalKey();
-        this.approved = c.isApproved();
-        this.targetEmail = c.getTargetEmail();
-    }
 
-    public ConnectionModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String approvalKey, boolean approved, String targetEmail) {
+    protected ConnectionModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String approvalKey, boolean approved, String targetEmail) {
         super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
         this.approvalKey = approvalKey;
         this.approved = approved;
@@ -73,6 +67,8 @@ public class ConnectionModel extends EntityModel implements Serializable, Connec
 
     public static class Builder extends EntityBuilder {
 
+        private final EntityType type = EntityType.connection;
+
         private String approvalKey;
 
         private boolean approved;
@@ -90,7 +86,7 @@ public class ConnectionModel extends EntityModel implements Serializable, Connec
             }
 
 
-            return new ConnectionModel(key, name, description, entityType, protectionLevel, parent, owner, uuid, approvalKey, approved, targetEmail);
+            return new ConnectionModel(key, name, description, type, protectionLevel, parent, owner, uuid, approvalKey, approved, targetEmail);
         }
 
         @Override
@@ -101,11 +97,6 @@ public class ConnectionModel extends EntityModel implements Serializable, Connec
         }
 
 
-        @Override
-        public Builder entityType(EntityType entityType) {
-            this.entityType = entityType;
-            return this;
-        }
 
         private void initEntity(Entity anEntity) {
 
@@ -113,7 +104,7 @@ public class ConnectionModel extends EntityModel implements Serializable, Connec
             this.id = anEntity.getKey();
             this.name = anEntity.getName();
             this.description = anEntity.getDescription();
-            this.entityType = anEntity.getEntityType();
+            this.entityType = type;
             this.parent = anEntity.getParent();
             this.owner = anEntity.getOwner();
             this.protectionLevel = anEntity.getProtectionLevel();

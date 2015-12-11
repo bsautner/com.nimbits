@@ -66,12 +66,12 @@ public class UserModel extends EntityModel implements Serializable, User {
     private static final long serialVersionUID = 5L;
 
     @SuppressWarnings("unused")
-    public UserModel() {
+    private UserModel() {
         super();
     }
 
 
-    public UserModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String emailAddress,
+    protected UserModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String emailAddress,
                      List<AccessKey> accessKeys, Boolean isAdmin, String token, String password, String passwordSalt, String source, LoginInfo loginInfo, String passwordResetToken,
                      Date passwordResetTokenTimestamp) {
         super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
@@ -234,7 +234,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     }
 
     public static class Builder extends EntityBuilder {
-
+        private final EntityType type = EntityType.user;
 
         private String emailAddress;
 
@@ -266,7 +266,7 @@ public class UserModel extends EntityModel implements Serializable, User {
             return this;
         }
 
-        public Builder setIsAdmin(Boolean isAdmin) {
+        public Builder isAdmin(Boolean isAdmin) {
             this.isAdmin = isAdmin;
             return this;
         }
@@ -307,7 +307,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         }
 
         public Builder name(String name) {
-            this.name = CommonFactory.createName(name, EntityType.user);
+            this.name = CommonFactory.createName(name, type);
             return this;
         }
 
@@ -315,9 +315,15 @@ public class UserModel extends EntityModel implements Serializable, User {
             if (protectionLevel == null) {
                 protectionLevel = ProtectionLevel.everyone;
             }
+            if (name == null && emailAddress != null) {
+                name = CommonFactory.createName(emailAddress, type);
+            }
+            if (parent == null && emailAddress != null) {
+                parent = emailAddress;
+            }
 
 
-            return new UserModel(key, name, description, EntityType.user, protectionLevel, parent, owner, uuid,
+            return new UserModel(key, name, description, type , protectionLevel, parent, owner, uuid,
                     emailAddress, accessKeys,isAdmin, token, password, passwordSalt, source, loginInfo, passwordResetToken, passwordResetTokenTimestamp  );
         }
 
@@ -328,12 +334,6 @@ public class UserModel extends EntityModel implements Serializable, User {
             return this;
         }
 
-
-        @Override
-        public Builder entityType(EntityType entityType) {
-            this.entityType = entityType;
-            return this;
-        }
 
         private void initEntity(Entity anEntity) {
 

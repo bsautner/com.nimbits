@@ -37,22 +37,7 @@ public abstract class TriggerModel extends EntityModel implements Serializable, 
     protected TriggerModel() {
     }
 
-    public TriggerModel(final Trigger anEntity) {
-        super(anEntity);
-        this.target = anEntity.getTarget();
-        this.trigger = anEntity.getTrigger();
-        this.enabled = anEntity.isEnabled();
-    }
 
-    public TriggerModel(final Entity anEntity, final TriggerEntity trigger, final TargetEntity target, boolean enabled) {
-        super(anEntity);
-        if (target != null) {
-            this.target = target.getValue();
-        }
-        this.trigger = trigger.getValue();
-        this.enabled = enabled;
-
-    }
 
     public TriggerModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String target, String trigger, boolean enabled) {
         super(key, name, description, entityType, protectionLevel, parent, owner, uuid);

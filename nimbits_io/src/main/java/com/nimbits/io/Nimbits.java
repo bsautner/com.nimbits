@@ -24,6 +24,7 @@ import com.nimbits.io.http.NimbitsClientException;
 import com.nimbits.io.http.rest.RestClient;
 import com.nimbits.server.gson.*;
 import com.nimbits.server.gson.deserializer.*;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import retrofit.*;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
@@ -52,6 +53,7 @@ public class Nimbits {
 
         final Gson gson =new GsonBuilder()
                 .setDateFormat(Const.GSON_DATE_FORMAT)
+                .excludeFieldsWithoutExposeAnnotation()
                 .registerTypeAdapter(AccessKey.class, new AccessKeySerializer())
                 .registerTypeAdapter(AccessKey.class, new AccessKeyDeserializer())
                 .registerTypeAdapter(Category.class, new CategoryDeserializer())
@@ -66,6 +68,7 @@ public class Nimbits {
                 .registerTypeAdapter(WebHook.class, new WebHookDeserializer())
                 .registerTypeAdapter(WebHook.class, new WebHookSerializer())
                 .registerTypeAdapter(Subscription.class, new SubscriptionDeserializer())
+                .registerTypeAdapter(Entity.class, new EntityInstanceCreator())
                 .create();
 
 
@@ -92,13 +95,15 @@ public class Nimbits {
                         if (retrofitError.getResponse() != null) {
                             TypedInput body = retrofitError.getResponse().getBody();
                             try {
-                                BufferedReader reader = new BufferedReader(new InputStreamReader(body.in()));
+                                if (body != null) {
+                                    BufferedReader reader = new BufferedReader(new InputStreamReader(body.in()));
 
-                                String newLine = System.getProperty("line.separator");
-                                String line;
-                                while ((line = reader.readLine()) != null) {
-                                    out.append(line);
-                                    out.append(newLine);
+                                    String newLine = System.getProperty("line.separator");
+                                    String line;
+                                    while ((line = reader.readLine()) != null) {
+                                        out.append(line);
+                                        out.append(newLine);
+                                    }
                                 }
 
                                 // Prints the correct String representation of body.
@@ -107,6 +112,8 @@ public class Nimbits {
                                 e.printStackTrace();
                             }
                         }
+                        String s = ExceptionUtils.getStackTrace(retrofitError);
+                        System.out.println(s);
                         throw new NimbitsClientException(retrofitError.getMessage() + " " + out, retrofitError);
 
                     }
@@ -432,22 +439,6 @@ public class Nimbits {
 
 
 
-    /**
-     * Provides a way to search for an entity by the entity name. Note that some some types of entities may have the same name and
-     * this method will return the first one found.
-     * @param entityName
-     * @param entityType
-     * @See EntityType
-     * @return The Entity, which may be downcasted to the type requestes (i.e Point, Calculation which extend Entity)
-     */
-    public Optional<Entity> findEntityByName(String entityName, EntityType entityType) {
-        try {
-            return Optional.of(api.findEntity(entityName, entityType.getCode()));
-        } catch (Throwable e) {
-            return Optional.absent();
-        }
-    }
-
     public Point getPoint(String uuid) {
         return api.getPoint(uuid);
     }
@@ -460,6 +451,16 @@ public class Nimbits {
             return (e != null);
         } catch (Exception ex) {
             return false;
+        }
+
+    }
+
+    public Optional<User> findUser(String email) {
+        try {
+            return Optional.of(api.findUser(email, EntityType.user.getCode()));
+        } catch (Throwable e) {
+
+            return Optional.absent();
         }
 
     }

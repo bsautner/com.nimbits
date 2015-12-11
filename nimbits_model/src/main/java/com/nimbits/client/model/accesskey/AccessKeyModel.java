@@ -85,11 +85,15 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
 
     public static class Builder extends EntityBuilder {
 
+        private final EntityType type = EntityType.accessKey;
+
         private String code;
 
         private String scope;
 
         private AuthLevel authLevel;
+
+
 
         public Builder code(String code) {
             this.code = code;
@@ -107,7 +111,7 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
         }
 
         public Builder name(String name) {
-            this.name = CommonFactory.createName(name, EntityType.category);
+            this.name = CommonFactory.createName(name, type);
             return this;
         }
 
@@ -117,7 +121,7 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
             }
 
 
-            return new AccessKeyModel(key, name, description, EntityType.accessKey, protectionLevel, parent, owner, uuid, code, scope, authLevel);
+            return new AccessKeyModel(key, name, description, type, protectionLevel, parent, owner, uuid, code, scope, authLevel);
         }
 
         @Override
@@ -127,12 +131,6 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
             return this;
         }
 
-
-        @Override
-        public Builder entityType(EntityType entityType) {
-            this.entityType = entityType;
-            return this;
-        }
 
         private void initEntity(Entity anEntity) {
 

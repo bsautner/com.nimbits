@@ -2,7 +2,6 @@ package com.nimbits.io.http;
 
 import com.google.gson.JsonDeserializer;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.server.gson.EntityDeserializer;
 import com.nimbits.server.gson.PointDeserializer;
 import com.nimbits.server.gson.deserializer.*;
 
@@ -38,7 +37,7 @@ public class SerializationHelper {
             case webhook:
                 return new WebHookDeserializer();
             default:
-                return new EntityDeserializer();
+                throw new IllegalArgumentException("Invalid Entity Type: " + type.name());
         }
 
 

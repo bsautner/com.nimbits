@@ -16,181 +16,176 @@ import java.util.regex.PatternSyntaxException;
  *
  *
  */
-public class V3RestClientTester  {
+public class V3RestClientTester extends NimbitsTest  {
+
+    private List<Entity> pointList = new ArrayList<Entity>();
+    private Map<Entity, List<Value>> storedValues = new HashMap<Entity, List<Value>>();
 
     public static void main(String[] args) throws InterruptedException {
 
+        V3RestClientTester test = new V3RestClientTester();
+        test.execute();
+
+    }
 
 
 
-        NimbitsLoadTester loadTester = new NimbitsLoadTester();
-        loadTester.execute();
+
+
+    public void execute() throws InterruptedException {
+
+        super.execute();
+        log("Starting up");
+
+        if (user != null) {
+            log("Continuing with user: " + user.getEmail() + " " + user.getUUID());
+
+            createRegularUsers();
+            createPoints();
+            recordSeriesData();
+        }
+        else {
+            log("User was null! Exiting Test");
+        }
+
+        log("Done!");
+    }
+
+    private void createRegularUsers() {
+
+        for (int i = 0; i < 10; i++) {
+            log("Creating regular user " + i);
+            String password = UUID.randomUUID().toString();
+            User regularUser = createUser(UUID.randomUUID().toString() + "@example.com", password);
+
+            Nimbits nonAdminClient = new Nimbits.NimbitsBuilder()
+                    .email(regularUser.getEmail().getValue()).token(password).instance(INSTANCE_URL).create();
+            User verify = nonAdminClient.getMe();
+            if (verify.equals(regularUser)) {
+                log("Verified Creating Regular " + i + " User can login ");
+            }
+            else {
+                throw new RuntimeException("Could not verify regular user");
+            }
+
+
+        }
+    }
+
+    /**
+     * Create some data points with the new user as the parent
+     */
+    private void createPoints() {
+
+        for (int i = 0; i < 10; i++) {
+            Point point = new PointModel.Builder().name(UUID.randomUUID().toString()).parent(user.getKey())
+                    .create();
+            Entity newPoint =  nimbits.addPoint(user, point);
+            pointList.add(newPoint);
+            log("Created : " + newPoint.getName().getValue());
+        }
+
+    }
+
+    /**
+     * Record large amounts of data to each point
+     */
+
+    private void recordSeriesData() throws InterruptedException {
+        log("Recording Data");
+        Random r = new Random();
+        String[] meta = {"foo", "bar"};
+
+        for (Entity entity : pointList) {
+
+            List<Value> values = new ArrayList<Value>();
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_YEAR, -30);
+            for (int i = 0; i < 1000; i++) {
+
+                calendar.add(Calendar.SECOND, 1);
+                String metavalue = meta[(i & 1) == 0 ? 0 : 1]; //flip between meta values for testing search
+                values.add(new Value.Builder().timestamp(calendar.getTime()).doubleValue(r.nextDouble() * 1000).meta(metavalue).data("{}").create());
+
+            }
+            nimbits.recordValues(entity, values);
+            log("Recorded : " + values.size() + " for " + entity.getName());
+            storedValues.put(entity, values);
+
+        }
+
+        log("Waiting for things to settle down server side");
+        Thread.sleep(5000);
+        log("Verifying Data");
+        verifySeriesData(null);
+
+        Thread.sleep(1000);
+        log("Verifying Data again!");
+        verifySeriesData("");
+
+        log("Verifying Data again with perfect match mask!");
+        verifySeriesData(meta[0]);
+
+        log("Verifying Data again with other perfect match mask mask!");
+        verifySeriesData(meta[1]);
+
+        log("Verifying Data again with regex mask!");
+        verifySeriesData("[o]+");
+
+        log("Make sure Count param is working");
+        verifyCountParam();
+
 
 
     }
 
-    private static class NimbitsLoadTester extends NimbitsTest {
-
-        private List<Entity> pointList = new ArrayList<Entity>();
-        private Map<Entity, List<Value>> storedValues = new HashMap<Entity, List<Value>>();
-
-        public void execute() throws InterruptedException {
-
-            super.execute();
-            log("Starting up");
-
-            if (user != null) {
-                log("Continuing with user: " + user.getEmail() + " " + user.getUUID());
-
-                createRegularUsers();
-                createPoints();
-                recordSeriesData();
-            }
-            else {
-                log("User was null! Exiting Test");
-            }
-
-            log("Done!");
-        }
-
-        private void createRegularUsers() {
-
-            for (int i = 0; i < 10; i++) {
-                log("Creating regular user " + i);
-                String password = UUID.randomUUID().toString();
-                User regularUser = createUser(UUID.randomUUID().toString() + "@example.com", password);
-
-                Nimbits nonAdminClient = new Nimbits.NimbitsBuilder()
-                        .email(regularUser.getEmail().getValue()).token(password).instance(INSTANCE_URL).create();
-                User verify = nonAdminClient.getMe();
-                if (verify.equals(regularUser)) {
-                    log("Verified Creating Regular " + i + " User can login ");
-                }
-                else {
-                    throw new RuntimeException("Could not verify regular user");
-                }
+    private void verifySeriesData(String mask) {
+        for (Entity entity : pointList) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DAY_OF_YEAR, -31);
+            log(entity.getUUID());
+            List<Value> downloadedValues = nimbits.getValues(entity, calendar.getTime(), new Date(), mask);
+            log("Downloaded " + downloadedValues.size() + " for " + entity.getName());
+            List<Value> stored = storedValues.get(entity);
+            Collections.sort(stored);
+            Collections.sort(downloadedValues);
 
 
-            }
-        }
-
-        /**
-         * Create some data points with the new user as the parent
-         */
-        private void createPoints() {
-
-            for (int i = 0; i < 10; i++) {
-                Point point = new PointModel.Builder().name(UUID.randomUUID().toString()).parent(user.getKey())
-                        .create();
-                Entity newPoint =  nimbits.addPoint(user, point);
-                pointList.add(newPoint);
-                log("Created : " + newPoint.getName().getValue());
-            }
-
-        }
-
-        /**
-         * Record large amounts of data to each point
-         */
-
-        private void recordSeriesData() throws InterruptedException {
-            log("Recording Data");
-            Random r = new Random();
-            String[] meta = {"foo", "bar"};
-
-            for (Entity entity : pointList) {
-
-                List<Value> values = new ArrayList<Value>();
-                Calendar calendar = Calendar.getInstance();
-                calendar.add(Calendar.DAY_OF_YEAR, -30);
-                for (int i = 0; i < 1000; i++) {
-
-                    calendar.add(Calendar.SECOND, 1);
-                    String metavalue = meta[(i & 1) == 0 ? 0 : 1]; //flip between meta values for testing search
-                    values.add(new Value.Builder().timestamp(calendar.getTime()).doubleValue(r.nextDouble() * 1000).meta(metavalue).data("{}").create());
-
-                }
-                nimbits.recordValues(entity, values);
-                log("Recorded : " + values.size() + " for " + entity.getName());
-                storedValues.put(entity, values);
-
-            }
-
-            log("Waiting for things to settle down server side");
-            Thread.sleep(5000);
-            log("Verifying Data");
-            verifySeriesData(null);
-
-            Thread.sleep(1000);
-            log("Verifying Data again!");
-            verifySeriesData("");
-
-            log("Verifying Data again with perfect match mask!");
-            verifySeriesData(meta[0]);
-
-            log("Verifying Data again with other perfect match mask mask!");
-            verifySeriesData(meta[1]);
-
-            log("Verifying Data again with regex mask!");
-            verifySeriesData("[o]+");
-
-            log("Make sure Count param is working");
-            verifyCountParam();
+            for (Value value : stored) {
+                if (StringUtils.isEmpty(mask) || mask.equals(value.getMetaData()) || containsMask(value, mask))
+                    if (!downloadedValues.contains(value)) {
+                        log("R Range: " + stored.get(0).getTimestamp() + " to " +
+                                stored.get(stored.size() - 1).getTimestamp());
+                        log("Q Range: " + calendar.getTime() + " to " + new Date());
 
 
-
-        }
-
-        private void verifySeriesData(String mask) {
-            for (Entity entity : pointList) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.add(Calendar.DAY_OF_YEAR, -31);
-                log(entity.getUUID());
-                List<Value> downloadedValues = nimbits.getValues(entity, calendar.getTime(), new Date(), mask);
-                log("Downloaded " + downloadedValues.size() + " for " + entity.getName());
-                List<Value> stored = storedValues.get(entity);
-                Collections.sort(stored);
-                Collections.sort(downloadedValues);
+                        throw new RuntimeException(
+                                "downloaded values did not contain expected posted value. " + value.toString());
 
 
-                for (Value value : stored) {
-                    if (StringUtils.isEmpty(mask) || mask.equals(value.getMetaData()) || containsMask(value, mask))
-                        if (!downloadedValues.contains(value)) {
-                            log("R Range: " + stored.get(0).getTimestamp() + " to " +
-                                    stored.get(stored.size() - 1).getTimestamp());
-                            log("Q Range: " + calendar.getTime() + " to " + new Date());
-
-
-                            throw new RuntimeException(
-                                    "downloaded values did not contain expected posted value. " + value.toString());
-
-
-                        }
-                }
-
-
-
-
-            }
-        }
-
-        private void verifyCountParam() {
-            for (Entity entity : pointList) {
-                for (int i = 1; i < 1000; i++) {
-                    log("getting " + i + " values for " + entity.getName());
-                    List<Value> values = nimbits.getValues(entity, i);
-                    if (values.size() != i) {
-                        throw new RuntimeException("asked for " + i + " values but got " + values.size());
                     }
+            }
 
+        }
+    }
+
+    private void verifyCountParam() {
+        for (Entity entity : pointList) {
+            for (int i = 1; i < 1000; i++) {
+                log("getting " + i + " values for " + entity.getName());
+                List<Value> values = nimbits.getValues(entity, i);
+                if (values.size() != i) {
+                    throw new RuntimeException("asked for " + i + " values but got " + values.size());
                 }
 
-
-
-
-
             }
+
+
+
+
+
         }
+
 
     }
 

@@ -47,17 +47,6 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
     private SubscriptionModel() {
     }
 
-    public SubscriptionModel(Subscription subscription) {
-        super(subscription);
-        this.subscribedEntity = subscription.getSubscribedEntity();
-        this.notifyMethod = subscription.getNotifyMethod().getCode();
-        this.subscriptionType = subscription.getSubscriptionType().getCode();
-        this.maxRepeat = subscription.getMaxRepeat();
-        this.notifyFormatJson = subscription.getNotifyFormatJson();
-        this.enabled = subscription.getEnabled();
-        this.target = subscription.getTarget();
-
-    }
 
     public SubscriptionModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String subscribedEntity, int notifyMethod, int subscriptionType, int maxRepeat, String target, boolean notifyFormatJson, boolean enabled) {
         super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
@@ -143,6 +132,7 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
 
     public static class Builder extends EntityBuilder {
 
+        private final EntityType type = EntityType.subscription;
 
         private String subscribedEntity;
 
@@ -180,14 +170,14 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
         }
 
         public Subscription create() {
-            return new SubscriptionModel(key, name, description, EntityType.subscription, protectionLevel, parent
+            return new SubscriptionModel(key, name, description, type, protectionLevel, parent
             , owner, uuid, subscribedEntity, notifyMethod.getCode(), subscriptionType.getCode(), maxRepeat, target, true, true );
 
         }
 
 
         public Builder name(String name) {
-            this.name = CommonFactory.createName(name, EntityType.subscription);
+            this.name = CommonFactory.createName(name, type);
             return this;
         }
 
@@ -198,12 +188,6 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
             return this;
         }
 
-
-        @Override
-        public Builder entityType(EntityType entityType) {
-            this.entityType = entityType;
-            return this;
-        }
         @Override
         public Builder name(EntityName name) {
             this.name = name;

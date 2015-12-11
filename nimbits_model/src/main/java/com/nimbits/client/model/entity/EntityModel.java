@@ -85,26 +85,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
 
 
 
-
-    public EntityModel(final CommonIdentifier name,
-                       final String description,
-                       final EntityType entityType,
-                       final ProtectionLevel protectionLevel,
-                       final String parent,
-                       final String owner,
-                       final String uuid) {
-        this.name = name.getValue();
-        this.description = description;
-        this.entityType = entityType.getCode();
-        this.parent = parent;
-        this.owner = owner;
-        this.protectionLevel = protectionLevel.getCode();
-        this.alertType = AlertType.OK.getCode();
-        this.uuid = uuid;
-        this.dateCreated = new Date();
-
-    }
-
     public EntityModel(final String key,
                        final CommonIdentifier name,
                        final String description,
@@ -138,24 +118,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
         }
     }
 
-    public EntityModel(final Entity anEntity) {
-        if (anEntity != null) {
-            this.dateCreated = new Date(anEntity.getDateCreated().getTime());
-            this.key = anEntity.getKey();
-            this.id = this.key;
-            this.name = anEntity.getName().getValue();
-            this.description = anEntity.getDescription();
-            this.entityType = anEntity.getEntityType().getCode();
-            this.parent = anEntity.getParent();
-            this.owner = anEntity.getOwner();
-            this.protectionLevel = anEntity.getProtectionLevel().getCode();
-            this.alertType = anEntity.getAlertType().getCode();
-            this.uuid = anEntity.getUUID();
-            this.instanceUrl = anEntity.getInstanceUrl();
-
-
-        }
-    }
 
     @Override
     public void setEmbedded(Embedded embedded) {
@@ -489,12 +451,12 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
 
         protected String action;
 
+
+
         public EntityBuilder() {
         }
 
         public abstract T parent(String parent);
-
-        public abstract T entityType(EntityType entityType);
 
         public abstract T  name(EntityName name);
 

@@ -6,12 +6,10 @@ import com.google.gson.JsonSyntaxException;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.gson.EntityDeserializer;
 import com.nimbits.server.gson.PointDeserializer;
 import com.nimbits.server.gson.deserializer.AccessKeyDeserializer;
 import com.nimbits.server.gson.deserializer.DateDeserializer;
@@ -90,7 +88,6 @@ public class SocketConnection {
                             .setDateFormat(GSON_DATE_FORMAT)
                             .registerTypeAdapter(Point.class, new PointDeserializer())
                             .registerTypeAdapter(AccessKey.class, new AccessKeyDeserializer())
-                            .registerTypeAdapter(Entity.class, new EntityDeserializer())
                             .registerTypeAdapter(User.class, new SessionDeserializer())
                             .registerTypeAdapter(Date.class, new DateDeserializer())
                             .create();

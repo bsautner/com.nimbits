@@ -45,7 +45,7 @@ public enum GsonFactory {
                     .registerTypeAdapter(Point.class, new PointSerializer())
                     .registerTypeAdapter(Point.class, new PointDeserializer())
                     .registerTypeAdapter(Entity.class, new EntitySerializer())
-                    .registerTypeAdapter(Entity.class, new EntityDeserializer())
+                  //  .registerTypeAdapter(Entity.class, new EntityDeserializer())
                     .registerTypeAdapter(Calculation.class, new CalculationSerializer())
                     .registerTypeAdapter(Calculation.class, new CalculationDeserializer())
                     .registerTypeAdapter(User.class, new UserSerializer())

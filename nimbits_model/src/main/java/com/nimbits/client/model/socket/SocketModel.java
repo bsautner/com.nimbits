@@ -24,7 +24,7 @@ public class SocketModel extends EntityModel implements Serializable, Socket {
     private String extraParams;
 
 
-    public SocketModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String targetApiKey, String targetUrl, String targetPath, String extraParams) {
+    protected SocketModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String targetApiKey, String targetUrl, String targetPath, String extraParams) {
         super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
         this.targetApiKey = targetApiKey;
         this.targetUrl = targetUrl;
@@ -32,16 +32,8 @@ public class SocketModel extends EntityModel implements Serializable, Socket {
         this.extraParams = extraParams;
     }
 
-    public SocketModel(Socket aSocket) {
 
-        super(aSocket);
-        this.targetApiKey = aSocket.getTargetApiKey();
-        this.targetUrl = aSocket.getTargetUrl();
-        this.targetPath = aSocket.getTargetPath();
-        this.extraParams = aSocket.getExtraParams();
-    }
-
-    public SocketModel() {
+    private SocketModel() {
     }
 
     @Override
@@ -91,7 +83,7 @@ public class SocketModel extends EntityModel implements Serializable, Socket {
     }
 
     public static class Builder extends EntityBuilder {
-
+        private final EntityType type = EntityType.socket;
 
         private String targetApiKey;
 
@@ -123,7 +115,7 @@ public class SocketModel extends EntityModel implements Serializable, Socket {
         }
 
         public Builder name(String name) {
-            this.name = CommonFactory.createName(name, EntityType.socket);
+            this.name = CommonFactory.createName(name, type);
             return this;
         }
 
@@ -133,7 +125,7 @@ public class SocketModel extends EntityModel implements Serializable, Socket {
             }
 
 
-            return new SocketModel(key, name, description, EntityType.socket, protectionLevel, parent, owner, uuid
+            return new SocketModel(key, name, description, type, protectionLevel, parent, owner, uuid
                     ,targetApiKey, targetUrl, targetPath, extraParams);
         }
 
@@ -144,20 +136,13 @@ public class SocketModel extends EntityModel implements Serializable, Socket {
             return this;
         }
 
-
-        @Override
-        public Builder entityType(EntityType entityType) {
-            this.entityType = entityType;
-            return this;
-        }
-
         private void initEntity(Entity anEntity) {
 
             this.key = anEntity.getKey();
             this.id = anEntity.getKey();
             this.name = anEntity.getName();
             this.description = anEntity.getDescription();
-            this.entityType = anEntity.getEntityType();
+            this.entityType = type;
             this.parent = anEntity.getParent();
             this.owner = anEntity.getOwner();
             this.protectionLevel = anEntity.getProtectionLevel();

@@ -51,21 +51,8 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
 
 
 
-    public InstanceModel(final Instance server) {
-        super(server);
-        this.serverId = server.getServerId();
-        this.baseUrl = server.getBaseUrl().getUrl();
-        this.adminEmail = server.getAdminEmail().getValue();
-        this.version = server.getVersion();
-        this.apiKey = server.getApiKey().getValue();
-        this.isDefault = server.isDefault();
-        this.protocol = server.getProtocol().name();
-        this.socketsEnabled = server.isSocketsEnabled();
 
-
-    }
-
-    public InstanceModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, long serverId, String baseUrl, String adminEmail, String version, String apiKey, boolean isDefault, String protocol, boolean socketsEnabled) {
+    protected InstanceModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, long serverId, String baseUrl, String adminEmail, String version, String apiKey, boolean isDefault, String protocol, boolean socketsEnabled) {
         super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
         this.serverId = serverId;
         this.baseUrl = baseUrl;
@@ -77,7 +64,7 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
         this.socketsEnabled = socketsEnabled;
     }
 
-    public InstanceModel() {
+    private InstanceModel() {
     }
 
     @Override
@@ -122,6 +109,8 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
     }
 
     public static class Builder extends EntityBuilder {
+        private final EntityType type = EntityType.instance;
+
 
         private long serverId;
 
@@ -141,7 +130,7 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
 
 
         public Builder name(String name) {
-            this.name = CommonFactory.createName(name, EntityType.instance);
+            this.name = CommonFactory.createName(name, type);
             return this;
         }
 
@@ -151,7 +140,7 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
             }
 
 
-            return new InstanceModel(key, name, description, EntityType.instance, protectionLevel, parent, owner, uuid
+            return new InstanceModel(key, name, description, type, protectionLevel, parent, owner, uuid
             , serverId, baseUrl.getUrl(),adminEmail.getValue(),version,apiKey.getValue(),  isDefault, protocol.name(), socketsEnabled );
         }
 
@@ -159,13 +148,6 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
         public Builder parent(String parent) {
 
             this.parent = parent;
-            return this;
-        }
-
-
-        @Override
-        public Builder entityType(EntityType entityType) {
-            this.entityType = entityType;
             return this;
         }
 

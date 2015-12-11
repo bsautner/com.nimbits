@@ -13,10 +13,8 @@
 package com.nimbits.server.gson.deserializer;
 
 import com.google.gson.*;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
-import com.nimbits.server.gson.EntityDeserializer;
 
 import java.lang.reflect.Type;
 
@@ -28,7 +26,7 @@ public class SessionDeserializer implements JsonDeserializer<User> {
 
         final String json = jsonElement.toString();
         Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Entity.class, new EntityDeserializer())
+               // .registerTypeAdapter(Entity.class, new EntityDeserializer())
                 .excludeFieldsWithoutExposeAnnotation().create();
         return gson.fromJson(json, UserModel.class);
 

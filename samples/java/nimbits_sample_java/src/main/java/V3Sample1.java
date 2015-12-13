@@ -411,7 +411,7 @@ public class V3Sample1 extends NimbitsTest {
             }
 
 
-            log("Done!");
+            log("Done " +  getClass().getName());
 
         }
 

@@ -39,7 +39,7 @@ public class V3EntityTests extends NimbitsTest {
 //                schedule
 //                webhook
 
-
+        log("Done " +  getClass().getName());
 
     }
 }

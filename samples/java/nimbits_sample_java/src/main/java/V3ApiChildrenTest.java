@@ -33,12 +33,10 @@ public class V3ApiChildrenTest extends NimbitsTest {
         }
 
         me = nimbits.getMe();
-        Log("Got Children: " + me.getChildren().size());
-
+        log("Got Children: " + me.getChildren().size());
+        log("Done " +  getClass().getName());
 
     }
 
-    private static void Log(String s) {
-        System.out.println(s);
-    }
+
 }

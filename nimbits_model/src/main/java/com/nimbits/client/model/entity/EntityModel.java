@@ -26,19 +26,23 @@ import com.nimbits.client.model.user.User;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
-public class EntityModel implements Serializable, Comparable<Entity>, Entity {
+public abstract class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
     @Expose
     private String name;
+
     @Expose
     private String key;
+
     @Expose
     private String description;
-    @Expose protected int entityType;
+
+    @Expose
+    protected int entityType;
+
     @Expose
     private int protectionLevel;
 
@@ -46,6 +50,7 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
     @Expose
     private String parent;
+
     @Expose
     private String owner;
 
@@ -54,13 +59,12 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
     @Expose
     private String uuid;
 
-    private Date dateCreated;
-
     @Expose
     private ArrayList<Entity> children;
 
     private String instanceUrl;
     private boolean isCached = false;
+
     @Expose
     private String id;
     private String action;
@@ -77,26 +81,6 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
     private Embedded embedded;
 
 
-
-
-    public EntityModel(final CommonIdentifier name,
-                       final String description,
-                       final EntityType entityType,
-                       final ProtectionLevel protectionLevel,
-                       final String parent,
-                       final String owner,
-                       final String uuid) {
-        this.name = name.getValue();
-        this.description = description;
-        this.entityType = entityType.getCode();
-        this.parent = parent;
-        this.owner = owner;
-        this.protectionLevel = protectionLevel.getCode();
-        this.alertType = AlertType.OK.getCode();
-        this.uuid = uuid;
-        this.dateCreated = new Date();
-
-    }
 
     public EntityModel(final String key,
                        final CommonIdentifier name,
@@ -121,7 +105,7 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
         this.alertType = AlertType.OK.getCode();
         this.uuid = uuid;
-        this.dateCreated = new Date();
+
 
     }
 
@@ -131,24 +115,6 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
         }
     }
 
-    public EntityModel(final Entity anEntity) {
-        if (anEntity != null) {
-            this.dateCreated = new Date(anEntity.getDateCreated().getTime());
-            this.key = anEntity.getKey();
-            this.id = this.key;
-            this.name = anEntity.getName().getValue();
-            this.description = anEntity.getDescription();
-            this.entityType = anEntity.getEntityType().getCode();
-            this.parent = anEntity.getParent();
-            this.owner = anEntity.getOwner();
-            this.protectionLevel = anEntity.getProtectionLevel().getCode();
-            this.alertType = anEntity.getAlertType().getCode();
-            this.uuid = anEntity.getUUID();
-            this.instanceUrl = anEntity.getInstanceUrl();
-
-
-        }
-    }
 
     @Override
     public void setEmbedded(Embedded embedded) {
@@ -350,11 +316,6 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
     }
 
-    @Override
-    public Date getDateCreated() {
-
-        return dateCreated != null ? new Date(dateCreated.getTime()) : new Date();
-    }
 
     @Override
     public void validate(User user) {
@@ -371,16 +332,6 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
         }
     }
 
-    @Override
-    public void setDateCreated(Date dateCreated) {
-        if (dateCreated != null) {
-            this.dateCreated = new Date(dateCreated.getTime());
-        } else {
-
-
-            this.dateCreated = null;
-        }
-    }
 
     @Override
     public boolean entityIsReadable(final User user) {
@@ -482,12 +433,12 @@ public class EntityModel implements Serializable, Comparable<Entity>, Entity {
 
         protected String action;
 
+
+
         public EntityBuilder() {
         }
 
         public abstract T parent(String parent);
-
-        public abstract T entityType(EntityType entityType);
 
         public abstract T  name(EntityName name);
 

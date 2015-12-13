@@ -118,6 +118,10 @@ public interface RestClient {
     @GET(API + "/me")
     Schedule findSchedule(@Query("name") String entityName, @Query("type") int entityType);
 
+
+    @GET(API + "/me")
+    User findUser(@Query("name") String entityName, @Query("type") int entityType);
+
     @GET(API + "/me")
     Socket findSocket(@Query("name") String entityName, @Query("type") int entityType);
 }

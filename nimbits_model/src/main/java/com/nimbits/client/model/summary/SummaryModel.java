@@ -40,24 +40,17 @@ public class SummaryModel extends TriggerModel implements Summary {
     private Date lastProcessed;
 
 
-    public SummaryModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String target, String trigger, boolean enabled, Integer summaryType, Long summaryIntervalMs, Date lastProcessed) {
+    protected SummaryModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String target, String trigger, boolean enabled, Integer summaryType, Long summaryIntervalMs, Date lastProcessed) {
         super(key, name, description, entityType, protectionLevel, parent, owner, uuid, target, trigger, enabled);
         this.summaryType = summaryType;
         this.summaryIntervalMs = summaryIntervalMs;
         this.lastProcessed = lastProcessed;
     }
 
-    public SummaryModel(Summary summary) {
-        super(summary);
 
-        this.summaryType = summary.getSummaryType().getCode();
-        this.summaryIntervalMs = summary.getSummaryIntervalMs();
-        this.lastProcessed = summary.getLastProcessed();
-
-    }
 
     @SuppressWarnings("unused")
-    public SummaryModel() {
+    private SummaryModel() {
     }
 
 
@@ -103,7 +96,7 @@ public class SummaryModel extends TriggerModel implements Summary {
 
 
     public static class Builder extends TriggerBuilder {
-
+        private final EntityType type = EntityType.summary;
 
         private SummaryType summaryType;
 
@@ -146,7 +139,7 @@ public class SummaryModel extends TriggerModel implements Summary {
         }
 
         public Builder name(String name) {
-            this.name = CommonFactory.createName(name, EntityType.summary);
+            this.name = CommonFactory.createName(name, type);
             return this;
         }
 
@@ -156,7 +149,7 @@ public class SummaryModel extends TriggerModel implements Summary {
             }
 
 
-            return new SummaryModel(key, name, description, EntityType.summary, protectionLevel, parent, owner, uuid,target,
+            return new SummaryModel(key, name, description, type, protectionLevel, parent, owner, uuid,target,
                     trigger, enabled,  summaryType.getCode(), summaryIntervalMs, lastProcessed);
         }
 
@@ -168,12 +161,6 @@ public class SummaryModel extends TriggerModel implements Summary {
         }
 
 
-        @Override
-        public Builder entityType(EntityType entityType) {
-            this.entityType = entityType;
-            return this;
-        }
-
         private void initEntity(Trigger anEntity) {
             this.trigger = anEntity.getTrigger();
             this.target = anEntity.getTarget();
@@ -184,7 +171,7 @@ public class SummaryModel extends TriggerModel implements Summary {
             this.id = anEntity.getKey();
             this.name = anEntity.getName();
             this.description = anEntity.getDescription();
-            this.entityType = anEntity.getEntityType();
+            this.entityType = type;
             this.parent = anEntity.getParent();
             this.owner = anEntity.getOwner();
             this.protectionLevel = anEntity.getProtectionLevel();

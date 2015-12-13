@@ -1,11 +1,7 @@
 package com.nimbits.io;
 
 import com.google.common.base.Optional;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.connection.Connection;
@@ -22,8 +18,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.io.http.NimbitsClientException;
 import com.nimbits.io.http.rest.RestClient;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.gson.deserializer.*;
+import com.nimbits.server.gson.GsonFactory;
 import retrofit.*;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
@@ -50,23 +45,6 @@ public class Nimbits {
     private Nimbits(final String email, final String token, String instance) {
 
 
-        final Gson gson =new GsonBuilder()
-                .setDateFormat(Const.GSON_DATE_FORMAT)
-                .registerTypeAdapter(AccessKey.class, new AccessKeySerializer())
-                .registerTypeAdapter(AccessKey.class, new AccessKeyDeserializer())
-                .registerTypeAdapter(Category.class, new CategoryDeserializer())
-                .registerTypeAdapter(Point.class, new PointSerializer())
-                .registerTypeAdapter(Point.class, new PointDeserializer())
-                .registerTypeAdapter(Entity.class, new EntitySerializer())
-                .registerTypeAdapter(Entity.class, new EntityDeserializer())
-                .registerTypeAdapter(Calculation.class, new CalculationSerializer())
-                .registerTypeAdapter(Calculation.class, new CalculationDeserializer())
-                .registerTypeAdapter(User.class, new UserSerializer())
-                .registerTypeAdapter(User.class, new SessionDeserializer())
-                .registerTypeAdapter(WebHook.class, new WebHookDeserializer())
-                .registerTypeAdapter(WebHook.class, new WebHookSerializer())
-                .registerTypeAdapter(Subscription.class, new SubscriptionDeserializer())
-                .create();
 
 
         RequestInterceptor requestInterceptor = new RequestInterceptor() {
@@ -82,7 +60,7 @@ public class Nimbits {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(instance)
                 .setRequestInterceptor(requestInterceptor)
-                .setConverter(new GsonConverter(gson))
+                .setConverter(new GsonConverter(GsonFactory.getInstance(false)))
                 .setErrorHandler(new ErrorHandler() {
                     @Override
                     public Throwable handleError(RetrofitError retrofitError) {
@@ -92,21 +70,24 @@ public class Nimbits {
                         if (retrofitError.getResponse() != null) {
                             TypedInput body = retrofitError.getResponse().getBody();
                             try {
-                                BufferedReader reader = new BufferedReader(new InputStreamReader(body.in()));
+                                if (body != null) {
+                                    BufferedReader reader = new BufferedReader(new InputStreamReader(body.in()));
 
-                                String newLine = System.getProperty("line.separator");
-                                String line;
-                                while ((line = reader.readLine()) != null) {
-                                    out.append(line);
-                                    out.append(newLine);
+                                    String newLine = System.getProperty("line.separator");
+                                    String line;
+                                    while ((line = reader.readLine()) != null) {
+                                        out.append(line);
+                                        out.append(newLine);
+                                    }
                                 }
 
                                 // Prints the correct String representation of body.
 
                             } catch (IOException e) {
-                                e.printStackTrace();
+
                             }
                         }
+
                         throw new NimbitsClientException(retrofitError.getMessage() + " " + out, retrofitError);
 
                     }
@@ -432,22 +413,6 @@ public class Nimbits {
 
 
 
-    /**
-     * Provides a way to search for an entity by the entity name. Note that some some types of entities may have the same name and
-     * this method will return the first one found.
-     * @param entityName
-     * @param entityType
-     * @See EntityType
-     * @return The Entity, which may be downcasted to the type requestes (i.e Point, Calculation which extend Entity)
-     */
-    public Optional<Entity> findEntityByName(String entityName, EntityType entityType) {
-        try {
-            return Optional.of(api.findEntity(entityName, entityType.getCode()));
-        } catch (Throwable e) {
-            return Optional.absent();
-        }
-    }
-
     public Point getPoint(String uuid) {
         return api.getPoint(uuid);
     }
@@ -460,6 +425,16 @@ public class Nimbits {
             return (e != null);
         } catch (Exception ex) {
             return false;
+        }
+
+    }
+
+    public Optional<User> findUser(String email) {
+        try {
+            return Optional.of(api.findUser(email, EntityType.user.getCode()));
+        } catch (Throwable e) {
+
+            return Optional.absent();
         }
 
     }

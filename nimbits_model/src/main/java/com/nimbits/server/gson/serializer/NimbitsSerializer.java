@@ -10,26 +10,19 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.client.model.instance;
+package com.nimbits.server.gson.serializer;
 
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
+import com.google.gson.*;
+import com.nimbits.server.gson.GsonFactory;
 
+import java.lang.reflect.Type;
 
-public class InstanceModelFactory {
+public class NimbitsSerializer<T> implements JsonSerializer<T> {
 
-    private InstanceModelFactory() {
+    @Override
+    public JsonElement serialize(final T src, final Type type, final JsonSerializationContext jsonSerializationContext) {
+        final String j = GsonFactory.getInstance(true).toJson(src);
+
+        return new JsonPrimitive(j);
     }
-
-    public static Instance createInstance(final Instance server) {
-
-        return new InstanceModel(server);
-
-    }
-
-    public static Instance createInstance(final Entity baseEntity, final String baseUrl, final EmailAddress ownerEmail, final String serverVersion) {
-        return new InstanceModel(baseEntity, baseUrl, ownerEmail, serverVersion);
-
-    }
-
 }

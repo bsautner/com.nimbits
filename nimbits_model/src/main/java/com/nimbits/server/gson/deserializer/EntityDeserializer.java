@@ -13,20 +13,28 @@
 package com.nimbits.server.gson.deserializer;
 
 import com.google.gson.*;
-import com.nimbits.client.model.instance.Instance;
-import com.nimbits.client.model.instance.InstanceModel;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.server.gson.GsonFactory;
 
 import java.lang.reflect.Type;
+import java.util.Map;
 
 
-public class InstanceDeserializer implements JsonDeserializer<Instance> {
+public class EntityDeserializer implements JsonDeserializer<Entity> {
+
+
+
     @Override
-    public Instance deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
-
-
+    public Entity deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
         final String json = jsonElement.toString();
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        return gson.fromJson(json, InstanceModel.class);
+
+
+        Map jsonMap =  GsonFactory.getInstance(true).fromJson(json, Map.class);
+        int t = Double.valueOf(String.valueOf(jsonMap.get("entityType"))).intValue();
+        EntityType entityType = EntityType.get(t);
+
+        return (Entity)  GsonFactory.getInstance(true).fromJson(json, entityType.getClz());
 
 
     }

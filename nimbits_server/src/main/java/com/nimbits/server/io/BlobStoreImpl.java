@@ -19,7 +19,6 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.entity.Entity;
@@ -27,6 +26,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.defrag.Defragmenter;
 import com.nimbits.server.defrag.ValueDayHolder;
+import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transaction.cache.NimbitsCache;
 import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.value.service.ValueService;
@@ -54,7 +54,7 @@ public class BlobStoreImpl implements BlobStore {
     public static final String SNAPSHOT = "SNAPSHOT";
     public static final int INITIAL_CAPACITY = 10000;
     private final Logger logger = Logger.getLogger(BlobStoreImpl.class.getName());
-    private final Gson gson = new GsonBuilder().create();
+    private final Gson gson =  GsonFactory.getInstance(true);
 
 
     @Autowired

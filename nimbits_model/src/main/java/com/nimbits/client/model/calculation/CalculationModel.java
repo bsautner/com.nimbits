@@ -47,7 +47,7 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
         super();
     }
 
-    public CalculationModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String target, String trigger, boolean enabled, String formula, String x, String y, String z) {
+    protected CalculationModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String target, String trigger, boolean enabled, String formula, String x, String y, String z) {
         super(key, name, description, entityType, protectionLevel, parent, owner, uuid, target, trigger, enabled);
         this.formula = formula;
         this.x = x;
@@ -131,7 +131,7 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
 
     public static class Builder extends TriggerBuilder {
 
-
+        private final EntityType type = EntityType.calculation;
         private String formula;
 
 
@@ -182,7 +182,7 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
         }
 
         public Builder name(String name) {
-            this.name = CommonFactory.createName(name, EntityType.calculation);
+            this.name = CommonFactory.createName(name, type);
             return this;
         }
 
@@ -192,7 +192,7 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
             }
 
 
-            return new CalculationModel(key, name, description, EntityType.calculation, protectionLevel, parent, owner, uuid,target,
+            return new CalculationModel(key, name, description, type, protectionLevel, parent, owner, uuid,target,
                     trigger, enabled, formula, x, y, z);
         }
 
@@ -203,12 +203,6 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
             return this;
         }
 
-
-        @Override
-        public Builder entityType(EntityType entityType) {
-            this.entityType = entityType;
-            return this;
-        }
 
         private void initEntity(Trigger anEntity) {
             this.trigger = anEntity.getTrigger();

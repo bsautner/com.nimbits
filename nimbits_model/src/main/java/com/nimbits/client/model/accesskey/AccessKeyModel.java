@@ -14,8 +14,15 @@ package com.nimbits.client.model.accesskey;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.AuthLevel;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.enums.ProtectionLevel;
+import com.nimbits.client.model.category.Category;
+import com.nimbits.client.model.category.CategoryModel;
+import com.nimbits.client.model.common.CommonIdentifier;
+import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
+import com.nimbits.client.model.entity.EntityName;
 
 import java.io.Serializable;
 
@@ -35,12 +42,13 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
     private AccessKeyModel() {
     }
 
-    public AccessKeyModel(final AccessKey anEntity) {
-        super(anEntity);
-        this.code = anEntity.getCode();
-        this.scope = anEntity.getScope();
-        this.authLevel = anEntity.getAuthLevel().getCode();
 
+    public AccessKeyModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid,
+                          String code, String scope, AuthLevel authLevel) {
+        super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
+        this.code = code;
+        this.scope = scope;
+        this.authLevel = authLevel.getCode();
     }
 
     @Override
@@ -48,12 +56,6 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
         return code;
     }
 
-    public AccessKeyModel(final Entity anEntity, final String code, final String scope, final AuthLevel level) {
-        super(anEntity);
-        this.code = code;
-        this.scope = scope;
-        this.authLevel = level.getCode();
-    }
 
     @Override
     public void setCode(final String code) {
@@ -78,5 +80,131 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
     @Override
     public void setAuthLevel(AuthLevel level) {
         this.authLevel = level.getCode();
+    }
+
+
+    public static class Builder extends EntityBuilder {
+
+        private final EntityType type = EntityType.accessKey;
+
+        private String code;
+
+        private String scope;
+
+        private AuthLevel authLevel;
+
+
+
+        public Builder code(String code) {
+            this.code = code;
+            return this;
+        }
+
+        public Builder scope(String scope) {
+            this.scope = scope;
+            return this;
+        }
+
+        public Builder authLevel(AuthLevel authLevel) {
+            this.authLevel = authLevel;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = CommonFactory.createName(name, type);
+            return this;
+        }
+
+        public AccessKey create() {
+            if (protectionLevel == null) {
+                protectionLevel = ProtectionLevel.everyone;
+            }
+
+
+            return new AccessKeyModel(key, name, description, type, protectionLevel, parent, owner, uuid, code, scope, authLevel);
+        }
+
+        @Override
+        public Builder parent(String parent) {
+
+            this.parent = parent;
+            return this;
+        }
+
+
+        private void initEntity(Entity anEntity) {
+
+            this.key = anEntity.getKey();
+            this.id = anEntity.getKey();
+            this.name = anEntity.getName();
+            this.description = anEntity.getDescription();
+            this.entityType = anEntity.getEntityType();
+            this.parent = anEntity.getParent();
+            this.owner = anEntity.getOwner();
+            this.protectionLevel = anEntity.getProtectionLevel();
+            this.alertType = anEntity.getAlertType().getCode();
+            this.uuid = anEntity.getUUID();
+
+        }
+
+        public Builder init(AccessKey e) {
+            initEntity(e);
+            this.code = e.getCode();
+            this.scope = e.getScope();
+            this.authLevel = e.getAuthLevel();
+            return this;
+        }
+
+        @Override
+        public Builder name(EntityName name) {
+            this.name = name;
+            return this;
+        }
+        @Override
+        public Builder key(String key) {
+            this.key = key;
+            return this;
+        }
+        @Override
+        public Builder description(String description) {
+            this.description = description;
+            return this;
+        }
+        @Override
+        public Builder protectionLevel(ProtectionLevel protectionLevel) {
+            this.protectionLevel = protectionLevel;
+            return this;
+        }
+        @Override
+        public Builder alertType(int alertType) {
+            this.alertType = alertType;
+            return this;
+        }
+        @Override
+        public Builder owner(String owner) {
+            this.owner = owner;
+            return this;
+        }
+        @Override
+        public Builder readOnly(boolean readOnly) {
+            this.readOnly = readOnly;
+            return this;
+        }
+        @Override
+        public Builder id(String id) {
+            this.id = id;
+            return this;
+        }
+        @Override
+        public Builder uuid(String uuid) {
+            this.uuid = uuid;
+            return this;
+        }
+
+        @Override
+        public Builder action(String action) {
+            this.action = action;
+            return this;
+        }
     }
 }

@@ -1,6 +1,7 @@
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.io.Nimbits;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 
 import java.util.Date;
 
@@ -36,6 +37,9 @@ public abstract class NimbitsTest  {
         } catch (Throwable throwable) {
             //user not found, let's create on - the first user will be an admin of the server
             log("Server returned error - creating user instead " + throwable.getMessage());
+            String s = ExceptionUtils.getStackTrace(throwable);
+            log(s);
+            throwable.printStackTrace();
             user =  createUser(EMAIL_ADDRESS, PASSWORD);
 
         }
@@ -55,13 +59,13 @@ public abstract class NimbitsTest  {
      */
     public User createUser(String email, String password) {
 
-        User postObject = new UserModel(email, password);
+        User postObject = new UserModel.Builder().email(email).password(password).create();
         User newUser = nimbits.addUser(postObject);
         if (newUser == null || ! newUser.getEmail().getValue().equals(email)) {
             throw new RuntimeException("Could not create a new user");
         }
         else {
-            log("Create new user" + newUser.getEmail());
+            log("Created new user: " + newUser.getEmail());
             return newUser;
         }
     }
@@ -70,5 +74,9 @@ public abstract class NimbitsTest  {
         //Get or Create this user account, when created it will be the system admin
         user = verifyAdminUser();
 
+    }
+
+    public void error(String message) {
+        throw new RuntimeException(message);
     }
 }

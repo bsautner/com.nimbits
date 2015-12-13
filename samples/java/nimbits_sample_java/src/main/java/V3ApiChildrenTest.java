@@ -1,38 +1,26 @@
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserModel;
-import com.nimbits.io.Nimbits;
 
 import java.util.UUID;
 
 /**
- * Create a point and write the current time in ms to it until stopped
+ * Create a points with children
  *
  */
-public class V3ApiChildrenTest {
-    private static final String server = "http://localhost:8080";
-    private static final String adminEmail = "admin@example.com";
-    private static final String adminPassword = "password1234";
-
+public class V3ApiChildrenTest extends NimbitsTest {
 
     public static void main(String... args) throws InterruptedException {
 
-        Nimbits adminClient = new Nimbits.Builder()
-                .email(adminEmail).token(adminPassword).instance(server).create();
+        V3ApiChildrenTest test = new V3ApiChildrenTest();
+        test.execute();
 
-        try {
+    }
+    @Override
+    public void execute() throws InterruptedException {
+        super.execute();
 
-            User admin = new UserModel.Builder().email(adminEmail).password(adminPassword).create();
-            admin = adminClient.addUser(admin);
-
-            Log("Created Admin: " + admin.toString());
-        } catch (Throwable throwable) {
-            //this will throw an exception if their already is an admin on this box
-            Log(throwable.getMessage());
-        }
-
-        User me = adminClient.getMe();
+        User me = nimbits.getMe();
 
         System.out.println(me.toString());
 
@@ -40,11 +28,11 @@ public class V3ApiChildrenTest {
 
         for (int i = 0; i < 10; i++) {
             Point point = new PointModel.Builder().name("child_" + UUID.randomUUID()).create();
-            adminClient.addPoint(me, point);
+            nimbits.addPoint(me, point);
 
         }
 
-        me = adminClient.getMe();
+        me = nimbits.getMe();
         Log("Got Children: " + me.getChildren().size());
 
 

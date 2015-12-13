@@ -73,6 +73,9 @@ public class SyncModel extends TriggerModel implements Sync {
 
     public static class Builder extends TriggerBuilder  {
 
+        private final EntityType type = EntityType.sync;
+
+
         private String targetInstance;
         private String targetPoint;
         private String accessKey;
@@ -114,7 +117,7 @@ public class SyncModel extends TriggerModel implements Sync {
         }
 
         public Builder name(String name) {
-            this.name = CommonFactory.createName(name, EntityType.sync);
+            this.name = CommonFactory.createName(name, type);
             return this;
         }
 
@@ -124,7 +127,7 @@ public class SyncModel extends TriggerModel implements Sync {
             }
 
 
-            return new SyncModel(key, name, description, EntityType.sync, protectionLevel, parent, owner, uuid,target,
+            return new SyncModel(key, name, description, type, protectionLevel, parent, owner, uuid,target,
                     trigger, enabled, targetInstance, targetPoint, accessKey);
         }
 
@@ -136,11 +139,6 @@ public class SyncModel extends TriggerModel implements Sync {
         }
 
 
-        @Override
-        public Builder entityType(EntityType entityType) {
-            this.entityType = entityType;
-            return this;
-        }
 
         private void initEntity(Trigger anEntity) {
             this.trigger = anEntity.getTrigger();

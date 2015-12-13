@@ -21,10 +21,10 @@ import com.nimbits.client.model.hal.Links;
 import com.nimbits.client.model.user.User;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 public interface Entity extends Serializable, Comparable<Entity> {
+
     EntityName getName();
 
     String getUUID();
@@ -73,11 +73,9 @@ public interface Entity extends Serializable, Comparable<Entity> {
 
     boolean entityIsReadable(User user);
 
-    Date getDateCreated();
 
     void validate(User user);
 
-    void setDateCreated(Date dateCreated);
 
     void setEmbedded(Embedded embedded);
 

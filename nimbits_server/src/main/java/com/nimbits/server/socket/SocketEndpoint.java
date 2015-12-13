@@ -2,7 +2,6 @@ package com.nimbits.server.socket;
 
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.UrlContainer;
@@ -15,6 +14,7 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.io.NimbitsClient;
 import com.nimbits.io.http.NimbitsClientFactory;
 import com.nimbits.server.auth.AuthService;
+import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transaction.user.dao.UserDao;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.websocket.WebSocket;
@@ -104,7 +104,7 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
 
             List<String> points;
             if (! StringUtils.isEmpty(ids)) {
-                Gson gson = new GsonBuilder().create();
+                Gson gson =  GsonFactory.getInstance(true);
                 Type type = new TypeToken<List<String>>() {
                 }.getType();
                 points = gson.fromJson(ids, type);

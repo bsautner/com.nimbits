@@ -10,7 +10,7 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.gson;
+package com.nimbits.server.gson.serializer;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
@@ -22,12 +22,7 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * Created by Benjamin Sautner
- * User: bsautner
- * Date: 11/17/11
- * Time: 2:55 PM
- */
+
 public class DateSerializer implements JsonSerializer<Date> {
 
     private static SimpleDateFormat format = new SimpleDateFormat(Const.GSON_DATE_FORMAT);

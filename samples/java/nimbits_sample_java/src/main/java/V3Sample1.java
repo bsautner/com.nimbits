@@ -1,11 +1,9 @@
 import com.google.common.base.Optional;
-import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.category.CategoryModel;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.subscription.Subscription;
@@ -20,7 +18,7 @@ import com.nimbits.io.Nimbits;
 
 import java.util.*;
 
-public class V3Sample1 {
+public class V3Sample1 extends NimbitsTest {
 
     /**
      * This sample is meant to walk through some of the basic nimbits automation features and uses nimbits.io to:
@@ -59,13 +57,13 @@ public class V3Sample1 {
 
 
 
-        Test test = new Test();
+        NimbitsTest test = new V3Sample1();
         test.execute();
 
 
     }
 
-    private static class Test extends NimbitsTest {
+
 
         public void execute() throws InterruptedException {
             super.execute();
@@ -108,16 +106,21 @@ public class V3Sample1 {
 
             //veryify user exists
 
-            Entity retrieved =  nimbits.findEntityByName(email2, EntityType.user).get();
-            log("Downloaded user to make sure it exists: " + retrieved.getUUID());
-            nimbits.deleteEntity(retrieved);
+            Optional<User> retrieved =  nimbits.findUser(email2);
+            if (retrieved.isPresent()) {
+                log("Downloaded user to make sure it exists: " + retrieved.get().getUUID());
 
-            //make sure it was deleted
+                nimbits.deleteEntity(retrieved.get());
 
-            Optional<Entity> retrieved2 = nimbits.findEntityByName(email2, EntityType.user);
-            if (retrieved2.isPresent()) {
-                log("should not exist: " + email2);
-                throw new RuntimeException("User was not deleted");
+                //make sure it was deleted
+
+                Optional<User> retrieved2 = nimbits.findUser(email2);
+                if (retrieved2.isPresent()) {
+                    log("should not exist: " + email2);
+                    error("User was not deleted");
+                }
+            } else {
+                error("user didn't exist after adding: " + email2);
             }
 
 
@@ -304,12 +307,12 @@ public class V3Sample1 {
 
             for (Value dog : dogs) {
                 if (! storedValues.contains(dog)) {
-                    throw new RuntimeException("Missing Data in dog List: " + dog.toString() + dog.hashCode());
+                    error("Missing Data in dog List: " + dog.toString() + dog.hashCode());
                 }
             }
             for (Value cat : cats) {
                 if (! storedValues.contains(cat)) {
-                    throw new RuntimeException("Missing Data in cat List");
+                    error("Missing Data in cat List");
                 }
             }
 
@@ -319,11 +322,11 @@ public class V3Sample1 {
 
             List<Value> storedDogs = client.getValues(testPoint1, new Date(1), new Date(99999999999999L), DOG);
             if (! storedCats.containsAll(cats)) {
-                throw new RuntimeException("Missing some cats");
+                error("Missing some cats");
             }
 
             if (! storedDogs.containsAll(dogs)) {
-                throw new RuntimeException("Missing some dogs");
+                error("Missing some dogs");
             }
 
 
@@ -349,7 +352,7 @@ public class V3Sample1 {
             snap = client.getSnapshot(snapshotTestPoint);
             log("Snapshot on a newly created point: " + snap.toString() + " timestamp:" + snap.getTimestamp());
             if (snap.getTimestamp().getTime() != 0) {
-                throw new RuntimeException("Snapshot on newly created point wasn't at unix epoch");
+                error("Snapshot on newly created point wasn't at unix epoch");
             }
 
 
@@ -364,7 +367,7 @@ public class V3Sample1 {
 
             if (! snap.getData().equals(test1.getData())) {
 
-                throw new RuntimeException("Snapshot on newly recorded value didn't match");
+                error("Snapshot on newly recorded value didn't match");
 
             }
 
@@ -404,14 +407,14 @@ public class V3Sample1 {
             log(snap.toString());
             log(last.toString());
             if (! snap.getData().equals(last.getData())) {
-                throw new RuntimeException("Most recent recorded value in series was not the snapshot");
+                error("Most recent recorded value in series was not the snapshot");
             }
 
 
             log("Done!");
 
         }
-    }
+
 
 
 }

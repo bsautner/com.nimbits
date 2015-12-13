@@ -32,7 +32,7 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
     private int pathChannel;
 
 
-    public WebHookModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, int method, String url, boolean enabled, String downloadTarget, int bodyChannel, int pathChannel) {
+    protected WebHookModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, int method, String url, boolean enabled, String downloadTarget, int bodyChannel, int pathChannel) {
         super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
         this.method = method;
         this.url = url;
@@ -42,7 +42,7 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
         this.pathChannel = pathChannel;
     }
 
-    protected WebHookModel() {
+    private WebHookModel() {
 
     }
 
@@ -123,7 +123,7 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
         private HttpMethod method;
         private DataChannel bodyChannel;
         private DataChannel pathChannel;
-        private boolean enabled;
+        private Boolean enabled;
         private UrlContainer url;
 
 
@@ -170,6 +170,19 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
             if (protectionLevel == null) {
                 protectionLevel = ProtectionLevel.everyone;
             }
+            if (enabled == null) {
+                enabled = true;
+            }
+
+            if (pathChannel == null) {
+                pathChannel = DataChannel.none;
+            }
+
+            if (bodyChannel == null) {
+                bodyChannel = DataChannel.none;
+            }
+
+
 
 
             return new WebHookModel(key, name, description, EntityType.webhook, protectionLevel, parent, owner, uuid, method.getCode(), url.getUrl(), true,
@@ -183,12 +196,6 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
             return this;
         }
 
-
-        @Override
-        public Builder entityType(EntityType entityType) {
-            this.entityType = entityType;
-            return this;
-        }
 
         private void initEntity(Entity anEntity) {
 

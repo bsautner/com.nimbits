@@ -10,27 +10,24 @@
  * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.gson;
+package com.nimbits.server.gson.serializer;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
-import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.server.gson.GsonFactory;
 
 import java.lang.reflect.Type;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 11/10/11
- * Time: 7:28 PM
- */
-public class AccessKeySerializer implements JsonSerializer<AccessKey> {
+public class PointSerializer implements JsonSerializer<Point> {
+
 
     @Override
-    public JsonElement serialize(final AccessKey src, final Type type, final JsonSerializationContext jsonSerializationContext) {
-        final String j = GsonFactory.getSimpleInstance().toJson(src);
+    public JsonElement serialize(Point src, Type type, JsonSerializationContext jsonSerializationContext) {
+        final String j = GsonFactory.getInstance(true).toJson(src);
+
         return new JsonPrimitive(j);
     }
 }

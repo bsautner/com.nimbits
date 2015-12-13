@@ -16,7 +16,6 @@ package com.nimbits.io.http;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
@@ -29,7 +28,6 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.io.NimbitsClient;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.gson.deserializer.SessionDeserializer;
 import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -68,13 +66,12 @@ public class NimbitsClientImpl implements NimbitsClient {
     @Override
     public User login() {
 
-        final Gson gson = new GsonBuilder().registerTypeAdapter(User.class, new SessionDeserializer()).create();
 
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(instanceUrl.getUrl())
                 .setRequestInterceptor(requestInterceptor)
-                .setConverter(new GsonConverter(gson))
+                .setConverter(new GsonConverter(GsonFactory.getInstance(true)))
                 .setErrorHandler(new ErrorHandler() {
                     @Override
                     public Throwable handleError(RetrofitError retrofitError) {
@@ -92,13 +89,12 @@ public class NimbitsClientImpl implements NimbitsClient {
     @Override
     public User getSession() {
 
-        final Gson gson = new GsonBuilder().registerTypeAdapter(User.class, new SessionDeserializer()).create();
 
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(instanceUrl.getUrl())
                 .setRequestInterceptor(requestInterceptor)
-                .setConverter(new GsonConverter(gson))
+                .setConverter(new GsonConverter(GsonFactory.getInstance(true)))
                 .setErrorHandler(new ErrorHandler() {
                     @Override
                     public Throwable handleError(RetrofitError retrofitError) {
@@ -115,7 +111,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     @Override
     public Value getValue(final String entityName) {
-        final Gson gson = new GsonBuilder().create();
+        final Gson gson =  GsonFactory.getInstance(true);
 
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -163,7 +159,7 @@ public class NimbitsClientImpl implements NimbitsClient {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(instanceUrl.getUrl())
                 .setRequestInterceptor(requestInterceptor)
-                .setConverter(new GsonConverter(GsonFactory.getInstance()))
+                .setConverter(new GsonConverter(GsonFactory.getInstance(true)))
                 .build();
 
         TreeApi api = restAdapter.create(TreeApi.class);
@@ -192,7 +188,7 @@ public class NimbitsClientImpl implements NimbitsClient {
     public List<Value> getSeries(final String entity) {
 
 
-        final Gson gson = new GsonBuilder().create();
+        final Gson gson =  GsonFactory.getInstance(true);
 
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -221,7 +217,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     @Override
     public List<Value> getSeries(final String entity, final int count) {
-        final Gson gson = new GsonBuilder().create();
+        final Gson gson =  GsonFactory.getInstance(true);
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(instanceUrl.getUrl())
@@ -257,7 +253,7 @@ public class NimbitsClientImpl implements NimbitsClient {
     public List<Value> getSeries(final String entity, final Range<Date> range) {
 
 
-        final Gson gson = new GsonBuilder().create();
+        final Gson gson =  GsonFactory.getInstance(true);
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(instanceUrl.getUrl())
@@ -284,9 +280,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     @Override
     public String deleteEntity(final Entity entity) {
-        final Gson gson = new GsonBuilder()
-                .registerTypeAdapter(entity.getEntityType().getClz(), SerializationHelper.getDeserializer(entity.getEntityType()))
-                .excludeFieldsWithoutExposeAnnotation().create();
+        final Gson gson = GsonFactory.getInstance(true);
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(instanceUrl.getUrl())
@@ -300,11 +294,7 @@ public class NimbitsClientImpl implements NimbitsClient {
 
     @Override
     public Entity addEntity(Entity entity) {
-        final Gson gson = new GsonBuilder()
-                .registerTypeAdapter(entity.getEntityType().getClz(),
-                        SerializationHelper.getDeserializer(entity.getEntityType()))
-                .excludeFieldsWithoutExposeAnnotation().create();
-
+        final Gson gson = GsonFactory.getInstance(true);
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(instanceUrl.getUrl())
                 .setRequestInterceptor(requestInterceptor)
@@ -360,10 +350,7 @@ public class NimbitsClientImpl implements NimbitsClient {
     public Entity getEntity(final SimpleValue<String> entityId, final EntityType entityType) {
 
 
-        final Gson g = new GsonBuilder()
-                .registerTypeAdapter(entityType.getClz(), SerializationHelper.getDeserializer(entityType))
-
-                .create();
+        final Gson g =  GsonFactory.getInstance(true);
 
         RestAdapter adapter = new RestAdapter.Builder()
                 .setEndpoint(instanceUrl.getUrl())

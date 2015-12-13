@@ -13,20 +13,34 @@
 package com.nimbits.server.gson.deserializer;
 
 import com.google.gson.*;
-import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.accesskey.AccessKeyModel;
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.server.gson.GsonFactory;
 
 import java.lang.reflect.Type;
 
 
-public class AccessKeyDeserializer implements JsonDeserializer<AccessKey> {
-    @Override
-    public AccessKey deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+public class NimbitsDeserializer<T>  implements JsonDeserializer<T>  {
 
-        final JsonPrimitive jsonPrimitive = (JsonPrimitive) jsonElement;
-        final String json = jsonPrimitive.getAsString();
-        return GsonFactory.getSimpleInstance().fromJson(json, AccessKeyModel.class);
+
+
+    private final Class modelClass;
+
+    public NimbitsDeserializer(EntityType entityType) {
+
+
+        this.modelClass = entityType.getModel();
+
+
+
+    }
+
+    @Override
+    public T deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext jsonDeserializationContext) throws JsonParseException {
+//        JsonObject object = (JsonObject) jsonElement;
+//        String s = jsonElement.getAsString();
+//        final JsonPrimitive jsonPrimitive = (JsonPrimitive) jsonElement;
+//        final String json = jsonPrimitive.getAsString();
+        return (T) GsonFactory.getInstance(true).fromJson(jsonElement, modelClass);
 
 
     }

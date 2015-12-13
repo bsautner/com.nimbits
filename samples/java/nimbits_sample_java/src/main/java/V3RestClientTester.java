@@ -55,12 +55,16 @@ public class V3RestClientTester extends NimbitsTest  {
 
         for (int i = 0; i < 10; i++) {
             log("Creating regular user " + i);
-            String password = UUID.randomUUID().toString();
+            String password = "password";
             User regularUser = createUser(UUID.randomUUID().toString() + "@example.com", password);
 
-            Nimbits nonAdminClient = new Nimbits.NimbitsBuilder()
-                    .email(regularUser.getEmail().getValue()).token(password).instance(INSTANCE_URL).create();
+            Nimbits nonAdminClient = new Nimbits.Builder()
+                    .email(regularUser.getEmail().getValue())
+                    .token(password)
+                    .instance(INSTANCE_URL).create();
+
             User verify = nonAdminClient.getMe();
+
             if (verify.equals(regularUser)) {
                 log("Verified Creating Regular " + i + " User can login ");
             }

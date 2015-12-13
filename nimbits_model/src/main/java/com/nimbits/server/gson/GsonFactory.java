@@ -1,74 +1,70 @@
-/*
- * Copyright (c) 2013 Nimbits Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
- */
-
 package com.nimbits.server.gson;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.nimbits.client.constants.Const;
-import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.calculation.Calculation;
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.gson.deserializer.AccessKeyDeserializer;
-import com.nimbits.server.gson.deserializer.CalculationDeserializer;
-import com.nimbits.server.gson.deserializer.CalculationSerializer;
-import com.nimbits.server.gson.deserializer.SessionDeserializer;
+import com.nimbits.server.gson.deserializer.DateDeserializer;
+import com.nimbits.server.gson.deserializer.EntityDeserializer;
+import com.nimbits.server.gson.deserializer.NimbitsDeserializer;
+import com.nimbits.server.gson.serializer.EntitySerializer;
+import com.nimbits.server.gson.serializer.NimbitsSerializer;
+import com.nimbits.server.gson.serializer.PointSerializer;
 
+import java.util.Date;
 
-public enum GsonFactory {
-    instance;
+public class GsonFactory {
 
+    private static Gson gson;
+    private static Gson excludedInstance;
 
-    private static class GsonHolder {
-        static final Gson gInstance;
+    public static Gson getInstance(boolean excludeFieldsWithoutExposeAnnotation) {
 
-        static {
-
-
-            gInstance = new GsonBuilder()
-                    .setDateFormat(Const.GSON_DATE_FORMAT)
-
-                    .addSerializationExclusionStrategy(new NimbitsExclusionStrategy(null))
-                    .registerTypeAdapter(AccessKey.class, new AccessKeySerializer())
-                    .registerTypeAdapter(AccessKey.class, new AccessKeyDeserializer())
+        if (gson == null) {
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.setDateFormat(Const.GSON_DATE_FORMAT)
+                    .registerTypeAdapter(Date.class, new DateDeserializer())
+                    .registerTypeAdapter(Entity.class, new EntityDeserializer())
                     .registerTypeAdapter(Point.class, new PointSerializer())
-                    .registerTypeAdapter(Point.class, new PointDeserializer())
                     .registerTypeAdapter(Entity.class, new EntitySerializer())
-                  //  .registerTypeAdapter(Entity.class, new EntityDeserializer())
-                    .registerTypeAdapter(Calculation.class, new CalculationSerializer())
-                    .registerTypeAdapter(Calculation.class, new CalculationDeserializer())
-                    .registerTypeAdapter(User.class, new UserSerializer())
-                    .registerTypeAdapter(User.class, new SessionDeserializer())
-                    .create();
+                        .excludeFieldsWithoutExposeAnnotation();
 
+
+            for (EntityType t : EntityType.values()) {
+                gsonBuilder
+                        .registerTypeAdapter(t.getClz(), new NimbitsDeserializer<Entity>(t))
+                        .registerTypeAdapter(t.getClz(), new NimbitsSerializer<Entity>());
+            }
+            gson = gsonBuilder.create();
         }
 
-        private GsonHolder() {
+        if (excludedInstance == null) {
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            gsonBuilder.setDateFormat(Const.GSON_DATE_FORMAT)
+                    .registerTypeAdapter(Date.class, new DateDeserializer())
+                    .registerTypeAdapter(Entity.class, new EntityDeserializer())
+                    .registerTypeAdapter(Point.class, new PointSerializer())
+                    .registerTypeAdapter(Entity.class, new EntitySerializer());
+
+
+
+            for (EntityType t : EntityType.values()) {
+                        gsonBuilder
+                        .registerTypeAdapter(t.getClz(), new NimbitsDeserializer<Entity>(t))
+                        .registerTypeAdapter(t.getClz(), new NimbitsSerializer<Entity>());
+            }
+            excludedInstance = gsonBuilder.create();
         }
+
+
+        return excludeFieldsWithoutExposeAnnotation ? gson : excludedInstance;
+
+
     }
 
-    public static Gson getInstance() {
-        return GsonHolder.gInstance;
-    }
 
-    public static Gson getSimpleInstance() {
-        return new GsonBuilder()
-                .setDateFormat(Const.GSON_DATE_FORMAT)
-                .excludeFieldsWithoutExposeAnnotation()
-                .serializeNulls()
-                .create();
-    }
 
 
 }

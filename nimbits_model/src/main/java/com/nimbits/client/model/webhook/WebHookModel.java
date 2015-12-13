@@ -174,6 +174,15 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
                 enabled = true;
             }
 
+            if (pathChannel == null) {
+                pathChannel = DataChannel.none;
+            }
+
+            if (bodyChannel == null) {
+                bodyChannel = DataChannel.none;
+            }
+
+
 
 
             return new WebHookModel(key, name, description, EntityType.webhook, protectionLevel, parent, owner, uuid, method.getCode(), url.getUrl(), true,

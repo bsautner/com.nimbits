@@ -1,11 +1,7 @@
 package com.nimbits.io;
 
 import com.google.common.base.Optional;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.connection.Connection;
@@ -22,9 +18,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.io.http.NimbitsClientException;
 import com.nimbits.io.http.rest.RestClient;
-import com.nimbits.server.gson.*;
-import com.nimbits.server.gson.deserializer.*;
-import org.apache.commons.lang3.exception.ExceptionUtils;
+import com.nimbits.server.gson.GsonFactory;
 import retrofit.*;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
@@ -51,25 +45,6 @@ public class Nimbits {
     private Nimbits(final String email, final String token, String instance) {
 
 
-        final Gson gson =new GsonBuilder()
-                .setDateFormat(Const.GSON_DATE_FORMAT)
-                .excludeFieldsWithoutExposeAnnotation()
-                .registerTypeAdapter(AccessKey.class, new AccessKeySerializer())
-                .registerTypeAdapter(AccessKey.class, new AccessKeyDeserializer())
-                .registerTypeAdapter(Category.class, new CategoryDeserializer())
-                .registerTypeAdapter(Point.class, new PointSerializer())
-                .registerTypeAdapter(Point.class, new PointDeserializer())
-                .registerTypeAdapter(Entity.class, new EntitySerializer())
-                .registerTypeAdapter(Entity.class, new EntityDeserializer())
-                .registerTypeAdapter(Calculation.class, new CalculationSerializer())
-                .registerTypeAdapter(Calculation.class, new CalculationDeserializer())
-                .registerTypeAdapter(User.class, new UserSerializer())
-                .registerTypeAdapter(User.class, new SessionDeserializer())
-                .registerTypeAdapter(WebHook.class, new WebHookDeserializer())
-                .registerTypeAdapter(WebHook.class, new WebHookSerializer())
-                .registerTypeAdapter(Subscription.class, new SubscriptionDeserializer())
-                .registerTypeAdapter(Entity.class, new EntityInstanceCreator())
-                .create();
 
 
         RequestInterceptor requestInterceptor = new RequestInterceptor() {
@@ -85,7 +60,7 @@ public class Nimbits {
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint(instance)
                 .setRequestInterceptor(requestInterceptor)
-                .setConverter(new GsonConverter(gson))
+                .setConverter(new GsonConverter(GsonFactory.getInstance(false)))
                 .setErrorHandler(new ErrorHandler() {
                     @Override
                     public Throwable handleError(RetrofitError retrofitError) {
@@ -109,11 +84,10 @@ public class Nimbits {
                                 // Prints the correct String representation of body.
 
                             } catch (IOException e) {
-                                e.printStackTrace();
+
                             }
                         }
-                        String s = ExceptionUtils.getStackTrace(retrofitError);
-                        System.out.println(s);
+
                         throw new NimbitsClientException(retrofitError.getMessage() + " " + out, retrofitError);
 
                     }

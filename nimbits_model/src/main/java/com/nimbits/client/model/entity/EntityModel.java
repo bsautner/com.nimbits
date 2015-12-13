@@ -26,7 +26,6 @@ import com.nimbits.client.model.user.User;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -59,8 +58,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
 
     @Expose
     private String uuid;
-
-    private Date dateCreated;
 
     @Expose
     private ArrayList<Entity> children;
@@ -108,7 +105,7 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
 
         this.alertType = AlertType.OK.getCode();
         this.uuid = uuid;
-        this.dateCreated = new Date();
+
 
     }
 
@@ -319,11 +316,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
 
     }
 
-    @Override
-    public Date getDateCreated() {
-
-        return dateCreated != null ? new Date(dateCreated.getTime()) : new Date();
-    }
 
     @Override
     public void validate(User user) {
@@ -340,16 +332,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
         }
     }
 
-    @Override
-    public void setDateCreated(Date dateCreated) {
-        if (dateCreated != null) {
-            this.dateCreated = new Date(dateCreated.getTime());
-        } else {
-
-
-            this.dateCreated = null;
-        }
-    }
 
     @Override
     public boolean entityIsReadable(final User user) {

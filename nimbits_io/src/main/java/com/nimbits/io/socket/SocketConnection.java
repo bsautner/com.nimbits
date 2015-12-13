@@ -1,33 +1,26 @@
 package com.nimbits.io.socket;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.server.Server;
-import com.nimbits.client.model.user.User;
-import com.nimbits.server.gson.PointDeserializer;
-import com.nimbits.server.gson.deserializer.AccessKeyDeserializer;
-import com.nimbits.server.gson.deserializer.DateDeserializer;
-import com.nimbits.server.gson.deserializer.SessionDeserializer;
+import com.nimbits.server.gson.GsonFactory;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketClient;
 import org.eclipse.jetty.websocket.WebSocketClientFactory;
 
 import java.io.IOException;
 import java.net.URI;
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Opens a web socket connection to a nimbits server
  */
 
-public class SocketConnection {
+public class SocketConnection extends GsonFactory {
     private static final String GSON_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss Z";
     private WebSocketClientFactory factory;
     private WebSocketClient client;
@@ -84,13 +77,8 @@ public class SocketConnection {
                 System.out.println("incoming raw data: " + data);
 
                 try {
-                    Gson gson = new GsonBuilder()
-                            .setDateFormat(GSON_DATE_FORMAT)
-                            .registerTypeAdapter(Point.class, new PointDeserializer())
-                            .registerTypeAdapter(AccessKey.class, new AccessKeyDeserializer())
-                            .registerTypeAdapter(User.class, new SessionDeserializer())
-                            .registerTypeAdapter(Date.class, new DateDeserializer())
-                            .create();
+                    Gson gson = GsonFactory.getInstance(true);
+
 
 
                     Point result = gson.fromJson(data, PointModel.class);

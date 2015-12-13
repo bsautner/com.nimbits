@@ -65,7 +65,7 @@ public abstract class NimbitsTest  {
             throw new RuntimeException("Could not create a new user");
         }
         else {
-            log("Create new user" + newUser.getEmail());
+            log("Created new user: " + newUser.getEmail());
             return newUser;
         }
     }

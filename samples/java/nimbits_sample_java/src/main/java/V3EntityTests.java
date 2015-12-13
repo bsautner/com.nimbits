@@ -1,5 +1,8 @@
 import com.nimbits.client.enums.EntityType;
 
+/**
+ * Create each type of entity and verify it does what it should
+ */
 public class V3EntityTests extends NimbitsTest {
 
 
@@ -20,5 +23,23 @@ public class V3EntityTests extends NimbitsTest {
             log(type.name());
 
         }
+
+
+//                user
+//                point
+//                category
+//                subscription
+//                sync
+//                calculation
+//                summary
+//                accessKey
+//                instance
+//                socket
+//                connection
+//                schedule
+//                webhook
+
+
+
     }
 }

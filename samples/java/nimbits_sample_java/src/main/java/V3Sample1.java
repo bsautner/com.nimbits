@@ -1,11 +1,9 @@
 import com.google.common.base.Optional;
-import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.category.CategoryModel;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.subscription.Subscription;
@@ -20,7 +18,7 @@ import com.nimbits.io.Nimbits;
 
 import java.util.*;
 
-public class V3Sample1 {
+public class V3Sample1 extends NimbitsTest {
 
     /**
      * This sample is meant to walk through some of the basic nimbits automation features and uses nimbits.io to:
@@ -59,13 +57,13 @@ public class V3Sample1 {
 
 
 
-        Test test = new Test();
+        NimbitsTest test = new V3Sample1();
         test.execute();
 
 
     }
 
-    private static class Test extends NimbitsTest {
+
 
         public void execute() throws InterruptedException {
             super.execute();
@@ -416,7 +414,7 @@ public class V3Sample1 {
             log("Done!");
 
         }
-    }
+
 
 
 }

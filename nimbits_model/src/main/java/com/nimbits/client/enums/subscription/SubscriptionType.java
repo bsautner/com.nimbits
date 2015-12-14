@@ -25,7 +25,6 @@ public enum SubscriptionType {
     low(3, "Low Alert"),
     idle(4, "Idle Alert"),
     newValue(5, "New Values"),
-    changed(6, "Any Updates"),
     deltaAlert(7, "Delta Alert"),
     increase(8, "Value Increases"),
     decrease(9, "Value Decreases");

@@ -96,8 +96,13 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
         else {
             this.protectionLevel = protectionLevel.getCode();
         }
+
         this.key = key;
-        this.name = name.getValue();
+        if (name != null) {
+            this.name = name.getValue();
+        } else {
+            this.name = (entityType.name() + "_" + System.currentTimeMillis());
+        }
         this.description = description;
         this.entityType = entityType.getCode();
         this.parent = parent;

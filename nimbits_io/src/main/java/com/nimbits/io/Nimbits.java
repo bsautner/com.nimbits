@@ -250,8 +250,8 @@ public class Nimbits {
         return  e;
     }
 
-    public Category addCategory(User me, Category category) {
-        return api.addCategory(me.getUUID(), category);
+    public Category addCategory(Entity parent, Category category) {
+        return api.addCategory(parent.getUUID(), category);
     }
 
     public WebHook addWebHook(Entity parent, WebHook webHook) {
@@ -262,6 +262,18 @@ public class Nimbits {
         return api.addSubscription(parent.getUUID(), subscription);
 
     }
+
+
+    public Sync addSync(Entity parent, Sync e) {
+        return api.addSync(parent.getUUID(), e);
+
+    }
+
+    public Calculation addCalc(Entity parent, Calculation e) {
+        return api.addCalc(parent.getUUID(), e);
+
+    }
+
 
     /**
      * Add an point as a child of a parent

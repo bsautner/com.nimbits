@@ -92,6 +92,10 @@ public abstract class TriggerModel extends EntityModel implements Serializable, 
 
         public abstract T trigger(String v);
 
+        public abstract T target(Entity v);
+
+        public abstract T trigger(Entity v);
+
         public abstract T enabled(boolean v);
 
 

@@ -149,6 +149,11 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
             return this;
         }
 
+        public Builder subscribedEntity(Entity subscribedEntity) {
+            this.subscribedEntity = subscribedEntity.getKey();
+            return this;
+        }
+
         public Builder notifyMethod(SubscriptionNotifyMethod notifyMethod) {
             this.notifyMethod = notifyMethod;
             return this;
@@ -168,6 +173,12 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
             this.target = target;
             return this;
         }
+
+        public Builder target(Entity target) {
+            this.target = target.getKey();
+            return this;
+        }
+
 
         public Subscription create() {
             return new SubscriptionModel(key, name, description, type, protectionLevel, parent

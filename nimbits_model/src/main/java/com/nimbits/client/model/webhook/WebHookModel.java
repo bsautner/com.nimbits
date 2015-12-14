@@ -163,7 +163,10 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
             this.downloadTarget = downloadTarget;
             return this;
         }
-
+        public Builder downloadTarget(Entity downloadTargetEntity) {
+            this.downloadTarget = downloadTargetEntity.getKey();
+            return this;
+        }
 
 
         public WebHook create() {

@@ -32,7 +32,7 @@ public abstract class NimbitsTest  {
 
         try {
 
-            log("Trying to get existing user info");
+            log("Trying to get existing user");
             user = nimbits.getMe();
         } catch (Throwable throwable) {
             //user not found, let's create on - the first user will be an admin of the server

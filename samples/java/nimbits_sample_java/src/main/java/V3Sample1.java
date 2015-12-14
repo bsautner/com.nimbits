@@ -108,19 +108,20 @@ public class V3Sample1 extends NimbitsTest {
 
             Optional<User> retrieved =  nimbits.findUser(email2);
             if (retrieved.isPresent()) {
-                log("Downloaded user to make sure it exists: " + retrieved.get().getUUID());
+                log("Downloaded:   " + retrieved.get().toString());
+                Thread.sleep(1000);
 
                 nimbits.deleteEntity(retrieved.get());
-
+                Thread.sleep(1000);
                 //make sure it was deleted
 
                 Optional<User> retrieved2 = nimbits.findUser(email2);
                 if (retrieved2.isPresent()) {
-                    log("should not exist: " + email2);
+                    log("Unexpected:   " + retrieved2.get().toString());
                     error("User was not deleted");
                 }
             } else {
-                error("user didn't exist after adding: " + email2);
+                error("got expected result: user didn't exist after adding: " + email2);
             }
 
 

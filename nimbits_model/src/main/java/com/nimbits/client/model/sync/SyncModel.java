@@ -12,6 +12,7 @@
 
 package com.nimbits.client.model.sync;
 
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.calculation.Calculation;
@@ -27,14 +28,14 @@ import com.nimbits.client.model.trigger.TriggerModel;
 
 public class SyncModel extends TriggerModel implements Sync {
 
+    @Expose
     private String targetInstance;
-    private String targetPoint;
+    @Expose
     private String accessKey;
 
-    public SyncModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String target, String trigger, boolean enabled, String targetInstance, String targetPoint, String accessKey) {
+    public SyncModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String target, String trigger, boolean enabled, String targetInstance, String accessKey) {
         super(key, name, description, entityType, protectionLevel, parent, owner, uuid, target, trigger, enabled);
         this.targetInstance = targetInstance;
-        this.targetPoint = targetPoint;
         this.accessKey = accessKey;
     }
 
@@ -48,23 +49,6 @@ public class SyncModel extends TriggerModel implements Sync {
         return accessKey;
     }
 
-    @Override
-    public void setTargetInstance(String targetInstance) {
-        this.targetInstance = targetInstance;
-    }
-
-    @Override
-    public String getTargetPoint() {
-        return targetPoint;
-    }
-
-    @Override
-    public void setTargetPoint(String targetPoint) {
-        this.targetPoint = targetPoint;
-    }
-
-
-
 
     @SuppressWarnings("unused")
     public SyncModel() {
@@ -77,7 +61,6 @@ public class SyncModel extends TriggerModel implements Sync {
 
 
         private String targetInstance;
-        private String targetPoint;
         private String accessKey;
 
 
@@ -88,15 +71,18 @@ public class SyncModel extends TriggerModel implements Sync {
             return this;
         }
 
-        public Builder setTargetPoint(String targetPoint) {
-            this.targetPoint = targetPoint;
-            return this;
-        }
 
         public Builder accessKey(String accessKey) {
             this.accessKey = accessKey;
             return this;
         }
+
+        public Builder password(String accessKey) {
+            this.accessKey = accessKey;
+            return this;
+        }
+
+
 
         @Override
         public Builder target(String v) {
@@ -105,10 +91,23 @@ public class SyncModel extends TriggerModel implements Sync {
         }
 
         @Override
+        public Builder target(Entity v) {
+            this.target = v.getKey();
+            return this;
+        }
+
+        public Builder trigger(Entity v) {
+            this.trigger = v.getKey();
+            return this;
+        }
+
+        @Override
         public Builder trigger(String v) {
             this.trigger = v;
             return this;
         }
+
+
 
         @Override
         public Builder enabled(boolean v) {
@@ -125,10 +124,11 @@ public class SyncModel extends TriggerModel implements Sync {
             if (protectionLevel == null) {
                 protectionLevel = ProtectionLevel.everyone;
             }
+            this.enabled = true;
 
 
             return new SyncModel(key, name, description, type, protectionLevel, parent, owner, uuid,target,
-                    trigger, enabled, targetInstance, targetPoint, accessKey);
+                    trigger, enabled, targetInstance, accessKey);
         }
 
         @Override
@@ -161,7 +161,6 @@ public class SyncModel extends TriggerModel implements Sync {
         public Builder init(Sync c) {
             initEntity(c);
             targetInstance = c.getTargetInstance();
-            targetPoint = c.getTargetPoint();
             accessKey = c.getAccessKey();
             return this;
         }

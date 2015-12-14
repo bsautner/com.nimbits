@@ -74,6 +74,14 @@ public interface RestClient {
     @POST(API + "/{uuid}")
     Subscription addSubscription(@Path("uuid") String parent,  @Body Subscription subscription);
 
+
+    @POST(API + "/{uuid}")
+    Sync addSync(@Path("uuid") String parent,  @Body Sync subscription);
+
+    @POST(API + "/{uuid}")
+    Calculation addCalc(@Path("uuid") String parent,  @Body Calculation calculation);
+
+
     @GET(API + "/{uuid}/children")
     List<Entity> getChildren(@Path("uuid") String uuid);
 

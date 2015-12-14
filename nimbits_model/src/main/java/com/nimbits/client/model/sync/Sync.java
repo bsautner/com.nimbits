@@ -24,9 +24,6 @@ public interface Sync extends Trigger, Serializable {
 
     String getAccessKey();
 
-    void setTargetInstance(String targetInstance);
 
-    String getTargetPoint();
 
-    void setTargetPoint(String targetPoint);
 }

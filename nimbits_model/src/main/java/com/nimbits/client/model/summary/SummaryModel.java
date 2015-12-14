@@ -115,7 +115,7 @@ public class SummaryModel extends TriggerModel implements Summary {
             return this;
         }
 
-        public Builder setLastProcessed(Date lastProcessed) {
+        public Builder lastProcessed(Date lastProcessed) {
             this.lastProcessed = lastProcessed;
             return this;
         }
@@ -129,6 +129,17 @@ public class SummaryModel extends TriggerModel implements Summary {
         @Override
         public Builder trigger(String v) {
             this.trigger = v;
+            return this;
+        }
+
+        @Override
+        public Builder target(Entity v) {
+            this.target = v.getKey();
+            return this;
+        }
+        @Override
+        public Builder trigger(Entity v) {
+            this.trigger = v.getKey();
             return this;
         }
 
@@ -148,6 +159,7 @@ public class SummaryModel extends TriggerModel implements Summary {
                 protectionLevel = ProtectionLevel.everyone;
             }
 
+            this.enabled = true;
 
             return new SummaryModel(key, name, description, type, protectionLevel, parent, owner, uuid,target,
                     trigger, enabled,  summaryType.getCode(), summaryIntervalMs, lastProcessed);

@@ -163,6 +163,21 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
             return this;
         }
 
+        public Builder x(Entity x) {
+            this.x = x.getKey();
+            return this;
+        }
+
+        public Builder y(Entity y) {
+            this.y = y.getKey();
+            return this;
+        }
+
+        public Builder z(Entity z) {
+            this.z = z.getKey();
+            return this;
+        }
+
         @Override
         public Builder target(String v) {
             this.target = v;
@@ -172,6 +187,17 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
         @Override
         public Builder trigger(String v) {
             this.trigger = v;
+            return this;
+        }
+
+        @Override
+        public Builder target(Entity v) {
+            this.target = v.getKey();
+            return this;
+        }
+        @Override
+        public Builder trigger(Entity v) {
+            this.trigger = v.getKey();
             return this;
         }
 
@@ -190,6 +216,7 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
             if (protectionLevel == null) {
                 protectionLevel = ProtectionLevel.everyone;
             }
+            this.enabled = true;
 
 
             return new CalculationModel(key, name, description, type, protectionLevel, parent, owner, uuid,target,

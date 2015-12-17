@@ -35,14 +35,14 @@
     </developers>
 
     <properties>
-        <appengine.app.version>1</appengine.app.version>
+
         <gwt.version>2.5.1</gwt.version>
         <gxt.version>2.2.5</gxt.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spring.version>4.1.1.RELEASE</spring.version>
+        <spring.version>4.2.3.RELEASE</spring.version>
 
         <jetty-jmx.version>8.1.15.v20140411</jetty-jmx.version>
-        <nimbits_version>3.9.25</nimbits_version>
+        <nimbits_version>3.9.26</nimbits_version>
         <datanucleus.version>3.1.2</datanucleus.version>
     </properties>
 
@@ -64,11 +64,11 @@
             <name>Google Releases</name>
             <url>https://oss.sonatype.org/content/repositories/google-releases</url>
         </repository>
-        <repository>
-            <id>nimbits.com</id>
-            <name>Nimbits Public Maven Repository</name>
-            <url>http://nimbits.com/maven</url>
-        </repository>
+        <!--<repository>-->
+            <!--<id>nimbits.com</id>-->
+            <!--<name>Nimbits Public Maven Repository</name>-->
+            <!--<url>http://nimbits.com/maven</url>-->
+        <!--</repository>-->
 
     </repositories>
 
@@ -154,7 +154,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>18.0</version>
+            <version>19.0</version>
 
         </dependency>
 
@@ -220,7 +220,7 @@
         <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
-            <version>2.3.1</version>
+            <version>2.5</version>
 
         </dependency>
 
@@ -246,15 +246,12 @@
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-api-jdo</artifactId>
             <version>${datanucleus.version}</version>
-            <scope>compile</scope>
+
         </dependency>
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-rdbms</artifactId>
             <version>${datanucleus.version}</version>
-            <scope>compile</scope>
-
-
         </dependency>
         <dependency>
             <groupId>org.datanucleus</groupId>

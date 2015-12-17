@@ -1,5 +1,6 @@
 package com.nimbits.io.http.rest;
 
+import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.connection.Connection;
@@ -10,6 +11,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.socket.Socket;
 import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.sync.Sync;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
@@ -35,11 +37,23 @@ public interface RestClient {
     @POST(API)
     User addUser(@Body User newUser);
 
-    @POST(API + "/{uuid}")
+    @POST(API + "/{uuid}") @Deprecated //use specific adder
     Entity addEntity(@Path("uuid") String parent,  @Body Point point);
 
     @POST(API + "/{uuid}")
     Point addPoint(@Path("uuid") String parent,  @Body Point point);
+
+    @POST(API + "/{uuid}")
+    Connection addConnection(@Path("uuid") String parent,  @Body Connection point);
+
+
+    @POST(API + "/{uuid}")
+    Instance addInstance(@Path("uuid") String parent,  @Body Instance e);
+
+
+    @POST(API + "/{uuid}")
+    Schedule addSchedule(@Path("uuid") String parent,  @Body Schedule e);
+
 
     @POST(API + "/{uuid}")
     Category addCategory(@Path("uuid") String parent,  @Body Category category);
@@ -80,6 +94,12 @@ public interface RestClient {
 
     @POST(API + "/{uuid}")
     Calculation addCalc(@Path("uuid") String parent,  @Body Calculation calculation);
+
+    @POST(API + "/{uuid}")
+    Summary addSummary(@Path("uuid") String parent,  @Body Summary summary);
+
+    @POST(API + "/{uuid}")
+    AccessKey addAccessKey(@Path("uuid") String parent,  @Body AccessKey summary);
 
 
     @GET(API + "/{uuid}/children")

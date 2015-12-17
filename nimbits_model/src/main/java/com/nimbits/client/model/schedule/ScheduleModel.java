@@ -118,6 +118,14 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
                 protectionLevel = ProtectionLevel.everyone;
             }
 
+            if (enabled == null) {
+                enabled = true;
+            }
+
+            if (lastProcessed == null) {
+                lastProcessed = 0L;
+            }
+
 
             return new ScheduleModel(key, name, description,type, protectionLevel, parent, owner, uuid,
                     enabled, interval, source, target, lastProcessed);
@@ -229,8 +237,19 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
             return this;
         }
 
+
+        public Builder source(Entity source) {
+            this.source = source.getKey();
+            return this;
+        }
+
         public Builder target(String target) {
             this.target = target;
+            return this;
+        }
+
+        public Builder target(Entity target) {
+            this.target = target.getKey();
             return this;
         }
 

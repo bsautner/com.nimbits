@@ -105,12 +105,12 @@ public class SummaryModel extends TriggerModel implements Summary {
         private Date lastProcessed;
 
 
-        public Builder setSummaryType(SummaryType summaryType) {
+        public Builder summaryType(SummaryType summaryType) {
             this.summaryType = summaryType;
             return this;
         }
 
-        public Builder setSummaryIntervalMs(Long summaryIntervalMs) {
+        public Builder summaryIntervalMs(Long summaryIntervalMs) {
             this.summaryIntervalMs = summaryIntervalMs;
             return this;
         }

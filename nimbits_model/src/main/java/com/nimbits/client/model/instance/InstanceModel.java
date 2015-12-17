@@ -16,8 +16,8 @@ import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.UrlContainer;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryModel;
+import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.accesskey.AccessKeyModel;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
@@ -25,7 +25,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.server.Protocol;
-import com.nimbits.client.model.server.apikey.AccessToken;
+
 
 import java.io.Serializable;
 
@@ -88,8 +88,8 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
     }
 
     @Override
-    public AccessToken getApiKey() {
-        return AccessToken.getInstance(this.apiKey);
+    public AccessKey getApiKey() {
+        return new AccessKeyModel.Builder().code(apiKey).create();
     }
 
     @Override
@@ -120,7 +120,7 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
 
         private String version;
 
-        private AccessToken apiKey;
+        private AccessKey apiKey;
 
         private boolean isDefault;
 
@@ -139,9 +139,13 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
                 protectionLevel = ProtectionLevel.everyone;
             }
 
+            if (protocol == null) {
+                protocol = Protocol.http;
+            }
+
 
             return new InstanceModel(key, name, description, type, protectionLevel, parent, owner, uuid
-            , serverId, baseUrl.getUrl(),adminEmail.getValue(),version,apiKey.getValue(),  isDefault, protocol.name(), socketsEnabled );
+            , serverId, baseUrl.getUrl(),adminEmail.getValue(),version,apiKey.getCode(),  isDefault, protocol.name(), socketsEnabled );
         }
 
         @Override
@@ -249,6 +253,11 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
             return this;
         }
 
+        public Builder url(String url) {
+            this.baseUrl = UrlContainer.getInstance(url);
+            return this;
+        }
+
         public Builder adminEmail(EmailAddress adminEmail) {
             this.adminEmail = adminEmail;
             return this;
@@ -259,7 +268,7 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
             return this;
         }
 
-        public Builder apiKey(AccessToken apiKey) {
+        public Builder apiKey(AccessKey apiKey) {
             this.apiKey = apiKey;
             return this;
         }

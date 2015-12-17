@@ -38,15 +38,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
 
-
-
-
-
     @Override
     public void startRecordValueTask(final User user, final Point entity, final Value value, final boolean preAuthorised) {
 
         try {
-            valueTask.recordValue(value, user, entity, preAuthorised);
+            valueTask.recordValue(value, user, entity);
         } catch (Exception e) {
 
             logger.log(Level.SEVERE,"Error running value task", e);

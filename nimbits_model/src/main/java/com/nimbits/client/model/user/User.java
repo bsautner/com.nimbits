@@ -13,13 +13,11 @@
 package com.nimbits.client.model.user;
 
 
-import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 
 public interface User extends Entity, Serializable {
@@ -31,12 +29,6 @@ public interface User extends Entity, Serializable {
     UserSource getSource();
 
     EmailAddress getEmail();
-
-    boolean isRestricted();
-
-    void addAccessKey(AccessKey key);
-
-    List<AccessKey> getAccessKeys();
 
     boolean getIsAdmin();
 

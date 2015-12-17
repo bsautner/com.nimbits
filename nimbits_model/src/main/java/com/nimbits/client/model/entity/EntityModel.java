@@ -43,7 +43,7 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
     @Expose
     protected int entityType;
 
-    @Expose
+    @Expose @Deprecated
     private int protectionLevel;
 
     private int alertType;
@@ -306,18 +306,8 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
 
     @Override
     public boolean isOwner(final User user) {
-        if (user != null && this.owner.equals(user.getKey())) {
-            return true;
-        }
-        if (user != null && user.getAccessKeys() != null) {
-            for (AccessKey key : user.getAccessKeys()) {
-                if (key.getAuthLevel().equals(AuthLevel.admin)) {
-                    return true;
-                }
-            }
+        return user != null && (this.owner.equals(user.getKey()) || user.getIsAdmin());
 
-        }
-        return false;
 
     }
 

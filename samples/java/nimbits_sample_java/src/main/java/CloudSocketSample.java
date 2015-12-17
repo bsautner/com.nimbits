@@ -1,10 +1,11 @@
 import com.nimbits.client.model.UrlContainer;
+import com.nimbits.client.model.accesskey.AccessKey;
+import com.nimbits.client.model.accesskey.AccessKeyModel;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
-import com.nimbits.client.model.server.apikey.AccessToken;
 import com.nimbits.client.model.user.User;
 import com.nimbits.io.NimbitsClient;
 import com.nimbits.io.http.NimbitsClientFactory;
@@ -30,51 +31,51 @@ public class CloudSocketSample {
 
     //you can create this server object with an API KEY you configured your server with to make authentication easy
 
-    private static final AccessToken API_KEY = AccessToken.getInstance("key");
+    private static final AccessKey API_KEY = new AccessKeyModel.Builder().code("key").create();// AccessToken.getInstance("key");
     private static final Server cloudServer = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, API_KEY);
 
 
     public static void main(String[] args) throws Exception {
 
 
-        NimbitsClient client = NimbitsClientFactory.getInstance(cloudServer);
-        User user = client.login();
-
-        System.out.println("Hello " + user.getEmail() + " " + user.getToken() + " " + cloudServer.getUrl());
-
-
-        //connect to the server with your new session token
-        Server authenticationContainer = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, AccessToken.getInstance(user.getToken()));
-
-        SocketConnection socketConnection = new SocketConnection(authenticationContainer, new SocketListener() {
-
-
-            public void onOpen(Connection connection)
-            {
-                System.out.println("connected!");
-            }
-
-            public void onClose(int closeCode, String message)
-            {
-                System.out.println("closing socket: " + message);
-            }
-
-            @Override
-            public void onNotify(Point point) {
-                System.out.println("A subscription to a point's events has been processed");
-                System.out.println(point.getName().getValue());
-                System.out.println(point.getValue().getAlertState().name());
-                // System.out.println(point.getValue().getData());
-            }
-
-            @Override
-            public void onUpdate(Point point) {
-                System.out.println("A point was updated");
-                System.out.println(point.getName().getValue());
-                System.out.println(point.getValue().getAlertState().name());
-                // System.out.println(point.getValue().getData());
-            }
-        });
+//        NimbitsClient client = NimbitsClientFactory.getInstance(cloudServer);
+//        User user = client.login();
+//
+//        System.out.println("Hello " + user.getEmail() + " " + user.getToken() + " " + cloudServer.getUrl());
+//
+//
+//        //connect to the server with your new session token
+//        Server authenticationContainer = ServerFactory.getInstance(INSTANCE_URL, EMAIL_ADDRESS, new AccessKeyModel.Builder().code(user.getToken()).create());
+//
+//        SocketConnection socketConnection = new SocketConnection(authenticationContainer, new SocketListener() {
+//
+//
+//            public void onOpen(Connection connection)
+//            {
+//                System.out.println("connected!");
+//            }
+//
+//            public void onClose(int closeCode, String message)
+//            {
+//                System.out.println("closing socket: " + message);
+//            }
+//
+//            @Override
+//            public void onNotify(Point point) {
+//                System.out.println("A subscription to a point's events has been processed");
+//                System.out.println(point.getName().getValue());
+//                System.out.println(point.getValue().getAlertState().name());
+//                // System.out.println(point.getValue().getData());
+//            }
+//
+//            @Override
+//            public void onUpdate(Point point) {
+//                System.out.println("A point was updated");
+//                System.out.println(point.getName().getValue());
+//                System.out.println(point.getValue().getAlertState().name());
+//                // System.out.println(point.getValue().getData());
+//            }
+//        });
 
 //        socketConnection.sendMessage("Hello Nimbits Socket! " + System.currentTimeMillis());
 //        ValueHelper valueHelper = HelperFactory.getValueHelper(cloudServer);

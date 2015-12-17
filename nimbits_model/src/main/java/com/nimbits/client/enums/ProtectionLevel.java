@@ -17,7 +17,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-
+@Deprecated
 public enum ProtectionLevel implements Serializable {
     onlyMe(0, "Only Me"),
     onlyConnection(1, "Connections"),

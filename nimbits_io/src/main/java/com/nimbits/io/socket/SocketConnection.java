@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.server.Server;
@@ -21,15 +22,15 @@ import java.util.concurrent.TimeUnit;
  */
 
 public class SocketConnection extends GsonFactory {
-    private static final String GSON_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss Z";
+
     private WebSocketClientFactory factory;
     private WebSocketClient client;
     private WebSocket.Connection connection;
 
-    private Server server;
+    private Instance server;
 
 
-    public SocketConnection(Server aServer, final SocketListener listener) throws Exception {
+    public SocketConnection(Instance aServer, final SocketListener listener) throws Exception {
         this.factory = new WebSocketClientFactory();
         this.factory.start();
         this.client = factory.newWebSocketClient();
@@ -38,27 +39,28 @@ public class SocketConnection extends GsonFactory {
         StringBuilder sb = new StringBuilder();
 
         String u;
-        boolean usingCloud = server.getUrl().contains("nimbits.com");
+        boolean usingCloud = server.getBaseUrl().getUrl().contains("nimbits.com");
         if (usingCloud) {
             u = Const.SOCKET_RELAY;
         } else {
-            u = server.getUrl();
+            u = server.getBaseUrl().getUrl().replace("http://", "").replace("https://", "");
         }
 
         sb
                 .append("ws://").append(u).append("/socket?")
-                .append(Parameters.email + "=" + server.getEmail().getValue())
+                .append(Parameters.email + "=" + server.getAdminEmail().getValue())
                 .append("&" + Parameters.format + "=" + "json")
-                .append("&" + Parameters.token + "=" + server.getAccessToken().getValue());
+                .append("&" + Parameters.token + "=" + server.getApiKey().getCode());
 
 
         if (usingCloud) {
-            sb.append("&" + Parameters.forward + "=" + "http://" + server.getUrl());
+            sb.append("&" + Parameters.forward + "=" + "http://" + server.getBaseUrl());
 
         }
-        System.out.println(sb.toString());
+        //System.out.println(sb.toString());
 
         //TODO - pass an array of point id's to limit the points this socket cares about
+
         connection = client.open(new URI(sb.toString()
 
 
@@ -109,7 +111,7 @@ public class SocketConnection extends GsonFactory {
         return connection;
     }
 
-    public Server getServer() {
+    public Instance getServer() {
         return server;
     }
 }

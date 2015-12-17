@@ -33,12 +33,9 @@ import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
-@Service
+@Service @Deprecated //nothing but trouble
 public class AuthServiceImpl implements AuthService {
 
     @Autowired
@@ -61,7 +58,7 @@ public class AuthServiceImpl implements AuthService {
 
             User user = userDao.getUserByAuthToken(authToken);
             if (user != null) {
-                return Arrays.asList(user.getEmail());
+                return Collections.singletonList(user.getEmail());
             }
 
         }

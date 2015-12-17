@@ -28,6 +28,7 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.io.NimbitsClient;
 import com.nimbits.server.gson.GsonFactory;
+import org.apache.http.util.TextUtils;
 import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -36,6 +37,7 @@ import retrofit.converter.GsonConverter;
 
 import java.util.*;
 
+@Deprecated
 public class NimbitsClientImpl implements NimbitsClient {
 
 
@@ -51,8 +53,8 @@ public class NimbitsClientImpl implements NimbitsClient {
         this.requestInterceptor = new RequestInterceptor() {
             @Override
             public void intercept(RequestInterceptor.RequestFacade request) {
-                if (!server.getAccessToken().isEmpty()) {
-                    request.addHeader(Parameters.token.getText(), theServer.getAccessToken().getValue());
+                if (!TextUtils.isEmpty(server.getAccessToken().getCode())) {
+                    request.addHeader(Parameters.token.getText(), theServer.getAccessToken().getCode());
 
                 }
                 request.addQueryParam(Parameters.email.getText(), theServer.getEmail().getValue());
@@ -364,66 +366,66 @@ public class NimbitsClientImpl implements NimbitsClient {
         switch (entityType) {
 
             case user:
-                result = entityApi.getUser(server.getEmail().getValue(), server.getAccessToken().getValue(), entityId.getValue());
+                result = entityApi.getUser(server.getEmail().getValue(), server.getAccessToken().getCode(), entityId.getValue());
 
                 break;
             case point:
 
-                result = entityApi.getPoint(server.getEmail().getValue(), server.getAccessToken().getValue(), entityId.getValue());
+                result = entityApi.getPoint(server.getEmail().getValue(), server.getAccessToken().getCode(), entityId.getValue());
 
                 break;
             case category:
 
-                result = entityApi.getCategory(server.getEmail().getValue(), server.getAccessToken().getValue(), entityId.getValue());
+                result = entityApi.getCategory(server.getEmail().getValue(), server.getAccessToken().getCode(), entityId.getValue());
 
                 break;
             case subscription:
 
-                result = entityApi.getSubscription(server.getEmail().getValue(), server.getAccessToken().getValue(), entityId.getValue());
+                result = entityApi.getSubscription(server.getEmail().getValue(), server.getAccessToken().getCode(), entityId.getValue());
 
                 break;
             case sync:
 
-                result = entityApi.getSync(server.getEmail().getValue(), server.getAccessToken().getValue(), entityId.getValue());
+                result = entityApi.getSync(server.getEmail().getValue(), server.getAccessToken().getCode(), entityId.getValue());
 
                 break;
             case calculation:
 
-                result = entityApi.getCalc(server.getEmail().getValue(), server.getAccessToken().getValue(), entityId.getValue());
+                result = entityApi.getCalc(server.getEmail().getValue(), server.getAccessToken().getCode(), entityId.getValue());
 
                 break;
             case summary:
 
-                result = entityApi.getSummary(server.getEmail().getValue(), server.getAccessToken().getValue(), entityId.getValue());
+                result = entityApi.getSummary(server.getEmail().getValue(), server.getAccessToken().getCode(), entityId.getValue());
 
                 break;
             case accessKey:
 
-                result = entityApi.getToken(server.getEmail().getValue(), server.getAccessToken().getValue(), entityId.getValue());
+                result = entityApi.getToken(server.getEmail().getValue(), server.getAccessToken().getCode(), entityId.getValue());
 
                 break;
             case instance:
-                result = entityApi.getInstance(server.getEmail().getValue(), server.getAccessToken().getValue(), entityId.getValue());
+                result = entityApi.getInstance(server.getEmail().getValue(), server.getAccessToken().getCode(), entityId.getValue());
 
                 break;
             case socket:
 
-                result = entityApi.getSocket(server.getEmail().getValue(), server.getAccessToken().getValue(), entityId.getValue());
+                result = entityApi.getSocket(server.getEmail().getValue(), server.getAccessToken().getCode(), entityId.getValue());
 
                 break;
             case connection:
 
-                result = entityApi.getConnection(server.getEmail().getValue(), server.getAccessToken().getValue(), entityId.getValue());
+                result = entityApi.getConnection(server.getEmail().getValue(), server.getAccessToken().getCode(), entityId.getValue());
 
                 break;
             case schedule:
 
-                result = entityApi.getSchedule(server.getEmail().getValue(), server.getAccessToken().getValue(), entityId.getValue());
+                result = entityApi.getSchedule(server.getEmail().getValue(), server.getAccessToken().getCode(), entityId.getValue());
 
                 break;
             case webhook:
 
-                result = entityApi.getWebHook(server.getEmail().getValue(), server.getAccessToken().getValue(), entityId.getValue());
+                result = entityApi.getWebHook(server.getEmail().getValue(), server.getAccessToken().getCode(), entityId.getValue());
 
                 break;
         }

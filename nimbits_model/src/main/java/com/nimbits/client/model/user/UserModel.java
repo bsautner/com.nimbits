@@ -14,12 +14,9 @@ package com.nimbits.client.model.user;
 
 
 import com.google.gson.annotations.Expose;
-import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryModel;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
@@ -39,8 +36,6 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     @Expose
     private String emailAddress;
-
-    private List<AccessKey> accessKeys;
 
     @Expose
     private Boolean isAdmin;
@@ -72,11 +67,10 @@ public class UserModel extends EntityModel implements Serializable, User {
 
 
     protected UserModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String emailAddress,
-                     List<AccessKey> accessKeys, Boolean isAdmin, String token, String password, String passwordSalt, String source, LoginInfo loginInfo, String passwordResetToken,
+                        Boolean isAdmin, String token, String password, String passwordSalt, String source, LoginInfo loginInfo, String passwordResetToken,
                      Date passwordResetTokenTimestamp) {
         super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
         this.emailAddress = emailAddress;
-        this.accessKeys = accessKeys;
         this.isAdmin = isAdmin;
         this.token = token;
         this.password = password;
@@ -100,36 +94,6 @@ public class UserModel extends EntityModel implements Serializable, User {
     @Override
     public UserSource getSource() {
         return source == null ? UserSource.google : UserSource.valueOf(source);
-    }
-
-
-
-
-    @Override
-    public boolean isRestricted() {
-        if (accessKeys == null) {
-            return true;
-        }
-        for (final AccessKey key : accessKeys) {
-            if (key.getAuthLevel().getCode() > (AuthLevel.restricted.getCode())) {
-                return false;
-            }
-        }
-        return true;
-
-    }
-
-    @Override
-    public List<AccessKey> getAccessKeys() {
-        return this.accessKeys == null ? new ArrayList<AccessKey>(1) : this.accessKeys;
-    }
-
-    @Override
-    public void addAccessKey(final AccessKey key) {
-        if (accessKeys == null) {
-            accessKeys = new ArrayList<AccessKey>(1);
-        }
-        accessKeys.add(key);
     }
 
 
@@ -213,7 +177,6 @@ public class UserModel extends EntityModel implements Serializable, User {
 
 
         if (isAdmin != userModel.isAdmin) return false;
-        if (accessKeys != null ? !accessKeys.equals(userModel.accessKeys) : userModel.accessKeys != null) return false;
         if (emailAddress != null ? !emailAddress.equals(userModel.emailAddress) : userModel.emailAddress != null)
             return false;
 
@@ -226,7 +189,6 @@ public class UserModel extends EntityModel implements Serializable, User {
         int result = super.hashCode();
 
         result = 31 * result + emailAddress.hashCode();
-        result = 31 * result + (accessKeys != null ? accessKeys.hashCode() : 0);
 
         result = 31 * result + (isAdmin ? 1 : 0);
 
@@ -237,8 +199,6 @@ public class UserModel extends EntityModel implements Serializable, User {
         private final EntityType type = EntityType.user;
 
         private String emailAddress;
-
-        private List<AccessKey> accessKeys;
 
         private Boolean isAdmin;
 
@@ -261,10 +221,6 @@ public class UserModel extends EntityModel implements Serializable, User {
             return this;
         }
 
-        public Builder setAccessKeys(List<AccessKey> accessKeys) {
-            this.accessKeys = accessKeys;
-            return this;
-        }
 
         public Builder isAdmin(Boolean isAdmin) {
             this.isAdmin = isAdmin;
@@ -324,7 +280,7 @@ public class UserModel extends EntityModel implements Serializable, User {
 
 
             return new UserModel(key, name, description, type , protectionLevel, parent, owner, uuid,
-                    emailAddress, accessKeys,isAdmin, token, password, passwordSalt, source, loginInfo, passwordResetToken, passwordResetTokenTimestamp  );
+                    emailAddress, isAdmin, token, password, passwordSalt, source, loginInfo, passwordResetToken, passwordResetTokenTimestamp  );
         }
 
         @Override
@@ -353,7 +309,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         public Builder init(User u) {
             initEntity(u);
             this.emailAddress = u.getEmail().getValue();
-            this.accessKeys = u.getAccessKeys();
+
             this.isAdmin = u.getIsAdmin();
             this.token = u.getToken();
             this.password = u.getPassword();

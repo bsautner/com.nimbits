@@ -9,13 +9,14 @@ import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
-import com.nimbits.client.model.server.apikey.AccessToken;
 import com.nimbits.client.model.user.User;
+import com.nimbits.io.Nimbits;
 import com.nimbits.io.NimbitsClient;
 import com.nimbits.io.http.NimbitsClientFactory;
 import com.nimbits.server.auth.AuthService;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transaction.user.dao.UserDao;
+import com.nimbits.server.transaction.user.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketServlet;
@@ -44,6 +45,9 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private UserService userService;
 
     private HttpServletRequest request;
 
@@ -76,31 +80,33 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
 
         String forwardUrl = request.getParameter(Parameters.forward.getText());
         String emailParam = request.getParameter(Parameters.email.getText());
-        List<EmailAddress> users;
 
+        User user;
         if (forwardUrl != null && emailParam != null && authToken != null) {
             //should only be called on the socket relay server
             //  forwardUrl = "http://localhost:8085";
-            Server server = ServerFactory.getInstance(UrlContainer.getInstance(forwardUrl),
-                    CommonFactory.createEmailAddress(emailParam), AccessToken.getInstance(authToken));
-            NimbitsClient client = NimbitsClientFactory.getInstance(server);
-            User user = client.getSession();
-            users = Arrays.asList(user.getEmail());
+//            Server server = ServerFactory.getInstance(UrlContainer.getInstance(forwardUrl),
+//                    CommonFactory.createEmailAddress(emailParam), AccessToken.getInstance(authToken));
+//            NimbitsClient client = NimbitsClientFactory.getInstance(server);
+            Nimbits nimbits = new Nimbits.Builder().email(emailParam).token(authToken).instance(forwardUrl).create();
+            user = nimbits.getMe();
+           // users = Arrays.asList(user.getEmail());
 
             //notify cloud of socket
-            client.notifySocketConnection(forwardUrl, user);
+            //TODO nimbits.notifySocketConnection(forwardUrl, user);
 
         } else {
 
-            users = authService.getCurrentUser(request);
+            user = userService.getHttpRequestUser(request);
+            //users = authService.getCurrentUser(request);
 
         }
 
 
-        if (users.isEmpty()) {
+        if (user == null) {
             throw new SecurityException("Session not found, did you POST to the session api first?");
         } else {
-            String email = users.get(0).getValue();
+            //String email = users.get(0).getValue();
 
             List<String> points;
             if (! StringUtils.isEmpty(ids)) {
@@ -115,8 +121,8 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
             List<String> fixed = new ArrayList<>(points.size());
             for (String p : points) {
                 if (StringUtils.isNotEmpty(p)) {
-                    if (!p.startsWith(email)) {
-                        fixed.add(email + "/" + p);
+                    if (!p.startsWith(user.getEmail().getValue())) {
+                        fixed.add(user.getEmail().getValue() + "/" + p);
                     } else {
                         fixed.add(p);
                     }
@@ -124,7 +130,7 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
             }
 
 
-            SocketClient client = new SocketClient(this, users.get(0), fixed, authToken);
+            SocketClient client = new SocketClient(this, user.getEmail(), fixed, authToken);
 
             connectedClients.add(client);
             return client;

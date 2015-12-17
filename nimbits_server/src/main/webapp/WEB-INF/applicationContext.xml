@@ -4,7 +4,8 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:beans="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
     <beans:import resource="context.xml"/>
     <bean id="defragmenter" class="com.nimbits.server.defrag.Defragmenter"/>
@@ -22,7 +23,6 @@
 
 
     <bean id="settingsDao" class="com.nimbits.server.transaction.settings.SettingsDaoImpl">
-
 
         <property name="persistenceManagerFactory" ref="pmf"/>
     </bean>
@@ -81,15 +81,34 @@
                 <prop key="javax.jdo.option.ConnectionUserName">sa</prop>
                 <prop key="javax.jdo.option.ConnectionPassword"></prop>
                 <prop key="javax.jdo.option.ConnectionDriverName">org.h2.Driver</prop>
-                <prop key="org.jpox.autoCreateSchema">true</prop>
+                <!--<prop key="org.jpox.autoCreateSchema">true</prop>-->
                 <!--<prop key="datanucleus.schema.autoCreateAll">true</prop>-->
                 <prop key="org.jpox.identifier.case">PreserveCase</prop>
-                <prop key="datanucleus.autoCreateTables">true</prop>
-                <prop key="datanucleus.autoCreateColumns">true</prop>
+                <prop key="datanucleus.autoCreateAll">true</prop>
+                <prop key="datanucleus.validateAll">true</prop>
+                <!--<prop key="datanucleus.autoCreateColumns">true</prop>-->
+                <!--<prop key="datanucleus.autoDeleteColumns">true</prop>-->
                 <!--<prop key="datanucleus.schema.autoCreateColumns">true</prop>-->
             </props>
         </property>
     </bean>
+
+
+    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="5" />
+        <property name="maxPoolSize" value="10" />
+        <property name="queueCapacity" value="25" />
+    </bean>
+
+    <bean id="systemTaskExecutor" class="com.nimbits.server.process.cron.SystemTaskExecutor">
+        <constructor-arg ref="taskExecutor" />
+    </bean>
+
+    <task:scheduled-tasks scheduler="myScheduler">
+        <task:scheduled ref="systemTaskExecutor" method="heartbeat" fixed-delay="5000"/>
+    </task:scheduled-tasks>
+
+    <task:scheduler id="myScheduler" pool-size="10"/>
 
 
 </beans>

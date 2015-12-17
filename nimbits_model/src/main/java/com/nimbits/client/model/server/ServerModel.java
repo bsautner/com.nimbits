@@ -14,9 +14,9 @@ package com.nimbits.client.model.server;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.model.UrlContainer;
+import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.server.apikey.AccessToken;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -26,14 +26,14 @@ public class ServerModel implements Server, Serializable {
     @Expose
     private UrlContainer url;
     @Expose
-    private AccessToken accessToken;
+    private AccessKey accessToken;
     @Expose
     private Protocol protocol;
     @Expose
     private String email;
 
 
-    public ServerModel(final UrlContainer url, EmailAddress emailAddress, final AccessToken accessToken) {
+    public ServerModel(final UrlContainer url, EmailAddress emailAddress, final AccessKey accessToken) {
         if (StringUtils.isEmpty(url.getUrl())) {
             throw new IllegalArgumentException("url was null");
         }
@@ -61,7 +61,7 @@ public class ServerModel implements Server, Serializable {
 
 
     @Override
-    public AccessToken getAccessToken() {
+    public AccessKey getAccessToken() {
         return accessToken;
     }
 

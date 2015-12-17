@@ -13,11 +13,8 @@
 package com.nimbits.client.model.accesskey;
 
 import com.google.gson.annotations.Expose;
-import com.nimbits.client.enums.AuthLevel;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.category.CategoryModel;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
@@ -33,10 +30,8 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
 
     @Expose
     private String code;
-    @Expose
-    private String scope;
-    @Expose
-    private int authLevel;
+
+
 
     @SuppressWarnings("unused")
     private AccessKeyModel() {
@@ -44,43 +39,23 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
 
 
     public AccessKeyModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid,
-                          String code, String scope, AuthLevel authLevel) {
+                          String code) {
         super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
         this.code = code;
-        this.scope = scope;
-        this.authLevel = authLevel.getCode();
+
     }
+
 
     @Override
     public String getCode() {
-        return code;
+        return this.code;
     }
-
 
     @Override
     public void setCode(final String code) {
         this.code = code;
     }
 
-    @Override
-    public String getScope() {
-        return this.scope;
-    }
-
-    @Override
-    public void setScope(String scope) {
-        this.scope = scope;
-    }
-
-    @Override
-    public AuthLevel getAuthLevel() {
-        return AuthLevel.get(this.authLevel);
-    }
-
-    @Override
-    public void setAuthLevel(AuthLevel level) {
-        this.authLevel = level.getCode();
-    }
 
 
     public static class Builder extends EntityBuilder {
@@ -89,26 +64,13 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
 
         private String code;
 
-        private String scope;
-
-        private AuthLevel authLevel;
-
-
 
         public Builder code(String code) {
+
             this.code = code;
             return this;
         }
 
-        public Builder scope(String scope) {
-            this.scope = scope;
-            return this;
-        }
-
-        public Builder authLevel(AuthLevel authLevel) {
-            this.authLevel = authLevel;
-            return this;
-        }
 
         public Builder name(String name) {
             this.name = CommonFactory.createName(name, type);
@@ -121,7 +83,7 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
             }
 
 
-            return new AccessKeyModel(key, name, description, type, protectionLevel, parent, owner, uuid, code, scope, authLevel);
+            return new AccessKeyModel(key, name, description, type, protectionLevel, parent, owner, uuid, code);
         }
 
         @Override
@@ -150,8 +112,7 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
         public Builder init(AccessKey e) {
             initEntity(e);
             this.code = e.getCode();
-            this.scope = e.getScope();
-            this.authLevel = e.getAuthLevel();
+
             return this;
         }
 

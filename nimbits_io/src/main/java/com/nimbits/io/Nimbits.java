@@ -2,6 +2,7 @@ package com.nimbits.io;
 
 import com.google.common.base.Optional;
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.connection.Connection;
@@ -12,6 +13,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.socket.Socket;
 import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.sync.Sync;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
@@ -275,6 +277,16 @@ public class Nimbits {
     }
 
 
+    public Summary addSummary(Entity parent, Summary e) {
+        return api.addSummary(parent.getUUID(), e);
+    }
+
+    public AccessKey addAccessKey(Entity parent, AccessKey e) {
+
+        return api.addAccessKey(parent.getUUID(), e);
+
+    }
+
     /**
      * Add an point as a child of a parent
      *
@@ -288,8 +300,22 @@ public class Nimbits {
 
     }
 
+    public Connection addConnection(Entity parent, Connection c) {
+        return api.addConnection(parent.getUUID(), c);
+    }
+
+
     public List<Point> getNearbyPoints(Point localPoint, double meters) {
         return api.getNearbyPoints(localPoint.getUUID(), meters);
+    }
+
+
+    public Instance addInstance(Entity parent, Instance instance) {
+        return api.addInstance(parent.getUUID(), instance);
+    }
+
+    public Schedule addSchedule(Entity parent, Schedule s) {
+        return api.addSchedule(parent.getUUID(), s);
     }
 
 
@@ -450,6 +476,8 @@ public class Nimbits {
         }
 
     }
+
+
 
     public static class Builder {
 

@@ -1,5 +1,4 @@
 import com.google.common.base.Optional;
-import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.SummaryType;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
@@ -15,7 +14,6 @@ import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.connection.Connection;
 import com.nimbits.client.model.connection.ConnectionModel;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.instance.InstanceModel;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
@@ -64,6 +62,7 @@ public class V3EntityTests extends NimbitsTest {
                 .name(UUID.randomUUID().toString())
                 .create());
 
+        testValue();
 
         testSocket();
 
@@ -90,6 +89,25 @@ public class V3EntityTests extends NimbitsTest {
 
 
         log("Done " + getClass().getName());
+
+    }
+
+    private void testValue() throws InterruptedException {
+        String foo = "foo";
+
+        Point inputPoint = nimbits.addPoint(category, new PointModel.Builder()
+                .name(UUID.randomUUID().toString())
+                .highAlarmOn(true)
+                .create());
+
+        nimbits.recordValue(inputPoint, new Value.Builder().meta(foo).create());
+        Thread.sleep(100);
+        Value value = nimbits.getSnapshot(inputPoint);
+        log(value.toString());
+        if (! foo.equals(value.getMetaData())) {
+            error("value did not record correctly");
+        }
+
 
     }
 

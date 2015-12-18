@@ -7,9 +7,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <beans:import resource="context.xml"/>
-    <bean id="defragmenter" class="com.nimbits.server.defrag.Defragmenter"/>
+    <bean id="defragmenter" class="Defragmenter"/>
     <bean id="valueTask" class="com.nimbits.server.process.task.ValueTask"/>
-    <bean id="dataProcessor" class="com.nimbits.server.data.DataProcessor"/>
+    <bean id="dataProcessor" class="DataProcessor"/>
     <bean id="chartHelper" class="com.nimbits.server.chart.ChartHelper"/>
     <bean id="nimbitsCache" class="com.nimbits.server.transaction.cache.NimbitsCacheImpl"/>
 

@@ -6,8 +6,8 @@ import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.instance.InstanceModel;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.io.socket.SocketConnection;
-import com.nimbits.io.socket.SocketListener;
+import com.nimbits.client.io.socket.SocketConnection;
+import com.nimbits.client.io.socket.SocketListener;
 
 import java.io.IOException;
 

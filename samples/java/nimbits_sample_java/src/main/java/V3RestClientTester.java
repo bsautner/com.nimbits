@@ -3,7 +3,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.io.Nimbits;
+import com.nimbits.client.io.Nimbits;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;

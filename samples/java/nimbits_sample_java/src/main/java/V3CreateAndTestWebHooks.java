@@ -9,7 +9,7 @@ import com.nimbits.client.model.webhook.DataChannel;
 import com.nimbits.client.model.webhook.HttpMethod;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
-import com.nimbits.io.http.NimbitsClientException;
+import com.nimbits.client.io.http.NimbitsClientException;
 
 import java.util.UUID;
 

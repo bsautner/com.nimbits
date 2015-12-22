@@ -1,15 +1,14 @@
 V3CreateAndTestWebHooks.class
 V3FindThingsExamples$Test.class
-SocketSample.class
 V3ApiChildrenTest.class
 V3FindThingsExamples.class
 V3Sample1.class
 V3IntegrationTest.class
 V3ApiHeartbeat.class
-CloudSocketSample$1.class
 V3EntityTests.class
+V3WebsocketTest.class
 V3RestClientTester.class
 NimbitsTest.class
+V3WebsocketTest$1.class
 CloudSocketSample.class
 V3FindThingsExamples$1.class
-SocketSample$1.class

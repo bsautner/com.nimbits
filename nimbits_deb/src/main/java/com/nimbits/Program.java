@@ -22,7 +22,6 @@ import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.server.Server;
-import com.nimbits.client.model.server.apikey.AccessToken;
 import com.nimbits.client.model.user.User;
 import jline.ConsoleReader;
 import jline.SimpleCompletor;
@@ -37,7 +36,7 @@ public class Program   {
 
     public static EmailAddress EMAIL_ADDRESS;
     private static UrlContainer INSTANCE_URL;
-    private static AccessToken accessToken;
+
     private static Server SERVER;
     public static User user;
     public static Entity current;

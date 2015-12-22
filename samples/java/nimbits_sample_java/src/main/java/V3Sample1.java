@@ -14,7 +14,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.webhook.HttpMethod;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
-import com.nimbits.io.Nimbits;
+import com.nimbits.client.io.Nimbits;
 
 import java.util.*;
 

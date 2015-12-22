@@ -3,14 +3,8 @@ import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.accesskey.AccessKeyModel;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.server.Server;
 import com.nimbits.client.model.server.ServerFactory;
-import com.nimbits.client.model.user.User;
-import com.nimbits.io.NimbitsClient;
-import com.nimbits.io.http.NimbitsClientFactory;
-import com.nimbits.io.socket.SocketConnection;
-import com.nimbits.io.socket.SocketListener;
 
 /**
  * An example of writing values to a data point and also having a web socket open to receive those events.

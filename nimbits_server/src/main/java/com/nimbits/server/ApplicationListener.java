@@ -15,13 +15,9 @@ package com.nimbits.server;
 import com.dmurph.tracking.AnalyticsConfigData;
 import com.dmurph.tracking.JGoogleAnalyticsTracker;
 import com.nimbits.client.constants.Const;
-import com.nimbits.server.process.cron.SystemCron;
-import com.nimbits.server.process.cron.SystemTaskExecutor;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.io.IOException;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;

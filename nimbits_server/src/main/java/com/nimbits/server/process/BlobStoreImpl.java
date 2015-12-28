@@ -12,7 +12,7 @@
     } applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS,  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.  See the License for the specific language governing permissions and limitations under the License.
  */
 
-package com.nimbits.server.io;
+package com.nimbits.server.process;
 
 
 import com.google.common.base.Optional;
@@ -34,7 +34,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +42,7 @@ import java.lang.reflect.Type;
 import java.util.*;
 import java.util.logging.Logger;
 
-@Service
+@Component
 public class BlobStoreImpl implements BlobStore {
 
     @Autowired
@@ -75,7 +75,10 @@ public class BlobStoreImpl implements BlobStore {
 
 
     @Override
-    public List<Value> getSeries(final Entity entity, final Optional<Range<Date>> timespan, final Optional<Range<Integer>> range, Optional<String> mask) {
+    public List<Value> getSeries(final Entity entity,
+                          final Optional<Range<Date>> timespan,
+                          final Optional<Range<Integer>> range,
+                          final Optional<String> mask) {
         //TODO - some way to test if a count has been reached before reading all files if no timespan is give - like test the list by processing it to see if it's complete
         //enough to return while reading other files.
 
@@ -159,7 +162,7 @@ public class BlobStoreImpl implements BlobStore {
 
     private void deleteAndRestore(Entity entity,  List<Value> retObj, List<String> allReadFiles) {
 
-        try {
+
             if (allReadFiles.size() > 1) {
                 for (String s : allReadFiles) {
                     FileUtils.deleteQuietly(new File(s));
@@ -168,9 +171,7 @@ public class BlobStoreImpl implements BlobStore {
                 }
                 valueService.storeValues(entity, retObj);
             }
-        } catch (IOException ex) {
-            logger.severe(ExceptionUtils.getStackTrace(ex));
-        }
+
     }
 
     @Override
@@ -260,7 +261,7 @@ public class BlobStoreImpl implements BlobStore {
 
 
     @Override
-    public void createBlobStoreEntity(final Entity entity, final ValueDayHolder holder) throws IOException {
+    public void createBlobStoreEntity(final Entity entity, final ValueDayHolder holder) {
 
 
         logger.info("createBlobStoreEntity");
@@ -290,9 +291,13 @@ public class BlobStoreImpl implements BlobStore {
     }
 
     @Override
-    public void deleteAllData(Point point) throws IOException {
+    public void deleteAllData(Point point) {
         final String key = point.getKey() + SNAPSHOT;
-        FileUtils.deleteDirectory(new File(root + "/" + point.getKey()));
+        try {
+            FileUtils.deleteDirectory(new File(root + "/" + point.getKey()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         nimbitsCache.delete(key);
 
     }

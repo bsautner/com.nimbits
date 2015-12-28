@@ -449,6 +449,11 @@ public class PointModel extends EntityModel implements Serializable, Point {
             return this;
         }
 
+        public Builder filterValue(double v) {
+            this.filterValue = v;
+            return this;
+        }
+
         public Builder pointType(PointType v) {
             this.pointType = v;
             return this;
@@ -578,6 +583,8 @@ public class PointModel extends EntityModel implements Serializable, Point {
             this.action = action;
             return this;
         }
+
+
 
 
     }

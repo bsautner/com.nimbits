@@ -28,11 +28,11 @@
     </bean>
     <bean id="emailService" class="com.nimbits.server.communication.mail.EmailServiceImpl"/>
 
-    <bean id="blobStore" class="com.nimbits.server.io.BlobStoreImpl">
+    <bean id="blobStore" class="com.nimbits.server.process.BlobStoreImpl">
 
     </bean>
 
-    <bean id="storageIO" class="com.nimbits.server.io.StorageIOImpl">
+    <bean id="storageIO" class="com.nimbits.server.process.StorageIOImpl">
 
     </bean>
     <bean id="entityDao" class="com.nimbits.server.transaction.entity.dao.EntityDaoImpl">

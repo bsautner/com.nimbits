@@ -24,29 +24,42 @@ import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.user.User;
+import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.settings.SettingsService;
+import com.nimbits.server.transaction.settings.SettingsServiceImpl;
 import com.nimbits.server.transaction.user.dao.UserDao;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.nimbits.server.transaction.user.dao.UserDaoImpl;
+import com.nimbits.server.transaction.user.service.UserService;
+import com.nimbits.server.transaction.value.service.ValueService;
 import org.springframework.stereotype.Service;
 
 import javax.mail.NoSuchProviderException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
 
 @Service @Deprecated //nothing but trouble
 public class AuthServiceImpl implements AuthService {
 
-    @Autowired
-    private SettingsService settingsService;
 
-    @Autowired
-    private UserDao userDao;
+    private final SettingsService settingsService;
 
-    public List<EmailAddress> getCurrentUser(HttpServletRequest request) {
 
-        List<EmailAddress> result = new ArrayList<EmailAddress>(1);
+    private final UserDao userDao;
+
+    public AuthServiceImpl(SettingsServiceImpl settingsService, UserDaoImpl userDao) {
+        this.settingsService = settingsService;
+        this.userDao = userDao;
+    }
+
+    @Override
+    public List<EmailAddress> getCurrentUser(EntityService entityService, UserService userService,  ValueService valueService, HttpServletRequest request) {
+
+        List<EmailAddress> result = new ArrayList<>(1);
 
         EmailAddress emailAddress;
 

@@ -32,9 +32,6 @@ import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,14 +39,8 @@ import java.lang.reflect.Type;
 import java.util.*;
 import java.util.logging.Logger;
 
-@Component
+
 public class BlobStoreImpl implements BlobStore {
-
-    @Autowired
-    private NimbitsCache nimbitsCache;
-
-    @Autowired
-    private StorageIOImpl storageIO;
 
     public static final String SNAPSHOT = "SNAPSHOT";
     public static final int INITIAL_CAPACITY = 10000;
@@ -57,31 +48,34 @@ public class BlobStoreImpl implements BlobStore {
     private final Gson gson =  GsonFactory.getInstance(true);
 
 
-    @Autowired
-    private ValueService valueService;
+    private NimbitsCache nimbitsCache;
 
-    @Autowired
+
+    private StorageIOImpl storageIO;
+
+
     private Defragmenter defragmenter;
 
-    private final String root;
 
-    @Autowired
-    public BlobStoreImpl(SettingsService settingsService) {
-        root = settingsService.getSetting(ServerSetting.storeDirectory);
+    private SettingsService settingsService;
 
+    public BlobStoreImpl(NimbitsCache nimbitsCache, StorageIOImpl storageIO, Defragmenter defragmenter, SettingsService settingsService) {
+
+        this.nimbitsCache = nimbitsCache;
+        this.storageIO = storageIO;
+        this.defragmenter = defragmenter;
+        this.settingsService = settingsService;
     }
 
-
-
-
     @Override
-    public List<Value> getSeries(final Entity entity,
+    public List<Value> getSeries(final ValueService valueService,
+                                 final Entity entity,
                           final Optional<Range<Date>> timespan,
                           final Optional<Range<Integer>> range,
                           final Optional<String> mask) {
         //TODO - some way to test if a count has been reached before reading all files if no timespan is give - like test the list by processing it to see if it's complete
         //enough to return while reading other files.
-
+        String root = settingsService.getSetting(ServerSetting.storeDirectory);
         String path = root + "/" + entity.getKey();
         List<Value> allvalues = new ArrayList<>(INITIAL_CAPACITY);
         List<String> allReadFiles = new ArrayList<>(INITIAL_CAPACITY);
@@ -147,7 +141,7 @@ public class BlobStoreImpl implements BlobStore {
 
             if (allReadFiles.size() > INITIAL_CAPACITY) {  //TODO will break if # of days = initial capacity
                 logger.info("Defragmenting " + allReadFiles.size());
-                deleteAndRestore(entity, allvalues, allReadFiles);
+                deleteAndRestore(this, valueService, entity, allvalues, allReadFiles);
             }
             logger.info("****** returning " + filtered.size());
             return ImmutableList.copyOf(filtered);
@@ -160,7 +154,7 @@ public class BlobStoreImpl implements BlobStore {
 
     }
 
-    private void deleteAndRestore(Entity entity,  List<Value> retObj, List<String> allReadFiles) {
+    private void deleteAndRestore(BlobStore blobStore, ValueService valueService, Entity entity,  List<Value> retObj, List<String> allReadFiles) {
 
 
             if (allReadFiles.size() > 1) {
@@ -169,7 +163,7 @@ public class BlobStoreImpl implements BlobStore {
 
 
                 }
-                valueService.storeValues(entity, retObj);
+                valueService.storeValues(blobStore, entity, retObj);
             }
 
     }
@@ -177,6 +171,7 @@ public class BlobStoreImpl implements BlobStore {
     @Override
     public Value getSnapshot(final Entity entity) {
         final Value value;
+        String root = settingsService.getSetting(ServerSetting.storeDirectory);
         final String key = entity.getKey() + SNAPSHOT;
         if (nimbitsCache.get(key) != null) {
 
@@ -200,6 +195,7 @@ public class BlobStoreImpl implements BlobStore {
     }
 
     private void createSnapshot(final Entity entity, final Value value) {
+        String root = settingsService.getSetting(ServerSetting.storeDirectory);
         final String key = entity.getKey() + SNAPSHOT;
         final String json = gson.toJson(Arrays.asList(value));
         nimbitsCache.put(key, value);
@@ -212,6 +208,7 @@ public class BlobStoreImpl implements BlobStore {
     public void saveSnapshot(final Entity entity, final Value value) {
         final String key = entity.getKey() + SNAPSHOT;
         Value old = getSnapshot(entity);
+        String root = settingsService.getSetting(ServerSetting.storeDirectory);
         if (value.getTimestamp().getTime() > old.getTimestamp().getTime()) {
             final String json = gson.toJson(Arrays.asList(value));
             nimbitsCache.put(key, value);
@@ -284,7 +281,7 @@ public class BlobStoreImpl implements BlobStore {
         final Date earliestForDay = range.lowerEndpoint();
 
 
-
+        String root = settingsService.getSetting(ServerSetting.storeDirectory);
         String FILENAME =  root + "/" + entity.getKey() + "/" + holder.getStartOfDay().getTime() + "/" + earliestForDay.getTime();//store.getId();
         // GcsService gcsService = GcsServiceFactory.createGcsService();
         writeFile(json, FILENAME);
@@ -294,6 +291,7 @@ public class BlobStoreImpl implements BlobStore {
     public void deleteAllData(Point point) {
         final String key = point.getKey() + SNAPSHOT;
         try {
+            String root = settingsService.getSetting(ServerSetting.storeDirectory);
             FileUtils.deleteDirectory(new File(root + "/" + point.getKey()));
         } catch (IOException e) {
             throw new RuntimeException(e);

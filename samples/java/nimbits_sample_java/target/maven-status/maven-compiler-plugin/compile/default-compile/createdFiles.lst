@@ -8,6 +8,7 @@ V3ApiHeartbeat.class
 V3EntityTests.class
 V3WebsocketTest.class
 V3RestClientTester.class
+V3FilterTest.class
 NimbitsTest.class
 V3WebsocketTest$1.class
 CloudSocketSample.class

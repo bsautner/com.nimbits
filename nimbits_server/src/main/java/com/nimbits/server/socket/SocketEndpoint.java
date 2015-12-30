@@ -4,13 +4,14 @@ package com.nimbits.server.socket;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.io.Nimbits;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.io.Nimbits;
-import com.nimbits.server.auth.AuthService;
 import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.user.dao.UserDao;
 import com.nimbits.server.transaction.user.service.UserService;
+import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.websocket.WebSocket;
 import org.eclipse.jetty.websocket.WebSocketServlet;
@@ -31,7 +32,7 @@ import java.util.List;
 public class SocketEndpoint extends WebSocketServlet implements SocketEventListener {
 
     @Autowired
-    private AuthService authService;
+    private EntityService entityService;
 
     @Autowired
     private ConnectedClients connectedClients;
@@ -41,6 +42,9 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ValueService valueService;
 
     private HttpServletRequest request;
 
@@ -90,7 +94,7 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
 
         } else {
 
-            user = userService.getHttpRequestUser(request);
+            user = userService.getHttpRequestUser(entityService, valueService, request);
             //users = authService.getCurrentUser(request);
 
         }

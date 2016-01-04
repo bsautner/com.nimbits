@@ -140,10 +140,10 @@ public class BlobStoreImpl implements BlobStore {
             List<Value> filtered = storageIO.filterValues(allvalues, timespan, range, mask);
 
             if (allReadFiles.size() > INITIAL_CAPACITY) {  //TODO will break if # of days = initial capacity
-                logger.info("Defragmenting " + allReadFiles.size());
+             //   logger.info("Defragmenting " + allReadFiles.size());
                 deleteAndRestore(this, valueService, entity, allvalues, allReadFiles);
             }
-            logger.info("****** returning " + filtered.size());
+          //  logger.info("****** returning " + filtered.size());
             return ImmutableList.copyOf(filtered);
         }
         else {
@@ -261,7 +261,7 @@ public class BlobStoreImpl implements BlobStore {
     public void createBlobStoreEntity(final Entity entity, final ValueDayHolder holder) {
 
 
-        logger.info("createBlobStoreEntity");
+     //   logger.info("createBlobStoreEntity");
 
         final String json = gson.toJson(holder.getValues());
 

@@ -44,7 +44,7 @@ public class Nimbits {
 
     private final RestClient api;
 
-    private Nimbits(final String email, final String token, String instance) {
+    protected Nimbits(final String email, final String token, String instance) {
 
 
 

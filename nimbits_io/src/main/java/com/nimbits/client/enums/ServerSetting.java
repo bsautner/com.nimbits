@@ -18,11 +18,12 @@ import com.nimbits.client.constants.Const;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 
 public enum ServerSetting {
 
-
+    gcm(SettingConstants.SETTING_GCM, "", false, true, false, false, false),
     version(SettingConstants.SETTING_VERSION, Const.VERSION, true, true, true, false, false),
     uuid(SettingConstants.SETTING_UUID, SettingConstants.SETTING_UUID_DEFAULT, true, true, true, false, false),
     storeDirectory(SettingConstants.SETTING_STORE_DIRECTORY, SettingConstants.STORE_DIRECTORY_DEFAULT, false, true, false, false, false),
@@ -127,6 +128,7 @@ public enum ServerSetting {
         static final String SETTING_UUID_DEFAULT = "";
         static final String SETTING_API_LIMIT = "Daily User API Limit (MB)";
         static final String SETTING_API_LIMIT_DEFAULT = "100";
+        public static final String SETTING_GCM = "GCM API Key";
 
         private SettingConstants() {
         }

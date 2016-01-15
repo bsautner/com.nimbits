@@ -181,6 +181,12 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
 
 
         public Subscription create() {
+            if (subscriptionType == null) {
+                subscriptionType = SubscriptionType.none;
+            }
+            if (notifyMethod == null) {
+                notifyMethod = SubscriptionNotifyMethod.none;
+            }
             return new SubscriptionModel(key, name, description, type, protectionLevel, parent
             , owner, uuid, subscribedEntity, notifyMethod.getCode(), subscriptionType.getCode(), maxRepeat, target, true, true );
 

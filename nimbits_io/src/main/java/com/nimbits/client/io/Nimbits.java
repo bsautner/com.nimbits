@@ -477,6 +477,20 @@ public class Nimbits {
 
     }
 
+    public void updateEntity(Entity entity) {
+        api.updateEntity(entity.getUUID(), entity, new Callback<Void>() {
+            @Override
+            public void success(Void aVoid, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+            }
+        });
+    }
+
 
 
     public static class Builder {

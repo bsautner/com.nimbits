@@ -111,9 +111,11 @@ public enum Parameters {
     type(ParamConstants.TYPE),
     gae(ParamConstants.GAE),
     forward(ParamConstants.FORWARD),
+    meters(ParamConstants.METERS),
     connectionId(ParamConstants.CONNECTION_ID);
 
     private static final Map<String, Parameters> lookup = new HashMap<String, Parameters>(100);
+
 
     static {
         for (Parameters s : EnumSet.allOf(Parameters.class))
@@ -233,6 +235,7 @@ public enum Parameters {
         private static final String FORWARD = "forward";
         public static final String CONNECTION_ID = "connection";
         public static final String PARAM_CURSOR = "cursor";
+        public static final String METERS = "meters";
 
 
         private ParamConstants() {

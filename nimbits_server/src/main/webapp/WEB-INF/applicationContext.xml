@@ -116,13 +116,15 @@
     </bean>
     <bean id="subscriptionService" class="com.nimbits.server.transaction.subscription.SubscriptionServiceImpl">
 
-        <constructor-arg index="0" ref="emailService"/>
-        <constructor-arg index="1" ref="valueTask"/>
-        <constructor-arg index="2" ref="xmppService"/>
-        <constructor-arg index="3" ref="connectedClients"/>
-        <constructor-arg index="4" ref="nimbitsCache"/>
-        <constructor-arg index="5" ref="entityService"/>
 
+        <constructor-arg index="0" ref="GeoSpatialDao"/>
+        <constructor-arg index="1" ref="emailService"/>
+        <constructor-arg index="2" ref="valueTask"/>
+        <constructor-arg index="3" ref="xmppService"/>
+        <constructor-arg index="4" ref="connectedClients"/>
+        <constructor-arg index="5" ref="nimbitsCache"/>
+        <constructor-arg index="6" ref="entityService"/>
+        <constructor-arg index="7" ref="settingsService"/>
     </bean>
 
 
@@ -138,9 +140,55 @@
     </bean>
 
 
-    <bean id="getActions" name="getActions" class="com.nimbits.server.api.v3.actions.GetActions">
-        <constructor-arg ref="entityDao"/>
+    <!--REST API -->
+    <bean id="getAction" name="getAction" class="com.nimbits.server.api.v3.actions.get.GetAction">
+
+
+        <constructor-arg index="0" ref="entityDao"/>
+        <constructor-arg index="1" ref="entityService"/>
+        <constructor-arg index="2" ref="valueService"/>
+        <constructor-arg index="3" ref="userService"/>
+        <constructor-arg index="4" ref="blobStore"/>
+        <constructor-arg index="5" ref="GeoSpatialDao"/>
+        <constructor-arg index="6" ref="userDao"/>
     </bean>
+
+    <bean id="postAction" name="postAction" class="com.nimbits.server.api.v3.actions.post.PostAction">
+
+
+        <constructor-arg index="0" ref="GeoSpatialDao"/>
+        <constructor-arg index="1" ref="entityService"/>
+        <constructor-arg index="2" ref="valueService"/>
+        <constructor-arg index="3" ref="userService"/>
+        <constructor-arg index="4" ref="entityDao"/>
+        <constructor-arg index="5" ref="taskService"/>
+        <constructor-arg index="6" ref="valueTask"/>
+        <constructor-arg index="7" ref="blobStore"/>
+        <constructor-arg index="8" ref="summaryService"/>
+        <constructor-arg index="9" ref="syncService"/>
+        <constructor-arg index="10" ref="subscriptionService"/>
+        <constructor-arg index="11" ref="calculationService"/>
+        <constructor-arg index="12" ref="dataProcessor"/>
+        <constructor-arg index="13" ref="userDao"/>
+    </bean>
+
+    <bean id="deleteAction" name="deleteAction" class="com.nimbits.server.api.v3.actions.delete.DeleteAction">
+
+        <constructor-arg index="0" ref="entityService"/>
+        <constructor-arg index="1" ref="valueService"/>
+        <constructor-arg index="2" ref="userService"/>
+        <constructor-arg index="3" ref="entityDao"/>
+    </bean>
+
+    <bean id="putAction" name="putAction" class="com.nimbits.server.api.v3.actions.put.PutAction">
+
+        <constructor-arg index="0" ref="entityService"/>
+        <constructor-arg index="1" ref="valueService"/>
+        <constructor-arg index="2" ref="userService"/>
+        <constructor-arg index="3" ref="entityDao"/>
+    </bean>
+
+
 
     <bean id="systemCron" name="systemCron" class="com.nimbits.server.process.cron.SystemCron"/>
 
@@ -180,21 +228,27 @@
     <bean id="systemTaskExecutor" class="com.nimbits.server.process.cron.SystemTaskExecutor">
 
 
-        <constructor-arg index="0" ref="taskExecutor"/>
-        <constructor-arg index="1" ref="systemCron"/>
-        <constructor-arg index="2" ref="entityDao"/>
-        <constructor-arg index="3" ref="userService"/>
-        <constructor-arg index="4" ref="entityService"/>
-        <constructor-arg index="5" ref="authService"/>
-        <constructor-arg index="6" ref="valueService"/>
-        <constructor-arg index="7" ref="taskService"/>
-        <constructor-arg index="8" ref="subscriptionService"/>
-        <constructor-arg index="9" ref="calculationService"/>
-        <constructor-arg index="10" ref="valueTask"/>
-        <constructor-arg index="11" ref="blobStore"/>
-        <constructor-arg index="12" ref="summaryService"/>
-        <constructor-arg index="13" ref="syncService"/>
-        <constructor-arg index="14" ref="dataProcessor"/>
+        <constructor-arg index="0" ref="GeoSpatialDao"/>
+        <constructor-arg index="1" ref="taskExecutor"/>
+        <constructor-arg index="2" ref="systemCron"/>
+        <constructor-arg index="3" ref="entityDao"/>
+        <constructor-arg index="4" ref="userService"/>
+        <constructor-arg index="5" ref="entityService"/>
+        <constructor-arg index="6" ref="authService"/>
+        <constructor-arg index="7" ref="valueService"/>
+        <constructor-arg index="8" ref="taskService"/>
+        <constructor-arg index="9" ref="subscriptionService"/>
+        <constructor-arg index="10" ref="calculationService"/>
+        <constructor-arg index="11" ref="valueTask"/>
+        <constructor-arg index="12" ref="blobStore"/>
+        <constructor-arg index="13" ref="summaryService"/>
+        <constructor-arg index="14" ref="syncService"/>
+        <constructor-arg index="15" ref="dataProcessor"/>
+    </bean>
+
+    <bean id="GeoSpatialDao" name="GeoSpatialDao" class="com.nimbits.server.geo.GeoSpatialDaoImpl">
+
+        <constructor-arg ref="entityDao"/>
     </bean>
 
     <task:scheduled-tasks scheduler="myScheduler">

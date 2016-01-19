@@ -64,12 +64,12 @@ public class Value implements Serializable, Comparable<Value> {
     }
 
     public Double getLatitude() {
-        return this.lt;
+        return this.lt == null ? 0.0 : this.lt;
     }
 
 
     public Double getLongitude() {
-        return this.lg;
+        return this.lg == null ? 0.0 : this.lg;
     }
 
 

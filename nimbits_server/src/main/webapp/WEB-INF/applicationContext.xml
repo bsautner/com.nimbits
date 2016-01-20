@@ -142,8 +142,6 @@
 
     <!--REST API -->
     <bean id="getAction" name="getAction" class="com.nimbits.server.api.v3.actions.get.GetAction">
-
-
         <constructor-arg index="0" ref="entityDao"/>
         <constructor-arg index="1" ref="entityService"/>
         <constructor-arg index="2" ref="valueService"/>
@@ -154,8 +152,6 @@
     </bean>
 
     <bean id="postAction" name="postAction" class="com.nimbits.server.api.v3.actions.post.PostAction">
-
-
         <constructor-arg index="0" ref="GeoSpatialDao"/>
         <constructor-arg index="1" ref="entityService"/>
         <constructor-arg index="2" ref="valueService"/>
@@ -173,7 +169,6 @@
     </bean>
 
     <bean id="deleteAction" name="deleteAction" class="com.nimbits.server.api.v3.actions.delete.DeleteAction">
-
         <constructor-arg index="0" ref="entityService"/>
         <constructor-arg index="1" ref="valueService"/>
         <constructor-arg index="2" ref="userService"/>

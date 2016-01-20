@@ -1,5 +1,6 @@
 package com.nimbits.server.geo;
 
+import com.google.common.base.Optional;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
@@ -17,6 +18,7 @@ public class GeoSpatialDaoImpl implements GeoSpatialDao {
     public GeoSpatialDaoImpl(EntityDao entityDao) {
     }
 
+
     @Override
     public List<Point> getNearby(User user, double x, double y, double meters) {
         return null;
@@ -27,4 +29,13 @@ public class GeoSpatialDaoImpl implements GeoSpatialDao {
 
     }
 
+    @Override
+    public Optional<String> getFile(String id) {
+        return null;
+    }
+
+    @Override
+    public void addFile(String messageId, String encodedBitmap) {
+
+    }
 }

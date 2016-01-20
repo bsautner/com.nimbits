@@ -23,6 +23,9 @@ public class V3IntegrationTest {
         V3RestClientTester v3RestClientTester = new V3RestClientTester();
         v3RestClientTester.execute();
 
+        V3UpdateEntityTest v3UpdateEntityTest = new V3UpdateEntityTest();
+        v3UpdateEntityTest.execute();
+
         System.out.println("Integration Tests Completed in : " + ((System.currentTimeMillis() - start) / 1000));
     }
 

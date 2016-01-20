@@ -152,4 +152,7 @@ public interface RestClient {
 
     @GET(API + "/me")
     Socket findSocket(@Query("name") String entityName, @Query("type") int entityType);
+
+    @PUT(API + "/{uuid}")
+    void updateEntity(@Path("uuid")String uuid, @Body Entity entity, Callback<Void> callback);
 }

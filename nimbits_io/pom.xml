@@ -8,7 +8,7 @@
     <artifactId>nimbits_io</artifactId>
     <version>${nimbits_version}-SNAPSHOT</version>
     <properties>
-        <nimbits_version>3.9.27</nimbits_version>
+        <nimbits_version>3.9.28</nimbits_version>
     </properties>
     <name>Nimbits IO</name>
     <description>Nimbits Client Input Output Library</description>
@@ -43,6 +43,11 @@
     </developers>
 
     <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>sonatype nexus snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
         <repository>
             <id>sonatype-nexus-staging</id>
             <name>Nexus Staging Repository</name>
@@ -72,6 +77,18 @@
 
     <build>
         <plugins>
+
+            <plugin>
+                <groupId>org.sonatype.plugins</groupId>
+                <artifactId>nexus-staging-maven-plugin</artifactId>
+                <version>1.6.3</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <serverId>sonatype-nexus-staging</serverId>
+                    <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

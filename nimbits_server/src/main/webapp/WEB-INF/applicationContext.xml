@@ -76,6 +76,7 @@
 
     <bean id="storageIO" class="com.nimbits.server.process.StorageIOImpl">
 
+        <constructor-arg ref="blobStore"/>
     </bean>
     <bean id="entityDao" class="com.nimbits.server.transaction.entity.dao.EntityDaoImpl">
         <constructor-arg ref="recursionValidation"/>

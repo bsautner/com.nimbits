@@ -42,24 +42,19 @@ import java.util.logging.Logger;
 
 public class BlobStoreImpl implements BlobStore {
 
-    public static final String SNAPSHOT = "SNAPSHOT";
-    public static final int INITIAL_CAPACITY = 10000;
+
     private final Logger logger = Logger.getLogger(BlobStoreImpl.class.getName());
-    private final Gson gson =  GsonFactory.getInstance(true);
-
-
     private NimbitsCache nimbitsCache;
-
-
     private StorageIOImpl storageIO;
-
-
     private Defragmenter defragmenter;
 
 
     private SettingsService settingsService;
 
-    public BlobStoreImpl(NimbitsCache nimbitsCache, StorageIOImpl storageIO, Defragmenter defragmenter, SettingsService settingsService) {
+    public BlobStoreImpl(NimbitsCache nimbitsCache,
+                         StorageIOImpl storageIO,
+                         Defragmenter defragmenter,
+                         SettingsService settingsService) {
 
         this.nimbitsCache = nimbitsCache;
         this.storageIO = storageIO;
@@ -73,12 +68,11 @@ public class BlobStoreImpl implements BlobStore {
                           final Optional<Range<Date>> timespan,
                           final Optional<Range<Integer>> range,
                           final Optional<String> mask) {
-        //TODO - some way to test if a count has been reached before reading all files if no timespan is give - like test the list by processing it to see if it's complete
-        //enough to return while reading other files.
+
         String root = settingsService.getSetting(ServerSetting.storeDirectory);
         String path = root + "/" + entity.getKey();
-        List<Value> allvalues = new ArrayList<>(INITIAL_CAPACITY);
-        List<String> allReadFiles = new ArrayList<>(INITIAL_CAPACITY);
+        List<Value> allvalues = new ArrayList<>();
+        List<String> allReadFiles = new ArrayList<>();
         File file = new File(path);
 
         Range<Date> maxRange = timespan.isPresent() ?
@@ -93,7 +87,7 @@ public class BlobStoreImpl implements BlobStore {
 
                 File node = new File(dailyFolderPath);
 
-                if (! node.getName().endsWith(SNAPSHOT)) {
+                if (! node.getName().endsWith(StorageIO.SNAPSHOT)) {
                     Long timestamp = Long.valueOf(dailyFolderPath);
                     if (maxRange.contains(new Date(timestamp))) {
 
@@ -117,7 +111,7 @@ public class BlobStoreImpl implements BlobStore {
 
                         File listItem = (File) result2.next();
                         String filePath = listItem.getName();
-                        if (!filePath.endsWith(SNAPSHOT)) {
+                        if (!filePath.endsWith(StorageIO.SNAPSHOT)) {
                             filePaths.add(sortedDayPath + "/" + filePath);
                         }
 
@@ -138,12 +132,9 @@ public class BlobStoreImpl implements BlobStore {
             }
 
             List<Value> filtered = storageIO.filterValues(allvalues, timespan, range, mask);
-
             if (allReadFiles.size() > INITIAL_CAPACITY) {  //TODO will break if # of days = initial capacity
-             //   logger.info("Defragmenting " + allReadFiles.size());
-                deleteAndRestore(this, valueService, entity, allvalues, allReadFiles);
+                deleteAndRestore(storageIO, valueService, entity, allvalues, allReadFiles);
             }
-          //  logger.info("****** returning " + filtered.size());
             return ImmutableList.copyOf(filtered);
         }
         else {
@@ -154,78 +145,10 @@ public class BlobStoreImpl implements BlobStore {
 
     }
 
-    private void deleteAndRestore(BlobStore blobStore, ValueService valueService, Entity entity,  List<Value> retObj, List<String> allReadFiles) {
 
-
-            if (allReadFiles.size() > 1) {
-                for (String s : allReadFiles) {
-                    FileUtils.deleteQuietly(new File(s));
-
-
-                }
-                valueService.storeValues(blobStore, entity, retObj);
-            }
-
-    }
 
     @Override
-    public Value getSnapshot(final Entity entity) {
-        final Value value;
-        String root = settingsService.getSetting(ServerSetting.storeDirectory);
-        final String key = entity.getKey() + SNAPSHOT;
-        if (nimbitsCache.get(key) != null) {
-
-            value = (Value) nimbitsCache.get(key);
-
-        }
-        else {
-            List<Value> values = readValuesFromFile(root + "/" + entity.getKey() + "/" + SNAPSHOT);
-
-            if (values.isEmpty()) {
-                value = new Value.Builder().doubleValue(0.0).timestamp(new Date(0)).create();
-                createSnapshot(entity, value);
-            } else {
-                value = values.get(0);
-            }
-            nimbitsCache.put(key, value);
-        }
-        return value;
-
-
-    }
-
-    private void createSnapshot(final Entity entity, final Value value) {
-        String root = settingsService.getSetting(ServerSetting.storeDirectory);
-        final String key = entity.getKey() + SNAPSHOT;
-        final String json = gson.toJson(Arrays.asList(value));
-        nimbitsCache.put(key, value);
-        writeFile(json, root + "/" + entity.getKey() + "/" + SNAPSHOT);
-
-
-    }
-
-    @Override
-    public void saveSnapshot(final Entity entity, final Value value) {
-        final String key = entity.getKey() + SNAPSHOT;
-        Value old = getSnapshot(entity);
-        String root = settingsService.getSetting(ServerSetting.storeDirectory);
-        if (value.getTimestamp().getTime() > old.getTimestamp().getTime()) {
-            final String json = gson.toJson(Arrays.asList(value));
-            nimbitsCache.put(key, value);
-            writeFile(json, root + "/" + entity.getKey() + "/" + SNAPSHOT);
-        }
-
-    }
-
-
-
-
-    private List<Value> readValuesFromFile(String path) {
-
-        final Type valueListType = new TypeToken<List<Value>>() {
-        }.getType();
-
-
+    public List<Value> readValuesFromFile(String path) {
 
 
         try {
@@ -233,17 +156,7 @@ public class BlobStoreImpl implements BlobStore {
           //  boolean isCompressed = isGzipped(file);
           //  System.out.println("******ISCOMPRESSED: " + isCompressed);
             String segment = FileUtils.readFileToString(file);
-            List<Value> models;
-            if (! StringUtils.isEmpty(segment)) {
-                models = gson.fromJson(segment, valueListType);
-                if (models != null) {
-                    Collections.sort(models);
-                } else {
-                    models = Collections.emptyList();
-                }
-            } else {
-                models = Collections.emptyList();
-            }
+            List<Value> models = storageIO.getValues( segment);
             return ImmutableList.copyOf(models);
         } catch (Exception e) {
             logger.severe(e.getMessage());
@@ -256,40 +169,9 @@ public class BlobStoreImpl implements BlobStore {
 
     }
 
-
-    @Override
-    public void createBlobStoreEntity(final Entity entity, final ValueDayHolder holder) {
-
-
-     //   logger.info("createBlobStoreEntity");
-
-        final String json = gson.toJson(holder.getValues());
-
-        Value mostRecent = null;
-        for (Value value : holder.getValues()) {
-            if (mostRecent == null) {
-                mostRecent = value;
-            }
-            else if (mostRecent.getTimestamp().getTime() < value.getTimestamp().getTime()) {
-                mostRecent = value;
-            }
-
-        }
-        saveSnapshot(entity, mostRecent);
-        Range<Date> range = holder.getTimeRange();
-
-        final Date earliestForDay = range.lowerEndpoint();
-
-
-        String root = settingsService.getSetting(ServerSetting.storeDirectory);
-        String FILENAME =  root + "/" + entity.getKey() + "/" + holder.getStartOfDay().getTime() + "/" + earliestForDay.getTime();//store.getId();
-        // GcsService gcsService = GcsServiceFactory.createGcsService();
-        writeFile(json, FILENAME);
-    }
-
     @Override
     public void deleteAllData(Point point) {
-        final String key = point.getKey() + SNAPSHOT;
+        final String key = point.getKey() + StorageIO.SNAPSHOT;
         try {
             String root = settingsService.getSetting(ServerSetting.storeDirectory);
             FileUtils.deleteDirectory(new File(root + "/" + point.getKey()));
@@ -300,60 +182,30 @@ public class BlobStoreImpl implements BlobStore {
 
     }
 
-    private void writeFile(String json, String FILENAME) {
-
+    @Override
+    public void writeFile(String body, String filename) {
 
         try {
-            FileUtils.writeStringToFile(new File(FILENAME), json);
-
-
+            FileUtils.writeStringToFile(new File(filename), body);
         }
         catch (Exception e) {
             logger.info(e.getMessage());
         }
     }
 
+    private void deleteAndRestore(StorageIO storageIO, ValueService valueService, Entity entity,  List<Value> retObj, List<String> allReadFiles) {
 
-//    public static boolean isGzipped(File f) {
-//
-//        InputStream is = null;
-//        try {
-//            is = new FileInputStream(f);
-//            byte [] signature = new byte[2];
-//            int nread = is.read( signature ); //read the gzip signature
-//            return nread == 2 && signature[ 0 ] == (byte) 0x1f && signature[ 1 ] == (byte) 0x8b;
-//        } catch (IOException e) {
-//
-//            return false;
-//        } finally {
-//            Closer.closeSilently(is);
-//        }
-//    }
 
-//    private static class Closer {
-//
-//        public static void closeSilently(Object... xs) {
-//            // Note: on Android API levels prior to 19 Socket does not implement Closeable
-//            for (Object x : xs) {
-//                if (x != null) {
-//                    try {
-//
-//                        if (x instanceof Closeable) {
-//                            ((Closeable)x).close();
-//                        } else if (x instanceof Socket) {
-//                            ((Socket)x).close();
-//                        } else if (x instanceof DatagramSocket) {
-//                            ((DatagramSocket)x).close();
-//                        } else {
-//
-//                            throw new RuntimeException("cannot close "+x);
-//                        }
-//                    } catch (Throwable e) {
-//
-//                    }
-//                }
-//            }
-//        }
-//    }
+        if (allReadFiles.size() > 1) {
+            for (String s : allReadFiles) {
+                FileUtils.deleteQuietly(new File(s));
+
+
+            }
+            valueService.storeValues(storageIO, entity, retObj);
+        }
+
+    }
+
 
 }

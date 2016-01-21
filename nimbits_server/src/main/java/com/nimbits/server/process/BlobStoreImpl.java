@@ -45,25 +45,26 @@ public class BlobStoreImpl implements BlobStore {
 
     private final Logger logger = Logger.getLogger(BlobStoreImpl.class.getName());
     private NimbitsCache nimbitsCache;
-    private StorageIOImpl storageIO;
+
     private Defragmenter defragmenter;
 
 
     private SettingsService settingsService;
 
     public BlobStoreImpl(NimbitsCache nimbitsCache,
-                         StorageIOImpl storageIO,
+
                          Defragmenter defragmenter,
                          SettingsService settingsService) {
 
         this.nimbitsCache = nimbitsCache;
-        this.storageIO = storageIO;
+
         this.defragmenter = defragmenter;
         this.settingsService = settingsService;
     }
 
     @Override
-    public List<Value> getSeries(final ValueService valueService,
+    public List<Value> getSeries(
+            final StorageIO storageIO, final ValueService valueService,
                                  final Entity entity,
                           final Optional<Range<Date>> timespan,
                           final Optional<Range<Integer>> range,
@@ -121,7 +122,7 @@ public class BlobStoreImpl implements BlobStore {
                     Collections.reverse(filePaths);
 
                     for (String sortedFilePath : filePaths) {
-                        List<Value> values = readValuesFromFile(sortedFilePath);
+                        List<Value> values = readValuesFromFile(storageIO, sortedFilePath);
                         allvalues.addAll(values);
                         allReadFiles.add(sortedFilePath);
 
@@ -148,7 +149,7 @@ public class BlobStoreImpl implements BlobStore {
 
 
     @Override
-    public List<Value> readValuesFromFile(String path) {
+    public List<Value> readValuesFromFile(StorageIO storageIO, String path) {
 
 
         try {

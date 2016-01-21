@@ -8,7 +8,7 @@
     <artifactId>com.nimbits.nimbits_client</artifactId>
     <version>${nimbits_version}-SNAPSHOT</version>
     <properties>
-        <nimbits_version>3.9.28</nimbits_version>
+        <nimbits_version>3.9.29</nimbits_version>
     </properties>
 
     <packaging>jar</packaging>
@@ -47,13 +47,13 @@
             <artifactId>jline</artifactId>
             <version>0.9.9</version>
         </dependency>
+
         <dependency>
             <groupId>javax.websocket</groupId>
             <artifactId>javax.websocket-api</artifactId>
             <version>1.0</version>
             <scope>compile</scope>
         </dependency>
-
 
         <dependency>
             <groupId>com.nimbits</groupId>
@@ -69,7 +69,6 @@
             <scope>compile</scope>
         </dependency>
 
-
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-util</artifactId>
@@ -80,10 +79,7 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>19.0</version>
-
         </dependency>
-
-
 
         <dependency>
             <groupId>commons-logging</groupId>

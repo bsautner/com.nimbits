@@ -1,6 +1,7 @@
 package com.nimbits.client.io;
 
 import com.google.common.base.Optional;
+import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.calculation.Calculation;
@@ -9,6 +10,7 @@ import com.nimbits.client.model.connection.Connection;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.hal.ValueContainer;
 import com.nimbits.client.model.instance.Instance;
+import com.nimbits.client.model.file.FileModel;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.socket.Socket;
@@ -446,6 +448,58 @@ public class Nimbits {
             return Optional.absent();
         }
 
+    }
+
+    public void uploadFile(FileModel fileModel) {
+       api.uploadFile(fileModel.getId(), fileModel.getEncoded(), new Callback<Void>() {
+           @Override
+           public void success(Void aVoid, Response response) {
+
+           }
+
+           @Override
+           public void failure(RetrofitError retrofitError) {
+
+           }
+       });
+    }
+
+    public Optional<String> getFile(String id) {
+        try {
+            String s = api.getFile(id);
+            return Optional.of(s);
+        } catch (Exception e) {
+            return Optional.absent();
+        }
+
+    }
+
+    public void deleteFile(String id) {
+        api.deleteFile(id, new Callback<Void>() {
+            @Override
+            public void success(Void aVoid, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+            }
+        });
+    }
+
+    public void updateFile(FileModel fileModel) {
+        api.updateFile(fileModel.getId(), fileModel.getEncoded(), new Callback<Void>() {
+            @Override
+            public void success(Void aVoid, Response response) {
+
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+
+            }
+        });
     }
 
 

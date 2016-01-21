@@ -17,6 +17,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.data.DataProcessor;
+import com.nimbits.server.geo.GeoSpatialDao;
 import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.transaction.calculation.CalculationService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
@@ -41,6 +42,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void process(
+            final GeoSpatialDao geoSpatialDao,
             final TaskService taskService,
             final UserService userService,
             final EntityDao entityDao,
@@ -53,11 +55,12 @@ public class TaskServiceImpl implements TaskService {
             final SubscriptionService subscriptionService,
             final CalculationService calculationService,
             final DataProcessor dataProcessor,
-            final User user, final Point point, final Value value) {
+            final User user, final Point point,
+            final Value value) {
 
         try {
             logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
-            valueTask.process(this, userService, entityDao, valueTask, entityService, blobStore, valueService,
+            valueTask.process(geoSpatialDao, this, userService, entityDao, valueTask, entityService, blobStore, valueService,
                     summaryService, syncService, subscriptionService, calculationService,
                     dataProcessor, user, point, value);
         } catch (Exception e) {

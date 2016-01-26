@@ -26,18 +26,21 @@
 
     <bean id="userService" class="com.nimbits.server.transaction.user.service.UserServiceImpl">
 
-        <constructor-arg ref="userDao"/>
-        <constructor-arg ref="settingsService"/>
-        <constructor-arg ref="authService"/>
-        <constructor-arg ref="entityDao"/>
+
+        <constructor-arg index="0" ref="nimbitsCache"/>
+        <constructor-arg index="1" ref="userDao"/>
+        <constructor-arg index="2" ref="settingsService"/>
+        <constructor-arg index="3" ref="authService"/>
+        <constructor-arg index="4" ref="entityDao"/>
     </bean>
 
     <bean id="entityService" class="com.nimbits.server.transaction.entity.EntityServiceImpl">
 
+
         <constructor-arg index="0" ref="emailService"/>
         <constructor-arg index="1" ref="connectedClients"/>
         <constructor-arg index="2" ref="entityDao"/>
-        <constructor-arg index="3" ref="blobStore"/>
+        <constructor-arg index="3" ref="storageIO"/>
     </bean>
 
     <bean id="authService" class="com.nimbits.server.auth.AuthServiceImpl">
@@ -66,16 +69,18 @@
     </bean>
 
     <bean id="blobStore" class="com.nimbits.server.process.BlobStoreImpl" >
+
         <constructor-arg index="0" ref="nimbitsCache"/>
-        <constructor-arg index="1" ref="storageIO"/>
-        <constructor-arg index="2" ref="defragmenter"/>
-        <constructor-arg index="3" ref="settingsService"/>
+        <constructor-arg index="1" ref="defragmenter"/>
+        <constructor-arg index="2" ref="settingsService"/>
     </bean>
 
 
 
     <bean id="storageIO" class="com.nimbits.server.process.StorageIOImpl">
 
+        <constructor-arg index="0" ref="blobStore"/>
+        <constructor-arg index="1" ref="nimbitsCache"/>
     </bean>
     <bean id="entityDao" class="com.nimbits.server.transaction.entity.dao.EntityDaoImpl">
         <constructor-arg ref="recursionValidation"/>
@@ -142,16 +147,18 @@
 
     <!--REST API -->
     <bean id="getAction" name="getAction" class="com.nimbits.server.api.v3.actions.get.GetAction">
+
         <constructor-arg index="0" ref="entityDao"/>
         <constructor-arg index="1" ref="entityService"/>
         <constructor-arg index="2" ref="valueService"/>
         <constructor-arg index="3" ref="userService"/>
-        <constructor-arg index="4" ref="blobStore"/>
+        <constructor-arg index="4" ref="storageIO"/>
         <constructor-arg index="5" ref="GeoSpatialDao"/>
         <constructor-arg index="6" ref="userDao"/>
     </bean>
 
     <bean id="postAction" name="postAction" class="com.nimbits.server.api.v3.actions.post.PostAction">
+
         <constructor-arg index="0" ref="GeoSpatialDao"/>
         <constructor-arg index="1" ref="entityService"/>
         <constructor-arg index="2" ref="valueService"/>
@@ -159,7 +166,7 @@
         <constructor-arg index="4" ref="entityDao"/>
         <constructor-arg index="5" ref="taskService"/>
         <constructor-arg index="6" ref="valueTask"/>
-        <constructor-arg index="7" ref="blobStore"/>
+        <constructor-arg index="7" ref="storageIO"/>
         <constructor-arg index="8" ref="summaryService"/>
         <constructor-arg index="9" ref="syncService"/>
         <constructor-arg index="10" ref="subscriptionService"/>
@@ -235,7 +242,7 @@
         <constructor-arg index="9" ref="subscriptionService"/>
         <constructor-arg index="10" ref="calculationService"/>
         <constructor-arg index="11" ref="valueTask"/>
-        <constructor-arg index="12" ref="blobStore"/>
+        <constructor-arg index="12" ref="storageIO"/>
         <constructor-arg index="13" ref="summaryService"/>
         <constructor-arg index="14" ref="syncService"/>
         <constructor-arg index="15" ref="dataProcessor"/>

@@ -109,8 +109,8 @@ public class Nimbits {
      *
      * @return the authentication user from /service/v3/me
      */
-    public User getMe() {
-        return api.getMe();
+    public User getMe(boolean includeChildren) {
+        return api.getMe(includeChildren);
     }
 
     /**

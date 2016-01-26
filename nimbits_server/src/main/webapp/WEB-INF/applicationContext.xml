@@ -26,10 +26,12 @@
 
     <bean id="userService" class="com.nimbits.server.transaction.user.service.UserServiceImpl">
 
-        <constructor-arg ref="userDao"/>
-        <constructor-arg ref="settingsService"/>
-        <constructor-arg ref="authService"/>
-        <constructor-arg ref="entityDao"/>
+
+        <constructor-arg index="0" ref="nimbitsCache"/>
+        <constructor-arg index="1" ref="userDao"/>
+        <constructor-arg index="2" ref="settingsService"/>
+        <constructor-arg index="3" ref="authService"/>
+        <constructor-arg index="4" ref="entityDao"/>
     </bean>
 
     <bean id="entityService" class="com.nimbits.server.transaction.entity.EntityServiceImpl">
@@ -67,10 +69,10 @@
     </bean>
 
     <bean id="blobStore" class="com.nimbits.server.process.BlobStoreImpl" >
+
         <constructor-arg index="0" ref="nimbitsCache"/>
-        <constructor-arg index="1" ref="storageIO"/>
-        <constructor-arg index="2" ref="defragmenter"/>
-        <constructor-arg index="3" ref="settingsService"/>
+        <constructor-arg index="1" ref="defragmenter"/>
+        <constructor-arg index="2" ref="settingsService"/>
     </bean>
 
 

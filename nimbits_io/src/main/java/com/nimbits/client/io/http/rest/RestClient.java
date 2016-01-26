@@ -32,7 +32,7 @@ public interface RestClient {
     User login();
 
     @GET(API + "/me")
-    User getMe();
+    User getMe(@Query("children") boolean includeChildren);
 
     @POST(API)
     User addUser(@Body User newUser);
@@ -153,16 +153,16 @@ public interface RestClient {
     @GET(API + "/me")
     Socket findSocket(@Query("name") String entityName, @Query("type") int entityType);
 
-    @POST(API + "/photo/{uuid}")
+    @POST(API + "/file/{uuid}")
     void uploadFile(@Path("uuid") String uuid, @Body String encoded, Callback<Void> callback);
 
-    @GET(API + "/photo/{uuid}")
+    @GET(API + "/file/{uuid}")
     String getFile(@Path("uuid") String uuid);
 
-    @DELETE(API + "/photo/{uuid}")
+    @DELETE(API + "/file/{uuid}")
     void deleteFile(@Path("uuid") String uuid, Callback<Void> callback);
 
-    @PUT(API + "/photo/{uuid}")
+    @PUT(API + "/file/{uuid}")
     void updateFile(@Path("uuid") String uuid, @Body String encoded, Callback<Void> callback);
 
 

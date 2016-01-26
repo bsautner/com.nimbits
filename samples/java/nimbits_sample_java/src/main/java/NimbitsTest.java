@@ -41,7 +41,7 @@ public abstract class NimbitsTest  {
         try {
 
             log("Trying to get existing user");
-            user = nimbits.getMe();
+            user = nimbits.getMe(true);
         } catch (Throwable throwable) {
             //user not found, let's create on - the first user will be an admin of the server
             log("Server returned error - creating user instead " + throwable.getMessage());
@@ -54,7 +54,7 @@ public abstract class NimbitsTest  {
 
         log("Got User:" + user.toString());
 
-        return nimbits.getMe();
+        return nimbits.getMe(true);
 
 
 

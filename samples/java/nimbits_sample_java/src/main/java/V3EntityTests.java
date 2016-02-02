@@ -31,6 +31,7 @@ import com.nimbits.client.model.webhook.WebHookModel;
 import com.nimbits.client.io.Nimbits;
 import org.apache.http.util.TextUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
@@ -82,19 +83,13 @@ public class V3EntityTests extends NimbitsTest {
 
         testSummary();
 
-
-
-
-
-
-
         log("Done " + getClass().getName());
 
     }
 
     private void testValue() throws InterruptedException {
         String foo = "foo";
-
+        Date start = new Date();
         Point inputPoint = nimbits.addPoint(category, new PointModel.Builder()
                 .name(UUID.randomUUID().toString())
                 .highAlarmOn(true)
@@ -106,6 +101,18 @@ public class V3EntityTests extends NimbitsTest {
         log(value.toString());
         if (! foo.equals(value.getMetaData())) {
             error("value did not record correctly");
+        }
+
+        Random random  = new Random();
+        for (int i = 0; i < 100; i++) {
+            nimbits.recordValue(inputPoint, new Value.Builder().doubleValue(random.nextDouble() * 100).meta(foo).create());
+
+        }
+
+        int count = 10;
+        List<Value> values = nimbits.getValues(inputPoint, start, new Date(), 10, foo);
+        if (values.size() != count) {
+            error("Didn't get the count i expected");
         }
 
 

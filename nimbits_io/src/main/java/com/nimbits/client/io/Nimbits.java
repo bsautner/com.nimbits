@@ -139,6 +139,10 @@ public class Nimbits {
         return api.getData(entity.getUUID(), start.getTime(), end.getTime(), mask);
     }
 
+    public List<Value> getValues(Entity entity, Date start, Date end, Integer count, String mask) {
+        return api.getData(entity.getUUID(), start.getTime(), end.getTime(), mask, count);
+    }
+
     public List<Value> getValues(Entity entity, Integer count) {
         return api.getData(entity.getUUID(), count);
     }

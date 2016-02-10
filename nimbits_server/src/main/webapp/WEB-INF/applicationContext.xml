@@ -122,9 +122,8 @@
         <constructor-arg index="2" ref="valueTask"/>
         <constructor-arg index="3" ref="xmppService"/>
         <constructor-arg index="4" ref="connectedClients"/>
-        <constructor-arg index="5" ref="nimbitsCache"/>
-        <constructor-arg index="6" ref="entityService"/>
-        <constructor-arg index="7" ref="settingsService"/>
+        <constructor-arg index="5" ref="entityService"/>
+        <constructor-arg index="6" ref="settingsService"/>
     </bean>
 
 

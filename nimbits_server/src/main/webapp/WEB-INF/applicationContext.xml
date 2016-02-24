@@ -34,10 +34,12 @@
 
     <bean id="entityService" class="com.nimbits.server.transaction.entity.EntityServiceImpl">
 
-        <constructor-arg index="0" ref="emailService"/>
-        <constructor-arg index="1" ref="connectedClients"/>
-        <constructor-arg index="2" ref="entityDao"/>
-        <constructor-arg index="3" ref="blobStore"/>
+
+        <constructor-arg index="0" ref="GeoSpatialDao"/>
+        <constructor-arg index="1" ref="emailService"/>
+        <constructor-arg index="2" ref="connectedClients"/>
+        <constructor-arg index="3" ref="entityDao"/>
+        <constructor-arg index="4" ref="blobStore"/>
     </bean>
 
     <bean id="authService" class="com.nimbits.server.auth.AuthServiceImpl">

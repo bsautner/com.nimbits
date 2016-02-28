@@ -62,8 +62,7 @@ public class UserServiceImpl implements UserService {
     public static final String ERROR1 = "Could not authenticate your request.";
 
     public static final int LIMIT = 1000;
-    public static final String HTTP_WWW_NIMBITS_COM_SERVICE_ADMIN_USER = "http://www.nimbits.com/service/admin/user";
-    private Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
+     private Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
 
 
     private final UserDao userDao;
@@ -284,39 +283,12 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = (User) entityService.addUpdateIncompleteEntity(valueService, newUser, newUser);
-        if (! Config.EE) { //TODO - build varient EE Edition
-            registerUser(user);
-        }
+
         return user;
 
     }
 
-    private void registerUser(final User user) {
-        Gson gson =  GsonFactory.getInstance(true);
 
-
-        try {
-            String message = gson.toJson(user);
-            URL url = new URL(HTTP_WWW_NIMBITS_COM_SERVICE_ADMIN_USER);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setDoOutput(true);
-            connection.setRequestMethod("POST");
-
-            OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-            writer.write(message);
-            writer.close();
-
-            if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                logger.info("sent user to nimbits.com");
-            } else {
-                logger.log(Level.SEVERE, "error sending user info to nimbits.com: "
-                        + connection.getResponseCode() + " "
-                        + connection.getResponseMessage());
-            }
-        } catch ( Exception e) {
-            logger.log(Level.SEVERE, "error sending user info to nimbits.com", e);
-        }
-    }
 
     @Override
     public User getAdmin() {
@@ -568,13 +540,7 @@ public class UserServiceImpl implements UserService {
         return entityType;
     }
 
-    protected AccessKey createAccessKey(final Entity u) {
 
-        return new AccessKeyModel.Builder().name(u.getName()).owner(u.getKey()).parent(u.getKey())
-                .code(u.getName().getValue()).create();
-
-
-    }
 
 
 }

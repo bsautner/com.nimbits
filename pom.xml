@@ -26,6 +26,8 @@
     <version>3.9.31</version>
     <name>Multi Chapter Simple Parent Project</name>
 
+
+
     <modules>
       <module>nimbits_io</module>
       <module>nimbits_core</module>
@@ -33,6 +35,30 @@
       <module>nimbits_gae</module>
       
     </modules>
+
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <!--<scm>-->
+
+    <!--<connection>scm:git:git@github.com:bsautner/nimbits-private.git</connection>-->
+    <!--<developerConnection>scm:git:git@github.com:bsautner/nimbits-private.git</developerConnection>-->
+    <!--<url>git@github.com:bsautner/nimbits-private.git</url>-->
+    <!--</scm>-->
+
+    <developers>
+        <developer>
+            <id>bsautner</id>
+            <name>Benjamin Sautner</name>
+            <email>bsautner@gmail.com</email>
+        </developer>
+    </developers>
 
     <build>
         <pluginManagement>

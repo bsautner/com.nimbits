@@ -9,6 +9,9 @@ and log data from a java or android app.
 
 More information and documentation is available at [www.nimbits.com] (http://www.nimbits.com)
 
+[![Build Status](http://www.nimbits.com:8080/buildStatus/icon?job=nimbits_parent)](http://www.nimbits.com:8080/job/nimbits_parent/)
+
+
 ## Project Structure
 
 - nimbits_core: core project containing the guts of nimbits server

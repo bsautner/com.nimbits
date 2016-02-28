@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+
+<!--
+  ~ Copyright 2016 Benjamin Sautner
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+
+    <listener>
+        <listener-class>com.nimbits.server.ApplicationListener</listener-class>
+    </listener>
+
+    <filter>
+        <filter-name>gwtCacheControlFilter</filter-name>
+        <filter-class>com.nimbits.server.api.filter.GWTCacheControlFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>gwtCacheControlFilter</filter-name>
+        <url-pattern>/nimbits/rpc/*</url-pattern>
+    </filter-mapping>
+    <filter>
+        <filter-name>authFilter</filter-name>
+        <filter-class>com.nimbits.server.api.filter.AuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>authFilter</filter-name>
+        <url-pattern>/service/v2/*</url-pattern>
+
+    </filter-mapping>
+
+
+
+    <filter>
+        <filter-name>rest filter</filter-name>
+        <filter-class>com.nimbits.server.api.v3.filter.RestApiAuthFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>rest filter</filter-name>
+        <url-pattern>/service/v3/rest/*</url-pattern>
+
+    </filter-mapping>
+    <servlet>
+        <servlet-name>rest api</servlet-name>
+        <servlet-class>com.nimbits.server.api.v3.RestApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>rest api</servlet-name>
+        <url-pattern>/service/v3/rest/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>dataTableApi</servlet-name>
+        <servlet-class>com.nimbits.server.api.DataTableApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dataTableApi</servlet-name>
+        <url-pattern>/service/v2/datatable</url-pattern>
+    </servlet-mapping>
+
+
+    <!--<servlet>-->
+        <!--<servlet-name>SystemServiceServlet</servlet-name>-->
+        <!--<servlet-class>com.google.api.server.spi.SystemServiceServlet</servlet-class>-->
+        <!--<init-param>-->
+            <!--<param-name>services</param-name>-->
+            <!--<param-value>com.nimbits.server.api.UserEndPoint</param-value>-->
+        <!--</init-param>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>SystemServiceServlet</servlet-name>-->
+        <!--<url-pattern>/_ah/spi/*</url-pattern>-->
+    <!--</servlet-mapping>-->
+
+    <servlet>
+        <servlet-name>sessionApi</servlet-name>
+        <servlet-class>com.nimbits.server.api.SessionApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>sessionApi</servlet-name>
+        <url-pattern>/service/v2/session</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>entityApi</servlet-name>
+        <servlet-class>com.nimbits.server.api.EntityApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>entityApi</servlet-name>
+        <url-pattern>/service/v2/entity</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>timeApi</servlet-name>
+        <servlet-class>com.nimbits.server.api.TimeApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>timeApi</servlet-name>
+        <url-pattern>/service/v2/time</url-pattern>
+    </servlet-mapping>
+
+    <!--<servlet>-->
+        <!--<servlet-name>userApi</servlet-name>-->
+        <!--<servlet-class>com.nimbits.server.api.UserApi</servlet-class>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>userApi</servlet-name>-->
+        <!--<url-pattern>/service/v2/user</url-pattern>-->
+    <!--</servlet-mapping>-->
+
+
+    <servlet>
+        <servlet-name>versionApi</servlet-name>
+        <servlet-class>com.nimbits.server.api.VersionApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>versionApi</servlet-name>
+        <url-pattern>/service/v2/version</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>treeApi</servlet-name>
+        <servlet-class>com.nimbits.server.api.TreeApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>treeApi</servlet-name>
+        <url-pattern>/service/v2/tree</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>seriesApi</servlet-name>
+        <servlet-class>com.nimbits.server.api.SeriesApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>seriesApi</servlet-name>
+        <url-pattern>/service/v2/series</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>valueApi</servlet-name>
+        <servlet-class>com.nimbits.server.api.ValueApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>valueApi</servlet-name>
+        <url-pattern>/service/v2/value/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>batchApi</servlet-name>
+        <servlet-class>com.nimbits.server.api.BatchApi</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>batchApi</servlet-name>
+        <url-pattern>/service/v2/batch</url-pattern>
+    </servlet-mapping>
+    <!--end v2 services-->
+
+
+    <!--XMPP-->
+    <servlet>
+        <servlet-name>xmpp</servlet-name>
+        <servlet-class>com.nimbits.server.api.xmpp.XMPPReceiverServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>xmpp</servlet-name>
+        <url-pattern>/_ah/xmpp/message/chat/</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>xmppPresenceAvailable</servlet-name>
+        <servlet-class>com.nimbits.server.api.xmpp.XMPPPresenceAvailableServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>xmppPresenceAvailable</servlet-name>
+        <url-pattern>/_ah/xmpp/presence/available/</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>xmppPresenceProbe</servlet-name>
+        <servlet-class>com.nimbits.server.api.xmpp.XMPPPresenceProbeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>xmppPresenceProbe</servlet-name>
+        <url-pattern>/_ah/xmpp/presence/probe/</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>xmppPresenceUnavailable</servlet-name>
+        <servlet-class>com.nimbits.server.api.xmpp.XMPPPresenceUnavailableServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>xmppPresenceUnavailable</servlet-name>
+        <url-pattern>/_ah/xmpp/presence/unavailable/</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>remote_api</servlet-name>
+        <servlet-class>com.google.apphosting.utils.remoteapi.RemoteApiServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>remote_api</servlet-name>
+        <url-pattern>/_ah/remote_api</url-pattern>
+    </servlet-mapping>
+
+
+
+
+
+    <servlet>
+        <servlet-name>valueTask</servlet-name>
+
+        <servlet-class>com.nimbits.server.process.task.ValueTask</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>valueTask</servlet-name>
+        <url-pattern>/task/value</url-pattern>
+    </servlet-mapping>
+
+
+
+    <!--cron-->
+
+    <servlet>
+        <servlet-name>reportCron</servlet-name>
+        <servlet-class>com.nimbits.server.process.cron.ReportCron</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>reportCron</servlet-name>
+        <url-pattern>/cron/reportCron</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>orphansCron</servlet-name>
+        <servlet-class>com.nimbits.server.process.cron.DeleteOrphanBlobCron</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>orphansCron</servlet-name>
+        <url-pattern>/cron/orphansCron</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>systemCron</servlet-name>
+
+        <servlet-class>com.nimbits.server.process.cron.SystemCron</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>systemCron</servlet-name>
+        <url-pattern>/cron/systemCron</url-pattern>
+    </servlet-mapping>
+
+
+    <!--end cron -->
+
+
+    <servlet>
+        <servlet-name>orphans</servlet-name>
+        <servlet-class>com.nimbits.server.process.cron.DeleteOrphanBlobCron</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>orphans</servlet-name>
+        <url-pattern>/service/orphans</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>time</servlet-name>
+        <servlet-class>com.nimbits.server.api.TimeApi</servlet-class>
+
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>time</servlet-name>
+        <url-pattern>/service/time</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>WebSocket</servlet-name>
+        <servlet-class>com.nimbits.server.socket.SocketEndpoint</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>WebSocket</servlet-name>
+        <url-pattern>/socket/*</url-pattern>
+    </servlet-mapping>
+
+
+    <!--gwt rpc services -->
+    <servlet>
+        <servlet-name>com.nimbits EntityService</servlet-name>
+        <servlet-class>com.nimbits.server.transaction.entity.service.EntityServiceRpcImpl</servlet-class>
+    </servlet>
+
+
+    <servlet>
+        <servlet-name>com.nimbits SettingsService</servlet-name>
+        <servlet-class>com.nimbits.server.SettingServiceRpcImpl</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>com.nimbits ValueService</servlet-name>
+        <servlet-class>com.nimbits.server.transaction.value.service.ValueServiceRpcImpl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>com.nimbits UserService</servlet-name>
+        <servlet-class>com.nimbits.server.transaction.user.service.UserServiceRpcImpl</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>com.nimbits UserService</servlet-name>
+        <url-pattern>/nimbits/rpc/userService</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>com.nimbits EntityService</servlet-name>
+        <url-pattern>/nimbits/rpc/entityService</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>com.nimbits SettingsService</servlet-name>
+        <url-pattern>/nimbits/rpc/settingsService</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>com.nimbits ValueService</servlet-name>
+        <url-pattern>/nimbits/rpc/valueService</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>com.nimbits XMPPService</servlet-name>
+        <servlet-class>com.nimbits.server.XmppRpcServiceImpl</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>com.nimbits XMPPService</servlet-name>
+        <url-pattern>/nimbits/rpc/xmppService</url-pattern>
+    </servlet-mapping>
+
+
+    <servlet>
+        <servlet-name>unavailableApis</servlet-name>
+        <servlet-class>com.nimbits.server.api.UnavailableApi</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>unavailableApis</servlet-name>
+        <url-pattern>/service/currentvalue</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>unavailableApis</servlet-name>
+        <url-pattern>/service/batch</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>unavailableApis</servlet-name>
+        <url-pattern>/service/value</url-pattern>
+    </servlet-mapping>
+
+
+    <!--<security-constraint>-->
+    <!--<web-resource-collection>-->
+    <!--<url-pattern>/cron/*</url-pattern>-->
+    <!--</web-resource-collection>-->
+    <!--<auth-constraint>-->
+    <!--<role-name>admin</role-name>-->
+    <!--</auth-constraint>-->
+    <!--</security-constraint>-->
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>admin</web-resource-name>
+            <url-pattern>/admin/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>task</web-resource-name>
+            <url-pattern>/task/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>appstats</web-resource-name>
+            <url-pattern>/appstats/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>admin</role-name>
+        </auth-constraint>
+    </security-constraint>
+</web-app>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+
+<!--
+  ~ Copyright 2016 Benjamin Sautner
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<ApplicationManifest xmlns="http://schemas.google.com/ApplicationManifest/2009">
+    <Name>Nimbits</Name>
+    <Description>Nimbits Process Data Historian</Description>
+
+    <!-- Administrators and users will be sent to this URL for application support -->
+    <Support>
+        <Link rel="support" href="http://www.nimbits.com?content=domain"/>
+    </Support>
+
+    <!-- Show this link in Google's universal navigation for all users -->
+    <Extension id="navLink" type="link">
+        <Name>Nimbits</Name>
+        <Url>https://cloud.nimbits.com/openid?hd=${DOMAIN_NAME}</Url>
+        <Scope ref="docsFeed"/>
+        <Scope ref="calendarAPI"/>
+        <Scope ref="spreadsheetsFeed"/>
+        <Scope ref="contentFeed"/>
+    </Extension>
+
+    <!-- Declare our OpenID realm so our app is white listed -->
+    <Extension id="realm" type="openIdRealm">
+        <Url>https://cloud.nimbits.com</Url>
+    </Extension>
+
+    <Scope id="docsFeed">
+
+        <Url>https://docs.google.com/feeds/</Url>
+
+        <Reason>Nimbits can create new spreadsheets and export documents</Reason>
+
+    </Scope>
+
+    <Scope id="contentFeed">
+        <Url>https://docs.googleusercontent.com/</Url>
+        <Reason>Nimbits can list documents in your drive</Reason>
+    </Scope>
+    <Scope id="spreadsheetsFeed">
+
+        <Url>https://spreadsheets.google.com/feeds/</Url>
+
+        <Reason>Nimbits can insert data into a google spreadsheet for export.</Reason>
+
+    </Scope>
+
+    <!--&lt;!&ndash; Need access to the Calendar API &ndash;&gt;-->
+    <Scope id="calendarAPI">
+        <Url>https://www.google.com/calendar/feeds/</Url>
+        <Reason>Nimbits can add reminders for idle points</Reason>
+    </Scope>
+    <!--<Edition id="free">-->
+    <!--<Name>nimbits</Name>-->
+    <!--<Extension ref="navLink"/>-->
+    <!--</Edition>-->
+</ApplicationManifest>

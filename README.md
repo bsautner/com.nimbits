@@ -1,13 +1,25 @@
-com.nimbits
-===========
+## About
 
-Nimbits is a free, social and open source process data historian, data logger and M2M system that is built on Google App Engine cloud Architecture. 
+nimbits server is a flexible API designed to store and process time and geo stamp data,
+filter incoming data and trigger events based on rules.  It stored data in a way that makes
+it easy to retrieve chucks of data sets using date ranges or gps coordinates.
 
-Release Notes:
+nimbits.io is a java client that wraps the api to make it easy to automated the server
+and log data from a java or android app.
 
-* Multi charting when you click on a folder
-* Web Sockets for Jetty More Reliable
-* Login as a nimbits user without a Google account
-* New Command Line Interface also can be used via an xmpp chat client
-* All outgoing emails are now nicely formatted html
-* Reset passwords, create accounts Workflows.
+## Licence
+
+Copyright 2016 Benjamin Sautner
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+

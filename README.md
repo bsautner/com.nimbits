@@ -1,11 +1,20 @@
 ## About
 
-nimbits server is a flexible API designed to store and process time and geo stamp data,
+Nimbits server is a flexible API designed to store and process time and geo stamp data,
 filter incoming data and trigger events based on rules.  It stored data in a way that makes
 it easy to retrieve chucks of data sets using date ranges or gps coordinates.
 
 nimbits.io is a java client that wraps the api to make it easy to automated the server
 and log data from a java or android app.
+
+## Project Structure
+
+- nimbits_core: core project containing the guts of nimbits server
+- nimbits_server: an implementation of nimbits_core for J2EE servers like jetty or tomcat with an embedded H2 Database
+- nimbits_gae: an implementation of nimbits_core for Google App Engine
+- nimbits_io: the java client and wrapper for the API
+- samples - various samples that use nimbits io or other clients to interact with the server
+
 
 ## Licence
 

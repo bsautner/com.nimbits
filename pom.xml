@@ -21,7 +21,7 @@
     <artifactId>nimbits-parent</artifactId>
     <packaging>pom</packaging>
 
-    <version>3.9.37-SNAPSHOT</version>
+    <version>3.9.38-SNAPSHOT</version>
     <properties>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -77,9 +77,10 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.5.1</version>
                     <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
+                        <source>1.7</source>
+                        <target>1.7</target>
                     </configuration>
                 </plugin>
             </plugins>

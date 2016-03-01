@@ -20,13 +20,13 @@
     <packaging>war</packaging>
     <groupId>com.nimbits</groupId>
     <artifactId>nimbits_server</artifactId>
-    <version>3.9.37-SNAPSHOT</version>
+    <version>3.9.38-SNAPSHOT</version>
     <name>Nimbits Server</name>
     <url>http://nimbits.com</url>
     <parent>
         <groupId>com.nimbits</groupId>
         <artifactId>nimbits-parent</artifactId>
-        <version>3.9.37-SNAPSHOT</version>
+        <version>3.9.38-SNAPSHOT</version>
     </parent>
     <description>Nimbits Server for the J2EE Platform</description>
 
@@ -77,14 +77,14 @@
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_core</artifactId>
-            <version>3.9.37-SNAPSHOT</version>
+            <version>3.9.38-SNAPSHOT</version>
 
         </dependency>
 
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_io</artifactId>
-            <version>3.9.37-SNAPSHOT</version>
+            <version>3.9.38-SNAPSHOT</version>
 
         </dependency>
 
@@ -429,15 +429,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.1</version>
-                <configuration>
-                    <source>1.7</source>
-                    <target>1.7</target>
-                </configuration>
             </plugin>
 
             <plugin>

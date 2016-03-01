@@ -9,14 +9,14 @@
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-simple:1.7.12" />
           <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.12" />
-          <element id="archive" name="nimbits_core-3.9.37-SNAPSHOT.jar">
+          <element id="archive" name="nimbits_core-3.9.36-SNAPSHOT.jar">
             <element id="module-output" name="nimbits_core" />
           </element>
           <element id="library" level="project" name="Maven: com.google.gwt.google-apis:gwt-visualization:1.0.2" />
           <element id="library" level="project" name="Maven: org.apache.directory.studio:org.apache.commons.io:2.4" />
           <element id="library" level="project" name="Maven: commons-io:commons-io:2.4" />
           <element id="library" level="project" name="Maven: net.sf.proguard:proguard-base:5.2.1" />
-          <element id="archive" name="nimbits_io-3.9.37-SNAPSHOT.jar">
+          <element id="archive" name="nimbits_io-3.9.36-SNAPSHOT.jar">
             <element id="module-output" name="nimbits_io" />
           </element>
           <element id="library" level="project" name="Maven: com.squareup.retrofit:retrofit:1.7.0" />

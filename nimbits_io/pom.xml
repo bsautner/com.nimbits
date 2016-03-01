@@ -20,7 +20,7 @@
 
     <groupId>com.nimbits</groupId>
     <artifactId>nimbits_io</artifactId>
-    <version>3.9.34</version>
+    <version>3.9.36-SNAPSHOT</version>
 
     <name>Nimbits IO</name>
     <description>Nimbits Client Input Output Library</description>

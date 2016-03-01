@@ -37,3 +37,5 @@ ehthumbs.db
 Thumbs.db
 */target/*
 */target/**
+*/.idea/**
+.idea

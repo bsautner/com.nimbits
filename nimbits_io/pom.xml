@@ -25,6 +25,14 @@
     <name>Nimbits IO</name>
     <description>Nimbits Client Input Output Library</description>
     <url>http://nimbits.com</url>
+
+    <distributionManagement>
+        <repository>
+            <id>bintray-bsautner-nimbits</id>
+            <name>bsautner-nimbits</name>
+            <url>https://api.bintray.com/maven/bsautner/nimbits/[PACKAGE_NAME]/;publish=1</url>
+        </repository>
+    </distributionManagement>
     
 
 

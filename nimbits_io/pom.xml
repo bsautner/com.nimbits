@@ -55,6 +55,14 @@
         </pluginRepository>
     </pluginRepositories>
 
+    <distributionManagement>
+        <repository>
+            <id>bintray-bsautner-nimbits</id>
+            <name>bsautner-nimbits</name>
+            <url>https://api.bintray.com/maven/${bintray.subject}/${bintray.repo}/${bintray.package}/;publish=1</url>
+        </repository>
+    </distributionManagement>
+
     <build>
         <plugins>
 

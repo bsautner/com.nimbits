@@ -39,7 +39,7 @@
     </facet>
   </component>
   <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_7" inherit-compiler-output="false">
-    <output url="file://$MODULE_DIR$/target/nimbits_server-3.9.39-SNAPSHOT/WEB-INF/classes" />
+    <output url="file://$MODULE_DIR$/target/nimbits_server-3.9.40-SNAPSHOT/WEB-INF/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
@@ -49,7 +49,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: com.nimbits:nimbits_core:3.9.39-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="nimbits_core" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: net.sf.proguard:proguard-base:5.2.1" level="project" />
     <orderEntry type="module" module-name="nimbits_io" />
     <orderEntry type="library" name="Maven: com.squareup.retrofit:retrofit:1.7.0" level="project" />
     <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.3.6" level="project" />
@@ -204,7 +205,7 @@
     <orderEntry type="library" name="Maven: org.apache.maven.scm:maven-scm-api:1.9.4" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.plexus:plexus-utils:3.0.15" level="project" />
     <orderEntry type="library" name="Maven: org.jdom:jdom:1.1" level="project" />
-    <orderEntry type="library" name="Maven: com.nimbits:nimbits_core:sources:3.9.39-SNAPSHOT" level="project" />
+    <orderEntry type="module" module-name="nimbits_core" />
     <orderEntry type="module" module-name="nimbits_io" />
   </component>
 </module>

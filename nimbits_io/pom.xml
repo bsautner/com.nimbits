@@ -30,7 +30,7 @@
         <repository>
             <id>bintray-bsautner-nimbits</id>
             <name>bsautner-nimbits</name>
-            <url>https://api.bintray.com/maven/bsautner/nimbits/com.nimbits;publish=1</url>
+            <url>https://api.bintray.com/maven/bsautner/nimbits/com.nimbits/;publish=1</url>
         </repository>
     </distributionManagement>
     

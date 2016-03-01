@@ -20,7 +20,7 @@
     <packaging>war</packaging>
     <groupId>com.nimbits</groupId>
     <artifactId>nimbits_server</artifactId>
-    <version>3.9.34-SNAPSHOT</version>
+    <version>3.9.34</version>
     <name>Nimbits Server</name>
     <url>http://nimbits.com</url>
 
@@ -73,14 +73,14 @@
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_core</artifactId>
-            <version>3.9.34-SNAPSHOT</version>
+            <version>3.9.34</version>
 
         </dependency>
 
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_io</artifactId>
-            <version>3.9.34-SNAPSHOT</version>
+            <version>3.9.34</version>
 
         </dependency>
 

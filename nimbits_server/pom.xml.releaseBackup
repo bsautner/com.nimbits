@@ -18,20 +18,22 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <packaging>war</packaging>
-
     <groupId>com.nimbits</groupId>
-    <artifactId>nimbits_gae</artifactId>
-    <version>3.9.34</version>
+    <artifactId>nimbits_server</artifactId>
+    <version>3.9.34-SNAPSHOT</version>
+    <name>Nimbits Server</name>
+    <url>http://nimbits.com</url>
 
-
+    <description>Nimbits Server for the J2EE Platform</description>
 
     <properties>
-        <appengine.app.version>1</appengine.app.version>
+
         <gwt.version>2.5.1</gwt.version>
         <gxt.version>2.2.5</gxt.version>
-        <spring.version>4.2.4.RELEASE</spring.version>
-        <appengine.target.version>1.9.32</appengine.target.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.version>4.2.3.RELEASE</spring.version>
+
+        <jetty-jmx.version>8.1.15.v20140411</jetty-jmx.version>
         <datanucleus.version>3.1.2</datanucleus.version>
     </properties>
 
@@ -48,27 +50,54 @@
         </repository>
 
 
-        <!--<repository>-->
-            <!--<id>localhost</id>-->
-            <!--<url>file://${user.home}/.m2/repository</url>-->
+            <!--<repository>-->
+                <!--<id>local</id>-->
+                <!--<url>file://${user.home}/.m2/repository</url>-->
 
-        <!--</repository>-->
+            <!--</repository>-->
+
 
     </repositories>
 
     <pluginRepositories>
-        <pluginRepository>
-            <id>google-staging</id>
-            <name>Google Staging</name>
-            <url>https://oss.sonatype.org/content/repositories/comgoogleappengine-1004/</url>
-        </pluginRepository>
+
         <pluginRepository>
             <id>gwt-maven</id>
             <url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
         </pluginRepository>
     </pluginRepositories>
 
+
     <dependencies>
+
+        <dependency>
+            <groupId>com.nimbits</groupId>
+            <artifactId>nimbits_core</artifactId>
+            <version>3.9.34-SNAPSHOT</version>
+
+        </dependency>
+
+        <dependency>
+            <groupId>com.nimbits</groupId>
+            <artifactId>nimbits_io</artifactId>
+            <version>3.9.34-SNAPSHOT</version>
+
+        </dependency>
+
+
+        <!--nimbits io will use these if available-->
+        <dependency>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>2.0.0</version>
+
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>okhttp-urlconnection</artifactId>
+            <version>2.0.0</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -78,15 +107,25 @@
 
 
         <dependency>
-            <groupId>com.nimbits</groupId>
-            <artifactId>nimbits_core</artifactId>
-            <version>3.9.34</version>
-         </dependency>
+            <groupId>com.dmurph</groupId>
+            <artifactId>JGoogleAnalyticsTracker</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+
+
+
 
         <dependency>
-            <groupId>com.nimbits</groupId>
-            <artifactId>nimbits_io</artifactId>
-            <version>3.9.34</version>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.190</version>
         </dependency>
 
         <dependency>
@@ -95,16 +134,64 @@
             <version>19.0</version>
 
         </dependency>
+
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.16</version>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-websocket</artifactId>
+            <version>${jetty-jmx.version}</version>
+
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-annotations</artifactId>
+            <version>${jetty-jmx.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>commons-logging</groupId>
-            <artifactId>commons-logging</artifactId>
-            <version>1.1.1</version>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>${jetty-jmx.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-jmx</artifactId>
+            <version>${jetty-jmx.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-util</artifactId>
+            <version>${jetty-jmx.version}</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>1.4.7</version>
+
+        </dependency>
+
+        <dependency>
+            <groupId>com.extjs</groupId>
+            <artifactId>gxt</artifactId>
+            <version>2.3.0-gwt22</version>
+
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <version>2.5.1</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <version>2.5.1</version>
+
         </dependency>
 
         <dependency>
@@ -115,89 +202,16 @@
         </dependency>
 
         <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-math3</artifactId>
-            <version>3.2</version>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>3.0.1</version>
 
         </dependency>
-        <dependency>
-            <groupId>commons-dbcp</groupId>
-            <artifactId>commons-dbcp</artifactId>
-            <version>1.4</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.extjs</groupId>
-            <artifactId>gxt</artifactId>
-            <version>2.3.0-gwt22</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-servlet</artifactId>
-            <version>${gwt.version}</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.gwt</groupId>
-            <artifactId>gwt-user</artifactId>
-            <version>${gwt.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>net.sf.jsr107cache</groupId>
-            <artifactId>jsr107cache</artifactId>
-            <version>1.1</version>
-
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.google.appengine.orm</groupId>
-            <artifactId>datanucleus-appengine</artifactId>
-            <version>2.1.2</version>
-
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.appengine.tools</groupId>
-            <artifactId>appengine-gcs-client</artifactId>
-            <version>0.4.4</version>
-        </dependency>
-
-
-        <!--test dep-->
-
-        <!--<dependency>-->
-            <!--<groupId>com.google.appengine</groupId>-->
-            <!--<artifactId>appengine-endpoints</artifactId>-->
-            <!--<version>${appengine.target.version}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>com.google.appengine</groupId>-->
-            <!--<artifactId>appengine-testing</artifactId>-->
-            <!--<version>${appengine.target.version}</version>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>com.google.appengine</groupId>-->
-            <!--<artifactId>appengine-api-stubs</artifactId>-->
-            <!--<version>${appengine.target.version}</version>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-            <!--<groupId>com.google.appengine</groupId>-->
-            <!--<artifactId>appengine-api-labs</artifactId>-->
-            <!--<version>${appengine.target.version}</version>-->
-            <!--<scope>test</scope>-->
-        <!--</dependency>-->
 
         <dependency>
             <groupId>javax.jdo</groupId>
             <artifactId>jdo-api</artifactId>
-            <version>3.1</version>
+            <version>3.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.datanucleus</groupId>
@@ -210,19 +224,37 @@
             <artifactId>datanucleus-api-jdo</artifactId>
             <version>${datanucleus.version}</version>
 
-
         </dependency>
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-rdbms</artifactId>
             <version>${datanucleus.version}</version>
-
         </dependency>
-
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-cache</artifactId>
             <version>${datanucleus.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.2</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.0.0.GA</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.0.0.GA</version>
+            <classifier>sources</classifier>
+            <scope>provided</scope>
         </dependency>
 
 
@@ -234,30 +266,36 @@
         </dependency>
 
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-all</artifactId>
-            <version>1.9.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-api-1.0-sdk</artifactId>
-            <version>${appengine.target.version}</version>
+            <groupId>commons-dbcp</groupId>
+            <artifactId>commons-dbcp</artifactId>
+            <version>1.4</version>
         </dependency>
 
         <dependency>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-jsr107cache</artifactId>
-            <version>${appengine.target.version}</version>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.3.3</version>
         </dependency>
 
         <dependency>
-            <groupId>com.google.appengine.tools</groupId>
-            <artifactId>appengine-gcs-client</artifactId>
-            <version>0.5</version>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>1.9</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.directory.studio</groupId>
+            <artifactId>org.apache.commons.io</artifactId>
+            <version>2.4</version>
 
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.gwt.google-apis</groupId>
+            <artifactId>gwt-visualization</artifactId>
+            <version>1.0.2</version>
+
+        </dependency>
         <!--Spring-->
 
         <dependency>
@@ -327,37 +365,34 @@
         </dependency>
         <!--End Spring -->
 
-
     </dependencies>
-
     <build>
         <outputDirectory>target/${project.artifactId}-${project.version}/WEB-INF/classes</outputDirectory>
-        <finalName>nimbits_gae</finalName>
+        <finalName>nimbits_server</finalName>
+
+        <testResources>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
+
+
         <plugins>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.4</version>
-                <configuration>
-                    <includes>
-                        <include>**/*Test.java</include>
-                    </includes>
-                    <excludes>
-                        <exclude>**/*SysTest.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
+
+
+
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
                 <version>2.5.1</version>
                 <configuration>
-                    <extraJvmArgs>-XX:MaxPermSize=512m -Xmx700m -Dgwt.style=DETAILED</extraJvmArgs>
+                    <extraJvmArgs>-Xmx1024m</extraJvmArgs>
 
                     <compileSourcesArtifacts>
-                        <compileSourcesArtifact>com.nimbits:nimbits_io</compileSourcesArtifact>
+
                         <compileSourcesArtifact>com.nimbits:nimbits_core</compileSourcesArtifact>
+                        <compileSourcesArtifact>com.nimbits:nimbits_io</compileSourcesArtifact>
                     </compileSourcesArtifacts>
 
                 </configuration>
@@ -375,27 +410,9 @@
             </plugin>
 
             <plugin>
-                <groupId>com.google.appengine</groupId>
-                <artifactId>appengine-maven-plugin</artifactId>
-                <version>${appengine.target.version}</version>
-                <configuration>
-                    <port>8099</port>
-                    <address>0.0.0.0</address>
-
-                    <jvmFlags>
-
-
-                        <jvmFlag>-Xdebug</jvmFlag>
-                        <jvmFlag>-agentlib:jdwp=transport=dt_socket,address=5099,server=y,suspend=n</jvmFlag>
-                    </jvmFlags>
-                </configuration>
-            </plugin>
-
-            <plugin>
                 <groupId>org.datanucleus</groupId>
                 <artifactId>maven-datanucleus-plugin</artifactId>
                 <version>${datanucleus.version}</version>
-
                 <configuration>
                     <verbose>false</verbose>
                     <fork>false</fork>
@@ -418,26 +435,19 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
-            <!--<plugin>-->
-            <!--<groupId>org.apache.maven.plugins</groupId>-->
-            <!--<artifactId>maven-war-plugin</artifactId>-->
-            <!--<version>2.4</version>-->
-            <!--<configuration>-->
-            <!--<webResources>-->
-            <!--&lt;!&ndash;<resource>&ndash;&gt;-->
-            <!--&lt;!&ndash;<exclude>**/web.xml</exclude>&ndash;&gt;-->
-            <!--&lt;!&ndash;&lt;!&ndash; this is relative to the pom.xml directory &ndash;&gt;&ndash;&gt;-->
-            <!--&lt;!&ndash;<directory>../nimbits_server/src/main/webapp</directory>&ndash;&gt;-->
-            <!--&lt;!&ndash;</resource>&ndash;&gt;-->
-            <!--</webResources>-->
-            <!--</configuration>-->
 
-            <!--&lt;!&ndash;<configuration>&ndash;&gt;-->
-            <!--&lt;!&ndash;<webappDirectory>/var/lib/tomcat7/webapps</webappDirectory>&ndash;&gt;-->
-            <!--&lt;!&ndash;</configuration>&ndash;&gt;-->
-            <!--</plugin>-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>2.4</version>
+
+
+                <!--<configuration>-->
+                <!--<webappDirectory>/var/lib/tomcat7/webapps</webappDirectory>-->
+                <!--</configuration>-->
+            </plugin>
+
 
         </plugins>
     </build>
-
 </project>

@@ -22,10 +22,8 @@
 
     <groupId>com.nimbits</groupId>
     <artifactId>com.nimbits.nimbits_client</artifactId>
-    <version>${nimbits_version}-SNAPSHOT</version>
-    <properties>
-        <nimbits_version>3.9.31</nimbits_version>
-    </properties>
+    <version>3.9.32-SNAPSHOT</version>
+
 
     <packaging>jar</packaging>
 
@@ -74,7 +72,7 @@
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_io</artifactId>
-            <version>${nimbits_version}-SNAPSHOT</version>
+            <version>3.9.32-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
 

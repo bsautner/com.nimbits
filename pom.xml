@@ -14,26 +14,55 @@
   ~    limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.nimbits</groupId>
     <artifactId>nimbits-parent</artifactId>
     <packaging>pom</packaging>
-    <version>3.9.31</version>
-    <name>Multi Chapter Simple Parent Project</name>
+
+    <version>3.9.34-SNAPSHOT</version>
+    <properties>
+
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <bintray.repo>bintray-examples/repo</bintray.repo>
+        <bintray.package>maven-example</bintray.package>
+
+    </properties>
+
+    <distributionManagement>
+        <repository>
+            <id>bintray-bsautner-nimbits</id>
+            <name>bsautner-nimbits</name>
+            <url>https://api.bintray.com/maven/bsautner/nimbits/[PACKAGE_NAME]/;publish=1</url>
+        </repository>
+    </distributionManagement>
+
+    <name>com.nimbits</name>
 
 
+    <scm>
+        <connection>scm:git:git@github.com:bsautner/nimbits-private.git</connection>
+        <developerConnection>scm:git:git@github.com:bsautner/com.nimbits.git</developerConnection>
+        <url>git@github.com:bsautner/com.nimbits.git</url>
+
+      <tag>HEAD</tag>
+  </scm>
+
+    <developers>
+        <developer>
+            <id>bsautner</id>
+            <name>Benjamin Sautner</name>
+            <email>bsautner@gmail.com</email>
+        </developer>
+    </developers>
 
     <modules>
-      <module>nimbits_io</module>
-      <module>nimbits_core</module>
-      <module>nimbits_server</module>
-      <module>nimbits_gae</module>
-      
+        <module>nimbits_io</module>
+        <module>nimbits_core</module>
+        <module>nimbits_server</module>
+        <module>nimbits_gae</module>
+
     </modules>
 
 
@@ -45,20 +74,8 @@
         </license>
     </licenses>
 
-    <!--<scm>-->
 
-    <!--<connection>scm:git:git@github.com:bsautner/nimbits-private.git</connection>-->
-    <!--<developerConnection>scm:git:git@github.com:bsautner/nimbits-private.git</developerConnection>-->
-    <!--<url>git@github.com:bsautner/nimbits-private.git</url>-->
-    <!--</scm>-->
 
-    <developers>
-        <developer>
-            <id>bsautner</id>
-            <name>Benjamin Sautner</name>
-            <email>bsautner@gmail.com</email>
-        </developer>
-    </developers>
 
     <build>
         <pluginManagement>

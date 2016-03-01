@@ -15,27 +15,20 @@
   ~    limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
     <properties>
         <spring.version>4.2.3.RELEASE</spring.version>
-        <nimbits_version>3.9.31</nimbits_version>
     </properties>
     <groupId>com.nimbits</groupId>
     <artifactId>nimbits_core</artifactId>
-    <version>${nimbits_version}-SNAPSHOT</version>
+    <version>3.9.34-SNAPSHOT</version>
     <name>Nimbits Core</name>
     <description>Nimbits Server Core Components</description>
     <url>http://nimbits.com</url>
 
-    <!--<parent>-->
-    <!--<groupId>org.sonatype.oss</groupId>-->
-    <!--<artifactId>oss-parent</artifactId>-->
-    <!--<version>7</version>-->
-    <!--</parent>-->
+
     <licenses>
         <license>
             <name>The Apache Software License, Version 2.0</name>
@@ -44,28 +37,8 @@
         </license>
     </licenses>
 
-    <scm>
 
-        <connection>scm:git:git@github.com:bsautner/nimbits-private.git</connection>
-        <developerConnection>scm:git:git@github.com:bsautner/nimbits-private.git</developerConnection>
-        <url>git@github.com:bsautner/nimbits-private.git</url>
-    </scm>
 
-    <developers>
-        <developer>
-            <id>bsautner</id>
-            <name>Benjamin Sautner</name>
-            <email>bsautner@gmail.com</email>
-        </developer>
-    </developers>
-
-    <!--<distributionManagement>-->
-    <!--<repository>-->
-    <!--<id>sonatype-nexus-staging</id>-->
-    <!--<name>Nexus Staging Repository</name>-->
-    <!--<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>-->
-    <!--</repository>-->
-    <!--</distributionManagement>-->
     <repositories>
         <repository>
             <id>DN_M2_Repo</id>
@@ -76,11 +49,6 @@
             </snapshots>
         </repository>
 
-        <!--<repository>-->
-        <!--<id>nimbits.com</id>-->
-        <!--<name>Nimbits Public Maven Repository</name>-->
-        <!--<url>http://nimbits.com/maven</url>-->
-        <!--</repository>-->
 
     </repositories>
 
@@ -97,6 +65,12 @@
     <dependencies>
 
 
+        <dependency>
+            <groupId>com.nimbits</groupId>
+            <artifactId>nimbits_io</artifactId>
+            <version>3.9.31-SNAPSHOT</version>
+        </dependency>
+
 
         <dependency>
             <groupId>com.google.gwt.google-apis</groupId>
@@ -111,12 +85,7 @@
 
         </dependency>
 
-        <dependency>
-            <groupId>com.nimbits</groupId>
-            <artifactId>nimbits_io</artifactId>
-            <version>${nimbits_version}-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
+
 
         <dependency>
             <groupId>javax.mail</groupId>
@@ -287,6 +256,7 @@
             <version>5.2.1</version>
             <scope>runtime</scope>
         </dependency>
+
 
     </dependencies>
     <build>

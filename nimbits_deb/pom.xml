@@ -31,6 +31,12 @@
     <description>Client App for Nimbits</description>
     <url>http://www.nimbits.com</url>
 
+    <parent>
+        <groupId>com.nimbits</groupId>
+        <artifactId>nimbits-parent</artifactId>
+        <version>3.9.37-SNAPSHOT</version>
+    </parent>
+
     <scm>
 
         <connection>scm:git:git@github.com:bsautner/com.nimbits.git</connection>

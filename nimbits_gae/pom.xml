@@ -21,9 +21,13 @@
 
     <groupId>com.nimbits</groupId>
     <artifactId>nimbits_gae</artifactId>
-    <version>3.9.36-SNAPSHOT</version>
+    <version>3.9.37-SNAPSHOT</version>
 
-
+    <parent>
+        <groupId>com.nimbits</groupId>
+        <artifactId>nimbits-parent</artifactId>
+        <version>3.9.37-SNAPSHOT</version>
+    </parent>
 
     <properties>
         <appengine.app.version>1</appengine.app.version>
@@ -80,13 +84,13 @@
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_core</artifactId>
-            <version>3.9.36-SNAPSHOT</version>
+            <version>3.9.37-SNAPSHOT</version>
          </dependency>
 
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_io</artifactId>
-            <version>3.9.36-SNAPSHOT</version>
+            <version>3.9.37-SNAPSHOT</version>
         </dependency>
 
         <dependency>

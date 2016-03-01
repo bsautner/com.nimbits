@@ -24,7 +24,7 @@
     <artifactId>nimbits_sample_java</artifactId>
     <version>3.9.32-SNAPSHOT</version>
     <properties>
-        <nimbits_version>3.9.31</nimbits_version>
+        <nimbits_version>3.9.34</nimbits_version>
     </properties>
 
     <parent>

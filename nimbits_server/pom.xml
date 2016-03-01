@@ -73,14 +73,14 @@
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_core</artifactId>
-            <version>3.9.31-SNAPSHOT</version>
+            <version>3.9.34-SNAPSHOT</version>
 
         </dependency>
 
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_io</artifactId>
-            <version>3.9.31-SNAPSHOT</version>
+            <version>3.9.34-SNAPSHOT</version>
 
         </dependency>
 

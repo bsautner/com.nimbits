@@ -113,7 +113,6 @@ public class SystemCron extends HttpServlet implements BaseProcessor {
 
 
     @Override
-    @SuppressWarnings(Const.WARNING_UNCHECKED)
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
 

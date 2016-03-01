@@ -1,0 +1,95 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="nimbits_server:war exploded">
+    <output-path>$PROJECT_DIR$/nimbits_server/target/nimbits_server</output-path>
+    <root id="root">
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="nimbits_server" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="archive" name="nimbits_core-3.9.34-SNAPSHOT.jar">
+            <element id="module-output" name="nimbits_core" />
+          </element>
+          <element id="library" level="project" name="Maven: net.sf.proguard:proguard-base:5.2.1" />
+          <element id="archive" name="nimbits_io-3.9.34-SNAPSHOT.jar">
+            <element id="module-output" name="nimbits_io" />
+          </element>
+          <element id="library" level="project" name="Maven: com.squareup.retrofit:retrofit:1.7.0" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpclient:4.3.6" />
+          <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.6" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-lang3:3.4" />
+          <element id="library" level="project" name="Maven: com.squareup.okhttp:okhttp:2.0.0" />
+          <element id="library" level="project" name="Maven: com.squareup.okio:okio:1.0.0" />
+          <element id="library" level="project" name="Maven: com.squareup.okhttp:okhttp-urlconnection:2.0.0" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-simple:1.7.12" />
+          <element id="library" level="project" name="Maven: org.slf4j:slf4j-api:1.7.12" />
+          <element id="library" level="project" name="Maven: com.dmurph:JGoogleAnalyticsTracker:1.2.0" />
+          <element id="library" level="project" name="Maven: log4j:log4j:1.2.17" />
+          <element id="library" level="project" name="Maven: com.h2database:h2:1.4.190" />
+          <element id="library" level="project" name="Maven: com.google.guava:guava:19.0" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-websocket:8.1.15.v20140411" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-io:8.1.15.v20140411" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-http:8.1.15.v20140411" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-annotations:8.1.15.v20140411" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-plus:8.1.15.v20140411" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty.orbit:javax.transaction:1.1.1.v201105210645" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-jndi:8.1.15.v20140411" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty.orbit:javax.mail.glassfish:1.4.1.v201005082020" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty.orbit:javax.activation:1.1.0.v201105071233" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-webapp:8.1.15.v20140411" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-xml:8.1.15.v20140411" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-servlet:8.1.15.v20140411" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-security:8.1.15.v20140411" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty.orbit:javax.annotation:1.1.0.v201108011116" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty.orbit:org.objectweb.asm:3.1.0.v200803061910" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty.orbit:javax.servlet:3.0.0.v201112011016" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-continuation:8.1.15.v20140411" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-jmx:8.1.15.v20140411" />
+          <element id="library" level="project" name="Maven: org.eclipse.jetty:jetty-util:8.1.15.v20140411" />
+          <element id="library" level="project" name="Maven: javax.mail:mail:1.4.7" />
+          <element id="library" level="project" name="Maven: javax.activation:activation:1.1" />
+          <element id="library" level="project" name="Maven: com.extjs:gxt:2.3.0-gwt22" />
+          <element id="library" level="project" name="Maven: com.google.gwt:gwt-servlet:2.5.1" />
+          <element id="library" level="project" name="Maven: com.google.gwt:gwt-user:2.5.1" />
+          <element id="library" level="project" name="Maven: org.json:json:20090211" />
+          <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.5" />
+          <element id="library" level="project" name="Maven: javax.servlet:javax.servlet-api:3.0.1" />
+          <element id="library" level="project" name="Maven: javax.jdo:jdo-api:3.0.1" />
+          <element id="library" level="project" name="Maven: javax.transaction:jta:1.1" />
+          <element id="library" level="project" name="Maven: org.datanucleus:datanucleus-core:3.1.1" />
+          <element id="library" level="project" name="Maven: org.datanucleus:datanucleus-api-jdo:3.1.2" />
+          <element id="library" level="project" name="Maven: org.datanucleus:datanucleus-rdbms:3.1.2" />
+          <element id="library" level="project" name="Maven: org.datanucleus:datanucleus-cache:3.1.2" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-math3:3.2" />
+          <element id="library" level="project" name="Maven: javax.validation:validation-api:1.0.0.GA" />
+          <element id="library" level="project" name="Maven: commons-dbcp:commons-dbcp:1.4" />
+          <element id="library" level="project" name="Maven: commons-pool:commons-pool:1.5.4" />
+          <element id="library" level="project" name="Maven: org.apache.httpcomponents:httpcore:4.3.3" />
+          <element id="library" level="project" name="Maven: org.apache.commons:commons-compress:1.9" />
+          <element id="library" level="project" name="Maven: org.apache.directory.studio:org.apache.commons.io:2.4" />
+          <element id="library" level="project" name="Maven: commons-io:commons-io:2.4" />
+          <element id="library" level="project" name="Maven: com.google.gwt.google-apis:gwt-visualization:1.0.2" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-aspects:4.2.3.RELEASE" />
+          <element id="library" level="project" name="Maven: org.aspectj:aspectjweaver:1.8.7" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-core:4.2.3.RELEASE" />
+          <element id="library" level="project" name="Maven: commons-logging:commons-logging:1.2" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-beans:4.2.3.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-web:4.2.3.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-webmvc:4.2.3.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-expression:4.2.3.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-orm:4.2.3.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-jdbc:4.2.3.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-tx:4.2.3.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-context:4.2.3.RELEASE" />
+          <element id="library" level="project" name="Maven: org.springframework:spring-aop:4.2.3.RELEASE" />
+          <element id="library" level="project" name="Maven: aopalliance:aopalliance:1.0" />
+        </element>
+      </element>
+      <element id="directory" name="META-INF">
+        <element id="file-copy" path="$PROJECT_DIR$/nimbits_server/target/nimbits_server/META-INF/MANIFEST.MF" />
+      </element>
+      <element id="javaee-facet-resources" facet="nimbits_server/web/Web" />
+      <element id="gwt-compiler-output" facet="nimbits_server/gwt/GWT" />
+    </root>
+  </artifact>
+</component>

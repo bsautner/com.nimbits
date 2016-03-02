@@ -23,14 +23,14 @@
     </properties>
     <groupId>com.nimbits</groupId>
     <artifactId>nimbits_core</artifactId>
-    <version>3.9.42-SNAPSHOT</version>
+    <version>3.9.42</version>
     <name>Nimbits Core</name>
     <description>Nimbits Server Core Components</description>
     <url>http://nimbits.com</url>
     <parent>
         <groupId>com.nimbits</groupId>
         <artifactId>nimbits-parent</artifactId>
-        <version>3.9.42-SNAPSHOT</version>
+        <version>3.9.42</version>
     </parent>
 
     <licenses>
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_io</artifactId>
-            <version>3.9.42-SNAPSHOT</version>
+            <version>3.9.42</version>
         </dependency>
 
 

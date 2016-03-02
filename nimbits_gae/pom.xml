@@ -21,12 +21,12 @@
 
     <groupId>com.nimbits</groupId>
     <artifactId>nimbits_gae</artifactId>
-    <version>3.9.42-SNAPSHOT</version>
+    <version>3.9.42</version>
 
     <parent>
         <groupId>com.nimbits</groupId>
         <artifactId>nimbits-parent</artifactId>
-        <version>3.9.42-SNAPSHOT</version>
+        <version>3.9.42</version>
     </parent>
 
     <properties>
@@ -84,13 +84,13 @@
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_core</artifactId>
-            <version>3.9.42-SNAPSHOT</version>
+            <version>3.9.42</version>
          </dependency>
 
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_io</artifactId>
-            <version>3.9.42-SNAPSHOT</version>
+            <version>3.9.42</version>
         </dependency>
 
         <dependency>

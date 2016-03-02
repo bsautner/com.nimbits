@@ -59,7 +59,7 @@
         <repository>
             <id>bintray-bsautner-nimbits</id>
             <name>bsautner-nimbits</name>
-            <url>https://api.bintray.com/maven/${bintray.subject}/${bintray.repo}/com.nimbits.client/;publish=1</url>
+            <url>https://api.bintray.com/maven/${bintray.subject}/${bintray.repo}/com.nimbits.io/;publish=1</url>
         </repository>
     </distributionManagement>
 

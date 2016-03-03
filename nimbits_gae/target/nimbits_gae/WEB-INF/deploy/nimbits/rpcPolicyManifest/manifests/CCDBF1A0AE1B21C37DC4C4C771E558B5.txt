@@ -1,2 +1,0 @@
-serviceClass: com.nimbits.client.service.settings.SettingsServiceRpc
-path: 7CD18E102F03D833C41E112F4E161263.gwt.rpc

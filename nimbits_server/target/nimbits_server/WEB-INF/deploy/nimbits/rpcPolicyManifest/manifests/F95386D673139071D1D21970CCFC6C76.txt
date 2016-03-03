@@ -1,2 +1,0 @@
-serviceClass: com.nimbits.client.service.xmpp.XmppRpcService
-path: F5C236C70B6D9FDAB54380A5828C8C34.gwt.rpc

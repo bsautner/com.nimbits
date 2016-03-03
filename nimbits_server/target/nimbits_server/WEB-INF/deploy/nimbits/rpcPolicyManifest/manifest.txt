@@ -1,7 +1,0 @@
-# Module nimbits
-# RPC service class, partial path of RPC policy file
-com.nimbits.client.service.entity.EntityServiceRpc, 95202478AC291B5BB7CC7A7A7FBBDA57.gwt.rpc
-com.nimbits.client.service.user.UserServiceRpc, 6976344DE29D11E4371EE79891FC930F.gwt.rpc
-com.nimbits.client.service.value.ValueServiceRpc, 77778FF7F7D9CA516FD70EF781FCE428.gwt.rpc
-com.nimbits.client.service.settings.SettingsServiceRpc, 7CD18E102F03D833C41E112F4E161263.gwt.rpc
-com.nimbits.client.service.xmpp.XmppRpcService, F5C236C70B6D9FDAB54380A5828C8C34.gwt.rpc

@@ -1,2 +1,0 @@
-serviceClass: com.nimbits.client.service.value.ValueServiceRpc
-path: 77778FF7F7D9CA516FD70EF781FCE428.gwt.rpc

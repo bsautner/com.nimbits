@@ -11,6 +11,26 @@ More information and documentation is available at [www.nimbits.com] (http://www
 
 [![Build Status](http://www.nimbits.com:8080/buildStatus/icon?job=nimbits_parent)](http://www.nimbits.com:8080/job/nimbits_parent/)
 
+## Basic Concept
+
+Nimbits is structured as a tree of entities. All entities have a name, unique id and a parent.  The top level entity is you. Entities are data points,
+rule triggers, calculations, alerts or anything else.  Data Points are buckets that contain many values.  Values are structured like this:
+
+```
+{
+    timestamp
+    decimal value
+    latitude
+    longitude
+    text data
+    meta data
+
+}
+```
+
+All fields are optional except the timestamp.  You record many Values into a Data Point where they are stored.  Based on rules you configure, incoming
+values may be ignored (such as noise from a sensor), trigger calculations, relayed to other servers etc.
+
 
 ## Project Structure
 
@@ -20,6 +40,29 @@ More information and documentation is available at [www.nimbits.com] (http://www
 - nimbits_io: the java client and wrapper for the API
 - samples - various samples that use nimbits io or other clients to interact with the server
 
+
+## nimbits.io client
+
+The nimbits.io client library is a wrapper for the nimbits server API and provides deep automation of the server and methods for reading and writing data
+
+You can import the library into your java or android project from the jcenter public repository.
+
+[Browse Repository](https://bintray.com/bsautner/nimbits/com.nimbits.io/view)
+
+### Maven
+```
+<dependency>
+  <groupId>com.nimbits</groupId>
+  <artifactId>nimbits_io</artifactId>
+  <version>3.9.43</version>
+  <type>pom</type>
+</dependency>
+```
+### Gradle
+
+```
+compile 'com.nimbits:nimbits_io:3.9.43'
+```
 
 ## Licence
 

@@ -21,7 +21,7 @@
     <properties>
         <spring.version>4.2.3.RELEASE</spring.version>
     </properties>
-    <groupId>com.nimbits</groupId>
+
     <artifactId>nimbits_core</artifactId>
     <version>3.9.45-SNAPSHOT</version>
     <name>Nimbits Core</name>

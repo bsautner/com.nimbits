@@ -57,7 +57,7 @@
         <module>nimbits_server</module>
         <module>nimbits_gae</module>
         <module>nimbits_deb</module>
-        <module>samples/java/nimbits_sample_java</module>
+        <!--<module>samples/java/nimbits_sample_java</module>-->
 
     </modules>
 

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!--
+  ~ Copyright 2016 Benjamin Sautner
+  ~
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<appengine-web-app xmlns="http://appengine.google.com/ns/1.0">
+    <threadsafe>true</threadsafe>
+    <application>yodel-1107</application>
+    <!--<application>nimbits-02</application>-->
+    <!--<application>private-cloud-drproducts</application>-->
+<!--fix blobstore bucket name, set filterbase to not enforce limits, -->
+
+    <version>1002</version>
+
+    <sessions-enabled>true</sessions-enabled>
+    <precompilation-enabled>false</precompilation-enabled>
+
+    <system-properties>
+        <property name="appengine.orm.disable.duplicate.pmf.exception" value="false"/>
+        <property name="java.util.logging.config.file" value="WEB-INF/classes/log4j.properties"/>
+    </system-properties>
+    <static-files>
+        <!--<include path="/bootstrap/css/**.css"/>-->
+        <include path="/favicon.ico"/>
+        <include path="/**.css"/>
+        <include path="/**.html"/>
+        <include path="/**.jsp"/>
+        <include path="/**.gif"/>
+        <include path="/**.png"/>
+        <include path="/**.js"/>
+        <include path="/**.ico"/>
+    </static-files>
+    <inbound-services>
+        <service>xmpp_message</service>
+        <service>xmpp_presence</service>
+        <!--<service>xmpp_subscribe</service>-->
+        <!--<service>xmpp_error</service>-->
+    </inbound-services>
+</appengine-web-app>

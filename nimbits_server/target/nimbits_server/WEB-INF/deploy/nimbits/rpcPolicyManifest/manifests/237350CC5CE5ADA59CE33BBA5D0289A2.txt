@@ -1,0 +1,2 @@
+serviceClass: com.nimbits.client.service.user.UserServiceRpc
+path: 6976344DE29D11E4371EE79891FC930F.gwt.rpc

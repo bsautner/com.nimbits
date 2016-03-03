@@ -1,0 +1,10 @@
+/Users/bsautner/code/nimbits/com.nimbits/nimbits_server/src/main/java/com/nimbits/server/communication/xmpp/XmppRpcServiceImpl.java
+/Users/bsautner/code/nimbits/com.nimbits/nimbits_server/src/main/java/com/nimbits/server/process/BlobStoreImpl.java
+/Users/bsautner/code/nimbits/com.nimbits/nimbits_server/src/main/java/com/nimbits/server/process/task/TaskServiceImpl.java
+/Users/bsautner/code/nimbits/com.nimbits/nimbits_server/src/main/java/com/nimbits/server/transaction/cache/NimbitsCacheImpl.java
+/Users/bsautner/code/nimbits/com.nimbits/nimbits_server/src/main/java/com/nimbits/server/SettingServiceRpcImpl.java
+/Users/bsautner/code/nimbits/com.nimbits/nimbits_server/src/main/java/com/nimbits/server/geo/GeoSpatialDaoImpl.java
+/Users/bsautner/code/nimbits/com.nimbits/nimbits_server/src/main/java/com/nimbits/server/socket/SocketEndpoint.java
+/Users/bsautner/code/nimbits/com.nimbits/nimbits_server/src/main/java/com/nimbits/server/ApplicationListener.java
+/Users/bsautner/code/nimbits/com.nimbits/nimbits_server/src/main/java/com/nimbits/server/auth/AuthServiceImpl.java
+/Users/bsautner/code/nimbits/com.nimbits/nimbits_server/src/main/java/com/nimbits/server/communication/xmpp/XmppServiceImpl.java

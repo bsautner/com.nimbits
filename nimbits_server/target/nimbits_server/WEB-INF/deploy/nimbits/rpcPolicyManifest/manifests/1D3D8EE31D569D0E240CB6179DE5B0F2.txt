@@ -1,0 +1,2 @@
+serviceClass: com.nimbits.client.service.entity.EntityServiceRpc
+path: 95202478AC291B5BB7CC7A7A7FBBDA57.gwt.rpc

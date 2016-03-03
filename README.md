@@ -46,13 +46,13 @@ values may be ignored (such as noise from a sensor), trigger calculations, relay
 
 Add the debian repository to your sources.list file
 
-```echo "deb https://dl.bintray.com/bsautner/nimbits.deb {distribution} {components}" | sudo tee -a /etc/apt/sources.list```
+```echo "deb https://dl.bintray.com/bsautner/nimbits.deb wheezy main" | sudo tee -a /etc/apt/sources.list```
 
 then run 
 
 ```
 apt-get update
-apt-get install numbits
+apt-get install nimbits
 ```
 
 Your server will be running on localhost:8080 and you can configure it like any jetty based server in ```/opt/nimbits```
@@ -74,7 +74,7 @@ The nimbits.io client library is a wrapper for the nimbits server API and provid
 
 You can import the library into your java or android project from the jcenter public repository.
 
-[Browse Repository](https://bintray.com/bsautner/nimbits/com.nimbits.io/view)
+[Browse bintray Repository](https://bintray.com/bsautner/nimbits/com.nimbits.io/view)
 
 ### Maven
 ```

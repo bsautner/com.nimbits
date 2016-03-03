@@ -40,6 +40,33 @@ values may be ignored (such as noise from a sensor), trigger calculations, relay
 - nimbits_io: the java client and wrapper for the API
 - samples - various samples that use nimbits io or other clients to interact with the server
 
+## nimbits server
+
+### Install debian linux (ubuntu etc) 
+
+Add the debian repository to your sources.list file
+
+```echo "deb https://dl.bintray.com/bsautner/nimbits.deb {distribution} {components}" | sudo tee -a /etc/apt/sources.list```
+
+then run 
+
+```
+apt-get update
+apt-get install numbits
+```
+
+Your server will be running on localhost:8080 and you can configure it like any jetty based server in ```/opt/nimbits```
+
+*please be sure to check this readme before upgraded to be notified of breaking changes*
+
+### Install from source
+
+Clone this repository and compule using maven
+
+```mvn clean package```
+
+copy the resulting war file in nimbits_server/target/nimbits_server.war to the webapps directory of a jetty or tomcat web server or any other J2EE 
+server such as jboss.  Rename the file to root.war if you want to load it in the root context.
 
 ## nimbits.io client
 
@@ -58,11 +85,10 @@ You can import the library into your java or android project from the jcenter pu
   <type>pom</type>
 </dependency>
 ```
+
 ### Gradle
 
-```
-compile 'com.nimbits:nimbits_io:3.9.43'
-```
+```compile 'com.nimbits:nimbits_io:3.9.43'```
 
 ## Licence
 

@@ -20,7 +20,7 @@
 
     <groupId>com.nimbits</groupId>
     <artifactId>nimbits_sample_java</artifactId>
-    <version>3.9.46-SNAPSHOT</version>
+    <version>3.9.46</version>
 
 
     <parent>
@@ -60,7 +60,7 @@
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_io</artifactId>
-            <version>3.9.46-SNAPSHOT</version>
+            <version>3.9.46</version>
             <scope>compile</scope>
         </dependency>
 
@@ -121,4 +121,8 @@
         </plugins>
 
     </build>
+
+  <scm>
+    <tag>nimbits-parent-3.9.46</tag>
+  </scm>
 </project>

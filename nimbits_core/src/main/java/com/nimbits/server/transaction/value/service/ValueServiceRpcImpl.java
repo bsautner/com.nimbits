@@ -119,7 +119,9 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
         User user = userService.getHttpRequestUser(entityService,valueService,  getThreadLocalRequest());
         Point p = (Point) entityDao.getEntityByKey(user, point.getKey(), EntityType.point).get();
         logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
-        taskService.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService, syncService, subscriptionService,
+        taskService.process(geoSpatialDao, taskService, userService,
+                entityDao, valueTask, entityService, blobStore, valueService,
+                summaryService, syncService, subscriptionService,
                 calculationService, dataProcessor, user, p, value);
 
 

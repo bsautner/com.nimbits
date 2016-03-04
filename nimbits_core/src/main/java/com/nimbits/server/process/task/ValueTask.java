@@ -280,7 +280,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
             final AlertType t = valueService.getAlertType(point, value);
             final Value v =  new Value.Builder().initValue(value).timestamp(new Date()).alertType(t).create();
             completeRequest(geoSpatialDao, taskService, entityDao, entityService, blobStore, valueService, summaryService, syncService, subscriptionService,
-                    calculationService, dataProcessor, user, point, v);
+                    calculationService, dataProcessor, userService, user, point, v);
 
 
 
@@ -295,13 +295,21 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
 
 
 
-    private void completeRequest(final GeoSpatialDao geoSpatialDao, TaskService taskService, EntityDao entityDao,  EntityService entityService,
-                                 BlobStore blobStore, ValueService valueService,
-                                 SummaryService summaryService, SyncService syncService,
+    private void completeRequest(final GeoSpatialDao geoSpatialDao,
+                                 TaskService taskService,
+                                 EntityDao entityDao,
+                                 EntityService entityService,
+                                 BlobStore blobStore,
+                                 ValueService valueService,
+                                 SummaryService summaryService,
+                                 SyncService syncService,
                                  SubscriptionService subscriptionService,
                                  CalculationService calculationService,
                                  DataProcessor dataProcessor,
-                                 User u, Point point, Value value) throws ValueException {
+                                 UserService userService,
+                                 User u,
+                                 Point point,
+                                 Value value) throws ValueException {
         try {
             if (point.isIdleAlarmOn() && point.getIdleAlarmSent()) {
                 point.setIdleAlarmSent(false);

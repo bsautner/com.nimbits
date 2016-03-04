@@ -408,9 +408,10 @@
                 <version>2.6</version>
 
 
-                <configuration>
-                      <webappDirectory>../nimbits_deb/src/main/opt/nimbits/webapps/root.war</webappDirectory>
-                </configuration>
+                <!--<configuration>-->
+                      <!--<warName>root</warName>-->
+                      <!--<webappDirectory>../nimbits_deb/src/main/opt/nimbits/webapps</webappDirectory>-->
+                <!--</configuration>-->
             </plugin>
 
 

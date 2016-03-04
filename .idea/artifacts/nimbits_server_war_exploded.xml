@@ -1,6 +1,6 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="nimbits_server:war exploded">
-    <output-path>$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/webapps/root.war</output-path>
+    <output-path>$PROJECT_DIR$/nimbits_server/target/nimbits_server</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
@@ -84,7 +84,7 @@
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/webapps/root.war/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/nimbits_server/target/nimbits_server/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="nimbits_server/web/Web" />
       <element id="gwt-compiler-output" facet="nimbits_server/gwt/GWT" />

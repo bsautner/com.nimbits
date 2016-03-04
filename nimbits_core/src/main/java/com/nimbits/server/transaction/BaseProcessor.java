@@ -48,5 +48,6 @@ public interface BaseProcessor {
                  final SyncService syncService,
                  final SubscriptionService subscriptionService,
                  final CalculationService calculationService,
-                 final DataProcessor dataProcessor, final User user, final Point point, final Value value) throws ValueException;
+                 final DataProcessor dataProcessor,
+                 final User user, final Point point, final Value value) throws ValueException;
 }

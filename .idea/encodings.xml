@@ -3,6 +3,7 @@
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/nimbits_core" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/nimbits_deb" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/nimbits_gae" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/nimbits_io" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/nimbits_server" charset="UTF-8" />

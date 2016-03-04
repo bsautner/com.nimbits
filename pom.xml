@@ -40,8 +40,7 @@
         <developerConnection>scm:git:git@github.com:bsautner/com.nimbits.git</developerConnection>
         <url>git@github.com:bsautner/com.nimbits.git</url>
 
-      <tag>com.nimbits-3.9.34</tag>
-  </scm>
+   </scm>
 
     <developers>
         <developer>
@@ -57,8 +56,6 @@
         <module>nimbits_server</module>
         <module>nimbits_gae</module>
         <module>nimbits_deb</module>
-        <!--<module>samples/java/nimbits_sample_java</module>-->
-
     </modules>
 
     <distributionManagement>
@@ -77,9 +74,6 @@
         </license>
     </licenses>
 
-
-
-
     <build>
         <pluginManagement>
             <plugins>
@@ -96,6 +90,7 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-release-plugin</artifactId>
                     <version>2.4</version>
+
                 </plugin>
 
             </plugins>
@@ -103,11 +98,18 @@
     </build>
 
     <dependencies>
-        <dependency>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-release-plugin</artifactId>
-            <version>2.5.3</version>
-        </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>org.apache.maven.plugins</groupId>-->
+            <!--<artifactId>maven-release-plugin</artifactId>-->
+            <!--<version>2.5.3</version>-->
+            <!--<exclusions>-->
+                <!--<exclusion>-->
+                    <!--<groupId>org.slf4j</groupId>-->
+                    <!--<artifactId>slf4j-log4j12</artifactId>-->
+                <!--</exclusion>-->
+            <!--</exclusions>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>junit</groupId>
@@ -115,15 +117,15 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
+        </dependency>
+
+
     </dependencies>
 
 
-
-    <!--<distributionManagement>-->
-        <!--<repository>-->
-            <!--<id>bintray-bsautner-nimbits</id>-->
-            <!--<name>bsautner-nimbits</name>-->
-            <!--<url>https://api.bintray.com/maven/bsautner/nimbits/[PACKAGE_NAME]/;publish=1</url>-->
-        <!--</repository>-->
-    <!--</distributionManagement>-->
 </project>

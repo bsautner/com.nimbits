@@ -48,7 +48,7 @@ public interface RestClient {
     User login();
 
     @GET(API + "/me")
-    User getMe();
+    User getMe(@Query("children") boolean includeChildren);
 
     @POST(API)
     User addUser(@Body User newUser);

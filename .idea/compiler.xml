@@ -45,12 +45,20 @@
         <processorPath useClasspath="true" />
         <module name="nimbits_io" />
       </profile>
+      <profile default="false" name="Annotation profile for nimbits_sample_java" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="true" />
+        <module name="nimbits_sample_java" />
+      </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="nimbits-parent" target="1.5" />
       <module name="nimbits_core" target="1.7" />
       <module name="nimbits_gae" target="1.7" />
       <module name="nimbits_io" target="1.7" />
+      <module name="nimbits_sample_java" target="1.7" />
       <module name="nimbits_server" target="1.7" />
     </bytecodeTargetLevel>
   </component>

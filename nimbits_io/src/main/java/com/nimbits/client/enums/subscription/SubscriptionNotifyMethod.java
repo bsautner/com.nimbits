@@ -22,13 +22,13 @@ import java.util.Map;
 
 
 public enum SubscriptionNotifyMethod {
-    none(-1, "None", true),
-    email(0, "Email", true),
-    instantMessage(3, "Instant Message (XMPP)", true),
-    cloud(5, "Android Notification (GCM)", true),
-    socket(6, "Connected Sockets", true),
-    webhook(7, "Web Hook", true),
-    proximity(8, "Proximity Points", true);
+    none(-1, "None"),
+    email(0, "Email"),
+    instantMessage(3, "Instant Message (XMPP)"),
+    cloud(5, "Android Notification (GCM)"),
+    socket(6, "Connected Sockets"),
+    webhook(7, "Web Hook"),
+    proximity(8, "Proximity Points");
 
 
 
@@ -41,12 +41,10 @@ public enum SubscriptionNotifyMethod {
 
     private final int code;
     private final String text;
-    private final boolean isJsonCompatible;
 
-    private SubscriptionNotifyMethod(int code, String text, boolean isJsonCompatible) {
+    SubscriptionNotifyMethod(int code, String text) {
         this.code = code;
         this.text = text;
-        this.isJsonCompatible = isJsonCompatible;
     }
 
     public String getText() {
@@ -55,10 +53,6 @@ public enum SubscriptionNotifyMethod {
 
     public int getCode() {
         return code;
-    }
-
-    public boolean isJsonCompatible() {
-        return isJsonCompatible;
     }
 
     public static SubscriptionNotifyMethod get(int code) {

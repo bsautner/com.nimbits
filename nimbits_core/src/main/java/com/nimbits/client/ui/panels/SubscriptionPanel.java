@@ -26,10 +26,8 @@ import com.extjs.gxt.ui.client.widget.Html;
 import com.extjs.gxt.ui.client.widget.MessageBox;
 import com.extjs.gxt.ui.client.widget.form.CheckBox;
 import com.extjs.gxt.ui.client.widget.form.ComboBox;
-import com.extjs.gxt.ui.client.widget.form.SpinnerField;
 import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.i18n.client.NumberFormat;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
@@ -52,11 +50,9 @@ import java.util.List;
 
 public class SubscriptionPanel extends BasePanel {
 
-    private static final int REPEAT_DEFAULT = 30;
-    private static final double INCREMENT = 1;
+
     private final Entity entity;
     private final User user;
-
 
     public SubscriptionPanel(PanelEvent listener, final Entity entity, User user) {
 
@@ -65,7 +61,6 @@ public class SubscriptionPanel extends BasePanel {
         this.entity = entity;
         createForm();
     }
-
 
     private static ComboBox<SubscriptionTypeOption> subscriptionTypeOptionComboBox(final String title, final SubscriptionType selectedValue) {
         ComboBox<SubscriptionTypeOption> combo = new ComboBox<SubscriptionTypeOption>();
@@ -136,16 +131,9 @@ public class SubscriptionPanel extends BasePanel {
 
 
 
-        final CheckBox machine = new CheckBox();
-        machine.setBoxLabel("Send message in JSON format");
-        machine.setFieldLabel("");
+
         final CheckBox enabled = new CheckBox();
 
-        final SpinnerField spinnerField = new SpinnerField();
-        spinnerField.setIncrement(INCREMENT);
-        spinnerField.getPropertyEditor().setType(Double.class);
-        spinnerField.getPropertyEditor().setFormat(NumberFormat.getFormat("00"));
-        spinnerField.setFieldLabel("Repeat limit (Seconds)");
         //spinnerField.setMinValue(MIN_VALUE);
         //spinnerField.setMaxValue(MAX_VALUE);
         // int alertSelected = (subscription == null) ? SubscriptionNotifyMethod.none.getCode() : subscription.getAlertNotifyMethod().getCode();
@@ -157,11 +145,8 @@ public class SubscriptionPanel extends BasePanel {
             method = subscription.getNotifyMethod();
             subscriptionName.setValue(entity.getName().getValue());
             target.setValue(subscription.getTarget());
-            spinnerField.setValue(subscription.getMaxRepeat());
 
-            machine.setValue(subscription.getNotifyFormatJson());
-            machine.setLabelSeparator("");
-            machine.setEnabled(subscription.getNotifyMethod().isJsonCompatible());
+
             enabled.setValue(subscription.getEnabled());
 
 
@@ -183,9 +168,9 @@ public class SubscriptionPanel extends BasePanel {
         } else {
             type = SubscriptionType.none;
             method = SubscriptionNotifyMethod.none;
-            machine.setLabelSeparator("");
+
             subscriptionName.setValue(entity.getName().getValue() + " Subscription");
-            spinnerField.setValue(REPEAT_DEFAULT);
+
             webHookCombo = new EntityCombo(EntityType.webhook,"", "Web Hook Target");
             webHookCombo.setVisible(false);
         }
@@ -198,16 +183,11 @@ public class SubscriptionPanel extends BasePanel {
         enabled.setBoxLabel("Enabled");
         enabled.setLabelSeparator("");
 
-        submit.addSelectionListener(new SubmitButtonEventSelectionListener(webHookCombo, methodCombo, typeCombo, subscriptionName, target, enabled, machine, spinnerField));
+        submit.addSelectionListener(new SubmitButtonEventSelectionListener(webHookCombo, methodCombo, typeCombo, subscriptionName, target, enabled));
 
 
         Html pn = new Html("<p><b>Name: </b>" + entity.getName().getValue() + "</p>");
 
-
-        methodCombo.addSelectionChangedListener(new DeliveryMethodOptionSelectionChangedListener(machine));
-
-
-        // target.setVisible(false);
 
         methodCombo.setFireChangeEventOnSetValue(true);
         methodCombo.addSelectionChangedListener(new SelectionChangedListener<DeliveryMethodOption>() {
@@ -227,23 +207,19 @@ public class SubscriptionPanel extends BasePanel {
         simple.add(methodCombo, formdata);
         simple.add(webHookCombo, formdata);
         simple.add(target, formdata);
-        simple.add(spinnerField, formdata);
+
 
         simple.add(enabled, formdata);
-        simple.add(machine, formdata);
+
 
         completeForm();
 
 
     }
 
-
     private static class DeliveryMethodOption extends BaseModelData {
         SubscriptionNotifyMethod method;
 
-        DeliveryMethodOption() {
-
-        }
 
         DeliveryMethodOption(SubscriptionNotifyMethod value) {
             this.method = value;
@@ -253,26 +229,6 @@ public class SubscriptionPanel extends BasePanel {
 
         public SubscriptionNotifyMethod getMethod() {
             return method;
-        }
-    }
-
-    private static class DeliveryMethodOptionSelectionChangedListener extends SelectionChangedListener<DeliveryMethodOption> {
-        private final CheckBox machine;
-
-        DeliveryMethodOptionSelectionChangedListener(CheckBox machine) {
-            this.machine = machine;
-        }
-
-        @Override
-        public void selectionChanged(SelectionChangedEvent<DeliveryMethodOption> deliveryMethodOptionSelectionChangedEvent) {
-            setMachineEnabled(deliveryMethodOptionSelectionChangedEvent.getSelectedItem().getMethod());
-        }
-
-        private void setMachineEnabled(SubscriptionNotifyMethod method) {
-            machine.setEnabled(method.isJsonCompatible());
-            if (!method.isJsonCompatible()) {
-                machine.setValue(false);
-            }
         }
     }
 
@@ -319,22 +275,6 @@ public class SubscriptionPanel extends BasePanel {
         }
     }
 
-    private class CancelButtonEventSelectionListener extends SelectionListener<ButtonEvent> {
-
-
-        CancelButtonEventSelectionListener() {
-        }
-
-        @Override
-        public void componentSelected(ButtonEvent buttonEvent) {
-            try {
-                notifyEntityAddedListener(null);
-            } catch (Exception e) {
-                FeedbackHelper.showError(e);
-            }
-        }
-    }
-
     private class SubmitButtonEventSelectionListener extends SelectionListener<ButtonEvent> {
         private final ComboBox<DeliveryMethodOption> methodCombo;
         private final ComboBox<SubscriptionTypeOption> typeCombo;
@@ -342,16 +282,12 @@ public class SubscriptionPanel extends BasePanel {
         private final TextField<String> subscriptionName;
         private final TextField<String> target;
         private final CheckBox enabled;
-        private final CheckBox machine;
-        private final SpinnerField spinnerField;
 
-        SubmitButtonEventSelectionListener(EntityCombo webhookCombo, ComboBox<DeliveryMethodOption> methodCombo, ComboBox<SubscriptionTypeOption> typeCombo, TextField<String> subscriptionName, TextField<String> target, CheckBox enabled, CheckBox machine, SpinnerField spinnerField) {
+        SubmitButtonEventSelectionListener(EntityCombo webhookCombo, ComboBox<DeliveryMethodOption> methodCombo, ComboBox<SubscriptionTypeOption> typeCombo, TextField<String> subscriptionName, TextField<String> target, CheckBox enabled ) {
             this.methodCombo = methodCombo;
             this.typeCombo = typeCombo;
             this.subscriptionName = subscriptionName;
             this.enabled = enabled;
-            this.machine = machine;
-            this.spinnerField = spinnerField;
             this.target = target;
             this.webhookCombo = webhookCombo;
         }
@@ -369,24 +305,21 @@ public class SubscriptionPanel extends BasePanel {
                 EntityName name = CommonFactory.createName(subscriptionName.getValue(), EntityType.subscription);
 
 
-                final Subscription update;
+
+                SubscriptionModel.Builder builder = new SubscriptionModel.Builder();
 
                 if (entity.getEntityType().equals(EntityType.subscription)) {
 
-                    update = (Subscription) entity;
-                    update.setName(name);
-                    update.setEnabled(enabled.getValue());
-                    update.setSubscriptionType(subscriptionType);
-                    update.setNotifyMethod(subscriptionNotifyMethod);
-                    update.setNotifyFormatJson(machine.getValue());
-                    update.setMaxRepeat(spinnerField.getValue().intValue());
+
+                    builder.init((Subscription) entity)
+                            .name(name);
 
 
                     if (subscriptionNotifyMethod.equals(SubscriptionNotifyMethod.webhook)) {
-                        update.setTarget(webhookCombo.getValue().getKey());
+                       builder.target(webhookCombo.getValue().getKey());
                     }
                     else {
-                        update.setTarget(target.getValue());
+                        builder.target(target.getValue());
                     }
 
 
@@ -396,38 +329,31 @@ public class SubscriptionPanel extends BasePanel {
                     String parent = user.getKey().equals(entity.getOwner()) ? entity.getKey() : "";
 
 
-
                     String targetValue;
                     if (subscriptionNotifyMethod.equals(SubscriptionNotifyMethod.webhook)) {
                         targetValue = (webhookCombo.getValue().getKey());
-                    }
-                    else {
+                    } else {
                         targetValue = (target.getValue());
+
+
                     }
 
-                    update = new SubscriptionModel.Builder()
-                            .name(name)
-                            .parent(parent)
+                    builder.parent(parent)
                             .subscriptionType(subscriptionType)
                             .subscribedEntity(entity.getKey())
                             .notifyMethod(subscriptionNotifyMethod)
-                            .maxRepeat(spinnerField.getValue().intValue())
-                            .target(targetValue)
+                            .target(targetValue);
 
-
-                            .create();
-
-//                    update = SubscriptionFactory.createSubscription(
-//                            newEntity,
-//                            entity.getKey(),
-//                            subscriptionType,
-//                            subscriptionNotifyMethod,
-//                            spinnerField.getValue().intValue(),
-//                            machine.getValue(),
-//                            enabled.getValue(),
-//                            targetValue);
                 }
 
+                    builder.name(name)
+                            .enabled(enabled.getValue())
+                            .subscriptionType(subscriptionType)
+                            .notifyMethod(subscriptionNotifyMethod);
+
+
+
+                final Subscription update = builder.create();
                 EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
                 service.addUpdateEntityRpc(update, new UpdateEntityAsyncCallback(box));
 

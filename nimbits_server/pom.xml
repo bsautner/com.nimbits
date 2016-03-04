@@ -175,12 +175,6 @@
 
         </dependency>
 
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.5</version>
-
-        </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -221,7 +215,7 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-math3</artifactId>
             <version>3.2</version>
-            <scope>compile</scope>
+            
         </dependency>
 
         <dependency>
@@ -415,7 +409,7 @@
 
 
                 <configuration>
-                      <webappDirectory>../nimbits_dep/src/main/opt/nimbits/webapps/root.war</webappDirectory>
+                      <webappDirectory>../nimbits_deb/src/main/opt/nimbits/webapps/root.war</webappDirectory>
                 </configuration>
             </plugin>
 

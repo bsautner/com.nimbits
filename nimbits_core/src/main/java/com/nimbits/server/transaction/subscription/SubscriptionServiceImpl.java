@@ -495,13 +495,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private void doXMPP(final User u, final Subscription subscription, final Entity entity, final Point point, final Value v) {
         final String message;
 
-        if (subscription.getNotifyFormatJson()) {
+
             point.setValue(v);
             message = GsonFactory.getInstance(true).toJson(point);
-        } else {
-            message = "Nimbits Data Point [" + entity.getName().getValue()
-                    + "] updated to new value: " + v.getDoubleValue();
-        }
+
 
         xmppService.sendMessage(message, u.getEmail());
 

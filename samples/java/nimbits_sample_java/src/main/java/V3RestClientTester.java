@@ -109,7 +109,12 @@ public class V3RestClientTester extends NimbitsTest  {
 
                 calendar.add(Calendar.SECOND, 1);
                 String metavalue = meta[(i & 1) == 0 ? 0 : 1]; //flip between meta values for testing search
-                values.add(new Value.Builder().timestamp(calendar.getTime()).doubleValue(r.nextDouble() * 1000).meta(metavalue).data("{}").create());
+                values.add(new Value.Builder()
+                        .timestamp(calendar.getTime())
+                        .doubleValue(r.nextDouble() * 1000)
+                        .lat(0.0)
+                        .lng(0.0)
+                        .meta(metavalue).data("{}").create());
 
             }
             nimbits.recordValues(entity, values);
@@ -163,7 +168,7 @@ public class V3RestClientTester extends NimbitsTest  {
                         log("Q Range: " + calendar.getTime() + " to " + new Date());
 
 
-                        throw new RuntimeException(
+                        error(
                                 "downloaded values did not contain expected posted value. " + value.toString());
 
 
@@ -179,7 +184,7 @@ public class V3RestClientTester extends NimbitsTest  {
                 log("getting " + i + " values for " + entity.getName());
                 List<Value> values = nimbits.getValues(entity, i);
                 if (values.size() != i) {
-                    throw new RuntimeException("asked for " + i + " values but got " + values.size());
+                    error("asked for " + i + " values but got " + values.size());
                 }
 
             }

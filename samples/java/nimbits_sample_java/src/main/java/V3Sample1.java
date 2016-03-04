@@ -281,7 +281,8 @@ public class V3Sample1 extends NimbitsTest {
                         .data("Some Random Data " + i)
                         .meta(i % 2 == 1 ? DOG : CAT) //alternate recording different meta values
                         .timestamp(calendar.getTime())
-
+                        .lat(0.0)
+                        .lng(0.0)
                         .create();
 
                 if (DOG.equals(newValue.getMetaData())) {

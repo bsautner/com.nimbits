@@ -16,6 +16,7 @@ public abstract class NimbitsTest  {
      public static final String EMAIL_ADDRESS ="admin@example.com";
   public static final String INSTANCE_URL = "http://localhost:8080";
     public static final String PASSWORD = "password1234";
+    int errors = 0;
 
 
 //    public static final String INSTANCE_URL = "https://yodel-1107.appspot.com";
@@ -85,6 +86,8 @@ public abstract class NimbitsTest  {
     }
 
     public void error(String message) {
+        log("Error: " + message);
+        errors++;
         throw new RuntimeException(message);
     }
 }

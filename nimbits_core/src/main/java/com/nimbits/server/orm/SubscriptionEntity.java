@@ -39,12 +39,6 @@ public class SubscriptionEntity extends EntityStore implements Serializable, Sub
     private Integer subscriptionType = SubscriptionType.none.getCode();
 
     @Persistent
-    private Double maxRepeat; //todo migrate to int
-
-    @Persistent
-    private Boolean notifyFormatJson;
-
-    @Persistent
     private Boolean enabled;
 
     @Persistent
@@ -60,42 +54,15 @@ public class SubscriptionEntity extends EntityStore implements Serializable, Sub
         super(subscription);
         this.notifyMethod = subscription.getNotifyMethod().getCode();
         this.subscriptionType = subscription.getSubscriptionType().getCode();
-        this.maxRepeat = (double) subscription.getMaxRepeat();
-        this.notifyFormatJson = subscription.getNotifyFormatJson();
+
         this.enabled = subscription.getEnabled();
         this.subscribedEntity = subscription.getSubscribedEntity();
         this.target = subscription.getTarget();
     }
 
-
-    @Override
-    public int getMaxRepeat() {
-        return this.maxRepeat == null ? 0 : (int) Math.round(maxRepeat);
-    }
-
-    @Override
-    public void setMaxRepeat(int maxRepeat) {
-        this.maxRepeat = (double) maxRepeat;
-    }
-
     @Override
     public String getSubscribedEntity() {
         return subscribedEntity;
-    }
-
-    @Override
-    public void setSubscribedEntity(String subscribedEntity) {
-        this.subscribedEntity = subscribedEntity;
-    }
-
-    @Override
-    public boolean getNotifyFormatJson() {
-        return notifyFormatJson;
-    }
-
-    @Override
-    public void setNotifyFormatJson(boolean notifyFormatJson) {
-        this.notifyFormatJson = notifyFormatJson;
     }
 
     @Override
@@ -144,9 +111,9 @@ public class SubscriptionEntity extends EntityStore implements Serializable, Sub
         Subscription s = (Subscription) update;
         notifyMethod = s.getNotifyMethod().getCode();
         subscriptionType = s.getSubscriptionType().getCode();
-        maxRepeat = (double) s.getMaxRepeat();
+
         enabled = s.getEnabled();
-        notifyFormatJson = s.getNotifyFormatJson();
+
         target = s.getTarget();
         subscribedEntity = s.getSubscribedEntity();
     }

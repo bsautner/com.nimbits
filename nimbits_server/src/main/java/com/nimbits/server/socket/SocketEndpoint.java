@@ -102,7 +102,7 @@ public class SocketEndpoint extends WebSocketServlet implements SocketEventListe
 //                    CommonFactory.createEmailAddress(emailParam), AccessToken.getInstance(authToken));
 //            NimbitsClient client = NimbitsClientFactory.getInstance(server);
             Nimbits nimbits = new Nimbits.Builder().email(emailParam).token(authToken).instance(forwardUrl).create();
-            user = nimbits.getMe();
+            user = nimbits.getMe(false);
            // users = Arrays.asList(user.getEmail());
 
             //notify cloud of socket

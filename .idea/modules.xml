@@ -2,11 +2,12 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/nimbits-parent.iml" filepath="$PROJECT_DIR$/nimbits-parent.iml" />
-      <module fileurl="file://$PROJECT_DIR$/nimbits_core/nimbits_core.iml" filepath="$PROJECT_DIR$/nimbits_core/nimbits_core.iml" />
-      <module fileurl="file://$PROJECT_DIR$/nimbits_gae/nimbits_gae.iml" filepath="$PROJECT_DIR$/nimbits_gae/nimbits_gae.iml" />
-      <module fileurl="file://$PROJECT_DIR$/nimbits_io/nimbits_io.iml" filepath="$PROJECT_DIR$/nimbits_io/nimbits_io.iml" />
-      <module fileurl="file://$PROJECT_DIR$/nimbits_server/nimbits_server.iml" filepath="$PROJECT_DIR$/nimbits_server/nimbits_server.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nimbits-parent.iml" filepath="$PROJECT_DIR$/nimbits-parent.iml" group="nimbits-parent and modules" />
+      <module fileurl="file://$PROJECT_DIR$/nimbits_core/nimbits_core.iml" filepath="$PROJECT_DIR$/nimbits_core/nimbits_core.iml" group="nimbits-parent and modules" />
+      <module fileurl="file://$PROJECT_DIR$/nimbits_gae/nimbits_gae.iml" filepath="$PROJECT_DIR$/nimbits_gae/nimbits_gae.iml" group="nimbits-parent and modules" />
+      <module fileurl="file://$PROJECT_DIR$/nimbits_io/nimbits_io.iml" filepath="$PROJECT_DIR$/nimbits_io/nimbits_io.iml" group="nimbits-parent and modules" />
+      <module fileurl="file://$PROJECT_DIR$/samples/java/nimbits_sample_java/nimbits_sample_java.iml" filepath="$PROJECT_DIR$/samples/java/nimbits_sample_java/nimbits_sample_java.iml" />
+      <module fileurl="file://$PROJECT_DIR$/nimbits_server/nimbits_server.iml" filepath="$PROJECT_DIR$/nimbits_server/nimbits_server.iml" group="nimbits-parent and modules" />
     </modules>
   </component>
 </project>

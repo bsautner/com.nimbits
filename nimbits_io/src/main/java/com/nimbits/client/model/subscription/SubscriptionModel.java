@@ -38,12 +38,9 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
     private int notifyMethod;
     @Expose
     private int subscriptionType;
-    @Expose
-    private int maxRepeat;
+
     @Expose
     private String target;
-    @Expose
-    private boolean notifyFormatJson;
     @Expose
     private boolean enabled;
 
@@ -52,35 +49,18 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
     }
 
 
-    public SubscriptionModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String subscribedEntity, int notifyMethod, int subscriptionType, int maxRepeat, String target, boolean notifyFormatJson, boolean enabled) {
+    public SubscriptionModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String subscribedEntity, int notifyMethod, int subscriptionType, String target,  boolean enabled) {
         super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
         this.subscribedEntity = subscribedEntity;
         this.notifyMethod = notifyMethod;
         this.subscriptionType = subscriptionType;
-        this.maxRepeat = maxRepeat;
         this.target = target;
-        this.notifyFormatJson = notifyFormatJson;
         this.enabled = enabled;
     }
 
     @Override
     public String getSubscribedEntity() {
         return this.subscribedEntity;
-    }
-
-    @Override
-    public void setSubscribedEntity(String uuid) {
-        this.subscribedEntity = uuid;
-    }
-
-    @Override
-    public boolean getNotifyFormatJson() {
-        return this.notifyFormatJson;
-    }
-
-    @Override
-    public void setNotifyFormatJson(boolean notifyFormatJson) {
-        this.notifyFormatJson = notifyFormatJson;
     }
 
     @Override
@@ -114,16 +94,6 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
     }
 
     @Override
-    public int getMaxRepeat() {
-        return maxRepeat;
-    }
-
-    @Override
-    public void setMaxRepeat(int maxRepeat) {
-        this.maxRepeat = maxRepeat;
-    }
-
-    @Override
     public String getTarget() {
         return target == null ? "" : target;
     }
@@ -147,6 +117,8 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
         private int maxRepeat;
 
         private String target;
+
+        private boolean enabled;
 
         public Builder subscribedEntity(String subscribedEntity) {
             this.subscribedEntity = subscribedEntity;
@@ -183,6 +155,11 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
             return this;
         }
 
+        public Builder enabled(boolean enabled) {
+            this.enabled = enabled;
+            return this;
+        }
+
 
         public Subscription create() {
             if (subscriptionType == null) {
@@ -192,7 +169,7 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
                 notifyMethod = SubscriptionNotifyMethod.none;
             }
             return new SubscriptionModel(key, name, description, type, protectionLevel, parent
-            , owner, uuid, subscribedEntity, notifyMethod.getCode(), subscriptionType.getCode(), maxRepeat, target, true, true );
+            , owner, uuid, subscribedEntity, notifyMethod.getCode(), subscriptionType.getCode(), target , enabled );
 
         }
 
@@ -266,8 +243,8 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
             this.subscribedEntity = entity.getSubscribedEntity();
             this.notifyMethod = entity.getNotifyMethod();
             this.subscriptionType = entity.getSubscriptionType();
-            this.maxRepeat = entity.getMaxRepeat();
             this.target = entity.getTarget();
+            this.enabled = entity.getEnabled();
             return this;
         }
 

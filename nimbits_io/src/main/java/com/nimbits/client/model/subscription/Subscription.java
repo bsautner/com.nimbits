@@ -25,17 +25,7 @@ import java.io.Serializable;
 
 public interface Subscription extends Entity, Serializable {
 
-    int getMaxRepeat();
-
-    void setMaxRepeat(int maxRepeat);
-
     String getSubscribedEntity();
-
-    void setSubscribedEntity(String uuid);
-
-    boolean getNotifyFormatJson();
-
-    void setNotifyFormatJson(boolean notifyFormatJson);
 
     boolean getEnabled();
 

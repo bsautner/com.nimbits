@@ -94,7 +94,7 @@ public class GetAction extends RestAction {
                 getTable(user, req, resp, path);
                 break;
             case entity:
-                getEntity(user, resp, path, base);
+                getEntity(user, req, resp, path, base);
                 break;
             case nearby:
                 getNearbyPoints(req, resp, path, user);
@@ -121,7 +121,8 @@ public class GetAction extends RestAction {
 
     //GET Actions
     public void getMe(HttpServletRequest req, HttpServletResponse resp, User user, String base) throws IOException {
-        List<Entity> children = entityDao.getChildren(user, Collections.<Entity>singletonList(user));
+
+        List<Entity> children = getChildEntitiesIfRequested(req, user);
         Integer indx = user.getIsAdmin() ? 0 : null;
         Gson gson = GsonFactory.getInstance(true);
         setHAL(user, user, children, base, indx);
@@ -156,6 +157,18 @@ public class GetAction extends RestAction {
         }
     }
 
+    private List<Entity> getChildEntitiesIfRequested(HttpServletRequest req, User user) {
+        String childrenParam = req.getParameter("children");
+        boolean includeChildren = ! StringUtils.isEmpty(childrenParam) && childrenParam.equals("true");
+        List<Entity> children;
+        if (includeChildren) {
+            children = entityDao.getChildren(user, Collections.<Entity>singletonList(user));
+        }
+        else {
+            children = Collections.emptyList();
+        }
+        return children;
+    }
 
 
     private void getChildren(User user, HttpServletResponse resp, String path ) throws IOException {
@@ -340,14 +353,23 @@ public class GetAction extends RestAction {
 
     //Helper Methods
 
-    private void getEntity(User user, HttpServletResponse resp, String path, String base) throws IOException {
+    private void getEntity(User user, HttpServletRequest req, HttpServletResponse resp, String path, String base) throws IOException {
         String uuid = getEntityUUID(path);
 
         Optional<Entity> optional = entityDao.findEntityByUUID(user, uuid);// entityMap.get(uuid);
 
         if (optional.isPresent()) {
             Entity entity = optional.get();
-            List<Entity> children = entityDao.getChildren(user, Collections.singletonList(entity));
+
+            String childrenParam = req.getParameter("children");
+            boolean includeChildren = ! StringUtils.isEmpty(childrenParam) && childrenParam.equals("true");
+            List<Entity> children;
+            if (includeChildren) {
+                children = entityDao.getChildren(user, Collections.singletonList(entity));
+            }
+            else {
+                children = Collections.emptyList();
+            }
 
             setHAL(user, entity, children, base, null);
 

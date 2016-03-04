@@ -19,7 +19,7 @@
 <module rename-to="nimbits">
 
     <entry-point class='com.nimbits.client.NimbitsEntryPoint'/>
-
+    <inherits name='com.google.gwt.user.UserAgent'/>
     <inherits name='com.google.gwt.visualization.Visualization'/>
     <inherits name="com.google.gwt.resources.Resources"/>
     <inherits name='com.google.gwt.user.User'/>

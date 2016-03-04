@@ -1,17 +1,17 @@
 <component name="ArtifactManager">
   <artifact type="exploded-war" name="nimbits_server:war exploded">
-    <output-path>$PROJECT_DIR$/nimbits_dep/src/main/opt/nimbits/webapps/root.war</output-path>
+    <output-path>$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/webapps/root.war</output-path>
     <root id="root">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="nimbits_server" />
         </element>
         <element id="directory" name="lib">
-          <element id="archive" name="nimbits_core-3.9.48-SNAPSHOT.jar">
+          <element id="archive" name="nimbits_core-3.9.49-SNAPSHOT.jar">
             <element id="module-output" name="nimbits_core" />
           </element>
           <element id="library" level="project" name="Maven: net.sf.proguard:proguard-base:5.2.1" />
-          <element id="archive" name="nimbits_io-3.9.48-SNAPSHOT.jar">
+          <element id="archive" name="nimbits_io-3.9.49-SNAPSHOT.jar">
             <element id="module-output" name="nimbits_io" />
           </element>
           <element id="library" level="project" name="Maven: com.squareup.retrofit:retrofit:1.7.0" />
@@ -49,7 +49,6 @@
           <element id="library" level="project" name="Maven: com.google.gwt:gwt-servlet:2.5.1" />
           <element id="library" level="project" name="Maven: com.google.gwt:gwt-user:2.5.1" />
           <element id="library" level="project" name="Maven: org.json:json:20090211" />
-          <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.5" />
           <element id="library" level="project" name="Maven: javax.servlet:javax.servlet-api:3.0.1" />
           <element id="library" level="project" name="Maven: javax.jdo:jdo-api:3.0.1" />
           <element id="library" level="project" name="Maven: javax.transaction:jta:1.1" />
@@ -80,11 +79,12 @@
           <element id="library" level="project" name="Maven: org.springframework:spring-context:4.2.3.RELEASE" />
           <element id="library" level="project" name="Maven: org.springframework:spring-aop:4.2.3.RELEASE" />
           <element id="library" level="project" name="Maven: aopalliance:aopalliance:1.0" />
+          <element id="library" level="project" name="Maven: com.google.code.gson:gson:2.6.2" />
           <element id="library" level="project" name="Maven: com.google.guava:guava:19.0" />
         </element>
       </element>
       <element id="directory" name="META-INF">
-        <element id="file-copy" path="$PROJECT_DIR$/nimbits_dep/src/main/opt/nimbits/webapps/root.war/META-INF/MANIFEST.MF" />
+        <element id="file-copy" path="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/webapps/root.war/META-INF/MANIFEST.MF" />
       </element>
       <element id="javaee-facet-resources" facet="nimbits_server/web/Web" />
       <element id="gwt-compiler-output" facet="nimbits_server/gwt/GWT" />

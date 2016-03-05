@@ -1,6 +1,6 @@
 ## About
 
-Nimbits server is a flexible API designed to store and process time and geo stamp data,
+Nimbits Server is a web portal and flexible API designed to store and process time and geo stamp data,
 filter incoming data and trigger events based on rules.  It stored data in a way that makes
 it easy to retrieve chucks of data sets using date ranges or gps coordinates.
 
@@ -15,6 +15,9 @@ More information and documentation is available at [www.nimbits.com] (http://www
 
 Nimbits is structured as a tree of entities. All entities have a name, unique id and a parent.  The top level entity is you. Entities are data points,
 rule triggers, calculations, alerts or anything else.  Data Points are buckets that contain many values.  Values are structured like this:
+
+![points](https://s3.amazonaws.com/com.nimbits.bucket/images/screenshots/points_screen.png)
+
 
 ```
 {

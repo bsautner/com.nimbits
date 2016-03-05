@@ -1,3 +1,7 @@
+[![Build Status](http://www.nimbits.com:8080/buildStatus/icon?job=nimbits_parent)](http://www.nimbits.com:8080/job/nimbits_parent/)
+
+[Public Wiki](https://github.com/bsautner/com.nimbits/wiki) | [Community Forum](https://groups.google.com/forum/#!forum/nimbits)
+
 ## About
 
 Nimbits Server is a web portal and flexible API designed to store and process time and geo stamp data,
@@ -9,7 +13,7 @@ and log data from a java or android app.
 
 More information and documentation is available at [www.nimbits.com] (http://www.nimbits.com)
 
-[![Build Status](http://www.nimbits.com:8080/buildStatus/icon?job=nimbits_parent)](http://www.nimbits.com:8080/job/nimbits_parent/)
+
 
 ## Basic Concept
 

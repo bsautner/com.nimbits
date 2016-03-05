@@ -40,10 +40,42 @@ values may be ignored (such as noise from a sensor), trigger calculations, relay
 - nimbits_core: core project containing the guts of nimbits server
 - nimbits_server: an implementation of nimbits_core for J2EE servers like jetty or tomcat with an embedded H2 Database
 - nimbits_gae: an implementation of nimbits_core for Google App Engine
-- nimbits_io: the java client and wrapper for the API
+- nimbits_io: the java client and wrapper for the API and the object model
 - samples - various samples that use nimbits io or other clients to interact with the server
 
+
+
 ## nimbits server
+
+### Understanding the API
+
+The API is a restful web service that uses HAL standards. This means that API responses include self links and navigatable links that allow 
+you to browse the api as if it was a web site.  One of the best ways to understand the api is to:
+ 
+- login to a server e.g. http://localhost:8080 
+- create some objects
+- browse to the root of the API: http://localhost:8080/service/v3/rest/me
+
+The response will be your user entity and you'll be viewing the top level of your entity tree.
+
+You can install plugins in your browser for formatting json and adding authentication headers. 
+
+The API uses basic authentication, so you should also use a browser plugin to add a header like this:
+
+`Authorization: Basic username:password`
+
+or you can base64 encode your user name and password for added security:
+
+`Authorization: Basic dm9yZGVsOnZvcmRlbA==`
+
+You can then browse the api and see how every object can be represented by it's unique ID: 
+
+http://localhost:8080/service/v3/rest/uuid
+
+You can PUT updated to the object, post data values and get a series of data
+
+For more on what you can do with the API, reference the [WIKI](https://github.com/bsautner/com.nimbits/wiki)
+
 
 ### Install debian linux (ubuntu etc) 
 

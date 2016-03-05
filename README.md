@@ -1,6 +1,6 @@
 [![Build Status](http://www.nimbits.com:8080/buildStatus/icon?job=nimbits_parent)](http://www.nimbits.com:8080/job/nimbits_parent/)
 
-[Public Wiki](https://github.com/bsautner/com.nimbits/wiki) | [Community Forum](https://groups.google.com/forum/#!forum/nimbits)
+[Public Wiki](https://github.com/bsautner/com.nimbits/wiki) | [Community Forum](https://groups.google.com/forum/#!forum/nimbits) | [Bug Report](https://github.com/bsautner/com.nimbits/issues)
 
 ## About
 

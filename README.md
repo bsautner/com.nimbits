@@ -5,10 +5,10 @@
 ## About
 
 Nimbits Server is a web portal and flexible API designed to store and process time and location stamped data,
-filter incoming data and trigger events based on rules.  It stored data in a way that makes
-it fast and easy to retrieve chucks of data sets using date ranges or gps coordinates.
+filter incoming data and trigger events based on rules.  It stores data in a way that makes
+it fast and easy to retrieve chunks of data sets using date ranges or gps coordinates.
 
-nimbits.io is a java client that wraps the api to make it easy to automated the server
+Nimbits.io is a java client that wraps the api to make it easy to automated the server
 and log data from a java or android app.
 
 More information and documentation is available at [www.nimbits.com] (http://www.nimbits.com)

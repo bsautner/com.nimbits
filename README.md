@@ -21,12 +21,11 @@ rule triggers, calculations, alerts or anything else.  Data Points are buckets t
 
 ```
 {
-    timestamp
-    decimal value
-    latitude
-    longitude
-    text data
-    meta data
+   long timestamp: unix time in ms
+   double value: a number value, current sensor reading, or a tempurature etc
+   latitude, longitude: gps coords
+   String text data: any string, JSON or XML payloads for example.
+   String meta data: another handy string field for filtering data
 
 }
 ```
@@ -34,6 +33,8 @@ rule triggers, calculations, alerts or anything else.  Data Points are buckets t
 All fields are optional except the timestamp.  You record many Values into a Data Point where they are stored.  Based on rules you configure, incoming
 values may be ignored (such as noise from a sensor), trigger calculations, relayed to other servers etc.
 
+With the API, you POST value objects that can trigger events like high alters, or run a rule like a webhook based on the incoming data. 
+You can then perform GET requests to download a series of data based on filter criteria such as a date range.
 
 ## Project Structure
 

@@ -339,7 +339,7 @@
                 <artifactId>gwt-maven-plugin</artifactId>
                 <version>2.5.1</version>
                 <configuration>
-                    <extraJvmArgs>-XX:MaxPermSize=1024m -Xmx1700m -Dgwt.style=DETAILED</extraJvmArgs>
+                    <extraJvmArgs>-XX:PermSize=128m -XX:MaxPermSize=128m -Dgwt.style=DETAILED</extraJvmArgs>
 
                     <compileSourcesArtifacts>
                         <compileSourcesArtifact>com.nimbits:nimbits_io</compileSourcesArtifact>

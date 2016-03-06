@@ -1,5 +1,5 @@
 <!--[![Build Status](http://www.nimbits.com:8080/buildStatus/icon?job=nimbits_parent)](http://www.nimbits.com:8080/job/nimbits_parent/)-->
-[![Build Status](http://54.164.32.20:8080/buildStatus/icon?job=com.nimbits)](http://54.164.32.20:8080/job/com.nimbits/)
+[![Build Status](http://54.174.81.75:8080/buildStatus/icon?job=com.nimbits)](http://54.164.32.20:8080/job/com.nimbits/)
 
 
 [Public Wiki](https://github.com/bsautner/com.nimbits/wiki) | [Community Forum](https://groups.google.com/forum/#!forum/nimbits) | [Bug Report](https://github.com/bsautner/com.nimbits/issues)

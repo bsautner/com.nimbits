@@ -4,7 +4,7 @@
 
 ## About
 
-Nimbits Server is a web portal and flexible API designed to store and process time and location stamped data,
+Nimbits Server is a web portal and API designed to store and process time and location stamped data,
 filter incoming data and trigger events based on rules.  It stores data in a way that makes
 it fast and easy to retrieve chunks of data sets using date ranges or gps coordinates.
 

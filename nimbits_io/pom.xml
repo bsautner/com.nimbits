@@ -62,44 +62,7 @@
         </repository>
     </distributionManagement>
 
-    <build>
-        <plugins>
 
-         <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>2.9.1</version>
-                <configuration>
-                    <show>public</show>
-                    <nohelp>true</nohelp>
-                    <reportOutputDirectory>/data/webapps/apidocs</reportOutputDirectory>
-                    <destDir>/data/webapps/apidocs/nimbits_io</destDir>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-javadocs</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.4</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-
-    </build>
 
     <reporting>
         <plugins>
@@ -138,11 +101,7 @@
 
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.commons</groupId>
-            <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
-        </dependency>
+
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>

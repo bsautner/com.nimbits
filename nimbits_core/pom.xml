@@ -33,38 +33,6 @@
         <version>3.9.50-SNAPSHOT</version>
     </parent>
 
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-
-
-    <repositories>
-        <repository>
-            <id>DN_M2_Repo</id>
-            <name>DataNucleus Repository</name>
-            <url>http://www.datanucleus.org/downloads/maven2</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-
-
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>DataNucleus_2</id>
-            <url>http://www.datanucleus.org/downloads/maven2/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
 
     <dependencies>
 
@@ -274,19 +242,7 @@
                 </executions>
             </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.4</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+
 
         </plugins>
     </build>

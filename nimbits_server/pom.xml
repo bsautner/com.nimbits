@@ -40,35 +40,7 @@
         <datanucleus.version>3.1.2</datanucleus.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>gwt-maven</id>
-            <url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
-        </repository>
 
-        <repository>
-            <id>google-releases</id>
-            <name>Google Releases</name>
-            <url>https://oss.sonatype.org/content/repositories/google-releases</url>
-        </repository>
-
-
-            <!--<repository>-->
-                <!--<id>local</id>-->
-                <!--<url>file://${user.home}/.m2/repository</url>-->
-
-            <!--</repository>-->
-
-
-    </repositories>
-
-    <pluginRepositories>
-
-        <pluginRepository>
-            <id>gwt-maven</id>
-            <url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
-        </pluginRepository>
-    </pluginRepositories>
 
 
     <dependencies>
@@ -79,14 +51,6 @@
             <version>3.9.50-SNAPSHOT</version>
 
         </dependency>
-
-        <dependency>
-            <groupId>com.nimbits</groupId>
-            <artifactId>nimbits_io</artifactId>
-            <version>3.9.50-SNAPSHOT</version>
-
-        </dependency>
-
 
         <!--nimbits io will use these if available-->
         <dependency>

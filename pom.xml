@@ -75,6 +75,67 @@
         </license>
     </licenses>
 
+    <repositories>
+
+        <!--<repository>-->
+            <!--<id>local</id>-->
+            <!--<url>file://${user.home}/.m2/repository</url>-->
+
+        <!--</repository>-->
+
+        <repository>
+            <id>jline</id>
+            <name>JLine Project Repository</name>
+            <url>http://jline.sourceforge.net/m2repo</url>
+        </repository>
+
+        <repository>
+            <id>DN_M2_Repo</id>
+            <name>DataNucleus Repository</name>
+            <url>http://www.datanucleus.org/downloads/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+
+        <repository>
+            <id>google-releases</id>
+            <name>Google Releases</name>
+            <url>https://oss.sonatype.org/content/repositories/google-releases</url>
+        </repository>
+
+        <repository>
+            <id>gwt-maven</id>
+            <url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
+        </repository>
+
+
+
+
+    </repositories>
+
+    <pluginRepositories>
+
+        <pluginRepository>
+            <id>gwt-maven</id>
+            <url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>DataNucleus_2</id>
+            <url>http://www.datanucleus.org/downloads/maven2/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+        <pluginRepository>
+            <id>google-staging</id>
+            <name>Google Staging</name>
+            <url>https://oss.sonatype.org/content/repositories/comgoogleappengine-1004/</url>
+        </pluginRepository>
+
+    </pluginRepositories>
+
     <build>
         <pluginManagement>
             <plugins>
@@ -113,19 +174,7 @@
                         </execution>
                     </executions>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-source-plugin</artifactId>
-                    <version>2.4</version>
-                    <executions>
-                        <execution>
-                            <id>attach-sources</id>
-                            <goals>
-                                <goal>jar</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                </plugin>
+
 
 
 

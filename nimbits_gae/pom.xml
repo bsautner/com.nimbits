@@ -39,38 +39,7 @@
         <datanucleus.version>3.1.2</datanucleus.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>gwt-maven</id>
-            <url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
-        </repository>
 
-        <repository>
-            <id>google-releases</id>
-            <name>Google Releases</name>
-            <url>https://oss.sonatype.org/content/repositories/google-releases</url>
-        </repository>
-
-
-        <!--<repository>-->
-            <!--<id>localhost</id>-->
-            <!--<url>file://${user.home}/.m2/repository</url>-->
-
-        <!--</repository>-->
-
-    </repositories>
-
-    <pluginRepositories>
-        <pluginRepository>
-            <id>google-staging</id>
-            <name>Google Staging</name>
-            <url>https://oss.sonatype.org/content/repositories/comgoogleappengine-1004/</url>
-        </pluginRepository>
-        <pluginRepository>
-            <id>gwt-maven</id>
-            <url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
-        </pluginRepository>
-    </pluginRepositories>
 
     <dependencies>
 

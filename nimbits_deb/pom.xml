@@ -36,14 +36,6 @@
             <email>bsautner@nimbits.com</email>
         </developer>
     </developers>
-    <repositories>
-
-        <repository>
-            <id>jline</id>
-            <name>JLine Project Repository</name>
-            <url>http://jline.sourceforge.net/m2repo</url>
-        </repository>
-    </repositories>
 
     <dependencies>
 

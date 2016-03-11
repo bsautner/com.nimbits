@@ -1,18 +1,15 @@
 <!--[![Build Status](http://www.nimbits.com:8080/buildStatus/icon?job=nimbits_parent)](http://www.nimbits.com:8080/job/nimbits_parent/)-->
-[![Build Status](http://52.86.203.20:8080/buildStatus/icon?job=com.nimbits)](http://54.164.32.20:8080/job/com.nimbits/)
-
-
-[Public Wiki](https://github.com/bsautner/com.nimbits/wiki) | [Community Forum](https://groups.google.com/forum/#!forum/nimbits) | [Bug Report](https://github.com/bsautner/com.nimbits/issues)
+[![Build Status](http://52.86.203.20:8080/buildStatus/icon?job=com.nimbits)](http://54.164.32.20:8080/job/com.nimbits/) | [WIKI](https://github.com/bsautner/com.nimbits/wiki) | [Community Forum](https://groups.google.com/forum/#!forum/nimbits) | [Bug Report](https://github.com/bsautner/com.nimbits/issues) 
 
 ## About
 
-Nimbits Server is a web portal and API designed to store and process time and location stamped data,
+`nimbits Server` is a web portal and API designed to store and process time and location stamped data,
 filter incoming data and trigger events based on rules.  It stores data in a way that makes
 it fast and easy to retrieve chunks of data sets using date ranges or gps coordinates.
 
 Further, it is designed to install on small java embedded devices like a [RaspberryPi](https://www.raspberrypi.org/), J2EE servers like [Apache Tomcat](http://tomcat.apache.org/) and finally on clouds like [Google App Engine](https://cloud.google.com/appengine/) and [Amazon EC2](https://aws.amazon.com/ec2).  This lets you build a topgraphy of servers all connect to each other.  Small instances can filter noise from sensors and relay data up to larger servers for display on a website, for example.
 
-Nimbits.io is a java client that wraps the api to make it easy to automate the server
+`nimbits.io` is a java client that wraps the api to make it easy to automate the server
 and log data from a java or android app.
  
 
@@ -45,11 +42,11 @@ You can then perform GET requests to download a series of data based on filter c
 
 ## Project Structure
 
-- nimbits_core: core project containing the guts of nimbits server
-- nimbits_server: an implementation of nimbits_core for J2EE servers like jetty or tomcat with an embedded H2 Database
-- nimbits_gae: an implementation of nimbits_core for Google App Engine
-- nimbits_io: the java client and wrapper for the API and the object model
-- samples - various samples that use nimbits io or other clients to interact with the server
+- `nimbits_core`: core project containing the guts of nimbits server
+- `nimbits_server`: an implementation of nimbits_core for J2EE servers like jetty or tomcat with an embedded H2 Database
+- `nimbits_gae`: an implementation of nimbits_core for Google App Engine
+- `nimbits_io`: the java client and wrapper for the API and the object model
+- `samples` - various samples that use nimbits io or other clients to interact with the server
 
 
 

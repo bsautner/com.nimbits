@@ -9,10 +9,10 @@
 filter incoming data and trigger events based on rules.  It stores data in a way that makes
 it fast and easy to retrieve chunks of data sets using date ranges or gps coordinates.
 
-Further, it is designed to install on small java embedded devices like a [RaspberryPi](https://www.raspberrypi.org/), J2EE servers like [Apache Tomcat](http://tomcat.apache.org/) and finally on clouds like [Google App Engine](https://cloud.google.com/appengine/) and [Amazon EC2](https://aws.amazon.com/ec2).  This lets you build a topgraphy of servers all connect to each other.  Small instances can filter noise from sensors and relay data up to larger servers for display on a website, for example.
+Further, it is designed to run on small java embedded devices like a [RaspberryPi](https://www.raspberrypi.org/), J2EE servers like [Apache Tomcat](http://tomcat.apache.org/) and finally on clouds like [Google App Engine](https://cloud.google.com/appengine/) and [Amazon EC2](https://aws.amazon.com/ec2).  This lets you build a topgraphy of servers all connected to each other.  Small instances can filter noise from sensors and relay data up to larger servers for display on a website, for example.
 
 `nimbits.io` is a java client that wraps the api to make it easy to automate the server
-and log data from a java or android app.
+and log data from a java or android app. Part of the maven central repository and JCenter, it's easy to import it into your projects.
  
 
 

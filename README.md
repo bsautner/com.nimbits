@@ -10,6 +10,10 @@ Nimbits Server is a web portal and API designed to store and process time and lo
 filter incoming data and trigger events based on rules.  It stores data in a way that makes
 it fast and easy to retrieve chunks of data sets using date ranges or gps coordinates.
 
+Further, it is designed to install on small java embedded devices like a RaspberryPi, J2EE servers like Apache Tomcat and finally on 
+the cloud like Google App Engine and Amazone EC2.  This lets you build a topgraphy of servers all connect to each other.  
+Small instances can filter noise from sensors and relay data up to larger servers for display on a website, for example.
+
 Nimbits.io is a java client that wraps the api to make it easy to automate the server
 and log data from a java or android app.
 

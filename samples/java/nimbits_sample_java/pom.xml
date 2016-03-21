@@ -20,7 +20,7 @@
 
     <groupId>com.nimbits</groupId>
     <artifactId>nimbits_sample_java</artifactId>
-    <version>3.9.49</version>
+    <version>3.9.50</version>
 
 
 
@@ -61,7 +61,7 @@
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_io</artifactId>
-            <version>3.9.49</version>
+            <version>3.9.50</version>
             <scope>compile</scope>
         </dependency>
 

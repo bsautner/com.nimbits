@@ -37,8 +37,6 @@ public class V3ApiHeartbeat {
 
         System.out.println(me.toString());
 
-
-
         Point point = new PointModel.Builder().name("timestamp_" + UUID.randomUUID()).create();
         point = adminClient.addPoint(me, point);
         while (true) {

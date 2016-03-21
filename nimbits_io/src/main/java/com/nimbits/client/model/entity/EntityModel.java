@@ -167,7 +167,7 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
 
     @Override
     public void setChildren(final List<Entity> someChildren) {
-        this.children = (ArrayList<Entity>) someChildren;
+        this.children = someChildren;
     }
 
     @Override

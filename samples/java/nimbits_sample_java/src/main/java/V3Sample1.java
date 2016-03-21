@@ -137,7 +137,7 @@ public class V3Sample1 extends NimbitsTest {
             Nimbits client = new Nimbits.Builder()
                     .email(email).token(password).instance(INSTANCE_URL).create();
 
-            User me = client.getMe();
+            User me = client.getMe(true);
 
             log("Re-Downloaded basic user to verify: " + me.toString());
 

@@ -150,7 +150,7 @@ public class GetAction extends RestAction {
             }
         }
         else {
-          //  List<Entity> children = entityDao.getChildren(user, Collections.<Entity>singletonList(user));
+
             user.setChildren(children);
             String r = gson.toJson(user);
             resp.getWriter().println(r);
@@ -158,7 +158,7 @@ public class GetAction extends RestAction {
     }
 
     private List<Entity> getChildEntitiesIfRequested(HttpServletRequest req, User user) {
-        String childrenParam = req.getParameter("children");
+        String childrenParam = req.getParameter(Parameters.children.getText());
         boolean includeChildren = ! StringUtils.isEmpty(childrenParam) && childrenParam.equals("true");
         List<Entity> children;
         if (includeChildren) {
@@ -175,11 +175,13 @@ public class GetAction extends RestAction {
         String uuid = getEntityUUID(path);
 
 
-        Entity entity = entityDao.findEntityByUUID(user, uuid).get();
+        Optional<Entity> optional = entityDao.findEntityByUUID(user, uuid);
 
 
-        List<Entity> children = entityDao.getChildren(user, Collections.singletonList(entity));
-        resp.getWriter().println(gson.toJson(children));
+        if (optional.isPresent()) {
+            List<Entity> children = entityDao.getChildren(user, Collections.singletonList(optional.get()));
+            resp.getWriter().println(gson.toJson(children));
+        }
 
     }
 
@@ -383,7 +385,7 @@ public class GetAction extends RestAction {
     }
 
 
-    public void getNearbyPoints(HttpServletRequest request, HttpServletResponse resp, String path, User user) throws IOException {
+    private void getNearbyPoints(HttpServletRequest request, HttpServletResponse resp, String path, User user) throws IOException {
 
         String metersParam = request.getParameter(Parameters.meters.getText());
         String uuid = getEntityUUID(path);

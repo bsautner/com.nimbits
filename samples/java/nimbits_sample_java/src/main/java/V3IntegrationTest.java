@@ -8,7 +8,6 @@ public class V3IntegrationTest {
         V3EntityTests v3EntityTests = new V3EntityTests();
         v3EntityTests.execute();
 
-
         V3Sample1 v3Sample1 = new V3Sample1();
         v3Sample1.execute();
 
@@ -17,7 +16,6 @@ public class V3IntegrationTest {
 
         V3ApiChildrenTest v3ApiChildrenTest = new V3ApiChildrenTest();
         v3ApiChildrenTest.execute();
-
 
         V3RestClientTester v3RestClientTester = new V3RestClientTester();
         v3RestClientTester.execute();

@@ -33,7 +33,7 @@ public class V3ApiHeartbeat {
             Log(throwable.getMessage());
         }
 
-        User me = adminClient.getMe();
+        User me = adminClient.getMe(true);
 
         System.out.println(me.toString());
 

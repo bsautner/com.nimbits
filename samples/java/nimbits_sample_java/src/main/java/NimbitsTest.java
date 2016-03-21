@@ -13,9 +13,9 @@ import java.util.Date;
 public abstract class NimbitsTest  {
     public User user;
 
-     public static final String EMAIL_ADDRESS ="admin@example.com";
-  public static final String INSTANCE_URL = "http://localhost:8080";
-    public static final String PASSWORD = "password1234";
+    static final String EMAIL_ADDRESS ="admin@example.com";
+    static final String INSTANCE_URL = "http://localhost:8080";
+    static final String PASSWORD = "1234"; //just like my luggage!
     int errors = 0;
 
 
@@ -42,7 +42,7 @@ public abstract class NimbitsTest  {
         try {
 
             log("Trying to get existing user");
-            user = nimbits.getMe();
+            user = nimbits.getMe(true);
         } catch (Throwable throwable) {
             //user not found, let's create on - the first user will be an admin of the server
             log("Server returned error - creating user instead " + throwable.getMessage());
@@ -55,7 +55,7 @@ public abstract class NimbitsTest  {
 
         log("Got User:" + user.toString());
 
-        return nimbits.getMe();
+        return nimbits.getMe(true);
 
 
 

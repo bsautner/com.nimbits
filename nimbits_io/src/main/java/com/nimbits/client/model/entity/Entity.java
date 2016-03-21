@@ -75,23 +75,13 @@ public interface Entity extends Serializable, Comparable<Entity> {
 
     boolean isOwner(User user);
 
-    boolean entityIsReadable(User user);
-
-
     void validate(User user);
-
 
     void setEmbedded(Embedded embedded);
 
     void setLinks(Links links);
 
     void setKey(String key);
-
-    String getInstanceUrl();
-
-    boolean isCached();
-
-    void setIsCached(boolean isCached);
 
     Action getAction();
 

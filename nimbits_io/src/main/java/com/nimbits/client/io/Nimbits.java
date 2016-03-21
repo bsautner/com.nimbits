@@ -131,6 +131,17 @@ public class Nimbits {
     }
 
     /**
+     *
+     * @Param should the returned object contain a list of children one level down
+     * @return the authentication user from /service/v3/me
+     */
+    public User getMe() {
+
+        return api.getMe(true);
+    }
+
+
+    /**
      * if you are using an admin id, you can add users here.
      * @param newUser a complete user object without an id or uuid
      * @return

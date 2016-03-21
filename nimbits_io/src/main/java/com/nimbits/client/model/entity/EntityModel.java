@@ -66,13 +66,11 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
     private String uuid;
 
     @Expose
-    private ArrayList<Entity> children;
-
-    private String instanceUrl;
-    private boolean isCached = false;
+    private List<Entity> children;
 
     @Expose
     private String id;
+
     private String action;
 
 
@@ -149,21 +147,7 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
         this.id = key;
     }
 
-    @Override
-    public String getInstanceUrl() {
-        return instanceUrl;
-    }
 
-    @Override
-    public boolean isCached() {
-        return this.isCached;
-
-    }
-
-    @Override
-    public void setIsCached(boolean isCached) {
-        this.isCached = isCached;
-    }
 
     @Override
     public Action getAction() {
@@ -331,28 +315,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
         if (!this.owner.equals(user.getKey()) && this.entityType != EntityType.user.getCode()) {
             throw new IllegalArgumentException("You can't create an entity with an owner other than yourself!");
         }
-    }
-
-
-    @Override
-    public boolean entityIsReadable(final User user) {
-
-
-        boolean retVal = this.getEntityType().equals(EntityType.user) ||
-                isOwner(user) ||
-                this.getProtectionLevel().equals(ProtectionLevel.everyone) ||
-                this.getProtectionLevel().equals(ProtectionLevel.onlyConnection);
-
-
-        if (this.getEntityType().equals(EntityType.summary) && user == null) {
-            retVal = true; //this is a system request from the summary cron job.
-        }
-        if (this.getEntityType().equals(EntityType.accessKey)) {
-
-        }
-        return retVal;
-
-
     }
 
 

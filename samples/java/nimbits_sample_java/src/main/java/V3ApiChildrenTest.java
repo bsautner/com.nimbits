@@ -20,7 +20,7 @@ public class V3ApiChildrenTest extends NimbitsTest {
     public void execute() throws InterruptedException {
         super.execute();
 
-        User me = nimbits.getMe();
+        User me = nimbits.getMe(true);
 
         System.out.println(me.toString());
 
@@ -32,7 +32,7 @@ public class V3ApiChildrenTest extends NimbitsTest {
 
         }
 
-        me = nimbits.getMe();
+        me = nimbits.getMe(true);
         log("Got Children: " + me.getChildren().size());
         log("Done " +  getClass().getName());
 

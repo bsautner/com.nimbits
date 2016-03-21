@@ -253,12 +253,6 @@ public abstract class EntityStore implements Entity {
     }
 
     @Override
-    public boolean entityIsReadable(final User user) {
-        throw new IllegalArgumentException("Not Implemented");
-    }
-
-
-    @Override
     public void validate(User user) {
 
         if (StringUtils.isEmpty(this.owner) || StringUtils.isEmpty(this.name) || StringUtils.isEmpty(this.parent)) {
@@ -278,21 +272,6 @@ public abstract class EntityStore implements Entity {
 
     @Override
     public void setKey(String key) {
-        throw new IllegalArgumentException("Not Implemented");
-    }
-
-    @Override
-    public String getInstanceUrl() {
-        return null;
-    }
-
-    @Override
-    public boolean isCached() {
-        return false;
-    }
-
-    @Override
-    public void setIsCached(boolean isCached) {
         throw new IllegalArgumentException("Not Implemented");
     }
 

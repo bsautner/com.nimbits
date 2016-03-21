@@ -63,7 +63,7 @@ public class V3RestClientTester extends NimbitsTest  {
                     .token(password)
                     .instance(INSTANCE_URL).create();
 
-            User verify = nonAdminClient.getMe();
+            User verify = nonAdminClient.getMe(true);
 
             if (verify.equals(regularUser)) {
                 log("Verified Creating Regular " + i + " User can login ");

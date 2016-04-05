@@ -7,10 +7,10 @@
           <element id="module-output" name="nimbits_server" />
         </element>
         <element id="directory" name="lib">
-          <element id="archive" name="nimbits_core-3.9.51-SNAPSHOT.jar">
+          <element id="archive" name="nimbits_core-3.9.55-SNAPSHOT.jar">
             <element id="module-output" name="nimbits_core" />
           </element>
-          <element id="archive" name="nimbits_io-3.9.51-SNAPSHOT.jar">
+          <element id="archive" name="nimbits_io-3.9.55-SNAPSHOT.jar">
             <element id="module-output" name="nimbits_io" />
           </element>
           <element id="library" level="project" name="Maven: com.squareup.retrofit:retrofit:1.7.0" />

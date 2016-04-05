@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="d6530a28-a7a9-42ab-9b5b-9d52ddecba3b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/process/cron/SystemTaskExecutor.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/process/cron/SystemTaskExecutor.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_server/src/main/webapp/WEB-INF/applicationContext.xml" afterPath="$PROJECT_DIR$/nimbits_server/src/main/webapp/WEB-INF/applicationContext.xml" />
-    </list>
+    <list default="true" id="d6530a28-a7a9-42ab-9b5b-9d52ddecba3b" name="Default" comment="" />
     <ignored path="com.nimbits.iws" />
     <ignored path=".idea/workspace.xml" />
     <ignored path="$PROJECT_DIR$/target/" />
@@ -1329,7 +1326,7 @@
       <workItem from="1457456450802" duration="91000" />
       <workItem from="1458660150932" duration="3032000" />
       <workItem from="1458663778413" duration="1296000" />
-      <workItem from="1459858926088" duration="7408000" />
+      <workItem from="1459858926088" duration="7496000" />
     </task>
     <servers />
   </component>
@@ -1366,7 +1363,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40941000" />
+    <option name="totallyTimeSpent" value="41029000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="41" y="23" width="1879" height="1057" extended-state="6" />

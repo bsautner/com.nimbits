@@ -3,7 +3,8 @@ datanucleus.log
 .idea
 .idea/*
 # Created by https://www.gitignore.io/api/maven,gradle,java,intellij,appengine,osx
-
+.idea/workspace.xml
+.idea/**
 ### Maven ###
 target/
 pom.xml.tag

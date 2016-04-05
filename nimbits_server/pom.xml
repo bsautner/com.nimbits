@@ -19,13 +19,13 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>war</packaging>
     <artifactId>nimbits_server</artifactId>
-    <version>3.9.51-SNAPSHOT</version>
+    <version>3.9.51</version>
     <name>Nimbits Server</name>
     <url>http://nimbits.com</url>
     <parent>
         <groupId>com.nimbits</groupId>
         <artifactId>nimbits-parent</artifactId>
-        <version>3.9.51-SNAPSHOT</version>
+        <version>3.9.51</version>
     </parent>
     <description>Nimbits Server for the J2EE Platform</description>
 
@@ -48,7 +48,7 @@
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_core</artifactId>
-            <version>3.9.51-SNAPSHOT</version>
+            <version>3.9.51</version>
 
         </dependency>
 

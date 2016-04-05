@@ -96,7 +96,7 @@ public class SystemTaskExecutor {
         public void run() {
             if (! authService.isGAE()) {
                 try {
-                    logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
+
                     systemCron.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService, syncService, subscriptionService,
                             calculationService, dataProcessor, null, null, null);
 

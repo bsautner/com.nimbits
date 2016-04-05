@@ -1,6 +1,7 @@
 datanucleus.log
 *.iml
 .idea
+.idea/*
 # Created by https://www.gitignore.io/api/maven,gradle,java,intellij,appengine,osx
 
 ### Maven ###

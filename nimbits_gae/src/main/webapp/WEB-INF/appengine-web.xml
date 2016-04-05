@@ -23,7 +23,7 @@
     <!--<application>private-cloud-drproducts</application>-->
 <!--fix blobstore bucket name, set filterbase to not enforce limits, -->
 
-    <version>1002</version>
+    <version>1003</version>
 
     <sessions-enabled>true</sessions-enabled>
     <precompilation-enabled>false</precompilation-enabled>

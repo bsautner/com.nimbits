@@ -563,6 +563,7 @@ public class Nimbits {
 
     }
 
+
     public void updateEntity(Entity entity) {
         api.updateEntity(entity.getUUID(), entity, new Callback<Void>() {
             @Override
@@ -575,6 +576,15 @@ public class Nimbits {
 
             }
         });
+    }
+
+    /**
+     *
+     * @param entity a valid entity with a key and updated values
+     * @param callback returnes success or error
+     */
+    public void updateEntity(Entity entity, Callback<Void> callback) {
+        api.updateEntity(entity.getUUID(), entity, callback);
     }
 
 

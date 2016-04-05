@@ -1,3 +1,5 @@
+package com.nimbits.it;
+
 import com.google.common.base.Optional;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.SummaryType;
@@ -30,31 +32,34 @@ import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
 import com.nimbits.client.io.Nimbits;
 import org.apache.http.util.TextUtils;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 /**
  * Create each type of entity and verify it does what it should
  */
 public class V3EntityTests extends NimbitsTest {
-    Category category;
-    Point outputPoint;
+    private Category category;
+    private Point outputPoint;
 
-    public static void main(String... args) throws InterruptedException {
-
-        V3EntityTests test = new V3EntityTests();
-        test.execute();
-
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
 
 
     }
 
-    @Override
-    public void execute() throws InterruptedException {
-        super.execute();
+    @Test
+    public void executeTest() throws InterruptedException {
+
 
 
         //create a folder for putting things in, my user account object is the folders parent in the tree (user is setup in the super.execute).
@@ -111,10 +116,7 @@ public class V3EntityTests extends NimbitsTest {
 
         int count = 10;
         List<Value> values = nimbits.getValues(inputPoint, start, new Date(), 10, foo);
-        if (values.size() != count) {
-            error("Didn't get the count i expected");
-        }
-
+        assertEquals(count, values.size());
 
     }
 
@@ -155,9 +157,8 @@ public class V3EntityTests extends NimbitsTest {
 
         Value outputValue = nimbits.getSnapshot(output);
 
-        if (outputValue.getDoubleValue() != 42.0) {
-            error("Schedule did not fire at expected interval");
-        }
+        assertNotEquals(42, outputValue.getDoubleValue());
+
 
 
 

@@ -263,11 +263,11 @@
         <constructor-arg ref="entityDao"/>
     </bean>
 
-    <task:scheduled-tasks scheduler="myScheduler">
-        <task:scheduled ref="systemTaskExecutor" method="heartbeat" fixed-delay="5000"/>
-    </task:scheduled-tasks>
+    <!--<task:scheduled-tasks scheduler="myScheduler">-->
+        <!--<task:scheduled ref="systemTaskExecutor" method="heartbeat" fixed-delay="5000"/>-->
+    <!--</task:scheduled-tasks>-->
 
-    <task:scheduler id="myScheduler" pool-size="10"/>
+    <!--<task:scheduler id="myScheduler" pool-size="10"/>-->
 
 
 </beans>

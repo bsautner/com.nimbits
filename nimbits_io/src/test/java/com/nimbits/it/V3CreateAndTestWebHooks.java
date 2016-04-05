@@ -1,3 +1,5 @@
+package com.nimbits.it;
+
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.model.point.Point;
@@ -10,6 +12,8 @@ import com.nimbits.client.model.webhook.HttpMethod;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
 import com.nimbits.client.io.http.NimbitsClientException;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.UUID;
 
@@ -17,16 +21,16 @@ public class V3CreateAndTestWebHooks extends NimbitsTest {
 
     private final static String TAG = V3CreateAndTestWebHooks.class.getName();
 
-    public static void main(String... args) throws InterruptedException {
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
 
-        V3CreateAndTestWebHooks test = new V3CreateAndTestWebHooks();
-        test.execute();
+
     }
 
-    @Override
-    public void execute() throws InterruptedException {
+    @Test
+    public void executeTest() throws InterruptedException {
 
-        super.execute();
 
         String targetPointName = TAG + " Download Target Point " + UUID.randomUUID().toString();
         String triggerPointName = TAG + " Trigger Point " + UUID.randomUUID().toString();

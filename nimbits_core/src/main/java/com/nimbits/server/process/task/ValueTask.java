@@ -311,6 +311,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
                                  Point point,
                                  Value value) throws ValueException {
         try {
+
             if (point.isIdleAlarmOn() && point.getIdleAlarmSent()) {
                 point.setIdleAlarmSent(false);
                 entityService.addUpdateEntity(valueService, u, point);
@@ -321,7 +322,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
             if (snapshot.getTimestamp().getTime() < value.getTimestamp().getTime()) {
                 blobStore.saveSnapshot(point, value);
             }
-            logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
+//            logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
             calculationService.process(geoSpatialDao, taskService, userService, entityDao, this, entityService, blobStore, valueService, summaryService, syncService, subscriptionService, calculationService, dataProcessor, u, point, value);
 
             summaryService.process(geoSpatialDao, taskService, userService, entityDao, this, entityService, blobStore, valueService, summaryService, syncService, subscriptionService, calculationService, dataProcessor,u, point, value);

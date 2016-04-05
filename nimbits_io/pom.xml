@@ -93,6 +93,16 @@
             <artifactId>jetty-util</artifactId>
             <version>8.1.15.v20140411</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
+
     </dependencies>
 
 </project>

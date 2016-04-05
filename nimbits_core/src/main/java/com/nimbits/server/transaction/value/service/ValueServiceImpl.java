@@ -233,16 +233,16 @@ public class ValueServiceImpl implements ValueService {
     public double calculateDelta(BlobStore blobStore, final Point point) {
         double retVal;
 
-        Calendar c = Calendar.getInstance();
-        c.add(Calendar.SECOND, (point.getDeltaSeconds() * -1));
-        Value start = getCurrentValue(blobStore, point);
-        double startValue;
+        Calendar compareTime = Calendar.getInstance();
+        compareTime.add(Calendar.SECOND, (point.getDeltaSeconds() * -1));
+        Range<Date> timespan = Range.closed(compareTime.getTime(), new Date());
+        List<Value> series = getSeries(blobStore, point, Optional.of(timespan), Optional.<Range<Integer>>absent(), Optional.<String>absent());
 
+        //Value start = getCurrentValue(blobStore, point);
+        double startValue = series.get(series.size() -1).getDoubleValue();
+        double endValue = series.get(0).getDoubleValue();
 
-        startValue = start.getDoubleValue();
-
-        Value current = getCurrentValue(blobStore, point);
-        retVal = abs(startValue - current.getDoubleValue());
+        retVal = abs(startValue - endValue);
 
 
         return retVal;

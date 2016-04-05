@@ -1,9 +1,16 @@
+package com.nimbits.it;
+
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.io.Nimbits;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.experimental.runners.Enclosed;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * A base class for running tests
@@ -11,6 +18,7 @@ import java.util.Date;
  */
 
 public abstract class NimbitsTest  {
+
     public User user;
 
     static final String EMAIL_ADDRESS ="admin@example.com";
@@ -19,23 +27,36 @@ public abstract class NimbitsTest  {
     int errors = 0;
 
 
-//    public static final String INSTANCE_URL = "https://yodel-1107.appspot.com";
-//    public static final String EMAIL_ADDRESS = "admin@yodelapp.com"; //TODO auth correctly
-//    public static final String PASSWORD = "12345";
 
 
-
-    protected static final Nimbits nimbits = new Nimbits.Builder()
+    static final Nimbits nimbits = new Nimbits.Builder()
             .email(EMAIL_ADDRESS).token(PASSWORD).instance(INSTANCE_URL).create();
 
 
+    @Before
+    public void setUp() throws Exception {
+        user = verifyAdminUser();
+
+    }
+
+    @After
+    public void tearDown() throws Exception {
+
+        List<Entity> entityList = nimbits.getChildren(user);
+        for (Entity entity : entityList) {
+            log("teardown deletinging child: " + entity.getName().getValue());
+            nimbits.deleteEntity(entity);
+        }
+
+
+    }
 
     static void log(String msg) {
         System.out.println(new Date() + "  " + msg);
     }
 
 
-    User verifyAdminUser() {
+    private User verifyAdminUser() {
         //See if my user id and password get me my user
         User user;
 
@@ -77,12 +98,6 @@ public abstract class NimbitsTest  {
             log("Created new user: " + newUser.getEmail());
             return newUser;
         }
-    }
-
-    public void execute() throws InterruptedException {
-        //Get or Create this user account, when created it will be the system admin
-        user = verifyAdminUser();
-
     }
 
     public void error(String message) {

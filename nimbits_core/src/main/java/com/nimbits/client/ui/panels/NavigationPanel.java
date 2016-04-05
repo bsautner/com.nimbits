@@ -108,7 +108,7 @@ public class NavigationPanel extends NavigationEventProvider {
         notifyValueEnteredListener(model, value);
     }
 
-    public void addUpdateTreeModel(final TreeModel model, final boolean refresh) {
+    private void addUpdateTreeModel(final TreeModel model, final boolean refresh) {
 
         if (tree != null && tree.getStore() != null) {
 

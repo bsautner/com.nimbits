@@ -91,7 +91,7 @@ public class CalculationServiceImpl implements CalculationService {
 
                     Value v = new Value.Builder().initValue(result.get()).timestamp(value.getTimestamp()).create();
 
-                    logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
+
                         valueTask.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService,
                                 syncService, subscriptionService, calculationService, dataProcessor, u, (Point) target.get(), v);
 

@@ -1,3 +1,5 @@
+package com.nimbits.it;
+
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
@@ -5,6 +7,8 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.io.Nimbits;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -21,20 +25,16 @@ public class V3RestClientTester extends NimbitsTest  {
     private List<Entity> pointList = new ArrayList<Entity>();
     private Map<Entity, List<Value>> storedValues = new HashMap<Entity, List<Value>>();
 
-    public static void main(String[] args) throws InterruptedException {
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
 
-        V3RestClientTester test = new V3RestClientTester();
-        test.execute();
 
     }
 
+    @Test
+    public void executeTest() throws InterruptedException {
 
-
-
-
-    public void execute() throws InterruptedException {
-
-        super.execute();
         log("Starting up");
 
         if (user != null) {

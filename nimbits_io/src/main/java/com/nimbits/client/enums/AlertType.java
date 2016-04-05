@@ -20,12 +20,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 6/24/11
- * Time: 1:00 PM
- */
+
 public enum AlertType {
     LowAlert(0),
     HighAlert(1),

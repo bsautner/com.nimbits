@@ -1,4 +1,4 @@
-/*
+package com.nimbits.it;/*
  * NIMBITS INC CONFIDENTIAL
  * Copyrite (c) 2015 Nimbits Inc
  *  __________________
@@ -21,21 +21,24 @@ import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.value.Value;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.Random;
 import java.util.UUID;
 
 public class V3FilterTest extends NimbitsTest {
 
-    public static void main(String... args) throws InterruptedException {
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
 
-        V3FilterTest test = new V3FilterTest();
-        test.execute();
 
     }
-    @Override
-    public void execute() throws InterruptedException {
-        super.execute();
+
+    @Test
+    public void fixedHysteresisTest() throws InterruptedException {
+
 
         Point point = nimbits.addPoint(user, new PointModel.Builder()
                 .filterType(FilterType.fixedHysteresis)

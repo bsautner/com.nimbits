@@ -1,6 +1,10 @@
+package com.nimbits.it;
+
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.UUID;
 
@@ -10,15 +14,16 @@ import java.util.UUID;
  */
 public class V3ApiChildrenTest extends NimbitsTest {
 
-    public static void main(String... args) throws InterruptedException {
+    @Before
+    public void setUp() throws Exception {
+        super.setUp();
 
-        V3ApiChildrenTest test = new V3ApiChildrenTest();
-        test.execute();
 
     }
-    @Override
-    public void execute() throws InterruptedException {
-        super.execute();
+
+    @Test
+    public void executeTest() throws InterruptedException {
+
 
         User me = nimbits.getMe(true);
 

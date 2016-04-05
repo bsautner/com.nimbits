@@ -6,7 +6,7 @@
 
 
     <artifactId>com.nimbits.nimbits_client</artifactId>
-    <version>3.9.52-SNAPSHOT</version>
+    <version>3.9.55-SNAPSHOT</version>
 
 
     <packaging>jar</packaging>
@@ -18,7 +18,7 @@
     <parent>
         <groupId>com.nimbits</groupId>
         <artifactId>nimbits-parent</artifactId>
-        <version>3.9.52-SNAPSHOT</version>
+        <version>3.9.55-SNAPSHOT</version>
     </parent>
 
     <scm>
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_io</artifactId>
-            <version>3.9.52-SNAPSHOT</version>
+            <version>3.9.55-SNAPSHOT</version>
         </dependency>
 
         <dependency>

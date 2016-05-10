@@ -166,12 +166,12 @@ public class V3Sample1 extends NimbitsTest {
 
         newTrigger = client.addPoint(folder, newTrigger);
         newTarget = client.addPoint(folder, newTarget);
-        log("Created Data Point: " + newTrigger.getUUID() + " " + newTrigger.toString());
-        log("Created Data Point: " + newTarget.getUUID() + " " + newTarget.toString());
+        log("Created Data Point: " + newTrigger.getId() + " " + newTrigger.toString());
+        log("Created Data Point: " + newTarget.getId() + " " + newTarget.toString());
 
 
-        log("Verified Point using newly created uuid " + client.getPoint(newTarget.getUUID()));
-        log("Verified Point using newly created uuid " + client.getPoint(newTarget.getUUID()));
+        log("Verified Point using newly created uuid " + client.getPoint(newTarget.getId()));
+        log("Verified Point using newly created uuid " + client.getPoint(newTarget.getId()));
 
 
 
@@ -189,7 +189,7 @@ public class V3Sample1 extends NimbitsTest {
         WebHook webHook = new WebHookModel.Builder()
                 .name("Web Hook To Time API")
                 .method(HttpMethod.GET)
-                .downloadTarget(newTarget.getKey())
+                .downloadTarget(newTarget.getId())
                 .url(timeApi)
                 .create();
 
@@ -212,8 +212,8 @@ public class V3Sample1 extends NimbitsTest {
                 .maxRepeat(-1)   //max repeat protects out of control loops etc - the minimum number of seconds to wait before this can run again - setting it to -1 means every subscription will run
                 .notifyMethod(SubscriptionNotifyMethod.webhook)
                 .name("Event Subscription Time API Web Hook Call when Trigger point is written To")
-                .target(webHook.getKey()) //note that the subsciption target is the webhook - the webhook target is the target point
-                .subscribedEntity(newTrigger.getKey())
+                .target(webHook.getId()) //note that the subsciption target is the webhook - the webhook target is the target point
+                .subscribedEntity(newTrigger.getId())
                 .create();
 
         subscription = client.addSubscription(folder, subscription);

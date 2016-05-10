@@ -105,7 +105,7 @@ public class BatchApi extends ApiBase {
             HashMap<String, List<Value>> map = GsonFactory.getInstance(true).fromJson(json, listType);
             for (String id : map.keySet()) {
 
-                 Point entitySample = (Point) entityDao.getEntityByKey(user, id, EntityType.point).get();
+                 Point entitySample = (Point) entityDao.getEntity(user, id, EntityType.point).get();
 
                     List<Value> valueList = map.get(id);
 

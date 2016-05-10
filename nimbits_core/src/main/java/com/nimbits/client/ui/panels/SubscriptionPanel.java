@@ -316,7 +316,7 @@ public class SubscriptionPanel extends BasePanel {
 
 
                     if (subscriptionNotifyMethod.equals(SubscriptionNotifyMethod.webhook)) {
-                       builder.target(webhookCombo.getValue().getKey());
+                       builder.target(webhookCombo.getValue().getId());
                     }
                     else {
                         builder.target(target.getValue());
@@ -326,12 +326,12 @@ public class SubscriptionPanel extends BasePanel {
                 } else {
 
 
-                    String parent = user.getKey().equals(entity.getOwner()) ? entity.getKey() : "";
+                    String parent = user.getId().equals(entity.getOwner()) ? entity.getId() : "";
 
 
                     String targetValue;
                     if (subscriptionNotifyMethod.equals(SubscriptionNotifyMethod.webhook)) {
-                        targetValue = (webhookCombo.getValue().getKey());
+                        targetValue = (webhookCombo.getValue().getId());
                     } else {
                         targetValue = (target.getValue());
 
@@ -340,7 +340,7 @@ public class SubscriptionPanel extends BasePanel {
 
                     builder.parent(parent)
                             .subscriptionType(subscriptionType)
-                            .subscribedEntity(entity.getKey())
+                            .subscribedEntity(entity.getId())
                             .notifyMethod(subscriptionNotifyMethod)
                             .target(targetValue);
 

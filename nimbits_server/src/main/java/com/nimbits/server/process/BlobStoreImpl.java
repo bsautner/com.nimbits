@@ -78,7 +78,7 @@ public class BlobStoreImpl implements BlobStore {
         //TODO - some way to test if a count has been reached before reading all files if no timespan is give - like test the list by processing it to see if it's complete
         //enough to return while reading other files.
         String root = settingsService.getSetting(ServerSetting.storeDirectory);
-        String path = root + "/" + entity.getKey();
+        String path = root + "/" + entity.getId();
         List<Value> allvalues = new ArrayList<>(INITIAL_CAPACITY);
         List<String> allReadFiles = new ArrayList<>(INITIAL_CAPACITY);
         File file = new File(path);
@@ -99,7 +99,7 @@ public class BlobStoreImpl implements BlobStore {
                     Long timestamp = Long.valueOf(dailyFolderPath);
                     if (maxRange.contains(new Date(timestamp))) {
 
-                        dailyFolderPaths.add(root + "/" + entity.getKey() + "/" + dailyFolderPath);
+                        dailyFolderPaths.add(root + "/" + entity.getId() + "/" + dailyFolderPath);
                     }
 
                 }
@@ -174,14 +174,14 @@ public class BlobStoreImpl implements BlobStore {
     public Value getSnapshot(final Entity entity) {
         final Value value;
         String root = settingsService.getSetting(ServerSetting.storeDirectory);
-        final String key = entity.getKey() + SNAPSHOT;
+        final String key = entity.getId() + SNAPSHOT;
         if (nimbitsCache.get(key) != null) {
 
             value = (Value) nimbitsCache.get(key);
 
         }
         else {
-            List<Value> values = readValuesFromFile(root + "/" + entity.getKey() + "/" + SNAPSHOT);
+            List<Value> values = readValuesFromFile(root + "/" + entity.getId() + "/" + SNAPSHOT);
 
             if (values.isEmpty()) {
                 value = new Value.Builder().doubleValue(0.0).timestamp(new Date(0)).create();
@@ -198,23 +198,23 @@ public class BlobStoreImpl implements BlobStore {
 
     private void createSnapshot(final Entity entity, final Value value) {
         String root = settingsService.getSetting(ServerSetting.storeDirectory);
-        final String key = entity.getKey() + SNAPSHOT;
+        final String key = entity.getId() + SNAPSHOT;
         final String json = gson.toJson(Arrays.asList(value));
         nimbitsCache.put(key, value);
-        writeFile(json, root + "/" + entity.getKey() + "/" + SNAPSHOT);
+        writeFile(json, root + "/" + entity.getId() + "/" + SNAPSHOT);
 
 
     }
 
     @Override
     public void saveSnapshot(final Entity entity, final Value value) {
-        final String key = entity.getKey() + SNAPSHOT;
+        final String key = entity.getId() + SNAPSHOT;
         Value old = getSnapshot(entity);
         String root = settingsService.getSetting(ServerSetting.storeDirectory);
         if (value.getTimestamp().getTime() > old.getTimestamp().getTime()) {
             final String json = gson.toJson(Arrays.asList(value));
             nimbitsCache.put(key, value);
-            writeFile(json, root + "/" + entity.getKey() + "/" + SNAPSHOT);
+            writeFile(json, root + "/" + entity.getId() + "/" + SNAPSHOT);
         }
 
     }
@@ -284,17 +284,17 @@ public class BlobStoreImpl implements BlobStore {
 
 
         String root = settingsService.getSetting(ServerSetting.storeDirectory);
-        String FILENAME =  root + "/" + entity.getKey() + "/" + holder.getStartOfDay().getTime() + "/" + earliestForDay.getTime();//store.getId();
+        String FILENAME =  root + "/" + entity.getId() + "/" + holder.getStartOfDay().getTime() + "/" + earliestForDay.getTime();//store.getId();
         // GcsService gcsService = GcsServiceFactory.createGcsService();
         writeFile(json, FILENAME);
     }
 
     @Override
     public void deleteAllData(Point point) {
-        final String key = point.getKey() + SNAPSHOT;
+        final String key = point.getId() + SNAPSHOT;
         try {
             String root = settingsService.getSetting(ServerSetting.storeDirectory);
-            FileUtils.deleteDirectory(new File(root + "/" + point.getKey()));
+            FileUtils.deleteDirectory(new File(root + "/" + point.getId()));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

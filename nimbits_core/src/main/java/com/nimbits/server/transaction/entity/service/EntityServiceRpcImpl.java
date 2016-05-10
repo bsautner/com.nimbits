@@ -89,7 +89,7 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
             case point:
                 Point p = new PointModel.Builder().init((Point) originalEntity).create();
                 p.setName(newName);
-                p.setKey(null);
+                p.setId(null);
 
                 User u = userService.getHttpRequestUser(entityService, valueService, getThreadLocalRequest());
                 return entityService.addUpdateIncompleteEntity(valueService, u, p);
@@ -115,6 +115,6 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
 
     @Override
     public  Entity getEntityByKeyRpc(final User user, final String entityId, final EntityType type) {
-        return entityDao.getEntityByKey(user, entityId, type).get();
+        return entityDao.getEntity(user, entityId, type).get();
     }
 }

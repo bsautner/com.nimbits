@@ -37,7 +37,7 @@ public class ListCommand extends AbstractCommand implements Command {
 
         String contains = args.length > 1 ? args[1] : "";
         for (Entity entity : tree) {
-            if (entity.getParent().equals(current.getKey())) {
+            if (entity.getParent().equals(current.getId())) {
                 if (contains.equals("")) {
                     listener.onMessage(entity.getName().getValue());
                 } else {

@@ -791,7 +791,7 @@ public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Stri
 <dl>
 <dt><strong>Specified by:</strong></dt>
 <dd><code><a href="../../../../../org/eclipse/jetty/server/ssl/SslConnector.html#getKeystoreType()">getKeystoreType</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../org/eclipse/jetty/server/ssl/SslConnector.html" title="interface in org.eclipse.jetty.server.ssl">SslConnector</a></code></dd>
-<dt><span class="strong">Returns:</span></dt><dd>The type of the key store (default "JKS")</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../../../../../org/eclipse/jetty/server/ssl/SslConnector.html#getKeystoreType()"><code>SslConnector.getKeystoreType()</code></a></dd></dl>
+<dt><span class="strong">Returns:</span></dt><dd>The type of the id store (default "JKS")</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../../../../../org/eclipse/jetty/server/ssl/SslConnector.html#getKeystoreType()"><code>SslConnector.getKeystoreType()</code></a></dd></dl>
 </li>
 </ul>
 <a name="getNeedClientAuth()">
@@ -1104,8 +1104,8 @@ public&nbsp;void&nbsp;setKeyPassword(<a href="http://download.oracle.com/javase/
 <dl>
 <dt><strong>Specified by:</strong></dt>
 <dd><code><a href="../../../../../org/eclipse/jetty/server/ssl/SslConnector.html#setKeyPassword(java.lang.String)">setKeyPassword</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../org/eclipse/jetty/server/ssl/SslConnector.html" title="interface in org.eclipse.jetty.server.ssl">SslConnector</a></code></dd>
-<dt><span class="strong">Parameters:</span></dt><dd><code>password</code> - The password (if any) for the specific key within 
- the key store</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../../../../../org/eclipse/jetty/server/ssl/SslConnector.html#setKeyPassword(java.lang.String)"><code>SslConnector.setKeyPassword(java.lang.String)</code></a></dd></dl>
+<dt><span class="strong">Parameters:</span></dt><dd><code>password</code> - The password (if any) for the specific id within
+ the id store</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../../../../../org/eclipse/jetty/server/ssl/SslConnector.html#setKeyPassword(java.lang.String)"><code>SslConnector.setKeyPassword(java.lang.String)</code></a></dd></dl>
 </li>
 </ul>
 <a name="setKeystore(java.lang.String)">
@@ -1135,7 +1135,7 @@ public&nbsp;void&nbsp;setKeystoreType(<a href="http://download.oracle.com/javase
 <dl>
 <dt><strong>Specified by:</strong></dt>
 <dd><code><a href="../../../../../org/eclipse/jetty/server/ssl/SslConnector.html#setKeystoreType(java.lang.String)">setKeystoreType</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../org/eclipse/jetty/server/ssl/SslConnector.html" title="interface in org.eclipse.jetty.server.ssl">SslConnector</a></code></dd>
-<dt><span class="strong">Parameters:</span></dt><dd><code>keystoreType</code> - The type of the key store (default "JKS")</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../../../../../org/eclipse/jetty/server/ssl/SslConnector.html#setKeystoreType(java.lang.String)"><code>SslConnector.setKeystoreType(java.lang.String)</code></a></dd></dl>
+<dt><span class="strong">Parameters:</span></dt><dd><code>keystoreType</code> - The type of the id store (default "JKS")</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../../../../../org/eclipse/jetty/server/ssl/SslConnector.html#setKeystoreType(java.lang.String)"><code>SslConnector.setKeystoreType(java.lang.String)</code></a></dd></dl>
 </li>
 </ul>
 <a name="setNeedClientAuth(boolean)">
@@ -1166,7 +1166,7 @@ public&nbsp;void&nbsp;setPassword(<a href="http://download.oracle.com/javase/6/d
 <dl>
 <dt><strong>Specified by:</strong></dt>
 <dd><code><a href="../../../../../org/eclipse/jetty/server/ssl/SslConnector.html#setPassword(java.lang.String)">setPassword</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../../org/eclipse/jetty/server/ssl/SslConnector.html" title="interface in org.eclipse.jetty.server.ssl">SslConnector</a></code></dd>
-<dt><span class="strong">Parameters:</span></dt><dd><code>password</code> - The password for the key store</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../../../../../org/eclipse/jetty/server/ssl/SslConnector.html#setPassword(java.lang.String)"><code>SslConnector.setPassword(java.lang.String)</code></a></dd></dl>
+<dt><span class="strong">Parameters:</span></dt><dd><code>password</code> - The password for the id store</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../../../../../org/eclipse/jetty/server/ssl/SslConnector.html#setPassword(java.lang.String)"><code>SslConnector.setPassword(java.lang.String)</code></a></dd></dl>
 </li>
 </ul>
 <a name="setTrustPassword(java.lang.String)">

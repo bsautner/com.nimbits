@@ -56,8 +56,8 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
 
 
 
-    protected InstanceModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, long serverId, String baseUrl, String adminEmail, String version, String apiKey, boolean isDefault, String protocol, boolean socketsEnabled) {
-        super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
+    protected InstanceModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, long serverId, String baseUrl, String adminEmail, String version, String apiKey, boolean isDefault, String protocol, boolean socketsEnabled) {
+        super(id, name, description, entityType, protectionLevel, parent, owner);
         this.serverId = serverId;
         this.baseUrl = baseUrl;
         this.adminEmail = adminEmail;
@@ -148,8 +148,8 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
             }
 
 
-            return new InstanceModel(key, name, description, type, protectionLevel, parent, owner, uuid
-            , serverId, baseUrl.getUrl(),adminEmail.getValue(),version,apiKey.getCode(),  isDefault, protocol.name(), socketsEnabled );
+            return new InstanceModel(id, name, description, type, protectionLevel, parent, owner,
+                    serverId, baseUrl.getUrl(),adminEmail.getValue(),version,apiKey.getCode(),  isDefault, protocol.name(), socketsEnabled );
         }
 
         @Override
@@ -161,8 +161,8 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
 
         private void initEntity(Entity anEntity) {
 
-            this.key = anEntity.getKey();
-            this.id = anEntity.getKey();
+
+            this.id = anEntity.getId();
             this.name = anEntity.getName();
             this.description = anEntity.getDescription();
             this.entityType = anEntity.getEntityType();
@@ -170,7 +170,7 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
             this.owner = anEntity.getOwner();
             this.protectionLevel = anEntity.getProtectionLevel();
             this.alertType = anEntity.getAlertType().getCode();
-            this.uuid = anEntity.getUUID();
+
 
         }
 
@@ -200,11 +200,7 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
             this.name = name;
             return this;
         }
-        @Override
-        public Builder key(String key) {
-            this.key = key;
-            return this;
-        }
+
         @Override
         public Builder description(String description) {
             this.description = description;
@@ -235,11 +231,7 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
             this.id = id;
             return this;
         }
-        @Override
-        public Builder uuid(String uuid) {
-            this.uuid = uuid;
-            return this;
-        }
+
 
         @Override
         public Builder action(String action) {

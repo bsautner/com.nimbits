@@ -812,7 +812,7 @@ implements <a href="../../../../org/eclipse/jetty/security/ConstraintAware.html"
 <pre>protected&nbsp;void&nbsp;processConstraintMappingWithMethodOmissions(<a href="../../../../org/eclipse/jetty/security/ConstraintMapping.html" title="class in org.eclipse.jetty.security">ConstraintMapping</a>&nbsp;mapping,
                                                <a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>,<a href="../../../../org/eclipse/jetty/security/RoleInfo.html" title="class in org.eclipse.jetty.security">RoleInfo</a>&gt;&nbsp;mappings)</pre>
 <div class="block">Constraints that name method omissions are dealt with differently.
- We create an entry in the mappings with key "method.omission". This entry
+ We create an entry in the mappings with id "method.omission". This entry
  is only ever combined with other omissions for the same method to produce a
  consolidated RoleInfo. Then, when we wish to find the relevant constraints for
   a given Request (in prepareConstraintInfo()), we consult 3 types of entries in 
@@ -847,7 +847,7 @@ implements <a href="../../../../org/eclipse/jetty/security/ConstraintAware.html"
  represents a merged set of user data constraints, roles etc -:
  <ol>
  <li>A mapping of an exact method name </li>
- <li>A mapping will null key that matches every method name</li>
+ <li>A mapping will null id that matches every method name</li>
  <li>Mappings with keys of the form "method.omission" that indicates it will match every method name EXCEPT that given</li>
  </ol></div>
 <dl>

@@ -31,7 +31,6 @@ import com.nimbits.client.model.hal.Links;
 import com.nimbits.client.model.user.User;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -41,7 +40,7 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
     private String name;
 
     @Expose
-    private String key;
+    private String id;
 
     @Expose
     private String description;
@@ -62,14 +61,10 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
 
     private boolean readOnly = false;
 
-    @Expose
-    private String uuid;
 
     @Expose
     private List<Entity> children;
 
-    @Expose
-    private String id;
 
     private String action;
 
@@ -86,14 +81,13 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
 
 
 
-    public EntityModel(final String key,
+    public EntityModel(final String id,
                        final CommonIdentifier name,
                        final String description,
                        final EntityType entityType,
                        final ProtectionLevel protectionLevel,
                        final String parent,
-                       final String owner,
-                       final String uuid) {
+                       final String owner) {
         if (protectionLevel == null) {
             this.protectionLevel = ProtectionLevel.everyone.getCode();
         }
@@ -101,7 +95,7 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
             this.protectionLevel = protectionLevel.getCode();
         }
 
-        this.key = key;
+        this.id = id;
         if (name != null) {
             this.name = name.getValue();
         } else {
@@ -113,15 +107,12 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
         this.owner = owner;
 
         this.alertType = AlertType.OK.getCode();
-        this.uuid = uuid;
 
 
     }
 
     public EntityModel() {
-        if (id != null && key == null) {
-            key = id;
-        }
+
     }
 
 
@@ -134,19 +125,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
     public void setLinks(Links links) {
         this.links = links;
     }
-
-
-
-
-
-
-
-    @Override
-    public void setKey(final String key) {
-        this.key = key;
-        this.id = key;
-    }
-
 
 
     @Override
@@ -176,7 +154,7 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
         this.name = update.getName().getValue();
         this.protectionLevel = update.getProtectionLevel().getCode();
         this.parent = update.getParent();
-        this.uuid = update.getUUID();
+        this.id = update.getId();
     }
 
 
@@ -188,13 +166,13 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
     }
 
     @Override
-    public String getUUID() {
-        return uuid;
+    public String getId() {
+        return id;
     }
 
     @Override
-    public void setUUID(final String uuid) {
-        this.uuid = uuid;
+    public void setId(final String id) {
+        this.id = id;
     }
 
     @Override
@@ -222,17 +200,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
         this.entityType = entityType.getCode();
     }
 
-    @Override
-    public String getKey() {
-        if (id != null && this.key == null) {
-            key = id;
-        }
-        //sometimes incoming json omits the full key so we add it if missing
-        if (getEntityType() != null && getEntityType().equals(EntityType.point) && this.key != null && ! key.startsWith(owner)) {
-            this.key = owner + "/" + this.key;
-        }
-        return this.key;
-    }
 
     @Override
     public String getParent() {
@@ -296,7 +263,7 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
 
     @Override
     public boolean isOwner(final User user) {
-        return user != null && (this.owner.equals(user.getKey()) || user.getIsAdmin());
+        return user != null && (this.owner.equals(user.getId()) || user.getIsAdmin());
 
 
     }
@@ -312,7 +279,7 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
         if (Utils.isEmptyString(this.owner)) {
             throw new IllegalArgumentException("Owner must not be null");
         }
-        if (!this.owner.equals(user.getKey()) && this.entityType != EntityType.user.getCode()) {
+        if (!this.owner.equals(user.getId()) && this.entityType != EntityType.user.getCode()) {
             throw new IllegalArgumentException("You can't create an entity with an owner other than yourself!");
         }
     }
@@ -331,7 +298,7 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
         if (protectionLevel != that.protectionLevel) return false;
         if (readOnly != that.readOnly) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
-        if (key != null ? !key.equals(that.key) : that.key != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (owner != null ? !owner.equals(that.owner) : that.owner != null) return false;
         if (parent != null ? !parent.equals(that.parent) : that.parent != null) return false;
@@ -343,7 +310,7 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
     @Override
     public int hashCode() {
         int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (key != null ? key.hashCode() : 0);
+        result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + entityType;
         result = 31 * result + protectionLevel;
@@ -364,7 +331,7 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
                 ", protectionLevel=" + protectionLevel +
                 ", entityType=" + entityType +
                 ", description='" + description + '\'' +
-                ", key='" + key + '\'' +
+                ", id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }
@@ -373,8 +340,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
     public static abstract class EntityBuilder<T>  {
 
         protected EntityName name;
-
-        protected String key;
 
         protected String description;
 
@@ -390,8 +355,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
 
         protected boolean readOnly = false;
 
-        protected String uuid;
-
         protected String id;
 
         protected String action;
@@ -405,8 +368,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
 
         public abstract T  name(EntityName name);
 
-        public abstract T key(String key);
-
         public abstract T description(String description);
 
         public abstract T protectionLevel(ProtectionLevel protectionLevel);
@@ -418,8 +379,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
         public abstract T readOnly(boolean readOnly);
 
         public abstract T id(String id);
-
-        public abstract T uuid(String uuid);
 
         public abstract T action(String action);
 

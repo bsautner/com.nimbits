@@ -111,7 +111,7 @@
 <div class="description">
 <ul class="blockList">
 <li class="blockList">
-<dl><dt><span class="strong">Type Parameters:</span></dt><dd><code>K</code> - The key type of the map.</dd></dl>
+<dl><dt><span class="strong">Type Parameters:</span></dt><dd><code>K</code> - The id type of the map.</dd></dl>
 <dl>
 <dt>All Implemented Interfaces:</dt>
 <dd><a href="http://download.oracle.com/javase/6/docs/api/java/io/Serializable.html?is-external=true" title="class or interface in java.io">Serializable</a>, <a href="http://download.oracle.com/javase/6/docs/api/java/util/concurrent/ConcurrentMap.html?is-external=true" title="class or interface in java.util.concurrent">ConcurrentMap</a>&lt;K,<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;, <a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;K,<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;</dd>
@@ -221,7 +221,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/MultiMap.html#containsKey(java.lang.Object)">containsKey</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;key)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/MultiMap.html#containsKey(java.lang.Object)">containsKey</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;id)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
@@ -285,7 +285,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/MultiMap.html#putIfAbsent(K, java.lang.Object)">putIfAbsent</a></strong>(<a href="../../../../org/eclipse/jetty/util/MultiMap.html" title="type parameter in MultiMap">K</a>&nbsp;key,
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/MultiMap.html#putIfAbsent(K, java.lang.Object)">putIfAbsent</a></strong>(<a href="../../../../org/eclipse/jetty/util/MultiMap.html" title="type parameter in MultiMap">K</a>&nbsp;id,
            <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;value)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -304,11 +304,11 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/MultiMap.html#remove(java.lang.Object)">remove</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;key)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/MultiMap.html#remove(java.lang.Object)">remove</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;id)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/MultiMap.html#remove(java.lang.Object, java.lang.Object)">remove</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;key,
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/MultiMap.html#remove(java.lang.Object, java.lang.Object)">remove</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;id,
       <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;value)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -320,12 +320,12 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/MultiMap.html#replace(K, java.lang.Object)">replace</a></strong>(<a href="../../../../org/eclipse/jetty/util/MultiMap.html" title="type parameter in MultiMap">K</a>&nbsp;key,
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/MultiMap.html#replace(K, java.lang.Object)">replace</a></strong>(<a href="../../../../org/eclipse/jetty/util/MultiMap.html" title="type parameter in MultiMap">K</a>&nbsp;id,
        <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;value)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/MultiMap.html#replace(K, java.lang.Object, java.lang.Object)">replace</a></strong>(<a href="../../../../org/eclipse/jetty/util/MultiMap.html" title="type parameter in MultiMap">K</a>&nbsp;key,
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/MultiMap.html#replace(K, java.lang.Object, java.lang.Object)">replace</a></strong>(<a href="../../../../org/eclipse/jetty/util/MultiMap.html" title="type parameter in MultiMap">K</a>&nbsp;id,
        <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;oldValue,
        <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;newValue)</code>&nbsp;</td>
 </tr>
@@ -429,7 +429,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 <pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&nbsp;getValues(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;name)</pre>
 <div class="block">Get multiple values.
  Single valued entries are converted to singleton lists.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry key.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry id.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>Unmodifieable List of values.</dd></dl>
 </li>
 </ul>
@@ -444,7 +444,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 <div class="block">Get a value from a multiple value.
  If the value is not a multivalue, then index 0 retrieves the
  value or null.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry key.</dd><dd><code>i</code> - Index of element to get.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry id.</dd><dd><code>i</code> - Index of element to get.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>Unmodifieable List of values.</dd></dl>
 </li>
 </ul>
@@ -459,7 +459,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
  Single valued items are converted to a String with the toString()
  Object method. Multi valued entries are converted to a comma separated
  List.  No quoting of commas within values is performed.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry key.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry id.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>String value.</dd></dl>
 </li>
 </ul>
@@ -490,7 +490,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 <dl>
 <dt><strong>Specified by:</strong></dt>
 <dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true#put(K, V)" title="class or interface in java.util">put</a></code>&nbsp;in interface&nbsp;<code><a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="../../../../org/eclipse/jetty/util/MultiMap.html" title="type parameter in MultiMap">K</a>,<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;</code></dd>
-<dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry key.</dd><dd><code>value</code> - The entry value.</dd>
+<dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry id.</dd><dd><code>value</code> - The entry value.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>The previous value or null.</dd></dl>
 </li>
 </ul>
@@ -505,7 +505,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 <pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;putValues(<a href="../../../../org/eclipse/jetty/util/MultiMap.html" title="type parameter in MultiMap">K</a>&nbsp;name,
                <a href="http://download.oracle.com/javase/6/docs/api/java/util/List.html?is-external=true" title="class or interface in java.util">List</a>&lt;? extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;&nbsp;values)</pre>
 <div class="block">Put multi valued entry.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry key.</dd><dd><code>values</code> - The List of multiple values.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry id.</dd><dd><code>values</code> - The List of multiple values.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>The previous value or null.</dd></dl>
 </li>
 </ul>
@@ -520,7 +520,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 <pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;putValues(<a href="../../../../org/eclipse/jetty/util/MultiMap.html" title="type parameter in MultiMap">K</a>&nbsp;name,
                <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>...&nbsp;values)</pre>
 <div class="block">Put multi valued entry.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry key.</dd><dd><code>values</code> - The String array of multiple values.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry id.</dd><dd><code>values</code> - The String array of multiple values.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>The previous value or null.</dd></dl>
 </li>
 </ul>
@@ -537,7 +537,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 <div class="block">Add value to multi valued entry.
  If the entry is single valued, it is converted to the first
  value of a multi valued entry.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry key.</dd><dd><code>value</code> - The entry value.</dd></dl>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry id.</dd><dd><code>value</code> - The entry value.</dd></dl>
 </li>
 </ul>
 <a name="addValues(java.lang.Object,java.util.List)">
@@ -553,7 +553,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 <div class="block">Add values to multi valued entry.
  If the entry is single valued, it is converted to the first
  value of a multi valued entry.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry key.</dd><dd><code>values</code> - The List of multiple values.</dd></dl>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry id.</dd><dd><code>values</code> - The List of multiple values.</dd></dl>
 </li>
 </ul>
 <a name="addValues(java.lang.Object,java.lang.String[])">
@@ -569,7 +569,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 <div class="block">Add values to multi valued entry.
  If the entry is single valued, it is converted to the first
  value of a multi valued entry.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry key.</dd><dd><code>values</code> - The String array of multiple values.</dd></dl>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry id.</dd><dd><code>values</code> - The String array of multiple values.</dd></dl>
 </li>
 </ul>
 <a name="removeValue(java.lang.Object,java.lang.Object)">
@@ -583,7 +583,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 <pre>public&nbsp;boolean&nbsp;removeValue(<a href="../../../../org/eclipse/jetty/util/MultiMap.html" title="type parameter in MultiMap">K</a>&nbsp;name,
                   <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;value)</pre>
 <div class="block">Remove value.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry key.</dd><dd><code>value</code> - The entry value.</dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>name</code> - The entry id.</dd><dd><code>value</code> - The entry value.</dd>
 <dt><span class="strong">Returns:</span></dt><dd>true if it was removed.</dd></dl>
 </li>
 </ul>
@@ -643,7 +643,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 <ul class="blockList">
 <li class="blockList">
 <h4>containsKey</h4>
-<pre>public&nbsp;boolean&nbsp;containsKey(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;key)</pre>
+<pre>public&nbsp;boolean&nbsp;containsKey(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;id)</pre>
 <dl>
 <dt><strong>Specified by:</strong></dt>
 <dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true#containsKey(java.lang.Object)" title="class or interface in java.util">containsKey</a></code>&nbsp;in interface&nbsp;<code><a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="../../../../org/eclipse/jetty/util/MultiMap.html" title="type parameter in MultiMap">K</a>,<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;</code></dd>
@@ -738,7 +738,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 <ul class="blockList">
 <li class="blockList">
 <h4>remove</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;remove(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;key)</pre>
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;remove(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;id)</pre>
 <dl>
 <dt><strong>Specified by:</strong></dt>
 <dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true#remove(java.lang.Object)" title="class or interface in java.util">remove</a></code>&nbsp;in interface&nbsp;<code><a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a>&lt;<a href="../../../../org/eclipse/jetty/util/MultiMap.html" title="type parameter in MultiMap">K</a>,<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&gt;</code></dd>
@@ -779,7 +779,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 <ul class="blockList">
 <li class="blockList">
 <h4>putIfAbsent</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;putIfAbsent(<a href="../../../../org/eclipse/jetty/util/MultiMap.html" title="type parameter in MultiMap">K</a>&nbsp;key,
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;putIfAbsent(<a href="../../../../org/eclipse/jetty/util/MultiMap.html" title="type parameter in MultiMap">K</a>&nbsp;id,
                  <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;value)</pre>
 <dl>
 <dt><strong>Specified by:</strong></dt>
@@ -793,7 +793,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 <ul class="blockList">
 <li class="blockList">
 <h4>remove</h4>
-<pre>public&nbsp;boolean&nbsp;remove(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;key,
+<pre>public&nbsp;boolean&nbsp;remove(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;id,
              <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;value)</pre>
 <dl>
 <dt><strong>Specified by:</strong></dt>
@@ -809,7 +809,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 <ul class="blockList">
 <li class="blockList">
 <h4>replace</h4>
-<pre>public&nbsp;boolean&nbsp;replace(<a href="../../../../org/eclipse/jetty/util/MultiMap.html" title="type parameter in MultiMap">K</a>&nbsp;key,
+<pre>public&nbsp;boolean&nbsp;replace(<a href="../../../../org/eclipse/jetty/util/MultiMap.html" title="type parameter in MultiMap">K</a>&nbsp;id,
               <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;oldValue,
               <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;newValue)</pre>
 <dl>
@@ -826,7 +826,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/util/concu
 <ul class="blockListLast">
 <li class="blockList">
 <h4>replace</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;replace(<a href="../../../../org/eclipse/jetty/util/MultiMap.html" title="type parameter in MultiMap">K</a>&nbsp;key,
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;replace(<a href="../../../../org/eclipse/jetty/util/MultiMap.html" title="type parameter in MultiMap">K</a>&nbsp;id,
              <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;value)</pre>
 <dl>
 <dt><strong>Specified by:</strong></dt>

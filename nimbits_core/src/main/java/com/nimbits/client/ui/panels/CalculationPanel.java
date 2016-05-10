@@ -132,10 +132,10 @@ public class CalculationPanel extends BasePanel {
     private Calculation createCalculation(final EntityName name, final EntityCombo xCombo, final EntityCombo yCombo, final EntityCombo zCombo, final EntityCombo targetcombo, final CheckBox enabled, final TextField<String> formula) {
 
 
-        final String x = xCombo.getValue() == null ? null : xCombo.getValue().getKey();
-        final String y = yCombo.getValue() == null ? null : yCombo.getValue().getKey();
-        final String z = zCombo.getValue() == null ? null : zCombo.getValue().getKey();
-        final String target = targetcombo.getValue() == null ? null : targetcombo.getValue().getKey();
+        final String x = xCombo.getValue() == null ? null : xCombo.getValue().getId();
+        final String y = yCombo.getValue() == null ? null : yCombo.getValue().getId();
+        final String z = zCombo.getValue() == null ? null : zCombo.getValue().getId();
+        final String target = targetcombo.getValue() == null ? null : targetcombo.getValue().getId();
 
         CalculationModel.Builder builder = new CalculationModel.Builder();
         if (entity.getEntityType().equals(EntityType.calculation)) {
@@ -147,7 +147,7 @@ public class CalculationPanel extends BasePanel {
         }
         Calculation update = builder.name(name)
                 .owner(entity.getOwner())
-                .trigger(entity.getKey())
+                .trigger(entity.getId())
                 .enabled(enabled.getValue())
                 .formula(formula.getValue())
                 .target(target)

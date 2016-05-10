@@ -89,7 +89,7 @@ public class XMPPReceiverServlet extends ApiBase {
         final String j[] = COMPILE.split(fromJid.getId());
         final String email = j[0].toLowerCase();
 
-        final Optional<Entity> optional = entityDao.getEntityByKey(userService.getAdmin(), email, EntityType.user);
+        final Optional<Entity> optional = entityDao.getEntity(userService.getAdmin(), email, EntityType.user);
 
         if (optional.isPresent()) {
         final User user = (User) optional.get();
@@ -154,8 +154,8 @@ public class XMPPReceiverServlet extends ApiBase {
 
         switch (action) {
             case record:
-                //  Point point = PointServiceFactory.getInstance().getPointByKey(p.getKey());
-                Optional<Entity> optional = entityDao.getEntityByKey(u, p.getKey(), EntityType.point);
+                //  Point point = PointServiceFactory.getInstance().getPointByKey(p.getId());
+                Optional<Entity> optional = entityDao.getEntity(u, p.getId(), EntityType.point);
 
                 if (optional.isPresent()) {
 

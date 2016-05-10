@@ -184,7 +184,7 @@ public class EmailServiceImpl implements EmailService {
         }
 
 
-        message.append("<p></p>").append("<p><a href =\"").append(serverInfo.getFullServerURL(null)).append("?uuid=").append(point.getUUID()).append("\">Go to Current Status Report</a></p>");
+        message.append("<p></p>").append("<p><a href =\"").append(serverInfo.getFullServerURL(null)).append("?uuid=").append(point.getId()).append("\">Go to Current Status Report</a></p>");
 
         message.append("<P>Subscription Name: ").append(subscription.getName().getValue()).append(" </P>");
         message.append("<P>Subscription Description: ").append(subscription.getDescription()).append(" </P>");

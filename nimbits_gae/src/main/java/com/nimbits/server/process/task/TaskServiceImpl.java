@@ -57,8 +57,8 @@ public class TaskServiceImpl implements TaskService {
                         SyncService syncService, SubscriptionService subscriptionService,
                         CalculationService calculationService, DataProcessor dataProcessor,
                         User user, Point point, Value value) throws ValueException {
-        String u = user.getKey();
-        String p = point.getKey();
+        String u = user.getId();
+        String p = point.getId();
         Gson gson =  GsonFactory.getInstance(true);
         String json = gson.toJson(value);
 

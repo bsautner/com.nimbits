@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include "Nimbits2.h"
 
-  //nimbits settings, set the instance name (nimbits-02 is the public cloud on https://cloud.nimbits.com) the email of the account owner, and a read write key they have created.
+  //nimbits settings, set the instance name (nimbits-02 is the public cloud on https://cloud.nimbits.com) the email of the account owner, and a read write id they have created.
     String instance = "nimbits-02";
     char owner[] = "YourGmailAddress";
     String readWriteKey = "YourNimbitsKey";

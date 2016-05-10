@@ -31,9 +31,9 @@ public interface Entity extends Serializable, Comparable<Entity> {
 
     EntityName getName();
 
-    String getUUID();
+    String getId();
 
-    void setUUID(String uuid);
+    void setId(String id);
 
     void setName(EntityName name);
 
@@ -44,8 +44,6 @@ public interface Entity extends Serializable, Comparable<Entity> {
     EntityType getEntityType();
 
     void setEntityType(EntityType entityType);
-
-    String getKey();
 
     String getParent();
 
@@ -80,8 +78,6 @@ public interface Entity extends Serializable, Comparable<Entity> {
     void setEmbedded(Embedded embedded);
 
     void setLinks(Links links);
-
-    void setKey(String key);
 
     Action getAction();
 

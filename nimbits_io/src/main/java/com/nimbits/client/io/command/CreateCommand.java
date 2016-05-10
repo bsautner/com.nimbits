@@ -45,7 +45,7 @@ public class CreateCommand extends AbstractCommand implements Command {
                 EntityType entityType = EntityType.valueOf(type);
                 if (entityType.equals(EntityType.point)) {
 
-                    Point point = new PointModel.Builder().name(name).parent(current.getKey()).create();// helper.createPoint(name, entityType, current);
+                    Point point = new PointModel.Builder().name(name).parent(current.getId()).create();// helper.createPoint(name, entityType, current);
                     tree.add(point);
                     listener.onTreeUpdated(tree);
                     listener.setCurrent(current);

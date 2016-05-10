@@ -176,16 +176,13 @@ public class ApiBase extends HttpServlet {
 
 
         if (StringUtils.isNotEmpty(id)) {
-            if (user != null && entityType.equals(EntityType.point) && !id.startsWith(user.getEmail().getValue())) {
-                id = user.getEmail() + "/" + id;
 
-            }
             response.append(" used entity id method");
             response.append(" getting ").append(id).append("");
-            sample = entityDao.getEntityByKey(user, id, entityType).get();
+            sample = entityDao.getEntity(user, id, entityType).get();
         } else if (StringUtils.isNotEmpty(uuid)) {
             response.append(" used uuid method ");
-            sample = entityDao.getEntityByUUID(user, uuid, entityType).get();
+            sample = entityDao.getEntity(user, uuid, entityType).get();
         } else if (StringUtils.isNotEmpty(name)) {
             response.append(" used name method ");
             EntityName entityName = CommonFactory.createName(name, entityType);
@@ -212,7 +209,7 @@ public class ApiBase extends HttpServlet {
         }
         else {
             sendError(resp, HttpServletResponse.SC_NOT_FOUND, "Entity not found");
-            throw new RuntimeException("entity not found");
+            throw new RuntimeException("entity not found 00002");
         }
 
 

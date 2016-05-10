@@ -27,7 +27,7 @@ echo $used_disk_percent
 timestamp=`date +%s%3N`
 echo $timestamp
 
-DATA="email=$email&token=$token&json=[{"key":"CPU_percent","values":[{"d":'$used_cpu_percent',"t":'$timestamp'}]},{"key":"DISK_percent","values":[{"d":'$used_disk_percent',"t":'$timestamp'}]},{"key":"DISK_used","values":[{"d":'$used_disk',"t":'$timestamp'}]}]"
+DATA="email=$email&token=$token&json=[{"id":"CPU_percent","values":[{"d":'$used_cpu_percent',"t":'$timestamp'}]},{"id":"DISK_percent","values":[{"d":'$used_disk_percent',"t":'$timestamp'}]},{"id":"DISK_used","values":[{"d":'$used_disk',"t":'$timestamp'}]}]"
 
 echo $DATA
 

@@ -80,7 +80,7 @@ public class EntityCombo extends ComboBox<TreeModel> {
                             || !(e.getEntityType().equals(EntityType.point))) {
                         TreeModel model = new GxtModel(e);
                         cbStore.add(model);
-                        if (model.getBaseEntity().getKey().equals(selectedUUID)) {
+                        if (model.getBaseEntity().getId().equals(selectedUUID)) {
                             setValue(model);
                         }
 

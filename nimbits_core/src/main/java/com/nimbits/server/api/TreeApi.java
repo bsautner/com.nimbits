@@ -70,16 +70,16 @@ public class TreeApi extends ApiBase {
                         if (!e.getEntityType().equals(EntityType.user)) {
                             if (e.getEntityType().recordsData()) {
 
-                                children.add(new JitModel(e, getCurrentValue(e), e.getKey(), e.getName().getValue(), new Object(), getChilden(sample, e)));
+                                children.add(new JitModel(e, getCurrentValue(e), e.getId(), e.getName().getValue(), new Object(), getChilden(sample, e)));
                             } else {
 
-                                children.add(new JitModel(e, e.getKey(), e.getName().getValue(), new Object(), getChilden(sample, e)));
+                                children.add(new JitModel(e, e.getId(), e.getName().getValue(), new Object(), getChilden(sample, e)));
                             }
                         }
 
                     }
                 }
-                JitModel top = new JitModel(user, user.getKey(), user.getName().getValue(), new Object(), children);
+                JitModel top = new JitModel(user, user.getId(), user.getName().getValue(), new Object(), children);
                 final String json =  GsonFactory.getInstance(true).toJson(top);
                 completeResponse(resp, json);
 
@@ -99,13 +99,13 @@ public class TreeApi extends ApiBase {
     private List<JitModel> getChilden(List<Entity> list, Entity parent) {
         List<JitModel> children = new ArrayList<>();
         for (Entity e : list) {
-            if (e.getParent().equals(parent.getKey())) {
+            if (e.getParent().equals(parent.getId())) {
                 if (e.getEntityType().recordsData()) {
 
-                    children.add(new JitModel(e, getCurrentValue(e), e.getKey(), e.getName().getValue(), new Object(), getChilden(list, e)));
+                    children.add(new JitModel(e, getCurrentValue(e), e.getId(), e.getName().getValue(), new Object(), getChilden(list, e)));
                 } else {
 
-                    children.add(new JitModel(e, e.getKey(), e.getName().getValue(), new Object(), getChilden(list, e)));
+                    children.add(new JitModel(e, e.getId(), e.getName().getValue(), new Object(), getChilden(list, e)));
                 }
             }
 

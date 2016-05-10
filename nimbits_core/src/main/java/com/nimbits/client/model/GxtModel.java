@@ -32,14 +32,14 @@ import com.nimbits.client.model.value.Value;
 @SuppressWarnings("unused")
 public class GxtModel extends BaseTreeModel implements TreeModel {
     private static final int INT = 40;
-    private String key;
+    private String id;
     private EntityName name;
     private AlertType alertType;
     private EntityType entityType;
     private boolean isReadOnly;
     private boolean isDirty;
     private Entity baseEntity;
-    private String uuid;
+
 
     protected GxtModel() {
     }
@@ -49,13 +49,13 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
     }
 
     public GxtModel(final User user) {
-        this.key = user.getKey();
+        this.id = user.getId();
         this.name = CommonFactory.createName(user.getEmail().getValue(), EntityType.user);
         this.alertType = AlertType.OK;
         this.entityType = EntityType.user;
         this.isReadOnly = true;
         this.baseEntity =  user;
-        set(Parameters.id.getText(), this.key);
+        set(Parameters.id.getText(), this.id);
         set(Parameters.name.getText(), this.name.getValue());
         set(Parameters.entityType.getText(), this.entityType.getCode());
         set(Parameters.dirty.getText(), Parameters.no.getText());
@@ -78,14 +78,10 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
     }
 
 
-    @Override
-    public String getId() {
-        return key;
-    }
 
     @Override
     public void setId(String id) {
-        this.key = id;
+        this.id = id;
     }
 
     @Override
@@ -121,8 +117,8 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
     }
 
     @Override
-    public String getKey() {
-        return key;
+    public String getId() {
+        return id;
     }
 
     @Override
@@ -151,22 +147,17 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
         setEntityValues(entity);
     }
 
-    @Override
-    public String getUuid() {
-        return uuid;
-    }
 
     private void setEntityValues(Entity entity) {
-        this.key = entity.getKey();
+        this.id = entity.getId();
         this.name = entity.getName();
         this.alertType = entity.getAlertType();
         this.entityType = entity.getEntityType();
         this.isReadOnly = entity.isReadOnly();
-        this.uuid = entity.getUUID();
 
 
         this.baseEntity = entity;
-        set(Parameters.id.getText(), this.key);
+        set(Parameters.id.getText(), this.id);
         set(Parameters.name.getText(), this.name.getValue());
         set(Parameters.entityType.getText(), entity.getEntityType().getCode());
 

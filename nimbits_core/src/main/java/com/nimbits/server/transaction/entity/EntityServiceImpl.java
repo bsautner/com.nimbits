@@ -86,7 +86,7 @@ public class EntityServiceImpl implements EntityService {
 
                 blobStore.deleteAllData(point);
             if (point.getPointType().equals(PointType.location)) {
-                geoSpatialDao.deleteSpatial(point.getUUID());
+                geoSpatialDao.deleteSpatial(point.getId());
             }
 
             // taskService.startDeleteDataTask((Point) entity);
@@ -124,14 +124,14 @@ public class EntityServiceImpl implements EntityService {
 
 
         if (StringUtils.isEmpty(entity.getOwner())) {
-            entity.setOwner(user.getKey());
+            entity.setOwner(user.getId());
         }
         if (StringUtils.isEmpty(entity.getParent())) {
-            entity.setParent(user.getKey());
+            entity.setParent(user.getId());
         }
-        if (StringUtils.isEmpty(entity.getUUID())) {
-            entity.setUUID(UUID.randomUUID().toString());
-        }
+//        if (StringUtils.isEmpty(entity.getId())) {
+//            entity.setId(UUID.randomUUID().toString());
+//        }
 
 
         return addUpdateEntity(valueService, user, entity);

@@ -83,7 +83,7 @@ public class CalculationServiceImpl implements CalculationService {
             Calculation c = (Calculation) optional.get();
 
 
-            final Optional<Entity> target = entityDao.getEntityByKey(u, c.getTarget(), EntityType.point);
+            final Optional<Entity> target = entityDao.getEntity(u, c.getTarget(), EntityType.point);
 
             if (target.isPresent()) {
                 final Optional<Value> result = solveEquation(entityDao, blobStore, valueService, u, c, point, value);
@@ -136,10 +136,10 @@ public class CalculationServiceImpl implements CalculationService {
         if (!Utils.isEmptyString(calculation.getX()) && calculation.getFormula().contains(var)) {
 
             double currentValue = 0;
-            if (varEntityId.equals(point.getKey())) {
+            if (varEntityId.equals(point.getId())) {
                 currentValue = value.getDoubleValue();
             } else {
-                Optional<Entity> sample = entityDao.getEntityByKey(user, varEntityId, EntityType.point);
+                Optional<Entity> sample = entityDao.getEntity(user, varEntityId, EntityType.point);
 
                 if (sample.isPresent()) {
                     final Value val = valueService.getCurrentValue(blobStore, sample.get());

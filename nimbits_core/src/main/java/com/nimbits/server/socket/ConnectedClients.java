@@ -102,7 +102,7 @@ public class ConnectedClients {
         for (SocketClient socketClient : rows.values()) {
             if (socketClient.getSession().equals(session) &&
                     socketClient.isOpen() &&
-                    (socketClient.getPoints().isEmpty() || socketClient.getPoints().contains(point.getKey())
+                    (socketClient.getPoints().isEmpty() || socketClient.getPoints().contains(point.getId())
                     )) {
                 sendFormatedMessage(points, socketClient);
 

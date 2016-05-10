@@ -211,20 +211,18 @@ public class SeriesApi extends ApiBase {
 
                 for (Point p : points) {
                     if (p != null && p.getValues() != null) {
-                        String key = p.getKey();
+                        String id = p.getId();
                         {
 
                             Point completePoint;
-                            if (! StringUtils.isEmpty(key) && !  key.startsWith(user.getEmail().getValue())) {
-                                key = user.getEmail().getValue() + "/" + key;
-                            }
-                            if (completeMap.containsKey(key)) {
-                                completePoint = completeMap.get(key);
+
+                            if (completeMap.containsKey(id)) {
+                                completePoint = completeMap.get(id);
                             }
                             else {
 
-                                 completePoint = (Point) entityDao.getEntityByKey(user, key, EntityType.point).get();
-                                 completeMap.put(key, completePoint);
+                                 completePoint = (Point) entityDao.getEntity(user, id, EntityType.point).get();
+                                 completeMap.put(id, completePoint);
 
 
 

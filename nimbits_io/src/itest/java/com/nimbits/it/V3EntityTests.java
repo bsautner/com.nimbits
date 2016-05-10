@@ -99,6 +99,7 @@ public class V3EntityTests extends NimbitsTest {
                 .name(UUID.randomUUID().toString())
                 .highAlarmOn(true)
                 .create());
+        log("input point id: " + inputPoint.getId());
 
         nimbits.recordValue(inputPoint, new Value.Builder().meta(foo).create());
         Thread.sleep(100);

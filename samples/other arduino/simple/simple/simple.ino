@@ -16,12 +16,12 @@
 
  
  
-//nimbits settings, set the instance name (nimbits-02 is the public cloud on https://cloud.nimbits.com) the email of the account owner, and a read write key they have created.
+//nimbits settings, set the instance name (nimbits-02 is the public cloud on https://cloud.nimbits.com) the email of the account owner, and a read write id they have created.
 //or if posting to your server, 192.168.1.100:8080/nimbits for example.
 #define PORT 80
 String instance = "nimbits-02"; 
 String owner = "test@example.com";
-String readWriteKey = "key";
+String readWriteKey = "id";
 const char *URL = "nimbits-02.appspot.com";
 
 long randNumber;
@@ -61,7 +61,7 @@ void recordValue(double value, char *pointId) {
   content = "email=";
 
   content += owner;
-  content += "&key=";
+  content += "&id=";
   content += readWriteKey;
   content += "&json=";
   content += json;

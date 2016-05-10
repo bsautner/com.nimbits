@@ -44,8 +44,8 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
 
     }
 
-    protected ScheduleModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, Boolean enabled, Long interval, String source, String target, Long lastProcessed) {
-        super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
+    protected ScheduleModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, Boolean enabled, Long interval, String source, String target, Long lastProcessed) {
+        super(id, name, description, entityType, protectionLevel, parent, owner);
         this.enabled = enabled;
         this.interval = interval;
         this.source = source;
@@ -141,7 +141,7 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
             }
 
 
-            return new ScheduleModel(key, name, description,type, protectionLevel, parent, owner, uuid,
+            return new ScheduleModel(id, name, description,type, protectionLevel, parent, owner,
                     enabled, interval, source, target, lastProcessed);
         }
 
@@ -155,8 +155,8 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
 
         private void initEntity(Entity anEntity) {
 
-            this.key = anEntity.getKey();
-            this.id = anEntity.getKey();
+
+            this.id = anEntity.getId();
             this.name = anEntity.getName();
             this.description = anEntity.getDescription();
             this.entityType = anEntity.getEntityType();
@@ -164,7 +164,7 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
             this.owner = anEntity.getOwner();
             this.protectionLevel = anEntity.getProtectionLevel();
             this.alertType = anEntity.getAlertType().getCode();
-            this.uuid = anEntity.getUUID();
+
 
         }
 
@@ -189,11 +189,7 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
             this.name = name;
             return this;
         }
-        @Override
-        public Builder key(String key) {
-            this.key = key;
-            return this;
-        }
+
         @Override
         public Builder description(String description) {
             this.description = description;
@@ -224,11 +220,7 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
             this.id = id;
             return this;
         }
-        @Override
-        public Builder uuid(String uuid) {
-            this.uuid = uuid;
-            return this;
-        }
+
 
         @Override
         public Builder action(String action) {
@@ -253,7 +245,7 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
 
 
         public Builder source(Entity source) {
-            this.source = source.getKey();
+            this.source = source.getId();
             return this;
         }
 
@@ -263,7 +255,7 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
         }
 
         public Builder target(Entity target) {
-            this.target = target.getKey();
+            this.target = target.getId();
             return this;
         }
 

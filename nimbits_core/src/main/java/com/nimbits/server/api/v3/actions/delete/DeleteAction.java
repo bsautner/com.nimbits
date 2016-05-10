@@ -43,14 +43,14 @@ public class DeleteAction extends RestAction {
     public void doDelete(HttpServletRequest req, HttpServletResponse resp, User user) throws IOException {
         String path = req.getRequestURI();
         String uuid = getEntityUUID(path);
-        Optional<Entity> optional = entityDao.findEntityByUUID(user, uuid);
+        Optional<Entity> optional = entityDao.findEntity(user, uuid);
         if (optional.isPresent()) {
             Entity entity = optional.get();
-            if (!user.getIsAdmin() && entity.getEntityType() != EntityType.user && entity.getOwner().equals(user.getKey())) {
+            if (!user.getIsAdmin() && entity.getEntityType() != EntityType.user && entity.getOwner().equals(user.getId())) {
                 entityService.deleteEntity(user, entity);
             } else if (user.getIsAdmin()) {
                 entityService.deleteEntity(user, entity);
-            } else if (!entity.getOwner().equals(user.getKey())) {
+            } else if (!entity.getOwner().equals(user.getId())) {
                 throw new SecurityException("You can not delete an entity you don't own if your not the system admin");
             }
         }

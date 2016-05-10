@@ -156,9 +156,9 @@ public class EntityApi extends ApiBase {
                 sendError(resp, HttpServletResponse.SC_BAD_REQUEST, e.getMessage());
             }
 
-            if (sampleEntity != null && !StringUtils.isEmpty(sampleEntity.getKey())) {
+            if (sampleEntity != null && !StringUtils.isEmpty(sampleEntity.getId())) {
 
-                 Optional<Entity> optional = entityDao.getEntityByKey(user, sampleEntity.getKey(), sampleEntity.getEntityType());
+                 Optional<Entity> optional = entityDao.getEntity(user, sampleEntity.getId(), sampleEntity.getEntityType());
 
                 if (optional.isPresent()) {
                     resp.setStatus(HttpServletResponse.SC_CONFLICT);
@@ -206,16 +206,16 @@ public class EntityApi extends ApiBase {
             Entity sampleEntity = (Entity) gson.fromJson(json, type.getClz());
 
 
-            if (sampleEntity != null && !StringUtils.isEmpty(sampleEntity.getKey())) {
+            if (sampleEntity != null && !StringUtils.isEmpty(sampleEntity.getId())) {
 
 
-                 Optional<Entity> optional = entityDao.getEntityByKey(user, sampleEntity.getKey(), sampleEntity.getEntityType());
+                 Optional<Entity> optional = entityDao.getEntity(user, sampleEntity.getId(), sampleEntity.getEntityType());
 
                 if (optional.isPresent()) {
                     resp.setStatus(HttpServletResponse.SC_OK);
                     return addUpdateUpscaledEntity(req, user, json);
                 } else {
-                    resp.addHeader("error details", "entity not found");
+                    resp.addHeader("error details", "entity not found 0003");
                     resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                     throw new IllegalArgumentException("Entity Not Found");
                 }
@@ -293,7 +293,7 @@ public class EntityApi extends ApiBase {
             Entity sampleEntity = (Entity) gson.fromJson(json, tp.getClz());
 
             if (sampleEntity != null) {
-                id = sampleEntity.getKey();
+                id = sampleEntity.getId();
             }
         }
 
@@ -302,7 +302,7 @@ public class EntityApi extends ApiBase {
             return;
         }
 
-        Optional<Entity> optional = entityDao.getEntityByKey(user, id, entityType);
+        Optional<Entity> optional = entityDao.getEntity(user, id, entityType);
         if (optional.isPresent()) {
             entityService.deleteEntity(user, optional.get());
             resp.setStatus(HttpServletResponse.SC_OK);

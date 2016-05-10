@@ -83,14 +83,13 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
     protected PointModel(
 
-            final String key,
+            final String id,
             final CommonIdentifier name,
             final String description,
             final EntityType entityType,
             final ProtectionLevel protectionLevel,
             final String parent,
             final String owner,
-            final String uuid,
             final double highAlarm,
             final int expire,
             final String unit,
@@ -108,7 +107,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
             final boolean deltaAlarmOn,
             final int deltaSeconds,
             final int precision) {
-        super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
+        super(id, name, description, entityType, protectionLevel, parent, owner);
         this.highAlarm = highAlarm;
         this.expire = expire;
         this.unit = unit;
@@ -509,15 +508,15 @@ public class PointModel extends EntityModel implements Serializable, Point {
                 filterType = FilterType.none;
             }
 
-            return new PointModel(key, name, description, type, protectionLevel, parent, owner, uuid, highAlarm, expire
+            return new PointModel(id, name, description, type, protectionLevel, parent, owner, highAlarm, expire
                     , unit, lowAlarm, highAlarmOn, lowAlarmOn, idleAlarmOn, idleSeconds, idleAlarmSent, filterType,filterValue, inferLocation,
                     pointType, deltaAlarm, deltaAlarmOn, deltaSeconds, precision);
         }
 
         private void initEntity(Entity anEntity) {
 
-            this.key = anEntity.getKey();
-            this.id = anEntity.getKey();
+
+            this.id = anEntity.getId();
             this.name = anEntity.getName();
             this.description = anEntity.getDescription();
             this.entityType = type;
@@ -525,7 +524,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
             this.owner = anEntity.getOwner();
             this.protectionLevel = anEntity.getProtectionLevel();
             this.alertType = anEntity.getAlertType().getCode();
-            this.uuid = anEntity.getUUID();
+
 
         }
         @Override
@@ -541,11 +540,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
             this.name = name;
             return this;
         }
-        @Override
-        public Builder key(String key) {
-            this.key = key;
-            return this;
-        }
+
         @Override
         public Builder description(String description) {
             this.description = description;
@@ -574,11 +569,6 @@ public class PointModel extends EntityModel implements Serializable, Point {
         @Override
         public Builder id(String id) {
             this.id = id;
-            return this;
-        }
-        @Override
-        public Builder uuid(String uuid) {
-            this.uuid = uuid;
             return this;
         }
 

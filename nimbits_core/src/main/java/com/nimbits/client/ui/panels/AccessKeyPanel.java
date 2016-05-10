@@ -57,7 +57,7 @@ public class AccessKeyPanel extends BasePanel {
         if (entity.getEntityType().equals(EntityType.accessKey)) {
 
             name.setValue(entity.getName().getValue());
-            key.setValue("<key encrypted>");
+            key.setValue("<id encrypted>");
             key.disable();
             submit.disable();
 
@@ -147,7 +147,7 @@ public class AccessKeyPanel extends BasePanel {
 
 
                     builder.owner(entity.getOwner())
-                            .parent(entity.getKey());
+                            .parent(entity.getId());
 
                     builder.name(newName)
                             .code(k.getValue());

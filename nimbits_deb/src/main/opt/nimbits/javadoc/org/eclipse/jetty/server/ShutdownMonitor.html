@@ -117,7 +117,7 @@
 extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></pre>
 <div class="block">Shutdown/Stop Monitor thread.
  <p>
- This thread listens on the port specified by the STOP.PORT system parameter (defaults to -1 for not listening) for request authenticated with the key given
+ This thread listens on the port specified by the STOP.PORT system parameter (defaults to -1 for not listening) for request authenticated with the id given
  by the STOP.KEY system parameter (defaults to "eclipse") for admin requests.
  <p>
  If the stop port is set to zero, then a random port is assigned and the port number is printed to stdout.
@@ -198,7 +198,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/server/ShutdownMonitor.html#setKey(java.lang.String)">setKey</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/server/ShutdownMonitor.html#setKey(java.lang.String)">setKey</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;id)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>void</code></td>
@@ -303,7 +303,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <ul class="blockList">
 <li class="blockList">
 <h4>setKey</h4>
-<pre>public&nbsp;void&nbsp;setKey(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</pre>
+<pre>public&nbsp;void&nbsp;setKey(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;id)</pre>
 </li>
 </ul>
 <a name="setPort(int)">

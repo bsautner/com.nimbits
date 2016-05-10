@@ -67,7 +67,7 @@ public class SyncPanel extends BasePanel {
             //name.setValue(entity.getName().getValue() + " Access Key");
             targetInstance.setValue("cloud.nimbits.com");
             targetPoint.setValue(entity.getName().getValue());
-            // accessKey.setValue("access key on target server");
+            // accessKey.setValue("access id on target server");
         }
 
         submit.addSelectionListener(new SubmitEventSelectionListener(targetPoint, targetInstance, accessKey));
@@ -154,9 +154,9 @@ public class SyncPanel extends BasePanel {
                 } else {
                     builder
                             .owner(entity.getOwner())
-                            .parent(entity.getKey())
+                            .parent(entity.getId())
                             .protectionLevel(ProtectionLevel.everyone)
-                            .trigger(entity.getKey());
+                            .trigger(entity.getId());
 
 
 

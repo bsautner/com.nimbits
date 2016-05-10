@@ -82,7 +82,7 @@ public class AccessKeyEntity extends EntityStore implements AccessKey {
     public void validate(User user) {
         super.validate(user);
         if (StringUtils.isEmpty(this.code)) {
-            throw new IllegalArgumentException("Access Key must not be empty, you can delete the key if you don't want it anymore.");
+            throw new IllegalArgumentException("Access Key must not be empty, you can delete the id if you don't want it anymore.");
         }
 
 

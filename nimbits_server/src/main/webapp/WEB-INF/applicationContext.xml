@@ -215,17 +215,17 @@
                     org.datanucleus.api.jdo.JDOPersistenceManagerFactory
                 </prop>
                 <prop key="javax.jdo.option.ConnectionURL">
-                    jdbc:h2:./database/db2;MV_STORE=FALSE;MVCC=FALSE;;FILE_LOCK=NO
+                    jdbc:h2:./database/db3;MV_STORE=FALSE;MVCC=FALSE;;FILE_LOCK=NO
                 </prop>
                 <prop key="javax.jdo.option.ConnectionUserName">sa</prop>
                 <prop key="javax.jdo.option.ConnectionPassword"></prop>
                 <prop key="javax.jdo.option.ConnectionDriverName">org.h2.Driver</prop>
                 <prop key="org.jpox.autoCreateSchema">true</prop>
-                <!--<prop key="datanucleus.schema.autoCreateAll">true</prop>-->
+                <!--<prop id="datanucleus.schema.autoCreateAll">true</prop>-->
                 <prop key="org.jpox.identifier.case">PreserveCase</prop>
                 <prop key="datanucleus.autoCreateTables">true</prop>
                 <prop key="datanucleus.autoCreateColumns">true</prop>
-                <!--<prop key="datanucleus.schema.autoCreateColumns">true</prop>-->
+                <!--<prop id="datanucleus.schema.autoCreateColumns">true</prop>-->
             </props>
         </property>
     </bean>

@@ -94,13 +94,13 @@ public class BlobStoreImpl implements BlobStore {
     @Override
     public Value getSnapshot(final Entity entity) {
         final Value value;
-        final String key = entity.getKey() + SNAPSHOT;
+        final String key = entity.getId() + SNAPSHOT;
         if (nimbitsCache.get(key) != null) {
 
             value = (Value) nimbitsCache.get(key);
 
         } else {
-            List<Value> values = readValuesFromFile(entity.getKey() + "/" + SNAPSHOT);
+            List<Value> values = readValuesFromFile(entity.getId() + "/" + SNAPSHOT);
 
             if (values.isEmpty()) {
                 value = new Value.Builder().doubleValue(0.0).timestamp(new Date(0)).create();
@@ -116,22 +116,22 @@ public class BlobStoreImpl implements BlobStore {
     }
 
     private void createSnapshot(final Entity entity, final Value value) {
-        final String key = entity.getKey() + SNAPSHOT;
+        final String key = entity.getId() + SNAPSHOT;
         final String json = gson.toJson(Collections.singletonList(value));
         nimbitsCache.put(key, value);
-        writeFile(json, entity.getKey() + "/" + SNAPSHOT);
+        writeFile(json, entity.getId() + "/" + SNAPSHOT);
 
 
     }
 
     @Override
     public void saveSnapshot(final Entity entity, final Value value) {
-        final String key = entity.getKey() + SNAPSHOT;
+        final String key = entity.getId() + SNAPSHOT;
         Value old = getSnapshot(entity);
         if (value.getTimestamp().getTime() > old.getTimestamp().getTime()) {
             final String json = gson.toJson(Collections.singletonList(value));
             nimbitsCache.put(key, value);
-            writeFile(json, entity.getKey() + "/" + SNAPSHOT);
+            writeFile(json, entity.getId() + "/" + SNAPSHOT);
         }
 
     }
@@ -150,7 +150,7 @@ public class BlobStoreImpl implements BlobStore {
 
         ListOptions.Builder b = new ListOptions.Builder();
         b.setRecursive(false);
-        b.setPrefix(entity.getKey() + "/");
+        b.setPrefix(entity.getId() + "/");
 
         List<Value> allvalues = new ArrayList<>(INITIAL_CAPACITY);
         List<String> allReadFiles = new ArrayList<>(INITIAL_CAPACITY);
@@ -293,14 +293,14 @@ public class BlobStoreImpl implements BlobStore {
         final Date earliestForDay = range.lowerEndpoint();
 
 
-        String FILENAME = entity.getKey() + "/" + holder.getStartOfDay().getTime() + "/" + earliestForDay.getTime();//store.getId();
+        String FILENAME = entity.getId() + "/" + holder.getStartOfDay().getTime() + "/" + earliestForDay.getTime();//store.getId();
         // GcsService gcsService = GcsServiceFactory.createGcsService();
         writeFile(json, FILENAME);
     }
 
     @Override
     public void deleteAllData(Point point)  {
-        GcsFilename path = new GcsFilename(BUCKETNAME, point.getKey());
+        GcsFilename path = new GcsFilename(BUCKETNAME, point.getId());
         try {
             gcsService.delete(path);
         } catch (IOException e) {

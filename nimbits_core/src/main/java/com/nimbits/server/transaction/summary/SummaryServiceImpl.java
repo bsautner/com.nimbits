@@ -85,7 +85,7 @@ public class SummaryServiceImpl implements SummaryService {
 
             if (summary.getLastProcessed().getTime() + summary.getSummaryIntervalMs() < new Date().getTime()) {
 
-                final  Entity source = entityDao.getEntityByKey(user, summary.getTrigger(), EntityType.point).get();
+                final  Entity source = entityDao.getEntity(user, summary.getTrigger(), EntityType.point).get();
 
                 final Optional<Range<Date>> timespan = Optional.of(Range.closed(new Date(now.getTime() - summary.getSummaryIntervalMs()), now));
 
@@ -113,7 +113,7 @@ public class SummaryServiceImpl implements SummaryService {
                 }
 
 
-                final Point target = (Point) entityDao.getEntityByKey(user, summary.getTarget(), EntityType.point).get();
+                final Point target = (Point) entityDao.getEntity(user, summary.getTarget(), EntityType.point).get();
                 logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
 
                 taskService.process(geoSpatialDao, taskService, userService, entityDao, valueTask,

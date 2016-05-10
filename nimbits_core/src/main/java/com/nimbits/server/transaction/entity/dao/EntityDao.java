@@ -21,6 +21,7 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.connection.Connection;
+import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.point.Point;
@@ -52,23 +53,19 @@ public interface EntityDao {
 
     void deleteEntity(User user, Entity entity, EntityType type);
 
-    Optional<Entity> getEntityByKey(User user, String id, EntityType type);
+    Optional<Entity> getEntity(User user, String id, EntityType type);
 
-
+    Optional<User> getUser(EmailAddress email);
 
     Optional<Entity> getEntityByName(User user, EntityName name, EntityType type);
 
-    List<Connection> approveConnection(String key);
+    List<Connection> approveConnection(String id);
 
     String getOwner(String point);
 
     List<Schedule> getSchedules();
 
-    Optional<Entity> findEntityByUUID(User user, String uuid);
-
-    Optional<Entity> findEntityByKey(User user, String key);
-
-    Optional<Entity> getEntityByUUID(User user, String uuid, EntityType type);
+    Optional<Entity> findEntity(User user, String uuid);
 
     List<AccessKey> getPasswordContainingAccessKeys(User user);
 }

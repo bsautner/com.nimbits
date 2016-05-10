@@ -176,7 +176,7 @@ implements <a href="../../../../../org/eclipse/jetty/io/AsyncEndPoint.html" titl
 <tr class="altColor">
 <td class="colOne"><code><strong><a href="../../../../../org/eclipse/jetty/io/nio/SelectChannelEndPoint.html#SelectChannelEndPoint(java.nio.channels.SocketChannel, org.eclipse.jetty.io.nio.SelectorManager.SelectSet, java.nio.channels.SelectionKey, int)">SelectChannelEndPoint</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/nio/channels/SocketChannel.html?is-external=true" title="class or interface in java.nio.channels">SocketChannel</a>&nbsp;channel,
                      <a href="../../../../../org/eclipse/jetty/io/nio/SelectorManager.SelectSet.html" title="class in org.eclipse.jetty.io.nio">SelectorManager.SelectSet</a>&nbsp;selectSet,
-                     <a href="http://download.oracle.com/javase/6/docs/api/java/nio/channels/SelectionKey.html?is-external=true" title="class or interface in java.nio.channels">SelectionKey</a>&nbsp;key,
+                     <a href="http://download.oracle.com/javase/6/docs/api/java/nio/channels/SelectionKey.html?is-external=true" title="class or interface in java.nio.channels">SelectionKey</a>&nbsp;id,
                      int&nbsp;maxIdleTime)</code>&nbsp;</td>
 </tr>
 </table>
@@ -413,7 +413,7 @@ implements <a href="../../../../../org/eclipse/jetty/io/AsyncEndPoint.html" titl
 <h4>SelectChannelEndPoint</h4>
 <pre>public&nbsp;SelectChannelEndPoint(<a href="http://download.oracle.com/javase/6/docs/api/java/nio/channels/SocketChannel.html?is-external=true" title="class or interface in java.nio.channels">SocketChannel</a>&nbsp;channel,
                      <a href="../../../../../org/eclipse/jetty/io/nio/SelectorManager.SelectSet.html" title="class in org.eclipse.jetty.io.nio">SelectorManager.SelectSet</a>&nbsp;selectSet,
-                     <a href="http://download.oracle.com/javase/6/docs/api/java/nio/channels/SelectionKey.html?is-external=true" title="class or interface in java.nio.channels">SelectionKey</a>&nbsp;key,
+                     <a href="http://download.oracle.com/javase/6/docs/api/java/nio/channels/SelectionKey.html?is-external=true" title="class or interface in java.nio.channels">SelectionKey</a>&nbsp;id,
                      int&nbsp;maxIdleTime)
                       throws <a href="http://download.oracle.com/javase/6/docs/api/java/io/IOException.html?is-external=true" title="class or interface in java.io">IOException</a></pre>
 <dl><dt><span class="strong">Throws:</span></dt>
@@ -529,7 +529,7 @@ implements <a href="../../../../../org/eclipse/jetty/io/AsyncEndPoint.html" titl
 <h4>undispatch</h4>
 <pre>protected&nbsp;boolean&nbsp;undispatch()</pre>
 <div class="block">Called when a dispatched thread is no longer handling the endpoint.
- The selection key operations are updated.</div>
+ The selection id operations are updated.</div>
 <dl><dt><span class="strong">Returns:</span></dt><dd>If false is returned, the endpoint has been redispatched and
  thread must keep handling the endpoint.</dd></dl>
 </li>

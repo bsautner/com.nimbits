@@ -136,7 +136,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
                     try {
                         EntityName name = CommonFactory.createName(newEntityName, EntityType.point);
 
-                        Point p = new PointModel.Builder().name(name).parent(currentEntity.getKey()).create();
+                        Point p = new PointModel.Builder().name(name).parent(currentEntity.getId()).create();
 
                         service.addUpdateEntityRpc(p, new NewPointEntityAsyncCallback(box));
                     } catch (Exception e) {
@@ -207,7 +207,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
                     try {
                         EntityName name = CommonFactory.createName(newEntityName, EntityType.category);
                         Category p = new CategoryModel.Builder().name(name).create();
-                        p.setParent(currentEntity.getKey());
+                        p.setParent(currentEntity.getId());
                         service.addUpdateEntityRpc(p, new NewFolderEntityAsyncCallback(box));
                     } catch (Exception e) {
                         box.close();

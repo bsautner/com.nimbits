@@ -59,7 +59,7 @@ public class GeoSpatialDaoImpl implements GeoSpatialDao {
 
         for (ScoredDocument scoredDocument : results) {
             String id = scoredDocument.getId();
-            Optional<Entity> p = entityDao.getEntityByUUID(user, id, EntityType.point);
+            Optional<Entity> p = entityDao.getEntity(user, id, EntityType.point);
             if (p.isPresent()) {
                 points.add((Point) p.get());
             }

@@ -17,7 +17,6 @@
 package com.nimbits.server.transaction.user.service;
 
 import com.google.common.base.Optional;
-import com.google.gson.Gson;
 import com.nimbits.client.common.Utils;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.EntityType;
@@ -30,9 +29,7 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.*;
-import com.nimbits.server.Config;
 import com.nimbits.server.auth.AuthService;
-import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.settings.SettingsService;
@@ -46,9 +43,6 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
@@ -146,7 +140,7 @@ public class UserServiceImpl implements UserService {
             User user;
 
 
-            Optional<User> result = getUserByEmail(email);
+            Optional<User> result = entityDao.getUser(email);
 
 
             if (! result.isPresent()) {
@@ -156,7 +150,7 @@ public class UserServiceImpl implements UserService {
 
 
             } else {
-                user = result.get(); ;
+                user = result.get();
                 if (credentials.isPresent()) {
                     if (! validatePassword ( entityService, valueService, user, credentials.get().getPassword())) {
                         throw new SecurityException("Invalid Password");
@@ -188,25 +182,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    private Optional<User> getUserByEmail(EmailAddress email) {
-
-        try {
-            Optional<Entity> optional = entityDao.getEntityByKey(
-                    getAdmin(), //avoid infinite recursion
-                    email.getValue(), EntityType.user);
-            if (optional.isPresent()) {
-                return Optional.of((User) optional.get());
-            }
-            else {
-                return Optional.absent();
-            }
-
-        } catch (Throwable throwable) {
-            logger.log(Level.SEVERE, throwable.getMessage(), throwable);
-            return Optional.absent();
-        }
-
-    }
 
     private boolean trustedRequest(EntityService entityService,  ValueService valueService, final HttpServletRequest request, EmailAddress email) {
         List<EmailAddress> emailSample = authService.getCurrentUser(entityService, this, valueService, request);
@@ -298,7 +273,7 @@ public class UserServiceImpl implements UserService {
         } else {
             final User u = new UserModel.Builder()
             .name(CommonFactory.createName(adminStr, EntityType.user))
-            .key(adminStr)
+            .id(adminStr)
             .email(adminStr)
 
             .parent(adminStr)
@@ -311,7 +286,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<User>  getUserByKey(final String key) {
 
-        Optional<Entity> optional = entityDao.getEntityByKey(getAdmin(), key, EntityType.user);
+        Optional<Entity> optional = entityDao.getEntity(getAdmin(), key, EntityType.user);
         if (optional.isPresent()) {
             return Optional.of((User)optional.get());
         }

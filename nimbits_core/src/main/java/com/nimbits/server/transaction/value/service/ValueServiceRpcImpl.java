@@ -117,7 +117,7 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
                                final Value value) throws ValueException {
 
         User user = userService.getHttpRequestUser(entityService,valueService,  getThreadLocalRequest());
-        Point p = (Point) entityDao.getEntityByKey(user, point.getKey(), EntityType.point).get();
+        Point p = (Point) entityDao.getEntity(user, point.getId(), EntityType.point).get();
         logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
         taskService.process(geoSpatialDao, taskService, userService,
                 entityDao, valueTask, entityService, blobStore, valueService,

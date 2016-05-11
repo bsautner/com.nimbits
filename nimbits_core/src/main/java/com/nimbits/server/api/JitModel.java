@@ -37,11 +37,9 @@ public class JitModel {
     public JitModel(Entity entity, Value value, String id, String name, Object data, List<JitModel> children) {
         this.id = id;
         StringBuilder builder = new StringBuilder();
-        if (entity.getEntityType().equals(EntityType.point)) {
-            builder.append(name.replace(entity.getOwner() + "/", ""));
-        } else {
-            builder.append(name);
-        }
+
+        builder.append(name);
+
         builder.append(" ").append(value.getValueWithData());
         this.name = builder.toString();
         this.data = data;

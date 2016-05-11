@@ -51,8 +51,8 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
         super();
     }
 
-    protected CalculationModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String target, String trigger, boolean enabled, String formula, String x, String y, String z) {
-        super(key, name, description, entityType, protectionLevel, parent, owner, uuid, target, trigger, enabled);
+    protected CalculationModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String target, String trigger, boolean enabled, String formula, String x, String y, String z) {
+        super(id, name, description, entityType, protectionLevel, parent, owner, target, trigger, enabled);
         this.formula = formula;
         this.x = x;
         this.y = y;
@@ -168,17 +168,17 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
         }
 
         public Builder x(Entity x) {
-            this.x = x.getKey();
+            this.x = x.getId();
             return this;
         }
 
         public Builder y(Entity y) {
-            this.y = y.getKey();
+            this.y = y.getId();
             return this;
         }
 
         public Builder z(Entity z) {
-            this.z = z.getKey();
+            this.z = z.getId();
             return this;
         }
 
@@ -196,12 +196,12 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
 
         @Override
         public Builder target(Entity v) {
-            this.target = v.getKey();
+            this.target = v.getId();
             return this;
         }
         @Override
         public Builder trigger(Entity v) {
-            this.trigger = v.getKey();
+            this.trigger = v.getId();
             return this;
         }
 
@@ -223,7 +223,7 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
             this.enabled = true;
 
 
-            return new CalculationModel(key, name, description, type, protectionLevel, parent, owner, uuid,target,
+            return new CalculationModel(id, name, description, type, protectionLevel, parent, owner, target,
                     trigger, enabled, formula, x, y, z);
         }
 
@@ -240,8 +240,8 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
             this.target = anEntity.getTarget();
             this.enabled = anEntity.isEnabled();
 
-            this.key = anEntity.getKey();
-            this.id = anEntity.getKey();
+
+            this.id = anEntity.getId();
             this.name = anEntity.getName();
             this.description = anEntity.getDescription();
             this.entityType = anEntity.getEntityType();
@@ -249,7 +249,7 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
             this.owner = anEntity.getOwner();
             this.protectionLevel = anEntity.getProtectionLevel();
             this.alertType = anEntity.getAlertType().getCode();
-            this.uuid = anEntity.getUUID();
+
 
         }
 
@@ -267,11 +267,7 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
             this.name = name;
             return this;
         }
-        @Override
-        public Builder key(String key) {
-            this.key = key;
-            return this;
-        }
+
         @Override
         public Builder description(String description) {
             this.description = description;
@@ -300,11 +296,6 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
         @Override
         public Builder id(String id) {
             this.id = id;
-            return this;
-        }
-        @Override
-        public Builder uuid(String uuid) {
-            this.uuid = uuid;
             return this;
         }
 

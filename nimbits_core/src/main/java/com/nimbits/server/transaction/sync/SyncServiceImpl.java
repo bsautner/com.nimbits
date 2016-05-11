@@ -78,7 +78,7 @@ public class SyncServiceImpl implements SyncService {
                     .email(user.getEmail().getValue())
                     .token(sync.getAccessKey()).create();
 
-            // Point target = (Point) entityDao.getEntityByKey(user,((Sync) syncEntity).getTargetPoint(), EntityType.point );
+            // Point target = (Point) entityDao.getEntity(user,((Sync) syncEntity).getTargetPoint(), EntityType.point );
             String targetName = sync.getTarget().split("/")[1];
 
             nimbits.recordValue(targetName, value);

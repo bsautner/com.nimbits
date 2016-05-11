@@ -263,7 +263,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/io/Externa
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#containsKey(java.lang.Object)">containsKey</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;key)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#containsKey(java.lang.Object)">containsKey</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;id)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/Set.html?is-external=true" title="class or interface in java.util">Set</a></code></td>
@@ -271,34 +271,34 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/io/Externa
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#get(java.lang.Object)">get</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;key)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#get(java.lang.Object)">get</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;id)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#get(java.lang.String)">get</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#get(java.lang.String)">get</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;id)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.Entry.html?is-external=true" title="class or interface in java.util">Map.Entry</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#getBestEntry(byte[], int, int)">getBestEntry</a></strong>(byte[]&nbsp;key,
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#getBestEntry(byte[], int, int)">getBestEntry</a></strong>(byte[]&nbsp;id,
             int&nbsp;offset,
             int&nbsp;maxLength)</code>
-<div class="block">Get a map entry by byte array key, using as much of the passed key as needed for a match.</div>
+<div class="block">Get a map entry by byte array id, using as much of the passed id as needed for a match.</div>
 </td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.Entry.html?is-external=true" title="class or interface in java.util">Map.Entry</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#getEntry(char[], int, int)">getEntry</a></strong>(char[]&nbsp;key,
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#getEntry(char[], int, int)">getEntry</a></strong>(char[]&nbsp;id,
         int&nbsp;offset,
         int&nbsp;length)</code>
-<div class="block">Get a map entry by char array key.</div>
+<div class="block">Get a map entry by char array id.</div>
 </td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.Entry.html?is-external=true" title="class or interface in java.util">Map.Entry</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#getEntry(java.lang.String, int, int)">getEntry</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key,
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#getEntry(java.lang.String, int, int)">getEntry</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;id,
         int&nbsp;offset,
         int&nbsp;length)</code>
-<div class="block">Get a map entry by substring key.</div>
+<div class="block">Get a map entry by substring id.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -315,12 +315,12 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/io/Externa
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#put(java.lang.Object, java.lang.Object)">put</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;key,
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#put(java.lang.Object, java.lang.Object)">put</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;id,
    <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;value)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#put(java.lang.String, java.lang.Object)">put</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key,
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#put(java.lang.String, java.lang.Object)">put</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;id,
    <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;value)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
@@ -329,11 +329,11 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/io/Externa
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#remove(java.lang.Object)">remove</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;key)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#remove(java.lang.Object)">remove</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;id)</code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#remove(java.lang.String)">remove</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</code>&nbsp;</td>
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/util/StringMap.html#remove(java.lang.String)">remove</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;id)</code>&nbsp;</td>
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code>void</code></td>
@@ -564,7 +564,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/io/Externa
 <ul class="blockList">
 <li class="blockList">
 <h4>put</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;put(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;key,
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;put(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;id,
          <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;value)</pre>
 <dl>
 <dt><strong>Specified by:</strong></dt>
@@ -580,7 +580,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/io/Externa
 <ul class="blockList">
 <li class="blockList">
 <h4>put</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;put(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key,
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;put(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;id,
          <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;value)</pre>
 </li>
 </ul>
@@ -590,7 +590,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/io/Externa
 <ul class="blockList">
 <li class="blockList">
 <h4>get</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;get(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;key)</pre>
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;get(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;id)</pre>
 <dl>
 <dt><strong>Specified by:</strong></dt>
 <dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true#get(java.lang.Object)" title="class or interface in java.util">get</a></code>&nbsp;in interface&nbsp;<code><a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a></code></dd>
@@ -605,7 +605,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/io/Externa
 <ul class="blockList">
 <li class="blockList">
 <h4>get</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;get(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</pre>
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;get(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;id)</pre>
 </li>
 </ul>
 <a name="getEntry(java.lang.String, int, int)">
@@ -614,12 +614,12 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/io/Externa
 <ul class="blockList">
 <li class="blockList">
 <h4>getEntry</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.Entry.html?is-external=true" title="class or interface in java.util">Map.Entry</a>&nbsp;getEntry(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key,
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.Entry.html?is-external=true" title="class or interface in java.util">Map.Entry</a>&nbsp;getEntry(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;id,
                  int&nbsp;offset,
                  int&nbsp;length)</pre>
-<div class="block">Get a map entry by substring key.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>key</code> - String containing the key</dd><dd><code>offset</code> - Offset of the key within the String.</dd><dd><code>length</code> - The length of the key</dd>
-<dt><span class="strong">Returns:</span></dt><dd>The Map.Entry for the key or null if the key is not in
+<div class="block">Get a map entry by substring id.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>id</code> - String containing the id</dd><dd><code>offset</code> - Offset of the id within the String.</dd><dd><code>length</code> - The length of the id</dd>
+<dt><span class="strong">Returns:</span></dt><dd>The Map.Entry for the id or null if the id is not in
  the map.</dd></dl>
 </li>
 </ul>
@@ -629,12 +629,12 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/io/Externa
 <ul class="blockList">
 <li class="blockList">
 <h4>getEntry</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.Entry.html?is-external=true" title="class or interface in java.util">Map.Entry</a>&nbsp;getEntry(char[]&nbsp;key,
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.Entry.html?is-external=true" title="class or interface in java.util">Map.Entry</a>&nbsp;getEntry(char[]&nbsp;id,
                  int&nbsp;offset,
                  int&nbsp;length)</pre>
-<div class="block">Get a map entry by char array key.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>key</code> - char array containing the key</dd><dd><code>offset</code> - Offset of the key within the array.</dd><dd><code>length</code> - The length of the key</dd>
-<dt><span class="strong">Returns:</span></dt><dd>The Map.Entry for the key or null if the key is not in
+<div class="block">Get a map entry by char array id.</div>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>id</code> - char array containing the id</dd><dd><code>offset</code> - Offset of the id within the array.</dd><dd><code>length</code> - The length of the id</dd>
+<dt><span class="strong">Returns:</span></dt><dd>The Map.Entry for the id or null if the id is not in
  the map.</dd></dl>
 </li>
 </ul>
@@ -644,13 +644,13 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/io/Externa
 <ul class="blockList">
 <li class="blockList">
 <h4>getBestEntry</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.Entry.html?is-external=true" title="class or interface in java.util">Map.Entry</a>&nbsp;getBestEntry(byte[]&nbsp;key,
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.Entry.html?is-external=true" title="class or interface in java.util">Map.Entry</a>&nbsp;getBestEntry(byte[]&nbsp;id,
                      int&nbsp;offset,
                      int&nbsp;maxLength)</pre>
-<div class="block">Get a map entry by byte array key, using as much of the passed key as needed for a match.
+<div class="block">Get a map entry by byte array id, using as much of the passed id as needed for a match.
  A simple 8859-1 byte to char mapping is assumed.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>key</code> - char array containing the key</dd><dd><code>offset</code> - Offset of the key within the array.</dd><dd><code>maxLength</code> - The length of the key</dd>
-<dt><span class="strong">Returns:</span></dt><dd>The Map.Entry for the key or null if the key is not in
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>id</code> - char array containing the id</dd><dd><code>offset</code> - Offset of the id within the array.</dd><dd><code>maxLength</code> - The length of the id</dd>
+<dt><span class="strong">Returns:</span></dt><dd>The Map.Entry for the id or null if the id is not in
  the map.</dd></dl>
 </li>
 </ul>
@@ -660,7 +660,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/io/Externa
 <ul class="blockList">
 <li class="blockList">
 <h4>remove</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;remove(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;key)</pre>
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;remove(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;id)</pre>
 <dl>
 <dt><strong>Specified by:</strong></dt>
 <dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true#remove(java.lang.Object)" title="class or interface in java.util">remove</a></code>&nbsp;in interface&nbsp;<code><a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a></code></dd>
@@ -675,7 +675,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/io/Externa
 <ul class="blockList">
 <li class="blockList">
 <h4>remove</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;remove(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</pre>
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;remove(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;id)</pre>
 </li>
 </ul>
 <a name="entrySet()">
@@ -729,7 +729,7 @@ implements <a href="http://download.oracle.com/javase/6/docs/api/java/io/Externa
 <ul class="blockList">
 <li class="blockList">
 <h4>containsKey</h4>
-<pre>public&nbsp;boolean&nbsp;containsKey(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;key)</pre>
+<pre>public&nbsp;boolean&nbsp;containsKey(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.html?is-external=true" title="class or interface in java.lang">Object</a>&nbsp;id)</pre>
 <dl>
 <dt><strong>Specified by:</strong></dt>
 <dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true#containsKey(java.lang.Object)" title="class or interface in java.util">containsKey</a></code>&nbsp;in interface&nbsp;<code><a href="http://download.oracle.com/javase/6/docs/api/java/util/Map.html?is-external=true" title="class or interface in java.util">Map</a></code></dd>

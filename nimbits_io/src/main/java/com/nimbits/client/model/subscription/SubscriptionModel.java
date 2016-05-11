@@ -49,8 +49,8 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
     }
 
 
-    public SubscriptionModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String subscribedEntity, int notifyMethod, int subscriptionType, String target,  boolean enabled) {
-        super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
+    public SubscriptionModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String subscribedEntity, int notifyMethod, int subscriptionType, String target, boolean enabled) {
+        super(id, name, description, entityType, protectionLevel, parent, owner);
         this.subscribedEntity = subscribedEntity;
         this.notifyMethod = notifyMethod;
         this.subscriptionType = subscriptionType;
@@ -126,7 +126,7 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
         }
 
         public Builder subscribedEntity(Entity subscribedEntity) {
-            this.subscribedEntity = subscribedEntity.getKey();
+            this.subscribedEntity = subscribedEntity.getId();
             return this;
         }
 
@@ -151,7 +151,7 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
         }
 
         public Builder target(Entity target) {
-            this.target = target.getKey();
+            this.target = target.getId();
             return this;
         }
 
@@ -168,8 +168,8 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
             if (notifyMethod == null) {
                 notifyMethod = SubscriptionNotifyMethod.none;
             }
-            return new SubscriptionModel(key, name, description, type, protectionLevel, parent
-            , owner, uuid, subscribedEntity, notifyMethod.getCode(), subscriptionType.getCode(), target , enabled );
+            return new SubscriptionModel(id, name, description, type, protectionLevel, parent
+            , owner, subscribedEntity, notifyMethod.getCode(), subscriptionType.getCode(), target , enabled );
 
         }
 
@@ -191,11 +191,7 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
             this.name = name;
             return this;
         }
-        @Override
-        public Builder key(String key) {
-            this.key = key;
-            return this;
-        }
+
         @Override
         public Builder description(String description) {
             this.description = description;
@@ -226,11 +222,6 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
             this.id = id;
             return this;
         }
-        @Override
-        public Builder uuid(String uuid) {
-            this.uuid = uuid;
-            return this;
-        }
 
         @Override
         public Builder action(String action) {
@@ -250,8 +241,8 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
 
         private void initEntity(Entity anEntity) {
 
-            this.key = anEntity.getKey();
-            this.id = anEntity.getKey();
+
+            this.id = anEntity.getId();
             this.name = anEntity.getName();
             this.description = anEntity.getDescription();
             this.entityType = anEntity.getEntityType();
@@ -259,7 +250,7 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
             this.owner = anEntity.getOwner();
             this.protectionLevel = anEntity.getProtectionLevel();
             this.alertType = anEntity.getAlertType().getCode();
-            this.uuid = anEntity.getUUID();
+
 
         }
     }

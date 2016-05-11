@@ -35,7 +35,7 @@ public class V3FindThingsExamples extends NimbitsTest{
         String pointName = UUID.randomUUID().toString();
 
         //create a point under the top level user with a random name
-        Point point = new PointModel.Builder().name(pointName).parent(user.getKey()).highAlarmOn(true)
+        Point point = new PointModel.Builder().name(pointName).parent(user.getId()).highAlarmOn(true)
                 .highAlarm(100.00)
                 .lowAlarmOn(true)
                 .lowAlarm(0.0)

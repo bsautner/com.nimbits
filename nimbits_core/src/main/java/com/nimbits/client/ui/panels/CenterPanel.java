@@ -146,7 +146,7 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
 
     private void displaySubscription(final Entity entity) {
         EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
-        service.getEntityByKeyRpc(user, entity.getKey(), EntityType.subscription, new GetSubscribedEntityAsyncCallback());
+        service.getEntityByKeyRpc(user, entity.getId(), EntityType.subscription, new GetSubscribedEntityAsyncCallback());
     }
 
     @Override

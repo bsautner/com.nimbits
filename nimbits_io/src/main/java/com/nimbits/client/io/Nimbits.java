@@ -17,7 +17,6 @@
 package com.nimbits.client.io;
 
 import com.google.common.base.Optional;
-import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.calculation.Calculation;
@@ -164,15 +163,15 @@ public class Nimbits {
      * @return
      */
     public List<Value> getValues(Entity entity, Date start, Date end, String mask) {
-        return api.getData(entity.getUUID(), start.getTime(), end.getTime(), mask);
+        return api.getData(entity.getId(), start.getTime(), end.getTime(), mask);
     }
 
     public List<Value> getValues(Entity entity, Date start, Date end, Integer count, String mask) {
-        return api.getData(entity.getUUID(), start.getTime(), end.getTime(), mask, count);
+        return api.getData(entity.getId(), start.getTime(), end.getTime(), mask, count);
     }
 
     public List<Value> getValues(Entity entity, Integer count) {
-        return api.getData(entity.getUUID(), count);
+        return api.getData(entity.getId(), count);
     }
 
     /**
@@ -185,11 +184,11 @@ public class Nimbits {
      * @return
      */
     public List<Value> getValues(Entity entity, Date start, Date end) {
-        return api.getData(entity.getUUID(), start.getTime(), end.getTime());
+        return api.getData(entity.getId(), start.getTime(), end.getTime());
     }
 
     public Value getSnapshot(Point point) {
-        ValueContainer valueContainer =  api.getSnapshot(point.getUUID());
+        ValueContainer valueContainer =  api.getSnapshot(point.getId());
         return valueContainer.getSnapshot();
 
 
@@ -198,7 +197,7 @@ public class Nimbits {
     public Value getSnapshot(String pointName) {
         Optional<Point> pointOptional = findPointByName(pointName);
         if (pointOptional.isPresent()) {
-            ValueContainer valueContainer = api.getSnapshot(pointOptional.get().getUUID());
+            ValueContainer valueContainer = api.getSnapshot(pointOptional.get().getId());
             return valueContainer.getSnapshot();
         }
         else {
@@ -209,7 +208,7 @@ public class Nimbits {
     }
 
     public Value getSnapshot(Entity entity) {
-        ValueContainer valueContainer =  api.getSnapshot(entity.getUUID());
+        ValueContainer valueContainer =  api.getSnapshot(entity.getId());
         return valueContainer.getSnapshot();
 
 
@@ -225,7 +224,7 @@ public class Nimbits {
      * @param values
      */
     public void recordValues(Entity entity, List<Value> values) {
-        api.recordData(entity.getUUID(), values, new Callback<Void>() {
+        api.recordData(entity.getId(), values, new Callback<Void>() {
             @Override
             public void success(Void aVoid, Response response) {
 
@@ -256,7 +255,7 @@ public class Nimbits {
     //DELETE Entities
 
     public void deleteEntity(Entity entity) {
-        api.deleteEntity(entity.getUUID(), new Callback<Void>() {
+        api.deleteEntity(entity.getId(), new Callback<Void>() {
             @Override
             public void success(Void aVoid, Response response) {
 
@@ -282,42 +281,42 @@ public class Nimbits {
     @Deprecated //we'll be creating individual methods for creating different types of entities
     public Entity addEntity(Entity parent, Point point) {
 
-        Entity e  =  api.addEntity(parent.getUUID(), point);
+        Entity e  =  api.addEntity(parent.getId(), point);
         return  e;
     }
 
     public Category addCategory(Entity parent, Category category) {
-        return api.addCategory(parent.getUUID(), category);
+        return api.addCategory(parent.getId(), category);
     }
 
     public WebHook addWebHook(Entity parent, WebHook webHook) {
-        return api.addWebhook(parent.getUUID(), webHook);
+        return api.addWebhook(parent.getId(), webHook);
     }
 
     public Subscription addSubscription(Entity parent, Subscription subscription) {
-        return api.addSubscription(parent.getUUID(), subscription);
+        return api.addSubscription(parent.getId(), subscription);
 
     }
 
 
     public Sync addSync(Entity parent, Sync e) {
-        return api.addSync(parent.getUUID(), e);
+        return api.addSync(parent.getId(), e);
 
     }
 
     public Calculation addCalc(Entity parent, Calculation e) {
-        return api.addCalc(parent.getUUID(), e);
+        return api.addCalc(parent.getId(), e);
 
     }
 
 
     public Summary addSummary(Entity parent, Summary e) {
-        return api.addSummary(parent.getUUID(), e);
+        return api.addSummary(parent.getId(), e);
     }
 
     public AccessKey addAccessKey(Entity parent, AccessKey e) {
 
-        return api.addAccessKey(parent.getUUID(), e);
+        return api.addAccessKey(parent.getId(), e);
 
     }
 
@@ -330,26 +329,26 @@ public class Nimbits {
      */
     public Point addPoint(Entity parent, Point point) {
 
-        return api.addPoint(parent.getUUID(), point);
+        return api.addPoint(parent.getId(), point);
 
     }
 
     public Connection addConnection(Entity parent, Connection c) {
-        return api.addConnection(parent.getUUID(), c);
+        return api.addConnection(parent.getId(), c);
     }
 
 
     public List<Point> getNearbyPoints(Point localPoint, double meters) {
-        return api.getNearbyPoints(localPoint.getUUID(), meters);
+        return api.getNearbyPoints(localPoint.getId(), meters);
     }
 
 
     public Instance addInstance(Entity parent, Instance instance) {
-        return api.addInstance(parent.getUUID(), instance);
+        return api.addInstance(parent.getId(), instance);
     }
 
     public Schedule addSchedule(Entity parent, Schedule s) {
-        return api.addSchedule(parent.getUUID(), s);
+        return api.addSchedule(parent.getId(), s);
     }
 
 
@@ -363,7 +362,7 @@ public class Nimbits {
 
     public List<Entity> getChildren(Entity parent) {
 
-        return api.getChildren(parent.getUUID());
+        return api.getChildren(parent.getId());
     }
 
     public Optional<Point> findPointByName(String pointName) {
@@ -565,7 +564,7 @@ public class Nimbits {
 
 
     public void updateEntity(Entity entity) {
-        api.updateEntity(entity.getUUID(), entity, new Callback<Void>() {
+        api.updateEntity(entity.getId(), entity, new Callback<Void>() {
             @Override
             public void success(Void aVoid, Response response) {
 
@@ -584,7 +583,7 @@ public class Nimbits {
      * @param callback returnes success or error
      */
     public void updateEntity(Entity entity, Callback<Void> callback) {
-        api.updateEntity(entity.getUUID(), entity, callback);
+        api.updateEntity(entity.getId(), entity, callback);
     }
 
 

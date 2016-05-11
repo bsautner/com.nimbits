@@ -34,8 +34,8 @@ public class SyncModel extends TriggerModel implements Sync {
     @Expose
     private String accessKey;
 
-    public SyncModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String target, String trigger, boolean enabled, String targetInstance, String accessKey) {
-        super(key, name, description, entityType, protectionLevel, parent, owner, uuid, target, trigger, enabled);
+    public SyncModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String target, String trigger, boolean enabled, String targetInstance, String accessKey) {
+        super(id, name, description, entityType, protectionLevel, parent, owner, target, trigger, enabled);
         this.targetInstance = targetInstance;
         this.accessKey = accessKey;
     }
@@ -93,12 +93,12 @@ public class SyncModel extends TriggerModel implements Sync {
 
         @Override
         public Builder target(Entity v) {
-            this.target = v.getKey();
+            this.target = v.getId();
             return this;
         }
 
         public Builder trigger(Entity v) {
-            this.trigger = v.getKey();
+            this.trigger = v.getId();
             return this;
         }
 
@@ -128,7 +128,7 @@ public class SyncModel extends TriggerModel implements Sync {
             this.enabled = true;
 
 
-            return new SyncModel(key, name, description, type, protectionLevel, parent, owner, uuid,target,
+            return new SyncModel(id, name, description, type, protectionLevel, parent, owner, target,
                     trigger, enabled, targetInstance, accessKey);
         }
 
@@ -146,8 +146,8 @@ public class SyncModel extends TriggerModel implements Sync {
             this.target = anEntity.getTarget();
             this.enabled = anEntity.isEnabled();
 
-            this.key = anEntity.getKey();
-            this.id = anEntity.getKey();
+
+            this.id = anEntity.getId();
             this.name = anEntity.getName();
             this.description = anEntity.getDescription();
             this.entityType = anEntity.getEntityType();
@@ -155,7 +155,7 @@ public class SyncModel extends TriggerModel implements Sync {
             this.owner = anEntity.getOwner();
             this.protectionLevel = anEntity.getProtectionLevel();
             this.alertType = anEntity.getAlertType().getCode();
-            this.uuid = anEntity.getUUID();
+
 
         }
 
@@ -171,11 +171,7 @@ public class SyncModel extends TriggerModel implements Sync {
             this.name = name;
             return this;
         }
-        @Override
-        public Builder key(String key) {
-            this.key = key;
-            return this;
-        }
+
         @Override
         public Builder description(String description) {
             this.description = description;
@@ -206,11 +202,7 @@ public class SyncModel extends TriggerModel implements Sync {
             this.id = id;
             return this;
         }
-        @Override
-        public Builder uuid(String uuid) {
-            this.uuid = uuid;
-            return this;
-        }
+
 
         @Override
         public Builder action(String action) {

@@ -38,8 +38,8 @@ public class SocketModel extends EntityModel implements Serializable, Socket {
     private String extraParams;
 
 
-    protected SocketModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String targetApiKey, String targetUrl, String targetPath, String extraParams) {
-        super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
+    protected SocketModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String targetApiKey, String targetUrl, String targetPath, String extraParams) {
+        super(id, name, description, entityType, protectionLevel, parent, owner);
         this.targetApiKey = targetApiKey;
         this.targetUrl = targetUrl;
         this.targetPath = targetPath;
@@ -139,8 +139,8 @@ public class SocketModel extends EntityModel implements Serializable, Socket {
             }
 
 
-            return new SocketModel(key, name, description, type, protectionLevel, parent, owner, uuid
-                    ,targetApiKey, targetUrl, targetPath, extraParams);
+            return new SocketModel(id, name, description, type, protectionLevel, parent, owner,
+                    targetApiKey, targetUrl, targetPath, extraParams);
         }
 
         @Override
@@ -152,8 +152,8 @@ public class SocketModel extends EntityModel implements Serializable, Socket {
 
         private void initEntity(Entity anEntity) {
 
-            this.key = anEntity.getKey();
-            this.id = anEntity.getKey();
+
+            this.id = anEntity.getId();
             this.name = anEntity.getName();
             this.description = anEntity.getDescription();
             this.entityType = type;
@@ -161,7 +161,7 @@ public class SocketModel extends EntityModel implements Serializable, Socket {
             this.owner = anEntity.getOwner();
             this.protectionLevel = anEntity.getProtectionLevel();
             this.alertType = anEntity.getAlertType().getCode();
-            this.uuid = anEntity.getUUID();
+
 
         }
 
@@ -180,11 +180,7 @@ public class SocketModel extends EntityModel implements Serializable, Socket {
             this.name = name;
             return this;
         }
-        @Override
-        public Builder key(String key) {
-            this.key = key;
-            return this;
-        }
+
         @Override
         public Builder description(String description) {
             this.description = description;
@@ -215,11 +211,7 @@ public class SocketModel extends EntityModel implements Serializable, Socket {
             this.id = id;
             return this;
         }
-        @Override
-        public Builder uuid(String uuid) {
-            this.uuid = uuid;
-            return this;
-        }
+
 
         @Override
         public Builder action(String action) {

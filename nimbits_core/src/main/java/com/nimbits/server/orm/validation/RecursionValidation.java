@@ -51,7 +51,7 @@ public class RecursionValidation {
             throw new IllegalArgumentException("Missing trigger");
         }
 
-        Optional<Entity> optional = entityDao.getEntityByKey(user, entity.getOwner(), EntityType.user);
+        Optional<Entity> optional = entityDao.getEntity(user, entity.getOwner(), EntityType.user);
 
         if (optional.isPresent() && entity.isEnabled()) {
             validateAgainstExisting(entityDao, (User) optional.get(), entity);

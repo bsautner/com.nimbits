@@ -128,7 +128,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
         Value value = gson.fromJson(j, Value.class);
 
 
-        Point point = (Point) entityDao.getEntityByKey(user, id, EntityType.point).get();
+        Point point = (Point) entityDao.getEntity(user, id, EntityType.point).get();
 
 
         try {
@@ -183,7 +183,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
                     break;
                 case location:
                     logger.info("Processing new location " + value.toString());
-                    geoSpatialDao.updateSpatial(point.getUUID(), value.getLatitude(), value.getLongitude());
+                    geoSpatialDao.updateSpatial(point.getId(), value.getLatitude(), value.getLongitude());
                     valueService.recordValues(blobStore, user, point, Collections.singletonList(value));
 
                     String[] mynames = value.getMetaData().split(",");

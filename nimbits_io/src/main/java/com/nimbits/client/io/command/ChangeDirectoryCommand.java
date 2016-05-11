@@ -40,7 +40,7 @@ public class ChangeDirectoryCommand extends AbstractCommand implements Command {
 
         } else if (name.equals("..")) {
             for (Entity entity : tree) {
-                if (entity.getKey().equals(current.getParent())) {
+                if (entity.getId().equals(current.getParent())) {
                     listener.setCurrent(entity);
                     return;
                 }
@@ -51,7 +51,7 @@ public class ChangeDirectoryCommand extends AbstractCommand implements Command {
 
         } else {
             for (Entity entity : tree) {
-                if (entity.getParent().equals(current.getKey()) && entity.getName().getValue().equals(name)) {
+                if (entity.getParent().equals(current.getId()) && entity.getName().getValue().equals(name)) {
 
                     listener.setCurrent(entity);
                     return;
@@ -60,7 +60,7 @@ public class ChangeDirectoryCommand extends AbstractCommand implements Command {
                 }
 
             }
-            listener.onMessage("entity not found");
+            listener.onMessage("entity not found 00001");
 
         }
 

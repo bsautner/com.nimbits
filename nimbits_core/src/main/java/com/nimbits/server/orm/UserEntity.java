@@ -89,7 +89,7 @@ public class UserEntity extends EntityStore implements User {
     public UserEntity(final User entity) {
         super(entity);
 
-        this.key = entity.getOwner();
+       // this.id = entity.getOwner();
         update(entity);
 
     }

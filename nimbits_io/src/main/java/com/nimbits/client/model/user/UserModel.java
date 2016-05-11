@@ -67,10 +67,10 @@ public class UserModel extends EntityModel implements Serializable, User {
     }
 
 
-    protected UserModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, String emailAddress,
+    protected UserModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String emailAddress,
                         Boolean isAdmin, String token, String password, String passwordSalt, String source, LoginInfo loginInfo, String passwordResetToken,
-                     Date passwordResetTokenTimestamp) {
-        super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
+                        Date passwordResetTokenTimestamp) {
+        super(id, name, description, entityType, protectionLevel, parent, owner);
         this.emailAddress = emailAddress;
         this.isAdmin = isAdmin;
         this.token = token;
@@ -280,7 +280,7 @@ public class UserModel extends EntityModel implements Serializable, User {
             }
 
 
-            return new UserModel(key, name, description, type , protectionLevel, parent, owner, uuid,
+            return new UserModel(id, name, description, type , protectionLevel, parent, owner,
                     emailAddress, isAdmin, token, password, passwordSalt, source, loginInfo, passwordResetToken, passwordResetTokenTimestamp  );
         }
 
@@ -294,8 +294,8 @@ public class UserModel extends EntityModel implements Serializable, User {
 
         private void initEntity(Entity anEntity) {
 
-            this.key = anEntity.getKey();
-            this.id = anEntity.getKey();
+
+            this.id = anEntity.getId();
             this.name = anEntity.getName();
             this.description = anEntity.getDescription();
             this.entityType = anEntity.getEntityType();
@@ -303,7 +303,7 @@ public class UserModel extends EntityModel implements Serializable, User {
             this.owner = anEntity.getOwner();
             this.protectionLevel = anEntity.getProtectionLevel();
             this.alertType = anEntity.getAlertType().getCode();
-            this.uuid = anEntity.getUUID();
+
 
         }
 
@@ -327,11 +327,7 @@ public class UserModel extends EntityModel implements Serializable, User {
             this.name = name;
             return this;
         }
-        @Override
-        public Builder key(String key) {
-            this.key = key;
-            return this;
-        }
+
         @Override
         public Builder description(String description) {
             this.description = description;
@@ -362,11 +358,7 @@ public class UserModel extends EntityModel implements Serializable, User {
             this.id = id;
             return this;
         }
-        @Override
-        public Builder uuid(String uuid) {
-            this.uuid = uuid;
-            return this;
-        }
+
 
         @Override
         public Builder action(String action) {

@@ -42,9 +42,9 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
     }
 
 
-    public AccessKeyModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid,
+    public AccessKeyModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner,
                           String code) {
-        super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
+        super(id, name, description, entityType, protectionLevel, parent, owner);
         this.code = code;
 
     }
@@ -87,7 +87,7 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
             }
 
 
-            return new AccessKeyModel(key, name, description, type, protectionLevel, parent, owner, uuid, code);
+            return new AccessKeyModel(id, name, description, type, protectionLevel, parent, owner, code);
         }
 
         @Override
@@ -100,8 +100,8 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
 
         private void initEntity(Entity anEntity) {
 
-            this.key = anEntity.getKey();
-            this.id = anEntity.getKey();
+
+            this.id = anEntity.getId();
             this.name = anEntity.getName();
             this.description = anEntity.getDescription();
             this.entityType = anEntity.getEntityType();
@@ -109,7 +109,7 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
             this.owner = anEntity.getOwner();
             this.protectionLevel = anEntity.getProtectionLevel();
             this.alertType = anEntity.getAlertType().getCode();
-            this.uuid = anEntity.getUUID();
+
 
         }
 
@@ -125,11 +125,7 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
             this.name = name;
             return this;
         }
-        @Override
-        public Builder key(String key) {
-            this.key = key;
-            return this;
-        }
+
         @Override
         public Builder description(String description) {
             this.description = description;
@@ -158,11 +154,6 @@ public class AccessKeyModel extends EntityModel implements AccessKey, Serializab
         @Override
         public Builder id(String id) {
             this.id = id;
-            return this;
-        }
-        @Override
-        public Builder uuid(String uuid) {
-            this.uuid = uuid;
             return this;
         }
 

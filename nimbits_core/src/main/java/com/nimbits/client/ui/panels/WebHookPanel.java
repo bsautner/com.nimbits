@@ -292,7 +292,7 @@ public class WebHookPanel extends BasePanel {
                     update.setPathChannel(pathChannelComboBox.getValue().getMethod());
                     update.setBodyChannel(bodyChannelComboBox.getValue().getMethod());
                     if (((WebHook) entity).getMethod().equals(HttpMethod.GET) && entityCombo.getValue() != null) {
-                        update.setDownloadTarget(entityCombo.getValue().getKey());
+                        update.setDownloadTarget(entityCombo.getValue().getId());
                     }
                 } catch (Exception e) {
                     box.close();
@@ -310,7 +310,7 @@ public class WebHookPanel extends BasePanel {
                     final UrlContainer url = UrlContainer.getInstance(urlField.getValue());
                     String target = null;
                     if (entityCombo.getValue() != null) {
-                        target = entityCombo.getValue().getKey();
+                        target = entityCombo.getValue().getId();
                     }
 
                     update = createWebHook(name, url, methodCombo, pathChannelComboBox, bodyChannelComboBox, enabled, target);
@@ -332,7 +332,7 @@ public class WebHookPanel extends BasePanel {
                                   ComboBox<DataChannelOption> bodyChannelComboBox,
                                   CheckBox enabled, String downloadTarget) {
         return new WebHookModel.Builder()
-        .name(name).parent(entity.getKey()).method(methodCombo.getValue().getMethod()).pathChannel(pathChannelComboBox.getValue().getMethod())
+        .name(name).parent(entity.getId()).method(methodCombo.getValue().getMethod()).pathChannel(pathChannelComboBox.getValue().getMethod())
                 .bodyChannel(bodyChannelComboBox.getValue().getMethod()).url(url.getUrl()).downloadTarget(downloadTarget).enabled(enabled.getValue()).create();
 
     }

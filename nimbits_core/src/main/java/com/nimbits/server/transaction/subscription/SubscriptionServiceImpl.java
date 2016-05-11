@@ -24,10 +24,8 @@ import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ServerSetting;
-import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.exception.ValueException;
-import com.nimbits.client.io.Proximity.ProximityHelper;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
@@ -46,7 +44,6 @@ import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.socket.ConnectedClients;
-import com.nimbits.server.transaction.cache.NimbitsCache;
 import com.nimbits.server.transaction.calculation.CalculationService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.entity.service.EntityService;
@@ -65,9 +62,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -139,12 +134,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 
             logger.info("Processing Subscription " + subscription.getName().getValue());
-          //  nimbitsCache.put(LAST_SENT_CACHE_KEY_PREFIX + subscription.getKey(), new Date());
+          //  nimbitsCache.put(LAST_SENT_CACHE_KEY_PREFIX + subscription.getId(), new Date());
 
 
             //EntityServiceImpl.addUpdateSingleEntity(user, subscription);
 
-            final Entity subscriptionEntity = entityDao.getEntityByKey(user, subscription.getKey(),
+            final Entity subscriptionEntity = entityDao.getEntity(user, subscription.getId(),
                     EntityType.subscription).get();
 
 
@@ -356,7 +351,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     private void doWebHook(BlobStore blobStore, EntityDao entityDao, ValueService valueService, User user, Point point, Subscription subscription) {
-        WebHook webHook = (WebHook) entityDao.getEntityByKey(user, subscription.getTarget(), EntityType.webhook).get();
+        WebHook webHook = (WebHook) entityDao.getEntity(user, subscription.getTarget(), EntityType.webhook).get();
         switch (webHook.getMethod()) {
 
             case POST:
@@ -474,7 +469,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             in = url.openStream();
             String result = ( IOUtils.toString(in) );
             if (! StringUtils.isEmpty(webHook.getDownloadTarget()) && ! StringUtils.isEmpty(result)) {
-                Point target = (Point) entityDao.getEntityByKey(user, webHook.getDownloadTarget(), EntityType.point).get();
+                Point target = (Point) entityDao.getEntity(user, webHook.getDownloadTarget(), EntityType.point).get();
 
                 Value value = new Value.Builder().data(result).create();
                 valueService.recordValues(blobStore, user, target, Collections.singletonList(value));
@@ -524,7 +519,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
             String API_KEY = settingsService.getSetting(ServerSetting.gcm);
             Gson gson =  GsonFactory.getInstance(true);
-            Value v = new Value.Builder().initValue(point.getValue()).meta(point.getKey()).create();
+            Value v = new Value.Builder().initValue(point.getValue()).meta(point.getId()).create();
             Payload payload = new Payload(subscription.getTarget(), v);
             String json = gson.toJson(payload);
             logger.info("GCM: " + json);
@@ -532,7 +527,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
             URL url = new URL("https://android.googleapis.com/gcm/send");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestProperty("Authorization", "key=" + API_KEY);
+            conn.setRequestProperty("Authorization", "id=" + API_KEY);
             conn.setRequestProperty("Content-Type", "application/json");
             conn.setRequestMethod("POST");
             conn.setDoOutput(true);
@@ -576,7 +571,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public void processIncomingSocketValues(EntityDao entityDao, User user, Point point) {
-        Point sample = (Point) entityDao.getEntityByKey(user, point.getKey(), EntityType.point).get();
+        Point sample = (Point) entityDao.getEntity(user, point.getId(), EntityType.point).get();
         //TODO taskService.startRecordValueTask(calculationService, user,  sample, point.getValue(), true);
 
     }

@@ -18,18 +18,19 @@ package com.nimbits.server.transaction.entity.dao;
 
 
 import com.google.common.base.Optional;
+import com.google.common.collect.ImmutableList;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.connection.Connection;
 import com.nimbits.client.model.connection.ConnectionModel;
+import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.trigger.Trigger;
 import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.UserModel;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.orm.validation.RecursionValidation;
@@ -44,7 +45,8 @@ import java.util.logging.Logger;
 
 @Repository
 public class EntityDaoImpl implements EntityDao {
-    final static Logger logger = Logger.getLogger(EntityDaoImpl.class.getName());
+
+    private final static Logger logger = Logger.getLogger(EntityDaoImpl.class.getName());
     private static final int INT = 1024;
 
 
@@ -70,7 +72,7 @@ public class EntityDaoImpl implements EntityDao {
             final Query q = pm.newQuery(SubscriptionEntity.class);
             q.setFilter("subscribedEntity==p && enabled==e");
             q.declareParameters("String p, Boolean e");
-            final Collection<Entity> results = (Collection<Entity>) q.execute(subscribedEntity.getKey(), true);
+            final Collection<Entity> results = (Collection<Entity>) q.execute(subscribedEntity.getId(), true);
             return EntityHelper.createModels(user, results);
         } finally {
             pm.close();
@@ -105,7 +107,7 @@ public class EntityDaoImpl implements EntityDao {
             final Query q = pm.newQuery(getEntityPersistentClass(type));
             q.setFilter("trigger == k && enabled == true");
             q.declareParameters("String k");
-            final List<Entity> results = (List<Entity>) q.execute(entity.getKey());
+            final List<Entity> results = (List<Entity>) q.execute(entity.getId());
             if (results.isEmpty()) {
                 return Optional.absent();
             }
@@ -140,12 +142,12 @@ public class EntityDaoImpl implements EntityDao {
             q1.setRange(0, limit);
 
 
-            final Collection<Entity> result = (Collection<Entity>) q1.execute(user.getKey(), type.getCode());
+            final Collection<Entity> result = (Collection<Entity>) q1.execute(user.getId(), type.getCode());
 
             final Map<String, Entity> retObj = new HashMap<String, Entity>(result.size());
             for (final Entity e : result) {
                 final Entity model = EntityHelper.createModel(user, e);
-                retObj.put(model.getKey(), model);
+                retObj.put(model.getId(), model);
             }
             return retObj;
 
@@ -184,14 +186,14 @@ public class EntityDaoImpl implements EntityDao {
 
 
 
-            if (StringUtils.isEmpty(entity.getKey())) {
+            if (StringUtils.isEmpty(entity.getId())) {
 
                 return addEntity(user, entity);
             } else {
 
 
                 final Class cls = getEntityPersistentClass(entity.getEntityType());
-                final Entity result = (Entity) pm.getObjectById(cls, entity.getKey());
+                final Entity result = (Entity) pm.getObjectById(cls, entity.getId());
 
                 if (result != null) {
                     final Transaction tx = pm.currentTransaction();
@@ -207,7 +209,7 @@ public class EntityDaoImpl implements EntityDao {
 
                 }
                 else {
-                    throw new RuntimeException("entity not found");
+                    throw new RuntimeException("entity not found 0004");
                 }
 
             }
@@ -215,7 +217,7 @@ public class EntityDaoImpl implements EntityDao {
 
         } catch (JDOObjectNotFoundException e) {
 
-            throw new RuntimeException("entity not found");
+            throw new RuntimeException("entity not found 0005");
 
         }   finally {
             pm.close();
@@ -243,8 +245,8 @@ public class EntityDaoImpl implements EntityDao {
 
             }
 
-            if (StringUtils.isEmpty(commit.getUUID())) {
-                commit.setUUID(UUID.randomUUID().toString());
+            if (StringUtils.isEmpty(commit.getId())) {
+                commit.setId(UUID.randomUUID().toString());
             }
 
             pm.makePersistent(commit);
@@ -268,7 +270,7 @@ public class EntityDaoImpl implements EntityDao {
 
         try {
             final Collection<String> ownerKeys = new ArrayList<String>(1);
-            ownerKeys.add(user.getKey());
+            ownerKeys.add(user.getId());
             for (Entity e : connections) {
                 Connection connection = (Connection) e;
                 if (connection.isApproved()) {
@@ -300,7 +302,7 @@ public class EntityDaoImpl implements EntityDao {
                             if (connectionMap.containsKey(entity1.getParent())) {
 
                                 Connection owner = connectionMap.get(entity1.getOwner());
-                                entity1.setParent(owner.getKey());
+                                entity1.setParent(owner.getId());
                                 //todo behold the iot social network
 
                             }
@@ -337,7 +339,7 @@ public class EntityDaoImpl implements EntityDao {
 
         try {
             final Collection<String> ownerKeys = new ArrayList<String>(1);
-            ownerKeys.add(user.getKey());
+            ownerKeys.add(user.getId());
 
 
             final List<Entity> retObj = new ArrayList<Entity>(INT);
@@ -388,16 +390,16 @@ public class EntityDaoImpl implements EntityDao {
 
                 q1.setFilter("parent==b");
                 q1.declareParameters("String b");
-                String key = entity.getKey();
-                if (key != null) {
-                    final Object sample = q1.execute(key);
+                String id = entity.getId();
+                if (id != null) {
+                    final Object sample = q1.execute(id);
                     if (sample != null) {
                         List<Entity> result = (List<Entity>) sample;
                         if (!result.isEmpty()) {
                             List<Entity> filtered = new ArrayList<>(result.size()); //avoid recursion on the user entity with the parent same as id
                             for (Entity c : result) {
                                 if (c.getEntityType() != null && c.getParent() != null) {
-                                    if (!c.getEntityType().equals(EntityType.user) && !c.getParent().equals(c.getKey())) {
+                                    if (!c.getEntityType().equals(EntityType.user) && !c.getParent().equals(c.getId())) {
                                         filtered.add(c);
                                     }
                                 }
@@ -433,7 +435,7 @@ public class EntityDaoImpl implements EntityDao {
         Class cls = getEntityPersistentClass(type);
         if (user.getIsAdmin() || entity.isOwner(user)) {
             try {
-                final Entity c = (Entity) pm.getObjectById(cls, entity.getKey());
+                final Entity c = (Entity) pm.getObjectById(cls, entity.getId());
                 if (c != null) {
                     List<Entity> list = new ArrayList<>(1);
                     list.add(c);
@@ -454,7 +456,7 @@ public class EntityDaoImpl implements EntityDao {
 
 
     @Override
-    public Optional<Entity> getEntityByKey(final User user, final String id, final EntityType type) {
+    public Optional<Entity> getEntity(final User user, final String id, final EntityType type) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         Entity entity = null;
 
@@ -468,44 +470,22 @@ public class EntityDaoImpl implements EntityDao {
             }
             return entity == null ? Optional.<Entity>absent() : Optional.of(entity);
         } catch (Exception ex) {
-           return Optional.absent();
-        } finally {
-            pm.close();
-        }
-    }
-
-
-    @Override
-    public  Optional<Entity> getEntityByUUID(final User user, final String uuid, EntityType type) {
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-        Class cls = getEntityPersistentClass(type);
-        try {
-            final Query q1 = pm.newQuery(cls);
-            q1.setFilter("uuid==u");
-            q1.declareParameters("String u");
-            q1.setRange(0, 1);
-
-            final Collection<Entity> result = (Collection<Entity>) q1.execute(uuid);
-            Entity entity = (EntityHelper.createModel(user, result.iterator().next()));
-            return Optional.of(entity);
-        } catch (Exception ex) {
-
             return Optional.absent();
         } finally {
             pm.close();
         }
-
-
     }
 
+
+
     @Override
-    public Optional<Entity> findEntityByUUID(User user, String uuid) {
+    public Optional<Entity> findEntity(User user, String id) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
         try {
             for (EntityType type : EntityType.values()) {
 
-                Optional<Entity> sample = getEntityByUUID(user, uuid, type);
+                Optional<Entity> sample = getEntity(user, id, type);
                 if (sample.isPresent()) {
                     return sample;
                 }
@@ -517,27 +497,6 @@ public class EntityDaoImpl implements EntityDao {
             pm.close();
         }
     }
-
-    @Override
-    public Optional<Entity> findEntityByKey(User user, String key) {
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
-        try {
-            for (EntityType type : EntityType.values()) {
-
-                Optional<Entity> sample = getEntityByKey(user, key, type);
-                if (sample.isPresent()) {
-                    return sample;
-                }
-
-
-            }
-            return Optional.absent();
-        } finally {
-            pm.close();
-        }
-    }
-
 
 
     @Override
@@ -554,7 +513,7 @@ public class EntityDaoImpl implements EntityDao {
                 q1.setFilter("name==b && owner==o");
                 q1.declareParameters("String b, String o");
                 q1.setRange(0, 1);
-                c = (List<Entity>) q1.execute(name.getValue(), user.getKey());
+                c = (List<Entity>) q1.execute(name.getValue(), user.getId());
 
                 return getEntityOptional(user, c);
             } finally {
@@ -580,7 +539,7 @@ public class EntityDaoImpl implements EntityDao {
 
     private Optional<Entity> getEntityOptional(User user, List<Entity> c) {
         if (c.isEmpty()) {
-           return Optional.absent();
+            return Optional.absent();
         } else {
 
             final Entity result = c.get(0);
@@ -591,89 +550,123 @@ public class EntityDaoImpl implements EntityDao {
 
 
     @Override
-        public List<Connection> approveConnection(String key) {
-            PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-            try {
-                final Query q1 = pm.newQuery(ConnectionEntity.class);
+    public List<Connection> approveConnection(String id) {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+        try {
+            final Query q1 = pm.newQuery(ConnectionEntity.class);
 
-                final List<ConnectionEntity> c;
+            final List<ConnectionEntity> c;
 
-                q1.setFilter("approvalKey==k");
-                q1.declareParameters("String k");
-                q1.setRange(0, 1);
-                c = (List<ConnectionEntity>) q1.execute(key);
+            q1.setFilter("approvalKey==k");
+            q1.declareParameters("String k");
+            q1.setRange(0, 1);
+            c = (List<ConnectionEntity>) q1.execute(id);
 
-                if (c.isEmpty()) {
-                    return Collections.emptyList();
-                } else {
+            if (c.isEmpty()) {
+                return Collections.emptyList();
+            } else {
 
-                    final ConnectionEntity result = c.get(0);
+                final ConnectionEntity result = c.get(0);
 
-                    final Transaction tx = pm.currentTransaction();
-                    tx.begin();
+                final Transaction tx = pm.currentTransaction();
+                tx.begin();
 
-                    result.setApproved(true);
+                result.setApproved(true);
 
 
-                    tx.commit();
+                tx.commit();
 
-                    return Collections.singletonList(new ConnectionModel.Builder().init(result).create());
+                return Collections.singletonList(new ConnectionModel.Builder().init(result).create());
 
-                }
-            } finally {
-                pm.close();
             }
+        } finally {
+            pm.close();
         }
+    }
 
-        @Override
-        public String getOwner(String point) {
-            PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
-
-            try {
+    @Override
+    public String getOwner(String point) {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
 
-                final Entity result = (Entity) pm.getObjectById(Class.forName(EntityType.point.getClassName()), point);
+        try {
 
 
-                return result.getOwner();
-            } catch (Exception ex) {
+            final Entity result = (Entity) pm.getObjectById(Class.forName(EntityType.point.getClassName()), point);
 
-                return null;
-            } finally {
-                pm.close();
-            }
+
+            return result.getOwner();
+        } catch (Exception ex) {
+
+            return null;
+        } finally {
+            pm.close();
         }
+    }
 
 
 
-        @Override
-        public List<Schedule> getSchedules() {
+    @Override
+    public List<Schedule> getSchedules() {
 
-            PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
-            try {
+        try {
 //TODO tasks, cursors etc - query only for those ready to run
 
-                final Query q1 = pm.newQuery(ScheduleEntity.class);
-                q1.setFilter("enabled==e");
-                q1.declareParameters("Boolean e");
+            final Query q1 = pm.newQuery(ScheduleEntity.class);
+            q1.setFilter("enabled==e");
+            q1.declareParameters("Boolean e");
 
-                final List<Schedule> result = (List<Schedule>) q1.execute(true);
+            final List<Schedule> result = (List<Schedule>) q1.execute(true);
 
 
-                return result;
+            return result;
 
-            } catch (Exception e) {
-                logger.severe(e.getMessage());
-                return Collections.emptyList();
+        } catch (Exception e) {
+            logger.severe(e.getMessage());
+            return Collections.emptyList();
 
-            } finally {
-                pm.close();
+        } finally {
+            pm.close();
+        }
+
+
+    }
+
+    @Override
+    public Optional<User> getUser(EmailAddress email) {
+
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+        try {
+
+
+            final Query q1 = pm.newQuery(UserEntity.class);
+            q1.setFilter("owner==e");
+            q1.declareParameters("String e");
+
+            final List<User> result = (List<User>) q1.execute(email.getValue());
+
+
+            if(result.isEmpty()) {
+                return Optional.absent();
+            }
+            else {
+                User r = new UserModel.Builder().init(result.get(0)).create();
+                return Optional.of(r);
             }
 
+        } catch (Exception e) {
+            logger.severe(e.getMessage());
+            return Optional.absent();
 
+        } finally {
+            pm.close();
         }
+
+
+    }
 
 
 
@@ -686,7 +679,7 @@ public class EntityDaoImpl implements EntityDao {
 
         try {
             final Collection<String> ownerKeys = new ArrayList<>(1);
-            ownerKeys.add(user.getKey());
+            ownerKeys.add(user.getId());
 
             final Query  q1 = pm.newQuery(AccessKeyEntity.class, ":p.contains(owner)");
             return  (List<AccessKey>) q1.execute(ownerKeys);
@@ -729,7 +722,7 @@ public class EntityDaoImpl implements EntityDao {
                     q1.setRange(0, 1);
                     final Collection<Entity> c = (Collection<Entity>) q1.execute(
                             entity.getName().getValue(),
-                            user.getKey(),
+                            user.getId(),
                             entity.getEntityType().getCode());
                     if (!c.isEmpty()) {
 

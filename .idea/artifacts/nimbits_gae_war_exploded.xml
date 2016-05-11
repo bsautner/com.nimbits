@@ -37,17 +37,17 @@
           <element id="library" level="project" name="Maven: com.google.apis:google-api-services-storage:v1-rev15-1.19.0" />
           <element id="library" level="project" name="Maven: com.google.api-client:google-api-client:1.19.0" />
           <element id="library" level="project" name="Maven: com.google.oauth-client:google-oauth-client:1.19.0" />
-          <element id="library" level="project" name="Maven: com.google.api-client:google-api-client-appengine:1.21.0" />
-          <element id="library" level="project" name="Maven: com.google.oauth-client:google-oauth-client-appengine:1.21.0" />
-          <element id="library" level="project" name="Maven: com.google.oauth-client:google-oauth-client-servlet:1.21.0" />
-          <element id="library" level="project" name="Maven: com.google.http-client:google-http-client-jdo:1.21.0" />
+          <element id="library" level="project" name="Maven: com.google.api-client:google-api-client-appengine:1.22.0" />
+          <element id="library" level="project" name="Maven: com.google.oauth-client:google-oauth-client-appengine:1.22.0" />
+          <element id="library" level="project" name="Maven: com.google.oauth-client:google-oauth-client-servlet:1.22.0" />
+          <element id="library" level="project" name="Maven: com.google.http-client:google-http-client-jdo:1.22.0" />
           <element id="library" level="project" name="Maven: javax.servlet:servlet-api:2.5" />
-          <element id="library" level="project" name="Maven: com.google.api-client:google-api-client-servlet:1.21.0" />
+          <element id="library" level="project" name="Maven: com.google.api-client:google-api-client-servlet:1.22.0" />
           <element id="library" level="project" name="Maven: javax.jdo:jdo2-api:2.3-eb" />
           <element id="library" level="project" name="Maven: com.google.http-client:google-http-client:1.19.0" />
           <element id="library" level="project" name="Maven: com.google.code.findbugs:jsr305:1.3.9" />
           <element id="library" level="project" name="Maven: com.google.http-client:google-http-client-appengine:1.19.0" />
-          <element id="library" level="project" name="Maven: com.google.http-client:google-http-client-jackson2:1.21.0" />
+          <element id="library" level="project" name="Maven: com.google.http-client:google-http-client-jackson2:1.22.0" />
           <element id="library" level="project" name="Maven: com.fasterxml.jackson.core:jackson-core:2.1.3" />
           <element id="library" level="project" name="Maven: javax.jdo:jdo-api:3.1" />
           <element id="library" level="project" name="Maven: javax.transaction:transaction-api:1.1" />

@@ -22,7 +22,7 @@ import java.util.regex.PatternSyntaxException;
  */
 public class V3RestClientTester extends NimbitsTest  {
 
-    private List<Entity> pointList = new ArrayList<Entity>();
+    private List<Entity> pointList = new ArrayList<>();
     private Map<Entity, List<Value>> storedValues = new HashMap<Entity, List<Value>>();
 
     @Before
@@ -38,7 +38,7 @@ public class V3RestClientTester extends NimbitsTest  {
         log("Starting up");
 
         if (user != null) {
-            log("Continuing with user: " + user.getEmail() + " " + user.getUUID());
+            log("Continuing with user: " + user.getEmail() + " " + user.getId());
 
             createRegularUsers();
             createPoints();
@@ -82,7 +82,7 @@ public class V3RestClientTester extends NimbitsTest  {
     private void createPoints() {
 
         for (int i = 0; i < 10; i++) {
-            Point point = new PointModel.Builder().name(UUID.randomUUID().toString()).parent(user.getKey())
+            Point point = new PointModel.Builder().name(UUID.randomUUID().toString()).parent(user.getId())
                     .create();
             Entity newPoint =  nimbits.addPoint(user, point);
             pointList.add(newPoint);
@@ -152,7 +152,7 @@ public class V3RestClientTester extends NimbitsTest  {
         for (Entity entity : pointList) {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_YEAR, -31);
-            log(entity.getUUID());
+            log(entity.getId());
             List<Value> downloadedValues = nimbits.getValues(entity, calendar.getTime(), new Date(), mask);
             log("Downloaded " + downloadedValues.size() + " for " + entity.getName());
             List<Value> stored = storedValues.get(entity);

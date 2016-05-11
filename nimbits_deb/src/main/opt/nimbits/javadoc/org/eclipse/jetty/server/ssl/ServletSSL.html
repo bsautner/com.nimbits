@@ -161,7 +161,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <td class="colFirst"><code>static int</code></td>
 <td class="colLast"><code><strong><a href="../../../../../org/eclipse/jetty/server/ssl/ServletSSL.html#deduceKeyLength(java.lang.String)">deduceKeyLength</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;cipherSuite)</code>
 <div class="block">Given the name of a TLS/SSL cipher suite, return an int representing it effective stream
- cipher key strength.</div>
+ cipher id strength.</div>
 </td>
 </tr>
 </table>
@@ -211,11 +211,11 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
 <h4>deduceKeyLength</h4>
 <pre>public static&nbsp;int&nbsp;deduceKeyLength(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;cipherSuite)</pre>
 <div class="block">Given the name of a TLS/SSL cipher suite, return an int representing it effective stream
- cipher key strength. i.e. How much entropy material is in the key material being fed into the
+ cipher id strength. i.e. How much entropy material is in the id material being fed into the
  encryption routines.
  
  <p>
- This is based on the information on effective key lengths in RFC 2246 - The TLS Protocol
+ This is based on the information on effective id lengths in RFC 2246 - The TLS Protocol
  Version 1.0, Appendix C. CipherSuite definitions:
  
  <pre>
@@ -232,7 +232,7 @@ extends <a href="http://download.oracle.com/javase/6/docs/api/java/lang/Object.h
      3DES_EDE_CBC Block    168     
  </pre></div>
 <dl><dt><span class="strong">Parameters:</span></dt><dd><code>cipherSuite</code> - String name of the TLS cipher suite.</dd>
-<dt><span class="strong">Returns:</span></dt><dd>int indicating the effective key entropy bit-length.</dd></dl>
+<dt><span class="strong">Returns:</span></dt><dd>int indicating the effective id entropy bit-length.</dd></dl>
 </li>
 </ul>
 </li>

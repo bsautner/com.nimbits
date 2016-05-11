@@ -13,10 +13,10 @@
 #define SUBSCRIPTION 5
  
  
-//nimbits settings, set the instance name (nimbits-02 is the public cloud on https://cloud.nimbits.com) the email of the account owner, and a read write key they have created.
+//nimbits settings, set the instance name (nimbits-02 is the public cloud on https://cloud.nimbits.com) the email of the account owner, and a read write id they have created.
 String instance = "nimbits-02";
 char owner[] = "test@gmail.com";
-String readWriteKey = "nimbits key";
+String readWriteKey = "nimbits id";
  
 byte mac[] = {
   0x90, 0xA2, 0xDA, 0x00, 0x54, 0x39}; //this ethernet shield's MAC address

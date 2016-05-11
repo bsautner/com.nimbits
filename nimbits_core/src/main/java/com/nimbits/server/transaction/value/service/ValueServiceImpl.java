@@ -85,7 +85,7 @@ public class ValueServiceImpl implements ValueService {
        // boolean retVal = false;
 
         //
-        final User u = (User) entityDao.getEntityByKey(user,
+        final User u = (User) entityDao.getEntity(user,
                 p.getOwner(), EntityType.user).get();
 
 
@@ -163,7 +163,7 @@ public class ValueServiceImpl implements ValueService {
 
             p.setValue(v);
 
-            retObj.put(p.getKey(), p);
+            retObj.put(p.getId(), p);
         }
         return retObj;
 
@@ -172,7 +172,7 @@ public class ValueServiceImpl implements ValueService {
 
     @Override
     public void recordValues(BlobStore blobStore, User user, Point point, List<Value> values) {
-        if (point.getOwner().equals(user.getKey())) {
+        if (point.getOwner().equals(user.getId())) {
 
             if (!values.isEmpty() && ! point.getPointType().equals(PointType.location)) {
 

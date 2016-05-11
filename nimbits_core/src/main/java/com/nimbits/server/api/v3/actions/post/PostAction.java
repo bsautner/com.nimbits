@@ -134,7 +134,7 @@ public class PostAction extends RestAction {
 
         Value value = gson.fromJson(json, Value.class);
         String uuid = getEntityUUID(path);
-        Point entity = (Point) entityDao.getEntityByUUID(user, uuid, EntityType.point);
+        Point entity = (Point) entityDao.getEntity(user, uuid, EntityType.point);
 
         taskService.process(geoSpatialDao, taskService, userService, entityDao,
                 valueTask, entityService, blobStore, valueService, summaryService, syncService, subscriptionService,
@@ -151,7 +151,7 @@ public class PostAction extends RestAction {
         List<Value> values = gson.fromJson(json, listType);
         String uuid = getEntityUUID(path);
 
-        Optional<Entity> optional = entityDao.getEntityByUUID(user, uuid, EntityType.point);
+        Optional<Entity> optional = entityDao.getEntity(user, uuid, EntityType.point);
         if (optional.isPresent()) {
             if (values.size() == 1) {
 
@@ -169,7 +169,7 @@ public class PostAction extends RestAction {
     private void postEntity(User user, HttpServletResponse resp, String json, String path) throws IOException {
         String uuid = getEntityUUID(path);
 
-        Optional<Entity> optional = entityDao.findEntityByUUID(user, uuid);
+        Optional<Entity> optional = entityDao.findEntity(user, uuid);
 
         Map jsonMap = gson.fromJson(json, Map.class);
         int t = Double.valueOf(String.valueOf(jsonMap.get("entityType"))).intValue();
@@ -179,8 +179,8 @@ public class PostAction extends RestAction {
             Entity parent = optional.get();
             EntityType type = EntityType.get(t);
             Entity newEntity = (Entity) gson.fromJson(json, type.getClz());
-            newEntity.setParent(parent.getKey());
-            newEntity.setOwner(user.getKey());
+            newEntity.setParent(parent.getId());
+            newEntity.setOwner(user.getId());
             Entity stored = entityService.addUpdateEntity(valueService, user, newEntity);
             resp.getWriter().print(gson.toJson(stored, stored.getEntityType().getModel()));
         }

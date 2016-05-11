@@ -32,8 +32,6 @@ public interface TreeModel extends com.extjs.gxt.ui.client.data.TreeModel, Seria
 
     EntityType getEntityType();
 
-    String getId();
-
     void setId(String id);
 
     EntityName getName();
@@ -48,13 +46,11 @@ public interface TreeModel extends com.extjs.gxt.ui.client.data.TreeModel, Seria
 
     void setDirty(boolean dirty);
 
-    String getKey();
+    String getId();
 
     void setValue(Value value);
 
     Entity getBaseEntity();
 
     void update(Entity entity);
-
-    String getUuid();
 }

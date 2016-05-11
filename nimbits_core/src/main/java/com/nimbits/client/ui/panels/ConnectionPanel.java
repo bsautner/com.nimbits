@@ -159,7 +159,7 @@ public class ConnectionPanel extends BasePanel {
 
                     update = new ConnectionModel.Builder()
                             .name(name)
-                            .key(entity.getKey())
+                            .id(entity.getId())
                             .owner(entity.getOwner())
                             .targetEmail(e)
                             .create();

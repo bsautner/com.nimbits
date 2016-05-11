@@ -1,6 +1,6 @@
 /**
 
-How to push values to a nimbits cloud using a read/write key instead of a password.
+How to push values to a nimbits cloud using a read/write id instead of a password.
 http://nimbits.com/howto_security.jsp
 
 Usage: login to your nimbits cloud or the public cloud: http://cloud.nimbits.com
@@ -20,9 +20,9 @@ byte mac[] = {
 char server[] = "cloud.nimbits.com";
 char email[] = "test@example.com";
 
-//This can be your password if you created an account and set a password, or an access key if you 
-//logged into the server and created a key - use an access key if you log into nimbits with a google account, for example.
-char password[] ="key"; 
+//This can be your password if you created an account and set a password, or an access id if you
+//logged into the server and created a id - use an access id if you log into nimbits with a google account, for example.
+char password[] ="id";
 int port = 80;
 
 String point = "pointname";

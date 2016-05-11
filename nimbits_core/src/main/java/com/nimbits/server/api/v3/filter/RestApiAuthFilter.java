@@ -103,7 +103,7 @@ public class RestApiAuthFilter implements Filter {
         } else {
 
             ((HttpServletResponse) resp).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Please add a header to your request providing basic authentication." +
-                    " Authorization, Basic email:token  a token can be your password or a access key see more here: http://nimbits.com/howto_security.jsp");
+                    " Authorization, Basic email:token  a token can be your password or a access id see more here: http://nimbits.com/howto_security.jsp");
 
         }
     }

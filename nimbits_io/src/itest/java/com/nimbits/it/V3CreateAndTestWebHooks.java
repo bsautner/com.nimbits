@@ -51,7 +51,7 @@ public class V3CreateAndTestWebHooks extends NimbitsTest {
                 .name(TAG + " web hook " + UUID.randomUUID().toString())
                 .url("http://scooterlabs.com/echo.json?")
                 .method(HttpMethod.GET)
-                .downloadTarget(downloadTarget.getKey())
+                .downloadTarget(downloadTarget.getId())
                 .pathChannel(DataChannel.data)
                 .bodyChannel(DataChannel.meta)
                 .create());
@@ -60,10 +60,10 @@ public class V3CreateAndTestWebHooks extends NimbitsTest {
         Subscription subscription = nimbits.addSubscription(downloadTarget,
                 new SubscriptionModel.Builder()
                         .name(subscriptionName)
-                        .subscribedEntity(trigger.getKey())
+                        .subscribedEntity(trigger.getId())
                         .notifyMethod(SubscriptionNotifyMethod.webhook)
                         .subscriptionType(SubscriptionType.newValue)
-                        .target(webHook.getKey())
+                        .target(webHook.getId())
                         .create());
 
         String data = UUID.randomUUID().toString();

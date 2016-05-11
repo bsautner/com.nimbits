@@ -21,7 +21,6 @@ import com.google.common.collect.Range;
 import com.google.gson.Gson;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.hal.*;
@@ -175,7 +174,7 @@ public class GetAction extends RestAction {
         String uuid = getEntityUUID(path);
 
 
-        Optional<Entity> optional = entityDao.findEntityByUUID(user, uuid);
+        Optional<Entity> optional = entityDao.findEntity(user, uuid);
 
 
         if (optional.isPresent()) {
@@ -210,7 +209,7 @@ public class GetAction extends RestAction {
                 List<Entity> tree = entityDao.getEntities(userResponse);
                 List<Entity> children = new ArrayList<>(tree.size());
                 for (Entity e : tree) {
-                    if (! e.getEntityType().equals(EntityType.user) && e.getParent().equals(userResponse.getKey())) {
+                    if (! e.getEntityType().equals(EntityType.user) && e.getParent().equals(userResponse.getId())) {
                         children.add(e);
                     }
                 }
@@ -249,7 +248,7 @@ public class GetAction extends RestAction {
 
 
         String uuid = getEntityUUID(path);
-        if (user.getUUID().equals(uuid)) {
+        if (user.getId().equals(uuid)) {
             List<Entity> entities = entityDao.getEntitiesByType(user, EntityType.point);
             List<Point> response = new ArrayList<>(entities.size());
             for (Entity e: entities) {
@@ -265,7 +264,7 @@ public class GetAction extends RestAction {
 
         }
         else {
-            Optional<Entity> optional = entityDao.getEntityByUUID(user, uuid, EntityType.point);
+            Optional<Entity> optional = entityDao.getEntity(user, uuid, EntityType.point);
             if (optional.isPresent()) {
                 List<Value> values = valueService.getSeries(blobStore, optional.get(), timespan, range, mask);
                 String json = gson.toJson(values);
@@ -303,7 +302,7 @@ public class GetAction extends RestAction {
 
         if (timespan.isPresent() || count.isPresent()) {
             String uuid = getEntityUUID(path);
-            Entity entity = entityDao.getEntityByUUID(user, uuid, EntityType.point).get();
+            Entity entity = entityDao.getEntity(user, uuid, EntityType.point).get();
             String chartData = valueService.getChartTable(entityDao, blobStore, user, entity, timespan, count, mask);
             resp.getWriter().print(chartData);
 
@@ -340,10 +339,15 @@ public class GetAction extends RestAction {
                 valueEmbedded = new EmbeddedValues(new ArrayList<Value>());
 
             }
-            Entity entity = entityDao.getEntityByUUID(user, uuid, EntityType.point).get();
-            Value snapshot = valueService.getCurrentValue(blobStore, entity);
-            ValueContainer valueContainer = new ValueContainer(links, valueEmbedded, snapshot);
-            resp.getWriter().println(gson.toJson(valueContainer));
+            Optional<Entity> optional = entityDao.getEntity(user, uuid, EntityType.point);
+            if (optional.isPresent()) {
+                Value snapshot = valueService.getCurrentValue(blobStore, optional.get());
+                ValueContainer valueContainer = new ValueContainer(links, valueEmbedded, snapshot);
+                resp.getWriter().println(gson.toJson(valueContainer));
+            }
+            else {
+                resp.sendError(HttpServletResponse.SC_NOT_FOUND, uuid + " not found");
+            }
         } catch (Throwable ex)  {
             throw new RuntimeException(ex);
         }
@@ -358,7 +362,7 @@ public class GetAction extends RestAction {
     private void getEntity(User user, HttpServletRequest req, HttpServletResponse resp, String path, String base) throws IOException {
         String uuid = getEntityUUID(path);
 
-        Optional<Entity> optional = entityDao.findEntityByUUID(user, uuid);// entityMap.get(uuid);
+        Optional<Entity> optional = entityDao.findEntity(user, uuid);// entityMap.get(uuid);
 
         if (optional.isPresent()) {
             Entity entity = optional.get();
@@ -390,7 +394,7 @@ public class GetAction extends RestAction {
         String metersParam = request.getParameter(Parameters.meters.getText());
         String uuid = getEntityUUID(path);
 
-        Entity entity = entityDao.getEntityByUUID(user, uuid, EntityType.point).get();
+        Entity entity = entityDao.getEntity(user, uuid, EntityType.point).get();
 
         Value current = valueService.getCurrentValue(blobStore, entity);
         double meters = metersParam == null ? DEFAULT_DISTANCE_METERS :  Double.parseDouble(metersParam);

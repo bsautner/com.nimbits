@@ -112,7 +112,7 @@ public class NavigationPanel extends NavigationEventProvider {
 
         if (tree != null && tree.getStore() != null) {
 
-            final ModelData mx = tree.getTreeStore().findModel(Parameters.id.getText(), model.getBaseEntity().getKey());
+            final ModelData mx = tree.getTreeStore().findModel(Parameters.id.getText(), model.getBaseEntity().getId());
             if (mx != null) {
                 final TreeModel m = (TreeModel) mx;
                 m.update(model.getBaseEntity());
@@ -305,10 +305,10 @@ public class NavigationPanel extends NavigationEventProvider {
 
 
             for (final Entity entity : result) {
-                if (!entity.getEntityType().equals(EntityType.user)) {// entity.getEntity().equals(this.user.getKey()) ) {
-                    if (entity.getParent().equals(model.getKey())) {
+                if (!entity.getEntityType().equals(EntityType.user)) {// entity.getEntity().equals(this.user.getId()) ) {
+                    if (entity.getParent().equals(model.getId())) {
                         TreeModel model2 = new GxtModel(entity);
-                        if (parents.contains(entity.getKey()) && !entity.getEntityType().equals(EntityType.user)) {
+                        if (parents.contains(entity.getId()) && !entity.getEntityType().equals(EntityType.user)) {
                             addChildrenToModel(result, parents, model2);
                         }
 
@@ -357,7 +357,7 @@ public class NavigationPanel extends NavigationEventProvider {
                 if (tree != null && tree.getStore() != null) {
 
 
-                    ModelData m = tree.getTreeStore().findModel(Parameters.id.getText(), currentModel.getBaseEntity().getKey());
+                    ModelData m = tree.getTreeStore().findModel(Parameters.id.getText(), currentModel.getBaseEntity().getId());
                     tree.getTreeStore().remove(m);
 
                 }
@@ -471,8 +471,8 @@ public class NavigationPanel extends NavigationEventProvider {
                 final TreeModel model = (TreeModel) m;
                 if (!model.isDirty() && model.getEntityType().equals(EntityType.point)) {
 
-                    if (stringPointMap.containsKey(model.getKey())) {
-                        Point p = (Point) stringPointMap.get(model.getKey());
+                    if (stringPointMap.containsKey(model.getId())) {
+                        Point p = (Point) stringPointMap.get(model.getId());
                         if (p.getValue() == null) {
                             model.setAlertType(AlertType.OK);
                             model.setValue(new Value.Builder().doubleValue(0.0).create());
@@ -558,7 +558,7 @@ public class NavigationPanel extends NavigationEventProvider {
             if (target.getOwner().equals(draggedEntity.getOwner())) {
 
 
-                draggedEntity.setParent(target.getKey());
+                draggedEntity.setParent(target.getId());
 
                 entityService.addUpdateEntityRpc(draggedEntity, new MoveEntityAsyncCallback());
             }
@@ -693,7 +693,7 @@ public class NavigationPanel extends NavigationEventProvider {
                     && model.getEntityType().equals(EntityType.point)
                     ) {
                 if (tree.isExpanded(model.getParent())) {
-                    entityMap.put(model.getKey(), (Point) model.getBaseEntity());
+                    entityMap.put(model.getId(), (Point) model.getBaseEntity());
                 }
             }
         }

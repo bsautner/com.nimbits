@@ -18,7 +18,6 @@ package com.nimbits.server.process.cron;
 
 
 import com.google.common.base.Optional;
-import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.entity.Entity;
@@ -187,8 +186,8 @@ public class SystemCron extends HttpServlet implements BaseProcessor {
                 schedule.setLastProcessed(new Date().getTime());
 
                 entityDao.addUpdateEntity(owner,schedule);
-                Optional<Entity> sourcePoint = entityDao.getEntityByKey(owner, schedule.getSource(), EntityType.point);
-                Optional<Entity> targetPoint = entityDao.getEntityByKey(owner, schedule.getTarget(), EntityType.point);
+                Optional<Entity> sourcePoint = entityDao.getEntity(owner, schedule.getSource(), EntityType.point);
+                Optional<Entity> targetPoint = entityDao.getEntity(owner, schedule.getTarget(), EntityType.point);
 
                 if (sourcePoint.isPresent() && targetPoint.isPresent()) {
                     Value value = valueService.getCurrentValue(blobStore, sourcePoint.get());

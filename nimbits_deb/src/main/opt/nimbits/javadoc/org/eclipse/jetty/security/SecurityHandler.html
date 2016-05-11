@@ -332,7 +332,7 @@ implements <a href="../../../../org/eclipse/jetty/security/Authenticator.AuthCon
 </tr>
 <tr class="altColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/security/SecurityHandler.html#getInitParameter(java.lang.String)">getInitParameter</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</code>
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/security/SecurityHandler.html#getInitParameter(java.lang.String)">getInitParameter</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;id)</code>
 <div class="block">Get a SecurityHandler init parameter</div>
 </td>
 </tr>
@@ -410,7 +410,7 @@ implements <a href="../../../../org/eclipse/jetty/security/Authenticator.AuthCon
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a></code></td>
-<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/security/SecurityHandler.html#setInitParameter(java.lang.String, java.lang.String)">setInitParameter</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key,
+<td class="colLast"><code><strong><a href="../../../../org/eclipse/jetty/security/SecurityHandler.html#setInitParameter(java.lang.String, java.lang.String)">setInitParameter</a></strong>(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;id,
                 <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;value)</code>
 <div class="block">Set an initialization parameter.</div>
 </td>
@@ -717,13 +717,13 @@ implements <a href="../../../../org/eclipse/jetty/security/Authenticator.AuthCon
 <ul class="blockList">
 <li class="blockList">
 <h4>getInitParameter</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getInitParameter(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key)</pre>
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;getInitParameter(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;id)</pre>
 <div class="block"><strong>Description copied from interface:&nbsp;<code><a href="../../../../org/eclipse/jetty/security/Authenticator.AuthConfiguration.html#getInitParameter(java.lang.String)">Authenticator.AuthConfiguration</a></code></strong></div>
 <div class="block">Get a SecurityHandler init parameter</div>
 <dl>
 <dt><strong>Specified by:</strong></dt>
 <dd><code><a href="../../../../org/eclipse/jetty/security/Authenticator.AuthConfiguration.html#getInitParameter(java.lang.String)">getInitParameter</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../org/eclipse/jetty/security/Authenticator.AuthConfiguration.html" title="interface in org.eclipse.jetty.security">Authenticator.AuthConfiguration</a></code></dd>
-<dt><span class="strong">Parameters:</span></dt><dd><code>key</code> - parameter name</dd>
+<dt><span class="strong">Parameters:</span></dt><dd><code>id</code> - parameter name</dd>
 <dt><span class="strong">Returns:</span></dt><dd>Parameter value or null</dd><dt><span class="strong">See Also:</span></dt><dd><a href="../../../../org/eclipse/jetty/security/SecurityHandler.html#getInitParameter(java.lang.String)"><code>getInitParameter(String)</code></a></dd></dl>
 </li>
 </ul>
@@ -748,10 +748,10 @@ implements <a href="../../../../org/eclipse/jetty/security/Authenticator.AuthCon
 <ul class="blockList">
 <li class="blockList">
 <h4>setInitParameter</h4>
-<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;setInitParameter(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;key,
+<pre>public&nbsp;<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;setInitParameter(<a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;id,
                       <a href="http://download.oracle.com/javase/6/docs/api/java/lang/String.html?is-external=true" title="class or interface in java.lang">String</a>&nbsp;value)</pre>
 <div class="block">Set an initialization parameter.</div>
-<dl><dt><span class="strong">Parameters:</span></dt><dd><code>key</code> - </dd><dd><code>value</code> - </dd>
+<dl><dt><span class="strong">Parameters:</span></dt><dd><code>id</code> - </dd><dd><code>value</code> - </dd>
 <dt><span class="strong">Returns:</span></dt><dd>previous value</dd>
 <dt><span class="strong">Throws:</span></dt>
 <dd><code><a href="http://download.oracle.com/javase/6/docs/api/java/lang/IllegalStateException.html?is-external=true" title="class or interface in java.lang">IllegalStateException</a></code> - if the SecurityHandler is running</dd></dl>

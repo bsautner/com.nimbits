@@ -128,8 +128,8 @@ public class SchedulePanel extends BasePanel {
         Schedule schedule;
 
 
-        final String source = sourceCombo.getValue() == null ? null : sourceCombo.getValue().getKey();
-        final String target = targetCombo.getValue() == null ? null : targetCombo.getValue().getKey();
+        final String source = sourceCombo.getValue() == null ? null : sourceCombo.getValue().getId();
+        final String target = targetCombo.getValue() == null ? null : targetCombo.getValue().getId();
 
         ScheduleModel.Builder builder = new ScheduleModel.Builder();
 
@@ -139,7 +139,7 @@ public class SchedulePanel extends BasePanel {
             builder.init(schedule);
 
         } else {
-            builder.name(name).parent(entity.getKey()).owner(entity.getOwner());
+            builder.name(name).parent(entity.getId()).owner(entity.getOwner());
         }
 
         builder.enabled(enabledCheckbox.getValue())

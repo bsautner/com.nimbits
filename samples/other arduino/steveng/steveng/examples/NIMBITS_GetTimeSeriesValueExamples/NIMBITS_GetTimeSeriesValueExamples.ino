@@ -4,7 +4,7 @@
 //  This example was written by Steven Guterman and is in the public domain. Please include this header
 //  in all subsequent versions. November 28, 2013
 
-//  To use this example you will need to add your Nimbits ID, Nimbits key, and point ID (total of 4 changes).
+//  To use this example you will need to add your Nimbits ID, Nimbits id, and point ID (total of 4 changes).
 //  Depending on your ethernet board, you may need to replace the MAC address with your devices address.  
 //  Many ethernet boards will accept any address, just make sure only it is unique on your network.
 
@@ -22,10 +22,10 @@
 #include <stdio.h>
 #include "Nimbits.h"
 
-  //nimbits settings, set the instance name (nimbits-02 is the public cloud on https://cloud.nimbits.com) the email of the account owner, and a read write key they have created.
+  //nimbits settings, set the instance name (nimbits-02 is the public cloud on https://cloud.nimbits.com) the email of the account owner, and a read write id they have created.
     String instance = "nimbits-02";
     char owner[] = "OOOOOOOOOOOOOOOOO";  // add you owner id, usually in a name@gmail.com format
-    String readWriteKey = "kkkkkkkkkk";  // add you key
+    String readWriteKey = "kkkkkkkkkk";  // add you id
     byte mac[] = {0x90, 0xA2, 0xDA, 0x00, 0x54, 0x39}; //this ethernet shield's MAC address
 
     Nimbits nimbits(instance, owner, readWriteKey);

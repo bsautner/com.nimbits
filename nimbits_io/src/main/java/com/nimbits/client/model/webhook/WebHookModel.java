@@ -48,8 +48,8 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
     private int pathChannel;
 
 
-    protected WebHookModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid, int method, String url, boolean enabled, String downloadTarget, int bodyChannel, int pathChannel) {
-        super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
+    protected WebHookModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, int method, String url, boolean enabled, String downloadTarget, int bodyChannel, int pathChannel) {
+        super(id, name, description, entityType, protectionLevel, parent, owner);
         this.method = method;
         this.url = url;
         this.enabled = enabled;
@@ -180,7 +180,7 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
             return this;
         }
         public Builder downloadTarget(Entity downloadTargetEntity) {
-            this.downloadTarget = downloadTargetEntity.getKey();
+            this.downloadTarget = downloadTargetEntity.getId();
             return this;
         }
 
@@ -204,7 +204,7 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
 
 
 
-            return new WebHookModel(key, name, description, EntityType.webhook, protectionLevel, parent, owner, uuid, method.getCode(), url.getUrl(), true,
+            return new WebHookModel(id, name, description, EntityType.webhook, protectionLevel, parent, owner, method.getCode(), url.getUrl(), true,
                     downloadTarget, bodyChannel.getCode(), pathChannel.getCode());
         }
 
@@ -218,8 +218,8 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
 
         private void initEntity(Entity anEntity) {
 
-            this.key = anEntity.getKey();
-            this.id = anEntity.getKey();
+
+            this.id = anEntity.getId();
             this.name = anEntity.getName();
             this.description = anEntity.getDescription();
             this.entityType = anEntity.getEntityType();
@@ -227,7 +227,7 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
             this.owner = anEntity.getOwner();
             this.protectionLevel = anEntity.getProtectionLevel();
             this.alertType = anEntity.getAlertType().getCode();
-            this.uuid = anEntity.getUUID();
+
 
         }
 
@@ -249,11 +249,7 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
             this.name = name;
             return this;
         }
-        @Override
-        public Builder key(String key) {
-            this.key = key;
-            return this;
-        }
+
         @Override
         public Builder description(String description) {
             this.description = description;
@@ -284,11 +280,7 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
             this.id = id;
             return this;
         }
-        @Override
-        public Builder uuid(String uuid) {
-            this.uuid = uuid;
-            return this;
-        }
+
 
         @Override
         public Builder action(String action) {

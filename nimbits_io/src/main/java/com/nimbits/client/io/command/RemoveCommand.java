@@ -69,7 +69,7 @@ public class RemoveCommand extends AbstractCommand implements Command {
 
     private boolean hasChildren(Entity entity) {
         for (Entity e : tree) {
-            if (e.getParent().equals(entity.getKey())) {
+            if (e.getParent().equals(entity.getId())) {
 
                 return true;
 

@@ -195,20 +195,20 @@ public abstract class RestAction {
 
         Parent parent;
         if (entity.getEntityType().equals(EntityType.user)) {
-            parent = new Parent(path + user.getUUID());
+            parent = new Parent(path + user.getId());
         }
         else {
-            Optional<Entity> rootParentEntity = entityDao.findEntityByKey(user, entity.getParent());
+            Optional<Entity> rootParentEntity = entityDao.findEntity(user, entity.getParent());
             if (rootParentEntity.isPresent()) {
-                parent = new Parent(path + rootParentEntity.get().getUUID());
+                parent = new Parent(path + rootParentEntity.get().getId());
             }
             else {
-                parent = new Parent(path + user.getUUID());
+                parent = new Parent(path + user.getId());
             }
         }
 
 
-        Self self = new Self(path + entity.getUUID());
+        Self self = new Self(path + entity.getId());
         Series series = null;
         DataTable dataTable = null;
         Snapshot snapshot = null;
@@ -218,33 +218,33 @@ public abstract class RestAction {
 
         if (entity.getEntityType().equals(EntityType.point)) {
             Point point = (Point) entity;
-            series =new Series(path + entity.getUUID() + "/series");
-            dataTable =new DataTable(path + entity.getUUID() + "/table");
-            snapshot =new Snapshot(path + entity.getUUID() + "/snapshot");
+            series =new Series(path + entity.getId() + "/series");
+            dataTable =new DataTable(path + entity.getId() + "/table");
+            snapshot =new Snapshot(path + entity.getId() + "/snapshot");
             if (point.getPointType().equals(PointType.location)) {
-                nearby = new Nearby(path + entity.getUUID() + "/nearby");
+                nearby = new Nearby(path + entity.getId() + "/nearby");
             }
 
 
         }
         else if (entity.getEntityType().equals(EntityType.user)) {
-            series =new Series(path + entity.getUUID() + "/series");
+            series =new Series(path + entity.getId() + "/series");
             if (index != null) {
                 next = new Next(path.substring(0, path.lastIndexOf("/")) + "?index=" + ++index);
             }
 
 
         }
-        children =new Children(path + entity.getUUID() + "/children");
+        children =new Children(path + entity.getId() + "/children");
         Links links = new Links(self, parent, series, snapshot, dataTable, next, nearby, children);
         List<EntityChild> entityChildren = new ArrayList<>();
 
 
 
         for (Entity child : childList) {
-            if (child.getParent().equals(entity.getKey()) && ! child.getKey().equals(entity.getKey())) {
+            if (child.getParent().equals(entity.getId()) && ! child.getId().equals(entity.getId())) {
 
-                Self eSelf = new Self(path + child.getUUID());
+                Self eSelf = new Self(path + child.getId());
                 Series cseries = null;
                 DataTable cdataTable = null;
                 Snapshot csnapshot = null;
@@ -252,24 +252,24 @@ public abstract class RestAction {
                 Children cchildren;
 
                 if (child.getEntityType().equals(EntityType.point)) {
-                    cseries =new Series(path + child.getUUID() + "/series");
-                    cdataTable =new DataTable(path + child.getUUID() + "/table");
-                    csnapshot  =new Snapshot(path + child.getUUID() + "/snapshot");
+                    cseries =new Series(path + child.getId() + "/series");
+                    cdataTable =new DataTable(path + child.getId() + "/table");
+                    csnapshot  =new Snapshot(path + child.getId() + "/snapshot");
                     Point point1 = (Point) child;
                     if (point1.getPointType().equals(PointType.location)) {
-                        cnearby = new Nearby(path + child.getUUID() + "/nearby");
+                        cnearby = new Nearby(path + child.getId() + "/nearby");
                     }
                 }
               //  Entity parentEntity = childMap.get(child.getParent());
 
                 Parent eParent;
-                if (child.getParent().equals(user.getKey())) {
+                if (child.getParent().equals(user.getId())) {
                     eParent = new Parent(path + "me");
                 }
                 else {
-                    eParent  = new Parent(path + entity.getUUID());
+                    eParent  = new Parent(path + entity.getId());
                 }
-                cchildren  =new Children(path + entity.getUUID() + "/children");
+                cchildren  =new Children(path + entity.getId() + "/children");
                 Links eLinks = new Links(eSelf, eParent, cseries, csnapshot, cdataTable, null, cnearby, cchildren);
 
                 entityChildren.add(new EntityChild(eLinks, child.getName().getValue()));

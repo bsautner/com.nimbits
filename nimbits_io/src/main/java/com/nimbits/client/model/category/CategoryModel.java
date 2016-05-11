@@ -34,8 +34,8 @@ public class CategoryModel extends EntityModel implements Serializable, Category
     }
 
 
-    protected CategoryModel(String key, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String uuid) {
-        super(key, name, description, entityType, protectionLevel, parent, owner, uuid);
+    protected CategoryModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner) {
+        super(id, name, description, entityType, protectionLevel, parent, owner);
     }
 
     public static class Builder extends EntityBuilder {
@@ -53,7 +53,7 @@ public class CategoryModel extends EntityModel implements Serializable, Category
             }
 
 
-            return new CategoryModel(key, name, description, type, protectionLevel, parent, owner, uuid);
+            return new CategoryModel(id, name, description, type, protectionLevel, parent, owner);
         }
 
         @Override
@@ -66,8 +66,8 @@ public class CategoryModel extends EntityModel implements Serializable, Category
 
         private void initEntity(Entity anEntity) {
 
-            this.key = anEntity.getKey();
-            this.id = anEntity.getKey();
+
+            this.id = anEntity.getId();
             this.name = anEntity.getName();
             this.description = anEntity.getDescription();
             this.entityType = anEntity.getEntityType();
@@ -75,7 +75,7 @@ public class CategoryModel extends EntityModel implements Serializable, Category
             this.owner = anEntity.getOwner();
             this.protectionLevel = anEntity.getProtectionLevel();
             this.alertType = anEntity.getAlertType().getCode();
-            this.uuid = anEntity.getUUID();
+
 
         }
 
@@ -89,11 +89,7 @@ public class CategoryModel extends EntityModel implements Serializable, Category
             this.name = name;
             return this;
         }
-        @Override
-        public Builder key(String key) {
-            this.key = key;
-            return this;
-        }
+
         @Override
         public Builder description(String description) {
             this.description = description;
@@ -124,11 +120,7 @@ public class CategoryModel extends EntityModel implements Serializable, Category
             this.id = id;
             return this;
         }
-        @Override
-        public Builder uuid(String uuid) {
-            this.uuid = uuid;
-            return this;
-        }
+
 
         @Override
         public Builder action(String action) {

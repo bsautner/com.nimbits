@@ -258,9 +258,9 @@ public class SummaryPanel extends BasePanel {
             } else {
                 try {
 
-                    update = new SummaryModel.Builder().name(name).parent(entity.getKey()).owner(entity.getOwner())
+                    update = new SummaryModel.Builder().name(name).parent(entity.getId()).owner(entity.getOwner())
                             .target(targetCombo.getValue().getId())
-                            .trigger(entity.getKey())
+                            .trigger(entity.getId())
                             .enabled(enabled.getValue())
                             .summaryType(summaryType)
                             .summaryIntervalMs((long) (spinnerField.getValue().intValue() * 1000))

@@ -61,7 +61,7 @@ public class UserDaoImpl implements UserDao {
 
             tx.begin();
 
-            User attachedUser = pm.getObjectById(UserEntity.class, user.getKey());
+            User attachedUser = pm.getObjectById(UserEntity.class, user.getId());
             attachedUser.setPasswordResetToken(token);
             attachedUser.setPasswordResetTokenTimestamp(new Date());
 
@@ -87,7 +87,7 @@ public class UserDaoImpl implements UserDao {
 
             tx.begin();
 
-            User attachedUser = pm.getObjectById(UserEntity.class, u.getKey());
+            User attachedUser = pm.getObjectById(UserEntity.class, u.getId());
             attachedUser.setPasswordResetToken("");
             attachedUser.setPasswordResetTokenTimestamp(new Date(0));
             attachedUser.setPassword(cryptPassword);
@@ -311,7 +311,7 @@ public class UserDaoImpl implements UserDao {
 
         try {
             final Collection<String> ownerKeys = new ArrayList<String>(1);
-            ownerKeys.add(user.getKey());
+            ownerKeys.add(user.getId());
 
             final Query q1;
 

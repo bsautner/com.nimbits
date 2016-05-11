@@ -38,13 +38,10 @@ public abstract class EntityStore implements Entity {
 
     @PrimaryKey
     @Persistent
-    protected String key;
+    protected String id;
 
     @Persistent
     private String name;
-
-    @Persistent
-    private String uuid;
 
     @Persistent
     private String description;
@@ -77,14 +74,14 @@ public abstract class EntityStore implements Entity {
 
         final EntityName saferName = CommonFactory.createName(entity.getName().getValue(), entity.getEntityType());
 
-        setKey(entity, saferName);
+
         setValues(entity, saferName);
 
     }
 
 
     private void setValues(Entity entity, EntityName saferName) {
-        this.uuid = entity.getUUID();
+
         this.name = saferName.getValue();
         this.description = entity.getDescription();
         this.entityType = entity.getEntityType().getCode();
@@ -94,27 +91,6 @@ public abstract class EntityStore implements Entity {
     }
 
 
-    private void setKey(final Entity entity, final CommonIdentifier saferName) {
-
-        switch (entity.getEntityType()) {
-
-            case user:
-                key = saferName.getValue();
-                break;
-            case point:
-                key = entity.getOwner() + '/' + saferName.getValue();
-                break;
-            default:
-                key = UUID.randomUUID().toString();
-                break;
-
-        }
-
-    }
-
-    private String createKey(String cls, String string) {
-        return cls + string;
-    }
 
     @Override
     public EntityName getName() {
@@ -127,15 +103,8 @@ public abstract class EntityStore implements Entity {
 
     }
 
-    @Override
-    public String getUUID() {
-        return uuid;
-    }
 
-    @Override
-    public void setUUID(final String uuid) {
-        this.uuid = uuid;
-    }
+
 
     @Override
     public void setName(final EntityName name) {
@@ -164,15 +133,16 @@ public abstract class EntityStore implements Entity {
     }
 
     @Override
-    public String getKey() {
+    public String getId() {
 
-        return this.key == null ? null : this.key;
+        return this.id == null ? null : this.id;
     }
 
-//    @Override
-//    public void setEntity(String entity) {
-//        this.entity = entity;
-//    }
+
+    @Override
+    public void setId(String id) {
+        this.id = id;
+    }
 
     @Override
     public String getParent() {
@@ -237,8 +207,7 @@ public abstract class EntityStore implements Entity {
         this.name = update.getName().getValue();
         this.protectionLevel = update.getProtectionLevel().getCode();
         this.parent = update.getParent();
-
-        this.uuid = update.getUUID();
+        this.id = update.getId();
 
     }
 
@@ -263,17 +232,13 @@ public abstract class EntityStore implements Entity {
         if (StringUtils.isEmpty(this.owner)) {
             throw new IllegalArgumentException("Owner must not be null");
         }
-        if (! user.getIsAdmin() && !this.owner.equals(user.getKey()) && !entityType.equals(EntityType.user.getCode())) {
+        if (! user.getIsAdmin() && !this.owner.equals(user.getId()) && !entityType.equals(EntityType.user.getCode())) {
             throw new IllegalArgumentException("You can't create an entity with an owner other than yourself!");
         }
 
 
     }
 
-    @Override
-    public void setKey(String key) {
-        throw new IllegalArgumentException("Not Implemented");
-    }
 
     @Override
     public int compareTo(final Entity entity) {
@@ -292,13 +257,12 @@ public abstract class EntityStore implements Entity {
         if (readOnly != that.readOnly) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (entityType != null ? !entityType.equals(that.entityType) : that.entityType != null) return false;
-        if (key != null ? !key.equals(that.key) : that.key != null) return false;
+        if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (owner != null ? !owner.equals(that.owner) : that.owner != null) return false;
         if (parent != null ? !parent.equals(that.parent) : that.parent != null) return false;
         if (protectionLevel != null ? !protectionLevel.equals(that.protectionLevel) : that.protectionLevel != null)
             return false;
-        if (uuid != null ? !uuid.equals(that.uuid) : that.uuid != null) return false;
 
         return true;
     }
@@ -306,9 +270,9 @@ public abstract class EntityStore implements Entity {
     @SuppressWarnings("NonFinalFieldReferencedInHashCode")
     @Override
     public int hashCode() {
-        int result = key != null ? key.hashCode() : 0;
+        int result = id != null ? id.hashCode() : 0;
         result = 31 * result + (name != null ? name.hashCode() : 0);
-        result = 31 * result + (uuid != null ? uuid.hashCode() : 0);
+
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (entityType != null ? entityType.hashCode() : 0);
         result = 31 * result + (protectionLevel != null ? protectionLevel.hashCode() : 0);

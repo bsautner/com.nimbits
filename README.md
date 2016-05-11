@@ -3,6 +3,8 @@
 
 [Wiki](https://github.com/bsautner/com.nimbits/wiki) | [Community Forum](https://groups.google.com/forum/#!forum/nimbits) | [Bug Report](https://github.com/bsautner/com.nimbits/issues) 
 
+**please be aware of a recent breaking change when uprading to 3.9.55 and above.  We consolidated the multiple unique keys for entities into one database id (id, uuid, key are now just id).  New installs of nimbits server will setup a new empty database.**
+
 ## About
 
 `nimbits server` is a web portal and API designed to store and process time and location stamped data,

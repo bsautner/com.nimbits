@@ -246,8 +246,17 @@ public class EntityDaoImpl implements EntityDao {
             }
 
             if (StringUtils.isEmpty(commit.getId())) {
-                commit.setId(UUID.randomUUID().toString());
+                if (entity.getEntityType().equals(EntityType.user)) {
+                    commit.setId(entity.getOwner());
+                } else if(entity.getEntityType().equals(EntityType.point)) {
+                    commit.setId(UUID.randomUUID().toString());
+                   //TODO commit.setId(entity.getOwner() + "/" + entity.getName());
+                }
+                else {
+                    commit.setId(UUID.randomUUID().toString());
+                }
             }
+
 
             pm.makePersistent(commit);
 

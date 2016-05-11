@@ -25,6 +25,8 @@ import com.nimbits.server.api.v3.actions.post.PostAction;
 import com.nimbits.server.api.v3.actions.put.PutAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.ServletException;
@@ -33,7 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Service
+@RestController
 public class RestApi extends HttpServlet {
 
     @Autowired
@@ -63,6 +65,8 @@ public class RestApi extends HttpServlet {
         putAction.updateEntity(req, resp, user);
 
     }
+
+  //  @RequestMapping("/service/v3/rest")
 
 
     @Override

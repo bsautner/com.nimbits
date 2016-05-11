@@ -2,159 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d6530a28-a7a9-42ab-9b5b-9d52ddecba3b" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_dmurph_JGoogleAnalyticsTracker_1_2_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_api_client_google_api_client_appengine_1_21_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_api_client_google_api_client_servlet_1_21_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_http_client_google_http_client_jackson2_1_21_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_http_client_google_http_client_jdo_1_21_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_oauth_client_google_oauth_client_appengine_1_21_0.xml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_oauth_client_google_oauth_client_servlet_1_21_0.xml" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/nimbits_io/src/test/java/com/nimbits/it/IntTest.java" afterPath="$PROJECT_DIR$/nimbits_io/src/itest/java/com/nimbits/it/IntTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/nimbits_io/src/test/java/com/nimbits/it/NimbitsTest.java" afterPath="$PROJECT_DIR$/nimbits_io/src/itest/java/com/nimbits/it/NimbitsTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/nimbits_io/src/test/java/com/nimbits/it/V3ApiChildrenTest.java" afterPath="$PROJECT_DIR$/nimbits_io/src/itest/java/com/nimbits/it/V3ApiChildrenTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/nimbits_io/src/test/java/com/nimbits/it/V3CreateAndTestWebHooks.java" afterPath="$PROJECT_DIR$/nimbits_io/src/itest/java/com/nimbits/it/V3CreateAndTestWebHooks.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/nimbits_io/src/test/java/com/nimbits/it/V3EntityTests.java" afterPath="$PROJECT_DIR$/nimbits_io/src/itest/java/com/nimbits/it/V3EntityTests.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/nimbits_io/src/test/java/com/nimbits/it/V3FilterTest.java" afterPath="$PROJECT_DIR$/nimbits_io/src/itest/java/com/nimbits/it/V3FilterTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/nimbits_io/src/test/java/com/nimbits/it/V3FindThingsExamples.java" afterPath="$PROJECT_DIR$/nimbits_io/src/itest/java/com/nimbits/it/V3FindThingsExamples.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/nimbits_io/src/test/java/com/nimbits/it/V3RestClientTester.java" afterPath="$PROJECT_DIR$/nimbits_io/src/itest/java/com/nimbits/it/V3RestClientTester.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/nimbits_io/src/test/java/com/nimbits/it/V3Sample1.java" afterPath="$PROJECT_DIR$/nimbits_io/src/itest/java/com/nimbits/it/V3Sample1.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/nimbits_io/src/test/java/com/nimbits/it/V3UpdateEntityTest.java" afterPath="$PROJECT_DIR$/nimbits_io/src/itest/java/com/nimbits/it/V3UpdateEntityTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/nimbits_gae_war_exploded.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/nimbits_gae_war_exploded.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/nimbits_server_war_exploded.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/nimbits_server_war_exploded.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/.name" afterPath="$PROJECT_DIR$/.idea/.name" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/model/GxtModel.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/model/GxtModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/model/TreeModel.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/model/TreeModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/controls/EntityCombo.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/controls/EntityCombo.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/controls/EntityContextMenu.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/controls/EntityContextMenu.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/AccessKeyPanel.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/AccessKeyPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/CalculationPanel.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/CalculationPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/CenterPanel.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/CenterPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/ConnectionPanel.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/ConnectionPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/NavigationPanel.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/NavigationPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/SchedulePanel.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/SchedulePanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/SocketPanel.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/SocketPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/SubscriptionPanel.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/SubscriptionPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/SummaryPanel.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/SummaryPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/SyncPanel.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/SyncPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/WebHookPanel.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/ui/panels/WebHookPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/ApiBase.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/ApiBase.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/BatchApi.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/BatchApi.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/EntityApi.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/EntityApi.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/JitModel.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/JitModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/SeriesApi.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/SeriesApi.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/TreeApi.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/TreeApi.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/actions/RestAction.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/actions/RestAction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/actions/delete/DeleteAction.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/actions/delete/DeleteAction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/actions/get/GetAction.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/actions/get/GetAction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/actions/post/PostAction.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/actions/post/PostAction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/filter/RestApiAuthFilter.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/filter/RestApiAuthFilter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/communication/mail/EmailServiceImpl.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/communication/mail/EmailServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/orm/AccessKeyEntity.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/orm/AccessKeyEntity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/orm/EntityStore.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/orm/EntityStore.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/orm/InstanceEntity.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/orm/InstanceEntity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/orm/UserEntity.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/orm/UserEntity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/orm/validation/RecursionValidation.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/orm/validation/RecursionValidation.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/process/cron/SystemCron.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/process/cron/SystemCron.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/process/task/ValueTask.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/process/task/ValueTask.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/socket/ConnectedClients.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/socket/ConnectedClients.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/calculation/CalculationServiceImpl.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/calculation/CalculationServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/entity/EntityServiceImpl.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/entity/EntityServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/entity/dao/EntityDao.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/entity/dao/EntityDao.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/RestApi.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/RestApi.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/entity/dao/EntityDaoImpl.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/entity/dao/EntityDaoImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/entity/service/EntityServiceRpcImpl.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/entity/service/EntityServiceRpcImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/subscription/SubscriptionServiceImpl.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/subscription/SubscriptionServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/summary/SummaryServiceImpl.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/summary/SummaryServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/sync/SyncServiceImpl.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/sync/SyncServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/user/dao/UserDaoImpl.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/user/dao/UserDaoImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/user/service/UserServiceImpl.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/user/service/UserServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/value/service/ValueServiceImpl.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/value/service/ValueServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/value/service/ValueServiceRpcImpl.java" afterPath="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/value/service/ValueServiceRpcImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/ajp/Ajp13Parser.EventHandler.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/ajp/Ajp13Parser.EventHandler.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/http/PathMap.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/http/PathMap.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/BufferCache.CachedBuffer.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/BufferCache.CachedBuffer.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/class-use/AbstractConnection.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/class-use/AbstractConnection.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/class-use/Buffer.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/class-use/Buffer.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/class-use/BufferCache.CachedBuffer.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/class-use/BufferCache.CachedBuffer.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/class-use/Connection.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/class-use/Connection.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/class-use/NetworkTrafficListener.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/class-use/NetworkTrafficListener.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/nio/NetworkTrafficSelectChannelEndPoint.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/nio/NetworkTrafficSelectChannelEndPoint.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/nio/SelectChannelEndPoint.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/nio/SelectChannelEndPoint.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/nio/SelectorManager.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/nio/SelectorManager.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/nio/class-use/AsyncConnection.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/nio/class-use/AsyncConnection.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/nio/class-use/SelectChannelEndPoint.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/nio/class-use/SelectChannelEndPoint.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/nio/class-use/SelectorManager.SelectSet.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/io/nio/class-use/SelectorManager.SelectSet.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/jndi/NamingUtil.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/jndi/NamingUtil.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/security/ConstraintSecurityHandler.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/security/ConstraintSecurityHandler.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/security/SecurityHandler.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/security/SecurityHandler.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/server/Request.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/server/Request.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/server/ResourceCache.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/server/ResourceCache.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/server/ShutdownMonitor.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/server/ShutdownMonitor.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/server/nio/NetworkTrafficSelectChannelConnector.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/server/nio/NetworkTrafficSelectChannelConnector.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/server/nio/SelectChannelConnector.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/server/nio/SelectChannelConnector.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/server/ssl/ServletSSL.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/server/ssl/ServletSSL.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/server/ssl/SslConnector.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/server/ssl/SslConnector.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/server/ssl/SslSelectChannelConnector.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/server/ssl/SslSelectChannelConnector.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/server/ssl/SslSocketConnector.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/server/ssl/SslSocketConnector.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/servlet/Holder.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/servlet/Holder.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/HostMap.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/HostMap.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/IPAddressMap.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/IPAddressMap.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/MultiMap.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/MultiMap.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/StringMap.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/StringMap.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/ajax/JSONPojoConvertor.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/ajax/JSONPojoConvertor.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/resource/class-use/Resource.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/resource/class-use/Resource.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/security/UnixCrypt.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/security/UnixCrypt.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/ssl/AliasedX509ExtendedKeyManager.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/ssl/AliasedX509ExtendedKeyManager.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/ssl/AliasedX509KeyManager.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/ssl/AliasedX509KeyManager.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/ssl/SslContextFactory.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/ssl/SslContextFactory.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/ssl/package-summary.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/util/ssl/package-summary.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/websocket/WebSocketConnectionD06.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/websocket/WebSocketConnectionD06.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/websocket/WebSocketConnectionD08.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/websocket/WebSocketConnectionD08.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/websocket/WebSocketConnectionRFC6455.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/websocket/WebSocketConnectionRFC6455.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/websocket/class-use/WebSocketConnection.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/websocket/class-use/WebSocketConnection.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/websocket/package-summary.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/websocket/package-summary.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/websocket/package-use.html" afterPath="$PROJECT_DIR$/nimbits_deb/src/main/opt/nimbits/javadoc/org/eclipse/jetty/websocket/package-use.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_gae/src/main/java/com/nimbits/server/api/xmpp/XMPPReceiverServlet.java" afterPath="$PROJECT_DIR$/nimbits_gae/src/main/java/com/nimbits/server/api/xmpp/XMPPReceiverServlet.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_gae/src/main/java/com/nimbits/server/geo/GeoSpatialDaoImpl.java" afterPath="$PROJECT_DIR$/nimbits_gae/src/main/java/com/nimbits/server/geo/GeoSpatialDaoImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_gae/src/main/java/com/nimbits/server/process/BlobStoreImpl.java" afterPath="$PROJECT_DIR$/nimbits_gae/src/main/java/com/nimbits/server/process/BlobStoreImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_gae/src/main/java/com/nimbits/server/process/task/TaskServiceImpl.java" afterPath="$PROJECT_DIR$/nimbits_gae/src/main/java/com/nimbits/server/process/task/TaskServiceImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/nimbits_io.iml" afterPath="$PROJECT_DIR$/nimbits_io/nimbits_io.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/io/Nimbits.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/io/Nimbits.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/io/command/ChangeDirectoryCommand.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/io/command/ChangeDirectoryCommand.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/io/command/CreateCommand.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/io/command/CreateCommand.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/io/command/ListCommand.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/io/command/ListCommand.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/io/command/RemoveCommand.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/io/command/RemoveCommand.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/accesskey/AccessKeyModel.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/accesskey/AccessKeyModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/calculation/CalculationModel.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/calculation/CalculationModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/category/CategoryModel.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/category/CategoryModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/connection/ConnectionModel.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/connection/ConnectionModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/entity/Entity.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/entity/Entity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/entity/EntityModel.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/entity/EntityModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/instance/InstanceModel.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/instance/InstanceModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/point/PointModel.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/point/PointModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/schedule/ScheduleModel.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/schedule/ScheduleModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/socket/SocketModel.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/socket/SocketModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/subscription/SubscriptionModel.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/subscription/SubscriptionModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/summary/SummaryModel.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/summary/SummaryModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/sync/SyncModel.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/sync/SyncModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/trigger/TriggerModel.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/trigger/TriggerModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/user/UserModel.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/user/UserModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/webhook/WebHookModel.java" afterPath="$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/webhook/WebHookModel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_server/nimbits_server.iml" afterPath="$PROJECT_DIR$/nimbits_server/nimbits_server.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_server/pom.xml" afterPath="$PROJECT_DIR$/nimbits_server/pom.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_server/src/main/java/com/nimbits/server/ApplicationListener.java" afterPath="$PROJECT_DIR$/nimbits_server/src/main/java/com/nimbits/server/ApplicationListener.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_server/src/main/java/com/nimbits/server/process/BlobStoreImpl.java" afterPath="$PROJECT_DIR$/nimbits_server/src/main/java/com/nimbits/server/process/BlobStoreImpl.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/nimbits_server/src/main/webapp/WEB-INF/applicationContext.xml" afterPath="$PROJECT_DIR$/nimbits_server/src/main/webapp/WEB-INF/applicationContext.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/samples/arduino/NimbitsClient/examples/nimbits_cloud_client/nimbits_cloud_client.ino" afterPath="$PROJECT_DIR$/samples/arduino/NimbitsClient/examples/nimbits_cloud_client/nimbits_cloud_client.ino" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/samples/bash scripts/server_stats_nimbits.sh" afterPath="$PROJECT_DIR$/samples/bash scripts/server_stats_nimbits.sh" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/samples/other arduino/samples/android_buffer/android_buffer.ino" afterPath="$PROJECT_DIR$/samples/other arduino/samples/android_buffer/android_buffer.ino" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/samples/other arduino/samples/batch_demo/batch_demo.ino" afterPath="$PROJECT_DIR$/samples/other arduino/samples/batch_demo/batch_demo.ino" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/samples/other arduino/samples/dht_sensor/dht_sensor.ino" afterPath="$PROJECT_DIR$/samples/other arduino/samples/dht_sensor/dht_sensor.ino" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/samples/other arduino/samples/record_values/record_values.ino" afterPath="$PROJECT_DIR$/samples/other arduino/samples/record_values/record_values.ino" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/samples/other arduino/simple/simple/simple.ino" afterPath="$PROJECT_DIR$/samples/other arduino/simple/simple/simple.ino" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/samples/other arduino/steveng/steveng/examples/NIMBITS_GetSeriesExample/NIMBITS_GetSeriesExample.ino" afterPath="$PROJECT_DIR$/samples/other arduino/steveng/steveng/examples/NIMBITS_GetSeriesExample/NIMBITS_GetSeriesExample.ino" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/samples/other arduino/steveng/steveng/examples/NIMBITS_GetTimeSeriesValueExamples/NIMBITS_GetTimeSeriesValueExamples.ino" afterPath="$PROJECT_DIR$/samples/other arduino/steveng/steveng/examples/NIMBITS_GetTimeSeriesValueExamples/NIMBITS_GetTimeSeriesValueExamples.ino" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/samples/other arduino/steveng/steveng/examples/Nimbits_test/Nimbits_test.ino" afterPath="$PROJECT_DIR$/samples/other arduino/steveng/steveng/examples/Nimbits_test/Nimbits_test.ino" />
     </list>
     <ignored path="com.nimbits.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -182,24 +33,18 @@
     <option name="SORT_POSITIONED" value="false" />
     <option name="SHOW_TABLE_DETAILS" value="true" />
     <option name="SHOW_EMPTY_GROUPS" value="false" />
-    <PATH>
-      <PATH_ELEMENT>
-        <option name="myItemId" />
-        <option name="myItemType" value="com.intellij.database.view.DatabaseStructure$Root" />
-      </PATH_ELEMENT>
-    </PATH>
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="com.nimbits" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="RestApi.java" pinned="false" current-in-tab="false">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="RestApi.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/RestApi.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="70" column="0" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+            <state relative-caret-position="450">
+              <caret line="68" column="4" selection-start-line="68" selection-start-column="4" selection-end-line="68" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -208,18 +53,8 @@
       <file leaf-file-name="PostAction.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/actions/post/PostAction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="383">
-              <caret line="183" column="57" selection-start-line="183" selection-start-column="42" selection-end-line="183" selection-end-column="57" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="EntityService.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/entity/service/EntityService.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="270">
-              <caret line="40" column="11" selection-start-line="40" selection-start-column="11" selection-end-line="40" selection-end-column="11" />
+            <state relative-caret-position="39">
+              <caret line="86" column="16" selection-start-line="86" selection-start-column="16" selection-end-line="86" selection-end-column="16" />
               <folding />
             </state>
           </provider>
@@ -235,21 +70,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="EntityDao.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/entity/dao/EntityDao.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="188">
-              <caret line="47" column="11" selection-start-line="47" selection-start-column="11" selection-end-line="47" selection-end-column="11" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="EntityDaoImpl.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="EntityDaoImpl.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/entity/dao/EntityDaoImpl.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="147">
-              <caret line="245" column="13" selection-start-line="245" selection-start-column="13" selection-end-line="245" selection-end-column="13" />
+            <state relative-caret-position="300">
+              <caret line="257" column="13" selection-start-line="257" selection-start-column="13" selection-end-line="257" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -257,11 +82,41 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="EntityHelper.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/entity/EntityHelper.java">
+      <file leaf-file-name="UserServiceRpcAsync.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/service/user/UserServiceRpcAsync.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="315">
-              <caret line="67" column="39" selection-start-line="67" selection-start-column="28" selection-end-line="67" selection-end-column="39" />
+            <state relative-caret-position="150">
+              <caret line="26" column="17" selection-start-line="26" selection-start-column="17" selection-end-line="26" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Entity.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/entity/Entity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="75">
+              <caret line="35" column="10" selection-start-line="35" selection-start-column="9" selection-end-line="35" selection-end-column="14" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UserServiceRpcImpl.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/user/service/UserServiceRpcImpl.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="196">
+              <caret line="187" column="43" selection-start-line="187" selection-start-column="31" selection-end-line="187" selection-end-column="43" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="UserService.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/user/service/UserService.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="195">
+              <caret line="40" column="20" selection-start-line="40" selection-start-column="20" selection-end-line="40" selection-end-column="20" />
               <folding />
             </state>
           </provider>
@@ -270,7 +125,7 @@
       <file leaf-file-name="PointEntity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/orm/PointEntity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="158">
+            <state relative-caret-position="1350">
               <caret line="126" column="13" selection-start-line="126" selection-start-column="8" selection-end-line="126" selection-end-column="13" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -282,18 +137,8 @@
       <file leaf-file-name="EntityStore.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/orm/EntityStore.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="445">
+            <state relative-caret-position="1590">
               <caret line="142" column="19" selection-start-line="142" selection-start-column="16" selection-end-line="142" selection-end-column="21" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="NimbitsTest.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/nimbits_io/src/itest/java/com/nimbits/it/NimbitsTest.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="188">
-              <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -329,7 +174,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/nimbits_deb/pom.xml" />
         <option value="$PROJECT_DIR$/nimbits_deb/target/com.nimbits.nimbits_client_3.9.53_all.changes" />
         <option value="$PROJECT_DIR$/nimbits_gae/pom.xml" />
         <option value="$PROJECT_DIR$/nimbits_io/pom.xml" />
@@ -371,7 +215,6 @@
         <option value="$PROJECT_DIR$/nimbits_io/src/itest/java/com/nimbits/it/V3Sample1.java" />
         <option value="$PROJECT_DIR$/nimbits_io/src/itest/java/com/nimbits/it/V3CreateAndTestWebHooks.java" />
         <option value="$PROJECT_DIR$/nimbits_io/src/itest/java/com/nimbits/it/V3FindThingsExamples.java" />
-        <option value="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/entity/dao/EntityDaoImpl.java" />
         <option value="$APPLICATION_CONFIG_DIR$/consoles/db/ebbd6bef-ef11-46e3-8a89-b9edfb217419/console.sql" />
         <option value="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/ApiBase.java" />
         <option value="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/JitModel.java" />
@@ -380,6 +223,8 @@
         <option value="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/actions/get/GetAction.java" />
         <option value="$PROJECT_DIR$/nimbits_io/src/itest/java/com/nimbits/it/V3EntityTests.java" />
         <option value="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/orm/EntityStore.java" />
+        <option value="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/entity/dao/EntityDaoImpl.java" />
+        <option value="$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/RestApi.java" />
       </list>
     </option>
   </component>
@@ -412,10 +257,9 @@
     <treeState />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="51" />
     <option name="y" value="23" />
-    <option name="width" value="1875" />
-    <option name="height" value="1057" />
+    <option name="width" value="1920" />
+    <option name="height" value="1002" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -461,241 +305,29 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scratches" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
+              <option name="myItemId" value="nimbits-parent" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
+              <option name="myItemId" value="nimbits-parent" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="nimbits_server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="nimbits_server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="test" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="resources" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="nimbits_server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="nimbits_server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="webapp" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="WEB-INF" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="nimbits_server" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="main" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="nimbits_io" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="nimbits_io" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="nimbits_io" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="itest" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="java" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="it" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="nimbits_core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com.nimbits" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="nimbits_core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scratches" />
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -976,6 +608,17 @@
       <envs />
       <properties />
       <listeners />
+      <method />
+    </configuration>
+    <configuration default="true" type="BashConfigurationType" factoryName="Bash">
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="INTERPRETER_PATH" value="/bin/bash" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <module name="" />
+      <envs />
       <method />
     </configuration>
     <configuration default="true" type="CucumberJavaRunConfigurationType" factoryName="Cucumber java">
@@ -1709,6 +1352,7 @@
       <workItem from="1462907332924" duration="6095000" />
       <workItem from="1462914515338" duration="436000" />
       <workItem from="1462915129816" duration="5287000" />
+      <workItem from="1462979437296" duration="2623000" />
     </task>
     <servers />
   </component>
@@ -1745,44 +1389,44 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="62741000" />
+    <option name="totallyTimeSpent" value="65364000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="51" y="23" width="1875" height="1057" extended-state="6" />
+    <frame x="0" y="23" width="1920" height="1002" extended-state="6" />
     <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.47046632" sideWeight="0.28641573" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2967033" sideWeight="0.543131" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Application Servers" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32953367" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32951444" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19967267" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.19914803" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.38549224" sideWeight="0.8445172" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31917098" sideWeight="0.45499182" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Java Enterprise" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32988626" sideWeight="0.49809057" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.47046632" sideWeight="0.7135843" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.47032967" sideWeight="0.71086264" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Spring" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32953367" sideWeight="0.49809057" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29740933" sideWeight="0.4588107" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Database Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32953367" sideWeight="0.49590835" order="-1" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18494272" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2967033" sideWeight="0.456869" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18477103" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Bean Validation" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Web" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32746115" sideWeight="0.42007637" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32637364" sideWeight="0.41640043" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="JavaEE:App" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.31917098" sideWeight="0.45499182" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Database Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32953367" sideWeight="0.49590835" order="8" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -1987,7 +1631,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/RestApi.java</url>
-          <line>70</line>
+          <line>74</line>
           <properties />
           <option name="timeStamp" value="93" />
         </line-breakpoint>
@@ -2019,21 +1663,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/value/service/ValueServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="765">
-          <caret line="95" column="26" selection-start-line="95" selection-start-column="26" selection-end-line="95" selection-end-column="26" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nimbits_server/src/main/java/com/nimbits/server/ApplicationListener.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="270">
-          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/nimbits_server/nimbits_server.iml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -2075,7 +1704,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
           <caret line="25" column="13" selection-start-line="25" selection-start-column="13" selection-end-line="25" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2083,7 +1711,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="29" column="13" selection-start-line="29" selection-start-column="13" selection-end-line="29" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2105,7 +1732,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="120">
           <caret line="26" column="17" selection-start-line="26" selection-start-column="17" selection-end-line="26" selection-end-column="17" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2137,15 +1763,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="192">
           <caret line="37" column="80" selection-start-line="37" selection-start-column="75" selection-end-line="37" selection-end-column="80" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/user/service/UserService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="33" column="9" selection-start-line="33" selection-start-column="9" selection-end-line="33" selection-end-column="9" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2153,7 +1770,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="235">
           <caret line="130" column="0" selection-start-line="130" selection-start-column="0" selection-end-line="130" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2161,7 +1777,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="210">
           <caret line="17" column="0" selection-start-line="17" selection-start-column="0" selection-end-line="17" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2169,7 +1784,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="60">
           <caret line="14" column="13" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2185,18 +1799,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="161">
           <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/ebbd6bef-ef11-46e3-8a89-b9edfb217419/console.sql">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="15">
-          <caret line="1" column="0" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/consoles/db/ebbd6bef-ef11-46e3-8a89-b9edfb217419/console.sql" />
     <entry file="file://$PROJECT_DIR$/nimbits_server/src/main/webapp/WEB-INF/applicationContext.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="220">
@@ -2209,7 +1815,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2225,7 +1830,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="188">
           <caret line="484" column="0" selection-start-line="484" selection-start-column="0" selection-end-line="484" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2233,7 +1837,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="285">
           <caret line="355" column="44" selection-start-line="355" selection-start-column="44" selection-end-line="355" selection-end-column="44" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2249,7 +1852,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="405">
           <caret line="84" column="44" selection-start-line="84" selection-start-column="44" selection-end-line="84" selection-end-column="44" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2257,7 +1859,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="330">
           <caret line="41" column="0" selection-start-line="41" selection-start-column="0" selection-end-line="41" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2265,7 +1866,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="192">
           <caret line="217" column="0" selection-start-line="217" selection-start-column="0" selection-end-line="217" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2301,15 +1901,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="202" column="17" selection-start-line="202" selection-start-column="17" selection-end-line="202" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/entity/Entity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="31" column="18" selection-start-line="31" selection-start-column="15" selection-end-line="31" selection-end-column="22" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2325,7 +1916,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="146">
           <caret line="58" column="26" selection-start-line="58" selection-start-column="26" selection-end-line="58" selection-end-column="26" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -2345,26 +1935,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/RestApi.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="70" column="0" selection-start-line="70" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/nimbits_io/src/itest/java/com/nimbits/it/NimbitsTest.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
+        <state relative-caret-position="510">
           <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/actions/post/PostAction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="383">
-          <caret line="183" column="57" selection-start-line="183" selection-start-column="42" selection-end-line="183" selection-end-column="57" />
           <folding />
         </state>
       </provider>
@@ -2377,17 +1951,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/entity/EntityServiceImpl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="518">
-          <caret line="174" column="40" selection-start-line="174" selection-start-column="25" selection-end-line="174" selection-end-column="40" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/entity/dao/EntityDao.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="188">
+        <state relative-caret-position="300">
           <caret line="47" column="11" selection-start-line="47" selection-start-column="11" selection-end-line="47" selection-end-column="11" />
           <folding />
         </state>
@@ -2403,7 +1969,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/orm/PointEntity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="158">
+        <state relative-caret-position="1350">
           <caret line="126" column="13" selection-start-line="126" selection-start-column="8" selection-end-line="126" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -2413,19 +1979,75 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/orm/EntityStore.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="445">
+        <state relative-caret-position="1590">
           <caret line="142" column="19" selection-start-line="142" selection-start-column="16" selection-end-line="142" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/client/service/user/UserServiceRpcAsync.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="26" column="17" selection-start-line="26" selection-start-column="17" selection-end-line="26" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/user/service/UserServiceRpcImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="196">
+          <caret line="187" column="43" selection-start-line="187" selection-start-column="31" selection-end-line="187" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/user/service/UserService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="195">
+          <caret line="40" column="20" selection-start-line="40" selection-start-column="20" selection-end-line="40" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/entity/EntityServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="518">
+          <caret line="174" column="40" selection-start-line="174" selection-start-column="25" selection-end-line="174" selection-end-column="40" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nimbits_io/src/main/java/com/nimbits/client/model/entity/Entity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="75">
+          <caret line="35" column="10" selection-start-line="35" selection-start-column="9" selection-end-line="35" selection-end-column="14" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/transaction/entity/dao/EntityDaoImpl.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="245" column="13" selection-start-line="245" selection-start-column="13" selection-end-line="245" selection-end-column="13" />
+        <state relative-caret-position="300">
+          <caret line="257" column="13" selection-start-line="257" selection-start-column="13" selection-end-line="257" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/actions/post/PostAction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="39">
+          <caret line="86" column="16" selection-start-line="86" selection-start-column="16" selection-end-line="86" selection-end-column="16" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/nimbits_core/src/main/java/com/nimbits/server/api/v3/RestApi.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="68" column="4" selection-start-line="68" selection-start-column="4" selection-end-line="68" selection-end-column="4" />
+          <folding />
         </state>
       </provider>
     </entry>

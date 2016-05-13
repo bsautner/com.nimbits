@@ -16,6 +16,8 @@
 
 package com.nimbits.server.transaction.user.dao;
 
+
+import com.google.common.base.Optional;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
@@ -34,11 +36,13 @@ import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
 import java.util.*;
+import java.util.logging.Logger;
+
 
 @Repository
 public class UserDaoImpl implements UserDao {
     private PersistenceManagerFactory persistenceManagerFactory;
-
+    private final Logger logger = Logger.getLogger(UserDaoImpl.class.getName());
 
     public UserDaoImpl() {
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
@@ -65,7 +69,7 @@ public class UserDaoImpl implements UserDao {
             attachedUser.setPasswordResetToken(token);
             attachedUser.setPasswordResetTokenTimestamp(new Date());
 
-
+            logger.info("commited update: setResetPasswordToken " + user.toString());
             tx.commit();
 
         } finally {
@@ -92,7 +96,7 @@ public class UserDaoImpl implements UserDao {
             attachedUser.setPasswordResetTokenTimestamp(new Date(0));
             attachedUser.setPassword(cryptPassword);
             attachedUser.setPasswordSalt(passwordSalt);
-
+            logger.info("commited update: updatePassword " + attachedUser.toString());
 
             tx.commit();
             return (User) EntityHelper.createModel(u, attachedUser);
@@ -182,14 +186,29 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public User getUserByEmail(String email) {
+    public Optional<User> getUserByEmail(String email) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
         try {
+            final Query q1;
+
+            q1 = pm.newQuery(UserEntity.class);
 
 
-            User user = pm.getObjectById(UserEntity.class, email);
-            return (User) EntityHelper.createModel(user, user);
+            q1.setFilter("owner==b");
+            q1.declareParameters("String b");
+
+            final List<User> result = (List<User>) q1.execute(email);
+            if (result.isEmpty()) {
+                throw new SecurityException("User Not Found");
+            } else {
+                User user =  result.get(0);
+
+                return Optional.of((User) EntityHelper.createModel(user, user));
+
+            }
+        } catch (Exception ex) {
+            return Optional.absent();
 
 
         } finally {
@@ -225,65 +244,6 @@ public class UserDaoImpl implements UserDao {
 
     //TODO delete old sessions, only get one per socket - add more info like socket id to make this more granular
 
-    @Override
-    public List<SocketStore> getSocketSessions(User user) {
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
-        try {
-            final Query q1;
-            q1 = pm.newQuery(SocketStore.class);
-            q1.setFilter("email==b");
-            q1.declareParameters("String b");
-            final List<SocketStore> result = (List<SocketStore>) q1.execute(user.getEmail().getValue());
-            return result;
-        } finally {
-            pm.close();
-        }
-    }
-
-    @Override
-    public List<User> getAllUsers() {
-
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
-        List<User> retObj = new ArrayList<>();
-
-        try {
-
-            final Query q1 = pm.newQuery(UserEntity.class);
-
-
-
-            final List<UserEntity> c = (List<UserEntity>) q1.execute();
-            for (UserEntity u : c) {
-                retObj.add(new UserModel.Builder().init(u).create());
-            }
-            return retObj;
-
-        } finally {
-            pm.close();
-        }
-
-
-    }
-
-    @Override
-    public User getUserByIndex(int index) {
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
-
-        try {
-
-            final Query q1 = pm.newQuery(UserEntity.class);
-
-             q1.setRange(index, index + 1);
-            final List<UserEntity> c = (List<UserEntity>) q1.execute();
-            return new UserModel.Builder().init(c.get(0)).create();
-        } finally {
-            pm.close();
-        }
-
-    }
 
     @Override
     public boolean usersExist() {

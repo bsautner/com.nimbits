@@ -56,7 +56,7 @@ public class UserServiceImpl implements UserService {
     public static final String ERROR1 = "Could not authenticate your request.";
 
     public static final int LIMIT = 1000;
-     private Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
+    private Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
 
 
     private final UserDao userDao;
@@ -78,6 +78,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<Credentials> credentialsWithBasicAuthentication(HttpServletRequest req) {
         String authHeader = req.getHeader("Authorization");
+        if (authHeader != null) {
+            return credentialsWithBasicAuthentication(authHeader);
+        }
+
+        return Optional.absent();
+    }
+
+
+    @Override
+    public Optional<Credentials> credentialsWithBasicAuthentication(String authHeader) {
+
         if (authHeader != null) {
             StringTokenizer st = new StringTokenizer(authHeader);
             if (st.hasMoreTokens()) {
@@ -109,7 +120,7 @@ public class UserServiceImpl implements UserService {
         return Optional.absent();
     }
 
-    @Override
+    @Override @Deprecated
     public User getHttpRequestUser(final EntityService entityService, final ValueService valueService, final HttpServletRequest req) {
         Optional<Credentials> credentials = credentialsWithBasicAuthentication(req);
 
@@ -146,7 +157,7 @@ public class UserServiceImpl implements UserService {
             if (! result.isPresent()) {
 
 
-                return createUserIfNonexistantButAuthenticated(entityService,valueService, req, email);
+                return createUserIfNonexistantButAuthenticated(entityService,valueService, req, email, credentials);
 
 
             } else {
@@ -169,56 +180,29 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    private User createUserIfNonexistantButAuthenticated(final EntityService entityService, final ValueService valueService, HttpServletRequest req, EmailAddress email) {
+    private User createUserIfNonexistantButAuthenticated(final EntityService entityService, final ValueService valueService, HttpServletRequest req, EmailAddress email, Optional<Credentials> credentials) {
         User user;
-        if (trustedRequest(entityService, valueService, req, email)) {
-            //TODO - users was authenticated but no record of them - must be google auth??
-            user = createUserRecord( entityService, valueService, email, UUID.randomUUID().toString(), UserSource.google);
 
-            return user;
-
-        } else {
-            throw new SecurityException(ERROR1);
+        String password;
+        UserSource source;
+        if (credentials.isPresent()) {
+            password = credentials.get().getPassword();
+            source = UserSource.google;
         }
+        else {
+            password = UUID.randomUUID().toString();
+            source = UserSource.local;
+        }
+
+
+        user = createUserRecord( entityService, valueService, email, password, source);
+
+        return user;
+
+
     }
 
 
-    private boolean trustedRequest(EntityService entityService,  ValueService valueService, final HttpServletRequest request, EmailAddress email) {
-        List<EmailAddress> emailSample = authService.getCurrentUser(entityService, this, valueService, request);
-        EmailAddress emailAddress;
-        if (emailSample.isEmpty()) {
-            emailAddress = null;
-        } else {
-            emailAddress = emailSample.get(0);
-        }
-        return (emailAddress != null && emailAddress.getValue().equalsIgnoreCase(email.getValue()))
-                || validServerToken(request);
-    }
-
-
-    @Deprecated //TODO get rid of system wide token - use admin password
-    private boolean  validServerToken(final HttpServletRequest request) {
-
-        String serverToken = settingsService.getSetting(ServerSetting.token);
-        String providedToken = request.getHeader(Parameters.token.getText());
-
-        if (StringUtils.isEmpty(providedToken)) {
-            providedToken = request.getParameter(Parameters.token.getText());
-        }
-
-        if (StringUtils.isEmpty(providedToken)) { //try legacy - TODO deletme
-            providedToken = request.getHeader("API_KEY");
-        }
-
-        if (StringUtils.isNotEmpty(serverToken) && StringUtils.isNotEmpty(providedToken)) {
-            if (serverToken.equals(providedToken)) {
-                return true;
-            }
-
-        }
-        return false;
-
-    }
 
     @Override
     public EmailAddress getEmailFromRequest(HttpServletRequest req) {
@@ -235,10 +219,13 @@ public class UserServiceImpl implements UserService {
         final EntityName name = CommonFactory.createName(internetAddress.getValue(), EntityType.user);
 
 
+        logger.info("Creating user");
+        logger.info("Creating user: " + internetAddress.getValue());
+        logger.info("Creating user: " + password);
         String passwordSalt = RandomStringUtils.randomAscii(20);
 
         String cryptPassword = DigestUtils.sha512Hex(password + passwordSalt);
-
+        logger.info("Creating user: " + cryptPassword);
         boolean isFirst = ! userDao.usersExist();
 
         final User newUser = new UserModel.Builder()
@@ -248,6 +235,7 @@ public class UserServiceImpl implements UserService {
                 .source(source.name())
                 .email(internetAddress.getValue())
                 .owner(internetAddress.getValue())
+                .parent(internetAddress.getValue())
                 .create();
 
 
@@ -257,9 +245,7 @@ public class UserServiceImpl implements UserService {
             settingsService.updateSetting(ServerSetting.admin, internetAddress.getValue());
         }
 
-        User user = (User) entityService.addUpdateIncompleteEntity(valueService, newUser, newUser);
-
-        return user;
+        return (User) entityDao.addUpdateEntity(newUser, newUser);
 
     }
 
@@ -272,12 +258,12 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Server is missing admin setting!");
         } else {
             final User u = new UserModel.Builder()
-            .name(CommonFactory.createName(adminStr, EntityType.user))
-            .id(adminStr)
-            .email(adminStr)
+                    .name(CommonFactory.createName(adminStr, EntityType.user))
+                    .id(adminStr)
+                    .email(adminStr)
 
-            .parent(adminStr)
-            .isAdmin(true).create();
+                    .parent(adminStr)
+                    .isAdmin(true).create();
 
             return u;
         }
@@ -422,42 +408,6 @@ public class UserServiceImpl implements UserService {
     public boolean userHasPoints(User user) {
 
         return userDao.userHasPoints(user);
-    }
-
-
-
-    @Override
-    public String getToken(HttpServletRequest req) {
-        String token = req.getHeader(Parameters.token.getText());
-
-        if (StringUtils.isEmpty(token)) {
-            token = req.getParameter(Parameters.token.getText());
-        }
-
-        //TODO legacy delete later
-
-        if (StringUtils.isEmpty(token)) {
-            token = req.getParameter(Parameters.password.getText());
-        }
-
-
-        if (StringUtils.isEmpty(token)) {
-            token = req.getParameter(Parameters.key.getText());
-        }
-
-        if (StringUtils.isEmpty(token)) {
-            token = req.getParameter(Parameters.secret.getText());
-        }
-
-        if (StringUtils.isEmpty(token)) {
-            token = req.getHeader("API_KEY");
-        }
-
-        if (StringUtils.isEmpty(token)) {
-            token = req.getParameter("ApiKey");
-        }
-
-        return token;
     }
 
 

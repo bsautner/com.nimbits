@@ -203,7 +203,7 @@ public class EntityDaoImpl implements EntityDao {
                     result.validate(user);
 
                     tx.commit();
-
+                    logger.info("commited update: " + result.toString());
                     return EntityHelper.createModel(user, result);
 
 
@@ -245,16 +245,10 @@ public class EntityDaoImpl implements EntityDao {
 
             }
 
+
             if (StringUtils.isEmpty(commit.getId())) {
-                if (entity.getEntityType().equals(EntityType.user)) {
-                    commit.setId(entity.getOwner());
-                } else if(entity.getEntityType().equals(EntityType.point)) {
-                    commit.setId(UUID.randomUUID().toString());
-                   //TODO commit.setId(entity.getOwner() + "/" + entity.getName());
-                }
-                else {
-                    commit.setId(UUID.randomUUID().toString());
-                }
+                commit.setId(UUID.randomUUID().toString());
+
             }
 
 
@@ -262,8 +256,10 @@ public class EntityDaoImpl implements EntityDao {
 
             return EntityHelper.createModel(user, commit);
 
+        } catch (Exception ex) {
 
-
+            logger.severe(ex.getMessage());
+            throw ex;
 
         } finally {
             pm.close();
@@ -582,7 +578,7 @@ public class EntityDaoImpl implements EntityDao {
 
                 result.setApproved(true);
 
-
+                logger.info("commited update: " + result.toString());
                 tx.commit();
 
                 return Collections.singletonList(new ConnectionModel.Builder().init(result).create());

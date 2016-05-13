@@ -22,6 +22,8 @@ import org.junit.Test;
 
 import java.util.*;
 
+import static org.junit.Assert.fail;
+
 public class V3Sample1 extends NimbitsTest {
 
     /**
@@ -86,7 +88,8 @@ public class V3Sample1 extends NimbitsTest {
         } catch (Throwable throwable) {
             //This will throw if the user already exists
 
-            log(throwable.getMessage());
+            log("error adding user 1: " + throwable.getMessage());
+            fail();
         }
 
         //create a second user with a random account
@@ -101,7 +104,7 @@ public class V3Sample1 extends NimbitsTest {
         } catch (Throwable throwable) {
             //This will throw if the user already exists
 
-            log(throwable.getMessage());
+            log("error adding user 2: " + throwable.getMessage());
         }
 
         //veryify user exists
@@ -121,6 +124,7 @@ public class V3Sample1 extends NimbitsTest {
                 error("User was not deleted");
             }
         } else {
+            fail();
             error("got expected result: user didn't exist after adding: " + email2);
         }
 
@@ -134,6 +138,7 @@ public class V3Sample1 extends NimbitsTest {
         Create a new client with the user's credentials instead:
          */
 
+        log("Getting a client for: " + email);
         Nimbits client = new Nimbits.Builder()
                 .email(email).token(password).instance(INSTANCE_URL).create();
 

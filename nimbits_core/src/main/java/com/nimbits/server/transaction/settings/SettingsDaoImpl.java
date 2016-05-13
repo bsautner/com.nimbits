@@ -81,6 +81,7 @@ public class SettingsDaoImpl implements SettingsService {
                 s.setValue(newValue);
                 tx.commit();
 
+
             } else {
                 SettingEntity setting = new SettingEntity(name, newValue);
                 pm.makePersistent(setting);

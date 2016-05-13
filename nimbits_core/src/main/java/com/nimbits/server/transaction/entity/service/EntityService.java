@@ -36,8 +36,6 @@ public interface EntityService {
 
     List<Entity> getEntitiesByType(final User user, final EntityType type);
 
-    Entity addUpdateIncompleteEntity(final ValueService valueService, final User user, final Entity entity);
-
     Entity addUpdateEntity(final ValueService valueService, final User user, final Entity entity);
 
 }

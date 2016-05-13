@@ -119,23 +119,7 @@ public class EntityServiceImpl implements EntityService {
     }
 
 
-    @Override
-    public Entity addUpdateIncompleteEntity(final ValueService valueService, User user, final  Entity entity) {
 
-
-        if (StringUtils.isEmpty(entity.getOwner())) {
-            entity.setOwner(user.getId());
-        }
-        if (StringUtils.isEmpty(entity.getParent())) {
-            entity.setParent(user.getId());
-        }
-//        if (StringUtils.isEmpty(entity.getId())) {
-//            entity.setId(UUID.randomUUID().toString());
-//        }
-
-
-        return addUpdateEntity(valueService, user, entity);
-    }
 
 
 

@@ -60,8 +60,9 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
 
     @Override
     public Entity addUpdateEntityRpc(final Entity entity) throws ClassNotFoundException {
-        User u = userService.getHttpRequestUser(entityService, valueService, getThreadLocalRequest());
-        return entityService.addUpdateIncompleteEntity(valueService, u, entity);
+        User user = userService.getHttpRequestUser(entityService, valueService, getThreadLocalRequest());
+        return entityDao.addUpdateEntity(user, entity);
+
 
     }
 
@@ -92,7 +93,7 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
                 p.setId(null);
 
                 User u = userService.getHttpRequestUser(entityService, valueService, getThreadLocalRequest());
-                return entityService.addUpdateIncompleteEntity(valueService, u, p);
+                return entityDao.addUpdateEntity(u, p);
             //return PointServiceFactory.getInstance().copyPoint(getUser(), originalEntity, newName);
 
             case category:

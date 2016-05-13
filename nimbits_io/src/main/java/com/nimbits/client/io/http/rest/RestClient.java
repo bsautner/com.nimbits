@@ -50,7 +50,7 @@ public interface RestClient {
     @GET(API + "/me")
     User getMe(@Query("children") boolean includeChildren);
 
-    @POST(API)
+    @POST(API + "/")
     User addUser(@Body User newUser);
 
     @POST(API + "/{uuid}") @Deprecated //use specific adder
@@ -135,7 +135,7 @@ public interface RestClient {
     List<Point> getNearbyPoints(@Path("uuid")String uuid, @Query("meters") double meters);
 
     @GET(API + "/me")
-    Point findPoint(@Query("point") String pointName);
+    Point findPoint(@Query("name") String pointName);
 
 
 
@@ -187,7 +187,6 @@ public interface RestClient {
 
     @PUT(API + "/photo/{uuid}")
     void updateFile(@Path("uuid") String uuid, @Body String encoded, Callback<Void> callback);
-
 
     @PUT(API + "/{uuid}")
     void updateEntity(@Path("uuid")String uuid, @Body Entity entity, Callback<Void> callback);

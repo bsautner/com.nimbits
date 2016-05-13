@@ -11,6 +11,7 @@
             <element id="module-output" name="nimbits_core" />
           </element>
           <element id="library" level="project" name="Maven: com.google.gwt.google-apis:gwt-visualization:1.0.2" />
+          <element id="library" level="project" name="Maven: javax.validation:validation-api:1.0.0.GA" />
           <element id="library" level="project" name="Maven: net.sf.proguard:proguard-base:5.2.1" />
           <element id="archive" name="nimbits_io-3.9.55-SNAPSHOT.jar">
             <element id="module-output" name="nimbits_io" />

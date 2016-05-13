@@ -40,35 +40,8 @@
         <filter-name>gwtCacheControlFilter</filter-name>
         <url-pattern>/nimbits/rpc/*</url-pattern>
     </filter-mapping>
-    <filter>
-        <filter-name>authFilter</filter-name>
-        <filter-class>com.nimbits.server.api.filter.AuthFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>authFilter</filter-name>
-        <url-pattern>/service/v2/*</url-pattern>
-
-    </filter-mapping>
 
 
-
-    <filter>
-        <filter-name>rest filter</filter-name>
-        <filter-class>com.nimbits.server.api.v3.filter.RestApiAuthFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>rest filter</filter-name>
-        <url-pattern>/service/v3/rest/*</url-pattern>
-
-    </filter-mapping>
-    <servlet>
-        <servlet-name>rest api</servlet-name>
-        <servlet-class>com.nimbits.server.api.v3.RestApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>rest api</servlet-name>
-        <url-pattern>/service/v3/rest/*</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>dataTableApi</servlet-name>
@@ -93,22 +66,6 @@
         <!--<url-pattern>/_ah/spi/*</url-pattern>-->
     <!--</servlet-mapping>-->
 
-    <servlet>
-        <servlet-name>sessionApi</servlet-name>
-        <servlet-class>com.nimbits.server.api.SessionApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>sessionApi</servlet-name>
-        <url-pattern>/service/v2/session</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>entityApi</servlet-name>
-        <servlet-class>com.nimbits.server.api.EntityApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>entityApi</servlet-name>
-        <url-pattern>/service/v2/entity</url-pattern>
-    </servlet-mapping>
 
     <servlet>
         <servlet-name>timeApi</servlet-name>

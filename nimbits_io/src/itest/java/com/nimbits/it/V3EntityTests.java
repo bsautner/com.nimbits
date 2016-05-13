@@ -82,7 +82,7 @@ public class V3EntityTests extends NimbitsTest {
 
         testWebhook();
 
-        testSync();
+//        testSync();
 
         testCalc();
 

@@ -80,37 +80,37 @@ public class Nimbits {
                 .setEndpoint(instance)
                 .setRequestInterceptor(requestInterceptor)
                 .setConverter(new GsonConverter(GsonFactory.getInstance(false)))
-                .setErrorHandler(new ErrorHandler() {
-                    @Override
-                    public Throwable handleError(RetrofitError retrofitError) {
-
-
-                        StringBuilder out = new StringBuilder();
-                        if (retrofitError.getResponse() != null) {
-                            TypedInput body = retrofitError.getResponse().getBody();
-                            try {
-                                if (body != null) {
-                                    BufferedReader reader = new BufferedReader(new InputStreamReader(body.in()));
-
-                                    String newLine = System.getProperty("line.separator");
-                                    String line;
-                                    while ((line = reader.readLine()) != null) {
-                                        out.append(line);
-                                        out.append(newLine);
-                                    }
-                                }
-
-                                // Prints the correct String representation of body.
-
-                            } catch (IOException e) {
-
-                            }
-                        }
-
-                        throw new NimbitsClientException(retrofitError.getMessage() + " " + out, retrofitError);
-
-                    }
-                })
+//                .setErrorHandler(new ErrorHandler() {
+//                    @Override
+//                    public Throwable handleError(RetrofitError retrofitError) {
+//
+//
+//                        StringBuilder out = new StringBuilder();
+//                        if (retrofitError.getResponse() != null) {
+//                            TypedInput body = retrofitError.getResponse().getBody();
+//                            try {
+//                                if (body != null) {
+//                                    BufferedReader reader = new BufferedReader(new InputStreamReader(body.in()));
+//
+//                                    String newLine = System.getProperty("line.separator");
+//                                    String line;
+//                                    while ((line = reader.readLine()) != null) {
+//                                        out.append(line);
+//                                        out.append(newLine);
+//                                    }
+//                                }
+//
+//                                // Prints the correct String representation of body.
+//
+//                            } catch (IOException e) {
+//
+//                            }
+//                        }
+//
+//                        throw new NimbitsClientException(retrofitError.getMessage() + " " + out, retrofitError);
+//
+//                    }
+//                })
                 .build();
 
         api = restAdapter.create(RestClient.class);
@@ -362,7 +362,12 @@ public class Nimbits {
 
     public List<Entity> getChildren(Entity parent) {
 
-        return api.getChildren(parent.getId());
+        if (parent != null) {
+            return api.getChildren(parent.getId());
+        }
+        else {
+            return Collections.emptyList();
+        }
     }
 
     public Optional<Point> findPointByName(String pointName) {

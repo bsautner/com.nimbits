@@ -29,7 +29,11 @@ import javax.servlet.http.HttpServletRequest;
 
 public interface UserService {
 
+    @Deprecated
     Optional<Credentials> credentialsWithBasicAuthentication(HttpServletRequest req);
+
+
+    Optional<Credentials> credentialsWithBasicAuthentication(String authHeader);
 
     User getHttpRequestUser(final EntityService entityService, final ValueService valueService, HttpServletRequest req);
 
@@ -53,8 +57,6 @@ public interface UserService {
     boolean userHasPoints(User user);
 
     User updatePassword(User u, String password);
-
-    String getToken(HttpServletRequest req);
 
 
 }

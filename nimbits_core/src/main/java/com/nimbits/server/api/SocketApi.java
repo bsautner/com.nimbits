@@ -37,6 +37,7 @@ import org.eclipse.jetty.websocket.WebSocket;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -51,80 +52,22 @@ import java.util.List;
  * subscription is configured to relay data over any open sockets to this server.  This API will open sockets in advance which
  * can then send and receive bidirectional data.
  */
-
-public class SocketApi extends ApiBase {
-
-    @Autowired
-    private SubscriptionService subscriptionService;
+@Deprecated
+public class SocketApi extends HttpServlet {
 
 
-    @Autowired
-    private ConnectedClients connectedClients;
-
-    @Autowired
     private TaskService taskService;
 
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String userJson = req.getParameter(Parameters.user.getText());
-        String pointJson = req.getParameter(Parameters.point.getText());
-        String valueJson = req.getParameter(Parameters.json.getText());
-        Gson gson = GsonFactory.getInstance(true);
-        Value value = gson.fromJson(valueJson, Value.class);
-        Point point = gson.fromJson(pointJson, PointModel.class);
-        User user = gson.fromJson(userJson, UserModel.class);
-        String token = req.getParameter(Parameters.token.getText());
 
-        connectedClients.sendLiveEvents(entityDao, taskService, subscriptionService, user, point, value, token);
 
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        PrintWriter writer = resp.getWriter();
-        User user = (User) req.getAttribute(Parameters.user.getText());
-        List<Entity> list = subscriptionService.sendSocket(entityDao, user, Collections.<Point>emptyList());
-        StringBuilder sb = new StringBuilder();
-        sb.append("<html><body>");
 
-        sb.append("<h5>Opening Outbound Connections</h5>" +
-                "<ul>");
-        for (Entity entity : list) {
-            sb.append("<li>" + entity.getName() + "</li>");
-        }
-        sb.append("</ul>");
-        Table<EmailAddress, String, SocketClient> clientMap = connectedClients.clientMap;
-        Table<User, Socket, SocketConnection> outboundMap = connectedClients.outboundMap;
-
-        sb.append("<h5>Outbound Connections</h5>" +
-                "<ul>");
-        for (SocketConnection row : outboundMap.row(user).values()) {
-            WebSocket.Connection connection = row.getConnection();
-            String data = "{ping}";
-            ByteBuffer payload = ByteBuffer.wrap(data.getBytes());
-
-
-            try {
-                connection.sendMessage(data);
-
-                sb.append("<li>" + row.getServer().getBaseUrl().toString() + " connected:" + row.getConnection().isOpen() + "</li>");
-            } catch (IOException e) {
-                sb.append(e.getMessage());
-                // e.printStackTrace(System.err);
-            }
-
-        }
-        sb.append("</ul>");
-
-        sb.append("<h5>Inbound Connections</h5><ul>");
-        for (SocketClient row : clientMap.row(user.getEmail()).values()) {
-            sb.append("<li>" + row.getSession() + " connected:" + row.getConnection().isOpen() + "</li>");
-        }
-        sb.append("</ul>");
-        sb.append("</body></html>");
-        writer.print(sb.toString());
-        writer.close();
 
     }
 }

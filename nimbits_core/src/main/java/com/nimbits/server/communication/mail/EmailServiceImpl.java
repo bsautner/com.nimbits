@@ -17,6 +17,7 @@
 package com.nimbits.server.communication.mail;
 
 
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.common.impl.CommonFactory;
@@ -28,7 +29,9 @@ import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.auth.AuthService;
+import com.nimbits.server.orm.UserEntity;
 import com.nimbits.server.system.ServerInfo;
+import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.settings.SettingsService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.stereotype.Service;
@@ -223,9 +226,10 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendConnectionRequestApprovalNotification(Connection c) {
+    public void sendConnectionRequestApprovalNotification(User user, Connection c) {
 
-        EmailAddress to = CommonFactory.createEmailAddress(c.getOwner());
+
+        EmailAddress to = CommonFactory.createEmailAddress(user.getName().getValue());
         String url = serverInfo.getFullServerURL(null)
                 + "/nimbits.html";
 

@@ -210,7 +210,7 @@ public abstract class EntityStore implements Entity {
     public void validate(User user) {
 
         if (StringUtils.isEmpty(this.owner) || StringUtils.isEmpty(this.name) || StringUtils.isEmpty(this.parent)) {
-            throw new IllegalArgumentException("Entity was missing required data, validation failed"
+            throw new IllegalArgumentException("Entity was missing required data, validation failed: "
                     + "owner=" + owner + "name=" + this.name + "parent:" + this.parent);
         }
 

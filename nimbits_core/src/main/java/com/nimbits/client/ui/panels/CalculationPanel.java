@@ -148,6 +148,7 @@ public class CalculationPanel extends BasePanel {
         Calculation update = builder.name(name)
                 .owner(entity.getOwner())
                 .trigger(entity.getId())
+                .parent(entity.getId())
                 .enabled(enabled.getValue())
                 .formula(formula.getValue())
                 .target(target)

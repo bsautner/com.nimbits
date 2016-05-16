@@ -76,18 +76,18 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
     @Override
     public User loginRpc(final String requestUri) {
 
-        final User retObj;
+        User retObj = null;
         EmailAddress internetAddress = null;
-        boolean isAdmin;
         boolean isFirst = !userDao.usersExist();
         UserStatus userStatus = UserStatus.unknown;
+
 
         if (isFirst) {
             userStatus = UserStatus.newServer;
         }
 
 
-        isAdmin = authService.isGAEAdmin();
+
         List<EmailAddress> emailAddresses = authService.getCurrentUser(entityService, userService, valueService, getThreadLocalRequest());
 
         if (!emailAddresses.isEmpty()) {
@@ -107,36 +107,35 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
             if (! userExists(internetAddress.getValue())) {
                 log.info("user not found, creating record");
                 retObj = userService.createUserRecord(entityService, valueService, internetAddress, UUID.randomUUID().toString(), UserSource.google);
+
                 userStatus = UserStatus.newUser;
 
 
             } else {
                 log.info("got user result");
-                Optional<User> optional = userService.getUserByKey(internetAddress.getValue());
-                retObj = optional.get();
+                Optional<User> optional = userDao.getUserByEmail(internetAddress.getValue());
+                if (optional.isPresent()) {
+                    retObj = optional.get();
 
 
-                if (userService.userHasPoints(retObj)) {
-                    userStatus = UserStatus.loggedIn;
+                    if (userService.userHasPoints(retObj)) {
+                        userStatus = UserStatus.loggedIn;
 
-                } else {
-                    userStatus = UserStatus.newUser;
+                    } else {
+                        userStatus = UserStatus.newUser;
+                    }
+
+
+                    LoginInfo loginInfo = UserModelFactory.createLoginInfo(authService.createLoginURL(requestUri),
+                            authService.createLogoutURL(requestUri), userStatus, authService.isGAE());
+                    retObj.setLoginInfo(loginInfo);
+
+
+
+
                 }
 
             }
-            String authToken = userService.startSession(getThreadLocalRequest(), retObj.getEmail().getValue());
-
-            if (isAdmin) {
-                retObj.setIsAdmin(true);
-            }
-
-
-            LoginInfo loginInfo = UserModelFactory.createLoginInfo(authService.createLoginURL(requestUri),
-                    authService.createLogoutURL(requestUri), userStatus, authService.isGAE());
-            retObj.setLoginInfo(loginInfo);
-
-            retObj.setToken(authToken);
-            entityService.addUpdateEntity(valueService, retObj, retObj);
 
 
         } else {
@@ -286,30 +285,31 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
                 if (!approveConnection.isEmpty()) {
                     Connection c = approveConnection.get(0);
                     if (c.isApproved()) {
-
-                        emailService.sendConnectionRequestApprovalNotification(c);
-                        //  Entity entity = EntityModelFactory.createEntity(c.getOwner(), "", EntityType.connection, ProtectionLevel.everyone, c.getTargetEmail(), c.getTargetEmail());
+                        Optional<User> o = userService.getUserByKey(c.getOwner());
+                        if (o.isPresent()) {
+                            emailService.sendConnectionRequestApprovalNotification(o.get(), c);
+                            //  Entity entity = EntityModelFactory.createEntity(c.getOwner(), "", EntityType.connection, ProtectionLevel.everyone, c.getTargetEmail(), c.getTargetEmail());
 
 //                        Connection c2 = ConnectionFactory.getInstance(entity, c.getOwner());
-                        Connection c2 = new ConnectionModel.Builder()
-                                .targetEmail(c.getOwner())
-                                .approved(true)
-                                .create();
+
+                            Connection c2 = new ConnectionModel.Builder()
+                                    .targetEmail(o.get().getEmail().getValue())
+                                    .approved(true)
+                                    .create();
 
 
-                        EmailAddress emailAddress = CommonFactory.createEmailAddress(c.getTargetEmail());
-                        // List<User> userSample = userService.getUserByKey(emailAddress.getValue(), AuthLevel.restricted);
-                        if (userExists(emailAddress.getValue())) {
-                            Optional<User> optional = userService.getUserByKey(emailAddress.getValue());
-                            if (optional.isPresent()) {
-                                entityService.addUpdateEntity(valueService, optional.get(), c2);
-                                success = true;
-                            }
-                            else {
-                                success = false;
+                            EmailAddress emailAddress = CommonFactory.createEmailAddress(c.getTargetEmail());
+                            // List<User> userSample = userService.getUserByKey(emailAddress.getValue(), AuthLevel.restricted);
+                            if (userExists(emailAddress.getValue())) {
+                                Optional<User> optional = userService.getUserByKey(emailAddress.getValue());
+                                if (optional.isPresent()) {
+                                    entityService.addUpdateEntity(valueService, optional.get(), c2);
+                                    success = true;
+                                } else {
+                                    success = false;
+                                }
                             }
                         }
-
                     }
                 }
 

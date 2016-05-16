@@ -39,7 +39,7 @@ public interface EmailService {
 
     void sendConnectionRequest(User user, Connection c);
 
-    void sendConnectionRequestApprovalNotification(Connection c);
+    void sendConnectionRequestApprovalNotification(User user, Connection c);
 
     void sendPasswordRecovery(String email, String token);
 }

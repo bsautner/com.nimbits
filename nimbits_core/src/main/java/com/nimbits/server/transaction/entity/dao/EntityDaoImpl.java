@@ -234,6 +234,18 @@ public class EntityDaoImpl implements EntityDao {
 
             }
             final Entity commit = EntityHelper.downcastEntity(entity);
+
+            if (StringUtils.isEmpty(commit.getId())) {
+                commit.setId(UUID.randomUUID().toString());
+
+            }
+
+            if (StringUtils.isEmpty(commit.getOwner())) {
+                commit.setOwner(user.getId());
+
+            }
+
+
             if (!commit.getEntityType().equals(EntityType.user)) {
                 commit.validate(user);
                 if (commit.getEntityType().isTrigger()) {
@@ -243,10 +255,7 @@ public class EntityDaoImpl implements EntityDao {
             }
 
 
-            if (StringUtils.isEmpty(commit.getId())) {
-                commit.setId(UUID.randomUUID().toString());
 
-            }
 
 
             pm.makePersistent(commit);
@@ -299,7 +308,7 @@ public class EntityDaoImpl implements EntityDao {
 
                     final List<Entity> entities = EntityHelper.createModels(user, result);
                     for (final Entity entity1 : entities) {
-                        if (!entity1.getOwner().equalsIgnoreCase(user.getEmail().toString())) {
+                        if (!entity1.getOwner().equals(user.getId())) {
 
                             if (connectionMap.containsKey(entity1.getParent())) {
 

@@ -17,6 +17,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 public class V3FindThingsExamples extends NimbitsTest{
 
@@ -70,11 +71,9 @@ public class V3FindThingsExamples extends NimbitsTest{
         double testValue = 100.00 * new Random().nextDouble();
         Value value = new Value.Builder().doubleValue(testValue).create();
         nimbits.recordValue(pointName, value);
-
+        Thread.sleep(1000);
         Value retrieved = nimbits.getSnapshot(pointName);
-        if (! retrieved.getDoubleValue().equals(value.getDoubleValue())) {
-            throw new RuntimeException("Value was different!");
-        }
+        assertEquals(value.getDoubleValue(), retrieved.getDoubleValue(), 0.001);
 
 
         veryifyFindCategory();

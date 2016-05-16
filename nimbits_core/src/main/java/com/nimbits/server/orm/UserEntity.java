@@ -98,7 +98,7 @@ public class UserEntity extends EntityStore implements User {
 
     @Override
     public EmailAddress getEmail() {
-        return CommonFactory.createEmailAddress(getOwner());
+        return CommonFactory.createEmailAddress(getName().getValue());
     }
 
 

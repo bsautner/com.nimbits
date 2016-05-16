@@ -125,14 +125,14 @@ You can import the library into your java or android project from the jcenter pu
 <dependency>
   <groupId>com.nimbits</groupId>
   <artifactId>nimbits_io</artifactId>
-  <version>3.9.55</version>
+  <version>3.9.56</version>
   <type>pom</type>
 </dependency>
 ```
 
 ### Gradle
 
-```compile 'com.nimbits:nimbits_io:3.9.55'```
+```compile 'com.nimbits:nimbits_io:3.9.56'```
 
 ## Licence
 

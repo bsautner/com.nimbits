@@ -53,8 +53,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.*;
 import java.util.logging.Logger;
 
@@ -199,7 +204,7 @@ public class Rest {
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<String> postUser( @RequestHeader(name = "Authorization") String authorization,
-                                              @RequestBody String json) throws IOException {
+                                            @RequestBody String json) throws IOException {
         logger.info("entered api: add user");
         User user = getUser(authorization);
 
@@ -225,44 +230,6 @@ public class Rest {
         return EntityType.get(t);
     }
 
-
-//    @RequestMapping(value = "/service/v3/rest", method = RequestMethod.POST)
-//    public ResponseEntity<String> postUser(
-//            @RequestHeader(name = "Authorization") String authorization,
-//            @RequestBody String json) throws IOException {
-//        logger.info("entered api: post user");
-//        logger.info(json);
-//        boolean isFirst = ! userDao.usersExist();
-//        User user = gson.fromJson(json, UserModel.class);
-//        logger.info("isFirst = " + isFirst);
-//        User newUser = null;
-//        if (isFirst) {
-//            Optional<Credentials> credentials = userService.credentialsWithBasicAuthentication(authorization);
-//            if (credentials.isPresent()) {
-//                newUser = userService.createUserRecord(entityService, valueService,
-//                        user.getEmail(), credentials.get().getPassword(), UserSource.local);
-//            }
-//        }
-//        else {
-//            User admin  = getUser(authorization);
-//            if (admin.getIsAdmin()) {
-//                newUser = userService.createUserRecord(entityService, valueService, user.getEmail(), user.getPassword(), UserSource.local);
-//
-//
-//            }
-//            else {
-//                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-//            }
-//        }
-//        if (newUser != null) {
-//            setHAL(newUser, newUser, new ArrayList<Entity>(0), "/service/v3/Rest", null);
-//            return new ResponseEntity<>(gson.toJson(newUser), HttpStatus.OK);
-//
-//        }
-//        else {
-//            return new ResponseEntity<>(gson.toJson(newUser), HttpStatus.INTERNAL_SERVER_ERROR);
-//        }
-//    }
 
 
 
@@ -290,7 +257,9 @@ public class Rest {
 
 
     @RequestMapping(value = "/{uuid}/children", method = RequestMethod.GET)
-    public ResponseEntity<String> getChildren( @RequestHeader(name = "Authorization") String authorization, @PathVariable String uuid ) throws IOException {
+    public ResponseEntity<String> getChildren(HttpServletRequest request,
+                                              @RequestHeader(name = "Authorization") String authorization,
+                                              @PathVariable String uuid ) throws IOException {
         logger.info("entered api: get children");
         User user = getUser(authorization);
 
@@ -300,6 +269,9 @@ public class Rest {
 
         if (optional.isPresent()) {
             List<Entity> children = entityDao.getChildren(user, Collections.singletonList(optional.get()));
+            for (Entity e : children) {
+                setHAL(user, e, Collections.<Entity>emptyList(), getCurrentUrl(request), null);
+            }
             return new ResponseEntity<>(gson.toJson(children), HttpStatus.OK);
         }
         else {
@@ -427,7 +399,8 @@ public class Rest {
     }
 
     @RequestMapping(value = "/{uuid}/snapshot", method = RequestMethod.GET)
-    public ResponseEntity<String> getSnapshot( @RequestHeader(name = "Authorization") String authorization,
+    public ResponseEntity<String> getSnapshot( HttpServletRequest request,
+                                               @RequestHeader(name = "Authorization") String authorization,
                                                @RequestParam(name = "sd", required = false) Long sd,
                                                @RequestParam(name = "sd", required = false) Long ed,
                                                @PathVariable String uuid) {
@@ -440,9 +413,9 @@ public class Rest {
 
             User user = getUser(authorization);
 
-            Self self = new Self(String.valueOf("/" + uuid));
-            Parent parent = new Parent("/service/v3/Rest/" + uuid);
-            Sample sample = new Sample("/service/v3/rest/" + uuid + "/snapshot", "get snapshot");
+            Self self = new Self(String.valueOf(getCurrentUrl(request) + uuid));
+            Parent parent = new Parent(getCurrentUrl(request) + uuid);
+            Sample sample = new Sample(getCurrentUrl(request) + uuid + "/snapshot", "get snapshot");
 
             Links links = new Links(self, parent, sample);
 
@@ -495,7 +468,7 @@ public class Rest {
 
     //Helper Methods
     @RequestMapping(value = "/{uuid}",  method = RequestMethod.GET)
-    public ResponseEntity<String> getEntity(
+    public ResponseEntity<String> getEntity(HttpServletRequest request,
             @RequestHeader(name = "Authorization") String authorization,
             @PathVariable String uuid,
             @RequestParam(name = "children", required = false) boolean includeChildren,
@@ -540,7 +513,7 @@ public class Rest {
         }
 
         else if (uuid.equals("me")) {
-            User u =  getMe(user, includeChildren);
+            User u =  getMe(request, user, includeChildren);
             return new ResponseEntity<>(GsonFactory.getInstance(true).toJson(u), HttpStatus.OK);
         }
 
@@ -559,7 +532,7 @@ public class Rest {
                     children = Collections.emptyList();
                 }
 
-                setHAL(user, entity, children, "baseurl", null);
+                setHAL(user, entity, children, getCurrentUrl(request), null);
 
                 entity.setChildren(children);
                 return new ResponseEntity<>(GsonFactory.getInstance(true).toJson(entity), HttpStatus.OK);
@@ -573,18 +546,37 @@ public class Rest {
     }
 
 
-    private User getMe(User user,  boolean withChildren) throws IOException {
+    private User getMe(HttpServletRequest request, User user, boolean withChildren) throws IOException {
 
 
         List<Entity> children = getChildEntitiesIfRequested(user, withChildren);
         Integer indx = user.getIsAdmin() ? 0 : null;
-        setHAL(user, user, children, "/service/v2/Rest", indx);
+        setHAL(user, user, children, getCurrentUrl(request), null);
         user.setChildren(children);
         return user;
 
     }
 
+    private String getCurrentUrl(HttpServletRequest request) {
+        URL url;
+        try {
+            url = new URL(request.getRequestURL().toString());
 
+            String host  = url.getHost();
+            String userInfo = url.getUserInfo();
+            String scheme = url.getProtocol();
+            int port = url.getPort();
+            String path = (String) request.getAttribute("javax.servlet.forward.request_uri");
+            String query = (String) request.getAttribute("javax.servlet.forward.query_string");
+
+            URI uri = new URI(scheme,userInfo,host,port,path,query,null);
+            return uri.toString() + "/service/v3/rest/";
+        } catch (MalformedURLException e) {
+            return e.getMessage();
+        } catch (URISyntaxException e) {
+            return e.getMessage();
+        }
+    }
 
 
 
@@ -620,8 +612,7 @@ public class Rest {
             @RequestHeader(name = "Authorization") String authorization,
             @RequestBody String json) {
 
-        logger.info("entered api: update entity");
-        logger.info(json);
+
         User user = getUser(authorization);
         EntityType type = getEntityType(json);
         Entity entity = (Entity) gson.fromJson(json, type.getClz());
@@ -680,6 +671,7 @@ public class Rest {
         Next next = null;
         Nearby nearby = null;
         Children children;
+
 
         if (entity.getEntityType().equals(EntityType.point)) {
             Point point = (Point) entity;

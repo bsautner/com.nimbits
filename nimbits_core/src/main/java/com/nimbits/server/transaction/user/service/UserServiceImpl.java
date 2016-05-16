@@ -290,22 +290,8 @@ public class UserServiceImpl implements UserService {
         String storedEncodedPassword = user.getPassword();
         String salt = user.getPasswordSalt();
         String challenge = DigestUtils.sha512Hex(password + salt);
-        logger.info("user: " + user.getName().getValue());
-        logger.info("stored: " + storedEncodedPassword);
-        logger.info("salt: " + salt);
-        logger.info("password: " + password);
-        logger.info("challenge: " + challenge);
 
-
-        if (! StringUtils.isEmpty(password) && storedEncodedPassword.equals(challenge)) {
-            return true;
-        }
-        else {
-            logger.info("FAILED LOGIN:" + password);
-            logger.info("FAILED LOGIN: " + storedEncodedPassword);
-            logger.info("FAILED LOGIN: " + challenge);
-            return false;
-        }
+        return !StringUtils.isEmpty(password) && storedEncodedPassword.equals(challenge);
 
 
     }

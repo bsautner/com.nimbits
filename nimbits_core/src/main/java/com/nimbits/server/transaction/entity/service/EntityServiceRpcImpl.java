@@ -109,9 +109,7 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
     @Override
     public List<Entity> getEntitiesRpc(final User user) {
 
-        List<Entity> result = entityService.getEntities(user);
-
-        return result;
+        return entityService.getEntities(user);
     }
 
     @Override

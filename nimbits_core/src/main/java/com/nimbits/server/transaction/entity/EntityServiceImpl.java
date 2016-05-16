@@ -129,8 +129,7 @@ public class EntityServiceImpl implements EntityService {
             case connection:
                 Connection c = (Connection) entity;
                 if (!c.isApproved()) {
-                    logger.info("***** Connection Request : " + c.getOwner() + " " + c.getTargetEmail() + " " + c.getApprovalKey());
-                    emailService.sendConnectionRequest(user, c);
+                      emailService.sendConnectionRequest(user, c);
                 }
                 break;
             case point:

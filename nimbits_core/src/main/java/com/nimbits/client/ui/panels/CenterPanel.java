@@ -222,7 +222,7 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
                     navigationPanel.toggleExpansion();
                     break;
                 case rest:
-                    Window.Location.replace("/service/v3/Rest/me");
+                    Window.Location.replace("/service/v3/rest/me");
                     break;
                 case logout:
                     final String logoutUrl = user != null ? user.getLoginInfo().getLogoutUrl() : PATH_NIMBITS_HOME;

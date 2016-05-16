@@ -73,6 +73,11 @@ public class WebHookEntity extends EntityStore implements WebHook  {
     }
 
     @Override
+    public void init(Entity anEntity) {
+
+    }
+
+    @Override
     public HttpMethod getMethod() {
         return HttpMethod.lookup(this.method);
     }

@@ -404,9 +404,6 @@ public class NavigationPanel extends NavigationEventProvider {
                             context.showSummaryPanel(model.getBaseEntity());
                             break;
 
-                        case accessKey:
-                            context.showKeyPanel(model.getBaseEntity());
-                            break;
                         case socket:
                             context.showSocketPanel(model.getBaseEntity());
                             break;

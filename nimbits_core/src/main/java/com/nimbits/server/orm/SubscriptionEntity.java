@@ -117,4 +117,9 @@ public class SubscriptionEntity extends EntityStore implements Serializable, Sub
         target = s.getTarget();
         subscribedEntity = s.getSubscribedEntity();
     }
+
+    @Override
+    public void init(Entity anEntity) {
+
+    }
 }

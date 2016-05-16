@@ -34,4 +34,6 @@ public interface Trigger extends Entity, Serializable {
     void setTarget(String target);
 
     void setTrigger(String trigger);
+
+    void init(Trigger entity);
 }

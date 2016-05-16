@@ -28,9 +28,33 @@
     </listener>
 
 
+
     <listener>
         <listener-class>com.nimbits.server.ApplicationListener</listener-class>
     </listener>
+
+    <!--<filter>-->
+        <!--<filter-name>Rest filter</filter-name>-->
+        <!--<filter-class>com.nimbits.server.api.v3.filter.RestApiAuthFilter</filter-class>-->
+    <!--</filter>-->
+    <!--<filter-mapping>-->
+        <!--<filter-name>Rest filter</filter-name>-->
+        <!--<url-pattern>/service/v3/Rest/*</url-pattern>-->
+
+    <!--</filter-mapping>-->
+
+    <servlet>
+        <servlet-name>rest</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
+
+        <servlet-name>rest</servlet-name>
+        <url-pattern>/service/v3/rest/*</url-pattern>
+    </servlet-mapping>
+
+
 
     <filter>
         <filter-name>socketFilter</filter-name>
@@ -42,42 +66,19 @@
 
     </filter-mapping>
 
-    <filter>
-        <filter-name>authFilter</filter-name>
-        <filter-class>com.nimbits.server.api.filter.AuthFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>authFilter</filter-name>
-        <url-pattern>/service/v2/*</url-pattern>
 
-    </filter-mapping>
 
-    <filter>
-        <filter-name>rest filter</filter-name>
-        <filter-class>com.nimbits.server.api.v3.filter.RestApiAuthFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>rest filter</filter-name>
-        <url-pattern>/service/v3/rest/*</url-pattern>
 
-    </filter-mapping>
-    <servlet>
-        <servlet-name>rest api</servlet-name>
-        <servlet-class>com.nimbits.server.api.v3.RestApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>rest api</servlet-name>
-        <url-pattern>/service/v3/rest/*</url-pattern>
-    </servlet-mapping>
+    <!--<servlet>-->
+        <!--<servlet-name>Rest api</servlet-name>-->
+        <!--<servlet-class>com.nimbits.server.api.v3.RestApi</servlet-class>-->
+    <!--</servlet>-->
+    <!--<servlet-mapping>-->
+        <!--<servlet-name>Rest api</servlet-name>-->
+        <!--<url-pattern>/service/v3/Rest/*</url-pattern>-->
+    <!--</servlet-mapping>-->
 
-    <servlet>
-        <servlet-name>dataTableApi</servlet-name>
-        <servlet-class>com.nimbits.server.api.DataTableApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>dataTableApi</servlet-name>
-        <url-pattern>/service/v2/datatable</url-pattern>
-    </servlet-mapping>
+
 
     <servlet>
         <servlet-name>WebSocket</servlet-name>
@@ -92,23 +93,8 @@
         <url-pattern>/socket/*</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>heartbeatApi</servlet-name>
-        <servlet-class>com.nimbits.server.api.HeartbeatApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>heartbeatApi</servlet-name>
-        <url-pattern>/service/v2/hb</url-pattern>
-    </servlet-mapping>
 
-    <servlet>
-        <servlet-name>socketApi</servlet-name>
-        <servlet-class>com.nimbits.server.api.SocketApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>socketApi</servlet-name>
-        <url-pattern>/service/v2/socket</url-pattern>
-    </servlet-mapping>
+
 
     <servlet>
         <servlet-name>timeApi</servlet-name>
@@ -119,49 +105,6 @@
         <url-pattern>/service/v2/time</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>valueApi</servlet-name>
-        <servlet-class>com.nimbits.server.api.ValueApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>valueApi</servlet-name>
-        <url-pattern>/service/v2/value</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>treeApi</servlet-name>
-        <servlet-class>com.nimbits.server.api.TreeApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>treeApi</servlet-name>
-        <url-pattern>/service/v2/tree</url-pattern>
-    </servlet-mapping>
-    <servlet>
-        <servlet-name>entityApi</servlet-name>
-        <servlet-class>com.nimbits.server.api.EntityApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>entityApi</servlet-name>
-        <url-pattern>/service/v2/entity</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>sessionApi</servlet-name>
-        <servlet-class>com.nimbits.server.api.SessionApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>sessionApi</servlet-name>
-        <url-pattern>/service/v2/session</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>seriesApi</servlet-name>
-        <servlet-class>com.nimbits.server.api.SeriesApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>seriesApi</servlet-name>
-        <url-pattern>/service/v2/series</url-pattern>
-    </servlet-mapping>
 
 
 

@@ -24,7 +24,6 @@
        http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
 
 
-
     <!-- Entry Points-->
     <bean id="valueTask" class="com.nimbits.server.process.task.ValueTask"/>
 
@@ -32,11 +31,8 @@
 
     <bean id="dataProcessor" class="com.nimbits.server.data.DataProcessor"/>
 
-    <bean id="chartHelper" class="com.nimbits.server.chart.ChartHelper">
+    <bean id="chartHelper" class="com.nimbits.server.chart.ChartHelper" />
 
-
-
-    </bean>
 
     <bean id="nimbitsCache" class="com.nimbits.server.transaction.cache.NimbitsCacheImpl"/>
 
@@ -157,48 +153,7 @@
     </bean>
 
 
-    <!--REST API -->
-    <bean id="getAction" name="getAction" class="com.nimbits.server.api.v3.actions.get.GetAction">
-        <constructor-arg index="0" ref="entityDao"/>
-        <constructor-arg index="1" ref="entityService"/>
-        <constructor-arg index="2" ref="valueService"/>
-        <constructor-arg index="3" ref="userService"/>
-        <constructor-arg index="4" ref="blobStore"/>
-        <constructor-arg index="5" ref="GeoSpatialDao"/>
-        <constructor-arg index="6" ref="userDao"/>
-    </bean>
 
-    <bean id="postAction" name="postAction" class="com.nimbits.server.api.v3.actions.post.PostAction">
-        <constructor-arg index="0" ref="GeoSpatialDao"/>
-        <constructor-arg index="1" ref="entityService"/>
-        <constructor-arg index="2" ref="valueService"/>
-        <constructor-arg index="3" ref="userService"/>
-        <constructor-arg index="4" ref="entityDao"/>
-        <constructor-arg index="5" ref="taskService"/>
-        <constructor-arg index="6" ref="valueTask"/>
-        <constructor-arg index="7" ref="blobStore"/>
-        <constructor-arg index="8" ref="summaryService"/>
-        <constructor-arg index="9" ref="syncService"/>
-        <constructor-arg index="10" ref="subscriptionService"/>
-        <constructor-arg index="11" ref="calculationService"/>
-        <constructor-arg index="12" ref="dataProcessor"/>
-        <constructor-arg index="13" ref="userDao"/>
-    </bean>
-
-    <bean id="deleteAction" name="deleteAction" class="com.nimbits.server.api.v3.actions.delete.DeleteAction">
-        <constructor-arg index="0" ref="entityService"/>
-        <constructor-arg index="1" ref="valueService"/>
-        <constructor-arg index="2" ref="userService"/>
-        <constructor-arg index="3" ref="entityDao"/>
-    </bean>
-
-    <bean id="putAction" name="putAction" class="com.nimbits.server.api.v3.actions.put.PutAction">
-
-        <constructor-arg index="0" ref="entityService"/>
-        <constructor-arg index="1" ref="valueService"/>
-        <constructor-arg index="2" ref="userService"/>
-        <constructor-arg index="3" ref="entityDao"/>
-    </bean>
 
 
 
@@ -264,7 +219,7 @@
     </bean>
 
     <task:scheduled-tasks scheduler="myScheduler">
-        <task:scheduled ref="systemTaskExecutor" method="heartbeat" fixed-delay="5000"/>
+        <task:scheduled ref="systemTaskExecutor" method="heartbeat" fixed-delay="60000"/>
     </task:scheduled-tasks>
 
     <task:scheduler id="myScheduler" pool-size="10"/>

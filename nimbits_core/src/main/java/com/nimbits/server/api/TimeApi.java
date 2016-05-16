@@ -21,6 +21,7 @@ import com.nimbits.server.gson.GsonFactory;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -33,7 +34,7 @@ import java.util.Date;
  */
 
 @Service
-public class TimeApi extends ApiBase {
+public class TimeApi extends HttpServlet {
     private Gson gson =  GsonFactory.getInstance(true);
 
     @Override

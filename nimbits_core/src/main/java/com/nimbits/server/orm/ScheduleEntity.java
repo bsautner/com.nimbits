@@ -16,6 +16,7 @@
 
 package com.nimbits.server.orm;
 
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.schedule.Schedule;
 
 import javax.jdo.annotations.PersistenceCapable;
@@ -102,4 +103,8 @@ public class ScheduleEntity extends EntityStore implements Serializable, Schedul
     }
 
 
+    @Override
+    public void init(Entity anEntity) {
+
+    }
 }

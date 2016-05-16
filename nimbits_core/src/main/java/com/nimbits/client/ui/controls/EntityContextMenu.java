@@ -51,29 +51,29 @@ import java.util.logging.Logger;
 public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
     private final Logger logger = Logger.getLogger(EntityContextMenu.class.getName());
 
-    public static final String SCHEDULE_TIMER = "Schedule Timer";
-    public static final String CREATE_CALCULATION = "Create Calculation";
-    public static final String CREATE_WEBHOOK= "Create Web Hook";
-    public static final String SYNCHRONIZE_POINTS = "Synchronize Points";
-    public static final String CONNECT_ACCOUNTS = "Connect Accounts";
-    public static final String EDIT_PROPERTIES = "Edit Properties";
-    public static final String COMPUTE_STATISTICS = "Compute Statistics";
-    public static final String SET_ALERTS = "Set Alerts";
-    public static final String SUBSCRIBE_TO_EVENTS1 = "Subscribe To Events";
-    public static final String COPY_ENTITY = "Copy Entity";
-    public static final String CREATE_ACCESS_KEY_TOKEN = "Create Access Token";
-    public static final String DELETE = "Delete";
-    public static final String OUTBOUND_SOCKET = "Outbound Socket";
-    public static final String CONNECT_USER_ACCOUNTS = "Connect User Accounts";
-    public static final String SUMMARIZE = "Summarize";
-    public static final String EXTERNAL_WEB_HOOK = "External Web Hook";
+    private static final String SCHEDULE_TIMER = "Schedule Timer";
+    private static final String CREATE_CALCULATION = "Create Calculation";
+    private static final String CREATE_WEBHOOK= "Create Web Hook";
+    private static final String SYNCHRONIZE_POINTS = "Synchronize Points";
+    private static final String CONNECT_ACCOUNTS = "Connect Accounts";
+    private static final String EDIT_PROPERTIES = "Edit Properties";
+    private static final String COMPUTE_STATISTICS = "Compute Statistics";
+    private static final String SET_ALERTS = "Set Alerts";
+    private static final String SUBSCRIBE_TO_EVENTS1 = "Subscribe To Events";
+    private static final String COPY_ENTITY = "Copy Entity";
+    private static final String CREATE_ACCESS_KEY_TOKEN = "Create Access Token";
+    private static final String DELETE = "Delete";
+    private static final String OUTBOUND_SOCKET = "Outbound Socket";
+    private static final String CONNECT_USER_ACCOUNTS = "Connect User Accounts";
+    private static final String SUMMARIZE = "Summarize";
+    private static final String EXTERNAL_WEB_HOOK = "External Web Hook";
     private static final String SUBSCRIBE_TO_EVENTS = "Subscribe to Events";
     private static final String SCHEDULE = "Create a Schedule Timer";
     private static final String MESSAGE_ADD_CATEGORY = "Add a new data point Category";
 
     private static final String MESSAGE_NEW_POINT_PROMPT = "Please enter the name of the new data point.";
 
-    public static final String PLEASE_SELECT_A_PARENT = "Please select a parent. You may not have clicked on the item in the tree you're creating a new point under, if you're a new user, try clicking your email address first.";
+    private static final String PLEASE_SELECT_A_PARENT = "Please select a parent. You may not have clicked on the item in the tree you're creating a new point under, if you're a new user, try clicking your email address first.";
     private final Listener<MessageBoxEvent> createNewPointListener = new NewPointMessageBoxEventListener();
     private final Listener<MessageBoxEvent> createNewFolderListener = new NewFolderMessageBoxEventListener();
 
@@ -81,7 +81,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
     private final Listener<MessageBoxEvent> copyPointListener = new CopyPointMessageBoxEventListener();
     private BasePanel panel;
     private com.extjs.gxt.ui.client.widget.Window w;
-    public static final String MESSAGE_NEW_POINT = "New Data Point";
+    private static final String MESSAGE_NEW_POINT = "New Data Point";
 
 
     private EntityTree<ModelData> tree;
@@ -94,7 +94,6 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
     private MenuItem copyContext;
     private MenuItem calcContext;
     private MenuItem summaryContext;
-    private MenuItem keyContext;
     private MenuItem propertyContext;
     private MenuItem alertContext;
 
@@ -353,7 +352,6 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
         // xmppContext = xmppResourceContext();
         summaryContext = summaryContext();
 
-        keyContext = keyContext();
 
         scheduleContext = scheduleContext();
 
@@ -371,7 +369,6 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
         add(deleteContext);
         add(subscribeContext);
 
-        add(keyContext);
         add(calcContext);
         add(summaryContext);
         add(webhookContext);
@@ -394,7 +391,6 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
         calcContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.calculation));
         summaryContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.summary));
         syncContext.setEnabled(!currentModel.getEntityType().equals(EntityType.point) || !currentModel.isReadOnly());
-        keyContext.setEnabled(currentModel.getEntityType().equals(EntityType.user) || currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.accessKey));
 
         propertyContext.setEnabled(!currentModel.isReadOnly() && currentModel.getEntityType().equals(EntityType.point));
         alertContext.setEnabled(!currentModel.isReadOnly() && currentModel.getEntityType().equals(EntityType.point));
@@ -465,15 +461,6 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
 
     }
 
-
-    private MenuItem keyContext() {
-        final MenuItem retObj = new MenuItem();
-        retObj.setText(CREATE_ACCESS_KEY_TOKEN);
-        retObj.setIcon((Icons.INSTANCE.key()));
-        retObj.addSelectionListener(new KeyMenuEventSelectionListener());
-        return retObj;
-
-    }
 
 
     private MenuItem scheduleContext() {
@@ -612,11 +599,6 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
         showModal(panel, SYNCHRONIZE_POINTS);
     }
 
-    public void showKeyPanel(final Entity entity) {
-        panel = new AccessKeyPanel(this, entity);
-        showModal(panel, CREATE_ACCESS_KEY_TOKEN);
-    }
-
 
     public void showAlertPanel(final Entity entity) {
         AlertPanel panel = new AlertPanel(this, entity);
@@ -701,8 +683,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
             currentModel = (TreeModel) selectedModel;
             final Entity entity = currentModel.getBaseEntity();
 
-            if (entity.getEntityType().equals(EntityType.accessKey) ||
-                    entity.getEntityType().equals(EntityType.point) || entity.getEntityType().equals(EntityType.user)) {
+            if  (entity.getEntityType().equals(EntityType.point) || entity.getEntityType().equals(EntityType.user)) {
                 showSyncPanel(entity);
             }
 
@@ -844,15 +825,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
         }
 
 
-        private class PointUpdatedListener implements PointPanel.PointUpdatedListener {
-            PointUpdatedListener() {
-            }
 
-            @Override
-            public void onPointUpdated(final Entity result) {
-                notifyEntityModifiedListener(new GxtModel(result), Action.create);
-            }
-        }
     }
 
     private class DeleteMessageBoxEventListener implements Listener<MessageBoxEvent> {
@@ -913,23 +886,6 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
         }
     }
 
-    private class KeyMenuEventSelectionListener extends SelectionListener<MenuEvent> {
-        KeyMenuEventSelectionListener() {
-        }
-
-        @Override
-        public void componentSelected(final MenuEvent ce) {
-            final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
-            currentModel = (TreeModel) selectedModel;
-            final Entity entity = currentModel.getBaseEntity();
-
-            if (entity.getEntityType().equals(EntityType.accessKey) ||
-                    entity.getEntityType().equals(EntityType.point) || entity.getEntityType().equals(EntityType.user)) {
-                showKeyPanel(entity);
-            }
-
-        }
-    }
 
     private class AlertEditSelectionListener extends SelectionListener<MenuEvent> {
         AlertEditSelectionListener() {

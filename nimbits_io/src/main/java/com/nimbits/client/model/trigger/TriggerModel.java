@@ -18,7 +18,6 @@ package com.nimbits.client.model.trigger;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
@@ -43,8 +42,8 @@ public abstract class TriggerModel extends EntityModel implements Serializable, 
 
 
 
-    public TriggerModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String target, String trigger, boolean enabled) {
-        super(id, name, description, entityType, protectionLevel, parent, owner);
+    public TriggerModel(String id, CommonIdentifier name, String description, EntityType entityType,  String parent, String owner, String target, String trigger, boolean enabled) {
+        super(id, name, description, entityType, parent, owner);
         this.target = target;
         this.trigger = trigger;
         this.enabled = enabled;
@@ -80,6 +79,13 @@ public abstract class TriggerModel extends EntityModel implements Serializable, 
         this.trigger = trigger;
     }
 
+    @Override
+    public void init(Trigger entity) {
+        super.init(entity);
+        this.trigger = entity.getTrigger();
+        this.target = entity.getTarget();
+        this.enabled = entity.isEnabled();
+    }
 
     public static abstract class TriggerBuilder<T> extends EntityBuilder {
 
@@ -102,6 +108,13 @@ public abstract class TriggerModel extends EntityModel implements Serializable, 
 
         public abstract T enabled(boolean v);
 
+        public void init(Trigger t) {
+            super.init(t);
+            trigger = t.getTrigger();
+            target = t.getTarget();
+            enabled = t.isEnabled();
+
+        }
 
     }
 }

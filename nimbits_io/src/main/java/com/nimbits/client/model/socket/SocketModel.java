@@ -18,7 +18,7 @@ package com.nimbits.client.model.socket;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
+
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
@@ -38,8 +38,8 @@ public class SocketModel extends EntityModel implements Serializable, Socket {
     private String extraParams;
 
 
-    protected SocketModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String targetApiKey, String targetUrl, String targetPath, String extraParams) {
-        super(id, name, description, entityType, protectionLevel, parent, owner);
+    protected SocketModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String targetApiKey, String targetUrl, String targetPath, String extraParams) {
+        super(id, name, description, entityType,  parent, owner);
         this.targetApiKey = targetApiKey;
         this.targetUrl = targetUrl;
         this.targetPath = targetPath;
@@ -134,12 +134,10 @@ public class SocketModel extends EntityModel implements Serializable, Socket {
         }
 
         public Socket create() {
-            if (protectionLevel == null) {
-                protectionLevel = ProtectionLevel.everyone;
-            }
 
 
-            return new SocketModel(id, name, description, type, protectionLevel, parent, owner,
+
+            return new SocketModel(id, name, description, type,  parent, owner,
                     targetApiKey, targetUrl, targetPath, extraParams);
         }
 
@@ -150,23 +148,11 @@ public class SocketModel extends EntityModel implements Serializable, Socket {
             return this;
         }
 
-        private void initEntity(Entity anEntity) {
 
-
-            this.id = anEntity.getId();
-            this.name = anEntity.getName();
-            this.description = anEntity.getDescription();
-            this.entityType = type;
-            this.parent = anEntity.getParent();
-            this.owner = anEntity.getOwner();
-            this.protectionLevel = anEntity.getProtectionLevel();
-            this.alertType = anEntity.getAlertType().getCode();
-
-
-        }
 
         public Builder init(Socket e) {
-            initEntity(e);
+            super.init(e);
+            this.alertType = e.getAlertType().getCode();
             targetApiKey = e.getTargetApiKey();
             targetUrl = e.getTargetUrl();
             targetPath = e.getTargetPath();
@@ -186,12 +172,7 @@ public class SocketModel extends EntityModel implements Serializable, Socket {
             this.description = description;
             return this;
         }
-        @Override
-        public Builder protectionLevel(ProtectionLevel protectionLevel) {
-            this.protectionLevel = protectionLevel;
-            return this;
-        }
-        @Override
+  @Override
         public Builder alertType(int alertType) {
             this.alertType = alertType;
             return this;

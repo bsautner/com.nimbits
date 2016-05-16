@@ -19,8 +19,7 @@ package com.nimbits.server.orm;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.model.common.CommonIdentifier;
+
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
@@ -30,7 +29,6 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.jdo.annotations.*;
 import java.util.List;
-import java.util.UUID;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 @Inheritance(strategy = InheritanceStrategy.SUBCLASS_TABLE)
@@ -48,9 +46,6 @@ public abstract class EntityStore implements Entity {
 
     @Persistent
     private Integer entityType;
-
-    @Persistent
-    private Integer protectionLevel;
 
     @Persistent
     private String parent;
@@ -87,7 +82,7 @@ public abstract class EntityStore implements Entity {
         this.entityType = entity.getEntityType().getCode();
         this.parent = entity.getParent();
         this.owner = entity.getOwner();
-        this.protectionLevel = entity.getProtectionLevel().getCode();
+
     }
 
 
@@ -155,16 +150,6 @@ public abstract class EntityStore implements Entity {
     }
 
     @Override
-    public ProtectionLevel getProtectionLevel() {
-        return ProtectionLevel.get(protectionLevel);
-    }
-
-    @Override
-    public void setProtectionLevel(final ProtectionLevel protectionLevel) {
-        this.protectionLevel = protectionLevel.getCode();
-    }
-
-    @Override
     public String getOwner() {
         return owner;
     }
@@ -205,7 +190,7 @@ public abstract class EntityStore implements Entity {
     public void update(final Entity update) {
         this.description = update.getDescription();
         this.name = update.getName().getValue();
-        this.protectionLevel = update.getProtectionLevel().getCode();
+
         this.parent = update.getParent();
         this.id = update.getId();
 
@@ -261,8 +246,6 @@ public abstract class EntityStore implements Entity {
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (owner != null ? !owner.equals(that.owner) : that.owner != null) return false;
         if (parent != null ? !parent.equals(that.parent) : that.parent != null) return false;
-        if (protectionLevel != null ? !protectionLevel.equals(that.protectionLevel) : that.protectionLevel != null)
-            return false;
 
         return true;
     }
@@ -275,7 +258,7 @@ public abstract class EntityStore implements Entity {
 
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + (entityType != null ? entityType.hashCode() : 0);
-        result = 31 * result + (protectionLevel != null ? protectionLevel.hashCode() : 0);
+
         result = 31 * result + (parent != null ? parent.hashCode() : 0);
         result = 31 * result + (owner != null ? owner.hashCode() : 0);
         result = 31 * result + alertType;
@@ -303,4 +286,5 @@ public abstract class EntityStore implements Entity {
     public void setLinks(Links links) {
 
     }
+
 }

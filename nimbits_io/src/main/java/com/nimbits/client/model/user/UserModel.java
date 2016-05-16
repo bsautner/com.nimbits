@@ -19,7 +19,7 @@ package com.nimbits.client.model.user;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
+
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
@@ -67,10 +67,10 @@ public class UserModel extends EntityModel implements Serializable, User {
     }
 
 
-    protected UserModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String emailAddress,
+    protected UserModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String emailAddress,
                         Boolean isAdmin, String token, String password, String passwordSalt, String source, LoginInfo loginInfo, String passwordResetToken,
                         Date passwordResetTokenTimestamp) {
-        super(id, name, description, entityType, protectionLevel, parent, owner);
+        super(id, name, description, entityType,  parent, owner);
         this.emailAddress = emailAddress;
         this.isAdmin = isAdmin;
         this.token = token;
@@ -269,9 +269,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         }
 
         public User create() {
-            if (protectionLevel == null) {
-                protectionLevel = ProtectionLevel.everyone;
-            }
+
             if (name == null && emailAddress != null) {
                 name = CommonFactory.createName(emailAddress, type);
             }
@@ -280,7 +278,7 @@ public class UserModel extends EntityModel implements Serializable, User {
             }
 
 
-            return new UserModel(id, name, description, type , protectionLevel, parent, owner,
+            return new UserModel(id, name, description, type ,  parent, owner,
                     emailAddress, isAdmin, token, password, passwordSalt, source, loginInfo, passwordResetToken, passwordResetTokenTimestamp  );
         }
 
@@ -292,23 +290,10 @@ public class UserModel extends EntityModel implements Serializable, User {
         }
 
 
-        private void initEntity(Entity anEntity) {
 
-
-            this.id = anEntity.getId();
-            this.name = anEntity.getName();
-            this.description = anEntity.getDescription();
-            this.entityType = anEntity.getEntityType();
-            this.parent = anEntity.getParent();
-            this.owner = anEntity.getOwner();
-            this.protectionLevel = anEntity.getProtectionLevel();
-            this.alertType = anEntity.getAlertType().getCode();
-
-
-        }
 
         public Builder init(User u) {
-            initEntity(u);
+            super.init(u);
             this.emailAddress = u.getEmail().getValue();
 
             this.isAdmin = u.getIsAdmin();
@@ -333,12 +318,7 @@ public class UserModel extends EntityModel implements Serializable, User {
             this.description = description;
             return this;
         }
-        @Override
-        public Builder protectionLevel(ProtectionLevel protectionLevel) {
-            this.protectionLevel = protectionLevel;
-            return this;
-        }
-        @Override
+  @Override
         public Builder alertType(int alertType) {
             this.alertType = alertType;
             return this;

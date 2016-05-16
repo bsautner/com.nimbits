@@ -89,6 +89,7 @@ public abstract class TriggerEntity extends EntityStore implements Trigger {
 
     }
 
+
     @Override
     public void update(Entity update) {
         super.update(update);

@@ -16,7 +16,6 @@
 
 package com.nimbits.server.transaction.cache;
 
-import com.nimbits.client.enums.MemCacheKey;
 import com.nimbits.client.enums.ServerSetting;
 
 
@@ -31,7 +30,7 @@ public class BaseCache {
         if (key.startsWith(GENERATED_KEY)) {
             return key; //duplicate call;
         } else {
-            return GENERATED_KEY + ServerSetting.version.getDefaultValue() + MemCacheKey.setting + getSafeNamespaceKey(key);
+            return GENERATED_KEY + ServerSetting.version.getDefaultValue() + getSafeNamespaceKey(key);
         }
 
     }

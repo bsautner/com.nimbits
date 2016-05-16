@@ -16,10 +16,9 @@
 
 package com.nimbits.server.transaction.user.dao;
 
+import com.google.common.base.Optional;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.orm.socket.SocketStore;
 
-import java.util.List;
 
 public interface UserDao {
     boolean usersExist();
@@ -36,15 +35,11 @@ public interface UserDao {
 
     User getUserByAuthToken(String authToken);
 
-    User getUserByEmail(String email);
+    Optional<User> getUserByEmail(String email);
 
     void startSocketSession(User user);
 
-    List<SocketStore> getSocketSessions(User user);
 
-    List<User> getAllUsers();
-
-    User getUserByIndex(int index);
 
 
 }

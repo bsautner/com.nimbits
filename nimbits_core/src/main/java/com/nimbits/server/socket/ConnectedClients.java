@@ -22,8 +22,6 @@ import com.google.gson.Gson;
 import com.nimbits.client.io.socket.SocketConnection;
 import com.nimbits.client.io.socket.SocketListener;
 import com.nimbits.client.model.UrlContainer;
-import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.accesskey.AccessKeyModel;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.instance.InstanceModel;
@@ -124,9 +122,9 @@ public class ConnectedClients {
 
         UrlContainer INSTANCE_URL = UrlContainer.getInstance(socket.getTargetUrl() + socket.getTargetPath());
 
-        AccessKey token = new AccessKeyModel.Builder().code(socket.getTargetApiKey()).create();
+        String token =  socket.getTargetApiKey();
        // Server SERVER = ServerFactory.getInstance(INSTANCE_URL, user.getEmail(), token);
-        Instance instance = new InstanceModel.Builder().adminEmail(user.getEmail()).apiKey(token).baseUrl(INSTANCE_URL).create();
+        Instance instance = new InstanceModel.Builder().adminEmail(user.getEmail()).password(token).baseUrl(INSTANCE_URL).create();
 
 
         try {

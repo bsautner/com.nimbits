@@ -18,13 +18,11 @@ package com.nimbits.client.model.summary;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.enums.SummaryType;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.trigger.Trigger;
 import com.nimbits.client.model.trigger.TriggerModel;
 
 import java.util.Date;
@@ -40,8 +38,8 @@ public class SummaryModel extends TriggerModel implements Summary {
     private Date lastProcessed;
 
 
-    protected SummaryModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String target, String trigger, boolean enabled, Integer summaryType, Long summaryIntervalMs, Date lastProcessed) {
-        super(id, name, description, entityType, protectionLevel, parent, owner, target, trigger, enabled);
+    protected SummaryModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String target, String trigger, boolean enabled, Integer summaryType, Long summaryIntervalMs, Date lastProcessed) {
+        super(id, name, description, entityType, parent, owner, target, trigger, enabled);
         this.summaryType = summaryType;
         this.summaryIntervalMs = summaryIntervalMs;
         this.lastProcessed = lastProcessed;
@@ -155,13 +153,10 @@ public class SummaryModel extends TriggerModel implements Summary {
         }
 
         public Summary create() {
-            if (protectionLevel == null) {
-                protectionLevel = ProtectionLevel.everyone;
-            }
 
             this.enabled = true;
 
-            return new SummaryModel(id, name, description, type, protectionLevel, parent, owner, target,
+            return new SummaryModel(id, name, description, type, parent, owner, target,
                     trigger, enabled,  summaryType.getCode(), summaryIntervalMs, lastProcessed);
         }
 
@@ -173,27 +168,11 @@ public class SummaryModel extends TriggerModel implements Summary {
         }
 
 
-        private void initEntity(Trigger anEntity) {
-            this.trigger = anEntity.getTrigger();
-            this.target = anEntity.getTarget();
-            this.enabled = anEntity.isEnabled();
-
-
-
-            this.id = anEntity.getId();
-            this.name = anEntity.getName();
-            this.description = anEntity.getDescription();
-            this.entityType = type;
-            this.parent = anEntity.getParent();
-            this.owner = anEntity.getOwner();
-            this.protectionLevel = anEntity.getProtectionLevel();
-            this.alertType = anEntity.getAlertType().getCode();
-
-
-        }
 
         public Builder init(Summary c) {
-            initEntity(c);
+            super.init(c);
+
+
             this.summaryType = c.getSummaryType();
             this.summaryIntervalMs = c.getSummaryIntervalMs();
             this.lastProcessed = c.getLastProcessed();
@@ -211,11 +190,7 @@ public class SummaryModel extends TriggerModel implements Summary {
             this.description = description;
             return this;
         }
-        @Override
-        public Builder protectionLevel(ProtectionLevel protectionLevel) {
-            this.protectionLevel = protectionLevel;
-            return this;
-        }
+
         @Override
         public Builder alertType(int alertType) {
             this.alertType = alertType;

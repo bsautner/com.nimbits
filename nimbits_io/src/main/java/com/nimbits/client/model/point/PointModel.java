@@ -20,7 +20,7 @@ package com.nimbits.client.model.point;
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
-import com.nimbits.client.enums.ProtectionLevel;
+
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
@@ -87,7 +87,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
             final CommonIdentifier name,
             final String description,
             final EntityType entityType,
-            final ProtectionLevel protectionLevel,
+
             final String parent,
             final String owner,
             final double highAlarm,
@@ -107,7 +107,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
             final boolean deltaAlarmOn,
             final int deltaSeconds,
             final int precision) {
-        super(id, name, description, entityType, protectionLevel, parent, owner);
+        super(id, name, description, entityType,  parent, owner);
         this.highAlarm = highAlarm;
         this.expire = expire;
         this.unit = unit;
@@ -475,7 +475,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
         }
 
         public Builder init(Point point) {
-            initEntity(point);
+            super.init(point);
             this.highAlarm = point.getHighAlarm();
             this.expire = point.getExpire();
             this.unit = point.getUnit();
@@ -508,25 +508,11 @@ public class PointModel extends EntityModel implements Serializable, Point {
                 filterType = FilterType.none;
             }
 
-            return new PointModel(id, name, description, type, protectionLevel, parent, owner, highAlarm, expire
+            return new PointModel(id, name, description, type,  parent, owner, highAlarm, expire
                     , unit, lowAlarm, highAlarmOn, lowAlarmOn, idleAlarmOn, idleSeconds, idleAlarmSent, filterType,filterValue, inferLocation,
                     pointType, deltaAlarm, deltaAlarmOn, deltaSeconds, precision);
         }
 
-        private void initEntity(Entity anEntity) {
-
-
-            this.id = anEntity.getId();
-            this.name = anEntity.getName();
-            this.description = anEntity.getDescription();
-            this.entityType = type;
-            this.parent = anEntity.getParent();
-            this.owner = anEntity.getOwner();
-            this.protectionLevel = anEntity.getProtectionLevel();
-            this.alertType = anEntity.getAlertType().getCode();
-
-
-        }
         @Override
         public Builder parent(String parent) {
 
@@ -546,12 +532,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
             this.description = description;
             return this;
         }
-        @Override
-        public Builder protectionLevel(ProtectionLevel protectionLevel) {
-            this.protectionLevel = protectionLevel;
-            return this;
-        }
-        @Override
+  @Override
         public Builder alertType(int alertType) {
             this.alertType = alertType;
             return this;

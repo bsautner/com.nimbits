@@ -19,7 +19,7 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>jar</packaging>
     <properties>
-        <spring.version>4.2.3.RELEASE</spring.version>
+        <spring.version>4.2.4.RELEASE</spring.version>
     </properties>
 
     <artifactId>nimbits_core</artifactId>
@@ -50,6 +50,13 @@
             <version>1.0.2</version>
 
         </dependency>
+
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>1.0.0.GA</version>
+        </dependency>
+
 
 
 
@@ -107,6 +114,9 @@
             <type>jar</type>
             <scope>provided</scope>
         </dependency>
+
+
+
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-orm</artifactId>

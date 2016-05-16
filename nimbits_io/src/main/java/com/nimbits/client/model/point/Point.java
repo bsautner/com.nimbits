@@ -68,8 +68,10 @@ public interface Point extends Entity, Serializable {
 
     void setUnit(final String unit);
 
+    @Deprecated
     void setValue(final Value value);
 
+    @Deprecated
     void setValues(final List<Value> values);
 
     FilterType getFilterType();

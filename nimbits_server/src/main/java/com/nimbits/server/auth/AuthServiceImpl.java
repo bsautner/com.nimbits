@@ -40,7 +40,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-@Service @Deprecated //nothing but trouble
+@Deprecated //nothing but trouble
 public class AuthServiceImpl implements AuthService {
 
 

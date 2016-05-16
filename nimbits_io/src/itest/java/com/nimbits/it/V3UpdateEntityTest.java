@@ -32,6 +32,11 @@ public class V3UpdateEntityTest extends NimbitsTest {
     }
 
     @Test
+    public void testSetup() {
+        assertTrue(true);
+    }
+
+    @Test
     public void executeTest() throws InterruptedException {
 
         final String name = UUID.randomUUID().toString();
@@ -44,7 +49,7 @@ public class V3UpdateEntityTest extends NimbitsTest {
         Subscription subscription1 = (Subscription) entity;
         assertNotNull(subscription1.getTarget());
 
-
+        assertEquals(name, entity.getName().getValue());
         nimbits.addSubscription(user, subscription);
 
         Optional<Subscription> returnedSubscription = nimbits.findSubscription(name);
@@ -52,6 +57,7 @@ public class V3UpdateEntityTest extends NimbitsTest {
 
         //update it
         Subscription r1 = returnedSubscription.get();
+        assertEquals(name, r1.getName().getValue());
         r1.setTarget("bar");
 
         nimbits.updateEntity(r1, new Callback<Void>() {

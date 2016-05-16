@@ -22,8 +22,6 @@ import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.ServerSetting;
-import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.accesskey.AccessKeyModel;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
@@ -56,7 +54,7 @@ public class UserServiceImpl implements UserService {
     public static final String ERROR1 = "Could not authenticate your request.";
 
     public static final int LIMIT = 1000;
-     private Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
+    private Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
 
 
     private final UserDao userDao;
@@ -78,6 +76,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<Credentials> credentialsWithBasicAuthentication(HttpServletRequest req) {
         String authHeader = req.getHeader("Authorization");
+        if (authHeader != null) {
+            return credentialsWithBasicAuthentication(authHeader);
+        }
+
+        return Optional.absent();
+    }
+
+
+    @Override
+    public Optional<Credentials> credentialsWithBasicAuthentication(String authHeader) {
+
         if (authHeader != null) {
             StringTokenizer st = new StringTokenizer(authHeader);
             if (st.hasMoreTokens()) {
@@ -109,7 +118,7 @@ public class UserServiceImpl implements UserService {
         return Optional.absent();
     }
 
-    @Override
+    @Override @Deprecated
     public User getHttpRequestUser(final EntityService entityService, final ValueService valueService, final HttpServletRequest req) {
         Optional<Credentials> credentials = credentialsWithBasicAuthentication(req);
 
@@ -140,13 +149,13 @@ public class UserServiceImpl implements UserService {
             User user;
 
 
-            Optional<User> result = entityDao.getUser(email);
+            Optional<User> result = entityDao.getUser(email.getValue());
 
 
             if (! result.isPresent()) {
 
 
-                return createUserIfNonexistantButAuthenticated(entityService,valueService, req, email);
+                return createUserIfNonexistantButAuthenticated(entityService,valueService, req, email, credentials);
 
 
             } else {
@@ -169,56 +178,29 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    private User createUserIfNonexistantButAuthenticated(final EntityService entityService, final ValueService valueService, HttpServletRequest req, EmailAddress email) {
+    private User createUserIfNonexistantButAuthenticated(final EntityService entityService, final ValueService valueService, HttpServletRequest req, EmailAddress email, Optional<Credentials> credentials) {
         User user;
-        if (trustedRequest(entityService, valueService, req, email)) {
-            //TODO - users was authenticated but no record of them - must be google auth??
-            user = createUserRecord( entityService, valueService, email, UUID.randomUUID().toString(), UserSource.google);
 
-            return user;
-
-        } else {
-            throw new SecurityException(ERROR1);
+        String password;
+        UserSource source;
+        if (credentials.isPresent()) {
+            password = credentials.get().getPassword();
+            source = UserSource.google;
         }
+        else {
+            password = UUID.randomUUID().toString();
+            source = UserSource.local;
+        }
+
+
+        user = createUserRecord( entityService, valueService, email, password, source);
+
+        return user;
+
+
     }
 
 
-    private boolean trustedRequest(EntityService entityService,  ValueService valueService, final HttpServletRequest request, EmailAddress email) {
-        List<EmailAddress> emailSample = authService.getCurrentUser(entityService, this, valueService, request);
-        EmailAddress emailAddress;
-        if (emailSample.isEmpty()) {
-            emailAddress = null;
-        } else {
-            emailAddress = emailSample.get(0);
-        }
-        return (emailAddress != null && emailAddress.getValue().equalsIgnoreCase(email.getValue()))
-                || validServerToken(request);
-    }
-
-
-    @Deprecated //TODO get rid of system wide token - use admin password
-    private boolean  validServerToken(final HttpServletRequest request) {
-
-        String serverToken = settingsService.getSetting(ServerSetting.token);
-        String providedToken = request.getHeader(Parameters.token.getText());
-
-        if (StringUtils.isEmpty(providedToken)) {
-            providedToken = request.getParameter(Parameters.token.getText());
-        }
-
-        if (StringUtils.isEmpty(providedToken)) { //try legacy - TODO deletme
-            providedToken = request.getHeader("API_KEY");
-        }
-
-        if (StringUtils.isNotEmpty(serverToken) && StringUtils.isNotEmpty(providedToken)) {
-            if (serverToken.equals(providedToken)) {
-                return true;
-            }
-
-        }
-        return false;
-
-    }
 
     @Override
     public EmailAddress getEmailFromRequest(HttpServletRequest req) {
@@ -233,11 +215,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUserRecord( final EntityService entityService, final ValueService valueService, final EmailAddress internetAddress, String password, UserSource source) {
         final EntityName name = CommonFactory.createName(internetAddress.getValue(), EntityType.user);
-
-
         String passwordSalt = RandomStringUtils.randomAscii(20);
-
         String cryptPassword = DigestUtils.sha512Hex(password + passwordSalt);
+        if (StringUtils.isEmpty(password)) {
+            throw new IllegalArgumentException("Attempt to create a user with a null password.");
+        }
+        logger.info("Creating user");
+        logger.info("Creating user: " + internetAddress.getValue());
+        logger.info("Creating user password: " + password);
+        logger.info("Creating user passwordSalt: " + passwordSalt);
+        logger.info("Creating user password: " + cryptPassword);
+
 
         boolean isFirst = ! userDao.usersExist();
 
@@ -248,6 +236,7 @@ public class UserServiceImpl implements UserService {
                 .source(source.name())
                 .email(internetAddress.getValue())
                 .owner(internetAddress.getValue())
+                .parent(internetAddress.getValue())
                 .create();
 
 
@@ -257,9 +246,7 @@ public class UserServiceImpl implements UserService {
             settingsService.updateSetting(ServerSetting.admin, internetAddress.getValue());
         }
 
-        User user = (User) entityService.addUpdateIncompleteEntity(valueService, newUser, newUser);
-
-        return user;
+        return (User) entityDao.addUpdateEntity(newUser, newUser);
 
     }
 
@@ -272,12 +259,12 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Server is missing admin setting!");
         } else {
             final User u = new UserModel.Builder()
-            .name(CommonFactory.createName(adminStr, EntityType.user))
-            .id(adminStr)
-            .email(adminStr)
+                    .name(CommonFactory.createName(adminStr, EntityType.user))
+                    .id(adminStr)
+                    .email(adminStr)
 
-            .parent(adminStr)
-            .isAdmin(true).create();
+                    .parent(adminStr)
+                    .isAdmin(true).create();
 
             return u;
         }
@@ -303,30 +290,23 @@ public class UserServiceImpl implements UserService {
         String storedEncodedPassword = user.getPassword();
         String salt = user.getPasswordSalt();
         String challenge = DigestUtils.sha512Hex(password + salt);
+        logger.info("user: " + user.getName().getValue());
+        logger.info("stored: " + storedEncodedPassword);
+        logger.info("salt: " + salt);
+        logger.info("password: " + password);
+        logger.info("challenge: " + challenge);
 
 
         if (! StringUtils.isEmpty(password) && storedEncodedPassword.equals(challenge)) {
             return true;
         }
         else {
-            List<AccessKey> keys = entityDao.getPasswordContainingAccessKeys(user);
-            for (AccessKey key : keys) {
-
-                if (key.getCode().equals(password)) { //TODO legacy from unencrypted keys remove someday
-                    entityDao.deleteEntity(user, key, EntityType.accessKey);
-                    AccessKey replacement = new AccessKeyModel.Builder()
-                            .init(key)
-                            .create();
-                    entityService.addUpdateEntity(valueService, user, replacement);
-                    return true;
-                }
-                if (key.getCode().equals(challenge)) {
-                    return true;
-                }
-
-            }
+            logger.info("FAILED LOGIN:" + password);
+            logger.info("FAILED LOGIN: " + storedEncodedPassword);
+            logger.info("FAILED LOGIN: " + challenge);
+            return false;
         }
-        return false;
+
 
     }
 
@@ -335,50 +315,22 @@ public class UserServiceImpl implements UserService {
     @Override
     public User doLogin(final EntityService entityService, final ValueService valueService, HttpServletRequest request, String email, String token) {
 
-        Optional<User> optional = getUserByKey(email);
-
-
+        Optional<User> optional = entityDao.getUser(email);
         if (optional.isPresent()) {
             User user = optional.get();
             if (validatePassword( entityService, valueService, user, token)) {
-
                 return loginUser(request, email, user);
             } else {
-                final Map<String, Entity> keys = entityDao.getEntityMap(user, EntityType.accessKey, LIMIT);
-
-                for (Entity entity : keys.values()) {
-                    String key = ((AccessKey) entity).getCode();
-
-                    if (token.equals(key)) {
-                        return loginUser(request, email, user);
-                    }
-
-
-                }
-                String serverToken = settingsService.getSetting(ServerSetting.token);
-
-
-                if (!StringUtils.isEmpty(serverToken) && serverToken.equals(token)) {
-                    return loginUser(request, email, user);
-                }
-
-                logger.info("login failed");
                 throw new SecurityException("Invalid user name or password");
-
-
             }
         } else {
             throw new SecurityException("User not found!");
         }
-
-
     }
 
     private User loginUser(HttpServletRequest request, String email, User user) {
         LoginInfo loginInfo = UserModelFactory.createLoginInfo("", "", UserStatus.newUser, authService.isGAE());
         user.setLoginInfo(loginInfo);
-
-
         String authToken = startSession(request, email);
         user.setToken(authToken);
         return user;
@@ -422,42 +374,6 @@ public class UserServiceImpl implements UserService {
     public boolean userHasPoints(User user) {
 
         return userDao.userHasPoints(user);
-    }
-
-
-
-    @Override
-    public String getToken(HttpServletRequest req) {
-        String token = req.getHeader(Parameters.token.getText());
-
-        if (StringUtils.isEmpty(token)) {
-            token = req.getParameter(Parameters.token.getText());
-        }
-
-        //TODO legacy delete later
-
-        if (StringUtils.isEmpty(token)) {
-            token = req.getParameter(Parameters.password.getText());
-        }
-
-
-        if (StringUtils.isEmpty(token)) {
-            token = req.getParameter(Parameters.key.getText());
-        }
-
-        if (StringUtils.isEmpty(token)) {
-            token = req.getParameter(Parameters.secret.getText());
-        }
-
-        if (StringUtils.isEmpty(token)) {
-            token = req.getHeader("API_KEY");
-        }
-
-        if (StringUtils.isEmpty(token)) {
-            token = req.getParameter("ApiKey");
-        }
-
-        return token;
     }
 
 

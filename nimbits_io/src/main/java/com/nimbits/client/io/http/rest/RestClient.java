@@ -16,7 +16,6 @@
 
 package com.nimbits.client.io.http.rest;
 
-import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.connection.Connection;
@@ -50,7 +49,7 @@ public interface RestClient {
     @GET(API + "/me")
     User getMe(@Query("children") boolean includeChildren);
 
-    @POST(API)
+    @POST(API + "/")
     User addUser(@Body User newUser);
 
     @POST(API + "/{uuid}") @Deprecated //use specific adder
@@ -121,10 +120,6 @@ public interface RestClient {
     @POST(API + "/{uuid}")
     Summary addSummary(@Path("uuid") String parent,  @Body Summary summary);
 
-    @POST(API + "/{uuid}")
-    AccessKey addAccessKey(@Path("uuid") String parent,  @Body AccessKey summary);
-
-
     @GET(API + "/{uuid}/children")
     List<Entity> getChildren(@Path("uuid") String uuid);
 
@@ -135,7 +130,7 @@ public interface RestClient {
     List<Point> getNearbyPoints(@Path("uuid")String uuid, @Query("meters") double meters);
 
     @GET(API + "/me")
-    Point findPoint(@Query("point") String pointName);
+    Point findPoint(@Query("name") String pointName);
 
 
 
@@ -187,7 +182,6 @@ public interface RestClient {
 
     @PUT(API + "/photo/{uuid}")
     void updateFile(@Path("uuid") String uuid, @Body String encoded, Callback<Void> callback);
-
 
     @PUT(API + "/{uuid}")
     void updateEntity(@Path("uuid")String uuid, @Body Entity entity, Callback<Void> callback);

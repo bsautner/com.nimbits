@@ -18,7 +18,7 @@ package com.nimbits.client.model.webhook;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
+
 import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
@@ -48,8 +48,8 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
     private int pathChannel;
 
 
-    protected WebHookModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, int method, String url, boolean enabled, String downloadTarget, int bodyChannel, int pathChannel) {
-        super(id, name, description, entityType, protectionLevel, parent, owner);
+    protected WebHookModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, int method, String url, boolean enabled, String downloadTarget, int bodyChannel, int pathChannel) {
+        super(id, name, description, entityType,  parent, owner);
         this.method = method;
         this.url = url;
         this.enabled = enabled;
@@ -186,9 +186,7 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
 
 
         public WebHook create() {
-            if (protectionLevel == null) {
-                protectionLevel = ProtectionLevel.everyone;
-            }
+
             if (enabled == null) {
                 enabled = true;
             }
@@ -204,7 +202,7 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
 
 
 
-            return new WebHookModel(id, name, description, EntityType.webhook, protectionLevel, parent, owner, method.getCode(), url.getUrl(), true,
+            return new WebHookModel(id, name, description, EntityType.webhook,  parent, owner, method.getCode(), url.getUrl(), true,
                     downloadTarget, bodyChannel.getCode(), pathChannel.getCode());
         }
 
@@ -216,23 +214,10 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
         }
 
 
-        private void initEntity(Entity anEntity) {
 
-
-            this.id = anEntity.getId();
-            this.name = anEntity.getName();
-            this.description = anEntity.getDescription();
-            this.entityType = anEntity.getEntityType();
-            this.parent = anEntity.getParent();
-            this.owner = anEntity.getOwner();
-            this.protectionLevel = anEntity.getProtectionLevel();
-            this.alertType = anEntity.getAlertType().getCode();
-
-
-        }
 
         public Builder init(WebHook e) {
-            initEntity(e);
+            super.init(e);
             method = e.getMethod();
             bodyChannel = e.getBodyChannel();
             pathChannel = e.getPathChannel();
@@ -255,12 +240,7 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
             this.description = description;
             return this;
         }
-        @Override
-        public Builder protectionLevel(ProtectionLevel protectionLevel) {
-            this.protectionLevel = protectionLevel;
-            return this;
-        }
-        @Override
+  @Override
         public Builder alertType(int alertType) {
             this.alertType = alertType;
             return this;

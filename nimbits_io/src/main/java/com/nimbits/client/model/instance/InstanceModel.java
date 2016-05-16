@@ -18,10 +18,8 @@ package com.nimbits.client.model.instance;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
+
 import com.nimbits.client.model.UrlContainer;
-import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.accesskey.AccessKeyModel;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
@@ -45,7 +43,7 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
     @Expose
     private String version;
     @Expose
-    private String apiKey;
+    private String password;
     @Expose
     private boolean isDefault;
     @Expose
@@ -56,13 +54,13 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
 
 
 
-    protected InstanceModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, long serverId, String baseUrl, String adminEmail, String version, String apiKey, boolean isDefault, String protocol, boolean socketsEnabled) {
-        super(id, name, description, entityType, protectionLevel, parent, owner);
+    protected InstanceModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, long serverId, String baseUrl, String adminEmail, String version, String password, boolean isDefault, String protocol, boolean socketsEnabled) {
+        super(id, name, description, entityType,  parent, owner);
         this.serverId = serverId;
         this.baseUrl = baseUrl;
         this.adminEmail = adminEmail;
         this.version = version;
-        this.apiKey = apiKey;
+        this.password = password;
         this.isDefault = isDefault;
         this.protocol = protocol;
         this.socketsEnabled = socketsEnabled;
@@ -92,8 +90,8 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
     }
 
     @Override
-    public AccessKey getApiKey() {
-        return new AccessKeyModel.Builder().code(apiKey).create();
+    public String getPassword() {
+        return password;
     }
 
     @Override
@@ -124,7 +122,7 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
 
         private String version;
 
-        private AccessKey apiKey;
+        private String password;
 
         private boolean isDefault;
 
@@ -139,17 +137,15 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
         }
 
         public Instance create() {
-            if (protectionLevel == null) {
-                protectionLevel = ProtectionLevel.everyone;
-            }
+
 
             if (protocol == null) {
                 protocol = Protocol.http;
             }
 
 
-            return new InstanceModel(id, name, description, type, protectionLevel, parent, owner,
-                    serverId, baseUrl.getUrl(),adminEmail.getValue(),version,apiKey.getCode(),  isDefault, protocol.name(), socketsEnabled );
+            return new InstanceModel(id, name, description, type,  parent, owner,
+                    serverId, baseUrl.getUrl(),adminEmail.getValue(),version, password,  isDefault, protocol.name(), socketsEnabled );
         }
 
         @Override
@@ -159,23 +155,9 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
             return this;
         }
 
-        private void initEntity(Entity anEntity) {
-
-
-            this.id = anEntity.getId();
-            this.name = anEntity.getName();
-            this.description = anEntity.getDescription();
-            this.entityType = anEntity.getEntityType();
-            this.parent = anEntity.getParent();
-            this.owner = anEntity.getOwner();
-            this.protectionLevel = anEntity.getProtectionLevel();
-            this.alertType = anEntity.getAlertType().getCode();
-
-
-        }
 
         public Builder init(Instance e) {
-            initEntity(e);
+            super.init(e);
             serverId = e.getServerId();
 
             baseUrl = e.getBaseUrl();
@@ -184,7 +166,7 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
 
             version = e.getVersion();
 
-            apiKey = e.getApiKey();
+            password = e.getPassword();
 
             isDefault = e.isDefault();
 
@@ -206,12 +188,7 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
             this.description = description;
             return this;
         }
-        @Override
-        public Builder protectionLevel(ProtectionLevel protectionLevel) {
-            this.protectionLevel = protectionLevel;
-            return this;
-        }
-        @Override
+  @Override
         public Builder alertType(int alertType) {
             this.alertType = alertType;
             return this;
@@ -264,8 +241,8 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
             return this;
         }
 
-        public Builder apiKey(AccessKey apiKey) {
-            this.apiKey = apiKey;
+        public Builder password(String password) {
+            this.password = password;
             return this;
         }
 

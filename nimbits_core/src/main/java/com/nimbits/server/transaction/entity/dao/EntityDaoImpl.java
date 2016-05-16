@@ -18,13 +18,10 @@ package com.nimbits.server.transaction.entity.dao;
 
 
 import com.google.common.base.Optional;
-import com.google.common.collect.ImmutableList;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
-import com.nimbits.client.model.accesskey.AccessKey;
+
 import com.nimbits.client.model.connection.Connection;
 import com.nimbits.client.model.connection.ConnectionModel;
-import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.schedule.Schedule;
@@ -203,7 +200,7 @@ public class EntityDaoImpl implements EntityDao {
                     result.validate(user);
 
                     tx.commit();
-
+                    logger.info("commited update: " + result.toString());
                     return EntityHelper.createModel(user, result);
 
 
@@ -245,16 +242,10 @@ public class EntityDaoImpl implements EntityDao {
 
             }
 
+
             if (StringUtils.isEmpty(commit.getId())) {
-                if (entity.getEntityType().equals(EntityType.user)) {
-                    commit.setId(entity.getOwner());
-                } else if(entity.getEntityType().equals(EntityType.point)) {
-                    commit.setId(UUID.randomUUID().toString());
-                   //TODO commit.setId(entity.getOwner() + "/" + entity.getName());
-                }
-                else {
-                    commit.setId(UUID.randomUUID().toString());
-                }
+                commit.setId(UUID.randomUUID().toString());
+
             }
 
 
@@ -262,8 +253,10 @@ public class EntityDaoImpl implements EntityDao {
 
             return EntityHelper.createModel(user, commit);
 
+        } catch (Exception ex) {
 
-
+            logger.severe(ex.getMessage());
+            throw ex;
 
         } finally {
             pm.close();
@@ -315,7 +308,7 @@ public class EntityDaoImpl implements EntityDao {
                                 //todo behold the iot social network
 
                             }
-                            if (!entity1.getEntityType().equals(EntityType.connection) && !entity1.getProtectionLevel().equals(ProtectionLevel.onlyMe)) {
+                            if (!entity1.getEntityType().equals(EntityType.connection)) {
                                 entity1.setReadOnly(true);
                                 retObj.add(entity1);
 
@@ -582,7 +575,7 @@ public class EntityDaoImpl implements EntityDao {
 
                 result.setApproved(true);
 
-
+                logger.info("commited update: " + result.toString());
                 tx.commit();
 
                 return Collections.singletonList(new ConnectionModel.Builder().init(result).create());
@@ -644,7 +637,7 @@ public class EntityDaoImpl implements EntityDao {
     }
 
     @Override
-    public Optional<User> getUser(EmailAddress email) {
+    public Optional<User> getUser(String email) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
@@ -655,7 +648,7 @@ public class EntityDaoImpl implements EntityDao {
             q1.setFilter("owner==e");
             q1.declareParameters("String e");
 
-            final List<User> result = (List<User>) q1.execute(email.getValue());
+            final List<User> result = (List<User>) q1.execute(email);
 
 
             if(result.isEmpty()) {
@@ -679,24 +672,6 @@ public class EntityDaoImpl implements EntityDao {
 
 
 
-
-    @Override
-    public List<AccessKey> getPasswordContainingAccessKeys(User user) {
-
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
-
-        try {
-            final Collection<String> ownerKeys = new ArrayList<>(1);
-            ownerKeys.add(user.getId());
-
-            final Query  q1 = pm.newQuery(AccessKeyEntity.class, ":p.contains(owner)");
-            return  (List<AccessKey>) q1.execute(ownerKeys);
-
-        } finally {
-            pm.close();
-        }
-    }
 
 
     private void checkDuplicateEntity(final User user, final List<Entity> entityList) {

@@ -185,13 +185,8 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
     private boolean userExists(String email) {
         Optional<User> user;
         try {
-            user = userService.getUserByKey(email);
-            if (user.isPresent()) {
-                return true;
-            }
-            else {
-                return false;
-            }
+            user = userDao.getUserByEmail(email);
+            return user.isPresent();
         }
         catch ( Exception ignored) {
             return false;

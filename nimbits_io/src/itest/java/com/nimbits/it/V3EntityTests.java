@@ -1,13 +1,9 @@
 package com.nimbits.it;
 
-import com.google.common.base.Optional;
-import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.SummaryType;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.model.UrlContainer;
-import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.accesskey.AccessKeyModel;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.calculation.CalculationModel;
 import com.nimbits.client.model.category.Category;
@@ -30,8 +26,6 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.webhook.HttpMethod;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
-import com.nimbits.client.io.Nimbits;
-import org.apache.http.util.TextUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -78,7 +72,7 @@ public class V3EntityTests extends NimbitsTest {
 
         testInstance();
 
-        testAccessKey();
+
 
         testWebhook();
 
@@ -174,7 +168,7 @@ public class V3EntityTests extends NimbitsTest {
                         .baseUrl(UrlContainer.getInstance("cloud.nimbits.com"))
                         .adminEmail(CommonFactory.createEmailAddress("test@example.com"))
                         .version("1.0")
-                        .apiKey(new AccessKeyModel.Builder().code("TEST").create())
+                        .password("TEST")
                         .isDefault(true)
                         .socketsEnabled(true)
                         .serverId(100)
@@ -182,45 +176,7 @@ public class V3EntityTests extends NimbitsTest {
 
     }
 
-    private void testAccessKey() {
 
-        AccessKey key = new AccessKeyModel.Builder()
-                .code("TEST")
-
-                .create();
-
-        nimbits.addAccessKey(category, key);
-
-        Point inputPoint = nimbits.addPoint(category, new PointModel.Builder()
-                .name(UUID.randomUUID().toString())
-                .create());
-
-
-
-        Nimbits clientUsingKey = new Nimbits.Builder().email(EMAIL_ADDRESS).instance(INSTANCE_URL).token(key.getCode()).create();
-
-    Optional<Point> p = clientUsingKey.findPointByName(inputPoint.getName().getValue());
-        if (p.isPresent()) {
-            log(p.toString());
-        }
-        else {
-            error("getting point with a new access key failed.");
-        }
-
-        List<Entity> downloaded = nimbits.getChildren(category);
-        for (Entity e : downloaded) {
-
-            if (e.getEntityType().equals(EntityType.accessKey)) {
-                AccessKey k = (AccessKey) e;
-                if (!TextUtils.isEmpty(k.getCode())) {
-                    error("api is returning key codes when it should not");
-                }
-            }
-        }
-
-
-
-    }
 
     private void testSummary() throws InterruptedException {
         Point inputPoint = nimbits.addPoint(category, new PointModel.Builder()

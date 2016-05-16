@@ -18,7 +18,7 @@ package com.nimbits.client.model.calculation;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
+
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
@@ -51,8 +51,8 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
         super();
     }
 
-    protected CalculationModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String target, String trigger, boolean enabled, String formula, String x, String y, String z) {
-        super(id, name, description, entityType, protectionLevel, parent, owner, target, trigger, enabled);
+    protected CalculationModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String target, String trigger, boolean enabled, String formula, String x, String y, String z) {
+        super(id, name, description, entityType,  parent, owner, target, trigger, enabled);
         this.formula = formula;
         this.x = x;
         this.y = y;
@@ -217,13 +217,11 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
         }
 
         public Calculation create() {
-            if (protectionLevel == null) {
-                protectionLevel = ProtectionLevel.everyone;
-            }
+
             this.enabled = true;
 
 
-            return new CalculationModel(id, name, description, type, protectionLevel, parent, owner, target,
+            return new CalculationModel(id, name, description, type,  parent, owner, target,
                     trigger, enabled, formula, x, y, z);
         }
 
@@ -235,26 +233,8 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
         }
 
 
-        private void initEntity(Trigger anEntity) {
-            this.trigger = anEntity.getTrigger();
-            this.target = anEntity.getTarget();
-            this.enabled = anEntity.isEnabled();
-
-
-            this.id = anEntity.getId();
-            this.name = anEntity.getName();
-            this.description = anEntity.getDescription();
-            this.entityType = anEntity.getEntityType();
-            this.parent = anEntity.getParent();
-            this.owner = anEntity.getOwner();
-            this.protectionLevel = anEntity.getProtectionLevel();
-            this.alertType = anEntity.getAlertType().getCode();
-
-
-        }
-
         public Builder init(Calculation c) {
-            initEntity(c);
+            super.init(c);
             this.formula = c.getFormula();
             this.x = c.getX();
             this.y = c.getY();
@@ -273,11 +253,7 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
             this.description = description;
             return this;
         }
-        @Override
-        public Builder protectionLevel(ProtectionLevel protectionLevel) {
-            this.protectionLevel = protectionLevel;
-            return this;
-        }
+
         @Override
         public Builder alertType(int alertType) {
             this.alertType = alertType;

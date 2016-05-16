@@ -16,7 +16,6 @@
 
 package com.nimbits.client.io.http.rest;
 
-import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.connection.Connection;
@@ -120,10 +119,6 @@ public interface RestClient {
 
     @POST(API + "/{uuid}")
     Summary addSummary(@Path("uuid") String parent,  @Body Summary summary);
-
-    @POST(API + "/{uuid}")
-    AccessKey addAccessKey(@Path("uuid") String parent,  @Body AccessKey summary);
-
 
     @GET(API + "/{uuid}/children")
     List<Entity> getChildren(@Path("uuid") String uuid);

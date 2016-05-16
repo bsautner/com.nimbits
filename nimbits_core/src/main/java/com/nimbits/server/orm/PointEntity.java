@@ -366,4 +366,9 @@ public class PointEntity extends EntityStore implements Point {
 
 
     }
+
+    @Override
+    public void init(Entity anEntity) {
+
+    }
 }

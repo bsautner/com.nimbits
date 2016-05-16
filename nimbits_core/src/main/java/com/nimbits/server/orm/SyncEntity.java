@@ -18,6 +18,7 @@ package com.nimbits.server.orm;
 
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.sync.Sync;
+import com.nimbits.client.model.trigger.Trigger;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -55,6 +56,11 @@ public class SyncEntity extends TriggerEntity implements Sync {
     }
 
     @Override
+    public void init(Entity anEntity) {
+
+    }
+
+    @Override
     public String getTargetInstance() {
         return targetInstance;
     }
@@ -65,5 +71,8 @@ public class SyncEntity extends TriggerEntity implements Sync {
     }
 
 
+    @Override
+    public void init(Trigger entity) {
 
+    }
 }

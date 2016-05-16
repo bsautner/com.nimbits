@@ -16,8 +16,6 @@
 
 package com.nimbits.server.transaction.entity;
 
-import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.accesskey.AccessKeyModel;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.calculation.CalculationModel;
 import com.nimbits.client.model.category.Category;
@@ -32,7 +30,6 @@ import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.schedule.ScheduleModel;
 import com.nimbits.client.model.socket.Socket;
-
 import com.nimbits.client.model.socket.SocketModel;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.subscription.SubscriptionModel;
@@ -82,10 +79,6 @@ public class EntityHelper {
 
             case sync:
                 return  new SyncEntity((Sync) entity);
-
-            case accessKey:
-                return  new AccessKeyEntity((AccessKey) entity);
-
             case socket:
                 return  new SocketEntity((Socket) entity);
 
@@ -152,11 +145,7 @@ public class EntityHelper {
                 case sync:
                     model = new SyncModel.Builder().init((Sync) entity).create();
                     break;
-                case accessKey:
-                    //do not return passwords, there is a special dao method for that if needed server side
-                    model = new AccessKeyModel.Builder().init((AccessKey) entity)
-                            .code("").create();
-                    break;
+
                 case socket:
                     model = new SocketModel.Builder().init((Socket) entity).create();
                     break;

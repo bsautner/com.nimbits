@@ -18,7 +18,7 @@ package com.nimbits.client.model.connection;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
+
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
@@ -42,8 +42,8 @@ public class ConnectionModel extends EntityModel implements Serializable, Connec
     }
 
 
-    protected ConnectionModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String approvalKey, boolean approved, String targetEmail) {
-        super(id, name, description, entityType, protectionLevel, parent, owner);
+    protected ConnectionModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String approvalKey, boolean approved, String targetEmail) {
+        super(id, name, description, entityType,  parent, owner);
         this.approvalKey = approvalKey;
         this.approved = approved;
         this.targetEmail = targetEmail;
@@ -85,12 +85,10 @@ public class ConnectionModel extends EntityModel implements Serializable, Connec
         }
 
         public Connection create() {
-            if (protectionLevel == null) {
-                protectionLevel = ProtectionLevel.everyone;
-            }
 
 
-            return new ConnectionModel(id, name, description, type, protectionLevel, parent, owner, approvalKey, approved, targetEmail);
+
+            return new ConnectionModel(id, name, description, type,  parent, owner, approvalKey, approved, targetEmail);
         }
 
         @Override
@@ -102,23 +100,9 @@ public class ConnectionModel extends EntityModel implements Serializable, Connec
 
 
 
-        private void initEntity(Entity anEntity) {
-
-
-            this.id = anEntity.getId();
-            this.name = anEntity.getName();
-            this.description = anEntity.getDescription();
-            this.entityType = type;
-            this.parent = anEntity.getParent();
-            this.owner = anEntity.getOwner();
-            this.protectionLevel = anEntity.getProtectionLevel();
-            this.alertType = anEntity.getAlertType().getCode();
-
-
-        }
 
         public Builder init(Connection e) {
-            initEntity(e);
+            super.init(e);
             this.approvalKey = e.getApprovalKey();
             this.approved = e.isApproved();
             this.targetEmail = e.getTargetEmail();
@@ -151,12 +135,7 @@ public class ConnectionModel extends EntityModel implements Serializable, Connec
             this.description = description;
             return this;
         }
-        @Override
-        public Builder protectionLevel(ProtectionLevel protectionLevel) {
-            this.protectionLevel = protectionLevel;
-            return this;
-        }
-        @Override
+  @Override
         public Builder alertType(int alertType) {
             this.alertType = alertType;
             return this;

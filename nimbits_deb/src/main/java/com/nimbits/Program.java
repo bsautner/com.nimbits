@@ -18,46 +18,14 @@
 
 package com.nimbits;
 
-import com.nimbits.client.model.UrlContainer;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.server.Server;
-import com.nimbits.client.model.user.User;
-import jline.ConsoleReader;
-import jline.SimpleCompletor;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
 
 
 public class Program   {
 
-    public static EmailAddress EMAIL_ADDRESS;
-    private static UrlContainer INSTANCE_URL;
 
-    private static Server SERVER;
-    public static User user;
-    public static Entity current;
-    public static List<Entity> tree = Collections.emptyList();
 
-    private static List<SimpleCompletor> completorList = new LinkedList<>();
-    private static MyReader currentReader;
 
-    private static class MyReader extends ConsoleReader {
-        private boolean closed;
-        public MyReader() throws IOException {
-        }
-
-        public void setClosed(boolean closed) {
-            this.closed = closed;
-        }
-
-        public boolean isClosed() {
-            return closed;
-        }
-    }
 
     public static void main(String[] args) throws Exception {
 

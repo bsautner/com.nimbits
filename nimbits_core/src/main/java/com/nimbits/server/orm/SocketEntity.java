@@ -100,5 +100,10 @@ public class SocketEntity extends EntityStore implements Socket {
 
     }
 
+    @Override
+    public void init(Entity anEntity) {
+
+    }
+
 
 }

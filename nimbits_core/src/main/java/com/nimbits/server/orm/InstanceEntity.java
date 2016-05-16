@@ -17,10 +17,9 @@
 package com.nimbits.server.orm;
 
 import com.nimbits.client.model.UrlContainer;
-import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.accesskey.AccessKeyModel;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.server.Protocol;
 
@@ -48,7 +47,7 @@ public class InstanceEntity extends EntityStore implements Instance {
     private String version;
 
     @Persistent
-    private String apiKey;
+    private String password;
 
     @Persistent
     private boolean isDefault;
@@ -66,7 +65,7 @@ public class InstanceEntity extends EntityStore implements Instance {
         this.baseUrl = server.getBaseUrl().getUrl();
         this.adminEmail = server.getAdminEmail().getValue();
         this.version = server.getVersion();
-        this.apiKey = server.getApiKey().getCode();
+        this.password = server.getPassword();
         this.isDefault = server.isDefault();
         this.protocol = server.getProtocol().name();
         this.socketsEnabled = server.isSocketsEnabled();
@@ -97,8 +96,8 @@ public class InstanceEntity extends EntityStore implements Instance {
     }
 
     @Override
-    public AccessKey getApiKey() {
-        return new AccessKeyModel.Builder().code(apiKey).create();
+    public String getPassword() {
+        return password;
     }
 
     @Override
@@ -117,4 +116,8 @@ public class InstanceEntity extends EntityStore implements Instance {
     }
 
 
+    @Override
+    public void init(Entity anEntity) {
+       // super.init(anEntity);
+    }
 }

@@ -123,6 +123,11 @@ public class UserEntity extends EntityStore implements User {
     }
 
     @Override
+    public void init(Entity anEntity) {
+
+    }
+
+    @Override
     public boolean getIsAdmin() {
         return isAdmin == null ? false : isAdmin;
     }

@@ -19,7 +19,6 @@ package com.nimbits.server.transaction.entity;
 
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.point.PointType;
-import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.connection.Connection;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
@@ -32,13 +31,10 @@ import com.nimbits.server.socket.ConnectedClients;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.value.service.ValueService;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 
@@ -146,11 +142,7 @@ public class EntityServiceImpl implements EntityService {
 
                 break;
 
-            case accessKey:
-                AccessKey a = (AccessKey) entity;
-                String cryptPassword = DigestUtils.sha512Hex(a.getCode() + user.getPasswordSalt());
-                a.setCode(cryptPassword);
-                break;
+
 
 
 

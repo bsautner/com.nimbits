@@ -18,13 +18,9 @@ package com.nimbits.server.transaction.entity.dao;
 
 import com.google.common.base.Optional;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.point.PointType;
-import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.connection.Connection;
-import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.user.User;
 
@@ -55,7 +51,7 @@ public interface EntityDao {
 
     Optional<Entity> getEntity(User user, String id, EntityType type);
 
-    Optional<User> getUser(EmailAddress email);
+    Optional<User> getUser(String email);
 
     Optional<Entity> getEntityByName(User user, EntityName name, EntityType type);
 
@@ -67,5 +63,4 @@ public interface EntityDao {
 
     Optional<Entity> findEntity(User user, String uuid);
 
-    List<AccessKey> getPasswordContainingAccessKeys(User user);
 }

@@ -18,7 +18,7 @@ package com.nimbits.client.model.schedule;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
+
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
@@ -44,8 +44,8 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
 
     }
 
-    protected ScheduleModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, Boolean enabled, Long interval, String source, String target, Long lastProcessed) {
-        super(id, name, description, entityType, protectionLevel, parent, owner);
+    protected ScheduleModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, Boolean enabled, Long interval, String source, String target, Long lastProcessed) {
+        super(id, name, description, entityType,  parent, owner);
         this.enabled = enabled;
         this.interval = interval;
         this.source = source;
@@ -128,9 +128,7 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
         }
 
         public Schedule create() {
-            if (protectionLevel == null) {
-                protectionLevel = ProtectionLevel.everyone;
-            }
+
 
             if (enabled == null) {
                 enabled = true;
@@ -141,7 +139,7 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
             }
 
 
-            return new ScheduleModel(id, name, description,type, protectionLevel, parent, owner,
+            return new ScheduleModel(id, name, description,type,  parent, owner,
                     enabled, interval, source, target, lastProcessed);
         }
 
@@ -153,23 +151,9 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
         }
 
 
-        private void initEntity(Entity anEntity) {
-
-
-            this.id = anEntity.getId();
-            this.name = anEntity.getName();
-            this.description = anEntity.getDescription();
-            this.entityType = anEntity.getEntityType();
-            this.parent = anEntity.getParent();
-            this.owner = anEntity.getOwner();
-            this.protectionLevel = anEntity.getProtectionLevel();
-            this.alertType = anEntity.getAlertType().getCode();
-
-
-        }
 
         public Builder init(Schedule e) {
-            initEntity(e);
+            super.init(e);
 
             enabled = e.isEnabled();
 
@@ -195,12 +179,7 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
             this.description = description;
             return this;
         }
-        @Override
-        public Builder protectionLevel(ProtectionLevel protectionLevel) {
-            this.protectionLevel = protectionLevel;
-            return this;
-        }
-        @Override
+  @Override
         public Builder alertType(int alertType) {
             this.alertType = alertType;
             return this;

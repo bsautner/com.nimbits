@@ -16,6 +16,7 @@
 
 package com.nimbits.client.model.calculation;
 
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.trigger.Trigger;
 
 import java.io.Serializable;
@@ -39,5 +40,8 @@ public interface Calculation extends Trigger, Serializable {
 
 
     void setFormula(final String formula);
+
+    @Override
+    void init(Entity e);
 
 }

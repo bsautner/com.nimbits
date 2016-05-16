@@ -18,7 +18,7 @@ package com.nimbits.client.model.sync;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
+
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
@@ -34,8 +34,8 @@ public class SyncModel extends TriggerModel implements Sync {
     @Expose
     private String accessKey;
 
-    public SyncModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String target, String trigger, boolean enabled, String targetInstance, String accessKey) {
-        super(id, name, description, entityType, protectionLevel, parent, owner, target, trigger, enabled);
+    public SyncModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String target, String trigger, boolean enabled, String targetInstance, String accessKey) {
+        super(id, name, description, entityType,  parent, owner, target, trigger, enabled);
         this.targetInstance = targetInstance;
         this.accessKey = accessKey;
     }
@@ -122,13 +122,11 @@ public class SyncModel extends TriggerModel implements Sync {
         }
 
         public Sync create() {
-            if (protectionLevel == null) {
-                protectionLevel = ProtectionLevel.everyone;
-            }
+
             this.enabled = true;
 
 
-            return new SyncModel(id, name, description, type, protectionLevel, parent, owner, target,
+            return new SyncModel(id, name, description, type,  parent, owner, target,
                     trigger, enabled, targetInstance, accessKey);
         }
 
@@ -141,26 +139,9 @@ public class SyncModel extends TriggerModel implements Sync {
 
 
 
-        private void initEntity(Trigger anEntity) {
-            this.trigger = anEntity.getTrigger();
-            this.target = anEntity.getTarget();
-            this.enabled = anEntity.isEnabled();
-
-
-            this.id = anEntity.getId();
-            this.name = anEntity.getName();
-            this.description = anEntity.getDescription();
-            this.entityType = anEntity.getEntityType();
-            this.parent = anEntity.getParent();
-            this.owner = anEntity.getOwner();
-            this.protectionLevel = anEntity.getProtectionLevel();
-            this.alertType = anEntity.getAlertType().getCode();
-
-
-        }
 
         public Builder init(Sync c) {
-            initEntity(c);
+            super.init(c);
             targetInstance = c.getTargetInstance();
             accessKey = c.getAccessKey();
             return this;
@@ -177,12 +158,7 @@ public class SyncModel extends TriggerModel implements Sync {
             this.description = description;
             return this;
         }
-        @Override
-        public Builder protectionLevel(ProtectionLevel protectionLevel) {
-            this.protectionLevel = protectionLevel;
-            return this;
-        }
-        @Override
+  @Override
         public Builder alertType(int alertType) {
             this.alertType = alertType;
             return this;

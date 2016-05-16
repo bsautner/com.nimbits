@@ -22,12 +22,7 @@ import com.nimbits.client.model.entity.Entity;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
-/**
- * Created by bsautner
- * User: benjamin
- * Date: 4/8/12
- * Time: 10:53 AM
- */
+
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class CategoryEntity extends EntityStore implements Category {
 
@@ -42,6 +37,12 @@ public class CategoryEntity extends EntityStore implements Category {
         super(entity);
 
     }
+
+    @Override
+    public void init(Entity anEntity) {
+
+    }
+
 //
 //    @Override
 //    public void update(Entity update)  {

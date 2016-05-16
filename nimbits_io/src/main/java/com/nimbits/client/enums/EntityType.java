@@ -16,8 +16,6 @@
 
 package com.nimbits.client.enums;
 
-import com.nimbits.client.model.accesskey.AccessKey;
-import com.nimbits.client.model.accesskey.AccessKeyModel;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.calculation.CalculationModel;
 import com.nimbits.client.model.category.Category;
@@ -44,7 +42,9 @@ import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public enum EntityType implements Serializable {
@@ -56,7 +56,6 @@ public enum EntityType implements Serializable {
     sync(15,  false,  false, true, false, 5, "com.nimbits.server.orm.SyncEntity", Sync.class, SyncModel.class),
     calculation(7, true, false, true, false, 6, "com.nimbits.server.orm.CalcEntity", Calculation.class, CalculationModel.class),
     summary(11, true,  false, true, false, 11, "com.nimbits.server.orm.SummaryEntity", Summary.class, SummaryModel.class),
-    accessKey(13,  false,  true, true, false, 13, "com.nimbits.server.orm.AccessKeyEntity", AccessKey.class, AccessKeyModel.class),
     instance(14,  false,  true, false, false, 14, "com.nimbits.server.orm.InstanceEntity", Instance.class, InstanceModel.class),
     socket(19,  false, true, true, false, 19, "com.nimbits.server.orm.SocketEntity", Socket.class, SocketModel.class),
     connection(20, false, true, true, false, 20, "com.nimbits.server.orm.ConnectionEntity", Connection.class, ConnectionModel.class),

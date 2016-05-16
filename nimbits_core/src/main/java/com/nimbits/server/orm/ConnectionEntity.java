@@ -70,6 +70,12 @@ public class ConnectionEntity extends EntityStore implements Connection {
     }
 
     @Override
+    public void init(Entity anEntity) {
+
+    }
+
+
+    @Override
     public String getApprovalKey() {
         return approvalKey;
     }

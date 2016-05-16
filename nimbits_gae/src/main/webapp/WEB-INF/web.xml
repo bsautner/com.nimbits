@@ -43,15 +43,6 @@
 
 
 
-    <servlet>
-        <servlet-name>dataTableApi</servlet-name>
-        <servlet-class>com.nimbits.server.api.DataTableApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>dataTableApi</servlet-name>
-        <url-pattern>/service/v2/datatable</url-pattern>
-    </servlet-mapping>
-
 
     <!--<servlet>-->
         <!--<servlet-name>SystemServiceServlet</servlet-name>-->
@@ -95,82 +86,14 @@
         <url-pattern>/service/v2/version</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>treeApi</servlet-name>
-        <servlet-class>com.nimbits.server.api.TreeApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>treeApi</servlet-name>
-        <url-pattern>/service/v2/tree</url-pattern>
-    </servlet-mapping>
 
-    <servlet>
-        <servlet-name>seriesApi</servlet-name>
-        <servlet-class>com.nimbits.server.api.SeriesApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>seriesApi</servlet-name>
-        <url-pattern>/service/v2/series</url-pattern>
-    </servlet-mapping>
-
-
-    <servlet>
-        <servlet-name>valueApi</servlet-name>
-        <servlet-class>com.nimbits.server.api.ValueApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>valueApi</servlet-name>
-        <url-pattern>/service/v2/value/*</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>batchApi</servlet-name>
-        <servlet-class>com.nimbits.server.api.BatchApi</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>batchApi</servlet-name>
-        <url-pattern>/service/v2/batch</url-pattern>
-    </servlet-mapping>
     <!--end v2 services-->
 
 
     <!--XMPP-->
-    <servlet>
-        <servlet-name>xmpp</servlet-name>
-        <servlet-class>com.nimbits.server.api.xmpp.XMPPReceiverServlet</servlet-class>
-    </servlet>
 
-    <servlet-mapping>
-        <servlet-name>xmpp</servlet-name>
-        <url-pattern>/_ah/xmpp/message/chat/</url-pattern>
-    </servlet-mapping>
 
-    <servlet>
-        <servlet-name>xmppPresenceAvailable</servlet-name>
-        <servlet-class>com.nimbits.server.api.xmpp.XMPPPresenceAvailableServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>xmppPresenceAvailable</servlet-name>
-        <url-pattern>/_ah/xmpp/presence/available/</url-pattern>
-    </servlet-mapping>
 
-    <servlet>
-        <servlet-name>xmppPresenceProbe</servlet-name>
-        <servlet-class>com.nimbits.server.api.xmpp.XMPPPresenceProbeServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>xmppPresenceProbe</servlet-name>
-        <url-pattern>/_ah/xmpp/presence/probe/</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>xmppPresenceUnavailable</servlet-name>
-        <servlet-class>com.nimbits.server.api.xmpp.XMPPPresenceUnavailableServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>xmppPresenceUnavailable</servlet-name>
-        <url-pattern>/_ah/xmpp/presence/unavailable/</url-pattern>
-    </servlet-mapping>
 
 
     <servlet>

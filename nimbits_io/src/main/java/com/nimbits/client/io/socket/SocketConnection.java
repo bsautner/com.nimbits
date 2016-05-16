@@ -65,7 +65,7 @@ public class SocketConnection extends GsonFactory {
                 .append("ws://").append(u).append("/socket?")
                 .append(Parameters.email + "=" + server.getAdminEmail().getValue())
                 .append("&" + Parameters.format + "=" + "json")
-                .append("&" + Parameters.token + "=" + server.getApiKey().getCode());
+                .append("&" + Parameters.token + "=" + server.getPassword());
 
 
         if (usingCloud) {

@@ -18,7 +18,7 @@ package com.nimbits.client.model.subscription;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
+
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.model.common.CommonIdentifier;
@@ -49,8 +49,8 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
     }
 
 
-    public SubscriptionModel(String id, CommonIdentifier name, String description, EntityType entityType, ProtectionLevel protectionLevel, String parent, String owner, String subscribedEntity, int notifyMethod, int subscriptionType, String target, boolean enabled) {
-        super(id, name, description, entityType, protectionLevel, parent, owner);
+    public SubscriptionModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String subscribedEntity, int notifyMethod, int subscriptionType, String target, boolean enabled) {
+        super(id, name, description, entityType,  parent, owner);
         this.subscribedEntity = subscribedEntity;
         this.notifyMethod = notifyMethod;
         this.subscriptionType = subscriptionType;
@@ -168,7 +168,7 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
             if (notifyMethod == null) {
                 notifyMethod = SubscriptionNotifyMethod.none;
             }
-            return new SubscriptionModel(id, name, description, type, protectionLevel, parent
+            return new SubscriptionModel(id, name, description, type,  parent
             , owner, subscribedEntity, notifyMethod.getCode(), subscriptionType.getCode(), target , enabled );
 
         }
@@ -197,12 +197,7 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
             this.description = description;
             return this;
         }
-        @Override
-        public Builder protectionLevel(ProtectionLevel protectionLevel) {
-            this.protectionLevel = protectionLevel;
-            return this;
-        }
-        @Override
+  @Override
         public Builder alertType(int alertType) {
             this.alertType = alertType;
             return this;
@@ -230,7 +225,7 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
         }
 
         public Builder init(Subscription entity) {
-            initEntity(entity);
+            super.init(entity);
             this.subscribedEntity = entity.getSubscribedEntity();
             this.notifyMethod = entity.getNotifyMethod();
             this.subscriptionType = entity.getSubscriptionType();
@@ -239,19 +234,6 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
             return this;
         }
 
-        private void initEntity(Entity anEntity) {
 
-
-            this.id = anEntity.getId();
-            this.name = anEntity.getName();
-            this.description = anEntity.getDescription();
-            this.entityType = anEntity.getEntityType();
-            this.parent = anEntity.getParent();
-            this.owner = anEntity.getOwner();
-            this.protectionLevel = anEntity.getProtectionLevel();
-            this.alertType = anEntity.getAlertType().getCode();
-
-
-        }
     }
 }

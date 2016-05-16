@@ -78,8 +78,7 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
                     return (Icons.INSTANCE.formula());
                 case summary:
                     return (Icons.INSTANCE.summary());
-                case accessKey:
-                    return (Icons.INSTANCE.key());
+
                 case sync:
                     return (Icons.INSTANCE.connection());
                 case socket:

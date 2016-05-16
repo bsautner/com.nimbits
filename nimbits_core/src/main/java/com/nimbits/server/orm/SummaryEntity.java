@@ -19,6 +19,7 @@ package com.nimbits.server.orm;
 import com.nimbits.client.enums.SummaryType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.summary.Summary;
+import com.nimbits.client.model.trigger.Trigger;
 
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
@@ -101,5 +102,15 @@ public class SummaryEntity extends TriggerEntity implements Summary {
         this.summaryType = summary.getSummaryType().getCode();
         this.summaryIntervalMs = summary.getSummaryIntervalMs();
         this.lastProcessed = summary.getLastProcessed();
+    }
+
+    @Override
+    public void init(Entity anEntity) {
+
+    }
+
+    @Override
+    public void init(Trigger entity) {
+
     }
 }

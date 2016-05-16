@@ -23,7 +23,6 @@ import com.nimbits.client.common.Utils;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.ProtectionLevel;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.hal.Embedded;
@@ -47,9 +46,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
 
     @Expose
     protected int entityType;
-
-    @Expose @Deprecated
-    private int protectionLevel;
 
     private int alertType;
 
@@ -85,15 +81,9 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
                        final CommonIdentifier name,
                        final String description,
                        final EntityType entityType,
-                       final ProtectionLevel protectionLevel,
                        final String parent,
                        final String owner) {
-        if (protectionLevel == null) {
-            this.protectionLevel = ProtectionLevel.everyone.getCode();
-        }
-        else {
-            this.protectionLevel = protectionLevel.getCode();
-        }
+
 
         this.id = id;
         if (name != null) {
@@ -152,9 +142,24 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
     public void update(Entity update) {
         this.description = update.getDescription();
         this.name = update.getName().getValue();
-        this.protectionLevel = update.getProtectionLevel().getCode();
         this.parent = update.getParent();
         this.id = update.getId();
+    }
+
+    @Override
+    public void init(Entity anEntity) {
+
+
+        this.id = anEntity.getId();
+        this.name = anEntity.getName().getValue();
+        this.description = anEntity.getDescription();
+        this.entityType = anEntity.getEntityType().getCode();
+        this.parent = anEntity.getParent();
+        this.owner = anEntity.getOwner();
+
+        this.alertType = anEntity.getAlertType().getCode();
+
+
     }
 
 
@@ -211,15 +216,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
         this.parent = parent;
     }
 
-    @Override
-    public ProtectionLevel getProtectionLevel() {
-        return ProtectionLevel.get(protectionLevel);
-    }
-
-    @Override
-    public void setProtectionLevel(final ProtectionLevel protectionLevel) {
-        this.protectionLevel = protectionLevel.getCode();
-    }
 
     @Override
     public String getOwner() {
@@ -295,7 +291,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
 
         if (alertType != that.alertType) return false;
         if (entityType != that.entityType) return false;
-        if (protectionLevel != that.protectionLevel) return false;
         if (readOnly != that.readOnly) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
@@ -313,7 +308,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
         result = 31 * result + (id != null ? id.hashCode() : 0);
         result = 31 * result + (description != null ? description.hashCode() : 0);
         result = 31 * result + entityType;
-        result = 31 * result + protectionLevel;
         result = 31 * result + alertType;
         result = 31 * result + (parent != null ? parent.hashCode() : 0);
         result = 31 * result + (owner != null ? owner.hashCode() : 0);
@@ -328,7 +322,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
                 ", owner='" + owner + '\'' +
                 ", parent='" + parent + '\'' +
                 ", alertType=" + alertType +
-                ", protectionLevel=" + protectionLevel +
                 ", entityType=" + entityType +
                 ", description='" + description + '\'' +
                 ", id='" + id + '\'' +
@@ -344,8 +337,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
         protected String description;
 
         protected EntityType entityType;
-
-        protected ProtectionLevel protectionLevel;
 
         protected int alertType;
 
@@ -370,8 +361,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
 
         public abstract T description(String description);
 
-        public abstract T protectionLevel(ProtectionLevel protectionLevel);
-
         public abstract T alertType(int alertType);
 
         public abstract T owner(String owner);
@@ -381,6 +370,22 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
         public abstract T id(String id);
 
         public abstract T action(String action);
+
+
+        public void init(Entity anEntity) {
+
+
+            this.id = anEntity.getId();
+            this.name = anEntity.getName();
+            this.description = anEntity.getDescription();
+            this.entityType = anEntity.getEntityType();
+            this.parent = anEntity.getParent();
+            this.owner = anEntity.getOwner();
+
+            this.alertType = anEntity.getAlertType().getCode();
+
+
+        }
 
     }
 

@@ -17,7 +17,6 @@
 package com.nimbits.client.io.http;
 
 
-import com.nimbits.client.model.accesskey.AccessKey;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.connection.Connection;
@@ -62,9 +61,6 @@ public interface EntityApi {
     Summary getSummary(@Query("email") String email, @Query("key") String key, @Query("id") String id);
 
     @GET(API)
-    AccessKey getToken(@Query("email") String email, @Query("key") String key, @Query("id") String id);
-
-    @GET(API)
     Instance getInstance(@Query("email") String email, @Query("key") String key, @Query("id") String id);
 
     @GET(API)
@@ -101,9 +97,6 @@ public interface EntityApi {
 
     @POST(API)
     Summary addSummaryentity(@Body Entity entity);
-
-    @POST(API)
-    AccessKey addAccessToken(@Body Entity entity);
 
     @POST(API)
     Instance addInstance(@Body Entity entity);

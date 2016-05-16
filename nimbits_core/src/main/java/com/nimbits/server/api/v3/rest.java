@@ -21,12 +21,10 @@ import com.google.common.collect.Range;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.hal.*;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.Credentials;
@@ -49,15 +47,12 @@ import com.nimbits.server.transaction.sync.SyncService;
 import com.nimbits.server.transaction.user.dao.UserDao;
 import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
-import com.oracle.tools.packager.Log;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -119,6 +114,7 @@ public class Rest {
             @RequestHeader(name = "Authorization") String authorization,
             @RequestBody String json,
             @PathVariable String uuid) {
+        getUser(authorization);
         logger.info("entered api: postFile");
         geoSpatialDao.addFile(uuid, json);
         return new ResponseEntity(HttpStatus.OK);
@@ -208,7 +204,8 @@ public class Rest {
         User user = getUser(authorization);
 
         if (user.getIsAdmin()) {
-            User newUser = gson.fromJson(json, UserModel.class);
+            User newUser = GsonFactory.getInstance(false).fromJson(json, UserModel.class);
+            logger.info("creating user: " + json);
             User createdUser = userService.createUserRecord(entityService, valueService, newUser.getEmail(), newUser.getPassword(), UserSource.local);
             return new ResponseEntity<>(gson.toJson(createdUser), HttpStatus.OK);
         }

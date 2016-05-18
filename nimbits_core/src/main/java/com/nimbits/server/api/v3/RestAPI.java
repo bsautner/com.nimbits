@@ -65,7 +65,7 @@ import java.util.logging.Logger;
 
 
 @RestController
-public class Rest {
+public class RestAPI {
 
 
     private final TaskService taskService;
@@ -84,15 +84,15 @@ public class Rest {
     private final EntityDao entityDao;
     private final Gson gson;
 
-    private final Logger logger = Logger.getLogger(Rest.class.getName());
+    private final Logger logger = Logger.getLogger(RestAPI.class.getName());
 
 
 
     @Autowired
-    public Rest(GeoSpatialDao geoSpatialDao, EntityService entityService, ValueService valueService, UserService userService,
-                EntityDao entityDao, TaskService taskService, ValueTask valueTask, BlobStore blobStore, SummaryService summaryService,
-                SyncService syncService, SubscriptionService subscriptionService, CalculationService calculationService, DataProcessor dataProcessor,
-                UserDao userDao) {
+    public RestAPI(GeoSpatialDao geoSpatialDao, EntityService entityService, ValueService valueService, UserService userService,
+                   EntityDao entityDao, TaskService taskService, ValueTask valueTask, BlobStore blobStore, SummaryService summaryService,
+                   SyncService syncService, SubscriptionService subscriptionService, CalculationService calculationService, DataProcessor dataProcessor,
+                   UserDao userDao) {
 
         this.taskService = taskService;
         this.valueTask = valueTask;

@@ -16,7 +16,8 @@
     <mvc:annotation-driven />
 
 
-    <bean id="rest2"  class="com.nimbits.server.api.v3.Rest">
+    <bean id="RestAPI"  class="com.nimbits.server.api.v3.RestAPI">
+
 
     </bean>
 

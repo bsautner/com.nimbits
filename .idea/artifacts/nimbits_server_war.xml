@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="nimbits_server:war">
-    <output-path>$PROJECT_DIR$/nimbits_server/target</output-path>
-    <root id="archive" name="nimbits_server.war">
-      <element id="artifact" artifact-name="nimbits_server:war exploded" />
-    </root>
-  </artifact>
-</component>

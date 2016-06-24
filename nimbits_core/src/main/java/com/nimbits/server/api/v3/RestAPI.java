@@ -61,7 +61,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @RestController
@@ -84,7 +85,7 @@ public class RestAPI {
     private final EntityDao entityDao;
     private final Gson gson;
 
-    private final Logger logger = Logger.getLogger(RestAPI.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(RestAPI.class.getName());
 
 
 

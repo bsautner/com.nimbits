@@ -19,12 +19,13 @@ package com.nimbits.server;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class ApplicationListener implements ServletContextListener {
 
-    private static final Logger log = Logger.getLogger(ApplicationListener.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(ApplicationListener.class.getName());
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {

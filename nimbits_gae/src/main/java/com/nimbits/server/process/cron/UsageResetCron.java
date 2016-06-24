@@ -125,7 +125,7 @@ public class UsageResetCron extends HttpServlet {
 ////                               // valueService.recordValue(adminUser, (Point) entity, zero, true);
 ////                            } catch (ValueException e) {
 ////                                resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-////                                logger.severe(e.getMessage());
+////                                logger.error(e.getMessage());
 ////                            }
 //                        }
 //                    }

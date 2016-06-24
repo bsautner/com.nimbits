@@ -43,12 +43,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class SummaryServiceImpl implements SummaryService {
 
-    private static final Logger logger = Logger.getLogger(SummaryServiceImpl.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(SummaryServiceImpl.class.getName());
 
 
 

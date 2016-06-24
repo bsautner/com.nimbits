@@ -41,12 +41,13 @@ import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class CalculationServiceImpl implements CalculationService {
 
-    private static final Logger logger = Logger.getLogger(CalculationService.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(CalculationService.class.getName());
 
 
     //TODO DI

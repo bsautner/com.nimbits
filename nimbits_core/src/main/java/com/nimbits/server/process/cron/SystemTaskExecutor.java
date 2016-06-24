@@ -33,10 +33,11 @@ import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.springframework.core.task.TaskExecutor;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SystemTaskExecutor {
-    private final Logger logger = Logger.getLogger(SystemTaskExecutor.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(SystemTaskExecutor.class.getName());
 
 
     private final TaskExecutor taskExecutor;
@@ -102,7 +103,7 @@ public class SystemTaskExecutor {
 
 
                 } catch (Exception e) {
-                    logger.severe(e.getMessage());
+                    logger.error(e.getMessage());
                 }
             }
         }

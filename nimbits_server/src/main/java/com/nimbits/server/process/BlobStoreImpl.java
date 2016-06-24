@@ -39,14 +39,15 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class BlobStoreImpl implements BlobStore {
 
     public static final String SNAPSHOT = "SNAPSHOT";
     public static final int INITIAL_CAPACITY = 10000;
-    private final Logger logger = Logger.getLogger(BlobStoreImpl.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(BlobStoreImpl.class.getName());
     private final Gson gson =  GsonFactory.getInstance(true);
 
 
@@ -248,7 +249,7 @@ public class BlobStoreImpl implements BlobStore {
             }
             return ImmutableList.copyOf(models);
         } catch (Exception e) {
-            logger.severe(e.getMessage());
+            logger.error(e.getMessage());
 
             return Collections.emptyList();
 

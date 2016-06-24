@@ -21,10 +21,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GWTCacheControlFilter implements Filter {
-    private final Logger logger = Logger.getLogger(AuthFilter.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(AuthFilter.class.getName());
 
     public void destroy() {
     }

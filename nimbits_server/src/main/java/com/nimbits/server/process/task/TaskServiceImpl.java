@@ -32,12 +32,12 @@ import com.nimbits.server.transaction.sync.SyncService;
 import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TaskServiceImpl implements TaskService {
 
-    Logger logger = Logger.getLogger(TaskService.class.getName());
+    Logger logger = LoggerFactory.getLogger(TaskService.class.getName());
 
     public TaskServiceImpl() {
 
@@ -69,7 +69,7 @@ public class TaskServiceImpl implements TaskService {
                     dataProcessor, user, point, value);
         } catch (Exception e) {
 
-            logger.log(Level.SEVERE,"Error running value task", e);
+            logger.error("Error running value task", e);
         }
 
 

@@ -59,11 +59,12 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class ValueTask extends HttpServlet implements BaseProcessor {
-    private final Logger logger = Logger.getLogger(ValueTask.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(ValueTask.class.getName());
 
     @Autowired
     private EntityService entityService;
@@ -135,7 +136,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
             process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService, syncService, subscriptionService,
                     calculationService, dataProcessor, user, point, value);
         } catch (ValueException e) {
-            logger.severe(ExceptionUtils.getStackTrace(e));
+            logger.error(ExceptionUtils.getStackTrace(e));
         }
 
 
@@ -216,12 +217,12 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
                                                 taskService.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, blobStore,
                                                         valueService, summaryService, syncService, subscriptionService, calculationService, dataProcessor, user, pushPoint, lastBroadcast);
                                             } else {
-                                                logger.warning("ignored value since it was the init value: " + lastBroadcast.toString());
+                                                logger.warn("ignored value since it was the init value: " + lastBroadcast.toString());
                                             }
 
                                         }
                                         else {
-                                            logger.warning("other user's broadcast point no longer exists.");
+                                            logger.warn("other user's broadcast point no longer exists.");
                                         }
                                     }
                                 }
@@ -335,7 +336,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
 //   value         try {
 //             //   connectedClients.sendLiveEvents(u, point, value, u.getToken());
 //            } catch (IOException e) {
-//                logger.severe(e.getMessage());
+//                logger.error(e.getMessage());
 //            }getMessage
 
             List<SocketStore> socketStores = Collections.emptyList();    //userDao.getSocketSessions(u);
@@ -370,17 +371,17 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
                     if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         logger.info("post ok");
                     } else {
-                        logger.severe("post to socket relay error " + connection.getResponseCode());
+                        logger.error("post to socket relay error " + connection.getResponseCode());
                     }
                 } catch (Exception e) {
-                    logger.severe(e.getMessage());
+                    logger.error(e.getMessage());
                     e.printStackTrace();
                 }
 
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            logger.severe(ex.getMessage());
+            logger.error(ex.getMessage());
         }
 
 

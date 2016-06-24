@@ -38,11 +38,12 @@ import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.springframework.stereotype.Service;
 
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class SyncServiceImpl implements SyncService {
-    protected final static Logger log = Logger.getLogger(SyncServiceImpl.class.getName());
+    protected final static Logger log = LoggerFactory.getLogger(SyncServiceImpl.class.getName());
 
 
 

@@ -36,7 +36,6 @@
 
     <dependencies>
 
-
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_io</artifactId>
@@ -139,6 +138,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.6.1</version>
+        </dependency>
+        
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>

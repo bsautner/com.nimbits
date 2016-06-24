@@ -22,12 +22,13 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class ApplicationListener implements ServletContextListener {
 
-    private static final Logger log = Logger.getLogger(ApplicationListener.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(ApplicationListener.class.getName());
 
 
 

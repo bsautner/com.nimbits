@@ -36,13 +36,14 @@ import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
 import java.util.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @Repository
 public class UserDaoImpl implements UserDao {
     private PersistenceManagerFactory persistenceManagerFactory;
-    private final Logger logger = Logger.getLogger(UserDaoImpl.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(UserDaoImpl.class.getName());
 
     public UserDaoImpl() {
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);

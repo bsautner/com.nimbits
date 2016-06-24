@@ -21,12 +21,13 @@ import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.user.User;
 
 import java.util.List;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ListCommand extends AbstractCommand implements Command {
 
     private final static String USAGE = "list child entities";
-    private final static Logger logger = Logger.getLogger(ListCommand.class.getName());
+    private final static Logger logger = LoggerFactory.getLogger(ListCommand.class.getName());
 
     public ListCommand(User user, Entity current, Instance server, List<Entity> tree) {
         super(user, current, server, tree);

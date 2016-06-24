@@ -49,7 +49,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -61,7 +62,7 @@ import java.util.logging.Logger;
 
 public class SystemCron extends HttpServlet implements BaseProcessor {
 
-    private static final Logger logger = Logger.getLogger(SystemCron.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(SystemCron.class.getName());
 
     @Autowired
     private EntityService entityService;

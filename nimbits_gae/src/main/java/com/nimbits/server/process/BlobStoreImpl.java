@@ -42,7 +42,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class BlobStoreImpl implements BlobStore {
@@ -58,7 +59,7 @@ public class BlobStoreImpl implements BlobStore {
 
     public static final String SNAPSHOT = "SNAPSHOT";
     public static final int INITIAL_CAPACITY = 100;
-    private final Logger logger = Logger.getLogger(BlobStoreImpl.class.getName());
+    private final Logger logger = LoggerFactory.getLogger(BlobStoreImpl.class.getName());
 
 
     private final Gson gson =  GsonFactory.getInstance(true);
@@ -87,7 +88,7 @@ public class BlobStoreImpl implements BlobStore {
                 valueService.storeValues(blobStore, entity, retObj);
             }
         } catch (IOException ex) {
-            logger.severe(ExceptionUtils.getStackTrace(ex));
+            logger.error(ExceptionUtils.getStackTrace(ex));
         }
     }
 
@@ -244,14 +245,14 @@ public class BlobStoreImpl implements BlobStore {
             segment = stringBuilder.toString();
         } catch (Exception e) {
 
-            logger.severe(e.getMessage());
+            logger.error(e.getMessage());
 
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (IOException e) {
-                    logger.severe(e.getMessage());
+                    logger.error(e.getMessage());
                 }
             }
         }
@@ -330,7 +331,7 @@ public class BlobStoreImpl implements BlobStore {
 
             writeChannel.close();
         } catch (Exception e) {
-            logger.severe(e.getMessage());
+            logger.error(e.getMessage());
         }
     }
 

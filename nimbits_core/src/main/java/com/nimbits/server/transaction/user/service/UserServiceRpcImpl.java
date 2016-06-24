@@ -44,13 +44,14 @@ import javax.servlet.ServletException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServiceRpc {
 
     private static final String ANON_NIMBITS_COM = "anon@nimbits.com";
-    private static final Logger log = Logger.getLogger(UserServiceRpcImpl.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(UserServiceRpcImpl.class.getName());
 
     @Autowired
     private EntityService entityService;

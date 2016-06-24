@@ -35,7 +35,8 @@ import com.nimbits.server.transaction.value.service.ValueService;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class EntityServiceImpl implements EntityService {
@@ -56,7 +57,7 @@ public class EntityServiceImpl implements EntityService {
     private final GeoSpatialDao geoSpatialDao;
 
 
-    final static Logger logger = Logger.getLogger(EntityServiceImpl.class.getName());
+    final static Logger logger = LoggerFactory.getLogger(EntityServiceImpl.class.getName());
 
     public EntityServiceImpl(GeoSpatialDao geoSpatialDao, EmailService emailService, ConnectedClients connectedClients, EntityDao entityDao, BlobStore blobStore) {
 

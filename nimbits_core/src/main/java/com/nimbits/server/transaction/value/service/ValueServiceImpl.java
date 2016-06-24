@@ -44,13 +44,14 @@ import com.nimbits.server.transaction.sync.SyncService;
 import com.nimbits.server.transaction.user.service.UserService;
 
 import java.util.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.lang.Math.abs;
 
 public class ValueServiceImpl implements ValueService {
 
-    private static final Logger logger = Logger.getLogger(ValueServiceImpl.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(ValueServiceImpl.class.getName());
 
     private ChartHelper chartHelper;
 

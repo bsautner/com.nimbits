@@ -29,13 +29,14 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class RecursionValidation {
     private static final int MAX_RECURSION = 10;
     private static final int INT = 1024;
-    private static final Logger log = Logger.getLogger(RecursionValidation.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(RecursionValidation.class.getName());
 
 
     public RecursionValidation( ) {
@@ -107,7 +108,7 @@ public class RecursionValidation {
 
                     count++;
                     if (count > MAX_RECURSION) {
-                        log.warning("trigger failed validation with recursion test");
+                        log.warn("trigger failed validation with recursion test");
                         throw new IllegalArgumentException("The target for this trigger is a trigger for another entity. That's ok, but the" +
                                 "target for that calc is also the trigger for another, and so on for over " + MAX_RECURSION + " steps. We " +
                                 "stopped checking after that, but it looks like this is an infinite loop." + " enabled=" + trigger.isEnabled());

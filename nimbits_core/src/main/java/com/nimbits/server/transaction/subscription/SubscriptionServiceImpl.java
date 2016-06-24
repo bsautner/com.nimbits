@@ -64,12 +64,12 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class SubscriptionServiceImpl implements SubscriptionService {
-    private static final Logger logger = Logger.getLogger(SubscriptionServiceImpl.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(SubscriptionServiceImpl.class.getName());
 
     public static final String UTF_8 = "UTF-8";
 
@@ -283,7 +283,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         try {
             notifyNearbyPoints(geoSpatialDao, taskService, userService, blobStore, entityDao, valueService, calculationService, summaryService, syncService, subscriptionService, dataProcessor , user, point, subscription);
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "error doing proxitmity", e);
+            logger.error("error doing proxitmity", e);
 
         }
 
@@ -336,15 +336,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                         //  point.getValue(), user, outgoingFeed);
                         logger.info("sending data to outgoing feed " + outgoingFeed.getName().getValue());
                     } catch (ValueException e) {
-                        logger.severe(e.getMessage());
+                        logger.error(e.getMessage());
                     }
 
                 } else {
-                    logger.severe("attempt to notify a nearby point in a subscription failed because it wasn't found: outgoingFeedName=" + outgoingFeedName);
+                    logger.error("attempt to notify a nearby point in a subscription failed because it wasn't found: outgoingFeedName=" + outgoingFeedName);
                 }
             }
             else {
-                logger.severe("attempt to notify a nearby point in a subscription failed because meta data with outgoing feed is missing");
+                logger.error("attempt to notify a nearby point in a subscription failed because meta data with outgoing feed is missing");
             }
         }
 
@@ -388,13 +388,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 logger.info("sent user to nimbits.com");
             } else {
-                logger.log(Level.SEVERE, "error sending user info to nimbits.com: "
+                logger.error("error sending user info to nimbits.com: "
                         + connection.getResponseCode() + " "
                         + connection.getResponseMessage());
             }
 
         } catch ( Exception e) {
-            logger.log(Level.SEVERE, "error sending user info to nimbits.com", e);
+            logger.error("error sending user info to nimbits.com", e);
         }
     }
 
@@ -477,7 +477,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "error with subscription", e);
+            logger.error("error with subscription", e);
         } finally {
             IOUtils.closeQuietly(in);
         }
@@ -542,7 +542,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             logger.info(resp);
 
         } catch (Exception e) {
-            logger.severe("Unable to send GCM message." + e.getMessage());
+            logger.error("Unable to send GCM message." + e.getMessage());
 
         }
 
@@ -563,7 +563,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             return outbound;
 
         } catch (IOException e) {
-            logger.severe(e.getMessage());
+            logger.error(e.getMessage());
             e.printStackTrace();
         }
         return null;

@@ -23,11 +23,12 @@ import net.sf.jsr107cache.CacheFactory;
 import net.sf.jsr107cache.CacheManager;
 
 import java.util.Collections;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class NimbitsCacheImpl extends BaseCache implements NimbitsCache {
-    final static Logger logger = Logger.getLogger(NimbitsCacheImpl.class.getName());
+    final static Logger logger = LoggerFactory.getLogger(NimbitsCacheImpl.class.getName());
 
     private Cache cache;
 

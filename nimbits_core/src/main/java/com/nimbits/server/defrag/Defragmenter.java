@@ -20,11 +20,12 @@ import com.google.common.collect.ImmutableMap;
 import com.nimbits.client.model.value.Value;
 
 import java.util.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class Defragmenter {
-    private Logger logger = Logger.getLogger(Defragmenter.class.getName());
+    private Logger logger = LoggerFactory.getLogger(Defragmenter.class.getName());
 
 
     /**
@@ -52,7 +53,7 @@ public class Defragmenter {
 
                 }
             } else {
-                logger.warning("Value Rejected - not healthy");
+                logger.warn("Value Rejected - not healthy");
             }
         }
         int count = 0;

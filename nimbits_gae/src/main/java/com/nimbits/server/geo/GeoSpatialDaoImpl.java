@@ -27,7 +27,8 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 
 import java.util.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class GeoSpatialDaoImpl implements GeoSpatialDao {
 //    public static final String UUID = "uuid";
@@ -40,7 +41,7 @@ public class GeoSpatialDaoImpl implements GeoSpatialDao {
 
     private final DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
 
-    private static final Logger logger = Logger.getLogger(GeoSpatialDao.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(GeoSpatialDao.class.getName());
 
     public GeoSpatialDaoImpl(EntityDao entityDao) {
         this.entityDao = entityDao;
@@ -64,7 +65,7 @@ public class GeoSpatialDaoImpl implements GeoSpatialDao {
                 points.add((Point) p.get());
             }
             else {
-                logger.warning("deleting a file since point wasn't found: " + id);
+                logger.warn("deleting a file since point wasn't found: " + id);
                 index.delete(id);
             }
         }

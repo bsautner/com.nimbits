@@ -44,8 +44,6 @@ public class FilterBase implements Filter {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private AuthService authService;
 
     @Autowired
     private EntityService entityService;
@@ -54,44 +52,14 @@ public class FilterBase implements Filter {
     private ValueService valueService;
 
 
-    @Autowired
-    private NimbitsCache nimbitsCache;
 
     private Logger logger = Logger.getLogger(FilterBase.class.getName());
 
     private User user;
 
-
-    private boolean enforceLimit = false;
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-
-        String ip = req.getRemoteAddr();
-        String key = ip +"_" + ((HttpServletRequest) req).getRequestURI();
-
-        if (enforceLimit && authService.isGAE()) {
-            Object o = nimbitsCache.get(key);
-            int count = 0;
-            if (o != null) {
-                ClientRequest clientRequest = (ClientRequest) o;
-                count = clientRequest.getCounter();
-                if (!clientRequest.isOk()) {
-                    ((HttpServletResponse) resp).sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE, "You exceeded a rate limit. Please don't hit an API at a frequency of more than " +
-                            "once a minute. You can register a private cloud without a rate limit, or use a local nimbits instance to buffer your data");
-                    logger.info("Enforced a rate limit on :" + ip + "  counter: " + clientRequest.getCounter());
-
-                    return;
-
-                }
-            }
-
-
-            ClientRequest update = new ClientRequest(System.currentTimeMillis(), count + 1);
-            nimbitsCache.put(key, update);
-        }
-
-        String q = ((HttpServletRequest)req).getQueryString();
 
         boolean isValid = isValid(req);
         if (isValid) {

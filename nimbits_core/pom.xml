@@ -180,22 +180,27 @@
             <scope>provided</scope>
         </dependency>
 
-
-        <!--JDO Dependencies-->
         <dependency>
-            <groupId>javax.jdo</groupId>
-            <artifactId>jdo-api</artifactId>
-            <version>3.1</version>
-            <scope>provided</scope>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-core</artifactId>
+            <version>[5.0.0-m1, 5.9)</version>
         </dependency>
-
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-api-jdo</artifactId>
-            <version>3.1.2</version>
-            <scope>provided</scope>
-
+            <version>[5.0.0-m1, 5.9)</version>
         </dependency>
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>javax.jdo</artifactId>
+            <version>[3.2.0-m5, )</version>
+        </dependency>
+
+       <dependency>
+          <groupId>org.datanucleus</groupId>
+          <artifactId>datanucleus-rdbms</artifactId>
+          <version>[5.0.0-m1, 5.9)</version>
+      </dependency>
 
 
         <dependency>
@@ -212,6 +217,21 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!--databases-->
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.1.39</version>
+        </dependency>
+
+
+        <!--<dependency>-->
+        <!--<groupId>com.h2database</groupId>-->
+        <!--<artifactId>h2</artifactId>-->
+        <!--<version>1.4.190</version>-->
+        <!--</dependency>-->
+
 
     </dependencies>
     <build>
@@ -224,6 +244,7 @@
                     <include>**/*.gwt.xml</include>
                 </includes>
             </resource>
+
         </resources>
 
 
@@ -233,24 +254,6 @@
 
 
 
-            <plugin>
-                <groupId>org.datanucleus</groupId>
-                <artifactId>maven-datanucleus-plugin</artifactId>
-                <version>3.1.2</version>
-                <configuration>
-                    <log4jConfiguration>${basedir}/log4j.properties</log4jConfiguration>
-                    <verbose>false</verbose>
-                    <fork>false</fork>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>enhance</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>

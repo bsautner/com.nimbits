@@ -55,7 +55,6 @@
         <module>nimbits_io</module>
         <module>nimbits_core</module>
         <module>nimbits_server</module>
-        <module>nimbits_gae</module>
         <module>nimbits_deb</module>
     </modules>
 
@@ -90,20 +89,16 @@
         </repository>
 
         <repository>
-            <id>DN_M2_Repo</id>
-            <name>DataNucleus Repository</name>
-            <url>http://www.datanucleus.org/downloads/maven2</url>
-            <snapshots>
+            <id>DN_Nightly_M2_Repo</id>
+            <url>http://www.datanucleus.org/downloads/maven2-nightly/</url>
+            <releases>
                 <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
 
-
-        <repository>
-            <id>google-releases</id>
-            <name>Google Releases</name>
-            <url>https://oss.sonatype.org/content/repositories/google-releases</url>
-        </repository>
 
         <repository>
             <id>gwt-maven</id>
@@ -121,24 +116,14 @@
             <id>gwt-maven</id>
             <url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
         </pluginRepository>
-        <pluginRepository>
-            <id>DataNucleus_2</id>
-            <url>http://www.datanucleus.org/downloads/maven2/</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </pluginRepository>
-        <pluginRepository>
-            <id>google-staging</id>
-            <name>Google Staging</name>
-            <url>https://oss.sonatype.org/content/repositories/comgoogleappengine-1004/</url>
-        </pluginRepository>
 
     </pluginRepositories>
 
     <build>
         <pluginManagement>
             <plugins>
+
+
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -220,6 +205,11 @@
             <artifactId>commons-math3</artifactId>
             <version>3.2</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
+
+
+
 
     </dependencies>
 

@@ -37,7 +37,6 @@ public interface UserDao {
 
     Optional<User> getUserByEmail(String email);
 
-    void startSocketSession(User user);
 
 
 

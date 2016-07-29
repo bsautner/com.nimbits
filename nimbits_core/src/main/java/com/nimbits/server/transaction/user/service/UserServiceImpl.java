@@ -315,7 +315,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private User loginUser(HttpServletRequest request, String email, User user) {
-        LoginInfo loginInfo = UserModelFactory.createLoginInfo("", "", UserStatus.newUser, authService.isGAE());
+        LoginInfo loginInfo = UserModelFactory.createLoginInfo("", "", UserStatus.newUser );
         user.setLoginInfo(loginInfo);
         String authToken = startSession(request, email);
         user.setToken(authToken);

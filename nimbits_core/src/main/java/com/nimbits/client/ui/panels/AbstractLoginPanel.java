@@ -46,18 +46,7 @@ public abstract class AbstractLoginPanel extends LayoutContainer {
         vp.setSpacing(15);
     }
 
-    protected Image googleLogin() {
-        Image image = new Image("/resources/images/gplus.png");
-        image.setWidth("182px");
-        image.setHeight("40px");
-        image.addClickListener(new ClickListener() {
-            @Override
-            public void onClick(Widget widget) {
-                loginListener.doGoogleLogin(loginInfo);
-            }
-        });
-        return image;
-    }
+
 
     public void setPendingConnectionToken(String pendingConnectionToken) {
         this.pendingConnectionToken = pendingConnectionToken;

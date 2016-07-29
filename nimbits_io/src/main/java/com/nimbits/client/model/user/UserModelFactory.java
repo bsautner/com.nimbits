@@ -25,12 +25,12 @@ public class UserModelFactory {
     private UserModelFactory() {
     }
 
-    public static LoginInfo createLoginInfo(String loginUrl, String logoutUrl, UserStatus userStatus, boolean isGAE) {
-        return new LoginInfoImpl(loginUrl, logoutUrl, userStatus, isGAE);
+    public static LoginInfo createLoginInfo(String loginUrl, String logoutUrl, UserStatus userStatus) {
+        return new LoginInfoImpl(loginUrl, logoutUrl, userStatus);
     }
 
-    public static LoginInfo createNullLoginInfo(boolean isGAE) {
-        return new LoginInfoImpl("", Const.WEBSITE, UserStatus.unknown, isGAE);
+    public static LoginInfo createNullLoginInfo() {
+        return new LoginInfoImpl("", Const.WEBSITE, UserStatus.unknown);
     }
 
 

@@ -54,8 +54,8 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
     private static final String HEIGHT = "100%";
     private LoginMainPanel loginMainPanel;
     private boolean connectionApproved = false;
-    private boolean isAppEngine = false;
-    private SystemDetails systemDetails = new SystemDetailsModel(Const.VERSION, isAppEngine);
+
+    private SystemDetails systemDetails = new SystemDetailsModel(Const.VERSION);
 
 
     @Override
@@ -70,14 +70,14 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
             userService.getSystemDetails(new AsyncCallback<SystemDetails>() {
                 @Override
                 public void onFailure(Throwable throwable) {
-                    loadLoginView(UserModelFactory.createNullLoginInfo(isAppEngine), systemDetails);
+                    loadLoginView(UserModelFactory.createNullLoginInfo(), systemDetails);
                     loginMainPanel.showPasswordReset(passwordResetToken);
                 }
 
                 @Override
                 public void onSuccess(SystemDetails result) {
                     systemDetails = result;
-                    isAppEngine = systemDetails.isGAE();
+
                     userService.loginRpc(GWT.getHostPageBaseURL(),
                             new LoginInfoAsyncCallback());
                 }
@@ -89,14 +89,14 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
             userService.getSystemDetails(new AsyncCallback<SystemDetails>() {
                 @Override
                 public void onFailure(Throwable throwable) {
-                    doConnectionApproval(userService, connectionRequestToken, email, isAppEngine);
+                    doConnectionApproval(userService, connectionRequestToken, email);
                 }
 
                 @Override
                 public void onSuccess(SystemDetails result) {
                     systemDetails = result;
-                    isAppEngine = systemDetails.isGAE();
-                    doConnectionApproval(userService, connectionRequestToken, email, isAppEngine);
+
+                    doConnectionApproval(userService, connectionRequestToken, email);
                 }
             });
 
@@ -105,15 +105,15 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
             userService.getSystemDetails(new AsyncCallback<SystemDetails>() {
                 @Override
                 public void onFailure(Throwable throwable) {
-                    loadLoginView(UserModelFactory.createNullLoginInfo(isAppEngine), systemDetails);
+                    loadLoginView(UserModelFactory.createNullLoginInfo(), systemDetails);
                     loginMainPanel.showPasswordReset(passwordResetToken);
                 }
 
                 @Override
                 public void onSuccess(SystemDetails result) {
                     systemDetails = result;
-                    isAppEngine = systemDetails.isGAE();
-                    loadLoginView(UserModelFactory.createNullLoginInfo(systemDetails.isGAE()), systemDetails);
+
+                    loadLoginView(UserModelFactory.createNullLoginInfo(), systemDetails);
                     loginMainPanel.showPasswordReset(passwordResetToken);
                 }
             });
@@ -127,7 +127,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
         return connectionRequestToken != null && email != null;
     }
 
-    private void doConnectionApproval(final UserServiceRpcAsync userService, final String token, final String email, final boolean isGAE) {
+    private void doConnectionApproval(final UserServiceRpcAsync userService, final String token, final String email ) {
 
 
         try {
@@ -153,7 +153,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
 
                                         @Override
                                         public void onSuccess(Boolean aBoolean) {
-                                            isAppEngine = aBoolean;
+
                                             userService.loginRpc(GWT.getHostPageBaseURL(),
                                                     new LoginInfoAsyncCallback());
                                             connectionApproved = true;
@@ -166,7 +166,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
 
                     } else {
 
-                        loadLoginView(UserModelFactory.createNullLoginInfo(isGAE), systemDetails);
+                        loadLoginView(UserModelFactory.createNullLoginInfo( ), systemDetails);
                         loginMainPanel.showRegisterDialog(email, token);
                     }
                 }
@@ -255,7 +255,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
     public void onLogout() {
         closeLoginWindows();
 
-        loadLoginView(UserModelFactory.createNullLoginInfo(isAppEngine), systemDetails);
+        loadLoginView(UserModelFactory.createNullLoginInfo( ), systemDetails);
     }
 
     @Override
@@ -319,7 +319,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
             FeedbackHelper.showError(caught);
             closeLoginWindows();
 
-            loadLoginView(UserModelFactory.createNullLoginInfo(isAppEngine), systemDetails);
+            loadLoginView(UserModelFactory.createNullLoginInfo( ), systemDetails);
         }
 
         @Override

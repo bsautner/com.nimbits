@@ -216,33 +216,6 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    @Override
-    public void startSocketSession(User user) {
-
-
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-        try {
-
-
-            final Transaction tx = pm.currentTransaction();
-
-            tx.begin();
-
-            final SocketStore socketStore = new SocketStore(user);
-            pm.makePersistent(socketStore);
-
-            tx.commit();
-        } catch (Exception ex) {
-            ex.printStackTrace();
-
-
-        } finally {
-            pm.close();
-        }
-
-    }
-
-    //TODO delete old sessions, only get one per socket - add more info like socket id to make this more granular
 
 
     @Override

@@ -163,6 +163,30 @@
     <bean id="stringEncryption" class="com.nimbits.server.secure.StringEncryption"/>
     <bean id="serverInfo" class="com.nimbits.server.system.ServerInfo"/>
 
+    <!--H2 DB Config-->
+    <!--<bean id="pmf" class="org.springframework.orm.jdo.LocalPersistenceManagerFactoryBean">-->
+        <!--<property name="jdoProperties">-->
+            <!--<props>-->
+                <!--<prop key="javax.jdo.PersistenceManagerFactoryClass">-->
+                    <!--org.datanucleus.api.jdo.JDOPersistenceManagerFactory-->
+                <!--</prop>-->
+                <!--<prop key="javax.jdo.option.ConnectionURL">-->
+                    <!--jdbc:h2:./database/db3;MV_STORE=FALSE;MVCC=FALSE;;FILE_LOCK=NO-->
+                <!--</prop>-->
+                <!--<prop key="javax.jdo.option.ConnectionUserName">sa</prop>-->
+                <!--<prop key="javax.jdo.option.ConnectionPassword"></prop>-->
+                <!--<prop key="javax.jdo.option.ConnectionDriverName">org.h2.Driver</prop>-->
+                <!--<prop key="org.jpox.autoCreateSchema">true</prop>-->
+                <!--&lt;!&ndash;<prop id="datanucleus.schema.autoCreateAll">true</prop>&ndash;&gt;-->
+                <!--<prop key="org.jpox.identifier.case">PreserveCase</prop>-->
+                <!--<prop key="datanucleus.autoCreateTables">true</prop>-->
+                <!--<prop key="datanucleus.autoCreateColumns">true</prop>-->
+                <!--&lt;!&ndash;<prop id="datanucleus.schema.autoCreateColumns">true</prop>&ndash;&gt;-->
+            <!--</props>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+<!--mySQL Config-->
     <bean id="pmf" class="org.springframework.orm.jdo.LocalPersistenceManagerFactoryBean">
         <property name="jdoProperties">
             <props>
@@ -170,11 +194,11 @@
                     org.datanucleus.api.jdo.JDOPersistenceManagerFactory
                 </prop>
                 <prop key="javax.jdo.option.ConnectionURL">
-                    jdbc:h2:./database/db3;MV_STORE=FALSE;MVCC=FALSE;;FILE_LOCK=NO
+                    jdbc:mysql://localhost:3306/nimbits
                 </prop>
-                <prop key="javax.jdo.option.ConnectionUserName">sa</prop>
-                <prop key="javax.jdo.option.ConnectionPassword"></prop>
-                <prop key="javax.jdo.option.ConnectionDriverName">org.h2.Driver</prop>
+                <prop key="javax.jdo.option.ConnectionUserName">root</prop>
+                <prop key="javax.jdo.option.ConnectionPassword">password</prop>
+                <prop key="javax.jdo.option.ConnectionDriverName">com.mysql.jdbc.Driver</prop>
                 <prop key="org.jpox.autoCreateSchema">true</prop>
                 <!--<prop id="datanucleus.schema.autoCreateAll">true</prop>-->
                 <prop key="org.jpox.identifier.case">PreserveCase</prop>
@@ -201,16 +225,15 @@
         <constructor-arg index="3" ref="entityDao"/>
         <constructor-arg index="4" ref="userService"/>
         <constructor-arg index="5" ref="entityService"/>
-        <constructor-arg index="6" ref="authService"/>
-        <constructor-arg index="7" ref="valueService"/>
-        <constructor-arg index="8" ref="taskService"/>
-        <constructor-arg index="9" ref="subscriptionService"/>
-        <constructor-arg index="10" ref="calculationService"/>
-        <constructor-arg index="11" ref="valueTask"/>
-        <constructor-arg index="12" ref="blobStore"/>
-        <constructor-arg index="13" ref="summaryService"/>
-        <constructor-arg index="14" ref="syncService"/>
-        <constructor-arg index="15" ref="dataProcessor"/>
+        <constructor-arg index="6" ref="valueService"/>
+        <constructor-arg index="7" ref="taskService"/>
+        <constructor-arg index="8" ref="subscriptionService"/>
+        <constructor-arg index="9" ref="calculationService"/>
+        <constructor-arg index="10" ref="valueTask"/>
+        <constructor-arg index="11" ref="blobStore"/>
+        <constructor-arg index="12" ref="summaryService"/>
+        <constructor-arg index="13" ref="syncService"/>
+        <constructor-arg index="14" ref="dataProcessor"/>
     </bean>
 
     <bean id="GeoSpatialDao" name="GeoSpatialDao" class="com.nimbits.server.geo.GeoSpatialDaoImpl">

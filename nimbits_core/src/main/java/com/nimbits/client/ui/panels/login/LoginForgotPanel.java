@@ -86,22 +86,13 @@ public class LoginForgotPanel extends AbstractLoginPanel {
         simple.add(email);
 
         simple.add(controlButtons);
-        if (loginInfo.isGAE()) {
-            simple.add(googleLogin());
-        }
+
         simple.add(tosHtml);
 
         Html html;
 
 
-        if (loginInfo.isGAE()) {
-            html = new Html("<br><p>Enter your email.  The system will send you instructions to reset your password. </p>" +
-                    "<br>" +
-                    "<p>If this is a private GAE instance, the administrator must set the admin email setting in the " +
-                    "settings menu to match the email account of someone with permission to send outgoing mail from this " +
-                    "instance.<p/>");
 
-        } else {
             html = new Html("<br><p>Enter your email.  The system will send you instructions to reset your password. </p>" +
                     "<br>" +
                     "<p>If this is a private server, you'll need to ensure that: </p><br>" +
@@ -113,7 +104,7 @@ public class LoginForgotPanel extends AbstractLoginPanel {
                     "</ul>" +
                     "<p><a href=\"http://www.nimbits.com/howto_server_mail.jsp\">Learn More</a></p>")
             ;
-        }
+
 
         simple.add(html);
 

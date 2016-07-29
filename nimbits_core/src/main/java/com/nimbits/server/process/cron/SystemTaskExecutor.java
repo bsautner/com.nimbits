@@ -47,8 +47,6 @@ public class SystemTaskExecutor {
     private final UserService userService;
     private final EntityService entityService;
 
-
-    private final AuthService authService;
     private final ValueService valueService;
     private final TaskService taskService;
     private final SubscriptionService subscriptionService;
@@ -61,7 +59,7 @@ public class SystemTaskExecutor {
     private final GeoSpatialDao geoSpatialDao;
 
     public SystemTaskExecutor(GeoSpatialDao geoSpatialDao, TaskExecutor taskExecutor, SystemCron systemCron, EntityDao entityDao,
-                              UserService userService, EntityService entityService, AuthService authService,
+                              UserService userService, EntityService entityService,
                               ValueService valueService, TaskService taskService, SubscriptionService subscriptionService,
                               CalculationService calculationService, ValueTask valueTask, BlobStore blobStore,
                               SummaryService summaryService, SyncService syncService, DataProcessor dataProcessor) {
@@ -70,7 +68,6 @@ public class SystemTaskExecutor {
         this.entityDao = entityDao;
         this.userService = userService;
         this.entityService = entityService;
-        this.authService = authService;
         this.valueService = valueService;
         this.taskService = taskService;
         this.subscriptionService = subscriptionService;
@@ -94,17 +91,17 @@ public class SystemTaskExecutor {
         }
 
         public void run() {
-            if (! authService.isGAE()) {
-                try {
 
-                    systemCron.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService, syncService, subscriptionService,
-                            calculationService, dataProcessor, null, null, null);
+            try {
+
+                systemCron.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService, syncService, subscriptionService,
+                        calculationService, dataProcessor, null, null, null);
 
 
-                } catch (Exception e) {
-                    logger.severe(e.getMessage());
-                }
+            } catch (Exception e) {
+                logger.severe(e.getMessage());
             }
+
         }
 
     }
@@ -113,7 +110,7 @@ public class SystemTaskExecutor {
 
     public void heartbeat() {
 
-            taskExecutor.execute(new SystemTask());
+        taskExecutor.execute(new SystemTask());
 
     }
 

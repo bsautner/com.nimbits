@@ -37,7 +37,7 @@
         <spring.version>4.2.4.RELEASE</spring.version>
 
         <jetty-jmx.version>8.1.15.v20140411</jetty-jmx.version>
-        <datanucleus.version>3.1.2</datanucleus.version>
+
     </properties>
 
 
@@ -65,11 +65,6 @@
             <version>2.0.0</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.190</version>
-        </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
@@ -138,33 +133,21 @@
 
         </dependency>
 
-        <dependency>
-            <groupId>javax.jdo</groupId>
-            <artifactId>jdo-api</artifactId>
-            <version>3.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.datanucleus</groupId>
-            <artifactId>datanucleus-core</artifactId>
-            <version>3.1.1</version>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.datanucleus</groupId>
-            <artifactId>datanucleus-api-jdo</artifactId>
-            <version>${datanucleus.version}</version>
 
-        </dependency>
-        <dependency>
-            <groupId>org.datanucleus</groupId>
-            <artifactId>datanucleus-rdbms</artifactId>
-            <version>${datanucleus.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.datanucleus</groupId>
-            <artifactId>datanucleus-cache</artifactId>
-            <version>${datanucleus.version}</version>
-        </dependency>
+        <!--JDO Dependencies-->
+        <!--<dependency>-->
+        <!--<groupId>javax.jdo</groupId>-->
+        <!--<artifactId>jdo-api</artifactId>-->
+        <!--<version>3.1</version>-->
+        <!--<scope>provided</scope>-->
+        <!--</dependency>-->
+
+
+        <!--<dependency>-->
+            <!--<groupId>org.datanucleus</groupId>-->
+            <!--<artifactId>datanucleus-cache</artifactId>-->
+            <!--<version>${datanucleus.version}</version>-->
+        <!--</dependency>-->
 
 
         <dependency>
@@ -310,6 +293,25 @@
         <plugins>
 
 
+            <plugin>
+                <groupId>org.datanucleus</groupId>
+                <artifactId>datanucleus-maven-plugin</artifactId>
+                <version>5.0.0-release</version>
+                <configuration>
+                    <api>JDO</api>
+                    <persistenceUnitName>Tutorial</persistenceUnitName>
+                    <log4jConfiguration>src/main/resources/log4j.properties</log4jConfiguration>
+                    <verbose>false</verbose>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>enhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
 
 
             <plugin>
@@ -339,23 +341,23 @@
 
             </plugin>
 
-            <plugin>
-                <groupId>org.datanucleus</groupId>
-                <artifactId>maven-datanucleus-plugin</artifactId>
-                <version>${datanucleus.version}</version>
-                <configuration>
-                    <verbose>false</verbose>
-                    <fork>false</fork>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>process-classes</phase>
-                        <goals>
-                            <goal>enhance</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.datanucleus</groupId>-->
+                <!--<artifactId>maven-datanucleus-plugin</artifactId>-->
+                <!--<version>${datanucleus.version}</version>-->
+                <!--<configuration>-->
+                    <!--<verbose>false</verbose>-->
+                    <!--<fork>false</fork>-->
+                <!--</configuration>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<phase>process-classes</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>enhance</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+            <!--</plugin>-->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

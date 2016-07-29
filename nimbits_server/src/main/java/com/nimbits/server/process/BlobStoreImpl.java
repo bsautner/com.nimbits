@@ -316,46 +316,4 @@ public class BlobStoreImpl implements BlobStore {
     }
 
 
-//    public static boolean isGzipped(File f) {
-//
-//        InputStream is = null;
-//        try {
-//            is = new FileInputStream(f);
-//            byte [] signature = new byte[2];
-//            int nread = is.read( signature ); //read the gzip signature
-//            return nread == 2 && signature[ 0 ] == (byte) 0x1f && signature[ 1 ] == (byte) 0x8b;
-//        } catch (IOException e) {
-//
-//            return false;
-//        } finally {
-//            Closer.closeSilently(is);
-//        }
-//    }
-
-//    private static class Closer {
-//
-//        public static void closeSilently(Object... xs) {
-//            // Note: on Android API levels prior to 19 Socket does not implement Closeable
-//            for (Object x : xs) {
-//                if (x != null) {
-//                    try {
-//
-//                        if (x instanceof Closeable) {
-//                            ((Closeable)x).close();
-//                        } else if (x instanceof Socket) {
-//                            ((Socket)x).close();
-//                        } else if (x instanceof DatagramSocket) {
-//                            ((DatagramSocket)x).close();
-//                        } else {
-//
-//                            throw new RuntimeException("cannot close "+x);
-//                        }
-//                    } catch (Throwable e) {
-//
-//                    }
-//                }
-//            }
-//        }
-//    }
-
 }

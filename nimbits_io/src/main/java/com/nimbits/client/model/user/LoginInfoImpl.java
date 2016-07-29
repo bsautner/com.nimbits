@@ -27,15 +27,12 @@ public class LoginInfoImpl implements Serializable, LoginInfo {
 
     private UserStatus userStatus;
 
-    private boolean isGAE;
 
-
-    public LoginInfoImpl(String loginUrl, String logoutUrl, UserStatus userStatus, boolean isGAE) {
+    public LoginInfoImpl(String loginUrl, String logoutUrl, UserStatus userStatus) {
 
         this.loginUrl = loginUrl;
         this.logoutUrl = logoutUrl;
         this.userStatus = userStatus;
-        this.isGAE = isGAE;
     }
 
     public LoginInfoImpl() {
@@ -64,11 +61,6 @@ public class LoginInfoImpl implements Serializable, LoginInfo {
     @Override
     public UserStatus getUserStatus() {
         return this.userStatus == null ? UserStatus.unknown : userStatus;
-    }
-
-    @Override
-    public boolean isGAE() {
-        return isGAE;
     }
 
 }

@@ -29,10 +29,6 @@ public interface AuthService {
 
     List<EmailAddress> getCurrentUser(EntityService entityService, UserService userService, ValueService valueService, HttpServletRequest request);
 
-    boolean isGAE();
-
-    boolean isGAEAdmin();
-
     String createLoginURL(String requestUri);
 
     String createLogoutURL(String requestUri);

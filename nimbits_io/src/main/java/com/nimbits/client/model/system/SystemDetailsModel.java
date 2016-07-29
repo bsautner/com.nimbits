@@ -24,21 +24,16 @@ public class SystemDetailsModel implements SystemDetails, Serializable {
 
     @Expose
     private String version;
-    @Expose
-    private boolean isGAE;
 
-    public SystemDetailsModel(String version, boolean isGAE) {
+
+
+    public SystemDetailsModel(String version) {
         this.version = version;
-        this.isGAE = isGAE;
     }
 
     public SystemDetailsModel() {
     }
 
-    @Override
-    public Boolean isGAE() {
-        return this.isGAE;
-    }
 
     @Override
     public String getVersion() {

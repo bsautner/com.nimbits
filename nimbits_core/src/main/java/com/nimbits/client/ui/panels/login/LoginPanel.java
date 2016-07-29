@@ -101,21 +101,10 @@ public class LoginPanel extends AbstractLoginPanel {
         simple.add(email);
         simple.add(password);
         simple.add(controlButtons);
-        if (loginInfo.isGAE()) {
-            simple.add(googleLogin());
-        }
 
         simple.add(tosHtml);
 
 
-        if (loginInfo.isGAE()) {
-            Html help = new Html("<BR>" +
-                    "<p>You may now register a user account using any email and setup a password to log directly into nimbits. " +
-                    "If you have used " +
-                    "a Google Account to login in the past, you may continue to do so by selecting to sign in with Google." +
-                    "</p>");
-            simple.add(help);
-        }
 
         submit.addSelectionListener(new SelectionListener<ButtonEvent>() {
             @Override

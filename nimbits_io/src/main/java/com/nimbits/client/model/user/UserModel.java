@@ -129,7 +129,7 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     @Override
     public LoginInfo getLoginInfo() {
-        return loginInfo == null ? UserModelFactory.createNullLoginInfo(false) : loginInfo;
+        return loginInfo == null ? UserModelFactory.createNullLoginInfo() : loginInfo;
     }
 
     @Override

@@ -127,7 +127,7 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
 
 
                     LoginInfo loginInfo = UserModelFactory.createLoginInfo(authService.createLoginURL(requestUri),
-                            authService.createLogoutURL(requestUri), userStatus, authService.isGAE());
+                            authService.createLogoutURL(requestUri), userStatus);
                     retObj.setLoginInfo(loginInfo);
 
 
@@ -144,7 +144,7 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
             retObj = new UserModel.Builder().name(name).create();
 
             LoginInfo loginInfo = UserModelFactory.createLoginInfo(authService.createLoginURL(requestUri),
-                    authService.createLogoutURL(requestUri), userStatus, authService.isGAE());
+                    authService.createLogoutURL(requestUri), userStatus);
             retObj.setLoginInfo(loginInfo);
 
 
@@ -203,7 +203,7 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
             if (! userExists(email)) {
 
                 user = userService.createUserRecord(entityService, valueService, emailAddress, password, UserSource.local);
-                LoginInfo loginInfo = UserModelFactory.createLoginInfo("", Const.WEBSITE, UserStatus.newUser, authService.isGAE());
+                LoginInfo loginInfo = UserModelFactory.createLoginInfo("", Const.WEBSITE, UserStatus.newUser);
                 user.setLoginInfo(loginInfo);
                 String authToken = userService.startSession(getThreadLocalRequest(), email);
                 if (pendingConnectionToken != null) {
@@ -235,7 +235,7 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
             if (u.getPasswordResetToken().equals(recoveryToken) && u.getSource().equals(UserSource.local)) {
                 if (new Date().getTime() - u.getPasswordResetTokenTimestamp().getTime() < 60000 * 5) {
                     User retObj = userService.updatePassword(u, password);
-                    LoginInfo loginInfo = UserModelFactory.createLoginInfo("", Const.WEBSITE, UserStatus.loggedIn, authService.isGAE());
+                    LoginInfo loginInfo = UserModelFactory.createLoginInfo("", Const.WEBSITE, UserStatus.loggedIn);
                     retObj.setLoginInfo(loginInfo);
                     String authToken = userService.startSession(getThreadLocalRequest(), email);
                     retObj.setToken(authToken);
@@ -329,7 +329,7 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
     @Override
     public SystemDetails getSystemDetails() {
         log.info("Get System Details: " + (authService == null));
-        return new SystemDetailsModel(Const.VERSION, authService.isGAE());
+        return new SystemDetailsModel(Const.VERSION);
     }
 
 }

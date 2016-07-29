@@ -116,9 +116,7 @@ public class LoginRegisterPanel extends AbstractLoginPanel {
         simple.add(password);
         simple.add(password2);
         simple.add(controlButtons);
-        if (loginInfo.isGAE()) {
-            simple.add(googleLogin());
-        }
+
         simple.add(tosHtml);
         if (loginInfo.getUserStatus().equals(UserStatus.newServer)) {
             Html helphtml = new Html("<br /><div><p><Strong>This appears to be a new Server Installation. " +

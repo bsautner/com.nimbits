@@ -159,7 +159,7 @@ public class UserEntity extends EntityStore implements User {
 
     @Override
     public LoginInfo getLoginInfo() {
-        return loginInfo == null ? UserModelFactory.createNullLoginInfo(false) : loginInfo;
+        return loginInfo == null ? UserModelFactory.createNullLoginInfo() : loginInfo;
     }
 
     @Override

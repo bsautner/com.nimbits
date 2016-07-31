@@ -17,9 +17,7 @@
 package com.nimbits.server.process.cron;
 
 
-import com.nimbits.server.auth.AuthService;
 import com.nimbits.server.data.DataProcessor;
-import com.nimbits.server.geo.GeoSpatialDao;
 import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.process.task.ValueTask;
@@ -56,9 +54,8 @@ public class SystemTaskExecutor {
     private final SummaryService summaryService;
     private final SyncService syncService;
     private final DataProcessor dataProcessor;
-    private final GeoSpatialDao geoSpatialDao;
 
-    public SystemTaskExecutor(GeoSpatialDao geoSpatialDao, TaskExecutor taskExecutor, SystemCron systemCron, EntityDao entityDao,
+    public SystemTaskExecutor( TaskExecutor taskExecutor, SystemCron systemCron, EntityDao entityDao,
                               UserService userService, EntityService entityService,
                               ValueService valueService, TaskService taskService, SubscriptionService subscriptionService,
                               CalculationService calculationService, ValueTask valueTask, BlobStore blobStore,
@@ -77,8 +74,6 @@ public class SystemTaskExecutor {
         this.summaryService = summaryService;
         this.syncService = syncService;
         this.dataProcessor = dataProcessor;
-        this.geoSpatialDao = geoSpatialDao;
-
     }
 
     private class SystemTask implements Runnable {
@@ -94,7 +89,7 @@ public class SystemTaskExecutor {
 
             try {
 
-                systemCron.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService, syncService, subscriptionService,
+                systemCron.process( taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService, syncService, subscriptionService,
                         calculationService, dataProcessor, null, null, null);
 
 

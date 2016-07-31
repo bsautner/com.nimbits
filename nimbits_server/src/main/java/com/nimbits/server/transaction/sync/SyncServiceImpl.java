@@ -25,7 +25,6 @@ import com.nimbits.client.model.sync.Sync;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.data.DataProcessor;
-import com.nimbits.server.geo.GeoSpatialDao;
 import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.process.task.ValueTask;
@@ -36,10 +35,9 @@ import com.nimbits.server.transaction.subscription.SubscriptionService;
 import com.nimbits.server.transaction.summary.SummaryService;
 import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
-import org.springframework.stereotype.Service;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
 @Service
 public class SyncServiceImpl implements SyncService {
@@ -54,7 +52,7 @@ public class SyncServiceImpl implements SyncService {
     }
 
     @Override
-    public void process(final GeoSpatialDao geoSpatialDao,
+    public void process(
                         final TaskService taskService,
                         final UserService userService,
                         final EntityDao entityDao,

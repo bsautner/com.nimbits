@@ -26,7 +26,6 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.data.DataProcessor;
-import com.nimbits.server.geo.GeoSpatialDao;
 import com.nimbits.server.math.MathEvaluator;
 import com.nimbits.server.math.MathEvaluatorImpl;
 import com.nimbits.server.process.BlobStore;
@@ -47,7 +46,6 @@ import org.slf4j.LoggerFactory;
 
 public class CalculationServiceImpl implements CalculationService {
 
-    private static final Logger logger = LoggerFactory.getLogger(CalculationService.class.getName());
 
 
     //TODO DI
@@ -62,8 +60,7 @@ public class CalculationServiceImpl implements CalculationService {
 
 
     @Override
-    public void process(final GeoSpatialDao geoSpatialDao,
-                        final TaskService taskService,
+    public void process( final TaskService taskService,
                         final UserService userService,
                         final EntityDao entityDao,
                         final ValueTask valueTask,
@@ -93,7 +90,7 @@ public class CalculationServiceImpl implements CalculationService {
                     Value v = new Value.Builder().initValue(result.get()).timestamp(value.getTimestamp()).create();
 
 
-                        valueTask.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService,
+                        valueTask.process(taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService,
                                 syncService, subscriptionService, calculationService, dataProcessor, u, (Point) target.get(), v);
 
                 }

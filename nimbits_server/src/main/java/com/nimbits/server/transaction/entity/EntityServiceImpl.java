@@ -18,24 +18,23 @@ package com.nimbits.server.transaction.entity;
 
 
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.communication.mail.EmailService;
-import com.nimbits.server.geo.GeoSpatialDao;
 import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.socket.ConnectedClients;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.entity.service.EntityService;
+import com.nimbits.server.transaction.value.ValueDao;
 import com.nimbits.server.transaction.value.service.ValueService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public class EntityServiceImpl implements EntityService {
@@ -53,18 +52,17 @@ public class EntityServiceImpl implements EntityService {
 
     private final BlobStore blobStore;
 
-    private final GeoSpatialDao geoSpatialDao;
+    private final ValueDao valueDao;
 
 
-    final static Logger logger = LoggerFactory.getLogger(EntityServiceImpl.class.getName());
-
-    public EntityServiceImpl(GeoSpatialDao geoSpatialDao, EmailService emailService, ConnectedClients connectedClients, EntityDao entityDao, BlobStore blobStore) {
+    public EntityServiceImpl( EmailService emailService, ConnectedClients connectedClients, EntityDao entityDao,
+                             BlobStore blobStore, ValueDao valueDao) {
 
         this.emailService = emailService;
         this.connectedClients = connectedClients;
         this.entityDao = entityDao;
         this.blobStore = blobStore;
-        this.geoSpatialDao = geoSpatialDao;
+        this.valueDao = valueDao;
     }
 
     @Override
@@ -80,12 +78,7 @@ public class EntityServiceImpl implements EntityService {
         if (entity.getEntityType().equals(EntityType.point)) {
             Point point = (Point) entity;
 
-                blobStore.deleteAllData(point);
-            if (point.getPointType().equals(PointType.location)) {
-                geoSpatialDao.deleteSpatial(point.getId());
-            }
-
-            // taskService.startDeleteDataTask((Point) entity);
+                valueDao.deleteAllData(point);
 
         }
         for (Entity c : children) {
@@ -133,7 +126,7 @@ public class EntityServiceImpl implements EntityService {
             case point:
                 Value init = new Value.Builder().doubleValue(0.0).timestamp(new Date(0)).meta(POINT_INITIALISED).create();
 
-                valueService.recordValues(blobStore, user, (Point) created, Collections.singletonList(init));
+                valueDao.storeValues(created, Collections.singletonList(init));
 
                 //  if (entity.getEntityType().equals(EntityType.))
 

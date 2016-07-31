@@ -44,7 +44,7 @@ public class ChartHelper {
 
     }
 
-    public String createChart(EntityDao entityDao, BlobStore blobStore, ValueService valueService, User user, Entity entity, Optional<Range<Date>> timespan, Optional<Integer> count, Optional<String> mask) {
+    public String createChart(EntityDao entityDao, BlobStore blobStore, ValueService valueService, User user, Entity entity, Optional<Range<Long>> timespan, Optional<Integer> count, Optional<String> mask) {
 
 
         final List<Entity> list = getList(entityDao, user, entity);
@@ -88,7 +88,7 @@ public class ChartHelper {
     private ChartDTO createChartData(BlobStore blobStore,
                                      ValueService valueService,
                                      List<Entity> points,
-                                     Optional<Range<Date>> timespan,
+                                     Optional<Range<Long>> timespan,
                                      Optional<Integer> count,
                                      Optional<String> mask) {
         ChartDTO dto = new ChartDTO();

@@ -29,7 +29,6 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.value.ValueServiceRpc;
 import com.nimbits.server.data.DataProcessor;
-import com.nimbits.server.geo.GeoSpatialDao;
 import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.process.task.ValueTask;
@@ -86,9 +85,6 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
     @Autowired
     DataProcessor dataProcessor;
 
-    @Autowired
-    GeoSpatialDao geoSpatialDao;
-
 
 
 
@@ -102,7 +98,7 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
     @Override
     public String getChartTable(User user, Entity entity, Integer countParam) {
         Optional<Integer> count = (countParam != null && countParam > 0) ? Optional.of(countParam) : Optional.<Integer>absent();
-        return valueService.getChartTable(entityDao, blobStore, user, entity, Optional.<Range<Date>>absent(), count, Optional.<String>absent());
+        return valueService.getChartTable(entityDao, blobStore, user, entity, Optional.<Range<Long>>absent(), count, Optional.<String>absent());
     }
 
     @Override
@@ -120,7 +116,7 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
         User user = userService.getHttpRequestUser(entityService,valueService,  getThreadLocalRequest());
         Point p = (Point) entityDao.getEntity(user, point.getId(), EntityType.point).get();
         logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
-        taskService.process(geoSpatialDao, taskService, userService,
+        taskService.process(taskService, userService,
                 entityDao, valueTask, entityService, blobStore, valueService,
                 summaryService, syncService, subscriptionService,
                 calculationService, dataProcessor, user, p, value);

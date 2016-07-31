@@ -33,7 +33,6 @@ import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.user.UserSource;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.data.DataProcessor;
-import com.nimbits.server.geo.GeoSpatialDao;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.process.task.TaskService;
@@ -48,6 +47,8 @@ import com.nimbits.server.transaction.user.dao.UserDao;
 import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,8 +62,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 @RestController
@@ -78,7 +77,6 @@ public class RestAPI {
     private final CalculationService calculationService;
     private final DataProcessor dataProcessor;
     private final UserDao userDao;
-    private final GeoSpatialDao geoSpatialDao;
     private final EntityService entityService;
     private final ValueService valueService;
     private final UserService userService;
@@ -90,7 +88,7 @@ public class RestAPI {
 
 
     @Autowired
-    public RestAPI(GeoSpatialDao geoSpatialDao, EntityService entityService, ValueService valueService, UserService userService,
+    public RestAPI(EntityService entityService, ValueService valueService, UserService userService,
                    EntityDao entityDao, TaskService taskService, ValueTask valueTask, BlobStore blobStore, SummaryService summaryService,
                    SyncService syncService, SubscriptionService subscriptionService, CalculationService calculationService, DataProcessor dataProcessor,
                    UserDao userDao) {
@@ -104,7 +102,6 @@ public class RestAPI {
         this.calculationService = calculationService;
         this.dataProcessor = dataProcessor;
         this.userDao = userDao;
-        this.geoSpatialDao = geoSpatialDao;
         this.entityService = entityService;
         this.valueService = valueService;
         this.userService = userService;
@@ -121,8 +118,7 @@ public class RestAPI {
             @RequestBody String json,
             @PathVariable String uuid) {
         getUser(authorization);
-        logger.info("entered api: postFile");
-        geoSpatialDao.addFile(uuid, json);
+
         return new ResponseEntity(HttpStatus.OK);
     }
 
@@ -136,7 +132,7 @@ public class RestAPI {
         User user = getUser(authorization);
         Point entity = (Point) entityDao.getEntity(user, uuid, EntityType.point);
         Value value = gson.fromJson(json, Value.class);
-        taskService.process(geoSpatialDao, taskService, userService, entityDao,
+        taskService.process( taskService, userService, entityDao,
                 valueTask, entityService, blobStore, valueService, summaryService, syncService, subscriptionService,
                 calculationService, dataProcessor, user, entity, value);
         return new ResponseEntity(HttpStatus.OK);
@@ -160,12 +156,12 @@ public class RestAPI {
         if (optional.isPresent()) {
             if (values.size() == 1) {
 
-                taskService.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService, syncService, subscriptionService,
+                taskService.process( taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService, syncService, subscriptionService,
                         calculationService, dataProcessor, user, (Point) optional.get(), values.get(0));
 
             } else {
 
-                valueService.recordValues(blobStore, user, (Point) optional.get(), values);
+                valueService.recordValues( user, (Point) optional.get(), values);
             }
         }
         return new ResponseEntity(HttpStatus.OK);
@@ -233,23 +229,6 @@ public class RestAPI {
 
 
 
-
-    @RequestMapping(value = "/{uuid}/file", method = RequestMethod.GET)
-    public ResponseEntity<String> getFile( @RequestHeader(name = "Authorization") String authorization,@PathVariable String uuid) throws IOException {
-        getUser(authorization);
-        Optional<String> file = geoSpatialDao.getFile(uuid);
-        if (file.isPresent()) {
-            return new ResponseEntity<>(file.get(), HttpStatus.OK);
-
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-
-
-
     //GET
 
 
@@ -309,8 +288,8 @@ public class RestAPI {
 
         logger.info("get series");
         Optional<String> mask = StringUtils.isEmpty(maskParam) ? Optional.<String>absent() : Optional.<String>of(maskParam);
-        Date start = StringUtils.isEmpty(startParam) ? new Date(1) : new Date(Long.valueOf(startParam));
-        Date end = StringUtils.isEmpty(endParam) ? new Date() : new Date(Long.valueOf(endParam));
+        Long start = StringUtils.isEmpty(startParam) ? 1 :  (Long.valueOf(startParam));
+        Long end = StringUtils.isEmpty(endParam) ? System.currentTimeMillis() : (Long.valueOf(endParam));
 
         Optional<Integer> count = (StringUtils.isEmpty(countParam)) ? Optional.<Integer>absent() : Optional.of(Integer.valueOf(countParam));
 
@@ -322,7 +301,7 @@ public class RestAPI {
             range = Optional.absent();
         }
 
-        Optional<Range<Date>> timespan = Optional.of(Range.closed(start, end));
+        Optional<Range<Long>> timespan = Optional.of(Range.closed(start, end));
 
 
         if (user.getId().equals(uuid)) {
@@ -371,12 +350,12 @@ public class RestAPI {
         Optional<String> mask = StringUtils.isEmpty(maskParam) ? Optional.<String>absent() : Optional.of(maskParam);
         Optional<Integer> count = StringUtils.isNotEmpty(countParam) ? Optional.of(Integer.valueOf(countParam)) : Optional.<Integer>absent();
 
-        Optional<Range<Date>> timespan;
+        Optional<Range<Long>> timespan;
 
 
         if (! StringUtils.isEmpty(startParam) && ! StringUtils.isEmpty(endParam) ) {
-            Date start = new Date(Long.valueOf(startParam));
-            Date end = new Date(Long.valueOf(endParam));
+            Long start = (Long.valueOf(startParam));
+            Long end =  (Long.valueOf(endParam));
             timespan = Optional.of(Range.closed(start, end));
 
         }
@@ -675,13 +654,11 @@ public class RestAPI {
 
 
         if (entity.getEntityType().equals(EntityType.point)) {
-            Point point = (Point) entity;
+
             series =new Series(path + entity.getId() + "/series");
             dataTable =new DataTable(path + entity.getId() + "/table");
             snapshot =new Snapshot(path + entity.getId() + "/snapshot");
-            if (point.getPointType().equals(PointType.location)) {
-                nearby = new Nearby(path + entity.getId() + "/nearby");
-            }
+
 
 
         }
@@ -714,9 +691,7 @@ public class RestAPI {
                     cdataTable =new DataTable(path + child.getId() + "/table");
                     csnapshot  =new Snapshot(path + child.getId() + "/snapshot");
                     Point point1 = (Point) child;
-                    if (point1.getPointType().equals(PointType.location)) {
-                        cnearby = new Nearby(path + child.getId() + "/nearby");
-                    }
+
                 }
                 //  Entity parentEntity = childMap.get(child.getParent());
 

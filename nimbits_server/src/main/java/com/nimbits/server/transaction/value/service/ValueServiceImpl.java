@@ -21,7 +21,6 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
@@ -29,9 +28,6 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.chart.ChartHelper;
 import com.nimbits.server.data.DataProcessor;
-import com.nimbits.server.defrag.Defragmenter;
-import com.nimbits.server.defrag.ValueDayHolder;
-import com.nimbits.server.geo.GeoSpatialDao;
 import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.process.task.ValueTask;
@@ -42,12 +38,11 @@ import com.nimbits.server.transaction.subscription.SubscriptionService;
 import com.nimbits.server.transaction.summary.SummaryService;
 import com.nimbits.server.transaction.sync.SyncService;
 import com.nimbits.server.transaction.user.service.UserService;
-
-import java.util.*;
-
 import com.nimbits.server.transaction.value.ValueDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.*;
 
 import static java.lang.Math.abs;
 
@@ -56,24 +51,19 @@ public class ValueServiceImpl implements ValueService {
     private static final Logger logger = LoggerFactory.getLogger(ValueServiceImpl.class.getName());
 
     private ChartHelper chartHelper;
-
-    private Defragmenter defragmenter;
-
     private ValueDao valueDao;
 
 
     public ValueServiceImpl(
-            ChartHelper chartHelper, Defragmenter defragmenter, ValueDao valueDao) {
+            ChartHelper chartHelper,  ValueDao valueDao) {
 
         this.chartHelper = chartHelper;
-        this.defragmenter = defragmenter;
         this.valueDao = valueDao;
 
     }
 
     @Override //process points using system cron, send idle alerts etc.
-    public void process(final GeoSpatialDao geoSpatialDao,
-                        final TaskService taskService,
+    public void process( final TaskService taskService,
                         final UserService userService,
                         final EntityDao entityDao,
                         final ValueTask valueTask,
@@ -102,7 +92,7 @@ public class ValueServiceImpl implements ValueService {
             entityService.addUpdateEntity(this, u, p);
             // PointServiceFactory.getInstance().updatePoint(u, p);
             logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
-            subscriptionService.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService,
+            subscriptionService.process(taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService,
                     syncService, subscriptionService, calculationService, dataProcessor, u, p,
                     new Value.Builder().initValue(value).alertType(AlertType.IdleAlert).create()
             );
@@ -114,14 +104,14 @@ public class ValueServiceImpl implements ValueService {
 
 
     @Override
-    public String getChartTable(EntityDao entityDao, BlobStore blobStore, User user, Entity entity, Optional<Range<Date>> timespan, Optional<Integer> count, Optional<String> mask) {
+    public String getChartTable(EntityDao entityDao, BlobStore blobStore, User user, Entity entity, Optional<Range<Long>> timespan, Optional<Integer> count, Optional<String> mask) {
         return chartHelper.createChart(entityDao, blobStore, this, user, entity, timespan, count, mask);
 
     }
 
     @Override
-    public List<Value> getSeries(BlobStore blobStore, Entity entity, Optional<Range<Date>> timespan, final Optional<Range<Integer>> range, Optional<String> mask) {
-        List<Value> series = blobStore.getSeries(this, entity, timespan, range, mask);
+    public List<Value> getSeries(BlobStore blobStore, Entity entity, Optional<Range<Long>> timespan, final Optional<Range<Integer>> range, Optional<String> mask) {
+        List<Value> series = valueDao.getSeries(entity, timespan, range, mask);
 
         return setAlertValues((Point) entity, series);
     }
@@ -176,53 +166,14 @@ public class ValueServiceImpl implements ValueService {
     }
 
 
-    @Override
-    public void recordValues(BlobStore blobStore, User user, Point point, List<Value> values) {
-        if (point.getOwner().equals(user.getId())) {
+    @Override @Deprecated
+    public void recordValues(User user, Point point, List<Value> values) {
 
-            if (!values.isEmpty() && ! point.getPointType().equals(PointType.location)) {
+                valueDao.storeValues(point, values);
 
-                storeValues(blobStore, point, values);
-            }
-            Value value = valueDao.getSnapshot(point);
-            Value newer = null;
-            for (Value vx : values) {
-                if (value.getTimestamp().getTime() < vx.getTimestamp().getTime()) {
-                    if (newer != null && newer.getTimestamp().getTime() < vx.getTimestamp().getTime()) {
-                        newer = vx;
-                    }
-                    else if (newer == null) {
-                        newer = vx;
-                    }
 
-                }
-            }
-            if (newer != null) {
-                valueDao.setSnapshot(point, newer);
-            }
-
-        }
     }
 
-    @Override
-    public void storeValues(BlobStore blobStore, Entity entity, List<Value> values) {
-        final Map<Long, ValueDayHolder> individualDaysValueMap = defragmenter.getLongValueDayHolderMap(
-                ImmutableList.copyOf(values)
-        );
-
-
-        for (final ValueDayHolder longListEntry : individualDaysValueMap.values()) {
-
-            blobStore.createBlobStoreEntity(entity, longListEntry);
-
-
-        }
-    }
-
-    @Override
-    public Value getSnapshot(Point point) {
-        return valueDao.getSnapshot(point);
-    }
 
 
     private List<Value> setAlertValues(Point entity, List<Value> series) {
@@ -244,7 +195,7 @@ public class ValueServiceImpl implements ValueService {
 
         Calendar compareTime = Calendar.getInstance();
         compareTime.add(Calendar.SECOND, (point.getDeltaSeconds() * -1));
-        Range<Date> timespan = Range.closed(compareTime.getTime(), new Date());
+        Range<Long> timespan = Range.closed(compareTime.getTime().getTime(), new Date().getTime());
         List<Value> series = getSeries(blobStore, point, Optional.of(timespan), Optional.<Range<Integer>>absent(), Optional.<String>absent());
 
         //Value start = getCurrentValue(blobStore, point);

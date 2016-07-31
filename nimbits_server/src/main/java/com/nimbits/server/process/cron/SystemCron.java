@@ -26,7 +26,6 @@ import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.data.DataProcessor;
-import com.nimbits.server.geo.GeoSpatialDao;
 import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.process.task.ValueTask;
@@ -100,8 +99,7 @@ public class SystemCron extends HttpServlet implements BaseProcessor {
     @Autowired
     DataProcessor dataProcessor;
 
-    @Autowired
-    GeoSpatialDao geoSpatialDao;
+
 
 
     @Override
@@ -119,7 +117,7 @@ public class SystemCron extends HttpServlet implements BaseProcessor {
         try {
 
             logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
-            process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService, syncService,
+            process( taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService, syncService,
                     subscriptionService, calculationService, dataProcessor, null, null, null );
             resp.setStatus(HttpServletResponse.SC_OK);
         } catch (ValueException e) {
@@ -132,8 +130,7 @@ public class SystemCron extends HttpServlet implements BaseProcessor {
     }
 
     @Override
-    public void process(final GeoSpatialDao geoSpatialDao,
-                        final TaskService taskService,
+    public void process( final TaskService taskService,
                         final UserService userService,
                         final EntityDao entityDao,
                         final ValueTask valueTask,
@@ -156,7 +153,7 @@ public class SystemCron extends HttpServlet implements BaseProcessor {
         for (final Entity p : points) {
             Value v = valueService.getCurrentValue(blobStore, p);
             logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
-            valueService.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, blobStore,
+            valueService.process( taskService, userService, entityDao, valueTask, entityService, blobStore,
                     valueService, summaryService, syncService, subscriptionService,
                     calculationService, dataProcessor, admin, (Point) p, v);
 
@@ -195,7 +192,7 @@ public class SystemCron extends HttpServlet implements BaseProcessor {
                     Value newValue = new Value.Builder().initValue(value).timestamp(new Date()).create();// ValueFactory.createValue(value, new Date());
                     counter++;
                     logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
-                    taskService.process(geoSpatialDao, taskService, userService, entityDao, valueTask,
+                    taskService.process(  taskService, userService, entityDao, valueTask,
                             entityService,
                             blobStore,
                             valueService,

@@ -17,30 +17,10 @@
 package com.nimbits.server.process;
 
 
-import com.google.common.base.Optional;
-import com.google.common.collect.Range;
-import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.value.Value;
-import com.nimbits.server.defrag.ValueDayHolder;
-import com.nimbits.server.transaction.value.service.ValueService;
-
-import java.util.Date;
-import java.util.List;
-
 public interface BlobStore {
 
 
-    List<Value> getSeries(final ValueService valueService,
-                          final Entity entity,
-                          final Optional<Range<Date>> timespan,
-                          final Optional<Range<Integer>> range,
-                          final Optional<String> mask);
 
 
-    void createBlobStoreEntity(Entity entity, ValueDayHolder holder);
 
-    void deleteAllData(Point point) ;
-
-    void saveSnapshot(Point point, Value value);
 }

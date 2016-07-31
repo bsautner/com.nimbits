@@ -20,8 +20,7 @@ import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.data.DataProcessor;
-import com.nimbits.server.geo.GeoSpatialDao;
+import com.nimbits.server.data.DataProcessor; 
 import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.process.task.ValueTask;
@@ -36,8 +35,7 @@ import com.nimbits.server.transaction.value.service.ValueService;
 
 public interface BaseProcessor {
 
-    void process(final GeoSpatialDao geoSpatialDao,
-                 final TaskService taskService,
+    void process(final TaskService taskService,
                  final UserService userService,
                  final EntityDao entityDao,
                  final ValueTask valueTask,

@@ -42,8 +42,7 @@ public enum PointType implements Serializable {
     timespan(5),
     flag(6),
     high(7),
-    low(8),
-    location(9);
+    low(8);
 
 
     private static final Map<Integer, PointType> lookup = new HashMap<Integer, PointType>(PointType.values().length);

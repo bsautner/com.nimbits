@@ -35,13 +35,14 @@ import org.springframework.stereotype.Repository;
 
 import javax.jdo.*;
 import java.util.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 @Repository
 public class EntityDaoImpl implements EntityDao {
 
-    private final static Logger logger = Logger.getLogger(EntityDaoImpl.class.getName());
+    private final static Logger logger = LoggerFactory.getLogger(EntityDaoImpl.class.getName());
     private static final int INT = 1024;
 
 
@@ -112,7 +113,7 @@ public class EntityDaoImpl implements EntityDao {
             }
 
         } catch (Exception ex) {
-            logger.severe(ex.getMessage());
+            logger.error(ex.getMessage());
             return Optional.absent();
 
         } finally {
@@ -262,7 +263,7 @@ public class EntityDaoImpl implements EntityDao {
 
         } catch (Exception ex) {
 
-            logger.severe(ex.getMessage());
+            logger.error(ex.getMessage());
             throw ex;
 
         } finally {
@@ -391,7 +392,7 @@ public class EntityDaoImpl implements EntityDao {
                                     }
                                 }
                                 else {
-                                    logger.warning("unexpected null values : " +  GsonFactory.getInstance(true).toJson(c));
+                                    logger.warn("unexpected null values : " +  GsonFactory.getInstance(true).toJson(c));
                                 }
                             }
                             if (!filtered.isEmpty()) {
@@ -433,7 +434,7 @@ public class EntityDaoImpl implements EntityDao {
 
                 }
             }catch (Throwable throwable) {
-                logger.severe(throwable.getMessage());
+                logger.error(throwable.getMessage());
 
             } finally {
                 pm.close();
@@ -578,7 +579,7 @@ public class EntityDaoImpl implements EntityDao {
             return result;
 
         } catch (Exception e) {
-            logger.severe(e.getMessage());
+            logger.error(e.getMessage());
             return Collections.emptyList();
 
         } finally {
@@ -612,7 +613,7 @@ public class EntityDaoImpl implements EntityDao {
             }
 
         } catch (Exception e) {
-            logger.severe(e.getMessage());
+            logger.error(e.getMessage());
             return Optional.absent();
 
         } finally {

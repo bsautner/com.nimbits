@@ -45,8 +45,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.UUID;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -54,7 +54,7 @@ public class UserServiceImpl implements UserService {
     public static final String ERROR1 = "Could not authenticate your request.";
 
     public static final int LIMIT = 1000;
-    private Logger logger = Logger.getLogger(UserServiceImpl.class.getName());
+    private Logger logger = LoggerFactory.getLogger(UserServiceImpl.class.getName());
 
 
     private final UserDao userDao;

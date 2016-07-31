@@ -41,7 +41,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Properties;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -56,7 +57,7 @@ public class EmailServiceImpl implements EmailService {
     private ServerInfo serverInfo;
 
 
-    private static final Logger log = Logger.getLogger(EmailServiceImpl.class.getName());
+    private static final Logger log = LoggerFactory.getLogger(EmailServiceImpl.class.getName());
 
     private static final int INT = 128;
     private static final int SECONDS_IN_MINUTE = 60;
@@ -84,7 +85,7 @@ public class EmailServiceImpl implements EmailService {
             }
 
         } catch (MessagingException e) {
-            log.severe(e.getMessage());
+            log.error(e.getMessage());
             e.printStackTrace();
         }
 

@@ -53,7 +53,6 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
 
     private static final String HEIGHT = "100%";
     private LoginMainPanel loginMainPanel;
-    private boolean connectionApproved = false;
 
     private SystemDetails systemDetails = new SystemDetailsModel(Const.VERSION);
 
@@ -267,10 +266,6 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
                     loadLoginView(result.getLoginInfo(), systemDetails);
                     break;
 
-            }
-            if (connectionApproved) {
-                FeedbackHelper.showInfo("Your connection request is now processed. You will now see your connection's data points and they will see yours. " +
-                        "You can remove this connection by deleting it from the tree.");
             }
 
 

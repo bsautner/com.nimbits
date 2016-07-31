@@ -46,12 +46,13 @@ import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.ServletException;
 import java.util.*;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Service
 public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueServiceRpc {
 
-    private final static Logger logger = Logger.getLogger(ValueServiceRpcImpl.class.getName());
+    private final static Logger logger = LoggerFactory.getLogger(ValueServiceRpcImpl.class.getName());
     @Autowired
     private TaskService taskService;
 

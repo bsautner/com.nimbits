@@ -32,8 +32,8 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FilterBase implements Filter {
 
@@ -53,7 +53,7 @@ public class FilterBase implements Filter {
 
 
 
-    private Logger logger = Logger.getLogger(FilterBase.class.getName());
+    private Logger logger = LoggerFactory.getLogger(FilterBase.class.getName());
 
     private User user;
 
@@ -112,7 +112,7 @@ public class FilterBase implements Filter {
             request.setAttribute(Parameters.user.getText(), user);
             return user != null;
         } catch (Throwable ex) {
-            logger.log(Level.SEVERE, ExceptionUtils.getStackTrace(ex), ex);
+            logger.error(ExceptionUtils.getStackTrace(ex), ex);
             return false;
         }
 

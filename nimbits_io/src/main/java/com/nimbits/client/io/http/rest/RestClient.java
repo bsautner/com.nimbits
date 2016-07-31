@@ -18,7 +18,6 @@ package com.nimbits.client.io.http.rest;
 
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.connection.Connection;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.hal.ValueContainer;
 import com.nimbits.client.model.instance.Instance;
@@ -57,10 +56,6 @@ public interface RestClient {
 
     @POST(API + "/{uuid}")
     Point addPoint(@Path("uuid") String parent,  @Body Point point);
-
-    @POST(API + "/{uuid}")
-    Connection addConnection(@Path("uuid") String parent,  @Body Connection point);
-
 
     @POST(API + "/{uuid}")
     Instance addInstance(@Path("uuid") String parent,  @Body Instance e);
@@ -157,9 +152,6 @@ public interface RestClient {
 
     @GET(API + "/me")
     Instance findInstance(@Query("name") String entityName, @Query("type") int entityType);
-
-    @GET(API + "/me")
-    Connection findConnection(@Query("name") String entityName, @Query("type") int entityType);
 
     @GET(API + "/me")
     Schedule findSchedule(@Query("name") String entityName, @Query("type") int entityType);

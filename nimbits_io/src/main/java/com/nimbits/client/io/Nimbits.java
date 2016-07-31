@@ -21,7 +21,6 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.io.http.rest.RestClient;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.category.Category;
-import com.nimbits.client.model.connection.Connection;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.file.FileModel;
 import com.nimbits.client.model.hal.ValueContainer;
@@ -325,10 +324,6 @@ public class Nimbits {
 
     }
 
-    public Connection addConnection(Entity parent, Connection c) {
-        return api.addConnection(parent.getId(), c);
-    }
-
 
     public List<Point> getNearbyPoints(Point localPoint, double meters) {
         return api.getNearbyPoints(localPoint.getId(), meters);
@@ -456,16 +451,6 @@ public class Nimbits {
 
     }
 
-    public Optional<Connection> findConnection(String name) {
-
-        try {
-            return Optional.of(api.findConnection(name, EntityType.connection.getCode()));
-        } catch (Throwable e) {
-
-            return Optional.absent();
-        }
-
-    }
 
     public Optional<Schedule> findSummary(String name) {
 

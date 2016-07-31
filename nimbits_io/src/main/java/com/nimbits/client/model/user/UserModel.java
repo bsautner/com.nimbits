@@ -23,12 +23,10 @@ import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityName;
 
 import java.io.Serializable;
-import java.util.Date;
 
 
 public class UserModel extends EntityModel implements Serializable, User {
@@ -55,7 +53,7 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     private String passwordResetToken;
 
-    private Date passwordResetTokenTimestamp;
+    private Long passwordResetTimestamp;
     /**
      *
      */
@@ -69,7 +67,7 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     protected UserModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String emailAddress,
                         Boolean isAdmin, String token, String password, String passwordSalt, String source, LoginInfo loginInfo, String passwordResetToken,
-                        Date passwordResetTokenTimestamp) {
+                        Long passwordResetTokenTimestamp) {
         super(id, name, description, entityType,  parent, owner);
         this.emailAddress = emailAddress;
         this.isAdmin = isAdmin;
@@ -79,7 +77,7 @@ public class UserModel extends EntityModel implements Serializable, User {
         this.source = source;
         this.loginInfo = loginInfo;
         this.passwordResetToken = passwordResetToken;
-        this.passwordResetTokenTimestamp = passwordResetTokenTimestamp;
+        this.passwordResetTimestamp = passwordResetTokenTimestamp;
     }
 
     @Override
@@ -137,9 +135,8 @@ public class UserModel extends EntityModel implements Serializable, User {
         this.passwordResetToken = token;
     }
 
-    @Override
-    public void setPasswordResetTokenTimestamp(Date date) {
-        this.passwordResetTokenTimestamp = date;
+    public void setPasswordResetTimestamp(Long date) {
+        this.passwordResetTimestamp = date;
     }
 
     @Override
@@ -147,9 +144,8 @@ public class UserModel extends EntityModel implements Serializable, User {
         return this.passwordResetToken;
     }
 
-    @Override
-    public Date getPasswordResetTokenTimestamp() {
-        return this.passwordResetTokenTimestamp == null ? new Date(0) : this.passwordResetTokenTimestamp;
+    public Long getPasswordResetTimestamp() {
+        return this.passwordResetTimestamp == null ? 0 : this.passwordResetTimestamp;
     }
 
     @Override
@@ -215,7 +211,7 @@ public class UserModel extends EntityModel implements Serializable, User {
 
         private String passwordResetToken;
 
-        private Date passwordResetTokenTimestamp;
+        private Long passwordResetTimestamp;
 
         public Builder email(String emailAddress) {
             this.emailAddress = emailAddress;
@@ -258,8 +254,8 @@ public class UserModel extends EntityModel implements Serializable, User {
             return this;
         }
 
-        public Builder setPasswordResetTokenTimestamp(Date passwordResetTokenTimestamp) {
-            this.passwordResetTokenTimestamp = passwordResetTokenTimestamp;
+        public Builder setPasswordResetTokenTimestamp(Long passwordResetTokenTimestamp) {
+            this.passwordResetTimestamp = passwordResetTokenTimestamp;
             return this;
         }
 
@@ -279,7 +275,7 @@ public class UserModel extends EntityModel implements Serializable, User {
 
 
             return new UserModel(id, name, description, type ,  parent, owner,
-                    emailAddress, isAdmin, token, password, passwordSalt, source, loginInfo, passwordResetToken, passwordResetTokenTimestamp  );
+                    emailAddress, isAdmin, token, password, passwordSalt, source, loginInfo, passwordResetToken, passwordResetTimestamp  );
         }
 
         @Override
@@ -303,7 +299,7 @@ public class UserModel extends EntityModel implements Serializable, User {
             this.source = u.getSource().name();
             this.loginInfo = u.getLoginInfo();
             this.passwordResetToken = u.getPasswordResetToken();
-            this.passwordResetTokenTimestamp = u.getPasswordResetTokenTimestamp();
+            this.passwordResetTimestamp = u.getPasswordResetTimestamp();
             return this;
         }
 

@@ -27,8 +27,7 @@ public enum SubscriptionNotifyMethod {
     instantMessage(3, "Instant Message (XMPP)"),
     cloud(5, "Android Notification (GCM)"),
     socket(6, "Connected Sockets"),
-    webhook(7, "Web Hook"),
-    proximity(8, "Proximity Points");
+    webhook(7, "Web Hook");
 
 
 

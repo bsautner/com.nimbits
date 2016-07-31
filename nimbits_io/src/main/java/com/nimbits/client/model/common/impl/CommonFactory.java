@@ -71,7 +71,7 @@ public class CommonFactory {
                 || name.contains("!")
                 || name.contains("?")
                 ) {
-            throw new IllegalArgumentException("Invalid Name");
+            throw new IllegalArgumentException("Invalid Name: " + name);
         }
 
 

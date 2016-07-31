@@ -27,7 +27,6 @@ import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.data.DataProcessor;
-import com.nimbits.server.geo.GeoSpatialDao;
 import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.process.task.ValueTask;
@@ -64,7 +63,7 @@ public class SummaryServiceImpl implements SummaryService {
 
 
     @Override
-    public void process(final GeoSpatialDao geoSpatialDao,
+    public void process(
                         final TaskService taskService,
                         final UserService userService,
                         final EntityDao entityDao,
@@ -81,14 +80,14 @@ public class SummaryServiceImpl implements SummaryService {
         final Optional<Entity> optional = entityDao.getEntityByTrigger(user, point, EntityType.summary);
         if (optional.isPresent()) {
 
-            final Date now = new Date();
+            final Long now = System.currentTimeMillis();
             final Summary summary = (Summary) optional.get();
 
             if (summary.getLastProcessed().getTime() + summary.getSummaryIntervalMs() < new Date().getTime()) {
 
                 final  Entity source = entityDao.getEntity(user, summary.getTrigger(), EntityType.point).get();
 
-                final Optional<Range<Date>> timespan = Optional.of(Range.closed(new Date(now.getTime() - summary.getSummaryIntervalMs()), now));
+                final Optional<Range<Long>> timespan = Optional.of(Range.closed( (now - summary.getSummaryIntervalMs()), now));
 
                 final Value value;
                 if (summary.getSummaryType().equals(SummaryType.delta)) {
@@ -117,7 +116,7 @@ public class SummaryServiceImpl implements SummaryService {
                 final Point target = (Point) entityDao.getEntity(user, summary.getTarget(), EntityType.point).get();
                 logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
 
-                taskService.process(geoSpatialDao, taskService, userService, entityDao, valueTask,
+                taskService.process( taskService, userService, entityDao, valueTask,
                         entityService,
                         blobStore,
                         valueService,

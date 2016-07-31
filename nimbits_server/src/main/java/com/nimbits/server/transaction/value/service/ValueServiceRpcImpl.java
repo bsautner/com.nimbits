@@ -30,7 +30,6 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.value.ValueServiceRpc;
 import com.nimbits.server.data.DataProcessor;
 import com.nimbits.server.geo.GeoSpatialDao;
-import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.calculation.CalculationService;
@@ -40,6 +39,7 @@ import com.nimbits.server.transaction.subscription.SubscriptionService;
 import com.nimbits.server.transaction.summary.SummaryService;
 import com.nimbits.server.transaction.sync.SyncService;
 import com.nimbits.server.transaction.user.service.UserService;
+import com.nimbits.server.transaction.value.ValueDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -74,7 +74,7 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
     @Autowired
     EntityService entityService;
     @Autowired
-    BlobStore blobStore;
+    ValueDao valueDao;
 
     @Autowired
     SummaryService summaryService;
@@ -102,13 +102,13 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
     @Override
     public String getChartTable(User user, Entity entity, Integer countParam) {
         Optional<Integer> count = (countParam != null && countParam > 0) ? Optional.of(countParam) : Optional.<Integer>absent();
-        return valueService.getChartTable(entityDao, blobStore, user, entity, Optional.<Range<Date>>absent(), count, Optional.<String>absent());
+        return valueService.getChartTable( user, entity, Optional.<Range<Date>>absent(), count, Optional.<String>absent());
     }
 
     @Override
     public List<Value> solveEquationRpc(final Calculation calculation) {
         User user = userService.getHttpRequestUser(entityService, valueService, getThreadLocalRequest());
-        Optional<Value> response = calculationService.solveEquation( entityDao, blobStore, valueService, user, calculation, null, null);
+        Optional<Value> response = calculationService.solveEquation(user, calculation, null, null);
 
         return response.isPresent() ? Collections.singletonList(response.get()) : Collections.<Value>emptyList();
     }
@@ -121,7 +121,7 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
         Point p = (Point) entityDao.getEntity(user, point.getId(), EntityType.point).get();
         logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
         taskService.process(geoSpatialDao, taskService, userService,
-                entityDao, valueTask, entityService, blobStore, valueService,
+                entityDao, valueTask, entityService, valueDao, valueService,
                 summaryService, syncService, subscriptionService,
                 calculationService, dataProcessor, user, p, value);
 
@@ -130,7 +130,7 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
 
     @Override
     public Map<String, Entity> getCurrentValuesRpc(final Map<String, Point> entities) throws Exception {
-        return valueService.getCurrentValues(blobStore, entities);
+        return valueService.getCurrentValues(entities);
 
     }
 

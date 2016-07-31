@@ -29,7 +29,6 @@ import com.nimbits.server.data.DataProcessor;
 import com.nimbits.server.geo.GeoSpatialDao;
 import com.nimbits.server.math.MathEvaluator;
 import com.nimbits.server.math.MathEvaluatorImpl;
-import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
@@ -38,13 +37,16 @@ import com.nimbits.server.transaction.subscription.SubscriptionService;
 import com.nimbits.server.transaction.summary.SummaryService;
 import com.nimbits.server.transaction.sync.SyncService;
 import com.nimbits.server.transaction.user.service.UserService;
+import com.nimbits.server.transaction.value.ValueDao;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.lang3.StringUtils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class CalculationServiceImpl implements CalculationService {
 
     private static final Logger logger = LoggerFactory.getLogger(CalculationService.class.getName());
@@ -54,8 +56,15 @@ public class CalculationServiceImpl implements CalculationService {
     private MathEvaluator m;
 
 
-    public CalculationServiceImpl(   ) {
+    private EntityDao entityDao;
 
+    private ValueService valueService;
+
+    @Autowired
+    public CalculationServiceImpl(EntityDao entityDao,  ValueService valueService  ) {
+
+        this.entityDao = entityDao;
+        this.valueService = valueService;
 
     }
 
@@ -68,7 +77,7 @@ public class CalculationServiceImpl implements CalculationService {
                         final EntityDao entityDao,
                         final ValueTask valueTask,
                         final EntityService entityService,
-                        final BlobStore blobStore,
+                        final ValueDao valueDao,
                         final ValueService valueService,
                         final SummaryService summaryService,
                         final SyncService syncService,
@@ -87,13 +96,13 @@ public class CalculationServiceImpl implements CalculationService {
             final Optional<Entity> target = entityDao.getEntity(u, c.getTarget(), EntityType.point);
 
             if (target.isPresent()) {
-                final Optional<Value> result = solveEquation(entityDao, blobStore, valueService, u, c, point, value);
+                final Optional<Value> result = solveEquation( u, c, point, value);
                 if (result.isPresent()) {
 
                     Value v = new Value.Builder().initValue(result.get()).timestamp(value.getTimestamp()).create();
 
 
-                        valueTask.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService,
+                        valueTask.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, valueDao, valueService, summaryService,
                                 syncService, subscriptionService, calculationService, dataProcessor, u, (Point) target.get(), v);
 
                 }
@@ -105,18 +114,18 @@ public class CalculationServiceImpl implements CalculationService {
     }
 
     @Override
-    public Optional<Value> solveEquation(EntityDao entityDao, BlobStore blobStore, ValueService valueService, final User user, final Calculation calculation, Entity point, Value value) {
+    public Optional<Value> solveEquation( final User user, final Calculation calculation, Entity point, Value value) {
 
 
         m = new MathEvaluatorImpl(calculation.getFormula());
         if (calculation.getFormula().contains("x") && !StringUtils.isEmpty(calculation.getX())) {
-            addVar(entityDao,blobStore,  valueService, user, calculation, point, value, "x", calculation.getX());
+            addVar( user, calculation, point, value, "x", calculation.getX());
         }
         if (calculation.getFormula().contains("y") && !StringUtils.isEmpty(calculation.getY())) {
-            addVar(entityDao, blobStore, valueService, user, calculation, point, value, "y", calculation.getY());
+            addVar(  user, calculation, point, value, "y", calculation.getY());
         }
         if (calculation.getFormula().contains("z") && !StringUtils.isEmpty(calculation.getZ())) {
-            addVar(entityDao, blobStore, valueService, user, calculation, point, value, "z", calculation.getZ());
+            addVar(  user, calculation, point, value, "z", calculation.getZ());
         }
 
 
@@ -133,7 +142,7 @@ public class CalculationServiceImpl implements CalculationService {
 
     }
 
-    private void addVar(EntityDao entityDao, BlobStore blobStore, ValueService valueService, User user, Calculation calculation, Entity point, Value value, String var, String varEntityId) {
+    private void addVar(  User user, Calculation calculation, Entity point, Value value, String var, String varEntityId) {
         if (!Utils.isEmptyString(calculation.getX()) && calculation.getFormula().contains(var)) {
 
             double currentValue = 0;
@@ -143,7 +152,7 @@ public class CalculationServiceImpl implements CalculationService {
                 Optional<Entity> sample = entityDao.getEntity(user, varEntityId, EntityType.point);
 
                 if (sample.isPresent()) {
-                    final Value val = valueService.getCurrentValue(blobStore, sample.get());
+                    final Value val = valueService.getCurrentValue(sample.get());
                     currentValue = val.getDoubleValue();
                 }
 

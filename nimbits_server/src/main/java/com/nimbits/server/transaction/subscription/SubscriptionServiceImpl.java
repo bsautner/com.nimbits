@@ -40,7 +40,6 @@ import com.nimbits.server.communication.xmpp.XmppService;
 import com.nimbits.server.data.DataProcessor;
 import com.nimbits.server.geo.GeoSpatialDao;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.socket.ConnectedClients;
@@ -51,6 +50,7 @@ import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.summary.SummaryService;
 import com.nimbits.server.transaction.sync.SyncService;
 import com.nimbits.server.transaction.user.service.UserService;
+import com.nimbits.server.transaction.value.ValueDao;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -116,7 +116,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                         final EntityDao entityDao,
                         final ValueTask valueTask,
                         final EntityService entityService,
-                        final BlobStore blobStore,
+                        final ValueDao blobStore,
                         final ValueService valueService,
                         final SummaryService summaryService,
                         final SyncService syncService,
@@ -151,7 +151,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                     break;
                 case anyAlert:
                     if (!alert.equals(AlertType.OK) && (point.isHighAlarmOn() || point.isLowAlarmOn())) {
-                        sendNotification(geoSpatialDao, taskService, userService, blobStore, entityDao, valueService, calculationService, summaryService, syncService, subscriptionService, dataProcessor, subscriber, subscription, point, v);
+                        sendNotification(  subscriber, subscription, point, v);
                     }
                     break;
                 case high:

@@ -32,8 +32,7 @@ import com.nimbits.server.data.DataProcessor;
 import com.nimbits.server.geo.GeoSpatialDao;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.orm.socket.SocketStore;
-import com.nimbits.server.process.BlobStore;
-import com.nimbits.server.transaction.BaseProcessor;
+ import com.nimbits.server.transaction.BaseProcessor;
 import com.nimbits.server.transaction.calculation.CalculationService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.entity.service.EntityService;
@@ -41,9 +40,12 @@ import com.nimbits.server.transaction.subscription.SubscriptionService;
 import com.nimbits.server.transaction.summary.SummaryService;
 import com.nimbits.server.transaction.sync.SyncService;
 import com.nimbits.server.transaction.user.service.UserService;
+import com.nimbits.server.transaction.value.ValueDao;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -59,8 +61,6 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 public class ValueTask extends HttpServlet implements BaseProcessor {
@@ -91,7 +91,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
     private DataProcessor dataProcessor;
 
     @Autowired
-    private BlobStore blobStore;
+    private ValueDao blobStore;
 
     @Autowired
     private EntityDao entityDao;
@@ -153,7 +153,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
             final EntityDao entityDao,
             final ValueTask valueTask,
             final EntityService entityService,
-            final BlobStore blobStore,
+            final ValueDao valueDao,
             final ValueService valueService,
             final SummaryService summaryService,
             final SyncService syncService,
@@ -164,7 +164,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
 
         final boolean ignored = false;
         final boolean ignoredByDate = dataProcessor.ignoreDataByExpirationDate(point, value, ignored);
-        final Value sample = valueService.getCurrentValue(blobStore, point);
+        final Value sample = valueService.getCurrentValue(point);
 
         boolean ignoredByCompression = false;
 
@@ -180,12 +180,12 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
             switch (point.getPointType()) {
                 case basic:
 
-                    valueService.recordValues(blobStore, user, point, Collections.singletonList(value));
+                    valueService.recordValues(user, point, Collections.singletonList(value));
                     break;
                 case location:
                     logger.info("Processing new location " + value.toString());
                     geoSpatialDao.updateSpatial(point.getId(), value.getLatitude(), value.getLongitude());
-                    valueService.recordValues(blobStore, user, point, Collections.singletonList(value));
+                    valueService.recordValues(user, point, Collections.singletonList(value));
 
                     String[] mynames = value.getMetaData().split(",");
                     if (mynames.length == 2) {
@@ -199,7 +199,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
                             List<Point> points = geoSpatialDao.getNearby(user, value.getLatitude(), value.getLongitude(), 100000);
                             logger.info("nearby location points: " + points.size());
                             for (Point nearby : points) {
-                                Value last = valueService.getCurrentValue(blobStore, nearby);
+                                Value last = valueService.getCurrentValue(nearby);
                                 if (!StringUtils.isEmpty(last.getMetaData())) {
                                     //meta contains the push and broadcast points for yodel
                                     String[] names = last.getMetaData().split(",");
@@ -210,7 +210,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
                                         if (optional1.isPresent()) {
                                             logger.info("found other user's point: " + broadcast);
                                             Point otherUsersBroadcastPoint = (Point) optional1.get();
-                                            Value lastBroadcast = valueService.getCurrentValue(blobStore, otherUsersBroadcastPoint);
+                                            Value lastBroadcast = valueService.getCurrentValue(otherUsersBroadcastPoint);
                                             if (lastBroadcast.getTimestamp().getTime() > 1000) {
                                                 logger.info("got last broadcast:" + lastBroadcast.toString());
                                                 logger.info("recording last broadcast to : " + pushPoint.getName().getValue());
@@ -236,39 +236,39 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
                     break;
 
                 case backend:
-                    valueService.recordValues(blobStore, user, point, Collections.singletonList(value));
+                    valueService.recordValues(user, point, Collections.singletonList(value));
                     break;
                 case cumulative:
-                    previousValue = valueService.getCurrentValue(blobStore, point);
+                    previousValue = valueService.getCurrentValue( point);
 
 
                     if (previousValue.getTimestamp().getTime() < value.getTimestamp().getTime()) {
                         value= new Value.Builder().initValue(value).doubleValue(value.getDoubleValue() + previousValue.getDoubleValue()).create();
-                        valueService.recordValues(blobStore, user, point, Collections.singletonList(value));
+                        valueService.recordValues(user, point, Collections.singletonList(value));
                     }
                     break;
                 case timespan:
-                    valueService.recordValues(blobStore, user, point, Collections.singletonList(value));
+                    valueService.recordValues( user, point, Collections.singletonList(value));
                     break;
                 case flag:
                     Integer whole = BigDecimal.valueOf(value.getDoubleValue()).intValue();
                     double d = whole != 0 ? 1.0 : 0.0;
                     value =  new Value.Builder().initValue(value).doubleValue(d).create();
-                    valueService.recordValues(blobStore, user, point, Collections.singletonList(value));
+                    valueService.recordValues(user, point, Collections.singletonList(value));
                     break;
                 case high:
-                    previousValue = valueService.getCurrentValue(blobStore, point);
+                    previousValue = valueService.getCurrentValue(point);
 
                     if (value.getDoubleValue() > previousValue.getDoubleValue()) {
-                        valueService.recordValues(blobStore, user, point, Collections.singletonList(value));
+                        valueService.recordValues(user, point, Collections.singletonList(value));
                     }
 
                     break;
                 case low:
-                    previousValue = valueService.getCurrentValue(blobStore, point);
+                    previousValue = valueService.getCurrentValue(point);
 
                     if (value.getDoubleValue() < previousValue.getDoubleValue()) {
-                        valueService.recordValues(blobStore, user, point, Collections.singletonList(value));
+                        valueService.recordValues( user, point, Collections.singletonList(value));
                     }
 
                     break;
@@ -280,7 +280,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
 
             final AlertType t = valueService.getAlertType(point, value);
             final Value v =  new Value.Builder().initValue(value).timestamp(new Date()).alertType(t).create();
-            completeRequest(geoSpatialDao, taskService, entityDao, entityService, blobStore, valueService, summaryService, syncService, subscriptionService,
+            completeRequest(geoSpatialDao, taskService, entityDao, entityService, valueDao, valueService, summaryService, syncService, subscriptionService,
                     calculationService, dataProcessor, userService, user, point, v);
 
 
@@ -300,7 +300,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
                                  TaskService taskService,
                                  EntityDao entityDao,
                                  EntityService entityService,
-                                 BlobStore blobStore,
+                                 ValueDao valueDao,
                                  ValueService valueService,
                                  SummaryService summaryService,
                                  SyncService syncService,
@@ -321,7 +321,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
 
             Value snapshot = valueService.getSnapshot(point);
             if (snapshot.getTimestamp().getTime() < value.getTimestamp().getTime()) {
-                blobStore.saveSnapshot(point, value);
+                valueDao.setSnapshot(point, value);
             }
 //            logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
             calculationService.process(geoSpatialDao, taskService, userService, entityDao, this, entityService, blobStore, valueService, summaryService, syncService, subscriptionService, calculationService, dataProcessor, u, point, value);

@@ -46,6 +46,7 @@ import com.nimbits.server.transaction.summary.SummaryService;
 import com.nimbits.server.transaction.sync.SyncService;
 import com.nimbits.server.transaction.user.dao.UserDao;
 import com.nimbits.server.transaction.user.service.UserService;
+import com.nimbits.server.transaction.value.ValueDao;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +72,7 @@ public class RestAPI {
 
     private final TaskService taskService;
     private final ValueTask valueTask;
-    private final BlobStore blobStore;
+    private final ValueDao valueDao;
     private final SummaryService summaryService;
     private final SyncService syncService;
     private final SubscriptionService subscriptionService;
@@ -91,13 +92,13 @@ public class RestAPI {
 
     @Autowired
     public RestAPI(GeoSpatialDao geoSpatialDao, EntityService entityService, ValueService valueService, UserService userService,
-                   EntityDao entityDao, TaskService taskService, ValueTask valueTask, BlobStore blobStore, SummaryService summaryService,
+                   EntityDao entityDao, TaskService taskService, ValueTask valueTask, ValueDao valueDao, SummaryService summaryService,
                    SyncService syncService, SubscriptionService subscriptionService, CalculationService calculationService, DataProcessor dataProcessor,
                    UserDao userDao) {
 
         this.taskService = taskService;
         this.valueTask = valueTask;
-        this.blobStore = blobStore;
+        this.valueDao = valueDao;
         this.summaryService = summaryService;
         this.syncService = syncService;
         this.subscriptionService = subscriptionService;
@@ -137,7 +138,7 @@ public class RestAPI {
         Point entity = (Point) entityDao.getEntity(user, uuid, EntityType.point);
         Value value = gson.fromJson(json, Value.class);
         taskService.process(geoSpatialDao, taskService, userService, entityDao,
-                valueTask, entityService, blobStore, valueService, summaryService, syncService, subscriptionService,
+                valueTask, entityService, valueDao, valueService, summaryService, syncService, subscriptionService,
                 calculationService, dataProcessor, user, entity, value);
         return new ResponseEntity(HttpStatus.OK);
 
@@ -160,12 +161,12 @@ public class RestAPI {
         if (optional.isPresent()) {
             if (values.size() == 1) {
 
-                taskService.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService, syncService, subscriptionService,
+                taskService.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, valueDao, valueService, summaryService, syncService, subscriptionService,
                         calculationService, dataProcessor, user, (Point) optional.get(), values.get(0));
 
             } else {
 
-                valueService.recordValues(blobStore, user, (Point) optional.get(), values);
+                valueService.recordValues(user, (Point) optional.get(), values);
             }
         }
         return new ResponseEntity(HttpStatus.OK);
@@ -330,7 +331,7 @@ public class RestAPI {
 
             Map<String, List<Value>> map = new HashMap<>(entities.size());
             for (Entity e: entities) {
-                List<Value>values = valueService.getSeries(blobStore, e, timespan, range, mask);
+                List<Value>values = valueService.getSeries( e, timespan, range, mask);
 
                 map.put(e.getId(), values);
 
@@ -346,7 +347,7 @@ public class RestAPI {
             if (optional.isPresent()) {
 
 
-                List<Value> values = valueService.getSeries(blobStore, optional.get(), timespan, range, mask);
+                List<Value> values = valueService.getSeries( optional.get(), timespan, range, mask);
 
                 String resp = gson.toJson(values);
                 return new ResponseEntity<>(resp, HttpStatus.OK);
@@ -387,7 +388,7 @@ public class RestAPI {
         if (timespan.isPresent() || count.isPresent()) {
 
             Entity entity = entityDao.getEntity(user, uuid, EntityType.point).get();
-            String chartData = valueService.getChartTable(entityDao, blobStore, user, entity, timespan, count, mask);
+            String chartData = valueService.getChartTable(user, entity, timespan, count, mask);
             return new ResponseEntity<>(chartData, HttpStatus.OK);
 
         }

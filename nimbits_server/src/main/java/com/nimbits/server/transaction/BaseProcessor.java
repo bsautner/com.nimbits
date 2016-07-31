@@ -22,7 +22,6 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.data.DataProcessor;
 import com.nimbits.server.geo.GeoSpatialDao;
-import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.calculation.CalculationService;
@@ -32,6 +31,7 @@ import com.nimbits.server.transaction.subscription.SubscriptionService;
 import com.nimbits.server.transaction.summary.SummaryService;
 import com.nimbits.server.transaction.sync.SyncService;
 import com.nimbits.server.transaction.user.service.UserService;
+import com.nimbits.server.transaction.value.ValueDao;
 import com.nimbits.server.transaction.value.service.ValueService;
 
 public interface BaseProcessor {
@@ -42,7 +42,7 @@ public interface BaseProcessor {
                  final EntityDao entityDao,
                  final ValueTask valueTask,
                  final EntityService entityService,
-                 final BlobStore blobStore,
+                 final ValueDao valueDao,
                  final ValueService valueService,
                  final SummaryService summaryService,
                  final SyncService syncService,

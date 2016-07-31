@@ -23,7 +23,6 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.transaction.BaseProcessor;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 
@@ -36,21 +35,23 @@ public interface ValueService extends BaseProcessor {
 
 
 
-    List<Value> getSeries(BlobStore blobStore, Entity entity, Optional<Range<Date>> timespan, final Optional<Range<Integer>> range, Optional<String> mask);
+    List<Value> getSeries(Entity entity, Optional<Range<Date>> timespan, final Optional<Range<Integer>> range, Optional<String> mask);
 
-    Map<String, Entity> getCurrentValues(BlobStore blobStore, Map<String, Point> entities);
+    Map<String, Entity> getCurrentValues( Map<String, Point> entities);
 
-    void recordValues(BlobStore blobStore, User user, Point point, List<Value> values);
+    void recordValues( User user, Point point, List<Value> values);
 
-    double calculateDelta(BlobStore blobStore, Point point);
+    double calculateDelta( Point point);
 
-    Value getCurrentValue(BlobStore blobStore, Entity p);
+    Value getCurrentValue(Entity p);
 
-    String getChartTable(EntityDao entityDao, BlobStore blobStore, User user, Entity entity, Optional<Range<Date>> timespan, Optional<Integer> count, Optional<String> mask);
+    String getChartTable( User user, Entity entity, Optional<Range<Date>> timespan, Optional<Integer> count, Optional<String> mask);
 
     AlertType getAlertType(final Point point, final Value value);
 
-    void storeValues(BlobStore blobStore, Entity entity, List<Value> values) ;
+    void storeValues(Entity entity, List<Value> values) ;
 
     Value getSnapshot(Point point);
+
+    void deleteAllData(Point point);
 }

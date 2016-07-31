@@ -1,5 +1,7 @@
 package com.nimbits.server.transaction.value;
 
+import com.google.common.base.Optional;
+import com.google.common.collect.Range;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.orm.ValueStore;
@@ -8,6 +10,7 @@ import org.springframework.stereotype.Repository;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -71,5 +74,14 @@ public class ValueDao {
 
 
 
+    }
+
+    public List<Value> getSeries(Entity entity, Optional<Range<Date>> timespan, Optional<Range<Integer>> range, Optional<String> mask) {
+        //TODO OOMA
+        return null;
+    }
+
+    public void storeValues(Entity entity, List<Value> values) {
+        //TODO OOMA
     }
 }

@@ -31,7 +31,11 @@
 
     <bean id="dataProcessor" class="com.nimbits.server.data.DataProcessor"/>
 
-    <bean id="chartHelper" class="com.nimbits.server.chart.ChartHelper" />
+    <bean id="chartHelper" class="com.nimbits.server.chart.ChartHelper" >
+        <constructor-arg index="0" ref="entityDao"/>
+        <constructor-arg index="1" ref="ValueDao"/>
+        <constructor-arg index="2" ref="valueService"/>
+    </bean>
 
 
     <bean id="nimbitsCache" class="com.nimbits.server.transaction.cache.NimbitsCacheImpl"/>
@@ -51,7 +55,7 @@
         <constructor-arg index="1" ref="emailService"/>
         <constructor-arg index="2" ref="connectedClients"/>
         <constructor-arg index="3" ref="entityDao"/>
-        <constructor-arg index="4" ref="blobStore"/>
+        <constructor-arg index="4" ref="valueService"/>
     </bean>
 
     <bean id="authService" class="com.nimbits.server.auth.AuthServiceImpl">
@@ -78,16 +82,6 @@
         <constructor-arg index="1" ref="authService"/>
         <constructor-arg index="2" ref="serverInfo"/>
     </bean>
-
-    <bean id="blobStore" class="com.nimbits.server.process.BlobStoreImpl" >
-
-        <constructor-arg index="0" ref="nimbitsCache"/>
-        <constructor-arg index="1" ref="storageIO"/>
-        <constructor-arg index="2" ref="defragmenter"/>
-        <constructor-arg index="3" ref="settingsDao"/>
-        <constructor-arg index="4" ref="ValueDao"/>
-    </bean>
-
 
 
     <bean id="storageIO" class="com.nimbits.server.process.StorageIOImpl">
@@ -116,8 +110,7 @@
 
 
         <constructor-arg index="0" ref="chartHelper"/>
-        <constructor-arg index="1" ref="defragmenter"/>
-        <constructor-arg index="2" ref="ValueDao"/>
+        <constructor-arg index="1" ref="ValueDao"/>
     </bean>
 
 
@@ -227,7 +220,7 @@
 
 
         <constructor-arg index="0" ref="GeoSpatialDao"/>
-        <constructor-arg index="1" ref="taskExecutor"/>
+        <constructor-arg index="1" ref="myScheduler"/>
         <constructor-arg index="2" ref="systemCron"/>
         <constructor-arg index="3" ref="entityDao"/>
         <constructor-arg index="4" ref="userService"/>
@@ -237,7 +230,7 @@
         <constructor-arg index="8" ref="subscriptionService"/>
         <constructor-arg index="9" ref="calculationService"/>
         <constructor-arg index="10" ref="valueTask"/>
-        <constructor-arg index="11" ref="blobStore"/>
+        <constructor-arg index="11" ref="ValueDao"/>
         <constructor-arg index="12" ref="summaryService"/>
         <constructor-arg index="13" ref="syncService"/>
         <constructor-arg index="14" ref="dataProcessor"/>

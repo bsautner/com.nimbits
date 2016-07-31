@@ -26,25 +26,29 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
+import com.nimbits.server.transaction.value.ValueDao;
 import com.nimbits.server.transaction.value.service.ValueService;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-
+@Component
 public class ChartHelper {
 
 
 
+    private EntityDao entityDao;
+    private ValueDao blobStore;
+    private ValueService valueService;
 
-
-    public ChartHelper( ) {
-
-
+    public ChartHelper(EntityDao entityDao, ValueDao blobStore, ValueService valueService) {
+        this.entityDao = entityDao;
+        this.blobStore = blobStore;
+        this.valueService = valueService;
     }
 
-    public String createChart(EntityDao entityDao, BlobStore blobStore, ValueService valueService, User user, Entity entity, Optional<Range<Date>> timespan, Optional<Integer> count, Optional<String> mask) {
+    public String createChart(User user, Entity entity, Optional<Range<Date>> timespan, Optional<Integer> count, Optional<String> mask) {
 
 
         final List<Entity> list = getList(entityDao, user, entity);
@@ -85,7 +89,7 @@ public class ChartHelper {
     }
 
 
-    private ChartDTO createChartData(BlobStore blobStore,
+    private ChartDTO createChartData(ValueDao blobStore,
                                      ValueService valueService,
                                      List<Entity> points,
                                      Optional<Range<Date>> timespan,
@@ -125,7 +129,7 @@ public class ChartHelper {
         }
 
         for (Entity point : points) {
-            List<Value> values  = valueService.getSeries(blobStore, point, timespan, range, mask);
+            List<Value> values  = valueService.getSeries(point, timespan, range, mask);
 
 
 

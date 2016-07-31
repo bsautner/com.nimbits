@@ -21,13 +21,10 @@ import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.transaction.BaseProcessor;
-import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.value.service.ValueService;
 
 
 public interface CalculationService  extends BaseProcessor {
 
-    Optional<Value> solveEquation(EntityDao entityDao, BlobStore blobStore, ValueService valueService, User user, Calculation calculation, Entity point, Value value);
+    Optional<Value> solveEquation( User user, Calculation calculation, Entity point, Value value);
 }

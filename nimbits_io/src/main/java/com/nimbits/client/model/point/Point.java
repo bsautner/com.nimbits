@@ -105,4 +105,6 @@ public interface Point extends Entity, Serializable {
     int getPrecision();
 
     void setPrecision(int precision);
+
+
 }

@@ -37,11 +37,10 @@ public interface BlobStore {
                           final Optional<Range<Integer>> range,
                           final Optional<String> mask);
 
-    Value getSnapshot(Entity entity);
-
-    void saveSnapshot(Entity entity, Value value);
 
     void createBlobStoreEntity(Entity entity, ValueDayHolder holder);
 
     void deleteAllData(Point point) ;
+
+    void saveSnapshot(Point point, Value value);
 }

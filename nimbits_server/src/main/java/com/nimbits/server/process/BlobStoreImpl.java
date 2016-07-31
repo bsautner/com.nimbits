@@ -31,6 +31,7 @@ import com.nimbits.server.defrag.ValueDayHolder;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transaction.cache.NimbitsCache;
 import com.nimbits.server.transaction.settings.SettingsService;
+import com.nimbits.server.transaction.value.ValueDao;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -62,12 +63,15 @@ public class BlobStoreImpl implements BlobStore {
 
     private SettingsService settingsService;
 
-    public BlobStoreImpl(NimbitsCache nimbitsCache, StorageIOImpl storageIO, Defragmenter defragmenter, SettingsService settingsService) {
+    private ValueDao valueDao;
+
+    public BlobStoreImpl(NimbitsCache nimbitsCache, StorageIOImpl storageIO, Defragmenter defragmenter, SettingsService settingsService, ValueDao valueDao) {
 
         this.nimbitsCache = nimbitsCache;
         this.storageIO = storageIO;
         this.defragmenter = defragmenter;
         this.settingsService = settingsService;
+        this.valueDao = valueDao;
     }
 
     @Override
@@ -171,55 +175,6 @@ public class BlobStoreImpl implements BlobStore {
 
     }
 
-    @Override
-    public Value getSnapshot(final Entity entity) {
-        final Value value;
-        String root = settingsService.getSetting(ServerSetting.storeDirectory);
-        final String key = entity.getId() + SNAPSHOT;
-        if (nimbitsCache.get(key) != null) {
-
-            value = (Value) nimbitsCache.get(key);
-
-        }
-        else {
-            List<Value> values = readValuesFromFile(root + "/" + entity.getId() + "/" + SNAPSHOT);
-
-            if (values.isEmpty()) {
-                value = new Value.Builder().doubleValue(0.0).timestamp(new Date(0)).create();
-                createSnapshot(entity, value);
-            } else {
-                value = values.get(0);
-            }
-            nimbitsCache.put(key, value);
-        }
-        return value;
-
-
-    }
-
-    private void createSnapshot(final Entity entity, final Value value) {
-        String root = settingsService.getSetting(ServerSetting.storeDirectory);
-        final String key = entity.getId() + SNAPSHOT;
-        final String json = gson.toJson(Arrays.asList(value));
-        nimbitsCache.put(key, value);
-        writeFile(json, root + "/" + entity.getId() + "/" + SNAPSHOT);
-
-
-    }
-
-    @Override
-    public void saveSnapshot(final Entity entity, final Value value) {
-        final String key = entity.getId() + SNAPSHOT;
-        Value old = getSnapshot(entity);
-        String root = settingsService.getSetting(ServerSetting.storeDirectory);
-        if (value.getTimestamp().getTime() > old.getTimestamp().getTime()) {
-            final String json = gson.toJson(Arrays.asList(value));
-            nimbitsCache.put(key, value);
-            writeFile(json, root + "/" + entity.getId() + "/" + SNAPSHOT);
-        }
-
-    }
-
 
 
 
@@ -278,7 +233,8 @@ public class BlobStoreImpl implements BlobStore {
             }
 
         }
-        saveSnapshot(entity, mostRecent);
+        valueDao.setSnapshot(entity, mostRecent);
+
         Range<Date> range = holder.getTimeRange();
 
         final Date earliestForDay = range.lowerEndpoint();
@@ -301,6 +257,11 @@ public class BlobStoreImpl implements BlobStore {
         }
         nimbitsCache.delete(key);
 
+    }
+
+    @Override
+    public void saveSnapshot(Point point, Value value) {
+        valueDao.setSnapshot(point, value);
     }
 
     private void writeFile(String json, String FILENAME) {

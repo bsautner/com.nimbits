@@ -44,6 +44,8 @@ import com.nimbits.server.transaction.sync.SyncService;
 import com.nimbits.server.transaction.user.service.UserService;
 
 import java.util.*;
+
+import com.nimbits.server.transaction.value.ValueDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,12 +59,15 @@ public class ValueServiceImpl implements ValueService {
 
     private Defragmenter defragmenter;
 
+    private ValueDao valueDao;
+
 
     public ValueServiceImpl(
-                            ChartHelper chartHelper, Defragmenter defragmenter ) {
+            ChartHelper chartHelper, Defragmenter defragmenter, ValueDao valueDao) {
 
         this.chartHelper = chartHelper;
         this.defragmenter = defragmenter;
+        this.valueDao = valueDao;
 
     }
 
@@ -179,7 +184,7 @@ public class ValueServiceImpl implements ValueService {
 
                 storeValues(blobStore, point, values);
             }
-            Value value = blobStore.getSnapshot(point);
+            Value value = valueDao.getSnapshot(point);
             Value newer = null;
             for (Value vx : values) {
                 if (value.getTimestamp().getTime() < vx.getTimestamp().getTime()) {
@@ -193,7 +198,7 @@ public class ValueServiceImpl implements ValueService {
                 }
             }
             if (newer != null) {
-                blobStore.saveSnapshot(point, newer);
+                valueDao.setSnapshot(point, newer);
             }
 
         }
@@ -214,7 +219,10 @@ public class ValueServiceImpl implements ValueService {
         }
     }
 
-
+    @Override
+    public Value getSnapshot(Point point) {
+        return valueDao.getSnapshot(point);
+    }
 
 
     private List<Value> setAlertValues(Point entity, List<Value> series) {
@@ -252,7 +260,7 @@ public class ValueServiceImpl implements ValueService {
     @Override
     public Value getCurrentValue(BlobStore blobStore, final Entity p) {
 
-        final Value v = blobStore.getSnapshot(p);
+        final Value v = valueDao.getSnapshot(p);
         final AlertType alertType = getAlertType((Point) p, v);
         return new Value.Builder().initValue(v).alertType(alertType).create();
 

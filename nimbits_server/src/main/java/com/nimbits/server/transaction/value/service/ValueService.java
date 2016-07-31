@@ -52,4 +52,5 @@ public interface ValueService extends BaseProcessor {
 
     void storeValues(BlobStore blobStore, Entity entity, List<Value> values) ;
 
+    Value getSnapshot(Point point);
 }

@@ -125,25 +125,23 @@ public class EntityServiceImpl implements EntityService {
     public Entity  addUpdateEntity(final ValueService valueService, final User user, Entity entity) {
 
 
+
+
+        Entity created =  entityDao.addUpdateEntity(user, entity);
         switch (entity.getEntityType()) {
 
             case point:
                 Value init = new Value.Builder().doubleValue(0.0).timestamp(new Date(0)).meta(POINT_INITIALISED).create();
 
-                 valueService.recordValues(blobStore, user, (Point) entity, Collections.singletonList(init));
+                valueService.recordValues(blobStore, user, (Point) created, Collections.singletonList(init));
 
-              //  if (entity.getEntityType().equals(EntityType.))
+                //  if (entity.getEntityType().equals(EntityType.))
 
                 break;
 
-
-
-
-
         }
 
-        return entityDao.addUpdateEntity(user, entity);
-
+        return created;
 
     }
 

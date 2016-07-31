@@ -23,6 +23,7 @@
         <class>com.nimbits.server.orm.TriggerEntity</class>
         <class>com.nimbits.server.orm.UserEntity</class>
         <class>com.nimbits.server.orm.WebHookEntity</class>
+        <class>com.nimbits.server.orm.ValueStore</class>
 
 
         <!--<class>org.datanucleus.samples.jdo.tutorial.Product</class>-->

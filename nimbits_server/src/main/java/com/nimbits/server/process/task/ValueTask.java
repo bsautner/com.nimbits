@@ -319,7 +319,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
             }
 
 
-            Value snapshot = blobStore.getSnapshot(point);
+            Value snapshot = valueService.getSnapshot(point);
             if (snapshot.getTimestamp().getTime() < value.getTimestamp().getTime()) {
                 blobStore.saveSnapshot(point, value);
             }

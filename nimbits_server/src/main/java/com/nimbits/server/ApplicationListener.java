@@ -22,29 +22,22 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Enumeration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.logging.Logger;
 
 
 public class ApplicationListener implements ServletContextListener {
 
-    private static final Logger log = LoggerFactory.getLogger(ApplicationListener.class.getName());
-
-
-
+    private final Logger logger = Logger.getLogger(ApplicationListener.class.getName());
 
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
-        log.info("nimbits context initialised");
-
-
-
+        logger.info("contextInitialized");
     }
 
 
     @Override
     public void contextDestroyed(ServletContextEvent servletContextEvent) {
-        log.info("nimbits Context Destroyed");
+
         ClassLoader applicationClassLoader = this.getClass().getClassLoader();
         Enumeration<Driver> driverEnumeration = DriverManager.getDrivers();
         while (driverEnumeration.hasMoreElements()) {

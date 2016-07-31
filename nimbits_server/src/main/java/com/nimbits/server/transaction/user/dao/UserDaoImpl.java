@@ -231,6 +231,9 @@ public class UserDaoImpl implements UserDao {
             q1.setRange(0, 1);
             final List<UserEntity> c = (List<UserEntity>) q1.execute();
             return !c.isEmpty();
+        } catch (Throwable throwable) {
+            throw new RuntimeException(throwable);
+
         } finally {
             pm.close();
         }

@@ -54,8 +54,6 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
     private static final String HEIGHT = "100%";
     private LoginMainPanel loginMainPanel;
 
-    private SystemDetails systemDetails = new SystemDetailsModel(Const.VERSION);
-
 
     @Override
     public void onModuleLoad() {
@@ -64,46 +62,20 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
         final String passwordResetToken = Window.Location.getParameter(Parameters.rToken.getText());
 
         if (passwordResetToken == null ) {
-            userService.getSystemDetails(new AsyncCallback<SystemDetails>() {
-                @Override
-                public void onFailure(Throwable throwable) {
-                    loadLoginView(UserModelFactory.createNullLoginInfo(), systemDetails);
-                    loginMainPanel.showPasswordReset(passwordResetToken);
-                }
 
-                @Override
-                public void onSuccess(SystemDetails result) {
-                    systemDetails = result;
-
-                    userService.loginRpc(GWT.getHostPageBaseURL(),
-                            new LoginInfoAsyncCallback());
-                }
-            });
-
+            userService.loginRpc(GWT.getHostPageBaseURL(),
+                    new LoginInfoAsyncCallback());
 
         } else {
-            userService.getSystemDetails(new AsyncCallback<SystemDetails>() {
-                @Override
-                public void onFailure(Throwable throwable) {
-                    loadLoginView(UserModelFactory.createNullLoginInfo(), systemDetails);
-                    loginMainPanel.showPasswordReset(passwordResetToken);
-                }
-
-                @Override
-                public void onSuccess(SystemDetails result) {
-                    systemDetails = result;
-
-                    loadLoginView(UserModelFactory.createNullLoginInfo(), systemDetails);
-                    loginMainPanel.showPasswordReset(passwordResetToken);
-                }
-            });
+            loadLoginView(UserModelFactory.createNullLoginInfo());
+            loginMainPanel.showPasswordReset(passwordResetToken);
 
         }
 
 
     }
 
-    private void loadLoginView(final LoginInfo loginInfo, SystemDetails systemDetails) {
+    private void loadLoginView(final LoginInfo loginInfo) {
 
 
         Viewport viewport = new Viewport();
@@ -111,14 +83,10 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
         viewport.setLayout(new BorderLayout());
         viewport.setBorders(false);
 
-        //feedPanel.setLayout(new FitLayout());
-        //feedPanel.setHeight("100%");
-
         loginMainPanel = new LoginMainPanel(this, loginInfo);
 
 
         ContentPanel center = new ContentPanel();
-        //center.setHeadingText();
         center.setHeadingHtml("<a href=\"http://www.nimbits.com\">Nimbits</a> Console Login");
         center.setScrollMode(Style.Scroll.AUTOX);
 
@@ -156,7 +124,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
     @Override
     public void showLoginDialog(LoginInfo loginInfo) {
         closeLoginWindows();
-        loadLoginView(loginInfo, systemDetails);
+        loadLoginView(loginInfo);
     }
 
     @Override
@@ -178,7 +146,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
     public void onLogout() {
         closeLoginWindows();
 
-        loadLoginView(UserModelFactory.createNullLoginInfo( ), systemDetails);
+        loadLoginView(UserModelFactory.createNullLoginInfo( ));
     }
 
     @Override
@@ -205,7 +173,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
 
         ContentPanel center = new ContentPanel();
 
-        center.setHeadingHtml("<a href=\"http://www.nimbits.com\">Nimbits</a>&nbsp;&nbsp;" + systemDetails.getVersion());
+        center.setHeadingHtml("<a href=\"http://www.nimbits.com\">Nimbits</a>&nbsp;&nbsp;" + Const.VERSION);
 
         center.setScrollMode(Style.Scroll.AUTOX);
 
@@ -242,7 +210,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
             FeedbackHelper.showError(caught);
             closeLoginWindows();
 
-            loadLoginView(UserModelFactory.createNullLoginInfo( ), systemDetails);
+            loadLoginView(UserModelFactory.createNullLoginInfo( ));
         }
 
         @Override
@@ -253,7 +221,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
             switch (loginInfo.getUserStatus()) {
 
                 case newServer:
-                    loadLoginView(result.getLoginInfo(), systemDetails);
+                    loadLoginView(result.getLoginInfo());
                     break;
                 case newUser:
                     loadPortalView(result);
@@ -263,7 +231,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
                     loadPortalView(result);
                     break;
                 case unknown:
-                    loadLoginView(result.getLoginInfo(), systemDetails);
+                    loadLoginView(result.getLoginInfo());
                     break;
 
             }

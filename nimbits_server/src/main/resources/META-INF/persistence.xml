@@ -9,7 +9,6 @@
 
         <class>com.nimbits.server.orm.CalcEntity</class>
         <class>com.nimbits.server.orm.CategoryEntity</class>
-        <class>com.nimbits.server.orm.ConnectionEntity</class>
         <class>com.nimbits.server.orm.DateCounter</class>
         <class>com.nimbits.server.orm.EntityStore</class>
         <class>com.nimbits.server.orm.InstanceEntity</class>
@@ -45,7 +44,7 @@
             <property name="javax.jdo.option.Mapping" value="hsql"/-->
 
             <!-- ENABLE THESE FOR MySQL/MariaDB -->
-            <!-- Change the "nucleus" to your database name, and the user/password -->
+             <!--Change the "nucleus" to your database name, and the user/password -->
             <property name="javax.jdo.option.ConnectionURL" value="jdbc:mysql://127.0.0.1/nimbits?useServerPrepStmts=false"/>
             <property name="javax.jdo.option.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
             <property name="javax.jdo.option.ConnectionUserName" value="root"/>

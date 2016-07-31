@@ -87,16 +87,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean isGAE() {
-        return false;
-    }
-
-    @Override
-    public boolean isGAEAdmin() {
-        return false;
-    }
-
-    @Override
     public String createLoginURL(String requestUri) {
         return Const.WEBSITE;
     }

@@ -51,11 +51,11 @@ public interface User extends Entity, Serializable {
 
     void setPasswordResetToken(String token);
 
-    void setPasswordResetTokenTimestamp(Date date);
+    void setPasswordResetTimestamp(Long date);
 
     String getPasswordResetToken();
 
-    Date getPasswordResetTokenTimestamp();
+    Long getPasswordResetTimestamp();
 
     void setPasswordSalt(String passwordSalt);
 

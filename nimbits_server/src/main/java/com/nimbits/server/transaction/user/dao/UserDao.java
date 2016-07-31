@@ -14,24 +14,31 @@
  *    limitations under the License.
  */
 
-package com.nimbits.client.model.user;
+package com.nimbits.server.transaction.user.dao;
 
-import com.nimbits.client.constants.Const;
-
-
-public class UserModelFactory {
+import com.google.common.base.Optional;
+import com.nimbits.client.model.user.User;
 
 
-    private UserModelFactory() {
-    }
+public interface UserDao {
+    boolean usersExist();
 
-    public static LoginInfo createLoginInfo(String loginUrl, String logoutUrl, UserStatus userStatus) {
-        return new LoginInfoImpl(loginUrl, logoutUrl, userStatus);
-    }
+    boolean userHasPoints(User user);
 
-    public static LoginInfo createNullLoginInfo() {
-        return new LoginInfoImpl("", Const.WEBSITE, UserStatus.unknown);
-    }
+    void setResetPasswordToken(User user, String token);
+
+    User updatePassword(User u, String password);
+
+    void storeAuthToken(String email, String authToken);
+
+    void deleteAuthToken(String authToken);
+
+    User getUserByAuthToken(String authToken);
+
+    Optional<User> getUserByEmail(String email);
+
+
+
 
 
 }

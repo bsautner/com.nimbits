@@ -9,8 +9,6 @@ import com.nimbits.client.model.calculation.CalculationModel;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.category.CategoryModel;
 import com.nimbits.client.model.common.impl.CommonFactory;
-import com.nimbits.client.model.connection.Connection;
-import com.nimbits.client.model.connection.ConnectionModel;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.instance.InstanceModel;
 import com.nimbits.client.model.point.Point;
@@ -66,8 +64,6 @@ public class V3EntityTests extends NimbitsTest {
 
         testSocket();
 
-        testConnection();
-
         testSchedule();
 
         testInstance();
@@ -119,13 +115,6 @@ public class V3EntityTests extends NimbitsTest {
 
     }
 
-    private void testConnection() {
-        Connection connection = nimbits.addConnection(category, new ConnectionModel.Builder()
-                .targetEmail("Z" + EMAIL_ADDRESS)
-                .create());
-
-        log(connection.toString());
-    }
 
     private void testSchedule() throws InterruptedException {
 

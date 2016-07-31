@@ -30,6 +30,5 @@ public interface LoginInfo extends Serializable {
 
     UserStatus getUserStatus();
 
-    boolean isGAE();
 
 }

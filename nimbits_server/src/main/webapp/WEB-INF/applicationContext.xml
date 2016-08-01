@@ -20,148 +20,13 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+       http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 
-    <!-- Entry Points-->
-    <bean id="valueTask" class="com.nimbits.server.process.task.ValueTask"/>
+    <context:component-scan base-package="com.nimbits.server" />
 
-    <bean id="defragmenter" class="com.nimbits.server.defrag.Defragmenter"/>
-
-    <bean id="dataProcessor" class="com.nimbits.server.data.DataProcessor"/>
-
-    <bean id="chartHelper" class="com.nimbits.server.chart.ChartHelper" >
-        <constructor-arg index="0" ref="entityDao"/>
-        <constructor-arg index="1" ref="ValueDao"/>
-        <constructor-arg index="2" ref="valueService"/>
-    </bean>
-
-
-    <bean id="nimbitsCache" class="com.nimbits.server.transaction.cache.NimbitsCacheImpl"/>
-
-    <bean id="userService" class="com.nimbits.server.transaction.user.service.UserServiceImpl">
-
-        <constructor-arg ref="userDao"/>
-        <constructor-arg ref="settingsService"/>
-        <constructor-arg ref="authService"/>
-        <constructor-arg ref="entityDao"/>
-    </bean>
-
-    <bean id="entityService" class="com.nimbits.server.transaction.entity.EntityServiceImpl">
-
-
-        <constructor-arg index="0" ref="GeoSpatialDao"/>
-        <constructor-arg index="1" ref="emailService"/>
-        <constructor-arg index="2" ref="connectedClients"/>
-        <constructor-arg index="3" ref="entityDao"/>
-        <constructor-arg index="4" ref="valueService"/>
-    </bean>
-
-    <bean id="authService" class="com.nimbits.server.auth.AuthServiceImpl">
-        <constructor-arg ref="settingsService"/>
-        <constructor-arg ref="userDao"/>
-
-
-    </bean>
-
-    <bean id="settingsService" class="com.nimbits.server.transaction.settings.SettingsServiceImpl">
-
-
-        <constructor-arg index="0" ref="settingsDao"/>
-        <constructor-arg index="1" ref="stringEncryption"/>
-    </bean>
-
-
-    <bean id="settingsDao" class="com.nimbits.server.transaction.settings.SettingsDaoImpl">
-
-        <property name="persistenceManagerFactory" ref="pmf"/>
-    </bean>
-    <bean id="emailService" class="com.nimbits.server.communication.mail.EmailServiceImpl">
-        <constructor-arg index="0" ref="settingsService"/>
-        <constructor-arg index="1" ref="authService"/>
-        <constructor-arg index="2" ref="serverInfo"/>
-    </bean>
-
-
-    <bean id="storageIO" class="com.nimbits.server.process.StorageIOImpl">
-
-    </bean>
-    <bean id="entityDao" class="com.nimbits.server.transaction.entity.dao.EntityDaoImpl">
-        <constructor-arg ref="recursionValidation"/>
-        <property name="persistenceManagerFactory" ref="pmf"/>
-    </bean>
-
-    <bean id="userDao" class="com.nimbits.server.transaction.user.dao.UserDaoImpl">
-        <property name="persistenceManagerFactory" ref="pmf"/>
-    </bean>
-
-    <bean id="ValueDao" class="com.nimbits.server.transaction.value.ValueDao">
-
-        <property name="persistenceManagerFactory" ref="pmf"/>
-    </bean>
-
-
-
-    <bean id="recursionValidation" class="com.nimbits.server.orm.validation.RecursionValidation">
-
-    </bean>
-    <bean id="valueService" class="com.nimbits.server.transaction.value.service.ValueServiceImpl">
-
-
-        <constructor-arg index="0" ref="chartHelper"/>
-        <constructor-arg index="1" ref="ValueDao"/>
-    </bean>
-
-
-    <bean id="calculationService" class="com.nimbits.server.transaction.calculation.CalculationServiceImpl">
-
-
-    </bean>
-
-
-    <bean id="summaryService" class="com.nimbits.server.transaction.summary.SummaryServiceImpl">
-
-
-        <constructor-arg ref="taskService"/>
-    </bean>
-    <bean id="syncService" class="com.nimbits.server.transaction.sync.SyncServiceImpl">
-
-    </bean>
-    <bean id="subscriptionService" class="com.nimbits.server.transaction.subscription.SubscriptionServiceImpl">
-
-
-        <constructor-arg index="0" ref="GeoSpatialDao"/>
-        <constructor-arg index="1" ref="emailService"/>
-        <constructor-arg index="2" ref="valueTask"/>
-        <constructor-arg index="3" ref="xmppService"/>
-        <constructor-arg index="4" ref="connectedClients"/>
-        <constructor-arg index="5" ref="entityService"/>
-        <constructor-arg index="6" ref="settingsService"/>
-    </bean>
-
-
-    <bean id="connectedClients" class="com.nimbits.server.socket.ConnectedClients">
-
-
-    </bean>
-    <bean id="xmppService" class="com.nimbits.server.communication.xmpp.XmppServiceImpl"/>
-
-    <bean id="taskService" name="taskService" class="com.nimbits.server.process.task.TaskServiceImpl">
-
-
-    </bean>
-
-
-
-
-
-
-    <bean id="systemCron" name="systemCron" class="com.nimbits.server.process.cron.SystemCron"/>
-
-
-    <bean id="stringEncryption" class="com.nimbits.server.secure.StringEncryption"/>
-    <bean id="serverInfo" class="com.nimbits.server.system.ServerInfo"/>
 
     <!--H2 DB Config-->
     <!--<bean id="pmf" class="org.springframework.orm.jdo.LocalPersistenceManagerFactoryBean">-->
@@ -210,36 +75,7 @@
     </bean>
 
 
-    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
-        <property name="corePoolSize" value="5" />
-        <property name="maxPoolSize" value="10" />
-        <property name="queueCapacity" value="25" />
-    </bean>
 
-    <bean id="systemTaskExecutor" class="com.nimbits.server.process.cron.SystemTaskExecutor">
-
-
-        <constructor-arg index="0" ref="GeoSpatialDao"/>
-        <constructor-arg index="1" ref="myScheduler"/>
-        <constructor-arg index="2" ref="systemCron"/>
-        <constructor-arg index="3" ref="entityDao"/>
-        <constructor-arg index="4" ref="userService"/>
-        <constructor-arg index="5" ref="entityService"/>
-        <constructor-arg index="6" ref="valueService"/>
-        <constructor-arg index="7" ref="taskService"/>
-        <constructor-arg index="8" ref="subscriptionService"/>
-        <constructor-arg index="9" ref="calculationService"/>
-        <constructor-arg index="10" ref="valueTask"/>
-        <constructor-arg index="11" ref="ValueDao"/>
-        <constructor-arg index="12" ref="summaryService"/>
-        <constructor-arg index="13" ref="syncService"/>
-        <constructor-arg index="14" ref="dataProcessor"/>
-    </bean>
-
-    <bean id="GeoSpatialDao" name="GeoSpatialDao" class="com.nimbits.server.geo.GeoSpatialDaoImpl">
-
-        <constructor-arg ref="entityDao"/>
-    </bean>
 
     <task:scheduled-tasks scheduler="myScheduler">
         <task:scheduled ref="systemTaskExecutor" method="heartbeat" fixed-delay="60000"/>

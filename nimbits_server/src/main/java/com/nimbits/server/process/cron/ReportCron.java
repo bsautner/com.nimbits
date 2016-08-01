@@ -17,7 +17,7 @@
 package com.nimbits.server.process.cron;
 
 
-import com.nimbits.server.transaction.entity.service.EntityService;
+import com.nimbits.server.transaction.entity.EntityService;
 import com.nimbits.server.transaction.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

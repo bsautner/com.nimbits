@@ -18,11 +18,12 @@ package com.nimbits.server.math;
 
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@SuppressWarnings("unchecked")
+@Component
 public class MathEvaluatorImpl implements MathEvaluator {
     private static final double ZERO = 0.0;
     private static Operator[] operators = null;

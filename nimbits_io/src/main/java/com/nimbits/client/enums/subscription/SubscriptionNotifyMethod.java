@@ -24,12 +24,7 @@ import java.util.Map;
 public enum SubscriptionNotifyMethod {
     none(-1, "None"),
     email(0, "Email"),
-    instantMessage(3, "Instant Message (XMPP)"),
-    cloud(5, "Android Notification (GCM)"),
-    socket(6, "Connected Sockets"),
     webhook(7, "Web Hook");
-
-
 
     private static final Map<Integer, SubscriptionNotifyMethod> lookup = new HashMap<Integer, SubscriptionNotifyMethod>(5);
 

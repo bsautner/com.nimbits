@@ -24,19 +24,10 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.sync.Sync;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.data.DataProcessor;
-import com.nimbits.server.process.BlobStore;
-import com.nimbits.server.process.task.TaskService;
-import com.nimbits.server.process.task.ValueTask;
-import com.nimbits.server.transaction.calculation.CalculationService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.entity.service.EntityService;
-import com.nimbits.server.transaction.subscription.SubscriptionService;
-import com.nimbits.server.transaction.summary.SummaryService;
-import com.nimbits.server.transaction.user.service.UserService;
-import com.nimbits.server.transaction.value.service.ValueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -44,28 +35,18 @@ public class SyncServiceImpl implements SyncService {
     protected final static Logger log = LoggerFactory.getLogger(SyncServiceImpl.class.getName());
 
 
+    private final EntityDao entityDao;
 
 
-    public SyncServiceImpl( ) {
+    @Autowired
+    public SyncServiceImpl(final EntityDao entityDao) {
 
+        this.entityDao = entityDao;
 
     }
 
     @Override
-    public void process(
-                        final TaskService taskService,
-                        final UserService userService,
-                        final EntityDao entityDao,
-                        final ValueTask valueTask,
-                        final EntityService entityService,
-                        final BlobStore blobStore,
-                        final ValueService valueService,
-                        final SummaryService summaryService,
-                        final SyncService syncService,
-                        final SubscriptionService subscriptionService,
-                        final CalculationService calculationService,
-                        final DataProcessor dataProcessor,
-                        final User user, final Point point, final Value value) {
+    public void process(final User user, final Point point, final Value value) {
         final Optional<Entity> optional = entityDao.getEntityByTrigger(user, point, EntityType.sync);
         if (optional.isPresent()) {
 

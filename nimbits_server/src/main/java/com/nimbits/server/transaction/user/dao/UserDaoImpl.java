@@ -26,6 +26,7 @@ import com.nimbits.server.orm.UserEntity;
 import com.nimbits.server.transaction.entity.EntityHelper;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -48,6 +49,7 @@ public class UserDaoImpl implements UserDao {
 
     }
 
+    @Autowired
     public void setPersistenceManagerFactory(PersistenceManagerFactory persistenceManagerFactory) {
         this.persistenceManagerFactory = persistenceManagerFactory;
     }

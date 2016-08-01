@@ -20,11 +20,12 @@ import com.google.common.collect.Range;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
 
-
+@Component
 public class DataProcessor {
 
     public boolean ignoreDataByExpirationDate(final Point p, final Value value, final boolean ignored) {

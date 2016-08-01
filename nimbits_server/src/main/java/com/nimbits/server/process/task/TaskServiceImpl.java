@@ -20,24 +20,18 @@ package com.nimbits.server.process.task;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.data.DataProcessor;
-import com.nimbits.server.geo.GeoSpatialDao;
-import com.nimbits.server.transaction.calculation.CalculationService;
-import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.entity.service.EntityService;
-import com.nimbits.server.transaction.subscription.SubscriptionService;
-import com.nimbits.server.transaction.summary.SummaryService;
-import com.nimbits.server.transaction.sync.SyncService;
-import com.nimbits.server.transaction.user.service.UserService;
-import com.nimbits.server.transaction.value.ValueDao;
-import com.nimbits.server.transaction.value.service.ValueService;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TaskServiceImpl implements TaskService {
 
-    Logger logger = LoggerFactory.getLogger(TaskService.class.getName());
+    private Logger logger = LoggerFactory.getLogger(TaskService.class.getName());
+
+    @Autowired
+    private ValueTask valueTask;
 
     public TaskServiceImpl() {
 
@@ -45,28 +39,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void process(
-            final GeoSpatialDao geoSpatialDao,
-            final TaskService taskService,
-            final UserService userService,
-            final EntityDao entityDao,
-            final ValueTask valueTask,
-            final EntityService entityService,
-            final ValueDao blobStore,
-            final ValueService valueService,
-            final SummaryService summaryService,
-            final SyncService syncService,
-            final SubscriptionService subscriptionService,
-            final CalculationService calculationService,
-            final DataProcessor dataProcessor,
-            final User user, final Point point,
-            final Value value) {
+    public void process(final User user, final Point point, final Value value) {
 
         try {
-            logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
-            valueTask.process(geoSpatialDao, this, userService, entityDao, valueTask, entityService, blobStore, valueService,
-                    summaryService, syncService, subscriptionService, calculationService,
-                    dataProcessor, user, point, value);
+
+            valueTask.process(user, point, value);
         } catch (Exception e) {
 
             logger.error("Error running value task", e);

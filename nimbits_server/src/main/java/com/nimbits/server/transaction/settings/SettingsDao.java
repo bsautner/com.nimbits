@@ -20,6 +20,7 @@ package com.nimbits.server.transaction.settings;
 import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.setting.Setting;
 import com.nimbits.server.orm.SettingEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.jdo.PersistenceManager;
@@ -29,19 +30,20 @@ import javax.jdo.Transaction;
 import java.util.List;
 
 @Repository
-public class SettingsDaoImpl implements SettingsService {
+public class SettingsDao {
 
     private PersistenceManagerFactory persistenceManagerFactory;
 
+    @Autowired
     public void setPersistenceManagerFactory(PersistenceManagerFactory persistenceManagerFactory) {
         this.persistenceManagerFactory = persistenceManagerFactory;
     }
 
-    public SettingsDaoImpl() {
+    public SettingsDao() {
 
     }
 
-    @Override
+
     public String getSetting(final ServerSetting setting) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         String retVal;
@@ -65,7 +67,7 @@ public class SettingsDaoImpl implements SettingsService {
         return retVal;
     }
 
-    @Override
+
     public void updateSetting(final ServerSetting name, final String newValue) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
@@ -92,7 +94,6 @@ public class SettingsDaoImpl implements SettingsService {
     }
 
 
-    @Override
     public void addSetting(final ServerSetting name, final String value) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 

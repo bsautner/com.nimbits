@@ -17,8 +17,11 @@
 package com.nimbits.server.transaction.value.service;
 
 import com.google.common.base.Optional;
+import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
+import com.google.common.collect.Table;
+import com.google.gson.Gson;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.exception.ValueException;
@@ -26,60 +29,39 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.chart.ChartHelper;
-import com.nimbits.server.data.DataProcessor;
-import com.nimbits.server.geo.GeoSpatialDao;
-import com.nimbits.server.process.task.TaskService;
-import com.nimbits.server.process.task.ValueTask;
-import com.nimbits.server.transaction.calculation.CalculationService;
+import com.nimbits.server.chart.ChartColumnDefinition;
+import com.nimbits.server.chart.ChartDTO;
+import com.nimbits.server.chart.ChartDataColumn;
+import com.nimbits.server.chart.Row;
+import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.transaction.entity.EntityService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.subscription.SubscriptionService;
-import com.nimbits.server.transaction.summary.SummaryService;
-import com.nimbits.server.transaction.sync.SyncService;
-import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.ValueDao;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-import static java.lang.Math.abs;
-
+@Service
 public class ValueServiceImpl implements ValueService {
 
-    private static final Logger logger = LoggerFactory.getLogger(ValueServiceImpl.class.getName());
+    private final ValueDao valueDao;
+    private final EntityDao entityDao;
+    private final EntityService entityService;
+    private final SubscriptionService subscriptionService;
 
-    private ChartHelper chartHelper;
-
-
-    private ValueDao valueDao;
-
-
-    public ValueServiceImpl(
-            ChartHelper chartHelper, ValueDao valueDao) {
-
-        this.chartHelper = chartHelper;
+    @Autowired
+    public ValueServiceImpl( ValueDao valueDao, EntityDao entityDao, EntityService entityService, SubscriptionService subscriptionService) {
 
         this.valueDao = valueDao;
-
+        this.entityDao = entityDao;
+        this.entityService = entityService;
+        this.subscriptionService = subscriptionService;
     }
 
     @Override //process points using system cron, send idle alerts etc.
-    public void process(final GeoSpatialDao geoSpatialDao,
-                        final TaskService taskService,
-                        final UserService userService,
-                        final EntityDao entityDao,
-                        final ValueTask valueTask,
-                        final EntityService entityService,
-                        final ValueDao valueDao,
-                        final ValueService valueService,
-                        final SummaryService summaryService,
-                        final SyncService syncService,
-                        final SubscriptionService subscriptionService,
-                        final CalculationService calculationService,
-                        final DataProcessor dataProcessor,
-                        final User user, final Point p, final Value value) throws ValueException {
+    public void process(final User user, final Point p, final Value value) throws ValueException {
         final Calendar c = Calendar.getInstance();
         c.add(Calendar.SECOND, p.getIdleSeconds() * -1);
        // boolean retVal = false;
@@ -95,9 +77,8 @@ public class ValueServiceImpl implements ValueService {
             p.setIdleAlarmSent(true);
             entityService.addUpdateEntity(this, u, p);
             // PointServiceFactory.getInstance().updatePoint(u, p);
-            logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
-            subscriptionService.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, valueDao, valueService, summaryService,
-                    syncService, subscriptionService, calculationService, dataProcessor, u, p,
+
+            subscriptionService.process( u, p,
                     new Value.Builder().initValue(value).alertType(AlertType.IdleAlert).create()
             );
             //retVal = true;
@@ -108,13 +89,13 @@ public class ValueServiceImpl implements ValueService {
 
 
     @Override
-    public String getChartTable( User user, Entity entity, Optional<Range<Date>> timespan, Optional<Integer> count, Optional<String> mask) {
-        return chartHelper.createChart( user, entity, timespan, count, mask);
+    public String getChartTable( User user, Entity entity, Optional<Range<Long>> timespan, Optional<Integer> count, Optional<String> mask) {
+        return createChart( user, entity, timespan, count, mask);
 
     }
 
     @Override
-    public List<Value> getSeries(Entity entity, Optional<Range<Date>> timespan, final Optional<Range<Integer>> range, Optional<String> mask) {
+    public List<Value> getSeries(Entity entity, Optional<Range<Long>> timespan, final Optional<Range<Integer>> range, Optional<String> mask) {
         List<Value> series = valueDao.getSeries( entity, timespan, range, mask);
 
         return setAlertValues((Point) entity, series);
@@ -153,11 +134,6 @@ public class ValueServiceImpl implements ValueService {
 
     }
 
-    @Override
-    public void storeValues(Entity entity, List<Value> values) {
-        valueDao.storeValues(entity, values);
-    }
-
 
     @Override
     public Map<String, Entity> getCurrentValues(final Map<String, Point> entities) {
@@ -178,10 +154,8 @@ public class ValueServiceImpl implements ValueService {
     @Override
     public void recordValues(User user, Point point, List<Value> values) {
 
+        valueDao.storeValues(point, values);
 
-        for (Value value : values) {
-            valueDao.setSnapshot(point, value);
-        }
 
     }
 
@@ -195,7 +169,7 @@ public class ValueServiceImpl implements ValueService {
     @Override
     public void deleteAllData(Point point) {
 
-        //TODO OOMA
+        valueDao.deleteAllData(point);
     }
 
 
@@ -212,24 +186,7 @@ public class ValueServiceImpl implements ValueService {
 
 
 
-    @Override
-    public double calculateDelta(final Point point) {
-        double retVal;
 
-        Calendar compareTime = Calendar.getInstance();
-        compareTime.add(Calendar.SECOND, (point.getDeltaSeconds() * -1));
-        Range<Date> timespan = Range.closed(compareTime.getTime(), new Date());
-        List<Value> series = getSeries(point, Optional.of(timespan), Optional.<Range<Integer>>absent(), Optional.<String>absent());
-
-        //Value start = getCurrentValue(blobStore, point);
-        double startValue = series.get(series.size() -1).getDoubleValue();
-        double endValue = series.get(0).getDoubleValue();
-
-        retVal = abs(startValue - endValue);
-
-
-        return retVal;
-    }
 
     @Override
     public Value getCurrentValue(final Entity p) {
@@ -239,6 +196,164 @@ public class ValueServiceImpl implements ValueService {
         return new Value.Builder().initValue(v).alertType(alertType).create();
 
 
+    }
+
+
+
+    private String createChart(User user, Entity entity, Optional<Range<Long>> timespan, Optional<Integer> count, Optional<String> mask) {
+
+
+        final List<Entity> list = getList(user, entity);
+
+        ChartDTO dto = createChartData(list, timespan, count, mask);
+
+        Gson gson =  GsonFactory.getInstance(true);
+
+        return gson.toJson(dto);
+
+
+    }
+
+
+
+
+    private List<Entity> getList(User user, Entity entity) {
+        final List<Entity> list;
+
+        if (entity.getEntityType().equals(EntityType.point)) {
+            list = Collections.singletonList(entity);
+        } else if (entity.getEntityType().equals(EntityType.category)) {
+            List<Entity> children = entityDao.getChildren(user, Collections.singletonList(entity));
+            list = new ArrayList<>(children.size());
+            for (Entity child : children) {
+                if (child.getEntityType().equals(EntityType.point)) {
+                    list.add(child);
+                }
+            }
+
+        } else {
+            list = Collections.emptyList();
+        }
+
+        return list;
+
+
+    }
+
+
+    private ChartDTO createChartData(  List<Entity> points,
+                                       Optional<Range<Long>> timespan,
+                                       Optional<Integer> count,
+                                       Optional<String> mask) {
+        ChartDTO dto = new ChartDTO();
+        List<ChartColumnDefinition> cols = new ArrayList<>();
+
+        ChartColumnDefinition dateCol = new ChartColumnDefinition();
+        dateCol.setLabel("Date");
+        dateCol.setType("date");
+        cols.add(dateCol);
+        for (Entity point : points) {
+
+            ChartColumnDefinition dataColumn = new ChartColumnDefinition();
+            dataColumn.setLabel(point.getName().getValue());
+            dataColumn.setType("number");
+            cols.add(dataColumn);
+
+
+        }
+
+
+        dto.setCols(cols);
+
+        List<Row> rows = new ArrayList<>();
+
+
+        Set<Date> timestamps = new HashSet<>();
+        Table<Entity, Date, Value> sensorTable = HashBasedTable.create();
+        Optional<Range<Integer>> range;
+        if (count.isPresent()) {
+            range = Optional.of(Range.closed(0, count.get()));
+        }
+        else {
+            range = Optional.absent();
+        }
+
+        for (Entity point : points) {
+            List<Value> values  =  getSeries(point, timespan, range, mask);
+
+
+
+            for (Value value : values) {
+
+                if (value.getTimestamp().getTime() != new Date().getTime()) { //don't chart the 1970 init value
+                    timestamps.add(value.getTimestamp());
+
+
+                    sensorTable.put(point, value.getTimestamp(), value);
+                }
+
+            }
+
+
+        }
+
+
+        for (Date timestamp : timestamps) {
+            List<ChartDataColumn> chartDataColumns = new ArrayList<>();
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(timestamp);
+            ChartDataColumn dateEntry = new ChartDataColumn(
+                    "Date("
+                            + calendar.get(Calendar.YEAR) + "," +
+                            +calendar.get(Calendar.MONTH) + "," +
+                            +calendar.get(Calendar.DAY_OF_MONTH) + "," +
+                            +calendar.get(Calendar.HOUR_OF_DAY) + "," +
+                            +calendar.get(Calendar.MINUTE) + "," +
+                            +calendar.get(Calendar.SECOND) +
+                            ")");
+            chartDataColumns.add(dateEntry);
+
+
+            for (Entity item : points) {
+
+                addSensorData(sensorTable, timestamp, chartDataColumns, item);
+
+
+            }
+
+
+            Row row = new Row();
+            row.setC(chartDataColumns);
+            rows.add(row);
+        }
+
+        dto.setRows(rows);
+        dto.setP(1);
+        return dto;
+    }
+
+
+
+    private void addSensorData(Table<Entity, Date, Value> sensorTable, Date timestamp, List<ChartDataColumn> chartDataColumns, Entity point) {
+        ChartDataColumn dataColumn;
+        if (sensorTable.contains(point, timestamp)) {
+
+            Value value = sensorTable.get(point, timestamp);
+            try {
+
+
+                dataColumn = new ChartDataColumn(value.getDoubleValue());
+
+            } catch (NumberFormatException ex) {
+                dataColumn = new ChartDataColumn(null);
+            }
+
+        } else {
+            dataColumn = new ChartDataColumn(null);
+        }
+
+        chartDataColumns.add(dataColumn);
     }
 
 

@@ -29,6 +29,7 @@ import com.nimbits.server.auth.AuthService;
 import com.nimbits.server.system.ServerInfo;
 import com.nimbits.server.transaction.settings.SettingsService;
 import org.apache.commons.io.IOUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.mail.Message;
@@ -62,6 +63,7 @@ public class EmailServiceImpl implements EmailService {
     private static final int INT = 128;
     private static final int SECONDS_IN_MINUTE = 60;
 
+    @Autowired
     public EmailServiceImpl(SettingsService settingsService, AuthService authService, ServerInfo serverInfo) {
         this.settingsService = settingsService;
         this.authService = authService;

@@ -29,25 +29,20 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.value.ValueServiceRpc;
 import com.nimbits.server.data.DataProcessor;
-import com.nimbits.server.geo.GeoSpatialDao;
 import com.nimbits.server.process.task.TaskService;
-import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.calculation.CalculationService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.entity.service.EntityService;
-import com.nimbits.server.transaction.subscription.SubscriptionService;
-import com.nimbits.server.transaction.summary.SummaryService;
-import com.nimbits.server.transaction.sync.SyncService;
 import com.nimbits.server.transaction.user.service.UserService;
-import com.nimbits.server.transaction.value.ValueDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.ServletException;
-import java.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueServiceRpc {
@@ -55,39 +50,20 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
     private final static Logger logger = LoggerFactory.getLogger(ValueServiceRpcImpl.class.getName());
     @Autowired
     private TaskService taskService;
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private ValueService valueService;
-
     @Autowired
     private EntityDao entityDao;
+    @Autowired
+    private CalculationService calculationService;
 
 
+    @Autowired
+    private DataProcessor dataProcessor;
 
-    @Autowired
-    CalculationService calculationService;
-    @Autowired
-    ValueTask valueTask;
-    @Autowired
-    EntityService entityService;
-    @Autowired
-    ValueDao valueDao;
 
-    @Autowired
-    SummaryService summaryService;
-    @Autowired
-    SyncService syncService;
-    @Autowired
-    SubscriptionService subscriptionService;
-
-    @Autowired
-    DataProcessor dataProcessor;
-
-    @Autowired
-    GeoSpatialDao geoSpatialDao;
 
 
 
@@ -102,12 +78,12 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
     @Override
     public String getChartTable(User user, Entity entity, Integer countParam) {
         Optional<Integer> count = (countParam != null && countParam > 0) ? Optional.of(countParam) : Optional.<Integer>absent();
-        return valueService.getChartTable( user, entity, Optional.<Range<Date>>absent(), count, Optional.<String>absent());
+        return valueService.getChartTable( user, entity, Optional.<Range<Long>>absent(), count, Optional.<String>absent());
     }
 
     @Override
     public List<Value> solveEquationRpc(final Calculation calculation) {
-        User user = userService.getHttpRequestUser(entityService, valueService, getThreadLocalRequest());
+        User user = userService.getHttpRequestUser( getThreadLocalRequest());
         Optional<Value> response = calculationService.solveEquation(user, calculation, null, null);
 
         return response.isPresent() ? Collections.singletonList(response.get()) : Collections.<Value>emptyList();
@@ -117,13 +93,10 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
     public void recordValueRpc(final Entity point,
                                final Value value) throws ValueException {
 
-        User user = userService.getHttpRequestUser(entityService,valueService,  getThreadLocalRequest());
+        User user = userService.getHttpRequestUser( getThreadLocalRequest());
         Point p = (Point) entityDao.getEntity(user, point.getId(), EntityType.point).get();
         logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
-        taskService.process(geoSpatialDao, taskService, userService,
-                entityDao, valueTask, entityService, valueDao, valueService,
-                summaryService, syncService, subscriptionService,
-                calculationService, dataProcessor, user, p, value);
+        taskService.process(user, p, value);
 
 
     }

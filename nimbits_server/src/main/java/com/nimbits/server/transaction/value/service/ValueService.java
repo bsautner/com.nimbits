@@ -35,21 +35,17 @@ public interface ValueService extends BaseProcessor {
 
 
 
-    List<Value> getSeries(Entity entity, Optional<Range<Date>> timespan, final Optional<Range<Integer>> range, Optional<String> mask);
+    List<Value> getSeries(Entity entity, Optional<Range<Long>> timespan, final Optional<Range<Integer>> range, Optional<String> mask);
 
     Map<String, Entity> getCurrentValues( Map<String, Point> entities);
 
     void recordValues( User user, Point point, List<Value> values);
 
-    double calculateDelta( Point point);
-
     Value getCurrentValue(Entity p);
 
-    String getChartTable( User user, Entity entity, Optional<Range<Date>> timespan, Optional<Integer> count, Optional<String> mask);
+    String getChartTable( User user, Entity entity, Optional<Range<Long>> timespan, Optional<Integer> count, Optional<String> mask);
 
     AlertType getAlertType(final Point point, final Value value);
-
-    void storeValues(Entity entity, List<Value> values) ;
 
     Value getSnapshot(Point point);
 

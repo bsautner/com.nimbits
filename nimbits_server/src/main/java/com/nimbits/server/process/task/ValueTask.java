@@ -16,37 +16,33 @@
 
 package com.nimbits.server.process.task;
 
-import com.google.common.base.Optional;
 import com.google.gson.Gson;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.exception.ValueException;
-import com.nimbits.client.model.common.impl.CommonFactory;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.data.DataProcessor;
-import com.nimbits.server.geo.GeoSpatialDao;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.orm.socket.SocketStore;
- import com.nimbits.server.transaction.BaseProcessor;
+import com.nimbits.server.transaction.BaseProcessor;
 import com.nimbits.server.transaction.calculation.CalculationService;
+import com.nimbits.server.transaction.entity.EntityService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.subscription.SubscriptionService;
 import com.nimbits.server.transaction.summary.SummaryService;
 import com.nimbits.server.transaction.sync.SyncService;
 import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.ValueDao;
 import com.nimbits.server.transaction.value.service.ValueService;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.ServletException;
@@ -62,7 +58,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-
+@Service
 public class ValueTask extends HttpServlet implements BaseProcessor {
     private final Logger logger = LoggerFactory.getLogger(ValueTask.class.getName());
 
@@ -91,21 +87,11 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
     private DataProcessor dataProcessor;
 
     @Autowired
-    private ValueDao blobStore;
-
-    @Autowired
     private EntityDao entityDao;
 
-    @Autowired
-    private ValueTask valueTask;
 
     @Autowired
-    private TaskService taskService;
-
-    @Autowired
-    private GeoSpatialDao geoSpatialDao;
-
-
+    private ValueDao valueDao;
 
     @Override
     public void init() throws ServletException {
@@ -133,8 +119,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
 
 
         try {
-            process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, blobStore, valueService, summaryService, syncService, subscriptionService,
-                    calculationService, dataProcessor, user, point, value);
+            process(user, point, value);
         } catch (ValueException e) {
             logger.error(ExceptionUtils.getStackTrace(e));
         }
@@ -146,21 +131,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
     }
 
     @Override
-    public void process(
-            final GeoSpatialDao geoSpatialDao,
-            final TaskService taskService,
-            final UserService userService,
-            final EntityDao entityDao,
-            final ValueTask valueTask,
-            final EntityService entityService,
-            final ValueDao valueDao,
-            final ValueService valueService,
-            final SummaryService summaryService,
-            final SyncService syncService,
-            final SubscriptionService subscriptionService,
-            final CalculationService calculationService,
-            final DataProcessor dataProcessor,
-            final User user, final Point point, Value value) throws ValueException  {
+    public void process(final User user, final Point point, Value value) throws ValueException  {
 
         final boolean ignored = false;
         final boolean ignoredByDate = dataProcessor.ignoreDataByExpirationDate(point, value, ignored);
@@ -182,58 +153,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
 
                     valueService.recordValues(user, point, Collections.singletonList(value));
                     break;
-                case location:
-                    logger.info("Processing new location " + value.toString());
-                    geoSpatialDao.updateSpatial(point.getId(), value.getLatitude(), value.getLongitude());
-                    valueService.recordValues(user, point, Collections.singletonList(value));
 
-                    String[] mynames = value.getMetaData().split(",");
-                    if (mynames.length == 2) {
-                        String mypush = mynames[0];
-                        Optional<Entity> optional = entityDao.getEntityByName(user, CommonFactory.createName(mypush, EntityType.point), EntityType.point);
-                        logger.info("my push point: " + mypush);
-
-                        if (optional.isPresent()) {
-                            logger.info("found push point: " + mypush);
-                            Point pushPoint = (Point) optional.get();
-                            List<Point> points = geoSpatialDao.getNearby(user, value.getLatitude(), value.getLongitude(), 100000);
-                            logger.info("nearby location points: " + points.size());
-                            for (Point nearby : points) {
-                                Value last = valueService.getCurrentValue(nearby);
-                                if (!StringUtils.isEmpty(last.getMetaData())) {
-                                    //meta contains the push and broadcast points for yodel
-                                    String[] names = last.getMetaData().split(",");
-                                    if (names.length == 2) {
-                                        String broadcast = names[1];
-                                        logger.info("other user's broadcast point: " + broadcast);
-                                        Optional<Entity> optional1 = entityDao.getEntityByName(user, CommonFactory.createName(broadcast, EntityType.point), EntityType.point);
-                                        if (optional1.isPresent()) {
-                                            logger.info("found other user's point: " + broadcast);
-                                            Point otherUsersBroadcastPoint = (Point) optional1.get();
-                                            Value lastBroadcast = valueService.getCurrentValue(otherUsersBroadcastPoint);
-                                            if (lastBroadcast.getTimestamp().getTime() > 1000) {
-                                                logger.info("got last broadcast:" + lastBroadcast.toString());
-                                                logger.info("recording last broadcast to : " + pushPoint.getName().getValue());
-                                                taskService.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, blobStore,
-                                                        valueService, summaryService, syncService, subscriptionService, calculationService, dataProcessor, user, pushPoint, lastBroadcast);
-                                            } else {
-                                                logger.warn("ignored value since it was the init value: " + lastBroadcast.toString());
-                                            }
-
-                                        }
-                                        else {
-                                            logger.warn("other user's broadcast point no longer exists.");
-                                        }
-                                    }
-                                }
-                            }
-                        }
-
-
-
-                    }
-
-                    break;
 
                 case backend:
                     valueService.recordValues(user, point, Collections.singletonList(value));
@@ -280,8 +200,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
 
             final AlertType t = valueService.getAlertType(point, value);
             final Value v =  new Value.Builder().initValue(value).timestamp(new Date()).alertType(t).create();
-            completeRequest(geoSpatialDao, taskService, entityDao, entityService, valueDao, valueService, summaryService, syncService, subscriptionService,
-                    calculationService, dataProcessor, userService, user, point, v);
+            completeRequest(user, point, v);
 
 
 
@@ -296,19 +215,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
 
 
 
-    private void completeRequest(final GeoSpatialDao geoSpatialDao,
-                                 TaskService taskService,
-                                 EntityDao entityDao,
-                                 EntityService entityService,
-                                 ValueDao valueDao,
-                                 ValueService valueService,
-                                 SummaryService summaryService,
-                                 SyncService syncService,
-                                 SubscriptionService subscriptionService,
-                                 CalculationService calculationService,
-                                 DataProcessor dataProcessor,
-                                 UserService userService,
-                                 User u,
+    private void completeRequest(User u,
                                  Point point,
                                  Value value) throws ValueException {
         try {
@@ -324,13 +231,13 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
                 valueDao.setSnapshot(point, value);
             }
 //            logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
-            calculationService.process(geoSpatialDao, taskService, userService, entityDao, this, entityService, blobStore, valueService, summaryService, syncService, subscriptionService, calculationService, dataProcessor, u, point, value);
+            calculationService.process(u, point, value);
 
-            summaryService.process(geoSpatialDao, taskService, userService, entityDao, this, entityService, blobStore, valueService, summaryService, syncService, subscriptionService, calculationService, dataProcessor,u, point, value);
+            summaryService.process(u, point, value);
 
-            syncService.process(geoSpatialDao, taskService, userService, entityDao, this, entityService, blobStore, valueService, summaryService, syncService, subscriptionService, calculationService, dataProcessor,u, point, value);
+            syncService.process(u, point, value);
 
-            subscriptionService.process(geoSpatialDao, taskService, userService, entityDao, this, entityService, blobStore, valueService, summaryService, syncService, subscriptionService, calculationService, dataProcessor,u, point, value);
+            subscriptionService.process(u, point, value);
 
             //TODO - turned this off  trying to fix logging
 //   value         try {

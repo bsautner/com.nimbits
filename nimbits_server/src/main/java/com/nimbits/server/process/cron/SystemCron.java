@@ -26,13 +26,13 @@ import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.data.DataProcessor;
-import com.nimbits.server.geo.GeoSpatialDao;
+
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.BaseProcessor;
 import com.nimbits.server.transaction.calculation.CalculationService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.entity.service.EntityService;
+import com.nimbits.server.transaction.entity.EntityService;
 import com.nimbits.server.transaction.subscription.SubscriptionService;
 import com.nimbits.server.transaction.summary.SummaryService;
 import com.nimbits.server.transaction.sync.SyncService;
@@ -42,6 +42,7 @@ import com.nimbits.server.transaction.value.service.ValueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.ServletException;
@@ -59,8 +60,8 @@ import java.util.List;
  * point is flagged so no further alerts will be sent until the point receives another value. If you only care if a point
  * is idle for more than 24 hours, it wouldn't make sense to run this every minute.
  */
-
-public class SystemCron extends HttpServlet implements BaseProcessor {
+@Service
+public class SystemCron extends HttpServlet  {
 
     private static final Logger logger = LoggerFactory.getLogger(SystemCron.class.getName());
 
@@ -100,10 +101,6 @@ public class SystemCron extends HttpServlet implements BaseProcessor {
     @Autowired
     DataProcessor dataProcessor;
 
-    @Autowired
-    GeoSpatialDao geoSpatialDao;
-
-
     @Override
     public void init() throws ServletException {
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
@@ -116,64 +113,45 @@ public class SystemCron extends HttpServlet implements BaseProcessor {
     public void doGet(final HttpServletRequest req, final HttpServletResponse resp)
             throws IOException {
 
-        try {
 
-            logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
-            process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, valueDao, valueService, summaryService, syncService,
-                    subscriptionService, calculationService, dataProcessor, null, null, null );
-            resp.setStatus(HttpServletResponse.SC_OK);
+        try {
+            process();
         } catch (ValueException e) {
             resp.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, e.getMessage());
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
+        resp.setStatus(HttpServletResponse.SC_OK);
+
 
 
 
 
     }
 
-    @Override
-    public void process(final GeoSpatialDao geoSpatialDao,
-                        final TaskService taskService,
-                        final UserService userService,
-                        final EntityDao entityDao,
-                        final ValueTask valueTask,
-                        final EntityService entityService,
-                        final ValueDao valueDao,
-                        final ValueService valueService,
-                        final SummaryService summaryService,
-                        final SyncService syncService,
-                        final SubscriptionService subscriptionService,
-                        final CalculationService calculationService,
-                        final DataProcessor dataProcessor,
-                        final User user, final Point point, final Value value) throws  ValueException {
+    public void process() throws  ValueException {
 
         final List<Entity> points = entityDao.getIdleEntities(userService.getAdmin());
 
         User admin = userService.getAdmin();
+        //TODO OOM - delete expired data here
 
 
 
         for (final Entity p : points) {
             Value v = valueService.getCurrentValue(p);
-            logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
-            valueService.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, valueDao,
-                    valueService, summaryService, syncService, subscriptionService,
-                    calculationService, dataProcessor, admin, (Point) p, v);
+
+            valueService.process(admin, (Point) p, v);
 
 
         }
 
-         processSchedules(entityDao, entityService, userService, valueService, taskService, calculationService, valueTask,
-                 valueDao, summaryService, syncService, subscriptionService, dataProcessor);
+         processSchedules();
 
 
     }
 
 
-    private long processSchedules(EntityDao entityDao, EntityService entityService, UserService userService,
-                                  ValueService valueService, TaskService taskService, CalculationService calculationService,
-    ValueTask valueTask, ValueDao valueDao, SummaryService summaryService, SyncService syncService, SubscriptionService subscriptionService
-    , DataProcessor dataProcessor) throws ValueException {
+    private long processSchedules() throws ValueException {
 
         List<Schedule> schedules = entityDao.getSchedules();
 
@@ -195,14 +173,7 @@ public class SystemCron extends HttpServlet implements BaseProcessor {
                     Value newValue = new Value.Builder().initValue(value).timestamp(new Date()).create();// ValueFactory.createValue(value, new Date());
                     counter++;
                     logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
-                    taskService.process(geoSpatialDao, taskService, userService, entityDao, valueTask,
-                            entityService,
-                            valueDao,
-                            valueService,
-                            summaryService,
-                            syncService,
-                            subscriptionService,
-                            calculationService, dataProcessor, owner, (Point) targetPoint.get(), newValue);
+                    taskService.process(owner, (Point) targetPoint.get(), newValue);
                 }
                 else {
                     schedule.setEnabled(false);

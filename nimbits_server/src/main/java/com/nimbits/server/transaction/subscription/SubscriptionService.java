@@ -16,25 +16,13 @@
 
 package com.nimbits.server.transaction.subscription;
 
-import com.nimbits.client.enums.Action;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.subscription.Subscription;
-import com.nimbits.client.model.user.User;
 import com.nimbits.server.transaction.BaseProcessor;
-import com.nimbits.server.transaction.entity.dao.EntityDao;
-
-import java.util.List;
 
 
 public interface SubscriptionService extends BaseProcessor {
 
 
+     double calculateDelta(final Point point);
 
-
-    void sendGCM(final User user, Subscription subscription, Point points, Action action);
-
-    List<Entity> sendSocket(EntityDao entityDao, User user, List<Point> points);
-
-    void processIncomingSocketValues(EntityDao entityDao, User user, Point point);
 }

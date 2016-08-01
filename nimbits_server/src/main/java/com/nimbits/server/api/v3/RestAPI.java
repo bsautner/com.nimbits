@@ -21,7 +21,6 @@ import com.google.common.collect.Range;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
@@ -33,14 +32,12 @@ import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.user.UserSource;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.data.DataProcessor;
-import com.nimbits.server.geo.GeoSpatialDao;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.process.BlobStore;
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.calculation.CalculationService;
+import com.nimbits.server.transaction.entity.EntityService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.subscription.SubscriptionService;
 import com.nimbits.server.transaction.summary.SummaryService;
 import com.nimbits.server.transaction.sync.SyncService;
@@ -49,6 +46,8 @@ import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.ValueDao;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -62,8 +61,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 @RestController
@@ -71,15 +68,8 @@ public class RestAPI {
 
 
     private final TaskService taskService;
-    private final ValueTask valueTask;
-    private final ValueDao valueDao;
-    private final SummaryService summaryService;
-    private final SyncService syncService;
-    private final SubscriptionService subscriptionService;
-    private final CalculationService calculationService;
-    private final DataProcessor dataProcessor;
     private final UserDao userDao;
-    private final GeoSpatialDao geoSpatialDao;
+
     private final EntityService entityService;
     private final ValueService valueService;
     private final UserService userService;
@@ -91,21 +81,11 @@ public class RestAPI {
 
 
     @Autowired
-    public RestAPI(GeoSpatialDao geoSpatialDao, EntityService entityService, ValueService valueService, UserService userService,
-                   EntityDao entityDao, TaskService taskService, ValueTask valueTask, ValueDao valueDao, SummaryService summaryService,
-                   SyncService syncService, SubscriptionService subscriptionService, CalculationService calculationService, DataProcessor dataProcessor,
-                   UserDao userDao) {
+    public RestAPI( EntityService entityService, ValueService valueService, UserService userService,
+                   EntityDao entityDao, TaskService taskService, UserDao userDao) {
 
         this.taskService = taskService;
-        this.valueTask = valueTask;
-        this.valueDao = valueDao;
-        this.summaryService = summaryService;
-        this.syncService = syncService;
-        this.subscriptionService = subscriptionService;
-        this.calculationService = calculationService;
-        this.dataProcessor = dataProcessor;
         this.userDao = userDao;
-        this.geoSpatialDao = geoSpatialDao;
         this.entityService = entityService;
         this.valueService = valueService;
         this.userService = userService;
@@ -116,16 +96,6 @@ public class RestAPI {
     }
 
 
-    @RequestMapping(value = "/{uuid}/file", method = RequestMethod.POST)
-    public ResponseEntity postFile(
-            @RequestHeader(name = "Authorization") String authorization,
-            @RequestBody String json,
-            @PathVariable String uuid) {
-        getUser(authorization);
-        logger.info("entered api: postFile");
-        geoSpatialDao.addFile(uuid, json);
-        return new ResponseEntity(HttpStatus.OK);
-    }
 
 
     @RequestMapping(value = "/{uuid}/snapshot", method = RequestMethod.POST)
@@ -137,9 +107,7 @@ public class RestAPI {
         User user = getUser(authorization);
         Point entity = (Point) entityDao.getEntity(user, uuid, EntityType.point);
         Value value = gson.fromJson(json, Value.class);
-        taskService.process(geoSpatialDao, taskService, userService, entityDao,
-                valueTask, entityService, valueDao, valueService, summaryService, syncService, subscriptionService,
-                calculationService, dataProcessor, user, entity, value);
+        taskService.process(user, entity, value);
         return new ResponseEntity(HttpStatus.OK);
 
 
@@ -161,8 +129,7 @@ public class RestAPI {
         if (optional.isPresent()) {
             if (values.size() == 1) {
 
-                taskService.process(geoSpatialDao, taskService, userService, entityDao, valueTask, entityService, valueDao, valueService, summaryService, syncService, subscriptionService,
-                        calculationService, dataProcessor, user, (Point) optional.get(), values.get(0));
+                taskService.process(user, (Point) optional.get(), values.get(0));
 
             } else {
 
@@ -213,7 +180,7 @@ public class RestAPI {
         if (user.getIsAdmin()) {
             User newUser = GsonFactory.getInstance(false).fromJson(json, UserModel.class);
             logger.info("creating user: " + json);
-            User createdUser = userService.createUserRecord(entityService, valueService, newUser.getEmail(), newUser.getPassword(), UserSource.local);
+            User createdUser = userService.createUserRecord(newUser.getEmail(), newUser.getPassword(), UserSource.local);
             return new ResponseEntity<>(gson.toJson(createdUser), HttpStatus.OK);
         }
         else {
@@ -231,29 +198,6 @@ public class RestAPI {
         int t = Double.valueOf(String.valueOf(jsonMap.get("entityType"))).intValue();
         return EntityType.get(t);
     }
-
-
-
-
-    @RequestMapping(value = "/{uuid}/file", method = RequestMethod.GET)
-    public ResponseEntity<String> getFile( @RequestHeader(name = "Authorization") String authorization,@PathVariable String uuid) throws IOException {
-        getUser(authorization);
-        Optional<String> file = geoSpatialDao.getFile(uuid);
-        if (file.isPresent()) {
-            return new ResponseEntity<>(file.get(), HttpStatus.OK);
-
-        }
-        else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-
-
-
-    //GET
-
-
 
 
 
@@ -323,7 +267,7 @@ public class RestAPI {
             range = Optional.absent();
         }
 
-        Optional<Range<Date>> timespan = Optional.of(Range.closed(start, end));
+        Optional<Range<Long>> timespan = Optional.of(Range.closed(start.getTime(), end.getTime()));
 
 
         if (user.getId().equals(uuid)) {
@@ -372,12 +316,12 @@ public class RestAPI {
         Optional<String> mask = StringUtils.isEmpty(maskParam) ? Optional.<String>absent() : Optional.of(maskParam);
         Optional<Integer> count = StringUtils.isNotEmpty(countParam) ? Optional.of(Integer.valueOf(countParam)) : Optional.<Integer>absent();
 
-        Optional<Range<Date>> timespan;
+        Optional<Range<Long>> timespan;
 
 
         if (! StringUtils.isEmpty(startParam) && ! StringUtils.isEmpty(endParam) ) {
-            Date start = new Date(Long.valueOf(startParam));
-            Date end = new Date(Long.valueOf(endParam));
+            long start =  (Long.valueOf(startParam));
+            long end =  (Long.valueOf(endParam));
             timespan = Optional.of(Range.closed(start, end));
 
         }
@@ -430,7 +374,7 @@ public class RestAPI {
             }
             Optional<Entity> optional = entityDao.getEntity(user, uuid, EntityType.point);
             if (optional.isPresent()) {
-                Value snapshot = valueService.getCurrentValue(blobStore, optional.get());
+                Value snapshot = valueService.getCurrentValue(optional.get());
                 ValueContainer valueContainer = new ValueContainer(links, valueEmbedded, snapshot);
                 return new ResponseEntity<>(gson.toJson(valueContainer), HttpStatus.OK);
             }
@@ -448,7 +392,7 @@ public class RestAPI {
         if (credentials.isPresent()) {
             Optional<User> user = userDao.getUserByEmail(credentials.get().getLogin());
             if (user.isPresent()) {
-                if (userService.validatePassword(entityService, valueService, user.get(), credentials.get().getPassword())) {
+                if (userService.validatePassword(user.get(), credentials.get().getPassword())) {
                     return user.get();
                 }
                 else {
@@ -595,8 +539,26 @@ public class RestAPI {
             Entity entity = optional.get();
             if (!user.getIsAdmin() && entity.getEntityType() != EntityType.user && entity.getOwner().equals(user.getId())) {
                 entityService.deleteEntity(user, entity);
+                if (entity.getEntityType().equals(EntityType.point)) {
+                    Point point = (Point) entity;
+
+                    valueService.deleteAllData(point);
+
+
+                    // taskService.startDeleteDataTask((Point) entity);
+
+                }
             } else if (user.getIsAdmin()) {
                 entityService.deleteEntity(user, entity);
+                if (entity.getEntityType().equals(EntityType.point)) {
+                    Point point = (Point) entity;
+
+                    valueService.deleteAllData(point);
+
+
+                    // taskService.startDeleteDataTask((Point) entity);
+
+                }
             } else if (!entity.getOwner().equals(user.getId())) {
                 throw new SecurityException("You can not delete an entity you don't own if your not the system admin");
             }
@@ -680,9 +642,6 @@ public class RestAPI {
             series =new Series(path + entity.getId() + "/series");
             dataTable =new DataTable(path + entity.getId() + "/table");
             snapshot =new Snapshot(path + entity.getId() + "/snapshot");
-            if (point.getPointType().equals(PointType.location)) {
-                nearby = new Nearby(path + entity.getId() + "/nearby");
-            }
 
 
         }
@@ -715,9 +674,7 @@ public class RestAPI {
                     cdataTable =new DataTable(path + child.getId() + "/table");
                     csnapshot  =new Snapshot(path + child.getId() + "/snapshot");
                     Point point1 = (Point) child;
-                    if (point1.getPointType().equals(PointType.location)) {
-                        cnearby = new Nearby(path + child.getId() + "/nearby");
-                    }
+
                 }
                 //  Entity parentEntity = childMap.get(child.getParent());
 

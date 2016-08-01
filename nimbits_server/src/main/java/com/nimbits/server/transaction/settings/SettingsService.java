@@ -18,14 +18,63 @@ package com.nimbits.server.transaction.settings;
 
 
 import com.nimbits.client.enums.ServerSetting;
+import com.nimbits.server.secure.StringEncryption;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class SettingsService {
 
 
-public interface SettingsService {
-    //TODO must cache this response, it's hit over and over many times with same  param name
-    String getSetting(ServerSetting paramName);
+    private SettingsDao settingsDao;
 
-    void updateSetting(ServerSetting setting, String newValue);
+    private StringEncryption stringEncryption;
 
-    void addSetting(ServerSetting setting, String value);
+
+    @Autowired
+    public SettingsService(SettingsDao settingsDao, StringEncryption stringEncryption) {
+        this.settingsDao = settingsDao;
+        this.stringEncryption = stringEncryption;
+    }
+
+
+    public String getSetting(final ServerSetting paramName) {
+        String stored = settingsDao.getSetting(paramName);
+        if (paramName.isEncrypted()) {
+            try {
+                return stringEncryption.decrypt(stored);
+            } catch (Exception e) {
+                return null;
+            }
+        } else {
+            return stored;
+        }
+    }
+
+
+    public void updateSetting(final ServerSetting setting, final String newValue) {
+        if (setting.isEncrypted()) {
+            try {
+                settingsDao.updateSetting(setting, stringEncryption.encrypt(newValue, false));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            settingsDao.updateSetting(setting, newValue);
+        }
+    }
+
+
+    public void addSetting(final ServerSetting setting, final String value) {
+        if (setting.isEncrypted()) {
+            try {
+                settingsDao.addSetting(setting, stringEncryption.encrypt(value, false));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        settingsDao.addSetting(setting, value);
+    }
+
 
 }

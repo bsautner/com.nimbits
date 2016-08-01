@@ -17,10 +17,11 @@
 package com.nimbits.server.system;
 
 
+import org.springframework.stereotype.Component;
+
 import javax.servlet.ServletRequest;
-import java.util.zip.Deflater;
 
-
+@Component
 public class ServerInfo {
 
 
@@ -28,10 +29,9 @@ public class ServerInfo {
 
 
     public String getFullServerURL(final ServletRequest req) {
-        Deflater compressor = new Deflater();
-        compressor.setLevel(Deflater.BEST_COMPRESSION);
+
         try {
-            return req == null ? getUrl() : req.getScheme() + "://" + req.getServerName() + ':' + req.getServerPort();
+            return req.getScheme() + "://" + req.getServerName() + ':' + req.getServerPort();
 
         } catch (NullPointerException ex) {
             return TEST_URL;
@@ -40,16 +40,5 @@ public class ServerInfo {
 
     }
 
-    private String getUrl() {
 
-        String environment = System.getProperty("com.google.appengine.runtime.environment");
-        if (environment != null && environment.equals("Production")) {
-            String applicationId = System.getProperty("com.google.appengine.application.id");
-            //String version = System.getProperty("com.google.appengine.application.version");
-            return "http://" + applicationId + ".appspot.com/";
-        } else {
-            return TEST_URL;
-        }
-
-    }
 }

@@ -24,6 +24,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityServiceRpc;
+import com.nimbits.server.transaction.entity.EntityService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
@@ -60,7 +61,7 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
 
     @Override
     public Entity addUpdateEntityRpc(final Entity entity) throws ClassNotFoundException {
-        User user = userService.getHttpRequestUser(entityService, valueService, getThreadLocalRequest());
+        User user = userService.getHttpRequestUser( getThreadLocalRequest());
         return entityDao.addUpdateEntity(user, entity);
 
 
@@ -68,15 +69,23 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
 
     @Override
     public void deleteEntityRpc(final  Entity entity) {
-        User u = userService.getHttpRequestUser(entityService, valueService, getThreadLocalRequest());
+        User u = userService.getHttpRequestUser( getThreadLocalRequest());
         entityService.deleteEntity(u, entity);
+        if (entity.getEntityType().equals(EntityType.point)) {
+            Point point = (Point) entity;
 
+            valueService.deleteAllData(point);
+
+
+            // taskService.startDeleteDataTask((Point) entity);
+
+        }
 
     }
 
     @Override
     public Map<String, Entity> getEntityMapRpc(final int type, final int limit) {
-        User u = userService.getHttpRequestUser(entityService, valueService, getThreadLocalRequest());
+        User u = userService.getHttpRequestUser(  getThreadLocalRequest());
         return entityDao.getEntityMap(u, EntityType.get(type), limit);
     }
 
@@ -92,7 +101,7 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
                 p.setName(newName);
                 p.setId(null);
 
-                User u = userService.getHttpRequestUser(entityService, valueService, getThreadLocalRequest());
+                User u = userService.getHttpRequestUser(  getThreadLocalRequest());
                 return entityDao.addUpdateEntity(u, p);
             //return PointServiceFactory.getInstance().copyPoint(getUser(), originalEntity, newName);
 

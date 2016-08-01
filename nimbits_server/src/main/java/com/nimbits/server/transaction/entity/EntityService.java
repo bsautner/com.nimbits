@@ -18,76 +18,42 @@ package com.nimbits.server.transaction.entity;
 
 
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.communication.mail.EmailService;
-import com.nimbits.server.geo.GeoSpatialDao;
-import com.nimbits.server.socket.ConnectedClients;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.value.service.ValueService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+@Service
+public class EntityService {
 
-public class EntityServiceImpl implements EntityService {
-
-    public static final String POINT_INITIALISED = "POINT_INITIALISED";
-
-
-    private final EmailService emailService;
+    private static final String POINT_INITIALISED = "POINT_INITIALISED";
 
 
-    private final ConnectedClients connectedClients;
 
     private final EntityDao entityDao;
 
 
-    private final ValueService valueService;
+    @Autowired
+    public EntityService(EntityDao entityDao) {
 
-    private final GeoSpatialDao geoSpatialDao;
-
-
-    final static Logger logger = LoggerFactory.getLogger(EntityServiceImpl.class.getName());
-
-    public EntityServiceImpl(GeoSpatialDao geoSpatialDao, EmailService emailService, ConnectedClients connectedClients,
-                             EntityDao entityDao, ValueService valueService) {
-
-        this.emailService = emailService;
-        this.connectedClients = connectedClients;
         this.entityDao = entityDao;
-        this.valueService = valueService;
-        this.geoSpatialDao = geoSpatialDao;
+
     }
 
-    @Override
     public void deleteEntity(final User user,  Entity entity) {
 
         List<Entity> children = entityDao.getChildren(user, Collections.singletonList(entity));
 
 
-        if (entity.getEntityType().equals(EntityType.socket)) {
-            connectedClients.remove(user, (com.nimbits.client.model.socket.Socket) entity);
-        }
 
-        if (entity.getEntityType().equals(EntityType.point)) {
-            Point point = (Point) entity;
-
-                valueService.deleteAllData(point);
-            if (point.getPointType().equals(PointType.location)) {
-                geoSpatialDao.deleteSpatial(point.getId());
-            }
-
-            // taskService.startDeleteDataTask((Point) entity);
-
-        }
         for (Entity c : children) {
             deleteEntity(user, c);
         }
@@ -97,8 +63,6 @@ public class EntityServiceImpl implements EntityService {
 
     }
 
-
-    @Override
     public List<Entity> getEntities(final User user) {
         final List<Entity> retVal = entityDao.getEntities(user);
 
@@ -106,22 +70,7 @@ public class EntityServiceImpl implements EntityService {
         return retVal;
     }
 
-    @Override
-    public List<Entity> getEntitiesByType(final User user, EntityType type) {
-        final List<Entity> retVal = entityDao.getEntitiesByType(user, type);
 
-        Collections.sort(retVal);
-        return retVal;
-    }
-
-
-
-
-
-
-
-
-    @Override
     public Entity  addUpdateEntity(final ValueService valueService, final User user, Entity entity) {
 
 

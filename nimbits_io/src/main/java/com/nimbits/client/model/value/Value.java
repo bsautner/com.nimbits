@@ -62,6 +62,16 @@ public class Value implements Serializable, Comparable<Value> {
         this.st = alert;
     }
 
+    public Value(Value value) {
+        this.d = value.getDoubleValue();
+        this.t = value.getTimestamp() == null ? System.currentTimeMillis() : value.getTimestamp().getTime();
+        this.dx = value.getData();
+        this.m = value.getData();
+        this.lg = value.getLongitude();
+        this.lt = value.getLatitude();
+
+    }
+
 
     public String getData() {
         return dx;

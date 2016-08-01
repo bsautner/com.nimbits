@@ -18,23 +18,21 @@ package com.nimbits.server.api.filter;
 
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.auth.AuthService;
-import com.nimbits.server.transaction.cache.NimbitsCache;
-import com.nimbits.server.transaction.entity.service.EntityService;
 import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.user.service.UserService;
-import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Service
 public class FilterBase implements Filter {
 
 
@@ -43,14 +41,6 @@ public class FilterBase implements Filter {
 
     @Autowired
     private UserService userService;
-
-
-    @Autowired
-    private EntityService entityService;
-
-    @Autowired
-    private ValueService valueService;
-
 
 
     private Logger logger = LoggerFactory.getLogger(FilterBase.class.getName());
@@ -108,7 +98,7 @@ public class FilterBase implements Filter {
 
         try {
 
-            user = userService.getHttpRequestUser(entityService,valueService,  (HttpServletRequest) request);
+            user = userService.getHttpRequestUser((HttpServletRequest) request);
             request.setAttribute(Parameters.user.getText(), user);
             return user != null;
         } catch (Throwable ex) {

@@ -22,7 +22,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Component;
 
 
-
+@Component
 public class StringEncryption {
     private final int saltSize = 20;
 

@@ -40,7 +40,7 @@ public class ValueStore  {
         this.entityId = entityId;
         this.lat = value.getLatitude();
         this.lng = value.getLongitude();
-        this.d = BigDecimal.valueOf(value.getDoubleValue());
+        this.d = value.getDoubleValue() == null ? null : BigDecimal.valueOf(value.getDoubleValue());
         this.meta = value.getMetaData();
         this.data = value.getData();
 
@@ -60,6 +60,12 @@ public class ValueStore  {
     }
 
     public Value getValue() {
-        return new Value.Builder().doubleValue(d.doubleValue()).lat(lat).lng(lng).timestamp(new Date(timestamp)).data(data).meta(meta).create();
+
+        Value.Builder builder =  new Value.Builder();
+
+        if (d!=null) {
+            builder.doubleValue(d.doubleValue());
+        }
+        return builder.lat(lat).lng(lng).timestamp(new Date(timestamp)).data(data).meta(meta).create();
     }
 }

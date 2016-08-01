@@ -92,7 +92,7 @@ public class V3EntityTests extends NimbitsTest {
         log("input point id: " + inputPoint.getId());
 
         nimbits.recordValue(inputPoint, new Value.Builder().meta(foo).create());
-        Thread.sleep(100);
+        Thread.sleep(1000);
         Value value = nimbits.getSnapshot(inputPoint);
         log(value.toString());
         if (! foo.equals(value.getMetaData())) {
@@ -180,11 +180,10 @@ public class V3EntityTests extends NimbitsTest {
                         .target(outputPoint)
                         .trigger(inputPoint)
                         .create());
-        Random r = new Random();
-        double total = 0;
+
         for (int i = 0; i < 10; i++) {
-            double v = i;//r.nextDouble() * 100;
-            total += v;
+            double v = i;
+
             log("Summary Test Recording: " + v);
             nimbits.recordValue(inputPoint, new Value.Builder().doubleValue(v).create());
             Thread.sleep(500);
@@ -193,8 +192,8 @@ public class V3EntityTests extends NimbitsTest {
 
         Value v = nimbits.getSnapshot(outputPoint);
         log("Summary Test:" + v.toString());
-        if (v.getDoubleValue() <= 5) {
-            error("summary didn't work");
+        if (v.getDoubleValue() <= 3) {
+            error("summary didn't work:" + v.toString());
         }
         else {
             log("Done Summary");

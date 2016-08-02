@@ -65,10 +65,11 @@
                 <prop key="javax.jdo.option.ConnectionPassword">password</prop>
                 <prop key="javax.jdo.option.ConnectionDriverName">com.mysql.jdbc.Driver</prop>
                 <prop key="org.jpox.autoCreateSchema">true</prop>
-                <!--<prop id="datanucleus.schema.autoCreateAll">true</prop>-->
+                <prop key="datanucleus.schema.autoCreateAll">true</prop>
                 <prop key="org.jpox.identifier.case">PreserveCase</prop>
-                <prop key="datanucleus.autoCreateTables">true</prop>
-                <prop key="datanucleus.autoCreateColumns">true</prop>
+                <!--<prop key="datanucleus.autoCreateTables">true</prop>-->
+                <!--<prop key="datanucleus.autoCreateColumns">true</prop>-->
+                <!--<prop key="datanucleus">true</prop>-->
                 <!--<prop id="datanucleus.schema.autoCreateColumns">true</prop>-->
             </props>
         </property>

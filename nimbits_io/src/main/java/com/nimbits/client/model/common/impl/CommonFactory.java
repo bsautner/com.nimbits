@@ -56,7 +56,7 @@ public class CommonFactory {
     }
 
 
-    protected static void nameTest(final String name, final EntityType type) {
+    private static void nameTest(final String name, final EntityType type) {
 
 
         if (Utils.isEmptyString(name)) {
@@ -65,7 +65,6 @@ public class CommonFactory {
         }
 
         if (name.contains("%")
-                || name.contains("+")
                 || name.contains("'")
                 || name.contains("\"")
                 || name.contains("!")

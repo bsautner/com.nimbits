@@ -16,6 +16,11 @@
 
 package com.nimbits.server;
 
+import com.nimbits.client.enums.ServerSetting;
+import com.nimbits.server.transaction.settings.SettingsDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.sql.Driver;
@@ -24,14 +29,21 @@ import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.logging.Logger;
 
-
+@Component
 public class ApplicationListener implements ServletContextListener {
 
     private final Logger logger = Logger.getLogger(ApplicationListener.class.getName());
 
+    @Autowired
+    private SettingsDao settingsDao;
+
+
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         logger.info("contextInitialized");
+        String admin = settingsDao.getSetting(ServerSetting.admin);
+        logger.info(String.format("system admin set: %b ", admin != null));
+
     }
 
 

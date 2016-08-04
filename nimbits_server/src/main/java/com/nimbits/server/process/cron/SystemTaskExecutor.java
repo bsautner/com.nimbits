@@ -28,13 +28,10 @@ public class SystemTaskExecutor {
     private final Logger logger = Logger.getLogger(SystemTaskExecutor.class.getName());
 
 
-
     @Autowired
     private TaskExecutor taskExecutor;
     @Autowired
     private SystemCron systemCron;
-
-
 
 
     public SystemTaskExecutor() {
@@ -43,8 +40,6 @@ public class SystemTaskExecutor {
     }
 
     private class SystemTask implements Runnable {
-
-
 
 
         public SystemTask() {
@@ -65,7 +60,6 @@ public class SystemTaskExecutor {
         }
 
     }
-
 
 
     public void heartbeat() {

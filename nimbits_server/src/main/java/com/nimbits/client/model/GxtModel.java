@@ -54,7 +54,7 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
         this.alertType = AlertType.OK;
         this.entityType = EntityType.user;
         this.isReadOnly = true;
-        this.baseEntity =  user;
+        this.baseEntity = user;
         set(Parameters.id.getText(), this.id);
         set(Parameters.name.getText(), this.name.getValue());
         set(Parameters.entityType.getText(), this.entityType.getCode());
@@ -76,7 +76,6 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
     public EntityType getEntityType() {
         return entityType;
     }
-
 
 
     @Override
@@ -125,7 +124,7 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
     public void setValue(Value value) {
 
         StringBuilder sb = new StringBuilder(INT);
-        if (value != null && value.getDoubleValue() != null && value.getDoubleValue()  != Const.CONST_IGNORED_NUMBER_VALUE) {
+        if (value != null && value.getDoubleValue() != null && value.getDoubleValue() != Const.CONST_IGNORED_NUMBER_VALUE) {
             sb.append(value.getDoubleValue());
         }
         if (value != null && !Utils.isEmptyString(value.getData())) {

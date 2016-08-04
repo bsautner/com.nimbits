@@ -23,7 +23,6 @@ import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.enums.EntityType;
-
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
@@ -157,10 +156,6 @@ public class SyncPanel extends BasePanel {
                             .parent(entity.getId())
 
                             .trigger(entity.getId());
-
-
-
-
 
 
                 }

@@ -49,7 +49,6 @@ import java.util.List;
 /**
  * A simpler java client for interacting with the V3 REST API using hal+json
  * and basic authentication
- *
  */
 @SuppressWarnings("unused")
 public class Nimbits {
@@ -58,8 +57,6 @@ public class Nimbits {
     private final RestClient api;
 
     protected Nimbits(final String email, final String token, String instance) {
-
-
 
 
         RequestInterceptor requestInterceptor = new RequestInterceptor() {
@@ -117,18 +114,16 @@ public class Nimbits {
     }
 
     /**
-     *
-     * @Param should the returned object contain a list of children one level down
      * @return the authentication user from /service/v3/me
+     * @Param should the returned object contain a list of children one level down
      */
     public User getMe(boolean includeChildren) {
         return api.getMe(includeChildren);
     }
 
     /**
-     *
-     * @Param should the returned object contain a list of children one level down
      * @return the authentication user from /service/v3/me
+     * @Param should the returned object contain a list of children one level down
      */
     public User getMe() {
 
@@ -138,6 +133,7 @@ public class Nimbits {
 
     /**
      * if you are using an admin id, you can add users here.
+     *
      * @param newUser a complete user object without an id or uuid
      * @return
      */
@@ -150,12 +146,10 @@ public class Nimbits {
     //READ Data
 
     /**
-     *
-     *
      * @param entity
      * @param start
      * @param end
-     * @param mask nullable - if present, will be used to filter values based on the mask string - can be null, string or regex
+     * @param mask   nullable - if present, will be used to filter values based on the mask string - can be null, string or regex
      * @return
      */
     public List<Value> getValues(Entity entity, Date start, Date end, String mask) {
@@ -171,12 +165,9 @@ public class Nimbits {
     }
 
     /**
-     *
-     *
      * @param entity
      * @param start
      * @param end
-
      * @return
      */
     public List<Value> getValues(Entity entity, Date start, Date end) {
@@ -184,7 +175,7 @@ public class Nimbits {
     }
 
     public Value getSnapshot(Point point) {
-        ValueContainer valueContainer =  api.getSnapshot(point.getId());
+        ValueContainer valueContainer = api.getSnapshot(point.getId());
         return valueContainer.getSnapshot();
 
 
@@ -195,8 +186,7 @@ public class Nimbits {
         if (pointOptional.isPresent()) {
             ValueContainer valueContainer = api.getSnapshot(pointOptional.get().getId());
             return valueContainer.getSnapshot();
-        }
-        else {
+        } else {
             throw new RuntimeException("Point Not Found");
         }
 
@@ -204,7 +194,7 @@ public class Nimbits {
     }
 
     public Value getSnapshot(Entity entity) {
-        ValueContainer valueContainer =  api.getSnapshot(entity.getId());
+        ValueContainer valueContainer = api.getSnapshot(entity.getId());
         return valueContainer.getSnapshot();
 
 
@@ -242,8 +232,7 @@ public class Nimbits {
         Optional<Point> point = findPointByName(pointName);
         if (point.isPresent()) {
             recordValues(point.get(), Collections.singletonList(newValue));
-        }
-        else {
+        } else {
             throw new RuntimeException("Point Not Found");
         }
     }
@@ -277,8 +266,8 @@ public class Nimbits {
     @Deprecated //we'll be creating individual methods for creating different types of entities
     public Entity addEntity(Entity parent, Point point) {
 
-        Entity e  =  api.addEntity(parent.getId(), point);
-        return  e;
+        Entity e = api.addEntity(parent.getId(), point);
+        return e;
     }
 
     public Category addCategory(Entity parent, Category category) {
@@ -343,6 +332,7 @@ public class Nimbits {
 
     /**
      * get all children under an entity
+     *
      * @param parent
      * @return
      */
@@ -351,20 +341,18 @@ public class Nimbits {
 
         if (parent != null) {
             return api.getChildren(parent.getId());
-        }
-        else {
+        } else {
             return Collections.emptyList();
         }
     }
 
     public Optional<Point> findPointByName(String pointName) {
         try {
-            Point p =  api.findPoint(pointName);
+            Point p = api.findPoint(pointName);
 
             if (p != null) {
                 return Optional.of(p);
-            }
-            else {
+            } else {
                 return Optional.absent();
             }
 
@@ -464,17 +452,17 @@ public class Nimbits {
     }
 
     public void uploadFile(FileModel fileModel) {
-       api.uploadFile(fileModel.getId(), fileModel.getEncoded(), new Callback<Void>() {
-           @Override
-           public void success(Void aVoid, Response response) {
+        api.uploadFile(fileModel.getId(), fileModel.getEncoded(), new Callback<Void>() {
+            @Override
+            public void success(Void aVoid, Response response) {
 
-           }
+            }
 
-           @Override
-           public void failure(RetrofitError retrofitError) {
+            @Override
+            public void failure(RetrofitError retrofitError) {
 
-           }
-       });
+            }
+        });
     }
 
     public Optional<String> getFile(String id) {
@@ -514,8 +502,6 @@ public class Nimbits {
             }
         });
     }
-
-
 
 
     public Point getPoint(String uuid) {
@@ -560,14 +546,12 @@ public class Nimbits {
     }
 
     /**
-     *
-     * @param entity a valid entity with a key and updated values
+     * @param entity   a valid entity with a key and updated values
      * @param callback returnes success or error
      */
     public void updateEntity(Entity entity, Callback<Void> callback) {
         api.updateEntity(entity.getId(), entity, callback);
     }
-
 
 
     public static class Builder {
@@ -624,7 +608,6 @@ public class Nimbits {
             return new Nimbits(email, token, instance);
         }
     }
-
 
 
 }

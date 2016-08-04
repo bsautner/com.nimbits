@@ -92,18 +92,17 @@ public class LoginForgotPanel extends AbstractLoginPanel {
         Html html;
 
 
+        html = new Html("<br><p>Enter your email.  The system will send you instructions to reset your password. </p>" +
+                "<br>" +
+                "<p>If this is a private server, you'll need to ensure that: </p><br>" +
 
-            html = new Html("<br><p>Enter your email.  The system will send you instructions to reset your password. </p>" +
-                    "<br>" +
-                    "<p>If this is a private server, you'll need to ensure that: </p><br>" +
-
-                    "<ul><li> This server is configured to send email over smtp</li>" +
-                    "<li> That the system admin setup smtp properly - setting the smtp password and server url in the " +
-                    "settings menu</li>" +
-                    "<li> That the email you registered one was valid and can receive email</li>" +
-                    "</ul>" +
-                    "<p><a href=\"http://www.nimbits.com/howto_server_mail.jsp\">Learn More</a></p>")
-            ;
+                "<ul><li> This server is configured to send email over smtp</li>" +
+                "<li> That the system admin setup smtp properly - setting the smtp password and server url in the " +
+                "settings menu</li>" +
+                "<li> That the email you registered one was valid and can receive email</li>" +
+                "</ul>" +
+                "<p><a href=\"http://www.nimbits.com/howto_server_mail.jsp\">Learn More</a></p>")
+        ;
 
 
         simple.add(html);

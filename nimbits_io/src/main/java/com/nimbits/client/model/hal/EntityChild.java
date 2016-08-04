@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Benjamin Sautner
  *
@@ -24,7 +23,7 @@ import javax.annotation.Generated;
 import java.io.Serializable;
 
 @Generated("org.jsonschema2pojo")
-public class EntityChild  implements Serializable {
+public class EntityChild implements Serializable {
 
     @SerializedName("_links")
     @Expose
@@ -40,10 +39,6 @@ public class EntityChild  implements Serializable {
         this.links = links;
         this.name = name;
     }
-
-
-
-
 
 
 }

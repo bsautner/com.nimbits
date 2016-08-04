@@ -25,7 +25,7 @@
 
     <script type="text/javascript" src="https://www.google.com/jsapi"></script>
     <script>
-        google.load('visualization', '1.0', {'packages':['corechart']});
+        google.load('visualization', '1.0', {'packages': ['corechart']});
 
         // Set a callback to run when the Google Visualization API is loaded.
         google.setOnLoadCallback(drawChart);
@@ -33,7 +33,7 @@
         function drawChart() {
             var id = getParameterByName('id');
             var token = getParameterByName('token');
-            var email =  getParameterByName('email');
+            var email = getParameterByName('email');
             $.get("service/v2/datatable", {id: id, token: token, email: email}).done(function (data) {
 
                 var dataset = new google.visualization.DataTable(data);
@@ -43,9 +43,9 @@
                         {
                             rollPeriod: 7,
                             title: id
-                           // showRangeSelector: true,
-                           // rangeSelectorHeight: 30
-                           //  errorBars: true
+                            // showRangeSelector: true,
+                            // rangeSelectorHeight: 30
+                            //  errorBars: true
                         }
                 );
 

@@ -1,32 +1,28 @@
 package com.nimbits.it;
 
+import com.nimbits.client.io.Nimbits;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
-import com.nimbits.client.io.Nimbits;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.experimental.runners.Enclosed;
 
 import java.util.Date;
 import java.util.List;
 
 /**
  * A base class for running tests
- *
  */
 
-public abstract class NimbitsTest  {
+public abstract class NimbitsTest {
 
     public User user;
 
-    static final String EMAIL_ADDRESS ="admin@example.com";
+    static final String EMAIL_ADDRESS = "admin@example.com";
     static final String INSTANCE_URL = "http://localhost:8080";
     static final String PASSWORD = "1234"; //just like my luggage!
     int errors = 0;
-
-
 
 
     static final Nimbits nimbits = new Nimbits.Builder()
@@ -70,7 +66,7 @@ public abstract class NimbitsTest  {
             String s = ExceptionUtils.getStackTrace(throwable);
             log(s);
             throwable.printStackTrace();
-            user =  createUser(EMAIL_ADDRESS, PASSWORD);
+            user = createUser(EMAIL_ADDRESS, PASSWORD);
 
         }
 
@@ -79,22 +75,18 @@ public abstract class NimbitsTest  {
         return nimbits.getMe(true);
 
 
-
     }
 
     /**
      * Creates a new user, if this is the first user on the system, it will be the admin
-     *
-     *
      */
     public User createUser(String email, String password) {
 
         User postObject = new UserModel.Builder().email(email).password(password).create();
         User newUser = nimbits.addUser(postObject);
-        if (newUser == null || ! newUser.getEmail().getValue().equals(email)) {
+        if (newUser == null || !newUser.getEmail().getValue().equals(email)) {
             throw new RuntimeException("Could not create a new user");
-        }
-        else {
+        } else {
             log("Created new user: " + newUser.getEmail());
             return newUser;
         }

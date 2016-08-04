@@ -24,9 +24,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.transaction.BaseProcessor;
-import com.nimbits.server.transaction.entity.dao.EntityDao;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -34,16 +32,15 @@ import java.util.Map;
 public interface ValueService extends BaseProcessor {
 
 
-
     List<Value> getSeries(Entity entity, Optional<Range<Long>> timespan, final Optional<Range<Integer>> range, Optional<String> mask);
 
-    Map<String, Entity> getCurrentValues( Map<String, Point> entities);
+    Map<String, Entity> getCurrentValues(Map<String, Point> entities);
 
-    void recordValues( User user, Point point, List<Value> values);
+    void recordValues(User user, Point point, List<Value> values);
 
     Value getCurrentValue(Entity p);
 
-    String getChartTable( User user, Entity entity, Optional<Range<Long>> timespan, Optional<Integer> count, Optional<String> mask);
+    String getChartTable(User user, Entity entity, Optional<Range<Long>> timespan, Optional<Integer> count, Optional<String> mask);
 
     AlertType getAlertType(final Point point, final Value value);
 

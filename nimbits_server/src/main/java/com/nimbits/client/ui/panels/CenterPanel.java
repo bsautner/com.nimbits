@@ -184,7 +184,7 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
         public void onSuccess(Entity result) {
             try {
 
-                    addEntity(new GxtModel(result));
+                addEntity(new GxtModel(result));
 
 
             } catch (Exception e) {

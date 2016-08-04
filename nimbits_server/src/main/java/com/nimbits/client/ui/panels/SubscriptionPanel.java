@@ -130,8 +130,6 @@ public class SubscriptionPanel extends BasePanel {
         final EntityCombo webHookCombo;
 
 
-
-
         final CheckBox enabled = new CheckBox();
 
         //spinnerField.setMinValue(MIN_VALUE);
@@ -150,17 +148,15 @@ public class SubscriptionPanel extends BasePanel {
             enabled.setValue(subscription.getEnabled());
 
 
-
             if (subscription.getNotifyMethod().equals(SubscriptionNotifyMethod.webhook)) {
-                webHookCombo = new EntityCombo(EntityType.webhook,subscription.getTarget(), "Web Hook Target");
+                webHookCombo = new EntityCombo(EntityType.webhook, subscription.getTarget(), "Web Hook Target");
 
 
                 webHookCombo.setVisible(true);
 
 
-            }
-            else {
-                webHookCombo = new EntityCombo(EntityType.webhook,"", "Web Hook Target");
+            } else {
+                webHookCombo = new EntityCombo(EntityType.webhook, "", "Web Hook Target");
                 webHookCombo.setVisible(false);
             }
 
@@ -171,7 +167,7 @@ public class SubscriptionPanel extends BasePanel {
 
             subscriptionName.setValue(entity.getName().getValue() + " Subscription");
 
-            webHookCombo = new EntityCombo(EntityType.webhook,"", "Web Hook Target");
+            webHookCombo = new EntityCombo(EntityType.webhook, "", "Web Hook Target");
             webHookCombo.setVisible(false);
         }
 
@@ -283,7 +279,7 @@ public class SubscriptionPanel extends BasePanel {
         private final TextField<String> target;
         private final CheckBox enabled;
 
-        SubmitButtonEventSelectionListener(EntityCombo webhookCombo, ComboBox<DeliveryMethodOption> methodCombo, ComboBox<SubscriptionTypeOption> typeCombo, TextField<String> subscriptionName, TextField<String> target, CheckBox enabled ) {
+        SubmitButtonEventSelectionListener(EntityCombo webhookCombo, ComboBox<DeliveryMethodOption> methodCombo, ComboBox<SubscriptionTypeOption> typeCombo, TextField<String> subscriptionName, TextField<String> target, CheckBox enabled) {
             this.methodCombo = methodCombo;
             this.typeCombo = typeCombo;
             this.subscriptionName = subscriptionName;
@@ -305,7 +301,6 @@ public class SubscriptionPanel extends BasePanel {
                 EntityName name = CommonFactory.createName(subscriptionName.getValue(), EntityType.subscription);
 
 
-
                 SubscriptionModel.Builder builder = new SubscriptionModel.Builder();
 
                 if (entity.getEntityType().equals(EntityType.subscription)) {
@@ -316,9 +311,8 @@ public class SubscriptionPanel extends BasePanel {
 
 
                     if (subscriptionNotifyMethod.equals(SubscriptionNotifyMethod.webhook)) {
-                       builder.target(webhookCombo.getValue().getId());
-                    }
-                    else {
+                        builder.target(webhookCombo.getValue().getId());
+                    } else {
                         builder.target(target.getValue());
                     }
 
@@ -346,11 +340,10 @@ public class SubscriptionPanel extends BasePanel {
 
                 }
 
-                    builder.name(name)
-                            .enabled(enabled.getValue())
-                            .subscriptionType(subscriptionType)
-                            .notifyMethod(subscriptionNotifyMethod);
-
+                builder.name(name)
+                        .enabled(enabled.getValue())
+                        .subscriptionType(subscriptionType)
+                        .notifyMethod(subscriptionNotifyMethod);
 
 
                 final Subscription update = builder.create();

@@ -159,7 +159,7 @@ public class NavigationPanel extends NavigationEventProvider {
             final String v = model.get(Parameters.value.getText());
 //            final String note = model.get(Const.Params.PARAM_NOTE);
 //            final String data = model.get(Const.PARAM_DATA);
-            final Value value =new Value.Builder().doubleWithData(v).timestamp(timestamp).create();// Value.getInstance(SimpleValue.getInstance(v), timestamp);
+            final Value value = new Value.Builder().doubleWithData(v).timestamp(timestamp).create();// Value.getInstance(SimpleValue.getInstance(v), timestamp);
 
             valueService.recordValueRpc(model.getBaseEntity(), value, new SaveValueAsyncCallback(model, value));
             model.setDirty(false);

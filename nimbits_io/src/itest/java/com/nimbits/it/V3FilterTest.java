@@ -42,7 +42,7 @@ public class V3FilterTest extends NimbitsTest {
 
         Point point = nimbits.addPoint(user, new PointModel.Builder()
                 .filterType(FilterType.fixedHysteresis)
-                 .filterValue(100)
+                .filterValue(100)
 
                 .create());
         if (point == null) {
@@ -61,10 +61,6 @@ public class V3FilterTest extends NimbitsTest {
         }
 
         log("Done!");
-
-
-
-
 
 
     }

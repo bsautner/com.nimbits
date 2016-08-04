@@ -48,6 +48,4 @@ public interface WebHook extends Entity, Serializable {
     void setDownloadTarget(String key);
 
 
-
-
 }

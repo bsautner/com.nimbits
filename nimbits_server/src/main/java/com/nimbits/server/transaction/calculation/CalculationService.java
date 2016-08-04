@@ -24,7 +24,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.server.transaction.BaseProcessor;
 
 
-public interface CalculationService  extends BaseProcessor {
+public interface CalculationService extends BaseProcessor {
 
-    Optional<Value> solveEquation( User user, Calculation calculation, Entity point, Value value);
+    Optional<Value> solveEquation(User user, Calculation calculation, Entity point, Value value);
 }

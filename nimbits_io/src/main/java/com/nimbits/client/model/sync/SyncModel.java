@@ -18,12 +18,10 @@ package com.nimbits.client.model.sync;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
-
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.trigger.Trigger;
 import com.nimbits.client.model.trigger.TriggerModel;
 
 
@@ -35,7 +33,7 @@ public class SyncModel extends TriggerModel implements Sync {
     private String accessKey;
 
     public SyncModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String target, String trigger, boolean enabled, String targetInstance, String accessKey) {
-        super(id, name, description, entityType,  parent, owner, target, trigger, enabled);
+        super(id, name, description, entityType, parent, owner, target, trigger, enabled);
         this.targetInstance = targetInstance;
         this.accessKey = accessKey;
     }
@@ -56,15 +54,13 @@ public class SyncModel extends TriggerModel implements Sync {
     }
 
 
-    public static class Builder extends TriggerBuilder  {
+    public static class Builder extends TriggerBuilder {
 
         private final EntityType type = EntityType.sync;
 
 
         private String targetInstance;
         private String accessKey;
-
-
 
 
         public Builder targetInstance(String targetInstance) {
@@ -82,7 +78,6 @@ public class SyncModel extends TriggerModel implements Sync {
             this.accessKey = accessKey;
             return this;
         }
-
 
 
         @Override
@@ -109,7 +104,6 @@ public class SyncModel extends TriggerModel implements Sync {
         }
 
 
-
         @Override
         public Builder enabled(boolean v) {
             this.enabled = v;
@@ -126,7 +120,7 @@ public class SyncModel extends TriggerModel implements Sync {
             this.enabled = true;
 
 
-            return new SyncModel(id, name, description, type,  parent, owner, target,
+            return new SyncModel(id, name, description, type, parent, owner, target,
                     trigger, enabled, targetInstance, accessKey);
         }
 
@@ -136,8 +130,6 @@ public class SyncModel extends TriggerModel implements Sync {
             this.parent = parent;
             return this;
         }
-
-
 
 
         public Builder init(Sync c) {
@@ -158,21 +150,25 @@ public class SyncModel extends TriggerModel implements Sync {
             this.description = description;
             return this;
         }
-  @Override
+
+        @Override
         public Builder alertType(int alertType) {
             this.alertType = alertType;
             return this;
         }
+
         @Override
         public Builder owner(String owner) {
             this.owner = owner;
             return this;
         }
+
         @Override
         public Builder readOnly(boolean readOnly) {
             this.readOnly = readOnly;
             return this;
         }
+
         @Override
         public Builder id(String id) {
             this.id = id;

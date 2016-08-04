@@ -19,7 +19,6 @@ package com.nimbits.client.model.user;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
-
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
@@ -30,7 +29,6 @@ import java.io.Serializable;
 
 
 public class UserModel extends EntityModel implements Serializable, User {
-
 
 
     @Expose
@@ -68,7 +66,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     protected UserModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String emailAddress,
                         Boolean isAdmin, String token, String password, String passwordSalt, String source, LoginInfo loginInfo, String passwordResetToken,
                         Long passwordResetTokenTimestamp) {
-        super(id, name, description, entityType,  parent, owner);
+        super(id, name, description, entityType, parent, owner);
         this.emailAddress = emailAddress;
         this.isAdmin = isAdmin;
         this.token = token;
@@ -274,8 +272,8 @@ public class UserModel extends EntityModel implements Serializable, User {
             }
 
 
-            return new UserModel(id, name, description, type ,  parent, owner,
-                    emailAddress, isAdmin, token, password, passwordSalt, source, loginInfo, passwordResetToken, passwordResetTimestamp  );
+            return new UserModel(id, name, description, type, parent, owner,
+                    emailAddress, isAdmin, token, password, passwordSalt, source, loginInfo, passwordResetToken, passwordResetTimestamp);
         }
 
         @Override
@@ -284,8 +282,6 @@ public class UserModel extends EntityModel implements Serializable, User {
             this.parent = parent;
             return this;
         }
-
-
 
 
         public Builder init(User u) {
@@ -314,21 +310,25 @@ public class UserModel extends EntityModel implements Serializable, User {
             this.description = description;
             return this;
         }
-  @Override
+
+        @Override
         public Builder alertType(int alertType) {
             this.alertType = alertType;
             return this;
         }
+
         @Override
         public Builder owner(String owner) {
             this.owner = owner;
             return this;
         }
+
         @Override
         public Builder readOnly(boolean readOnly) {
             this.readOnly = readOnly;
             return this;
         }
+
         @Override
         public Builder id(String id) {
             this.id = id;

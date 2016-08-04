@@ -44,7 +44,7 @@ public class DataProcessor {
     public boolean ignoreByFilter(final Point point, final Value pv, final Value v) {
 
 
-        if (v.getData() != null && ! v.getData().equals(pv.getData())) {
+        if (v.getData() != null && !v.getData().equals(pv.getData())) {
             return false;
         }
 
@@ -69,7 +69,7 @@ public class DataProcessor {
 
                 case percentageHysteresis:
                     if (point.getFilterValue() > 0) {
-                        final double p = current* point.getFilterValue() / 100;
+                        final double p = current * point.getFilterValue() / 100;
                         return v.getDoubleValue() <= current + p
                                 && v.getDoubleValue() >= current - p;
 

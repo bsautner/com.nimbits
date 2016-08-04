@@ -86,16 +86,16 @@ public class CalculationPanel extends BasePanel {
         }
 
 
-        final EntityCombo targetCombo = new EntityCombo(EntityType.point, targetKey,  MESSAGE_SELECT_POINT);
+        final EntityCombo targetCombo = new EntityCombo(EntityType.point, targetKey, MESSAGE_SELECT_POINT);
         targetCombo.setFieldLabel("Target");
 
         final EntityCombo xCombo = new EntityCombo(EntityType.point, xc, MESSAGE_SELECT_POINT);
         xCombo.setFieldLabel("x var");
 
-        final EntityCombo yCombo = new EntityCombo(EntityType.point, yc,  MESSAGE_SELECT_POINT);
+        final EntityCombo yCombo = new EntityCombo(EntityType.point, yc, MESSAGE_SELECT_POINT);
         yCombo.setFieldLabel("y var");
 
-        final EntityCombo zCombo = new EntityCombo(EntityType.point, zc,  MESSAGE_SELECT_POINT);
+        final EntityCombo zCombo = new EntityCombo(EntityType.point, zc, MESSAGE_SELECT_POINT);
         zCombo.setFieldLabel("z var");
 
         enabled.setBoxLabel("Enabled");
@@ -140,8 +140,6 @@ public class CalculationPanel extends BasePanel {
         CalculationModel.Builder builder = new CalculationModel.Builder();
         if (entity.getEntityType().equals(EntityType.calculation)) {
             builder.init((Calculation) entity);
-
-
 
 
         }

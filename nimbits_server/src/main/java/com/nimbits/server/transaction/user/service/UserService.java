@@ -81,7 +81,7 @@ public class UserService {
                 if (basic.equalsIgnoreCase("Basic")) {
                     try {
                         // String credentials = new String(Base64.decodeBase64(st.nextToken()), "UTF-8");
-                        String credentials =  st.nextToken();
+                        String credentials = st.nextToken();
 
                         int p = credentials.indexOf(":");
                         if (p != -1) {
@@ -104,7 +104,7 @@ public class UserService {
         return Optional.absent();
     }
 
-   @Deprecated
+    @Deprecated
     public User getHttpRequestUser(final HttpServletRequest req) {
         Optional<Credentials> credentials = credentialsWithBasicAuthentication(req);
 
@@ -122,11 +122,8 @@ public class UserService {
         }
 
         if (email == null) {
-            email = getEmailFromLoggedInUser( req);
+            email = getEmailFromLoggedInUser(req);
         }
-
-
-
 
 
         if (email != null) {
@@ -138,16 +135,16 @@ public class UserService {
             Optional<User> result = entityDao.getUser(email.getValue());
 
 
-            if (! result.isPresent()) {
+            if (!result.isPresent()) {
 
 
-                return createUserIfNonexistantButAuthenticated(  email, credentials);
+                return createUserIfNonexistantButAuthenticated(email, credentials);
 
 
             } else {
                 user = result.get();
                 if (credentials.isPresent()) {
-                    if (! validatePassword ( user, credentials.get().getPassword())) {
+                    if (!validatePassword(user, credentials.get().getPassword())) {
                         throw new SecurityException("Invalid Password");
                     }
                 }
@@ -164,7 +161,7 @@ public class UserService {
 
     }
 
-    private User createUserIfNonexistantButAuthenticated( EmailAddress email, Optional<Credentials> credentials) {
+    private User createUserIfNonexistantButAuthenticated(EmailAddress email, Optional<Credentials> credentials) {
         User user;
 
         String password;
@@ -172,14 +169,13 @@ public class UserService {
         if (credentials.isPresent()) {
             password = credentials.get().getPassword();
             source = UserSource.google;
-        }
-        else {
+        } else {
             password = UUID.randomUUID().toString();
             source = UserSource.local;
         }
 
 
-        user = createUserRecord( email, password, source);
+        user = createUserRecord(email, password, source);
 
         return user;
 
@@ -196,7 +192,7 @@ public class UserService {
     }
 
 
-    public User createUserRecord( final EmailAddress internetAddress, String password, UserSource source) {
+    public User createUserRecord(final EmailAddress internetAddress, String password, UserSource source) {
         final EntityName name = CommonFactory.createName(internetAddress.getValue(), EntityType.user);
         String passwordSalt = RandomStringUtils.randomAscii(20);
         String cryptPassword = DigestUtils.sha512Hex(password + passwordSalt);
@@ -205,7 +201,7 @@ public class UserService {
         }
 
 
-        boolean isFirst = ! userDao.usersExist();
+        boolean isFirst = !userDao.usersExist();
 
         final User newUser = new UserModel.Builder()
                 .name(name)
@@ -246,20 +242,19 @@ public class UserService {
         }
     }
 
-    public Optional<User>  getUserByKey(final String key) {
+    public Optional<User> getUserByKey(final String key) {
 
         Optional<Entity> optional = entityDao.getEntity(getAdmin(), key, EntityType.user);
         if (optional.isPresent()) {
-            return Optional.of((User)optional.get());
-        }
-        else {
+            return Optional.of((User) optional.get());
+        } else {
             return Optional.absent();
         }
 
 
     }
 
-    public boolean validatePassword(  User user, String password) {
+    public boolean validatePassword(User user, String password) {
 
         String storedEncodedPassword = user.getPassword();
         String salt = user.getPasswordSalt();
@@ -276,7 +271,7 @@ public class UserService {
         Optional<User> optional = entityDao.getUser(email);
         if (optional.isPresent()) {
             User user = optional.get();
-            if (validatePassword( user, token)) {
+            if (validatePassword(user, token)) {
                 return loginUser(request, email, user);
             } else {
                 throw new SecurityException("Invalid user name or password");
@@ -287,7 +282,7 @@ public class UserService {
     }
 
     private User loginUser(HttpServletRequest request, String email, User user) {
-        LoginInfo loginInfo = UserModelFactory.createLoginInfo("", "", UserStatus.newUser );
+        LoginInfo loginInfo = UserModelFactory.createLoginInfo("", "", UserStatus.newUser);
         user.setLoginInfo(loginInfo);
         String authToken = startSession(request, email);
         user.setToken(authToken);
@@ -327,7 +322,6 @@ public class UserService {
     }
 
 
-
     private EmailAddress getEmailFromLoggedInUser(HttpServletRequest request) {
 
         List<EmailAddress> emailSample = authService.getCurrentUser(request);
@@ -346,9 +340,6 @@ public class UserService {
     }
 
 
-
-
-
     protected EntityType getEntityType(HttpServletRequest req) {
         EntityType entityType = null;
         String type = req.getParameter(Parameters.type.getText());
@@ -362,8 +353,6 @@ public class UserService {
         }
         return entityType;
     }
-
-
 
 
 }

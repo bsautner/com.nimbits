@@ -21,7 +21,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 
-public enum DataChannel  implements Serializable {
+public enum DataChannel implements Serializable {
     none(0), number(1), data(2), meta(3), timestamp(4), gps(5), object(6);
 
     private static final Map<Integer, DataChannel> lookup = new HashMap<Integer, DataChannel>(5);

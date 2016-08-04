@@ -16,7 +16,9 @@
 
 package com.nimbits.server.gson.serializer;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSerializationContext;
+import com.google.gson.JsonSerializer;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.server.gson.GsonFactory;
 
@@ -27,7 +29,7 @@ public class EntitySerializer implements JsonSerializer<Entity> {
 
     @Override
     public JsonElement serialize(final Entity src, final Type type, final JsonSerializationContext jsonSerializationContext) {
-       return GsonFactory.getInstance(true).toJsonTree(src);
+        return GsonFactory.getInstance(true).toJsonTree(src);
         //return new JsonPrimitive(j);
     }
 }

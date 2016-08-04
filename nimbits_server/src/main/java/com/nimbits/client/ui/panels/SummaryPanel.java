@@ -136,7 +136,7 @@ public class SummaryPanel extends BasePanel {
         final ComboBox<SummaryTypeOption> typeCombo = summaryTypeOptionComboBox("Summary Type", type);
 
 
-        final EntityCombo targetCombo = new EntityCombo(EntityType.point, target,  MESSAGE_SELECT_POINT);
+        final EntityCombo targetCombo = new EntityCombo(EntityType.point, target, MESSAGE_SELECT_POINT);
         targetCombo.setFieldLabel("Target");
 
         submit.addSelectionListener(new SubmitEventSelectionListener(typeCombo, spinnerField, targetCombo, name, enabled));
@@ -267,8 +267,6 @@ public class SummaryPanel extends BasePanel {
 
 
                             .create();
-
-
 
 
                     if (update != null) {

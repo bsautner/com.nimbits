@@ -46,7 +46,6 @@ public class SummaryModel extends TriggerModel implements Summary {
     }
 
 
-
     @SuppressWarnings("unused")
     private SummaryModel() {
     }
@@ -135,6 +134,7 @@ public class SummaryModel extends TriggerModel implements Summary {
             this.target = v.getId();
             return this;
         }
+
         @Override
         public Builder trigger(Entity v) {
             this.trigger = v.getId();
@@ -157,7 +157,7 @@ public class SummaryModel extends TriggerModel implements Summary {
             this.enabled = true;
 
             return new SummaryModel(id, name, description, type, parent, owner, target,
-                    trigger, enabled,  summaryType.getCode(), summaryIntervalMs, lastProcessed);
+                    trigger, enabled, summaryType.getCode(), summaryIntervalMs, lastProcessed);
         }
 
         @Override
@@ -166,7 +166,6 @@ public class SummaryModel extends TriggerModel implements Summary {
             this.parent = parent;
             return this;
         }
-
 
 
         public Builder init(Summary c) {
@@ -196,16 +195,19 @@ public class SummaryModel extends TriggerModel implements Summary {
             this.alertType = alertType;
             return this;
         }
+
         @Override
         public Builder owner(String owner) {
             this.owner = owner;
             return this;
         }
+
         @Override
         public Builder readOnly(boolean readOnly) {
             this.readOnly = readOnly;
             return this;
         }
+
         @Override
         public Builder id(String id) {
             this.id = id;

@@ -17,7 +17,6 @@
 package com.nimbits.server.transaction.entity;
 
 
-import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
@@ -37,7 +36,6 @@ public class EntityService {
     private static final String POINT_INITIALISED = "POINT_INITIALISED";
 
 
-
     private final EntityDao entityDao;
 
 
@@ -48,17 +46,15 @@ public class EntityService {
 
     }
 
-    public void deleteEntity(final User user,  Entity entity) {
+    public void deleteEntity(final User user, Entity entity) {
 
         List<Entity> children = entityDao.getChildren(user, Collections.singletonList(entity));
-
 
 
         for (Entity c : children) {
             deleteEntity(user, c);
         }
         entityDao.deleteEntity(user, entity, entity.getEntityType());
-
 
 
     }
@@ -71,12 +67,10 @@ public class EntityService {
     }
 
 
-    public Entity  addUpdateEntity(final ValueService valueService, final User user, Entity entity) {
+    public Entity addUpdateEntity(final ValueService valueService, final User user, Entity entity) {
 
 
-
-
-        Entity created =  entityDao.addUpdateEntity(user, entity);
+        Entity created = entityDao.addUpdateEntity(user, entity);
         switch (entity.getEntityType()) {
 
             case point:

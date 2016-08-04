@@ -108,10 +108,10 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
         String u = req.getParameter(Parameters.user.getText());
         String j = req.getParameter(Parameters.json.getText());
         String id = req.getParameter(Parameters.id.getText());
-        Gson gson =  GsonFactory.getInstance(true);
+        Gson gson = GsonFactory.getInstance(true);
 
 
-        User user  = userService.getUserByKey(u).get();
+        User user = userService.getUserByKey(u).get();
         Value value = gson.fromJson(j, Value.class);
 
 
@@ -125,13 +125,10 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
         }
 
 
-
-
-
     }
 
     @Override
-    public void process(final User user, final Point point, Value value) throws ValueException  {
+    public void process(final User user, final Point point, Value value) throws ValueException {
 
         final boolean ignored = false;
         final boolean ignoredByDate = dataProcessor.ignoreDataByExpirationDate(point, value, ignored);
@@ -159,21 +156,21 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
                     valueService.recordValues(user, point, Collections.singletonList(value));
                     break;
                 case cumulative:
-                    previousValue = valueService.getCurrentValue( point);
+                    previousValue = valueService.getCurrentValue(point);
 
 
                     if (previousValue.getTimestamp().getTime() < value.getTimestamp().getTime()) {
-                        value= new Value.Builder().initValue(value).doubleValue(value.getDoubleValue() + previousValue.getDoubleValue()).create();
+                        value = new Value.Builder().initValue(value).doubleValue(value.getDoubleValue() + previousValue.getDoubleValue()).create();
                         valueService.recordValues(user, point, Collections.singletonList(value));
                     }
                     break;
                 case timespan:
-                    valueService.recordValues( user, point, Collections.singletonList(value));
+                    valueService.recordValues(user, point, Collections.singletonList(value));
                     break;
                 case flag:
                     Integer whole = BigDecimal.valueOf(value.getDoubleValue()).intValue();
                     double d = whole != 0 ? 1.0 : 0.0;
-                    value =  new Value.Builder().initValue(value).doubleValue(d).create();
+                    value = new Value.Builder().initValue(value).doubleValue(d).create();
                     valueService.recordValues(user, point, Collections.singletonList(value));
                     break;
                 case high:
@@ -188,7 +185,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
                     previousValue = valueService.getCurrentValue(point);
 
                     if (value.getDoubleValue() < previousValue.getDoubleValue()) {
-                        valueService.recordValues( user, point, Collections.singletonList(value));
+                        valueService.recordValues(user, point, Collections.singletonList(value));
                     }
 
                     break;
@@ -199,9 +196,8 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
 
 
             final AlertType t = valueService.getAlertType(point, value);
-            final Value v =  new Value.Builder().initValue(value).timestamp(new Date()).alertType(t).create();
+            final Value v = new Value.Builder().initValue(value).timestamp(new Date()).alertType(t).create();
             completeRequest(user, point, v);
-
 
 
         } else {
@@ -209,10 +205,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
         }
 
 
-
     }
-
-
 
 
     private void completeRequest(User u,
@@ -264,7 +257,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
                     connection.setRequestMethod("POST");
 
                     OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-                    Gson gson =  GsonFactory.getInstance(true);
+                    Gson gson = GsonFactory.getInstance(true);
                     String json = gson.toJson(value);
                     String userJson = gson.toJson(u);
                     String pointJson = gson.toJson(point);

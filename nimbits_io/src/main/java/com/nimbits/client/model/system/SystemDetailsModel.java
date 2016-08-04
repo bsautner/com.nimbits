@@ -26,7 +26,6 @@ public class SystemDetailsModel implements SystemDetails, Serializable {
     private String version;
 
 
-
     public SystemDetailsModel(String version) {
         this.version = version;
     }

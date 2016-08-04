@@ -53,7 +53,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
 
     private static final String SCHEDULE_TIMER = "Schedule Timer";
     private static final String CREATE_CALCULATION = "Create Calculation";
-    private static final String CREATE_WEBHOOK= "Create Web Hook";
+    private static final String CREATE_WEBHOOK = "Create Web Hook";
     private static final String SYNCHRONIZE_POINTS = "Synchronize Points";
     private static final String EDIT_PROPERTIES = "Edit Properties";
     private static final String COMPUTE_STATISTICS = "Compute Statistics";
@@ -430,7 +430,6 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
     }
 
 
-
     private MenuItem scheduleContext() {
         final MenuItem retObj = new MenuItem();
 
@@ -646,7 +645,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
             currentModel = (TreeModel) selectedModel;
             final Entity entity = currentModel.getBaseEntity();
 
-            if  (entity.getEntityType().equals(EntityType.point) || entity.getEntityType().equals(EntityType.user)) {
+            if (entity.getEntityType().equals(EntityType.point) || entity.getEntityType().equals(EntityType.user)) {
                 showSyncPanel(entity);
             }
 
@@ -788,7 +787,6 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
         }
 
 
-
     }
 
     private class DeleteMessageBoxEventListener implements Listener<MessageBoxEvent> {
@@ -820,7 +818,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
             if (currentModel.getEntityType().equals(EntityType.point) && !currentModel.isReadOnly()) {
                 box = MessageBox.prompt(
                         MESSAGE_NEW_POINT,
-                       MESSAGE_NEW_POINT_PROMPT);
+                        MESSAGE_NEW_POINT_PROMPT);
                 box.addCallback(copyPointListener);
             } else {
                 box = MessageBox.alert("Not supported", "Sorry, for the moment you can only copy your data points", null);

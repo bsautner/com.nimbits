@@ -174,15 +174,9 @@ public class SocketPanel extends BasePanel {
                     builder.init(socket);
 
 
-
                 } else {
 
                     builder.parent(entity.getId()).owner(entity.getOwner());
-
-
-
-
-
 
 
                 }

@@ -4,11 +4,9 @@ import com.google.common.base.Optional;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.orm.ValueStore;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.util.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +15,6 @@ import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,11 +52,9 @@ public class ValueDao {
             final List<ValueStore> result = (List<ValueStore>) q1.execute(entity.getId());
             if (result.isEmpty()) {
                 return new Value.Builder().create();
-            }
-            else {
+            } else {
                 return new Value.Builder().initValue(result.get(0).getValue()).create();
             }
-
 
 
         } finally {
@@ -68,7 +63,7 @@ public class ValueDao {
     }
 
 
-    public void setSnapshot(Entity entity, Value value)  {
+    public void setSnapshot(Entity entity, Value value) {
 
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -78,11 +73,9 @@ public class ValueDao {
 
             pm.makePersistent(valueStore);
 
-        }
-        finally {
+        } finally {
             pm.close();
         }
-
 
 
     }
@@ -91,32 +84,29 @@ public class ValueDao {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
         try {
-            final Query<ValueStore> q1  = pm.newQuery(ValueStore.class);
+            final Query<ValueStore> q1 = pm.newQuery(ValueStore.class);
             final List<ValueStore> result;
             final List<Value> retList = new ArrayList<>();
 
-            if (timespan.isPresent() && ! range.isPresent()) {
+            if (timespan.isPresent() && !range.isPresent()) {
                 q1.setFilter("entityId==i && timestamp >= sd && timestamp <= ed");
                 q1.declareParameters("String i, Long sd, Long ed");
                 q1.orderBy("timestamp desc");
                 result = (List<ValueStore>) q1.execute(entity.getId(), timespan.get().lowerEndpoint(), timespan.get().upperEndpoint());
-            }
-            else if (! timespan.isPresent() && range.isPresent()) {
+            } else if (!timespan.isPresent() && range.isPresent()) {
                 q1.setFilter("entityId==i");
                 q1.declareParameters("String i");
                 q1.orderBy("timestamp desc");
                 q1.setRange(range.get().lowerEndpoint(), range.get().upperEndpoint());
                 result = (List<ValueStore>) q1.execute(entity.getId());
-            }
-            else if (timespan.isPresent() && range.isPresent()) {
+            } else if (timespan.isPresent() && range.isPresent()) {
                 q1.setFilter("entityId==i && timestamp >= sd && timestamp <= ed");
                 q1.declareParameters("String i, Long sd, Long ed");
                 q1.orderBy("timestamp desc");
                 q1.setRange(range.get().lowerEndpoint(), range.get().upperEndpoint());
                 result = (List<ValueStore>) q1.execute(entity.getId(), timespan.get().lowerEndpoint(), timespan.get().upperEndpoint());
 
-            }
-            else {
+            } else {
                 q1.setFilter("entityId==i");
                 q1.declareParameters("String i");
                 q1.orderBy("timestamp desc");
@@ -139,8 +129,7 @@ public class ValueDao {
 
 
                 return ImmutableList.copyOf(retList);
-            }
-            else {
+            } else {
                 return Collections.emptyList();
             }
 
@@ -158,7 +147,7 @@ public class ValueDao {
                 stores.add(new ValueStore(entity.getId(), value));
             }
             pm.makePersistentAll(stores);
-        }finally {
+        } finally {
             pm.close();
         }
     }
@@ -178,7 +167,6 @@ public class ValueDao {
             pm.deletePersistentAll(result);
 
 
-
         } finally {
             pm.close();
         }
@@ -187,18 +175,16 @@ public class ValueDao {
 
     private boolean containsMask(String metadata, String mask) {
 
-         if (! StringUtils.isEmpty(mask) && mask.equals(metadata) ) {
+        if (!StringUtils.isEmpty(mask) && mask.equals(metadata)) {
 
             return true;
-        }
-        else if (! StringUtils.isEmpty(mask) && ! StringUtils.isEmpty(metadata)) {
+        } else if (!StringUtils.isEmpty(mask) && !StringUtils.isEmpty(metadata)) {
             try {
                 Pattern p = Pattern.compile(mask);
 
                 Matcher m = p.matcher(metadata);
                 return m.find();
-            }
-            catch (PatternSyntaxException ex) {
+            } catch (PatternSyntaxException ex) {
 
                 return false;
             }

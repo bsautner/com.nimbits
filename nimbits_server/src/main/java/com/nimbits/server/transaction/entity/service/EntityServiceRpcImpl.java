@@ -61,15 +61,15 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
 
     @Override
     public Entity addUpdateEntityRpc(final Entity entity) throws ClassNotFoundException {
-        User user = userService.getHttpRequestUser( getThreadLocalRequest());
+        User user = userService.getHttpRequestUser(getThreadLocalRequest());
         return entityDao.addUpdateEntity(user, entity);
 
 
     }
 
     @Override
-    public void deleteEntityRpc(final  Entity entity) {
-        User u = userService.getHttpRequestUser( getThreadLocalRequest());
+    public void deleteEntityRpc(final Entity entity) {
+        User u = userService.getHttpRequestUser(getThreadLocalRequest());
         entityService.deleteEntity(u, entity);
         if (entity.getEntityType().equals(EntityType.point)) {
             Point point = (Point) entity;
@@ -85,12 +85,12 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
 
     @Override
     public Map<String, Entity> getEntityMapRpc(final int type, final int limit) {
-        User u = userService.getHttpRequestUser(  getThreadLocalRequest());
+        User u = userService.getHttpRequestUser(getThreadLocalRequest());
         return entityDao.getEntityMap(u, EntityType.get(type), limit);
     }
 
     @Override
-    public  Entity copyEntity(final Entity originalEntity, final EntityName newName) {
+    public Entity copyEntity(final Entity originalEntity, final EntityName newName) {
 
         switch (originalEntity.getEntityType()) {
 
@@ -101,7 +101,7 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
                 p.setName(newName);
                 p.setId(null);
 
-                User u = userService.getHttpRequestUser(  getThreadLocalRequest());
+                User u = userService.getHttpRequestUser(getThreadLocalRequest());
                 return entityDao.addUpdateEntity(u, p);
             //return PointServiceFactory.getInstance().copyPoint(getUser(), originalEntity, newName);
 
@@ -122,7 +122,7 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
     }
 
     @Override
-    public  Entity getEntityByKeyRpc(final User user, final String entityId, final EntityType type) {
+    public Entity getEntityByKeyRpc(final User user, final String entityId, final EntityType type) {
         return entityDao.getEntity(user, entityId, type).get();
     }
 }

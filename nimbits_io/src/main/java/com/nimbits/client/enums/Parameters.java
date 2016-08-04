@@ -156,7 +156,7 @@ public enum Parameters {
         private static final String PARAM_CLIENT = "client";
         private static final String PARAM_CODE = "code";
         private static final String PARAM_COUNT = "count";
-        private static final String PARAM_START= "start";
+        private static final String PARAM_START = "start";
         private static final String PARAM_END = "end";
         private static final String PARAM_MASK = "mask";
         private static final String PARAM_DIAGRAM = "diagram";

@@ -26,7 +26,6 @@ import javax.jdo.annotations.Persistent;
 import java.util.Date;
 
 
-
 @SuppressWarnings("unused")
 @PersistenceCapable
 public class SummaryEntity extends TriggerEntity implements Summary {

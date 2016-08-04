@@ -30,10 +30,9 @@ import com.nimbits.client.service.user.UserServiceRpc;
 import com.nimbits.client.service.user.UserServiceRpcException;
 import com.nimbits.server.auth.AuthService;
 import com.nimbits.server.communication.mail.EmailService;
-import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.entity.EntityService;
 import com.nimbits.server.transaction.user.dao.UserDao;
-import com.nimbits.server.transaction.value.service.ValueService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -42,8 +41,6 @@ import javax.servlet.ServletException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
 public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServiceRpc {
@@ -69,7 +66,7 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
 
         User retObj = null;
         EmailAddress internetAddress = null;
-        boolean isFirst = ! userDao.usersExist();
+        boolean isFirst = !userDao.usersExist();
         UserStatus userStatus = UserStatus.unknown;
 
 
@@ -78,8 +75,7 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
         }
 
 
-
-        List<EmailAddress> emailAddresses = authService.getCurrentUser( getThreadLocalRequest());
+        List<EmailAddress> emailAddresses = authService.getCurrentUser(getThreadLocalRequest());
 
         if (!emailAddresses.isEmpty()) {
 
@@ -95,7 +91,7 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
 
             log.info("getting user with address: " + internetAddress.getValue());
 
-            if (! userExists(internetAddress.getValue())) {
+            if (!userExists(internetAddress.getValue())) {
                 log.info("user not found, creating record");
                 retObj = userService.createUserRecord(internetAddress, UUID.randomUUID().toString(), UserSource.google);
 
@@ -120,8 +116,6 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
                     LoginInfo loginInfo = UserModelFactory.createLoginInfo(authService.createLoginURL(requestUri),
                             authService.createLogoutURL(requestUri), userStatus);
                     retObj.setLoginInfo(loginInfo);
-
-
 
 
                 }
@@ -177,8 +171,7 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
         try {
             user = userDao.getUserByEmail(email);
             return user.isPresent();
-        }
-        catch ( Exception ignored) {
+        } catch (Exception ignored) {
             return false;
         }
 
@@ -191,7 +184,7 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
 
 
         try {
-            if (! userExists(email)) {
+            if (!userExists(email)) {
 
                 user = userService.createUserRecord(emailAddress, password, UserSource.local);
                 LoginInfo loginInfo = UserModelFactory.createLoginInfo("", Const.WEBSITE, UserStatus.newUser);
@@ -235,8 +228,7 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
             } else {
                 throw new UserServiceRpcException("Invalid Token or not a nimbits user");
             }
-        }
-        else {
+        } else {
             throw new UserServiceRpcException("User not found");
         }
 

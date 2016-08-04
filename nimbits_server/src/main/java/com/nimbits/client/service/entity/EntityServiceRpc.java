@@ -34,13 +34,13 @@ public interface EntityServiceRpc extends RemoteService {
 
     Entity addUpdateEntityRpc(final Entity entity) throws Exception;
 
-    void deleteEntityRpc(final  Entity  entity) throws Exception;
+    void deleteEntityRpc(final Entity entity) throws Exception;
 
     Map<String, Entity> getEntityMapRpc(final int type, final int limit);
 
     Entity copyEntity(final Entity originalEntity, final EntityName newName);
 
-     Entity getEntityByKeyRpc(final User u, final String key, final EntityType type);
+    Entity getEntityByKeyRpc(final User u, final String key, final EntityType type);
 
     List<Entity> getEntitiesRpc(User user) throws Exception;
 

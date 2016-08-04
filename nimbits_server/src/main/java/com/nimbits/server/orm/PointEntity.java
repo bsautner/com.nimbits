@@ -26,7 +26,6 @@ import com.nimbits.client.model.value.Value;
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import java.math.BigDecimal;
 import java.util.List;
 
 @PersistenceCapable
@@ -86,7 +85,6 @@ public class PointEntity extends EntityStore implements Point {
 
     @Persistent
     private Integer precision;
-
 
 
     @Override

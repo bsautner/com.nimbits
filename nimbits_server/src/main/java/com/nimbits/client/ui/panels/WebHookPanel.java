@@ -96,7 +96,7 @@ public class WebHookPanel extends BasePanel {
 
             entityCombo = new EntityCombo(EntityType.point, hook.getDownloadTarget(), GET_RESULTS_POINT);
             entityCombo.setFieldLabel(GET_RESULTS_POINT);
-          //  entityCombo.setVisible(hook.equals(HttpMethod.GET));
+            //  entityCombo.setVisible(hook.equals(HttpMethod.GET));
 
 
             //bodyChannelCombo.setVisible(hook.equals(HttpMethod.POST));
@@ -110,7 +110,7 @@ public class WebHookPanel extends BasePanel {
             enabled.setValue(true);
             entityCombo = new EntityCombo(EntityType.point, "", GET_RESULTS_POINT);
             entityCombo.setFieldLabel(GET_RESULTS_POINT);
-           // entityCombo.setVisible(false);
+            // entityCombo.setVisible(false);
 
         }
 
@@ -122,7 +122,7 @@ public class WebHookPanel extends BasePanel {
         methodCombo.addSelectionChangedListener(new SelectionChangedListener<HttpMethodOption>() {
             @Override
             public void selectionChanged(SelectionChangedEvent<HttpMethodOption> selectionChangedEvent) {
-             //   entityCombo.setVisible(selectionChangedEvent.getSelectedItem().getMethod().equals(HttpMethod.GET));
+                //   entityCombo.setVisible(selectionChangedEvent.getSelectedItem().getMethod().equals(HttpMethod.GET));
 
             }
         });
@@ -332,7 +332,7 @@ public class WebHookPanel extends BasePanel {
                                   ComboBox<DataChannelOption> bodyChannelComboBox,
                                   CheckBox enabled, String downloadTarget) {
         return new WebHookModel.Builder()
-        .name(name).parent(entity.getId()).method(methodCombo.getValue().getMethod()).pathChannel(pathChannelComboBox.getValue().getMethod())
+                .name(name).parent(entity.getId()).method(methodCombo.getValue().getMethod()).pathChannel(pathChannelComboBox.getValue().getMethod())
                 .bodyChannel(bodyChannelComboBox.getValue().getMethod()).url(url.getUrl()).downloadTarget(downloadTarget).enabled(enabled.getValue()).create();
 
     }

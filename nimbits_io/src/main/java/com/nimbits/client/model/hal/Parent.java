@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Benjamin Sautner
  *
@@ -23,7 +22,7 @@ import javax.annotation.Generated;
 import java.io.Serializable;
 
 @Generated("org.jsonschema2pojo")
-public class Parent  implements Serializable {
+public class Parent implements Serializable {
 
     @Expose
     private String href;
@@ -37,23 +36,18 @@ public class Parent  implements Serializable {
     }
 
     /**
-     * 
-     * @return
-     *     The href
+     * @return The href
      */
     public String getHref() {
         return href;
     }
 
     /**
-     * 
-     * @param href
-     *     The href
+     * @param href The href
      */
     public void setHref(String href) {
         this.href = href;
     }
-
 
 
 }

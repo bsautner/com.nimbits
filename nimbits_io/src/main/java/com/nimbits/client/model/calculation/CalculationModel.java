@@ -18,12 +18,10 @@ package com.nimbits.client.model.calculation;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
-
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.trigger.Trigger;
 import com.nimbits.client.model.trigger.TriggerModel;
 
 import java.io.Serializable;
@@ -52,7 +50,7 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
     }
 
     protected CalculationModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String target, String trigger, boolean enabled, String formula, String x, String y, String z) {
-        super(id, name, description, entityType,  parent, owner, target, trigger, enabled);
+        super(id, name, description, entityType, parent, owner, target, trigger, enabled);
         this.formula = formula;
         this.x = x;
         this.y = y;
@@ -199,6 +197,7 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
             this.target = v.getId();
             return this;
         }
+
         @Override
         public Builder trigger(Entity v) {
             this.trigger = v.getId();
@@ -221,7 +220,7 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
             this.enabled = true;
 
 
-            return new CalculationModel(id, name, description, type,  parent, owner, target,
+            return new CalculationModel(id, name, description, type, parent, owner, target,
                     trigger, enabled, formula, x, y, z);
         }
 
@@ -259,16 +258,19 @@ public class CalculationModel extends TriggerModel implements Serializable, Calc
             this.alertType = alertType;
             return this;
         }
+
         @Override
         public Builder owner(String owner) {
             this.owner = owner;
             return this;
         }
+
         @Override
         public Builder readOnly(boolean readOnly) {
             this.readOnly = readOnly;
             return this;
         }
+
         @Override
         public Builder id(String id) {
             this.id = id;

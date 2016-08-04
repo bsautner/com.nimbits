@@ -146,7 +146,7 @@ public class LoginRegisterPanel extends AbstractLoginPanel {
                 } else {
                     try {
                         if (recoveryToken == null) {
-                            userService.register(e, p1,  new AsyncCallback<User>() {
+                            userService.register(e, p1, new AsyncCallback<User>() {
                                 @Override
                                 public void onFailure(Throwable throwable) {
                                     FeedbackHelper.showError(throwable);

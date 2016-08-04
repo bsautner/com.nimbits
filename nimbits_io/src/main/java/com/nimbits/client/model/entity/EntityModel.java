@@ -65,7 +65,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
     private String action;
 
 
-
     //HAL
     @SerializedName("_links")
     @Expose
@@ -74,7 +73,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
     @SerializedName("_embedded")
     @Expose
     private Embedded embedded;
-
 
 
     public EntityModel(final String id,
@@ -330,7 +328,7 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
     }
 
 
-    public static abstract class EntityBuilder<T>  {
+    public static abstract class EntityBuilder<T> {
 
         protected EntityName name;
 
@@ -351,13 +349,12 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
         protected String action;
 
 
-
         public EntityBuilder() {
         }
 
         public abstract T parent(String parent);
 
-        public abstract T  name(EntityName name);
+        public abstract T name(EntityName name);
 
         public abstract T description(String description);
 

@@ -20,11 +20,9 @@ package com.nimbits.client.model.point;
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.FilterType;
-
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.value.Value;
@@ -79,8 +77,6 @@ public class PointModel extends EntityModel implements Serializable, Point {
     private boolean idleAlarmSent;
 
 
-
-
     protected PointModel(
 
             final String id,
@@ -107,7 +103,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
             final boolean deltaAlarmOn,
             final int deltaSeconds,
             final int precision) {
-        super(id, name, description, entityType,  parent, owner);
+        super(id, name, description, entityType, parent, owner);
         this.highAlarm = highAlarm;
         this.expire = expire;
         this.unit = unit;
@@ -134,11 +130,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
     private PointModel() {
 
 
-
     }
-
-
-
 
 
     @Override
@@ -381,11 +373,11 @@ public class PointModel extends EntityModel implements Serializable, Point {
         private int precision;
 
 
-
         public Builder name(String v) {
             this.name = CommonFactory.createName(v, type);
             return this;
         }
+
         public Builder highAlarm(double v) {
             this.highAlarm = v;
             return this;
@@ -425,6 +417,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
             this.lowAlarmOn = v;
             return this;
         }
+
         public Builder idleAlarmOn(boolean v) {
             this.idleAlarmOn = v;
             return this;
@@ -468,7 +461,6 @@ public class PointModel extends EntityModel implements Serializable, Point {
         }
 
 
-
         public Builder inferLocation(boolean v) {
             this.inferLocation = v;
             return this;
@@ -497,7 +489,6 @@ public class PointModel extends EntityModel implements Serializable, Point {
         }
 
 
-
         public Point create() {
 
 
@@ -508,8 +499,8 @@ public class PointModel extends EntityModel implements Serializable, Point {
                 filterType = FilterType.none;
             }
 
-            return new PointModel(id, name, description, type,  parent, owner, highAlarm, expire
-                    , unit, lowAlarm, highAlarmOn, lowAlarmOn, idleAlarmOn, idleSeconds, idleAlarmSent, filterType,filterValue, inferLocation,
+            return new PointModel(id, name, description, type, parent, owner, highAlarm, expire
+                    , unit, lowAlarm, highAlarmOn, lowAlarmOn, idleAlarmOn, idleSeconds, idleAlarmSent, filterType, filterValue, inferLocation,
                     pointType, deltaAlarm, deltaAlarmOn, deltaSeconds, precision);
         }
 
@@ -532,21 +523,25 @@ public class PointModel extends EntityModel implements Serializable, Point {
             this.description = description;
             return this;
         }
-  @Override
+
+        @Override
         public Builder alertType(int alertType) {
             this.alertType = alertType;
             return this;
         }
+
         @Override
         public Builder owner(String owner) {
             this.owner = owner;
             return this;
         }
+
         @Override
         public Builder readOnly(boolean readOnly) {
             this.readOnly = readOnly;
             return this;
         }
+
         @Override
         public Builder id(String id) {
             this.id = id;
@@ -558,8 +553,6 @@ public class PointModel extends EntityModel implements Serializable, Point {
             this.action = action;
             return this;
         }
-
-
 
 
     }

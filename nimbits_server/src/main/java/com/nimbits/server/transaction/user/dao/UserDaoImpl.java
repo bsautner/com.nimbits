@@ -26,6 +26,8 @@ import com.nimbits.server.orm.UserEntity;
 import com.nimbits.server.transaction.entity.EntityHelper;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -34,9 +36,10 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
-import java.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 
 
 @Repository
@@ -53,7 +56,6 @@ public class UserDaoImpl implements UserDao {
     public void setPersistenceManagerFactory(PersistenceManagerFactory persistenceManagerFactory) {
         this.persistenceManagerFactory = persistenceManagerFactory;
     }
-
 
 
     @Override
@@ -203,7 +205,7 @@ public class UserDaoImpl implements UserDao {
             if (result.isEmpty()) {
                 throw new SecurityException("User Not Found");
             } else {
-                User user =  result.get(0);
+                User user = result.get(0);
 
                 return Optional.of((User) EntityHelper.createModel(user, user));
 
@@ -216,7 +218,6 @@ public class UserDaoImpl implements UserDao {
             pm.close();
         }
     }
-
 
 
     @Override

@@ -18,7 +18,6 @@ package com.nimbits.client.model.webhook;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
-
 import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
@@ -49,7 +48,7 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
 
 
     protected WebHookModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, int method, String url, boolean enabled, String downloadTarget, int bodyChannel, int pathChannel) {
-        super(id, name, description, entityType,  parent, owner);
+        super(id, name, description, entityType, parent, owner);
         this.method = method;
         this.url = url;
         this.enabled = enabled;
@@ -105,18 +104,22 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
     public UrlContainer getUrl() {
         return UrlContainer.getInstance(url);
     }
+
     @Override
     public boolean isEnabled() {
         return enabled;
     }
+
     @Override
     public void setMethod(HttpMethod method) {
         this.method = method.getCode();
     }
+
     @Override
     public void setUrl(UrlContainer url) {
         this.url = url.getUrl();
     }
+
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -133,8 +136,7 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
     }
 
 
-
-    public static class Builder extends EntityBuilder  {
+    public static class Builder extends EntityBuilder {
 
         private HttpMethod method;
         private DataChannel bodyChannel;
@@ -174,11 +176,11 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
         }
 
 
-
         public Builder downloadTarget(String downloadTarget) {
             this.downloadTarget = downloadTarget;
             return this;
         }
+
         public Builder downloadTarget(Entity downloadTargetEntity) {
             this.downloadTarget = downloadTargetEntity.getId();
             return this;
@@ -200,9 +202,7 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
             }
 
 
-
-
-            return new WebHookModel(id, name, description, EntityType.webhook,  parent, owner, method.getCode(), url.getUrl(), true,
+            return new WebHookModel(id, name, description, EntityType.webhook, parent, owner, method.getCode(), url.getUrl(), true,
                     downloadTarget, bodyChannel.getCode(), pathChannel.getCode());
         }
 
@@ -212,8 +212,6 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
             this.parent = parent;
             return this;
         }
-
-
 
 
         public Builder init(WebHook e) {
@@ -240,21 +238,25 @@ public class WebHookModel extends EntityModel implements Serializable, WebHook {
             this.description = description;
             return this;
         }
-  @Override
+
+        @Override
         public Builder alertType(int alertType) {
             this.alertType = alertType;
             return this;
         }
+
         @Override
         public Builder owner(String owner) {
             this.owner = owner;
             return this;
         }
+
         @Override
         public Builder readOnly(boolean readOnly) {
             this.readOnly = readOnly;
             return this;
         }
+
         @Override
         public Builder id(String id) {
             this.id = id;

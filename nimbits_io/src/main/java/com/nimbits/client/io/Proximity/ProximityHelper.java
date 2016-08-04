@@ -98,11 +98,10 @@ public class ProximityHelper {
                 break;
             }
         }
-        double distance =  (b * A * (sigma - deltaSigma));
+        double distance = (b * A * (sigma - deltaSigma));
         return distance;
 
     }
-
 
 
 }

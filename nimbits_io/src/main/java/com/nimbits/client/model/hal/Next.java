@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Benjamin Sautner
  *
@@ -36,18 +35,14 @@ public class Next implements Serializable {
     }
 
     /**
-     * 
-     * @return
-     *     The href
+     * @return The href
      */
     public String getHref() {
         return href;
     }
 
     /**
-     * 
-     * @param href
-     *     The href
+     * @param href The href
      */
     public void setHref(String href) {
         this.href = href;

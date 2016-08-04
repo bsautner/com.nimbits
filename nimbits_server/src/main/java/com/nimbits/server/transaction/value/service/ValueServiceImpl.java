@@ -52,7 +52,7 @@ public class ValueServiceImpl implements ValueService {
     private final SubscriptionService subscriptionService;
 
     @Autowired
-    public ValueServiceImpl( ValueDao valueDao, EntityDao entityDao, EntityService entityService, SubscriptionService subscriptionService) {
+    public ValueServiceImpl(ValueDao valueDao, EntityDao entityDao, EntityService entityService, SubscriptionService subscriptionService) {
 
         this.valueDao = valueDao;
         this.entityDao = entityDao;
@@ -64,7 +64,7 @@ public class ValueServiceImpl implements ValueService {
     public void process(final User user, final Point p, final Value value) throws ValueException {
         final Calendar c = Calendar.getInstance();
         c.add(Calendar.SECOND, p.getIdleSeconds() * -1);
-       // boolean retVal = false;
+        // boolean retVal = false;
 
         //
         final User u = (User) entityDao.getEntity(user,
@@ -78,7 +78,7 @@ public class ValueServiceImpl implements ValueService {
             entityService.addUpdateEntity(this, u, p);
             // PointServiceFactory.getInstance().updatePoint(u, p);
 
-            subscriptionService.process( u, p,
+            subscriptionService.process(u, p,
                     new Value.Builder().initValue(value).alertType(AlertType.IdleAlert).create()
             );
             //retVal = true;
@@ -89,18 +89,17 @@ public class ValueServiceImpl implements ValueService {
 
 
     @Override
-    public String getChartTable( User user, Entity entity, Optional<Range<Long>> timespan, Optional<Integer> count, Optional<String> mask) {
-        return createChart( user, entity, timespan, count, mask);
+    public String getChartTable(User user, Entity entity, Optional<Range<Long>> timespan, Optional<Integer> count, Optional<String> mask) {
+        return createChart(user, entity, timespan, count, mask);
 
     }
 
     @Override
     public List<Value> getSeries(Entity entity, Optional<Range<Long>> timespan, final Optional<Range<Integer>> range, Optional<String> mask) {
-        List<Value> series = valueDao.getSeries( entity, timespan, range, mask);
+        List<Value> series = valueDao.getSeries(entity, timespan, range, mask);
 
         return setAlertValues((Point) entity, series);
     }
-
 
 
     @Override
@@ -160,7 +159,6 @@ public class ValueServiceImpl implements ValueService {
     }
 
 
-
     @Override
     public Value getSnapshot(Point point) {
         return valueDao.getSnapshot(point);
@@ -185,9 +183,6 @@ public class ValueServiceImpl implements ValueService {
     }
 
 
-
-
-
     @Override
     public Value getCurrentValue(final Entity p) {
 
@@ -199,7 +194,6 @@ public class ValueServiceImpl implements ValueService {
     }
 
 
-
     private String createChart(User user, Entity entity, Optional<Range<Long>> timespan, Optional<Integer> count, Optional<String> mask) {
 
 
@@ -207,14 +201,12 @@ public class ValueServiceImpl implements ValueService {
 
         ChartDTO dto = createChartData(list, timespan, count, mask);
 
-        Gson gson =  GsonFactory.getInstance(true);
+        Gson gson = GsonFactory.getInstance(true);
 
         return gson.toJson(dto);
 
 
     }
-
-
 
 
     private List<Entity> getList(User user, Entity entity) {
@@ -241,10 +233,10 @@ public class ValueServiceImpl implements ValueService {
     }
 
 
-    private ChartDTO createChartData(  List<Entity> points,
-                                       Optional<Range<Long>> timespan,
-                                       Optional<Integer> count,
-                                       Optional<String> mask) {
+    private ChartDTO createChartData(List<Entity> points,
+                                     Optional<Range<Long>> timespan,
+                                     Optional<Integer> count,
+                                     Optional<String> mask) {
         ChartDTO dto = new ChartDTO();
         List<ChartColumnDefinition> cols = new ArrayList<>();
 
@@ -273,14 +265,12 @@ public class ValueServiceImpl implements ValueService {
         Optional<Range<Integer>> range;
         if (count.isPresent()) {
             range = Optional.of(Range.closed(0, count.get()));
-        }
-        else {
+        } else {
             range = Optional.absent();
         }
 
         for (Entity point : points) {
-            List<Value> values  =  getSeries(point, timespan, range, mask);
-
+            List<Value> values = getSeries(point, timespan, range, mask);
 
 
             for (Value value : values) {
@@ -332,7 +322,6 @@ public class ValueServiceImpl implements ValueService {
         dto.setP(1);
         return dto;
     }
-
 
 
     private void addSensorData(Table<Entity, Date, Value> sensorTable, Date timestamp, List<ChartDataColumn> chartDataColumns, Entity point) {

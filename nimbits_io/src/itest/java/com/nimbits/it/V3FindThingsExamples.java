@@ -17,9 +17,8 @@ import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
-public class V3FindThingsExamples extends NimbitsTest{
+public class V3FindThingsExamples extends NimbitsTest {
 
 
     @Before
@@ -42,18 +41,17 @@ public class V3FindThingsExamples extends NimbitsTest{
                 .lowAlarmOn(true)
                 .lowAlarm(0.0)
                 .create();
-        Entity newPoint =  nimbits.addPoint(user, point);
+        Entity newPoint = nimbits.addPoint(user, point);
         log("Created : " + newPoint.getName().getValue());
 
         Optional<Point> foundPoint = nimbits.findPointByName(pointName);
         if (foundPoint.isPresent()) {
             log("verified point");
-            if (! foundPoint.get().isHighAlarmOn() || ! foundPoint.get().isLowAlarmOn()) {
+            if (!foundPoint.get().isHighAlarmOn() || !foundPoint.get().isLowAlarmOn()) {
                 throw new RuntimeException(" Alarm was off when it was set to on!");
 
             }
-        }
-        else {
+        } else {
             throw new RuntimeException("Point not found after being created and searched for");
         }
 
@@ -61,8 +59,7 @@ public class V3FindThingsExamples extends NimbitsTest{
         Optional<Point> shouldNotExist = nimbits.findPointByName(UUID.randomUUID().toString());
         if (shouldNotExist.isPresent()) {
             throw new RuntimeException("Point found that was never created!");
-        }
-        else {
+        } else {
             log("verified absent point");
         }
 
@@ -113,16 +110,14 @@ public class V3FindThingsExamples extends NimbitsTest{
 
     private void verifyReponse(Optional result, boolean shouldExist) {
 
-      //  assertEquals(! shouldExist, result.isPresent());
+        //  assertEquals(! shouldExist, result.isPresent());
 
 
-        if (! shouldExist && result.isPresent()) {
+        if (!shouldExist && result.isPresent()) {
             throw new RuntimeException("Found an object that should not exist!");
-        }
-        else if (shouldExist && ! result.isPresent()) {
+        } else if (shouldExist && !result.isPresent()) {
             throw new RuntimeException("Did NOT find an object that should exist!");
-        }
-        else {
+        } else {
 
             log("Got expected result looking for  entity");
 

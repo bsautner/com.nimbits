@@ -20,6 +20,7 @@ import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.server.transaction.settings.SettingsDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -41,6 +42,7 @@ public class ApplicationListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         logger.info("contextInitialized");
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
         String admin = settingsDao.getSetting(ServerSetting.admin);
         logger.info(String.format("system admin set: %b ", admin != null));
 

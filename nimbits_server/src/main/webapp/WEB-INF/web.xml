@@ -67,35 +67,6 @@
     </filter-mapping>
 
 
-
-
-    <!--<servlet>-->
-        <!--<servlet-name>Rest api</servlet-name>-->
-        <!--<servlet-class>com.nimbits.server.api.v3.RestApi</servlet-class>-->
-    <!--</servlet>-->
-    <!--<servlet-mapping>-->
-        <!--<servlet-name>Rest api</servlet-name>-->
-        <!--<url-pattern>/service/v3/Rest/*</url-pattern>-->
-    <!--</servlet-mapping>-->
-
-
-
-    <servlet>
-        <servlet-name>WebSocket</servlet-name>
-        <servlet-class>com.nimbits.server.socket.SocketEndpoint</servlet-class>
-        <init-param>
-            <param-name>minVersion</param-name>
-            <param-value>-1</param-value>
-        </init-param>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>WebSocket</servlet-name>
-        <url-pattern>/socket/*</url-pattern>
-    </servlet-mapping>
-
-
-
-
     <servlet>
         <servlet-name>timeApi</servlet-name>
         <servlet-class>com.nimbits.server.api.TimeApi</servlet-class>

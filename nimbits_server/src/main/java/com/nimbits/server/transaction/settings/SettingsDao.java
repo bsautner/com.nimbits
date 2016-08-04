@@ -21,6 +21,8 @@ import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.setting.Setting;
 import com.nimbits.server.orm.SettingEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import javax.jdo.PersistenceManager;
@@ -43,7 +45,7 @@ public class SettingsDao {
 
     }
 
-
+    @Cacheable(cacheNames = "settings", key = "#name")
     public String getSetting(final ServerSetting setting) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         String retVal;
@@ -67,7 +69,7 @@ public class SettingsDao {
         return retVal;
     }
 
-
+    @CacheEvict(cacheNames = "settings", key = "#name")
     public void updateSetting(final ServerSetting name, final String newValue) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
@@ -93,7 +95,7 @@ public class SettingsDao {
         }
     }
 
-
+    @CacheEvict(cacheNames = "settings", key = "#name")
     public void addSetting(final ServerSetting name, final String value) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 

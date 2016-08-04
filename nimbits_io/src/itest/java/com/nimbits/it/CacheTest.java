@@ -36,7 +36,7 @@ public class CacheTest  extends NimbitsTest {
 
             nimbits.recordValue(name, new Value.Builder().doubleValue(42.0).create());
 
-            Thread.sleep(100);
+            Thread.sleep(1000);
 
             double r = nimbits.getSnapshot(name).getDoubleValue();
 

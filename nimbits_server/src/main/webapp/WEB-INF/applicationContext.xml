@@ -33,7 +33,10 @@
         <property name="caches">
             <set>
                 <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
-                    <property name="name" value="valueCache"/>
+                    <property name="name" value="snapshots"/>
+                </bean>
+                <bean class="org.springframework.cache.concurrent.ConcurrentMapCacheFactoryBean">
+                    <property name="name" value="settings"/>
                 </bean>
             </set>
         </property>

@@ -8,6 +8,8 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.server.orm.ValueStore;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Repository;
 
 import javax.jdo.PersistenceManager;
@@ -20,7 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-@Repository
+@Repository @EnableCaching
 public class ValueDao {
 
 
@@ -33,6 +35,7 @@ public class ValueDao {
 
     }
 
+    @Cacheable(cacheNames = "valueCache", key="#entity.id")
     public Value getSnapshot(Entity entity) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();

@@ -21,7 +21,6 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 
 import java.io.Serializable;
-import java.util.Date;
 
 
 public interface User extends Entity, Serializable {

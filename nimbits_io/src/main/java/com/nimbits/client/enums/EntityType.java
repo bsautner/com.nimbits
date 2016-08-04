@@ -48,16 +48,16 @@ import java.util.Map;
 public enum EntityType implements Serializable {
 
     user(0, false, true, true, false, 0, "com.nimbits.server.orm.UserEntity", User.class, UserModel.class),
-    point(1, false,true, true, true, 1, "com.nimbits.server.orm.PointEntity", Point.class, PointModel.class),
-    category(2,false,false, true, false, 2, "com.nimbits.server.orm.CategoryEntity", Category.class, CategoryModel.class),
+    point(1, false, true, true, true, 1, "com.nimbits.server.orm.PointEntity", Point.class, PointModel.class),
+    category(2, false, false, true, false, 2, "com.nimbits.server.orm.CategoryEntity", Category.class, CategoryModel.class),
     subscription(5, false, false, true, false, 4, "com.nimbits.server.orm.SubscriptionEntity", Subscription.class, SubscriptionModel.class),
-    sync(15,  false,  false, true, false, 5, "com.nimbits.server.orm.SyncEntity", Sync.class, SyncModel.class),
+    sync(15, false, false, true, false, 5, "com.nimbits.server.orm.SyncEntity", Sync.class, SyncModel.class),
     calculation(7, true, false, true, false, 6, "com.nimbits.server.orm.CalcEntity", Calculation.class, CalculationModel.class),
-    summary(11, true,  false, true, false, 11, "com.nimbits.server.orm.SummaryEntity", Summary.class, SummaryModel.class),
-    instance(14,  false,  true, false, false, 14, "com.nimbits.server.orm.InstanceEntity", Instance.class, InstanceModel.class),
-    socket(19,  false, true, true, false, 19, "com.nimbits.server.orm.SocketEntity", Socket.class, SocketModel.class),
+    summary(11, true, false, true, false, 11, "com.nimbits.server.orm.SummaryEntity", Summary.class, SummaryModel.class),
+    instance(14, false, true, false, false, 14, "com.nimbits.server.orm.InstanceEntity", Instance.class, InstanceModel.class),
+    socket(19, false, true, true, false, 19, "com.nimbits.server.orm.SocketEntity", Socket.class, SocketModel.class),
     schedule(21, false, false, true, false, 21, "com.nimbits.server.orm.ScheduleEntity", Schedule.class, ScheduleModel.class),
-    webhook(22,  false,  false, true, false, 22, "com.nimbits.server.orm.WebHookEntity", WebHook.class, WebHookModel.class);
+    webhook(22, false, false, true, false, 22, "com.nimbits.server.orm.WebHookEntity", WebHook.class, WebHookModel.class);
 
     private static final Map<Integer, EntityType> lookup = new HashMap<Integer, EntityType>(EntityType.values().length);
     private static final Map<String, EntityType> lookupName = new HashMap<String, EntityType>(EntityType.values().length);
@@ -154,7 +154,6 @@ public enum EntityType implements Serializable {
     public boolean isTrigger() {
         return isTrigger;
     }
-
 
 
     public Class<?> getClz() {

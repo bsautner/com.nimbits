@@ -35,7 +35,7 @@ import java.util.Date;
 
 @Service
 public class TimeApi extends HttpServlet {
-    private Gson gson =  GsonFactory.getInstance(true);
+    private Gson gson = GsonFactory.getInstance(true);
 
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

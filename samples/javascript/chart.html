@@ -68,18 +68,16 @@ nimbits data into a chart using google charts.
                     });
 
 
-
-
-
-
         }
 
-        $(document).ready(function() {
-            google.load('visualization', '1', {packages:['corechart'], language: 'en', callback: function (){
-                $('#draw').click(function () {
-                    drawChart();
-                });
-            }});
+        $(document).ready(function () {
+            google.load('visualization', '1', {
+                packages: ['corechart'], language: 'en', callback: function () {
+                    $('#draw').click(function () {
+                        drawChart();
+                    });
+                }
+            });
         });
 
 
@@ -93,11 +91,13 @@ nimbits data into a chart using google charts.
 
 <a href="https://developers.google.com/chart/interactive/docs/examples">Chart Gallery</a>
 <ul>
-    <li>Log into a nimbits instance, such as our public cloud <a href="http://cloud.nimbits.com">cloud.nimbits.com</a></li>
+    <li>Log into a nimbits instance, such as our public cloud <a href="http://cloud.nimbits.com">cloud.nimbits.com</a>
+    </li>
     <li>Right click on your account in the upper right, and select to create a new point</li>
     <li>Type some random values into the data entry area.</li>
-    <li>Right click on your account again and create an access token.  <a href="http://nimbits.com/howto_security.jsp"> Read more about access tokens here</a></li>
-    <li>Enter the info you setup in the form below to generate a chart. </li>
+    <li>Right click on your account again and create an access token. <a href="http://nimbits.com/howto_security.jsp">
+        Read more about access tokens here</a></li>
+    <li>Enter the info you setup in the form below to generate a chart.</li>
 
 </ul>
 
@@ -105,25 +105,25 @@ nimbits data into a chart using google charts.
     <form style="width: 400px;">
         <div class="form-group">
             <label for="email">Email address</label>
-            <input type="email" class="form-control" id="email" placeholder="Enter email" >
+            <input type="email" class="form-control" id="email" placeholder="Enter email">
         </div>
 
         <div class="form-group">
             <label for="instance">Instance URL - (e.g http://cloud.nimbits.com) </label>
-            <input type="url" class="form-control" id="instance" placeholder="Enter URL" >
+            <input type="url" class="form-control" id="instance" placeholder="Enter URL">
         </div>
 
         <div class="form-group">
             <label for="token">Token</label>
-            <input type="password" class="form-control" id="token" placeholder="Access Token" >
+            <input type="password" class="form-control" id="token" placeholder="Access Token">
         </div>
         <div class="form-group">
             <label for="email">Point Name</label>
-            <input type="text" class="form-control" id="point" placeholder="Enter Point Name" >
+            <input type="text" class="form-control" id="point" placeholder="Enter Point Name">
         </div>
 
 
-        <input type="button" value="draw chart" id="draw" />
+        <input type="button" value="draw chart" id="draw"/>
     </form>
 </div>
 

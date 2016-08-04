@@ -2,6 +2,7 @@ package com.nimbits.it;
 
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
+import com.nimbits.client.io.http.NimbitsClientException;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.subscription.Subscription;
@@ -11,7 +12,6 @@ import com.nimbits.client.model.webhook.DataChannel;
 import com.nimbits.client.model.webhook.HttpMethod;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
-import com.nimbits.client.io.http.NimbitsClientException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,7 +34,7 @@ public class V3CreateAndTestWebHooks extends NimbitsTest {
 
         String targetPointName = TAG + " Download Target Point " + UUID.randomUUID().toString();
         String triggerPointName = TAG + " Trigger Point " + UUID.randomUUID().toString();
-        String subscriptionName =  TAG + " Subscription " + UUID.randomUUID().toString();
+        String subscriptionName = TAG + " Subscription " + UUID.randomUUID().toString();
 
 
         Point downloadTarget = nimbits.addPoint(user,
@@ -69,8 +69,8 @@ public class V3CreateAndTestWebHooks extends NimbitsTest {
         String data = UUID.randomUUID().toString();
 
         nimbits.recordValue(trigger, new Value.Builder()
-                .data("value=" + data )
-        .create());
+                .data("value=" + data)
+                .create());
 
         Thread.sleep(1000);
 
@@ -78,13 +78,10 @@ public class V3CreateAndTestWebHooks extends NimbitsTest {
         log(snapshot.toString());
 
 
-
-
-
         log("cleanup " + TAG);
         try {
-           // nimbits.deleteEntity(webHook);
-          //  nimbits.deleteEntity(downloadTarget);
+            // nimbits.deleteEntity(webHook);
+            //  nimbits.deleteEntity(downloadTarget);
         } catch (NimbitsClientException ex) {
             log(ex.getMessage());
             ex.printStackTrace();
@@ -92,8 +89,6 @@ public class V3CreateAndTestWebHooks extends NimbitsTest {
         log("done " + TAG);
 
     }
-
-
 
 
 }

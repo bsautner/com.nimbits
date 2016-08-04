@@ -18,7 +18,6 @@ package com.nimbits.client.model.subscription;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
-
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.model.common.CommonIdentifier;
@@ -50,7 +49,7 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
 
 
     public SubscriptionModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String subscribedEntity, int notifyMethod, int subscriptionType, String target, boolean enabled) {
-        super(id, name, description, entityType,  parent, owner);
+        super(id, name, description, entityType, parent, owner);
         this.subscribedEntity = subscribedEntity;
         this.notifyMethod = notifyMethod;
         this.subscriptionType = subscriptionType;
@@ -168,8 +167,8 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
             if (notifyMethod == null) {
                 notifyMethod = SubscriptionNotifyMethod.none;
             }
-            return new SubscriptionModel(id, name, description, type,  parent
-            , owner, subscribedEntity, notifyMethod.getCode(), subscriptionType.getCode(), target , enabled );
+            return new SubscriptionModel(id, name, description, type, parent
+                    , owner, subscribedEntity, notifyMethod.getCode(), subscriptionType.getCode(), target, enabled);
 
         }
 
@@ -197,21 +196,25 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
             this.description = description;
             return this;
         }
-  @Override
+
+        @Override
         public Builder alertType(int alertType) {
             this.alertType = alertType;
             return this;
         }
+
         @Override
         public Builder owner(String owner) {
             this.owner = owner;
             return this;
         }
+
         @Override
         public Builder readOnly(boolean readOnly) {
             this.readOnly = readOnly;
             return this;
         }
+
         @Override
         public Builder id(String id) {
             this.id = id;

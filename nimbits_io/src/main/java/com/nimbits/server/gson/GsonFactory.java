@@ -45,7 +45,7 @@ public class GsonFactory {
                     .registerTypeAdapter(Entity.class, new EntityDeserializer())
                     .registerTypeAdapter(Point.class, new PointSerializer())
                     .registerTypeAdapter(Entity.class, new EntitySerializer())
-                        .excludeFieldsWithoutExposeAnnotation();
+                    .excludeFieldsWithoutExposeAnnotation();
 
 
             for (EntityType t : EntityType.values()) {
@@ -65,9 +65,8 @@ public class GsonFactory {
                     .registerTypeAdapter(Entity.class, new EntitySerializer());
 
 
-
             for (EntityType t : EntityType.values()) {
-                        gsonBuilder
+                gsonBuilder
                         .registerTypeAdapter(t.getClz(), new NimbitsDeserializer<Entity>(t))
                         .registerTypeAdapter(t.getClz(), new NimbitsSerializer<Entity>());
             }
@@ -79,8 +78,6 @@ public class GsonFactory {
 
 
     }
-
-
 
 
 }

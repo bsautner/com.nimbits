@@ -23,7 +23,6 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.server.Protocol;
 
-
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
@@ -118,6 +117,6 @@ public class InstanceEntity extends EntityStore implements Instance {
 
     @Override
     public void init(Entity anEntity) {
-       // super.init(anEntity);
+        // super.init(anEntity);
     }
 }

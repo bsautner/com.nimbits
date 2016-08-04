@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
-public class ValueStore  {
+public class ValueStore {
 
     @PrimaryKey
     @Persistent(valueStrategy = IdGeneratorStrategy.INCREMENT)
@@ -61,9 +61,9 @@ public class ValueStore  {
 
     public Value getValue() {
 
-        Value.Builder builder =  new Value.Builder();
+        Value.Builder builder = new Value.Builder();
 
-        if (d!=null) {
+        if (d != null) {
             builder.doubleValue(d.doubleValue());
         }
         return builder.lat(lat).lng(lng).timestamp(new Date(timestamp)).data(data).meta(meta).create();

@@ -51,7 +51,6 @@ public class Value implements Serializable, Comparable<Value> {
     }
 
 
-
     protected Value(Double lat, Double lng, Double v, Date time, String data, String metadata, Integer alert) {
         this.d = v;
         this.t = time == null ? new Date().getTime() : time.getTime();
@@ -197,7 +196,7 @@ public class Value implements Serializable, Comparable<Value> {
 
         public Value create() {
 
-            return new Value(lat, lng, doubleValue, timestamp, data, meta, alertType );
+            return new Value(lat, lng, doubleValue, timestamp, data, meta, alertType);
         }
 
         public Builder lat(Double lat) {
@@ -252,7 +251,7 @@ public class Value implements Serializable, Comparable<Value> {
                     String a[] = valueAndNote.split(" ");
                     try {
                         this.doubleValue = Double.parseDouble(a[0]);
-                        this.data  = valueAndNote.replace(a[0], "").trim();
+                        this.data = valueAndNote.replace(a[0], "").trim();
                     } catch (NumberFormatException ex) {
                         this.data = valueAndNote;
 

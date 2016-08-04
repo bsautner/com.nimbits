@@ -41,7 +41,6 @@ public class Const {
     public static final int CONST_MAX_NAME_LENGTH = 250;
 
 
-
     private Const() {
         throw new AssertionError();
     }

@@ -31,19 +31,12 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.user.UserSource;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.data.DataProcessor;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.process.task.TaskService;
-import com.nimbits.server.process.task.ValueTask;
-import com.nimbits.server.transaction.calculation.CalculationService;
 import com.nimbits.server.transaction.entity.EntityService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.subscription.SubscriptionService;
-import com.nimbits.server.transaction.summary.SummaryService;
-import com.nimbits.server.transaction.sync.SyncService;
 import com.nimbits.server.transaction.user.dao.UserDao;
 import com.nimbits.server.transaction.user.service.UserService;
-import com.nimbits.server.transaction.value.ValueDao;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -79,9 +72,8 @@ public class RestAPI {
     private final Logger logger = LoggerFactory.getLogger(RestAPI.class.getName());
 
 
-
     @Autowired
-    public RestAPI( EntityService entityService, ValueService valueService, UserService userService,
+    public RestAPI(EntityService entityService, ValueService valueService, UserService userService,
                    EntityDao entityDao, TaskService taskService, UserDao userDao) {
 
         this.taskService = taskService;
@@ -94,8 +86,6 @@ public class RestAPI {
 
 
     }
-
-
 
 
     @RequestMapping(value = "/{uuid}/snapshot", method = RequestMethod.POST)
@@ -142,15 +132,14 @@ public class RestAPI {
     }
 
     @RequestMapping(value = "/{uuid}", method = RequestMethod.POST)
-    public ResponseEntity<String> postEntity( @RequestHeader(name = "Authorization") String authorization,
-                                              @RequestBody String json,
-                                              @PathVariable String uuid) throws IOException {
+    public ResponseEntity<String> postEntity(@RequestHeader(name = "Authorization") String authorization,
+                                             @RequestBody String json,
+                                             @PathVariable String uuid) throws IOException {
         logger.info("entered api: post entity");
         User user = getUser(authorization);
         EntityType type = getEntityType(json);
         Entity newEntity = (Entity) gson.fromJson(json, type.getClz());
         Optional<Entity> parentOptional = entityDao.findEntity(user, uuid);
-
 
 
         if (parentOptional.isPresent()) {
@@ -163,8 +152,7 @@ public class RestAPI {
 
             return new ResponseEntity<>(gson.toJson(stored), HttpStatus.OK);
 
-        }
-        else {
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 
         }
@@ -172,8 +160,8 @@ public class RestAPI {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ResponseEntity<String> postUser( @RequestHeader(name = "Authorization") String authorization,
-                                            @RequestBody String json) throws IOException {
+    public ResponseEntity<String> postUser(@RequestHeader(name = "Authorization") String authorization,
+                                           @RequestBody String json) throws IOException {
         logger.info("entered api: add user");
         User user = getUser(authorization);
 
@@ -182,12 +170,9 @@ public class RestAPI {
             logger.info("creating user: " + json);
             User createdUser = userService.createUserRecord(newUser.getEmail(), newUser.getPassword(), UserSource.local);
             return new ResponseEntity<>(gson.toJson(createdUser), HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-
-
 
 
     }
@@ -200,12 +185,10 @@ public class RestAPI {
     }
 
 
-
-
     @RequestMapping(value = "/{uuid}/children", method = RequestMethod.GET)
     public ResponseEntity<String> getChildren(HttpServletRequest request,
                                               @RequestHeader(name = "Authorization") String authorization,
-                                              @PathVariable String uuid ) throws IOException {
+                                              @PathVariable String uuid) throws IOException {
         logger.info("entered api: get children");
         User user = getUser(authorization);
 
@@ -219,8 +202,7 @@ public class RestAPI {
                 setHAL(user, e, Collections.<Entity>emptyList(), getCurrentUrl(request), null);
             }
             return new ResponseEntity<>(gson.toJson(children), HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
@@ -233,22 +215,20 @@ public class RestAPI {
         List<Entity> children;
         if (includeChildren) {
             children = entityDao.getChildren(user, Collections.<Entity>singletonList(user));
-        }
-        else {
+        } else {
             children = Collections.emptyList();
         }
         return children;
     }
 
 
-
     @RequestMapping(value = "/{uuid}/series", method = RequestMethod.GET)
-    public ResponseEntity<String> getSeries( @RequestHeader(name = "Authorization") String authorization,
-                                             @PathVariable String uuid,
-                                             @RequestParam(value = "start", required = false) String startParam,
-                                             @RequestParam(value = "end", required = false) String endParam ,
-                                             @RequestParam(value = "count", required = false) String countParam ,
-                                             @RequestParam(value = "mask", required = false) String maskParam ) throws IOException {
+    public ResponseEntity<String> getSeries(@RequestHeader(name = "Authorization") String authorization,
+                                            @PathVariable String uuid,
+                                            @RequestParam(value = "start", required = false) String startParam,
+                                            @RequestParam(value = "end", required = false) String endParam,
+                                            @RequestParam(value = "count", required = false) String countParam,
+                                            @RequestParam(value = "mask", required = false) String maskParam) throws IOException {
 
         User user = getUser(authorization);
 
@@ -262,8 +242,7 @@ public class RestAPI {
         Optional<Range<Integer>> range;
         if (count.isPresent()) {
             range = Optional.of(Range.closed(0, count.get()));
-        }
-        else {
+        } else {
             range = Optional.absent();
         }
 
@@ -274,8 +253,8 @@ public class RestAPI {
             List<Entity> entities = entityDao.getEntitiesByType(user, EntityType.point);
 
             Map<String, List<Value>> map = new HashMap<>(entities.size());
-            for (Entity e: entities) {
-                List<Value>values = valueService.getSeries( e, timespan, range, mask);
+            for (Entity e : entities) {
+                List<Value> values = valueService.getSeries(e, timespan, range, mask);
 
                 map.put(e.getId(), values);
 
@@ -285,18 +264,16 @@ public class RestAPI {
             return new ResponseEntity<>(resp, HttpStatus.OK);
 
 
-        }
-        else {
+        } else {
             Optional<Entity> optional = entityDao.getEntity(user, uuid, EntityType.point);
             if (optional.isPresent()) {
 
 
-                List<Value> values = valueService.getSeries( optional.get(), timespan, range, mask);
+                List<Value> values = valueService.getSeries(optional.get(), timespan, range, mask);
 
                 String resp = gson.toJson(values);
                 return new ResponseEntity<>(resp, HttpStatus.OK);
-            }
-            else {
+            } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
         }
@@ -305,12 +282,12 @@ public class RestAPI {
     }
 
     @RequestMapping(value = "/{uuid}/table", method = RequestMethod.GET)
-    public ResponseEntity<String> getTable( @RequestHeader(name = "Authorization") String authorization,
-                                            @PathVariable String uuid,
-                                            @RequestParam(value = "start", required = false) String startParam,
-                                            @RequestParam(value = "end", required = false) String endParam ,
-                                            @RequestParam(value = "count", required = false) String countParam ,
-                                            @RequestParam(value = "mask", required = false) String maskParam ) throws IOException {
+    public ResponseEntity<String> getTable(@RequestHeader(name = "Authorization") String authorization,
+                                           @PathVariable String uuid,
+                                           @RequestParam(value = "start", required = false) String startParam,
+                                           @RequestParam(value = "end", required = false) String endParam,
+                                           @RequestParam(value = "count", required = false) String countParam,
+                                           @RequestParam(value = "mask", required = false) String maskParam) throws IOException {
 
         User user = getUser(authorization);
         Optional<String> mask = StringUtils.isEmpty(maskParam) ? Optional.<String>absent() : Optional.of(maskParam);
@@ -319,13 +296,12 @@ public class RestAPI {
         Optional<Range<Long>> timespan;
 
 
-        if (! StringUtils.isEmpty(startParam) && ! StringUtils.isEmpty(endParam) ) {
-            long start =  (Long.valueOf(startParam));
-            long end =  (Long.valueOf(endParam));
+        if (!StringUtils.isEmpty(startParam) && !StringUtils.isEmpty(endParam)) {
+            long start = (Long.valueOf(startParam));
+            long end = (Long.valueOf(endParam));
             timespan = Optional.of(Range.closed(start, end));
 
-        }
-        else {
+        } else {
             timespan = Optional.absent();
         }
 
@@ -335,8 +311,7 @@ public class RestAPI {
             String chartData = valueService.getChartTable(user, entity, timespan, count, mask);
             return new ResponseEntity<>(chartData, HttpStatus.OK);
 
-        }
-        else {
+        } else {
 
             throw new RuntimeException(
                     "Please provide a start and end date parameter or a count parameter in unix epoch format including ms for example:?count=100 or ?count=100&mask=regex  or ?start="
@@ -345,11 +320,11 @@ public class RestAPI {
     }
 
     @RequestMapping(value = "/{uuid}/snapshot", method = RequestMethod.GET)
-    public ResponseEntity<String> getSnapshot( HttpServletRequest request,
-                                               @RequestHeader(name = "Authorization") String authorization,
-                                               @RequestParam(name = "sd", required = false) Long sd,
-                                               @RequestParam(name = "sd", required = false) Long ed,
-                                               @PathVariable String uuid) {
+    public ResponseEntity<String> getSnapshot(HttpServletRequest request,
+                                              @RequestHeader(name = "Authorization") String authorization,
+                                              @RequestParam(name = "sd", required = false) Long sd,
+                                              @RequestParam(name = "sd", required = false) Long ed,
+                                              @PathVariable String uuid) {
         logger.info("entered api: get snapshot");
         try {
 
@@ -377,11 +352,10 @@ public class RestAPI {
                 Value snapshot = valueService.getCurrentValue(optional.get());
                 ValueContainer valueContainer = new ValueContainer(links, valueEmbedded, snapshot);
                 return new ResponseEntity<>(gson.toJson(valueContainer), HttpStatus.OK);
-            }
-            else {
+            } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
-        } catch (Throwable ex)  {
+        } catch (Throwable ex) {
             throw new RuntimeException(ex);
         }
     }
@@ -394,18 +368,15 @@ public class RestAPI {
             if (user.isPresent()) {
                 if (userService.validatePassword(user.get(), credentials.get().getPassword())) {
                     return user.get();
-                }
-                else {
+                } else {
 
                     throw new SecurityException("Invalid Password: " + authString);
                 }
 
-            }
-            else {
+            } else {
                 throw new SecurityException("User Not Found: " + authString);
             }
-        }
-        else {
+        } else {
             throw new SecurityException("Invalid Credentials: " + authString);
         }
 
@@ -413,31 +384,29 @@ public class RestAPI {
     }
 
     //Helper Methods
-    @RequestMapping(value = "/{uuid}",  method = RequestMethod.GET)
+    @RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<String> getEntity(HttpServletRequest request,
-            @RequestHeader(name = "Authorization") String authorization,
-            @PathVariable String uuid,
-            @RequestParam(name = "children", required = false) boolean includeChildren,
-            @RequestParam(name = "name", required = false) String name,
-            @RequestParam(name = "point", required = false) String point,
-            @RequestParam(name = "type", required = false) String t) throws IOException {
+                                            @RequestHeader(name = "Authorization") String authorization,
+                                            @PathVariable String uuid,
+                                            @RequestParam(name = "children", required = false) boolean includeChildren,
+                                            @RequestParam(name = "name", required = false) String name,
+                                            @RequestParam(name = "point", required = false) String point,
+                                            @RequestParam(name = "type", required = false) String t) throws IOException {
 
         logger.info("entered api: get entity");
         User user = getUser(authorization);
         String searchName = null;
         EntityType searchType;
 
-        if (StringUtils.isNotEmpty(name) ) {
+        if (StringUtils.isNotEmpty(name)) {
             searchName = name;
-        }
-        else  if (StringUtils.isNotEmpty(point) ) {
+        } else if (StringUtils.isNotEmpty(point)) {
             searchName = name;
         }
 
         if (StringUtils.isEmpty(t)) {
             searchType = EntityType.point;
-        }
-        else {
+        } else {
             int type = Integer.valueOf(t);
             searchType = EntityType.get(type);
             if (searchType == null) {
@@ -447,24 +416,18 @@ public class RestAPI {
 
         if (StringUtils.isNotEmpty(searchName)) {
 
-            Optional<Entity> e =  entityDao.getEntityByName(user, CommonFactory.createName(name, searchType), searchType);
+            Optional<Entity> e = entityDao.getEntityByName(user, CommonFactory.createName(name, searchType), searchType);
             if (e.isPresent()) {
                 String json = gson.toJson(e.get());
                 return new ResponseEntity<>(json, HttpStatus.OK);
-            }
-            else {
+            } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
 
-        }
-
-        else if (uuid.equals("me")) {
-            User u =  getMe(request, user, includeChildren);
+        } else if (uuid.equals("me")) {
+            User u = getMe(request, user, includeChildren);
             return new ResponseEntity<>(GsonFactory.getInstance(true).toJson(u), HttpStatus.OK);
-        }
-
-
-        else {
+        } else {
             Optional<Entity> optional = entityDao.findEntity(user, uuid);// entityMap.get(uuid);
 
             if (optional.isPresent()) {
@@ -508,14 +471,14 @@ public class RestAPI {
         try {
             url = new URL(request.getRequestURL().toString());
 
-            String host  = url.getHost();
+            String host = url.getHost();
             String userInfo = url.getUserInfo();
             String scheme = url.getProtocol();
             int port = url.getPort();
             String path = (String) request.getAttribute("javax.servlet.forward.request_uri");
             String query = (String) request.getAttribute("javax.servlet.forward.query_string");
 
-            URI uri = new URI(scheme,userInfo,host,port,path,query,null);
+            URI uri = new URI(scheme, userInfo, host, port, path, query, null);
             return uri.toString() + "/service/v3/rest/";
         } catch (MalformedURLException e) {
             return e.getMessage();
@@ -525,12 +488,11 @@ public class RestAPI {
     }
 
 
-
     //DELETE
 
     @RequestMapping(value = "/{uuid}", method = RequestMethod.DELETE)
-    public ResponseEntity doDelete( @RequestHeader(name = "Authorization") String authorization,
-                                    @PathVariable String uuid) throws IOException {
+    public ResponseEntity doDelete(@RequestHeader(name = "Authorization") String authorization,
+                                   @PathVariable String uuid) throws IOException {
         logger.info("entered api: delete entity");
 
         User user = getUser(authorization);
@@ -563,8 +525,7 @@ public class RestAPI {
                 throw new SecurityException("You can not delete an entity you don't own if your not the system admin");
             }
             return new ResponseEntity(HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
@@ -588,7 +549,7 @@ public class RestAPI {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public ResponseEntity putUser( @RequestHeader(name = "Authorization") String authorization, @RequestBody User update)  {
+    public ResponseEntity putUser(@RequestHeader(name = "Authorization") String authorization, @RequestBody User update) {
 
         logger.info("entered api: update user");
         User user = getUser(authorization);
@@ -603,8 +564,7 @@ public class RestAPI {
                 entityService.addUpdateEntity(valueService, user, update);
             }
             return new ResponseEntity(HttpStatus.OK);
-        }
-        else {
+        } else {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }
 
@@ -616,13 +576,11 @@ public class RestAPI {
         Parent parent;
         if (entity.getEntityType().equals(EntityType.user)) {
             parent = new Parent(path + user.getId());
-        }
-        else {
+        } else {
             Optional<Entity> rootParentEntity = entityDao.findEntity(user, entity.getParent());
             if (rootParentEntity.isPresent()) {
                 parent = new Parent(path + rootParentEntity.get().getId());
-            }
-            else {
+            } else {
                 parent = new Parent(path + user.getId());
             }
         }
@@ -639,28 +597,26 @@ public class RestAPI {
 
         if (entity.getEntityType().equals(EntityType.point)) {
             Point point = (Point) entity;
-            series =new Series(path + entity.getId() + "/series");
-            dataTable =new DataTable(path + entity.getId() + "/table");
-            snapshot =new Snapshot(path + entity.getId() + "/snapshot");
+            series = new Series(path + entity.getId() + "/series");
+            dataTable = new DataTable(path + entity.getId() + "/table");
+            snapshot = new Snapshot(path + entity.getId() + "/snapshot");
 
 
-        }
-        else if (entity.getEntityType().equals(EntityType.user)) {
-            series =new Series(path + entity.getId() + "/series");
+        } else if (entity.getEntityType().equals(EntityType.user)) {
+            series = new Series(path + entity.getId() + "/series");
             if (index != null) {
                 next = new Next(path.substring(0, path.lastIndexOf("/")) + "?index=" + ++index);
             }
 
 
         }
-        children =new Children(path + entity.getId() + "/children");
+        children = new Children(path + entity.getId() + "/children");
         Links links = new Links(self, parent, series, snapshot, dataTable, next, nearby, children);
         List<EntityChild> entityChildren = new ArrayList<>();
 
 
-
         for (Entity child : childList) {
-            if (child.getParent().equals(entity.getId()) && ! child.getId().equals(entity.getId())) {
+            if (child.getParent().equals(entity.getId()) && !child.getId().equals(entity.getId())) {
 
                 Self eSelf = new Self(path + child.getId());
                 Series cseries = null;
@@ -670,9 +626,9 @@ public class RestAPI {
                 Children cchildren;
 
                 if (child.getEntityType().equals(EntityType.point)) {
-                    cseries =new Series(path + child.getId() + "/series");
-                    cdataTable =new DataTable(path + child.getId() + "/table");
-                    csnapshot  =new Snapshot(path + child.getId() + "/snapshot");
+                    cseries = new Series(path + child.getId() + "/series");
+                    cdataTable = new DataTable(path + child.getId() + "/table");
+                    csnapshot = new Snapshot(path + child.getId() + "/snapshot");
                     Point point1 = (Point) child;
 
                 }
@@ -681,11 +637,10 @@ public class RestAPI {
                 Parent eParent;
                 if (child.getParent().equals(user.getId())) {
                     eParent = new Parent(path + "me");
+                } else {
+                    eParent = new Parent(path + entity.getId());
                 }
-                else {
-                    eParent  = new Parent(path + entity.getId());
-                }
-                cchildren  =new Children(path + entity.getId() + "/children");
+                cchildren = new Children(path + entity.getId() + "/children");
                 Links eLinks = new Links(eSelf, eParent, cseries, csnapshot, cdataTable, null, cnearby, cchildren);
 
                 entityChildren.add(new EntityChild(eLinks, child.getName().getValue()));

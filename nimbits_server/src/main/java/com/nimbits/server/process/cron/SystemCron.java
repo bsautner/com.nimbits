@@ -26,13 +26,11 @@ import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.data.DataProcessor;
-
 import com.nimbits.server.process.task.TaskService;
 import com.nimbits.server.process.task.ValueTask;
-import com.nimbits.server.transaction.BaseProcessor;
 import com.nimbits.server.transaction.calculation.CalculationService;
-import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.entity.EntityService;
+import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.subscription.SubscriptionService;
 import com.nimbits.server.transaction.summary.SummaryService;
 import com.nimbits.server.transaction.sync.SyncService;
@@ -61,7 +59,7 @@ import java.util.List;
  * is idle for more than 24 hours, it wouldn't make sense to run this every minute.
  */
 @Service
-public class SystemCron extends HttpServlet  {
+public class SystemCron extends HttpServlet {
 
     private static final Logger logger = LoggerFactory.getLogger(SystemCron.class.getName());
 
@@ -123,18 +121,14 @@ public class SystemCron extends HttpServlet  {
         resp.setStatus(HttpServletResponse.SC_OK);
 
 
-
-
-
     }
 
-    public void process() throws  ValueException {
+    public void process() throws ValueException {
 
         final List<Entity> points = entityDao.getIdleEntities(userService.getAdmin());
 
         User admin = userService.getAdmin();
         //TODO OOM - delete expired data here
-
 
 
         for (final Entity p : points) {
@@ -145,7 +139,7 @@ public class SystemCron extends HttpServlet  {
 
         }
 
-         processSchedules();
+        processSchedules();
 
 
     }
@@ -164,7 +158,7 @@ public class SystemCron extends HttpServlet  {
 
                 schedule.setLastProcessed(new Date().getTime());
 
-                entityDao.addUpdateEntity(owner,schedule);
+                entityDao.addUpdateEntity(owner, schedule);
                 Optional<Entity> sourcePoint = entityDao.getEntity(owner, schedule.getSource(), EntityType.point);
                 Optional<Entity> targetPoint = entityDao.getEntity(owner, schedule.getTarget(), EntityType.point);
 
@@ -174,12 +168,10 @@ public class SystemCron extends HttpServlet  {
                     counter++;
                     logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
                     taskService.process(owner, (Point) targetPoint.get(), newValue);
-                }
-                else {
+                } else {
                     schedule.setEnabled(false);
                     entityService.addUpdateEntity(valueService, owner, schedule);
                 }
-
 
 
             }

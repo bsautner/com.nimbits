@@ -18,16 +18,13 @@ package com.nimbits.client.model.instance;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
-
 import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.server.Protocol;
-
 
 import java.io.Serializable;
 
@@ -52,10 +49,8 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
     private boolean socketsEnabled;
 
 
-
-
     protected InstanceModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, long serverId, String baseUrl, String adminEmail, String version, String password, boolean isDefault, String protocol, boolean socketsEnabled) {
-        super(id, name, description, entityType,  parent, owner);
+        super(id, name, description, entityType, parent, owner);
         this.serverId = serverId;
         this.baseUrl = baseUrl;
         this.adminEmail = adminEmail;
@@ -144,8 +139,8 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
             }
 
 
-            return new InstanceModel(id, name, description, type,  parent, owner,
-                    serverId, baseUrl.getUrl(),adminEmail.getValue(),version, password,  isDefault, protocol.name(), socketsEnabled );
+            return new InstanceModel(id, name, description, type, parent, owner,
+                    serverId, baseUrl.getUrl(), adminEmail.getValue(), version, password, isDefault, protocol.name(), socketsEnabled);
         }
 
         @Override
@@ -188,21 +183,25 @@ public class InstanceModel extends EntityModel implements Serializable, Instance
             this.description = description;
             return this;
         }
-  @Override
+
+        @Override
         public Builder alertType(int alertType) {
             this.alertType = alertType;
             return this;
         }
+
         @Override
         public Builder owner(String owner) {
             this.owner = owner;
             return this;
         }
+
         @Override
         public Builder readOnly(boolean readOnly) {
             this.readOnly = readOnly;
             return this;
         }
+
         @Override
         public Builder id(String id) {
             this.id = id;

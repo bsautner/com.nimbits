@@ -64,10 +64,6 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
     private DataProcessor dataProcessor;
 
 
-
-
-
-
     @Override
     public void init() throws ServletException {
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
@@ -78,12 +74,12 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
     @Override
     public String getChartTable(User user, Entity entity, Integer countParam) {
         Optional<Integer> count = (countParam != null && countParam > 0) ? Optional.of(countParam) : Optional.<Integer>absent();
-        return valueService.getChartTable( user, entity, Optional.<Range<Long>>absent(), count, Optional.<String>absent());
+        return valueService.getChartTable(user, entity, Optional.<Range<Long>>absent(), count, Optional.<String>absent());
     }
 
     @Override
     public List<Value> solveEquationRpc(final Calculation calculation) {
-        User user = userService.getHttpRequestUser( getThreadLocalRequest());
+        User user = userService.getHttpRequestUser(getThreadLocalRequest());
         Optional<Value> response = calculationService.solveEquation(user, calculation, null, null);
 
         return response.isPresent() ? Collections.singletonList(response.get()) : Collections.<Value>emptyList();
@@ -93,7 +89,7 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
     public void recordValueRpc(final Entity point,
                                final Value value) throws ValueException {
 
-        User user = userService.getHttpRequestUser( getThreadLocalRequest());
+        User user = userService.getHttpRequestUser(getThreadLocalRequest());
         Point p = (Point) entityDao.getEntity(user, point.getId(), EntityType.point).get();
         logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
         taskService.process(user, p, value);

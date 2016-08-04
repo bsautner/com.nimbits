@@ -20,7 +20,6 @@ import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.util.Padding;
-import com.extjs.gxt.ui.client.widget.Html;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
@@ -103,7 +102,6 @@ public class LoginPanel extends AbstractLoginPanel {
         simple.add(controlButtons);
 
         simple.add(tosHtml);
-
 
 
         submit.addSelectionListener(new SelectionListener<ButtonEvent>() {

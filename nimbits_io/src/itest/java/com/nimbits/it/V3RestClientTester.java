@@ -1,11 +1,11 @@
 package com.nimbits.it;
 
+import com.nimbits.client.io.Nimbits;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.client.io.Nimbits;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -18,10 +18,8 @@ import java.util.regex.PatternSyntaxException;
 
 /**
  * Exercises the V3 Rest API - designed to run continuously against a server as an integration test.
- *
- *
  */
-public class V3RestClientTester extends NimbitsTest  {
+public class V3RestClientTester extends NimbitsTest {
 
     private List<Entity> pointList = new ArrayList<>();
     private Map<Entity, List<Value>> storedValues = new HashMap<Entity, List<Value>>();
@@ -33,7 +31,8 @@ public class V3RestClientTester extends NimbitsTest  {
 
     }
 
-    @Test @Ignore
+    @Test
+    @Ignore
     public void executeTest() throws InterruptedException {
 
         log("Starting up");
@@ -44,8 +43,7 @@ public class V3RestClientTester extends NimbitsTest  {
             createRegularUsers();
             createPoints();
             recordSeriesData();
-        }
-        else {
+        } else {
             log("User was null! Exiting Test");
         }
 
@@ -68,8 +66,7 @@ public class V3RestClientTester extends NimbitsTest  {
 
             if (verify.equals(regularUser)) {
                 log("Verified Creating Regular " + i + " User can login ");
-            }
-            else {
+            } else {
                 throw new RuntimeException("Could not verify regular user");
             }
 
@@ -85,7 +82,7 @@ public class V3RestClientTester extends NimbitsTest  {
         for (int i = 0; i < 10; i++) {
             Point point = new PointModel.Builder().name(UUID.randomUUID().toString()).parent(user.getId())
                     .create();
-            Entity newPoint =  nimbits.addPoint(user, point);
+            Entity newPoint = nimbits.addPoint(user, point);
             pointList.add(newPoint);
             log("Created : " + newPoint.getName().getValue());
         }
@@ -146,7 +143,6 @@ public class V3RestClientTester extends NimbitsTest  {
         verifyCountParam();
 
 
-
     }
 
     private void verifySeriesData(String mask) {
@@ -191,34 +187,25 @@ public class V3RestClientTester extends NimbitsTest  {
             }
 
 
-
-
-
         }
 
 
     }
 
 
-
-
-
     public static boolean containsMask(Value value, String mask) {
 
         if (StringUtils.isEmpty(mask)) {
             return true;
-        }
-        else if (! StringUtils.isEmpty(mask) && mask.equals(value.getMetaData()) ) {
+        } else if (!StringUtils.isEmpty(mask) && mask.equals(value.getMetaData())) {
 
             return true;
-        }
-        else if (! StringUtils.isEmpty(mask)) {
+        } else if (!StringUtils.isEmpty(mask)) {
             try {
                 Pattern p = Pattern.compile(mask);
                 Matcher m = p.matcher(value.getMetaData());
                 return m.find();
-            }
-            catch (PatternSyntaxException ex) {
+            } catch (PatternSyntaxException ex) {
 
                 return false;
             }
@@ -229,9 +216,6 @@ public class V3RestClientTester extends NimbitsTest  {
         return false;
 
     }
-
-
-
 
 
 }

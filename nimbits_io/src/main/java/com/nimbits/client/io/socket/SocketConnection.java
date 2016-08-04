@@ -97,7 +97,6 @@ public class SocketConnection extends GsonFactory {
                     Gson gson = GsonFactory.getInstance(true);
 
 
-
                     Point result = gson.fromJson(data, PointModel.class);
                     listener.onNotify(result);
 //                    if (result != null && ! result.isEmpty()) {

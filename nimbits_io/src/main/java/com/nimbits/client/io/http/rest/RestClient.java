@@ -51,25 +51,27 @@ public interface RestClient {
     @POST(API + "/")
     User addUser(@Body User newUser);
 
-    @POST(API + "/{uuid}") @Deprecated //use specific adder
-    Entity addEntity(@Path("uuid") String parent,  @Body Point point);
+    @POST(API + "/{uuid}")
+    @Deprecated
+        //use specific adder
+    Entity addEntity(@Path("uuid") String parent, @Body Point point);
 
     @POST(API + "/{uuid}")
-    Point addPoint(@Path("uuid") String parent,  @Body Point point);
+    Point addPoint(@Path("uuid") String parent, @Body Point point);
 
     @POST(API + "/{uuid}")
-    Instance addInstance(@Path("uuid") String parent,  @Body Instance e);
-
-
-    @POST(API + "/{uuid}")
-    Schedule addSchedule(@Path("uuid") String parent,  @Body Schedule e);
+    Instance addInstance(@Path("uuid") String parent, @Body Instance e);
 
 
     @POST(API + "/{uuid}")
-    Category addCategory(@Path("uuid") String parent,  @Body Category category);
+    Schedule addSchedule(@Path("uuid") String parent, @Body Schedule e);
+
+
+    @POST(API + "/{uuid}")
+    Category addCategory(@Path("uuid") String parent, @Body Category category);
 
     @POST(API + "/{uuid}/series")
-    void recordData(@Path("uuid") String uuid,  @Body List<Value> values, Callback<Void> callback);
+    void recordData(@Path("uuid") String uuid, @Body List<Value> values, Callback<Void> callback);
 
     @GET(API + "/{uuid}/series")
     List<Value> getData(@Path("uuid") String uuid, @Query("start") long start, @Query("end") long end, @Query("mask") String mask);
@@ -79,11 +81,8 @@ public interface RestClient {
                         @Query("mask") String mask, @Query("count") int count);
 
 
-
-
     @GET(API + "/{uuid}/series")
     List<Value> getData(@Path("uuid") String uuid, @Query("count") Integer count);
-
 
 
     @GET(API + "/{uuid}/series")
@@ -91,7 +90,7 @@ public interface RestClient {
 
 
     @POST(API + "/{uuid}/snapshot")
-    void updateSnapshot(@Path("uuid") String uuid,  @Body Value values, Callback<Void> callback);
+    void updateSnapshot(@Path("uuid") String uuid, @Body Value values, Callback<Void> callback);
 
     @GET(API + "/{uuid}/snapshot")
     ValueContainer getSnapshot(@Path("uuid") String uuid);
@@ -100,20 +99,20 @@ public interface RestClient {
     Point getPoint(@Path("uuid") String uuid);
 
     @POST(API + "/{uuid}")
-    WebHook addWebhook(@Path("uuid") String parent,  @Body WebHook webHook);
+    WebHook addWebhook(@Path("uuid") String parent, @Body WebHook webHook);
 
     @POST(API + "/{uuid}")
-    Subscription addSubscription(@Path("uuid") String parent,  @Body Subscription subscription);
+    Subscription addSubscription(@Path("uuid") String parent, @Body Subscription subscription);
 
 
     @POST(API + "/{uuid}")
-    Sync addSync(@Path("uuid") String parent,  @Body Sync subscription);
+    Sync addSync(@Path("uuid") String parent, @Body Sync subscription);
 
     @POST(API + "/{uuid}")
-    Calculation addCalc(@Path("uuid") String parent,  @Body Calculation calculation);
+    Calculation addCalc(@Path("uuid") String parent, @Body Calculation calculation);
 
     @POST(API + "/{uuid}")
-    Summary addSummary(@Path("uuid") String parent,  @Body Summary summary);
+    Summary addSummary(@Path("uuid") String parent, @Body Summary summary);
 
     @GET(API + "/{uuid}/children")
     List<Entity> getChildren(@Path("uuid") String uuid);
@@ -122,11 +121,10 @@ public interface RestClient {
     Entity getEntity(@Path("uuid") String uuid);
 
     @GET(API + "/{uuid}/nearby")
-    List<Point> getNearbyPoints(@Path("uuid")String uuid, @Query("meters") double meters);
+    List<Point> getNearbyPoints(@Path("uuid") String uuid, @Query("meters") double meters);
 
     @GET(API + "/me")
     Point findPoint(@Query("name") String pointName);
-
 
 
     @DELETE(API + "/{uuid}")
@@ -176,5 +174,5 @@ public interface RestClient {
     void updateFile(@Path("uuid") String uuid, @Body String encoded, Callback<Void> callback);
 
     @PUT(API + "/{uuid}")
-    void updateEntity(@Path("uuid")String uuid, @Body Entity entity, Callback<Void> callback);
+    void updateEntity(@Path("uuid") String uuid, @Body Entity entity, Callback<Void> callback);
 }

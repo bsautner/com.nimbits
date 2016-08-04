@@ -29,5 +29,4 @@ public interface Sync extends Trigger, Serializable {
     String getAccessKey();
 
 
-
 }

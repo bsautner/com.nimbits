@@ -53,7 +53,6 @@ public class V3EntityTests extends NimbitsTest {
     public void executeTest() throws InterruptedException {
 
 
-
         //create a folder for putting things in, my user account object is the folders parent in the tree (user is setup in the super.execute).
         category = nimbits.addCategory(user, new CategoryModel.Builder().create());
         outputPoint = nimbits.addPoint(category, new PointModel.Builder()
@@ -67,7 +66,6 @@ public class V3EntityTests extends NimbitsTest {
         testSchedule();
 
         testInstance();
-
 
 
         testWebhook();
@@ -95,11 +93,11 @@ public class V3EntityTests extends NimbitsTest {
         Thread.sleep(1000);
         Value value = nimbits.getSnapshot(inputPoint);
         log(value.toString());
-        if (! foo.equals(value.getMetaData())) {
+        if (!foo.equals(value.getMetaData())) {
             error("value did not record correctly");
         }
 
-        Random random  = new Random();
+        Random random = new Random();
         for (int i = 0; i < 100; i++) {
             nimbits.recordValue(inputPoint, new Value.Builder().doubleValue(random.nextDouble() * 100).meta(foo).create());
 
@@ -135,7 +133,7 @@ public class V3EntityTests extends NimbitsTest {
 
         log(schedule.toString());
 
-        nimbits.recordValue(inputPoint, new  Value.Builder().doubleValue(42.0).create());
+        nimbits.recordValue(inputPoint, new Value.Builder().doubleValue(42.0).create());
 
         Thread.sleep(10000);
 
@@ -144,12 +142,9 @@ public class V3EntityTests extends NimbitsTest {
         assertNotEquals(42, outputValue.getDoubleValue());
 
 
-
-
     }
 
     private void testInstance() {
-
 
 
         nimbits.addInstance(category,
@@ -166,14 +161,13 @@ public class V3EntityTests extends NimbitsTest {
     }
 
 
-
     private void testSummary() throws InterruptedException {
         Point inputPoint = nimbits.addPoint(category, new PointModel.Builder()
                 .name(UUID.randomUUID().toString())
                 .create());
 
 
-       nimbits.addSummary(category,
+        nimbits.addSummary(category,
                 new SummaryModel.Builder()
                         .summaryType(SummaryType.average)
                         .summaryIntervalMs(2000L)
@@ -194,8 +188,7 @@ public class V3EntityTests extends NimbitsTest {
         log("Summary Test:" + v.toString());
         if (v.getDoubleValue() <= 3) {
             error("summary didn't work:" + v.toString());
-        }
-        else {
+        } else {
             log("Done Summary");
         }
 
@@ -206,7 +199,7 @@ public class V3EntityTests extends NimbitsTest {
                 .name(UUID.randomUUID().toString())
                 .create());
         List<Entity> children = nimbits.getChildren(category);
-        if (! children.contains(inputPoint)) {
+        if (!children.contains(inputPoint)) {
             error("Adding a point to a folder didn't work");
         }
 
@@ -273,7 +266,7 @@ public class V3EntityTests extends NimbitsTest {
 
         log(snapshot3.toString());
         if (snapshot3.getDoubleValue() != testValue3 * 2) {
-            error("calc failed: " + testValue3  + "vs" + snapshot3.getDoubleValue());
+            error("calc failed: " + testValue3 + "vs" + snapshot3.getDoubleValue());
         }
         log("calc: " + calculation.toString());
         log("calc: " + snapshot3.toString());

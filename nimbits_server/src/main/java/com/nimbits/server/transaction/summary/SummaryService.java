@@ -54,8 +54,7 @@ public class SummaryService implements BaseProcessor {
                           final ValueService valueService,
                           final TaskService taskService,
                           final EntityService entityService,
-                          final SubscriptionService subscriptionService)
-    {
+                          final SubscriptionService subscriptionService) {
 
         this.entityDao = entityDao;
         this.valueService = valueService;
@@ -65,7 +64,6 @@ public class SummaryService implements BaseProcessor {
 
 
     }
-
 
 
     @Override
@@ -78,9 +76,9 @@ public class SummaryService implements BaseProcessor {
 
             if (summary.getLastProcessed().getTime() + summary.getSummaryIntervalMs() < new Date().getTime()) {
 
-                final  Entity source = entityDao.getEntity(user, summary.getTrigger(), EntityType.point).get();
+                final Entity source = entityDao.getEntity(user, summary.getTrigger(), EntityType.point).get();
 
-                final Optional<Range<Long>> timespan = Optional.of(Range.closed( (now - summary.getSummaryIntervalMs()), now));
+                final Optional<Range<Long>> timespan = Optional.of(Range.closed((now - summary.getSummaryIntervalMs()), now));
 
                 final Value value;
                 if (summary.getSummaryType().equals(SummaryType.delta)) {
@@ -90,7 +88,7 @@ public class SummaryService implements BaseProcessor {
                     value = new Value.Builder().doubleValue(delta).timestamp(new Date()).create();
 
                 } else {
-                    final List<Value> values = valueService.getSeries( source, timespan, Optional.<Range<Integer>>absent(), Optional.<String>absent());
+                    final List<Value> values = valueService.getSeries(source, timespan, Optional.<Range<Integer>>absent(), Optional.<String>absent());
                     if (!values.isEmpty()) {
                         final double[] doubles = new double[values.size()];
                         for (int i = 0; i < values.size(); i++) {
@@ -111,8 +109,6 @@ public class SummaryService implements BaseProcessor {
                 taskService.process(user, target, value);
                 summary.setLastProcessed(new Date());
                 entityService.addUpdateEntity(valueService, user, summary);
-
-
 
 
             }

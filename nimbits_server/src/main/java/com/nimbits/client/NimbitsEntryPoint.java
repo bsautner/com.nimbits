@@ -30,14 +30,11 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.model.system.SystemDetails;
-import com.nimbits.client.model.system.SystemDetailsModel;
 import com.nimbits.client.model.user.LoginInfo;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModelFactory;
 import com.nimbits.client.service.user.UserServiceRpc;
 import com.nimbits.client.service.user.UserServiceRpcAsync;
-import com.nimbits.client.service.user.UserServiceRpcException;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.panels.CenterPanel;
 import com.nimbits.client.ui.panels.NavigationEventProvider;
@@ -61,7 +58,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
 
         final String passwordResetToken = Window.Location.getParameter(Parameters.rToken.getText());
 
-        if (passwordResetToken == null ) {
+        if (passwordResetToken == null) {
 
             userService.loginRpc(GWT.getHostPageBaseURL(),
                     new LoginInfoAsyncCallback());
@@ -146,7 +143,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
     public void onLogout() {
         closeLoginWindows();
 
-        loadLoginView(UserModelFactory.createNullLoginInfo( ));
+        loadLoginView(UserModelFactory.createNullLoginInfo());
     }
 
     @Override
@@ -210,7 +207,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
             FeedbackHelper.showError(caught);
             closeLoginWindows();
 
-            loadLoginView(UserModelFactory.createNullLoginInfo( ));
+            loadLoginView(UserModelFactory.createNullLoginInfo());
         }
 
         @Override

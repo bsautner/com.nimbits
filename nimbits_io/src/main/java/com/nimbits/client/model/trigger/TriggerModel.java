@@ -41,8 +41,7 @@ public abstract class TriggerModel extends EntityModel implements Serializable, 
     }
 
 
-
-    public TriggerModel(String id, CommonIdentifier name, String description, EntityType entityType,  String parent, String owner, String target, String trigger, boolean enabled) {
+    public TriggerModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String target, String trigger, boolean enabled) {
         super(id, name, description, entityType, parent, owner);
         this.target = target;
         this.trigger = trigger;

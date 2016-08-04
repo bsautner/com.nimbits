@@ -73,15 +73,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private ValueDao valueDao;
 
 
-
-
     public SubscriptionServiceImpl() {
 
 
-
     }
-
-
 
 
     @Override
@@ -94,9 +89,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             Subscription subscription = (Subscription) entity;
 
 
-
             logger.info("Processing Subscription " + subscription.getName().getValue());
-          //  nimbitsCache.put(LAST_SENT_CACHE_KEY_PREFIX + subscription.getId(), new Date());
+            //  nimbitsCache.put(LAST_SENT_CACHE_KEY_PREFIX + subscription.getId(), new Date());
 
 
             //EntityServiceImpl.addUpdateSingleEntity(user, subscription);
@@ -136,18 +130,16 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                     break;
 
                 case deltaAlert:
-                    if (calculateDelta( point) > point.getDeltaAlarm()) {
+                    if (calculateDelta(point) > point.getDeltaAlarm()) {
                         sendNotification(subscriber, subscription, point, v);
                     }
                     break;
                 case increase:
                 case decrease:
-                    processSubscriptionToIncreaseOrDecrease(point, v, subscription,   subscriber);
+                    processSubscriptionToIncreaseOrDecrease(point, v, subscription, subscriber);
                     break;
 
             }
-
-
 
 
         }
@@ -161,7 +153,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
             final Value v,
             final Subscription subscription,
             final User subscriber
-     ) {
+    ) {
         Value prevValue = valueDao.getSnapshot(point);
 
         if (subscription.getSubscriptionType().equals(SubscriptionType.decrease) && (prevValue.getDoubleValue() > v.getDoubleValue())) {
@@ -200,7 +192,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 point.setValue(value);
                 doWebHook(user, point, subscription);
                 break;
-
 
 
         }
@@ -250,7 +241,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                         + connection.getResponseMessage());
             }
 
-        } catch ( Exception e) {
+        } catch (Exception e) {
             logger.error("error sending user info to nimbits.com", e);
         }
     }
@@ -274,13 +265,13 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 url = new URL(base + point.getValue().getMetaData());
                 break;
             case timestamp:
-                url = new URL(base+ point.getValue().getTimestamp());
+                url = new URL(base + point.getValue().getTimestamp());
                 break;
             case gps:
                 url = new URL(base + point.getValue().getLatitude() + "," + point.getValue().getLongitude());
                 break;
             case object:
-                String json =  GsonFactory.getInstance(true).toJson(point.getValue());
+                String json = GsonFactory.getInstance(true).toJson(point.getValue());
                 url = new URL(base + json);
                 break;
         }
@@ -309,7 +300,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 message = point.getValue().getLatitude() + "," + point.getValue().getLatitude();
                 break;
             case object:
-                message =  GsonFactory.getInstance(true).toJson(point.getValue());
+                message = GsonFactory.getInstance(true).toJson(point.getValue());
                 break;
         }
         return message;
@@ -321,11 +312,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         InputStream in = null;
 
         try {
-            logger.info("executing webhook GET:"  + webHook.getUrl().getUrl());
+            logger.info("executing webhook GET:" + webHook.getUrl().getUrl());
             URL url = buildPath(webHook, point);
             in = url.openStream();
-            String result = ( IOUtils.toString(in) );
-            if (! StringUtils.isEmpty(webHook.getDownloadTarget()) && ! StringUtils.isEmpty(result)) {
+            String result = (IOUtils.toString(in));
+            if (!StringUtils.isEmpty(webHook.getDownloadTarget()) && !StringUtils.isEmpty(result)) {
                 Point target = (Point) entityDao.getEntity(user, webHook.getDownloadTarget(), EntityType.point).get();
 
                 Value value = new Value.Builder().data(result).create();
@@ -353,7 +344,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         List<Value> series = valueDao.getSeries(point, Optional.of(timespan), Optional.<Range<Integer>>absent(), Optional.<String>absent());
 
         //Value start = getCurrentValue(blobStore, point);
-        double startValue = series.get(series.size() -1).getDoubleValue();
+        double startValue = series.get(series.size() - 1).getDoubleValue();
         double endValue = series.get(0).getDoubleValue();
 
         retVal = abs(startValue - endValue);
@@ -361,8 +352,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
         return retVal;
     }
-
-
 
 
 }

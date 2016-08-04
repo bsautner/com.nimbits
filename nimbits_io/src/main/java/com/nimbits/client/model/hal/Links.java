@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Benjamin Sautner
  *
@@ -55,7 +54,7 @@ public class Links implements Serializable {
     public Links() {
     }
 
-    public Links(Self self, Parent parent, Series series, Snapshot snapshot, DataTable datatable, Next next, Nearby nearby, Children children ) {
+    public Links(Self self, Parent parent, Series series, Snapshot snapshot, DataTable datatable, Next next, Nearby nearby, Children children) {
         this.self = self;
         this.series = series;
         this.snapshot = snapshot;
@@ -71,7 +70,6 @@ public class Links implements Serializable {
         this.sample = sample;
         this.parent = parent;
     }
-
 
 
 }

@@ -19,10 +19,10 @@ package com.nimbits.client.io.command;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.user.User;
-
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.List;
 
 public class ListCommand extends AbstractCommand implements Command {
 

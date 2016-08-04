@@ -22,7 +22,4 @@ import com.nimbits.server.transaction.BaseProcessor;
 public interface TaskService extends BaseProcessor {
 
 
-
-
-
 }

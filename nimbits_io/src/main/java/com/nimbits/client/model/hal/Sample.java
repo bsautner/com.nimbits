@@ -1,4 +1,3 @@
-
 /*
  * Copyright 2016 Benjamin Sautner
  *
@@ -23,7 +22,7 @@ import javax.annotation.Generated;
 import java.io.Serializable;
 
 @Generated("org.jsonschema2pojo")
-public class Sample  implements Serializable {
+public class Sample implements Serializable {
 
     @Expose
     private String href;

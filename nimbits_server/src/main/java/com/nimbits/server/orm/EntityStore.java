@@ -19,7 +19,6 @@ package com.nimbits.server.orm;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
-
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
@@ -86,7 +85,6 @@ public abstract class EntityStore implements Entity {
     }
 
 
-
     @Override
     public EntityName getName() {
         try {
@@ -97,8 +95,6 @@ public abstract class EntityStore implements Entity {
         }
 
     }
-
-
 
 
     @Override
@@ -217,7 +213,7 @@ public abstract class EntityStore implements Entity {
         if (StringUtils.isEmpty(this.owner)) {
             throw new IllegalArgumentException("Owner must not be null");
         }
-        if (! user.getIsAdmin() && !this.owner.equals(user.getId()) && !entityType.equals(EntityType.user.getCode())) {
+        if (!user.getIsAdmin() && !this.owner.equals(user.getId()) && !entityType.equals(EntityType.user.getCode())) {
             throw new IllegalArgumentException("You can't create an entity with an owner other than yourself!");
         }
 

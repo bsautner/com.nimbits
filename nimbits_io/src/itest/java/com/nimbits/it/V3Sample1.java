@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
+import com.nimbits.client.io.Nimbits;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.category.CategoryModel;
 import com.nimbits.client.model.point.Point;
@@ -16,7 +17,6 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.webhook.HttpMethod;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
-import com.nimbits.client.io.Nimbits;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,8 +28,8 @@ public class V3Sample1 extends NimbitsTest {
 
     /**
      * This sample is meant to walk through some of the basic nimbits automation features and uses nimbits.io to:
-     *
-     *
+     * <p>
+     * <p>
      * 1. Create an admin user on a new nimbits server (@see com.nimbits.it.NimbitsTest base class)
      * 2. Create some regular users using the admin's credentials - then delete some of them
      * 3. Re-Connect to the server as a regular user
@@ -40,22 +40,21 @@ public class V3Sample1 extends NimbitsTest {
      * 8. Write some data and verify the subscriptions
      * 9. Record Some data over a period of time and verify the data using meta data and masks
      * 10. Verify Snapshots by writing single and series of data - the most recent value should always be available in the snapshot
-     *
+     * <p>
      * Note:
-
-     the api is designed to take a POJO and return a new object that is the fully created object with database keys etc
-     so code like this is common:
-
-     Foo foo1 = FooBuilder().create();
-     Foo foo2 = nimbits.createFoo(foo1);
-
-     foo2 is a new object, returned by the api where foo1 was a DTO used to create foo2.
-
-     to avoid confusion the sample will do:
-
-     Foo foo1 = FooBuilder().create();
-     foo1 = nimbits.createFoo(foo1);
-
+     * <p>
+     * the api is designed to take a POJO and return a new object that is the fully created object with database keys etc
+     * so code like this is common:
+     * <p>
+     * Foo foo1 = FooBuilder().create();
+     * Foo foo2 = nimbits.createFoo(foo1);
+     * <p>
+     * foo2 is a new object, returned by the api where foo1 was a DTO used to create foo2.
+     * <p>
+     * to avoid confusion the sample will do:
+     * <p>
+     * Foo foo1 = FooBuilder().create();
+     * foo1 = nimbits.createFoo(foo1);
      */
 
 
@@ -109,7 +108,7 @@ public class V3Sample1 extends NimbitsTest {
 
         //veryify user exists
 
-        Optional<User> retrieved =  nimbits.findUser(email2);
+        Optional<User> retrieved = nimbits.findUser(email2);
         if (retrieved.isPresent()) {
             log("Downloaded:   " + retrieved.get().toString());
             Thread.sleep(1000);
@@ -166,7 +165,6 @@ public class V3Sample1 extends NimbitsTest {
                 .name("Data Point Trigger " + System.currentTimeMillis())
                 .create();
         Point newTarget = new PointModel.Builder().name("Data Point Target" + System.currentTimeMillis()).create();
-
 
 
         newTrigger = client.addPoint(folder, newTrigger);
@@ -292,8 +290,7 @@ public class V3Sample1 extends NimbitsTest {
 
             if (DOG.equals(newValue.getMetaData())) {
                 dogs.add(newValue);
-            }
-            else if (CAT.equals(newValue.getMetaData())) {
+            } else if (CAT.equals(newValue.getMetaData())) {
                 cats.add(newValue);
             }
 
@@ -313,12 +310,12 @@ public class V3Sample1 extends NimbitsTest {
         }
 
         for (Value dog : dogs) {
-            if (! storedValues.contains(dog)) {
+            if (!storedValues.contains(dog)) {
                 error("Missing Data in dog List: " + dog.toString() + dog.hashCode());
             }
         }
         for (Value cat : cats) {
-            if (! storedValues.contains(cat)) {
+            if (!storedValues.contains(cat)) {
                 error("Missing Data in cat List");
             }
         }
@@ -328,11 +325,11 @@ public class V3Sample1 extends NimbitsTest {
         List<Value> storedCats = client.getValues(testPoint1, new Date(1), new Date(99999999999999L), CAT);
 
         List<Value> storedDogs = client.getValues(testPoint1, new Date(1), new Date(99999999999999L), DOG);
-        if (! storedCats.containsAll(cats)) {
+        if (!storedCats.containsAll(cats)) {
             error("Missing some cats");
         }
 
-        if (! storedDogs.containsAll(dogs)) {
+        if (!storedDogs.containsAll(dogs)) {
             error("Missing some dogs");
         }
 
@@ -354,8 +351,6 @@ public class V3Sample1 extends NimbitsTest {
         snapshotTestPoint = client.addPoint(folder, snapshotTestPoint);
 
 
-
-
         snap = client.getSnapshot(snapshotTestPoint);
         log("Snapshot on a newly created point: " + snap.toString() + " timestamp:" + snap.getTimestamp());
         if (snap.getTimestamp().getTime() != 0) {
@@ -372,7 +367,7 @@ public class V3Sample1 extends NimbitsTest {
         snap = client.getSnapshot(snapshotTestPoint);
         log("Snapshot on a newly recorded value: " + snap.toString() + " timestamp:" + snap.getTimestamp());
 
-        if (! snap.getData().equals(test1.getData())) {
+        if (!snap.getData().equals(test1.getData())) {
 
             error("Snapshot on newly recorded value didn't match");
 
@@ -410,18 +405,17 @@ public class V3Sample1 extends NimbitsTest {
 
         Thread.sleep(1000);
         snap = client.getSnapshot(seriesSnapshotTestPoint);
-        Value last = seriesSnapshotTest.get(seriesSnapshotTest.size()-1);
+        Value last = seriesSnapshotTest.get(seriesSnapshotTest.size() - 1);
         log(snap.toString());
         log(last.toString());
-        if (! snap.getData().equals(last.getData())) {
+        if (!snap.getData().equals(last.getData())) {
             error("Most recent recorded value in series was not the snapshot");
         }
 
 
-        log("Done " +  getClass().getName());
+        log("Done " + getClass().getName());
 
     }
-
 
 
 }

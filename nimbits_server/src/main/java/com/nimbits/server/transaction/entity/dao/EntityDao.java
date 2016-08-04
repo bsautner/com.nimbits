@@ -19,7 +19,6 @@ package com.nimbits.server.transaction.entity.dao;
 
 import com.google.common.base.Optional;
 import com.nimbits.client.enums.EntityType;
-
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.schedule.Schedule;
@@ -30,13 +29,13 @@ import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.orm.*;
 import com.nimbits.server.transaction.entity.EntityHelper;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import javax.jdo.*;
 import java.util.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 @Repository
@@ -47,21 +46,20 @@ public class EntityDao {
     private static final int INT = 1024;
 
 
-
     private PersistenceManagerFactory persistenceManagerFactory;
 
 
-    public EntityDao( ) {
+    public EntityDao() {
 
     }
-    
+
     @Autowired
     public void setPersistenceManagerFactory(PersistenceManagerFactory persistenceManagerFactory) {
         this.persistenceManagerFactory = persistenceManagerFactory;
 
     }
 
-    
+
     public List<Entity> getSubscriptionsToEntity(final User user, final Entity subscribedEntity) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
@@ -76,7 +74,7 @@ public class EntityDao {
 
     }
 
-     
+
     public List<Entity> getIdleEntities(User admin) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -95,7 +93,6 @@ public class EntityDao {
     }
 
 
-    
     public Optional<Entity> getEntityByTrigger(final User user, final Entity entity, final EntityType type) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -106,9 +103,8 @@ public class EntityDao {
             final List<Entity> results = (List<Entity>) q.execute(entity.getId());
             if (results.isEmpty()) {
                 return Optional.absent();
-            }
-            else {
-                Entity e =  EntityHelper.createModel(user, results.get(0));
+            } else {
+                Entity e = EntityHelper.createModel(user, results.get(0));
                 return Optional.of(e);
             }
 
@@ -122,7 +118,6 @@ public class EntityDao {
     }
 
 
-    
     public Map<String, Entity> getEntityMap(final User user, final EntityType type, final int limit) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -156,7 +151,6 @@ public class EntityDao {
     }
 
 
-    
     public List<Entity> getChildren(final User user, final List<Entity> parents) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
@@ -173,13 +167,11 @@ public class EntityDao {
     }
 
 
-    
     public Entity addUpdateEntity(final User user, final Entity entity) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
         try {
-
 
 
             if (StringUtils.isEmpty(entity.getId())) {
@@ -203,8 +195,7 @@ public class EntityDao {
                     return EntityHelper.createModel(user, result);
 
 
-                }
-                else {
+                } else {
                     throw new RuntimeException("entity not found 0004");
                 }
 
@@ -215,14 +206,14 @@ public class EntityDao {
 
             throw new RuntimeException("entity not found 0005");
 
-        }   finally {
+        } finally {
             pm.close();
         }
 
 
     }
 
-    private Entity addEntity(final User user, final  Entity  entity) {
+    private Entity addEntity(final User user, final Entity entity) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
 
@@ -248,13 +239,10 @@ public class EntityDao {
             if (!commit.getEntityType().equals(EntityType.user)) {
                 commit.validate(user);
                 if (commit.getEntityType().isTrigger()) {
-                     validate(user, (Trigger) commit);
+                    validate(user, (Trigger) commit);
                 }
 
             }
-
-
-
 
 
             pm.makePersistent(commit);
@@ -272,14 +260,12 @@ public class EntityDao {
     }
 
 
-    
     public List<Entity> getEntities(final User user) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
         try {
             final Collection<String> ownerKeys = new ArrayList<String>(1);
             ownerKeys.add(user.getId());
-
 
 
             final List<Entity> retObj = new ArrayList<Entity>(INT);
@@ -303,7 +289,6 @@ public class EntityDao {
                         retObj.add(entity1);
 
 
-
                     }
 
 
@@ -320,7 +305,6 @@ public class EntityDao {
     }
 
 
-    
     public List<Entity> getEntitiesByType(final User user, final EntityType type) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
@@ -340,7 +324,6 @@ public class EntityDao {
             result = (Collection<Entity>) q1.execute(ownerKeys);
 
 
-
             final List<Entity> entities = EntityHelper.createModels(user, result);
             for (final Entity entity1 : entities) {
 
@@ -358,7 +341,6 @@ public class EntityDao {
 
 
     }
-
 
 
     private List<Entity> getEntityChildren(PersistenceManager pm, final List<Entity> parents) {
@@ -390,9 +372,8 @@ public class EntityDao {
                                     if (!c.getEntityType().equals(EntityType.user) && !c.getParent().equals(c.getId())) {
                                         filtered.add(c);
                                     }
-                                }
-                                else {
-                                    logger.warn("unexpected null values : " +  GsonFactory.getInstance(true).toJson(c));
+                                } else {
+                                    logger.warn("unexpected null values : " + GsonFactory.getInstance(true).toJson(c));
                                 }
                             }
                             if (!filtered.isEmpty()) {
@@ -417,7 +398,6 @@ public class EntityDao {
     }
 
 
-    
     public void deleteEntity(final User user, final Entity entity, final EntityType type) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         Class cls = getEntityPersistentClass(type);
@@ -433,7 +413,7 @@ public class EntityDao {
                     pm.deletePersistentAll(entities);
 
                 }
-            }catch (Throwable throwable) {
+            } catch (Throwable throwable) {
                 logger.error(throwable.getMessage());
 
             } finally {
@@ -443,7 +423,6 @@ public class EntityDao {
     }
 
 
-    
     public Optional<Entity> getEntity(final User user, final String id, final EntityType type) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         Entity entity = null;
@@ -465,8 +444,6 @@ public class EntityDao {
     }
 
 
-
-    
     public Optional<Entity> findEntity(User user, String id) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
@@ -487,7 +464,6 @@ public class EntityDao {
     }
 
 
-    
     public Optional<Entity> getEntityByName(final User user, final EntityName name, final EntityType type) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
@@ -537,9 +513,6 @@ public class EntityDao {
     }
 
 
-
-
-    
     public String getOwner(String point) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
@@ -560,8 +533,6 @@ public class EntityDao {
     }
 
 
-
-    
     public List<Schedule> getSchedules() {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -589,7 +560,7 @@ public class EntityDao {
 
     }
 
-    
+
     public Optional<User> getUser(String email) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -604,10 +575,9 @@ public class EntityDao {
             final List<User> result = (List<User>) q1.execute(email);
 
 
-            if(result.isEmpty()) {
+            if (result.isEmpty()) {
                 return Optional.absent();
-            }
-            else {
+            } else {
                 User r = new UserModel.Builder().init(result.get(0)).create();
                 return Optional.of(r);
             }
@@ -622,9 +592,6 @@ public class EntityDao {
 
 
     }
-
-
-
 
 
     private void checkDuplicateEntity(final User user, final List<Entity> entityList) {
@@ -686,7 +653,6 @@ public class EntityDao {
             return null;
         }
     }
-
 
 
     public void validate(final User user, final Trigger entity) {

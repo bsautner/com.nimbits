@@ -27,7 +27,6 @@ import com.nimbits.client.model.user.UserSource;
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import java.util.Date;
 
 
 @PersistenceCapable
@@ -56,7 +55,6 @@ public class UserEntity extends EntityStore implements User {
 
     @Persistent
     private Long passwordResetTimestamp;
-
 
 
     /**
@@ -89,11 +87,10 @@ public class UserEntity extends EntityStore implements User {
     public UserEntity(final User entity) {
         super(entity);
 
-       // this.id = entity.getOwner();
+        // this.id = entity.getOwner();
         update(entity);
 
     }
-
 
 
     @Override

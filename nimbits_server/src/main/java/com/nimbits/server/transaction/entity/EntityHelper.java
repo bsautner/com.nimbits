@@ -49,7 +49,6 @@ import java.util.List;
 public class EntityHelper {
 
 
-
     public static Entity downcastEntity(final Entity entity) {
 
         switch (entity.getEntityType()) {
@@ -60,10 +59,10 @@ public class EntityHelper {
 
             case point:
 
-                return  new PointEntity((Point) entity);
+                return new PointEntity((Point) entity);
 
             case category:
-                return new  CategoryEntity(entity);
+                return new CategoryEntity(entity);
 
             case subscription:
                 return new SubscriptionEntity((Subscription) entity);
@@ -76,21 +75,21 @@ public class EntityHelper {
                 return new SummaryEntity((Summary) entity);
 
             case sync:
-                return  new SyncEntity((Sync) entity);
+                return new SyncEntity((Sync) entity);
             case socket:
-                return  new SocketEntity((Socket) entity);
+                return new SocketEntity((Socket) entity);
 
             case schedule:
-                return  new ScheduleEntity((Schedule) entity);
+                return new ScheduleEntity((Schedule) entity);
 
             case instance:
-                return  new InstanceEntity((Instance) entity);
+                return new InstanceEntity((Instance) entity);
 
             case webhook:
-                return  new WebHookEntity((WebHook) entity);
+                return new WebHookEntity((WebHook) entity);
 
             default:
-               throw new IllegalArgumentException("Attempt to downcast an unknown entity");
+                throw new IllegalArgumentException("Attempt to downcast an unknown entity");
         }
 
 
@@ -116,53 +115,53 @@ public class EntityHelper {
         final Entity model;
 
 
-            switch (entity.getEntityType()) {
+        switch (entity.getEntityType()) {
 
-                case user:
-                    model = new UserModel.Builder().init((User) entity).create();
-                    break;
-                case point:
-                    model = new PointModel.Builder().init((Point) entity).create();
-                    break;
-                case category:
-                    model = new CategoryModel.Builder().init((Category) entity).create();
-                    break;
-                case subscription:
-                    model = new SubscriptionModel.Builder().init((Subscription) entity).create();
-                    break;
-                case calculation:
-                    model = new CalculationModel.Builder().init((Calculation) entity).create();
-                    break;
+            case user:
+                model = new UserModel.Builder().init((User) entity).create();
+                break;
+            case point:
+                model = new PointModel.Builder().init((Point) entity).create();
+                break;
+            case category:
+                model = new CategoryModel.Builder().init((Category) entity).create();
+                break;
+            case subscription:
+                model = new SubscriptionModel.Builder().init((Subscription) entity).create();
+                break;
+            case calculation:
+                model = new CalculationModel.Builder().init((Calculation) entity).create();
+                break;
 
-                case summary:
-                    model = new SummaryModel.Builder().init((Summary) entity).create();
-                    break;
-                case sync:
-                    model = new SyncModel.Builder().init((Sync) entity).create();
-                    break;
+            case summary:
+                model = new SummaryModel.Builder().init((Summary) entity).create();
+                break;
+            case sync:
+                model = new SyncModel.Builder().init((Sync) entity).create();
+                break;
 
-                case socket:
-                    model = new SocketModel.Builder().init((Socket) entity).create();
-                    break;
-                 case instance:
-                    model = new InstanceModel.Builder().init((Instance) entity).create();// InstanceModelFactory.createInstance((Instance) entity);
-                    break;
-                case schedule:
-                    model = new ScheduleModel.Builder().init((Schedule) entity).create();
-                    break;
-                case webhook:
-                    model = new WebHookModel.Builder().init((WebHook)entity).create();
-                    break;
-                default:
-                    model = null;
-                    break;
+            case socket:
+                model = new SocketModel.Builder().init((Socket) entity).create();
+                break;
+            case instance:
+                model = new InstanceModel.Builder().init((Instance) entity).create();// InstanceModelFactory.createInstance((Instance) entity);
+                break;
+            case schedule:
+                model = new ScheduleModel.Builder().init((Schedule) entity).create();
+                break;
+            case webhook:
+                model = new WebHookModel.Builder().init((WebHook) entity).create();
+                break;
+            default:
+                model = null;
+                break;
 
-            }
+        }
 
 
-            final boolean isOwner = model.isOwner(user);
-            model.setReadOnly(!isOwner);
-            return model;
+        final boolean isOwner = model.isOwner(user);
+        model.setReadOnly(!isOwner);
+        return model;
 
     }
 }

@@ -98,7 +98,6 @@ public class CalcEntity extends TriggerEntity implements Calculation {
     }
 
 
-
     @Override
     public void update(final Entity update) {
         super.update(update);

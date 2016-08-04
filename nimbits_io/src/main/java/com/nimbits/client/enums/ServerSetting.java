@@ -22,7 +22,6 @@ import com.nimbits.client.constants.Const;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 
 public enum ServerSetting {
@@ -57,12 +56,12 @@ public enum ServerSetting {
     private final boolean isFlag;
 
     ServerSetting(final String name,
-                          final String defaultValue,
-                          final boolean update,
-                          final boolean create,
-                          final boolean readonly,
-                          final boolean encrypt,
-                          final boolean isFlag
+                  final String defaultValue,
+                  final boolean update,
+                  final boolean create,
+                  final boolean readonly,
+                  final boolean encrypt,
+                  final boolean isFlag
 
     ) {
         this.name = name;

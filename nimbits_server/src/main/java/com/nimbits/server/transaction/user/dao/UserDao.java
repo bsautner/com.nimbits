@@ -38,7 +38,4 @@ public interface UserDao {
     Optional<User> getUserByEmail(String email);
 
 
-
-
-
 }

@@ -41,7 +41,6 @@ import java.util.List;
 public class PointPanel extends BasePanel {
 
 
-
     private final Collection<PointUpdatedListener> pointUpdatedListeners = new ArrayList<PointUpdatedListener>(1);
     private final NumberField compression = new NumberField();
     private final NumberField expires = new NumberField();
@@ -232,7 +231,7 @@ public class PointPanel extends BasePanel {
                 }
 
                 @Override
-                public void onSuccess(final Entity  result) {
+                public void onSuccess(final Entity result) {
 
                     try {
                         notifyPointUpdatedListener();

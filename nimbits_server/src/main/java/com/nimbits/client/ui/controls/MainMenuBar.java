@@ -179,7 +179,6 @@ public class MainMenuBar extends ToolBar {
     }
 
 
-
     private Collection<ActionListener> actionListeners = new ArrayList<ActionListener>(1);
 
     public interface ActionListener {
@@ -196,9 +195,6 @@ public class MainMenuBar extends ToolBar {
             listener.onAction(action);
         }
     }
-
-
-
 
 
     private static class OpenUrlBaseEventListener implements Listener<BaseEvent> {
@@ -233,12 +229,7 @@ public class MainMenuBar extends ToolBar {
     }
 
 
-
-
-
-
-
-    }
+}
 
 
 

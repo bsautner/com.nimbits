@@ -47,7 +47,7 @@ public class CalculationServiceImpl implements CalculationService {
     private final ValueTask valueTask;
 
     @Autowired
-    public CalculationServiceImpl(EntityDao entityDao,  ValueService valueService, ValueTask valueTask  ) {
+    public CalculationServiceImpl(EntityDao entityDao, ValueService valueService, ValueTask valueTask) {
 
         this.entityDao = entityDao;
         this.valueService = valueService;
@@ -56,9 +56,8 @@ public class CalculationServiceImpl implements CalculationService {
     }
 
 
-
     @Override
-    public void process( final User u, final Point point, final Value value) throws ValueException {
+    public void process(final User u, final Point point, final Value value) throws ValueException {
 
         final Optional<Entity> optional = entityDao.getEntityByTrigger(u, point, EntityType.calculation);
         if (optional.isPresent()) {
@@ -70,35 +69,34 @@ public class CalculationServiceImpl implements CalculationService {
             final Optional<Entity> target = entityDao.getEntity(u, c.getTarget(), EntityType.point);
 
             if (target.isPresent()) {
-                final Optional<Value> result = solveEquation( u, c, point, value);
+                final Optional<Value> result = solveEquation(u, c, point, value);
                 if (result.isPresent()) {
 
                     Value v = new Value.Builder().initValue(result.get()).timestamp(value.getTimestamp()).create();
 
 
-                        valueTask.process(u, (Point) target.get(), v);
+                    valueTask.process(u, (Point) target.get(), v);
 
                 }
             }
-
 
 
         }
     }
 
     @Override
-    public Optional<Value> solveEquation( final User user, final Calculation calculation, Entity point, Value value) {
+    public Optional<Value> solveEquation(final User user, final Calculation calculation, Entity point, Value value) {
 
 
         m = new MathEvaluatorImpl(calculation.getFormula());
         if (calculation.getFormula().contains("x") && !StringUtils.isEmpty(calculation.getX())) {
-            addVar( user, calculation, point, value, "x", calculation.getX());
+            addVar(user, calculation, point, value, "x", calculation.getX());
         }
         if (calculation.getFormula().contains("y") && !StringUtils.isEmpty(calculation.getY())) {
-            addVar(  user, calculation, point, value, "y", calculation.getY());
+            addVar(user, calculation, point, value, "y", calculation.getY());
         }
         if (calculation.getFormula().contains("z") && !StringUtils.isEmpty(calculation.getZ())) {
-            addVar(  user, calculation, point, value, "z", calculation.getZ());
+            addVar(user, calculation, point, value, "z", calculation.getZ());
         }
 
 
@@ -115,7 +113,7 @@ public class CalculationServiceImpl implements CalculationService {
 
     }
 
-    private void addVar(  User user, Calculation calculation, Entity point, Value value, String var, String varEntityId) {
+    private void addVar(User user, Calculation calculation, Entity point, Value value, String var, String varEntityId) {
         if (!Utils.isEmptyString(calculation.getX()) && calculation.getFormula().contains(var)) {
 
             double currentValue = 0;

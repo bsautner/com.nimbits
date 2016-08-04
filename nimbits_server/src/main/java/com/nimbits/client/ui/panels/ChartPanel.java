@@ -76,7 +76,6 @@ public class ChartPanel extends LayoutContainer {
         dialog.setResizable(false);
 
 
-
         return dialog;
     }
 

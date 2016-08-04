@@ -29,6 +29,8 @@ import com.nimbits.server.auth.AuthService;
 import com.nimbits.server.system.ServerInfo;
 import com.nimbits.server.transaction.settings.SettingsService;
 import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,8 +44,6 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Properties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -193,10 +193,6 @@ public class EmailServiceImpl implements EmailService {
         sendEmail(emailAddress, message.toString(), "Nimbits Subscription Event");
 
     }
-
-
-
-
 
 
     @Override

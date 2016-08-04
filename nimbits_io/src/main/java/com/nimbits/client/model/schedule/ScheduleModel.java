@@ -18,7 +18,6 @@ package com.nimbits.client.model.schedule;
 
 import com.google.gson.annotations.Expose;
 import com.nimbits.client.enums.EntityType;
-
 import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
@@ -45,14 +44,13 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
     }
 
     protected ScheduleModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, Boolean enabled, Long interval, String source, String target, Long lastProcessed) {
-        super(id, name, description, entityType,  parent, owner);
+        super(id, name, description, entityType, parent, owner);
         this.enabled = enabled;
         this.interval = interval;
         this.source = source;
         this.target = target;
         this.lastProcessed = lastProcessed;
     }
-
 
 
     @Override
@@ -121,7 +119,6 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
         private Long lastProcessed;
 
 
-
         public Builder name(String name) {
             this.name = CommonFactory.createName(name, type);
             return this;
@@ -139,7 +136,7 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
             }
 
 
-            return new ScheduleModel(id, name, description,type,  parent, owner,
+            return new ScheduleModel(id, name, description, type, parent, owner,
                     enabled, interval, source, target, lastProcessed);
         }
 
@@ -149,7 +146,6 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
             this.parent = parent;
             return this;
         }
-
 
 
         public Builder init(Schedule e) {
@@ -179,21 +175,25 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
             this.description = description;
             return this;
         }
-  @Override
+
+        @Override
         public Builder alertType(int alertType) {
             this.alertType = alertType;
             return this;
         }
+
         @Override
         public Builder owner(String owner) {
             this.owner = owner;
             return this;
         }
+
         @Override
         public Builder readOnly(boolean readOnly) {
             this.readOnly = readOnly;
             return this;
         }
+
         @Override
         public Builder id(String id) {
             this.id = id;

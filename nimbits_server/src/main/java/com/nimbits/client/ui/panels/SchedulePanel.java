@@ -150,7 +150,6 @@ public class SchedulePanel extends BasePanel {
                 .lastProcessed(fmt.parse(dateField.getValue()).getTime());
 
 
-
         return builder.create();
     }
 

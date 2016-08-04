@@ -37,7 +37,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
 
-@Deprecated @Component//nothing but trouble
+@Deprecated
+@Component//nothing but trouble
 public class AuthService {
 
 

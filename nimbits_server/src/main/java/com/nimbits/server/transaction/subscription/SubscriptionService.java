@@ -23,6 +23,6 @@ import com.nimbits.server.transaction.BaseProcessor;
 public interface SubscriptionService extends BaseProcessor {
 
 
-     double calculateDelta(final Point point);
+    double calculateDelta(final Point point);
 
 }

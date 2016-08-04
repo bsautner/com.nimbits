@@ -44,7 +44,6 @@ public abstract class TriggerEntity extends EntityStore implements Trigger {
     }
 
 
-
     public TriggerEntity() {
     }
 

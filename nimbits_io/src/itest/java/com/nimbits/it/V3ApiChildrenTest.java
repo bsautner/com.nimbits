@@ -10,7 +10,6 @@ import java.util.UUID;
 
 /**
  * Create a points with children
- *
  */
 public class V3ApiChildrenTest extends NimbitsTest {
 
@@ -30,7 +29,6 @@ public class V3ApiChildrenTest extends NimbitsTest {
         System.out.println(me.toString());
 
 
-
         for (int i = 0; i < 10; i++) {
             Point point = new PointModel.Builder().name("child_" + UUID.randomUUID()).create();
             nimbits.addPoint(me, point);
@@ -39,7 +37,7 @@ public class V3ApiChildrenTest extends NimbitsTest {
 
         me = nimbits.getMe(true);
         log("Got Children: " + me.getChildren().size());
-        log("Done " +  getClass().getName());
+        log("Done " + getClass().getName());
 
     }
 

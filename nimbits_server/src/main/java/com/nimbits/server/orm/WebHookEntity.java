@@ -28,7 +28,7 @@ import javax.jdo.annotations.Persistent;
 
 
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
-public class WebHookEntity extends EntityStore implements WebHook  {
+public class WebHookEntity extends EntityStore implements WebHook {
 
     @Persistent
     private Integer method;
@@ -47,7 +47,6 @@ public class WebHookEntity extends EntityStore implements WebHook  {
 
     @Persistent
     private Integer bodyChannel;
-
 
 
     public WebHookEntity(WebHook webHook) {
@@ -107,18 +106,22 @@ public class WebHookEntity extends EntityStore implements WebHook  {
     public UrlContainer getUrl() {
         return UrlContainer.getInstance(url);
     }
+
     @Override
     public boolean isEnabled() {
         return enabled;
     }
+
     @Override
     public void setMethod(HttpMethod method) {
         this.method = method.getCode();
     }
+
     @Override
     public void setUrl(UrlContainer url) {
         this.url = url.getUrl();
     }
+
     @Override
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
@@ -133,7 +136,6 @@ public class WebHookEntity extends EntityStore implements WebHook  {
     public void setDownloadTarget(String downloadTarget) {
         this.downloadTarget = downloadTarget;
     }
-
 
 
 }

@@ -16,15 +16,17 @@
 
 package com.nimbits.server.gson.deserializer;
 
-import com.google.gson.*;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.server.gson.GsonFactory;
 
 import java.lang.reflect.Type;
 
 
-public class NimbitsDeserializer<T>  implements JsonDeserializer<T>  {
-
+public class NimbitsDeserializer<T> implements JsonDeserializer<T> {
 
 
     private final Class modelClass;
@@ -33,7 +35,6 @@ public class NimbitsDeserializer<T>  implements JsonDeserializer<T>  {
 
 
         this.modelClass = entityType.getModel();
-
 
 
     }

@@ -65,16 +65,7 @@ public class SettingsService {
     }
 
 
-    public void addSetting(final ServerSetting setting, final String value) {
-        if (setting.isEncrypted()) {
-            try {
-                settingsDao.addSetting(setting, stringEncryption.encrypt(value, false));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        settingsDao.addSetting(setting, value);
-    }
+
 
 
 }

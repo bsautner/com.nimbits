@@ -69,8 +69,6 @@ public class RestAPI {
     private final EntityDao entityDao;
     private final Gson gson;
 
-    private final Logger logger = LoggerFactory.getLogger(RestAPI.class.getName());
-
 
     @Autowired
     public RestAPI(EntityService entityService, ValueService valueService, UserService userService,
@@ -93,7 +91,7 @@ public class RestAPI {
             @RequestHeader(name = "Authorization") String authorization,
             @RequestBody String json,
             @PathVariable String uuid) throws Exception {
-        logger.info("entered api: postSnapshot");
+
         User user = getUser(authorization);
         Point entity = (Point) entityDao.getEntity(user, uuid, EntityType.point);
         Value value = gson.fromJson(json, Value.class);
@@ -109,7 +107,7 @@ public class RestAPI {
             @RequestBody String json,
             @PathVariable String uuid) throws ValueException {
 
-        logger.info("entered api: post series");
+
         Type listType = new TypeToken<ArrayList<Value>>() {
         }.getType();
         User user = getUser(authorization);
@@ -135,7 +133,7 @@ public class RestAPI {
     public ResponseEntity<String> postEntity(@RequestHeader(name = "Authorization") String authorization,
                                              @RequestBody String json,
                                              @PathVariable String uuid) throws IOException {
-        logger.info("entered api: post entity");
+
         User user = getUser(authorization);
         EntityType type = getEntityType(json);
         Entity newEntity = (Entity) gson.fromJson(json, type.getClz());
@@ -162,12 +160,11 @@ public class RestAPI {
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<String> postUser(@RequestHeader(name = "Authorization") String authorization,
                                            @RequestBody String json) throws IOException {
-        logger.info("entered api: add user");
+
         User user = getUser(authorization);
 
         if (user.getIsAdmin()) {
             User newUser = GsonFactory.getInstance(false).fromJson(json, UserModel.class);
-            logger.info("creating user: " + json);
             User createdUser = userService.createUserRecord(newUser.getEmail(), newUser.getPassword(), UserSource.local);
             return new ResponseEntity<>(gson.toJson(createdUser), HttpStatus.OK);
         } else {
@@ -189,7 +186,7 @@ public class RestAPI {
     public ResponseEntity<String> getChildren(HttpServletRequest request,
                                               @RequestHeader(name = "Authorization") String authorization,
                                               @PathVariable String uuid) throws IOException {
-        logger.info("entered api: get children");
+
         User user = getUser(authorization);
 
 
@@ -232,8 +229,7 @@ public class RestAPI {
 
         User user = getUser(authorization);
 
-        logger.info("get series");
-        Optional<String> mask = StringUtils.isEmpty(maskParam) ? Optional.<String>absent() : Optional.<String>of(maskParam);
+        Optional<String> mask = StringUtils.isEmpty(maskParam) ? Optional.<String>absent() : Optional.of(maskParam);
         Date start = StringUtils.isEmpty(startParam) ? new Date(1) : new Date(Long.valueOf(startParam));
         Date end = StringUtils.isEmpty(endParam) ? new Date() : new Date(Long.valueOf(endParam));
 
@@ -307,9 +303,14 @@ public class RestAPI {
 
         if (timespan.isPresent() || count.isPresent()) {
 
-            Entity entity = entityDao.getEntity(user, uuid, EntityType.point).get();
-            String chartData = valueService.getChartTable(user, entity, timespan, count, mask);
-            return new ResponseEntity<>(chartData, HttpStatus.OK);
+            Optional<Entity> optional = entityDao.getEntity(user, uuid, EntityType.point);
+            if (optional.isPresent()) {
+                String chartData = valueService.getChartTable(user, optional.get(), timespan, count, mask);
+                return new ResponseEntity<>(chartData, HttpStatus.OK);
+            }
+            else {
+                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
 
         } else {
 
@@ -325,7 +326,7 @@ public class RestAPI {
                                               @RequestParam(name = "sd", required = false) Long sd,
                                               @RequestParam(name = "sd", required = false) Long ed,
                                               @PathVariable String uuid) {
-        logger.info("entered api: get snapshot");
+
         try {
 
             Calendar calendar = Calendar.getInstance();
@@ -393,7 +394,7 @@ public class RestAPI {
                                             @RequestParam(name = "point", required = false) String point,
                                             @RequestParam(name = "type", required = false) String t) throws IOException {
 
-        logger.info("entered api: get entity");
+
         User user = getUser(authorization);
         String searchName = null;
         EntityType searchType;
@@ -459,7 +460,7 @@ public class RestAPI {
 
 
         List<Entity> children = getChildEntitiesIfRequested(user, withChildren);
-        Integer indx = user.getIsAdmin() ? 0 : null;
+
         setHAL(user, user, children, getCurrentUrl(request), null);
         user.setChildren(children);
         return user;
@@ -493,7 +494,6 @@ public class RestAPI {
     @RequestMapping(value = "/{uuid}", method = RequestMethod.DELETE)
     public ResponseEntity doDelete(@RequestHeader(name = "Authorization") String authorization,
                                    @PathVariable String uuid) throws IOException {
-        logger.info("entered api: delete entity");
 
         User user = getUser(authorization);
         Optional<Entity> optional = entityDao.findEntity(user, uuid);
@@ -551,7 +551,7 @@ public class RestAPI {
     @RequestMapping(value = "/", method = RequestMethod.PUT)
     public ResponseEntity putUser(@RequestHeader(name = "Authorization") String authorization, @RequestBody User update) {
 
-        logger.info("entered api: update user");
+
         User user = getUser(authorization);
         if (user.getIsAdmin()) {
             if (!StringUtils.isEmpty(update.getPassword())) {
@@ -596,7 +596,7 @@ public class RestAPI {
 
 
         if (entity.getEntityType().equals(EntityType.point)) {
-            Point point = (Point) entity;
+
             series = new Series(path + entity.getId() + "/series");
             dataTable = new DataTable(path + entity.getId() + "/table");
             snapshot = new Snapshot(path + entity.getId() + "/snapshot");
@@ -629,7 +629,6 @@ public class RestAPI {
                     cseries = new Series(path + child.getId() + "/series");
                     cdataTable = new DataTable(path + child.getId() + "/table");
                     csnapshot = new Snapshot(path + child.getId() + "/snapshot");
-                    Point point1 = (Point) child;
 
                 }
                 //  Entity parentEntity = childMap.get(child.getParent());

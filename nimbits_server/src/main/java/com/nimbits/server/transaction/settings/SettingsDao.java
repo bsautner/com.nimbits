@@ -21,6 +21,8 @@ import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.setting.Setting;
 import com.nimbits.server.orm.SettingEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import javax.jdo.PersistenceManager;
@@ -43,7 +45,7 @@ public class SettingsDao {
 
     }
 
-
+    @Cacheable(cacheNames = "settings", key = "#setting.name")
     public String getSetting(final ServerSetting setting) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         String retVal;
@@ -67,15 +69,15 @@ public class SettingsDao {
         return retVal;
     }
 
-
-    public void updateSetting(final ServerSetting name, final String newValue) {
+    @CacheEvict(cacheNames = "settings", key = "#setting.name")
+    public void updateSetting(final ServerSetting setting, final String newValue) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
 
             final Query q = pm.newQuery(SettingEntity.class, "name == n");
             q.setRange(0, 1);
             q.declareParameters("String n");
-            final List<Setting> a = (List<Setting>) q.execute(name.getName());
+            final List<Setting> a = (List<Setting>) q.execute(setting.getName());
             if (!a.isEmpty()) {
                 final Transaction tx = pm.currentTransaction();
                 tx.begin();
@@ -85,8 +87,8 @@ public class SettingsDao {
 
 
             } else {
-                SettingEntity setting = new SettingEntity(name, newValue);
-                pm.makePersistent(setting);
+                SettingEntity newSetting = new SettingEntity(setting, newValue);
+                pm.makePersistent(newSetting);
             }
         } finally {
             pm.close();
@@ -94,18 +96,6 @@ public class SettingsDao {
     }
 
 
-    public void addSetting(final ServerSetting name, final String value) {
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
-        try {
-            final Setting s = new SettingEntity(name, value);
-            pm.makePersistent(s);
-        } finally {
-            pm.close();
-        }
-
-
-    }
 
 
 }

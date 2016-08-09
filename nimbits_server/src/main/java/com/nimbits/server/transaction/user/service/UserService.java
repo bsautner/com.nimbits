@@ -281,6 +281,7 @@ public class UserService {
         }
     }
 
+    @Deprecated
     private User loginUser(HttpServletRequest request, String email, User user) {
         LoginInfo loginInfo = UserModelFactory.createLoginInfo("", "", UserStatus.newUser);
         user.setLoginInfo(loginInfo);
@@ -289,6 +290,7 @@ public class UserService {
         return user;
     }
 
+    @Deprecated
     String startSession(HttpServletRequest req, String email) {
 
 
@@ -297,7 +299,7 @@ public class UserService {
         String authToken = UUID.randomUUID().toString();
 
         session.setAttribute(Const.LOGGED_IN_EMAIL, email);
-        session.setAttribute(Parameters.token.getText(), authToken);
+        session.setAttribute("token", authToken);
         userDao.storeAuthToken(email, authToken);
         return authToken;
 

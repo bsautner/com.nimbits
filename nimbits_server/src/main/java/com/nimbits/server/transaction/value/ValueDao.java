@@ -7,7 +7,11 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.orm.ValueStore;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Repository;
 
 import javax.jdo.PersistenceManager;
@@ -16,6 +20,7 @@ import javax.jdo.Query;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -25,7 +30,7 @@ public class ValueDao {
 
 
     private PersistenceManagerFactory persistenceManagerFactory;
-
+    private final org.slf4j.Logger logger = LoggerFactory.getLogger(ValueDao.class);
 
     @Autowired
     public void setPersistenceManagerFactory(PersistenceManagerFactory persistenceManagerFactory) {
@@ -33,10 +38,11 @@ public class ValueDao {
 
     }
 
+    @Cacheable(cacheNames = "snapshots", key="#entity.id")
     public Value getSnapshot(Entity entity) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
+        logger.info("getting snapshot");
         try {
             final Query<ValueStore> q1;
 
@@ -62,12 +68,12 @@ public class ValueDao {
         }
     }
 
-
+    @CacheEvict(cacheNames = "snapshots", key="#entity.id")
     public void setSnapshot(Entity entity, Value value) {
 
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
+        logger.info("storing snapshot");
         try {
             ValueStore valueStore = new ValueStore(entity.getId(), value);
 
@@ -138,6 +144,7 @@ public class ValueDao {
         }
     }
 
+    @CacheEvict(cacheNames = "snapshots", key="#entity.id")
     public void storeValues(Entity entity, List<Value> values) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
@@ -152,6 +159,7 @@ public class ValueDao {
         }
     }
 
+    @CacheEvict(cacheNames = "snapshots", key="#entity.id")
     public void deleteAllData(Entity entity) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 

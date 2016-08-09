@@ -28,10 +28,7 @@ public enum ServerSetting {
 
     gcm(SettingConstants.SETTING_GCM, "", false, true, false, false, false),
     version(SettingConstants.SETTING_VERSION, Const.VERSION, true, true, true, false, false),
-    uuid(SettingConstants.SETTING_UUID, SettingConstants.SETTING_UUID_DEFAULT, true, true, true, false, false),
-    storeDirectory(SettingConstants.SETTING_STORE_DIRECTORY, SettingConstants.STORE_DIRECTORY_DEFAULT, false, true, false, false, false),
     admin(SettingConstants.SETTING_ADMIN, SettingConstants.SETTING_ADMIN_DEFAULT, false, true, false, false, false),
-    token(SettingConstants.SERVER_TOKEN, SettingConstants.API_KEY_DEFAULT, false, true, false, false, false),
     smtp(SettingConstants.SETTING_SMTP, SettingConstants.SETTING_SMTP_DEFAULT, false, true, false, false, false),
     smtpPassword(SettingConstants.SETTING_SMTP_PASSWORD, SettingConstants.SETTING_SMTP_PASSWORD_DEFAULT, false, true, false, true, false),
 
@@ -112,15 +109,12 @@ public enum ServerSetting {
 
     private static class SettingConstants {
 
-        static final String STORE_DIRECTORY_DEFAULT = "/opt/nimbits/data";
         static final String SETTING_ADMIN = "admin";
         static final String SETTING_SMTP = "smtp";
         static final String SETTING_SMTP_PASSWORD = "smtp password";
         static final String SETTING_ADMIN_DEFAULT = "support@nimbits.com";
         static final String SETTING_VERSION = "version";
         static final String SERVER_TOKEN = "token";
-        static final String SETTING_STORE_DIRECTORY = "blob dir";
-        static final String API_KEY_DEFAULT = "SYSTEM_WIDE_TOKEN_CHANGE_ME";
         static final String SETTING_SMTP_DEFAULT = "smtp.gmail.com";
         static final String SETTING_SMTP_PASSWORD_DEFAULT = "";
 

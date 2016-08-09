@@ -17,7 +17,6 @@
 package com.nimbits.server.transaction.user.service;
 
 import com.google.common.base.Optional;
-import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.ServerSetting;
@@ -25,8 +24,10 @@ import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.user.*;
-import com.nimbits.server.auth.AuthService;
+import com.nimbits.client.model.user.Credentials;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.UserModel;
+import com.nimbits.client.model.user.UserSource;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.user.dao.UserDao;
@@ -37,10 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import java.util.List;
 import java.util.StringTokenizer;
-import java.util.UUID;
 
 @Service
 public class UserService {
@@ -49,27 +47,15 @@ public class UserService {
 
     private final SettingsService settingsService;
 
-    private final AuthService authService;
-
     private final EntityDao entityDao;
 
     @Autowired
-    public UserService(UserDao userDao, SettingsService settingsService, AuthService authService, EntityDao entityDao) {
+    public UserService(UserDao userDao, SettingsService settingsService,  EntityDao entityDao) {
         this.userDao = userDao;
         this.settingsService = settingsService;
-        this.authService = authService;
         this.entityDao = entityDao;
     }
 
-
-    public Optional<Credentials> credentialsWithBasicAuthentication(HttpServletRequest req) {
-        String authHeader = req.getHeader("Authorization");
-        if (authHeader != null) {
-            return credentialsWithBasicAuthentication(authHeader);
-        }
-
-        return Optional.absent();
-    }
 
     public Optional<Credentials> credentialsWithBasicAuthentication(String authHeader) {
 
@@ -104,92 +90,9 @@ public class UserService {
         return Optional.absent();
     }
 
-    @Deprecated
-    public User getHttpRequestUser(final HttpServletRequest req) {
-        Optional<Credentials> credentials = credentialsWithBasicAuthentication(req);
-
-        EmailAddress email = null;
-
-        if (credentials.isPresent()) {
-            email = CommonFactory.createEmailAddress(credentials.get().getLogin());
-
-        }
-
-        //legacy stuff
-
-        if (email == null) {
-            email = getEmailFromRequest(req);
-        }
-
-        if (email == null) {
-            email = getEmailFromLoggedInUser(req);
-        }
 
 
-        if (email != null) {
 
-
-            User user;
-
-
-            Optional<User> result = entityDao.getUser(email.getValue());
-
-
-            if (!result.isPresent()) {
-
-
-                return createUserIfNonexistantButAuthenticated(email, credentials);
-
-
-            } else {
-                user = result.get();
-                if (credentials.isPresent()) {
-                    if (!validatePassword(user, credentials.get().getPassword())) {
-                        throw new SecurityException("Invalid Password");
-                    }
-                }
-
-            }
-
-            return user;
-        } else {
-
-            throw new RuntimeException("User not found - could not get an email address from your request");
-
-        }
-
-
-    }
-
-    private User createUserIfNonexistantButAuthenticated(EmailAddress email, Optional<Credentials> credentials) {
-        User user;
-
-        String password;
-        UserSource source;
-        if (credentials.isPresent()) {
-            password = credentials.get().getPassword();
-            source = UserSource.google;
-        } else {
-            password = UUID.randomUUID().toString();
-            source = UserSource.local;
-        }
-
-
-        user = createUserRecord(email, password, source);
-
-        return user;
-
-
-    }
-
-
-    private EmailAddress getEmailFromRequest(HttpServletRequest req) {
-        if (req != null) {
-            String emailParam = req.getParameter(Parameters.email.getText());
-            return StringUtils.isEmpty(emailParam) ? null : CommonFactory.createEmailAddress(emailParam);
-        }
-        return null;
-    }
 
 
     public User createUserRecord(final EmailAddress internetAddress, String password, UserSource source) {
@@ -230,7 +133,7 @@ public class UserService {
         if (StringUtils.isEmpty(adminStr)) {
             throw new IllegalArgumentException("Server is missing admin setting!");
         } else {
-            final User u = new UserModel.Builder()
+            return new UserModel.Builder()
                     .name(CommonFactory.createName(adminStr, EntityType.user))
                     .id(adminStr)
                     .email(adminStr)
@@ -238,7 +141,6 @@ public class UserService {
                     .parent(adminStr)
                     .isAdmin(true).create();
 
-            return u;
         }
     }
 
@@ -265,14 +167,37 @@ public class UserService {
 
     }
 
+    public User getUser(String authString) {
 
-    User doLogin(HttpServletRequest request, String email, String token) {
+        Optional<Credentials> credentials = credentialsWithBasicAuthentication(authString);
+        if (credentials.isPresent()) {
+            Optional<User> user = userDao.getUserByEmail(credentials.get().getLogin());
+            if (user.isPresent()) {
+                if (validatePassword(user.get(), credentials.get().getPassword())) {
+                    return user.get();
+                } else {
 
-        Optional<User> optional = entityDao.getUser(email);
+                    throw new SecurityException("Invalid Password: " + authString);
+                }
+
+            } else {
+                throw new SecurityException("User Not Found: " + authString);
+            }
+        } else {
+            throw new SecurityException("Invalid Credentials: " + authString);
+        }
+
+
+    }
+
+
+    User doLogin(String email, String token) {
+
+        Optional<User> optional = userDao.getUserByEmail(email);
         if (optional.isPresent()) {
             User user = optional.get();
             if (validatePassword(user, token)) {
-                return loginUser(request, email, user);
+                return user;
             } else {
                 throw new SecurityException("Invalid user name or password");
             }
@@ -281,29 +206,7 @@ public class UserService {
         }
     }
 
-    @Deprecated
-    private User loginUser(HttpServletRequest request, String email, User user) {
-        LoginInfo loginInfo = UserModelFactory.createLoginInfo("", "", UserStatus.newUser);
-        user.setLoginInfo(loginInfo);
-        String authToken = startSession(request, email);
-        user.setToken(authToken);
-        return user;
-    }
 
-    @Deprecated
-    String startSession(HttpServletRequest req, String email) {
-
-
-        HttpSession session = req.getSession(true);
-
-        String authToken = UUID.randomUUID().toString();
-
-        session.setAttribute(Const.LOGGED_IN_EMAIL, email);
-        session.setAttribute("token", authToken);
-        userDao.storeAuthToken(email, authToken);
-        return authToken;
-
-    }
 
     public User updatePassword(User u, String password) {
 
@@ -318,28 +221,8 @@ public class UserService {
 
     }
 
-    boolean userHasPoints(User user) {
-
-        return userDao.userHasPoints(user);
-    }
 
 
-    private EmailAddress getEmailFromLoggedInUser(HttpServletRequest request) {
-
-        List<EmailAddress> emailSample = authService.getCurrentUser(request);
-        EmailAddress emailAddress;
-        if (emailSample.isEmpty()) {
-            emailAddress = null;
-        } else {
-            emailAddress = emailSample.get(0);
-        }
-        if (emailAddress != null) {
-
-            return emailAddress;
-
-        }
-        return null;
-    }
 
 
     protected EntityType getEntityType(HttpServletRequest req) {

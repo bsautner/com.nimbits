@@ -26,6 +26,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityServiceRpc;
 import com.nimbits.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.client.ui.helper.FeedbackHelper;
@@ -50,8 +51,10 @@ public class AlertPanel extends BasePanel {
     private final Entity entity;
 
 
-    public AlertPanel(BasePanel.PanelEvent listener, final Entity entity) {
-        super(listener, "<a href=\"http://www.nimbits.com/howto_alerts.jsp\">Learn More: Data Points</a>");
+
+
+    public AlertPanel(final User user, BasePanel.PanelEvent listener, final Entity entity) {
+        super(user, listener, "<a href=\"http://www.nimbits.com/howto_alerts.jsp\">Learn More: Data Points</a>");
         this.entity = entity;
 
         createForm();
@@ -181,7 +184,7 @@ public class AlertPanel extends BasePanel {
 
             final EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
             // PointServiceAsync service = GWT.create(PointService.class);
-            service.addUpdateEntityRpc(point, new AsyncCallback<Entity>() {
+            service.addUpdateEntityRpc(user, point, new AsyncCallback<Entity>() {
                 @Override
                 public void onFailure(final Throwable caught) {
                     box.close();

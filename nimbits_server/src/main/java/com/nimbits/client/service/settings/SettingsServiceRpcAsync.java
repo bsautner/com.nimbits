@@ -17,7 +17,6 @@
 package com.nimbits.client.service.settings;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-
 public interface SettingsServiceRpcAsync {
 
     void getSetting(String setting, final AsyncCallback<String> asyncCallback);

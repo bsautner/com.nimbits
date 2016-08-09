@@ -17,7 +17,6 @@
 package com.nimbits.server.process.task;
 
 import com.google.gson.Gson;
-import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
@@ -27,7 +26,6 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.data.DataProcessor;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.orm.socket.SocketStore;
 import com.nimbits.server.transaction.BaseProcessor;
 import com.nimbits.server.transaction.calculation.CalculationService;
 import com.nimbits.server.transaction.entity.EntityService;
@@ -50,13 +48,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 @Service
 public class ValueTask extends HttpServlet implements BaseProcessor {
@@ -223,7 +217,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
             if (snapshot.getTimestamp().getTime() < value.getTimestamp().getTime()) {
                 valueDao.setSnapshot(point, value);
             }
-//            logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
+
             calculationService.process(u, point, value);
 
             summaryService.process(u, point, value);
@@ -232,53 +226,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
 
             subscriptionService.process(u, point, value);
 
-            //TODO - turned this off  trying to fix logging
-//   value         try {
-//             //   connectedClients.sendLiveEvents(u, point, value, u.getToken());
-//            } catch (IOException e) {
-//                logger.error(e.getMessage());
-//            }getMessage
 
-            List<SocketStore> socketStores = Collections.emptyList();    //userDao.getSocketSessions(u);
-
-            //TODO outbound sockets?
-            //logger.info("*****processing socket relay " + socketStores.size());
-            for (SocketStore socketStore : socketStores) {
-
-
-                try {
-                    //my socket relay instance
-                    URL url = new URL("http://" + Const.SOCKET_RELAY + "/service/v2/socket");
-                    logger.info(url.toString());
-
-                    // create and open the connection using POST
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                    connection.setDoOutput(true);
-                    connection.setRequestMethod("POST");
-
-                    OutputStreamWriter writer = new OutputStreamWriter(connection.getOutputStream());
-                    Gson gson = GsonFactory.getInstance(true);
-                    String json = gson.toJson(value);
-                    String userJson = gson.toJson(u);
-                    String pointJson = gson.toJson(point);
-                    writer.write("user=" + userJson + "&point=" + pointJson + "&json=" + json + "&session=" + socketStore.getSession());
-                    logger.info("user=" + userJson + "&point=" + pointJson + "&json=" + json + "&session=" + socketStore.getSession());
-                    writer.close();
-
-                    // this is where you can check for success/fail.
-                    // Even if this doesn't properly try again, you could make another
-                    // request in the ELSE for extra error handling! :)
-                    if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                        logger.info("post ok");
-                    } else {
-                        logger.error("post to socket relay error " + connection.getResponseCode());
-                    }
-                } catch (Exception e) {
-                    logger.error(e.getMessage());
-                    e.printStackTrace();
-                }
-
-            }
         } catch (Exception ex) {
             ex.printStackTrace();
             logger.error(ex.getMessage());

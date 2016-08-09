@@ -78,18 +78,18 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
     }
 
     @Override
-    public List<Value> solveEquationRpc(final Calculation calculation) {
-        User user = userService.getHttpRequestUser(getThreadLocalRequest());
+    public List<Value> solveEquationRpc(final User user, final Calculation calculation) {
+
         Optional<Value> response = calculationService.solveEquation(user, calculation, null, null);
 
         return response.isPresent() ? Collections.singletonList(response.get()) : Collections.<Value>emptyList();
     }
 
     @Override
-    public void recordValueRpc(final Entity point,
+    public void recordValueRpc(final User user, final Entity point,
                                final Value value) throws ValueException {
 
-        User user = userService.getHttpRequestUser(getThreadLocalRequest());
+
         Point p = (Point) entityDao.getEntity(user, point.getId(), EntityType.point).get();
         logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
         taskService.process(user, p, value);
@@ -98,7 +98,7 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
     }
 
     @Override
-    public Map<String, Entity> getCurrentValuesRpc(final Map<String, Point> entities) throws Exception {
+    public Map<String, Entity> getCurrentValuesRpc(final User user, final Map<String, Point> entities) throws Exception {
         return valueService.getCurrentValues(entities);
 
     }

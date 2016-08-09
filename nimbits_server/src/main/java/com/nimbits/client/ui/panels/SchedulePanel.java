@@ -32,6 +32,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.schedule.ScheduleModel;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityServiceRpc;
 import com.nimbits.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.client.ui.controls.EntityCombo;
@@ -47,8 +48,8 @@ public class SchedulePanel extends BasePanel {
     Logger logger = Logger.getLogger(SchedulePanel.class.getName());
     DateTimeFormat fmt = DateTimeFormat.getFormat(Const.FORMAT_DATE_TIME);
 
-    public SchedulePanel(PanelEvent listener, final Entity entity) {
-        super(listener, "<a href=\"http://www.nimbits.com/howto_schedule.jsp\">Learn More: Schedule Help</a>");
+    public SchedulePanel(User user, PanelEvent listener, final Entity entity) {
+        super(user, listener, "<a href=\"http://www.nimbits.com/howto_schedule.jsp\">Learn More: Schedule Help</a>");
         this.entity = entity;
         createForm();
     }
@@ -87,10 +88,10 @@ public class SchedulePanel extends BasePanel {
         }
 
 
-        final EntityCombo targetCombo = new EntityCombo(EntityType.point, target, "Target");
+        final EntityCombo targetCombo = new EntityCombo(user, EntityType.point, target, "Target");
         targetCombo.setFieldLabel("Target");
 
-        final EntityCombo sourceCombo = new EntityCombo(EntityType.point, source, "Source");
+        final EntityCombo sourceCombo = new EntityCombo(user, EntityType.point, source, "Source");
         sourceCombo.setFieldLabel("Source");
 
         enabled.setBoxLabel("Enabled");
@@ -228,7 +229,7 @@ public class SchedulePanel extends BasePanel {
             // Date combined = new Date(date.getTime() + time.getTime() - 1);
             // update.setLastProcessed(date.getTime());
             logger.log(Level.INFO, "doing rpc");
-            service.addUpdateEntityRpc(update, new AddScheduleEntityAsyncCallback(box));
+            service.addUpdateEntityRpc(user, update, new AddScheduleEntityAsyncCallback(box));
 
         }
     }

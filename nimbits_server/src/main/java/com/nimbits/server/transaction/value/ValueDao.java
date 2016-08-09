@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Repository;
 
 import javax.jdo.PersistenceManager;
@@ -20,7 +19,6 @@ import javax.jdo.Query;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -116,7 +114,8 @@ public class ValueDao {
                 q1.setFilter("entityId==i");
                 q1.declareParameters("String i");
                 q1.orderBy("timestamp desc");
-                result = (List<ValueStore>) q1.execute(entity.getId(), timespan.get().lowerEndpoint(), timespan.get().upperEndpoint());
+
+                result = (List<ValueStore>) q1.execute(entity.getId());
             }
 
             if (result != null) {

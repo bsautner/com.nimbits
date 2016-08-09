@@ -28,11 +28,12 @@ import java.util.List;
 import java.util.Map;
 
 public interface ValueServiceRpcAsync {
-    void solveEquationRpc(final Calculation calculation, final AsyncCallback<List<Value>> async);
 
-    void recordValueRpc(final Entity point, final Value value, final AsyncCallback<Void> asyncCallback) throws ValueException;
+    void solveEquationRpc(final User user, final Calculation calculation, final AsyncCallback<List<Value>> async);
 
-    void getCurrentValuesRpc(Map<String, Point> entities, AsyncCallback<Map<String, Entity>> async);
+    void recordValueRpc(final User user, final Entity point, final Value value, final AsyncCallback<Void> asyncCallback) throws ValueException;
+
+    void getCurrentValuesRpc(final User user, Map<String, Point> entities, AsyncCallback<Map<String, Entity>> async);
 
     void getChartTable(final User user, Entity entity, Integer count, AsyncCallback<String> asyncCallback);
 }

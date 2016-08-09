@@ -23,7 +23,6 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.schedule.Schedule;
-import com.nimbits.client.model.socket.Socket;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.sync.Sync;
@@ -63,9 +62,6 @@ public interface EntityApi {
     Instance getInstance(@Query("email") String email, @Query("key") String key, @Query("id") String id);
 
     @GET(API)
-    Socket getSocket(@Query("email") String email, @Query("key") String key, @Query("id") String id);
-
-    @GET(API)
     Schedule getSchedule(@Query("email") String email, @Query("key") String key, @Query("id") String id);
 
     @GET(API)
@@ -97,8 +93,6 @@ public interface EntityApi {
     @POST(API)
     Instance addInstance(@Body Entity entity);
 
-    @POST(API)
-    Socket addSocket(@Body Entity entity);
 
     @POST(API)
     Schedule addSchedule(@Body Entity entity);

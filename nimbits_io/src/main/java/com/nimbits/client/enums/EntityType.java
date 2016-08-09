@@ -26,8 +26,6 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.schedule.ScheduleModel;
-import com.nimbits.client.model.socket.Socket;
-import com.nimbits.client.model.socket.SocketModel;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.subscription.SubscriptionModel;
 import com.nimbits.client.model.summary.Summary;
@@ -55,7 +53,6 @@ public enum EntityType implements Serializable {
     calculation(7, true, false, true, false, 6, "com.nimbits.server.orm.CalcEntity", Calculation.class, CalculationModel.class),
     summary(11, true, false, true, false, 11, "com.nimbits.server.orm.SummaryEntity", Summary.class, SummaryModel.class),
     instance(14, false, true, false, false, 14, "com.nimbits.server.orm.InstanceEntity", Instance.class, InstanceModel.class),
-    socket(19, false, true, true, false, 19, "com.nimbits.server.orm.SocketEntity", Socket.class, SocketModel.class),
     schedule(21, false, false, true, false, 21, "com.nimbits.server.orm.ScheduleEntity", Schedule.class, ScheduleModel.class),
     webhook(22, false, false, true, false, 22, "com.nimbits.server.orm.WebHookEntity", WebHook.class, WebHookModel.class);
 

@@ -17,12 +17,9 @@
 package com.nimbits.client.service.user;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.model.system.SystemDetails;
 import com.nimbits.client.model.user.User;
 
 public interface UserServiceRpcAsync {
-
-    void loginRpc(final String requestUri, final AsyncCallback<User> async);
 
     void doLogin(final String email, final String password, final AsyncCallback<User> async) throws UserServiceRpcException;
 
@@ -34,7 +31,4 @@ public interface UserServiceRpcAsync {
 
     void resetPassword(String email, String password, String recoveryToken, AsyncCallback<User> asyncCallback) throws UserServiceRpcException;
 
-    void verifyEmail(String email, AsyncCallback<Boolean> asyncCallback);
-
-    void getSystemDetails(AsyncCallback<SystemDetails> asyncCallback);
 }

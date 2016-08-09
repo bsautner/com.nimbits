@@ -25,6 +25,7 @@ import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityServiceRpc;
 import com.nimbits.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.client.ui.helper.FeedbackHelper;
@@ -34,7 +35,7 @@ import java.util.Map;
 public class EntityCombo extends ComboBox<TreeModel> {
 
 
-    public EntityCombo(final EntityType type,
+    public EntityCombo(User user, final EntityType type,
                        final String selectedUUID,
                        final String emptyText) {
 
@@ -48,7 +49,7 @@ public class EntityCombo extends ComboBox<TreeModel> {
         setAutoValidate(true);
 
 
-        service.getEntityMapRpc(type.getCode(), 100, new GetEntityMapAsyncCallback(emptyText, cbStore, selectedUUID));
+        service.getEntityMapRpc(user, type.getCode(), 100, new GetEntityMapAsyncCallback(emptyText, cbStore, selectedUUID));
 
 
     }

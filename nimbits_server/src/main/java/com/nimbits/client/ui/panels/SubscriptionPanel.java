@@ -52,12 +52,12 @@ public class SubscriptionPanel extends BasePanel {
 
 
     private final Entity entity;
-    private final User user;
+
 
     public SubscriptionPanel(PanelEvent listener, final Entity entity, User user) {
 
-        super(listener, "<a href=\"http://www.nimbits.com/howto_subscribe.jsp\">Learn More: Subscription Help</a>");
-        this.user = user;
+        super(user, listener, "<a href=\"http://www.nimbits.com/howto_subscribe.jsp\">Learn More: Subscription Help</a>");
+
         this.entity = entity;
         createForm();
     }
@@ -149,14 +149,14 @@ public class SubscriptionPanel extends BasePanel {
 
 
             if (subscription.getNotifyMethod().equals(SubscriptionNotifyMethod.webhook)) {
-                webHookCombo = new EntityCombo(EntityType.webhook, subscription.getTarget(), "Web Hook Target");
+                webHookCombo = new EntityCombo(user, EntityType.webhook, subscription.getTarget(), "Web Hook Target");
 
 
                 webHookCombo.setVisible(true);
 
 
             } else {
-                webHookCombo = new EntityCombo(EntityType.webhook, "", "Web Hook Target");
+                webHookCombo = new EntityCombo(user, EntityType.webhook, "", "Web Hook Target");
                 webHookCombo.setVisible(false);
             }
 
@@ -167,7 +167,7 @@ public class SubscriptionPanel extends BasePanel {
 
             subscriptionName.setValue(entity.getName().getValue() + " Subscription");
 
-            webHookCombo = new EntityCombo(EntityType.webhook, "", "Web Hook Target");
+            webHookCombo = new EntityCombo(user, EntityType.webhook, "", "Web Hook Target");
             webHookCombo.setVisible(false);
         }
 
@@ -221,6 +221,9 @@ public class SubscriptionPanel extends BasePanel {
             this.method = value;
             set(Parameters.value.getText(), value.getCode());
             set(Parameters.name.getText(), value.getText());
+        }
+
+        private DeliveryMethodOption() {
         }
 
         public SubscriptionNotifyMethod getMethod() {
@@ -348,7 +351,7 @@ public class SubscriptionPanel extends BasePanel {
 
                 final Subscription update = builder.create();
                 EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
-                service.addUpdateEntityRpc(update, new UpdateEntityAsyncCallback(box));
+                service.addUpdateEntityRpc(user, update, new UpdateEntityAsyncCallback(box));
 
 
             } catch (Exception e) {

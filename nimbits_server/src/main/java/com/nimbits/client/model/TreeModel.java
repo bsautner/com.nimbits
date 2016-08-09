@@ -26,6 +26,7 @@ import java.io.Serializable;
 
 
 public interface TreeModel extends com.extjs.gxt.ui.client.data.TreeModel, Serializable {
+
     AlertType getAlertType();
 
     void setAlertType(AlertType alertType);
@@ -39,8 +40,6 @@ public interface TreeModel extends com.extjs.gxt.ui.client.data.TreeModel, Seria
     void setName(EntityName name);
 
     boolean isReadOnly();
-
-    void setReadOnly(boolean readOnly);
 
     boolean isDirty();
 

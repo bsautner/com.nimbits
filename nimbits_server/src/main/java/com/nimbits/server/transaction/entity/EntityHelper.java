@@ -27,8 +27,6 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.schedule.ScheduleModel;
-import com.nimbits.client.model.socket.Socket;
-import com.nimbits.client.model.socket.SocketModel;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.subscription.SubscriptionModel;
 import com.nimbits.client.model.summary.Summary;
@@ -76,8 +74,6 @@ public class EntityHelper {
 
             case sync:
                 return new SyncEntity((Sync) entity);
-            case socket:
-                return new SocketEntity((Socket) entity);
 
             case schedule:
                 return new ScheduleEntity((Schedule) entity);
@@ -140,9 +136,6 @@ public class EntityHelper {
                 model = new SyncModel.Builder().init((Sync) entity).create();
                 break;
 
-            case socket:
-                model = new SocketModel.Builder().init((Socket) entity).create();
-                break;
             case instance:
                 model = new InstanceModel.Builder().init((Instance) entity).create();// InstanceModelFactory.createInstance((Instance) entity);
                 break;

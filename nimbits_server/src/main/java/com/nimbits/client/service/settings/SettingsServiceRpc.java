@@ -19,6 +19,7 @@ package com.nimbits.client.service.settings;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
+import com.nimbits.client.model.user.User;
 
 @RemoteServiceRelativePath("rpc/settingsService")
 public interface SettingsServiceRpc extends RemoteService {

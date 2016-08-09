@@ -29,16 +29,15 @@ import java.util.List;
 import java.util.Map;
 
 @RemoteServiceRelativePath("rpc/valueService")
-@SuppressWarnings("unused")
 public interface ValueServiceRpc extends RemoteService {
 
     String getChartTable(final User user, Entity entity, Integer count);
 
-    List<Value> solveEquationRpc(final Calculation calculation) throws Exception;
+    List<Value> solveEquationRpc(final User user, final Calculation calculation) throws Exception;
 
-    void recordValueRpc(final Entity entity, final Value value) throws ValueException;
+    void recordValueRpc(final User user, final Entity entity, final Value value) throws ValueException;
 
-    Map<String, Entity> getCurrentValuesRpc(final Map<String, Point> entities) throws Exception;
+    Map<String, Entity> getCurrentValuesRpc(final User user, final Map<String, Point> entities) throws Exception;
 
 
 }

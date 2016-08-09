@@ -33,6 +33,7 @@ import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.trigger.Trigger;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.entity.EntityServiceRpc;
 import com.nimbits.client.service.entity.EntityServiceRpcAsync;
@@ -49,8 +50,8 @@ public class CalculationPanel extends BasePanel {
     private final Entity entity;
 
 
-    public CalculationPanel(PanelEvent listener, final Entity entity) {
-        super(listener, "<a href=\"http://www.nimbits.com/howto_calcs.jsp\">Learn More: Calculations Help</a>");
+    public CalculationPanel(final User user, PanelEvent listener, final Entity entity) {
+        super(user, listener, "<a href=\"http://www.nimbits.com/howto_calcs.jsp\">Learn More: Calculations Help</a>");
         this.entity = entity;
         createForm();
     }
@@ -86,16 +87,16 @@ public class CalculationPanel extends BasePanel {
         }
 
 
-        final EntityCombo targetCombo = new EntityCombo(EntityType.point, targetKey, MESSAGE_SELECT_POINT);
+        final EntityCombo targetCombo = new EntityCombo(user, EntityType.point, targetKey, MESSAGE_SELECT_POINT);
         targetCombo.setFieldLabel("Target");
 
-        final EntityCombo xCombo = new EntityCombo(EntityType.point, xc, MESSAGE_SELECT_POINT);
+        final EntityCombo xCombo = new EntityCombo(user, EntityType.point, xc, MESSAGE_SELECT_POINT);
         xCombo.setFieldLabel("x var");
 
-        final EntityCombo yCombo = new EntityCombo(EntityType.point, yc, MESSAGE_SELECT_POINT);
+        final EntityCombo yCombo = new EntityCombo(user, EntityType.point, yc, MESSAGE_SELECT_POINT);
         yCombo.setFieldLabel("y var");
 
-        final EntityCombo zCombo = new EntityCombo(EntityType.point, zc, MESSAGE_SELECT_POINT);
+        final EntityCombo zCombo = new EntityCombo(user, EntityType.point, zc, MESSAGE_SELECT_POINT);
         zCombo.setFieldLabel("z var");
 
         enabled.setBoxLabel("Enabled");
@@ -201,7 +202,7 @@ public class CalculationPanel extends BasePanel {
 
             simple.setHideOnButtonClick(true);
             final ValueServiceRpcAsync service = GWT.create(ValueServiceRpc.class);
-            service.solveEquationRpc(calculation1, new GetValueAsyncCallback(simple));
+            service.solveEquationRpc(user, calculation1, new GetValueAsyncCallback(simple));
 
         }
 
@@ -266,7 +267,7 @@ public class CalculationPanel extends BasePanel {
                 return;
             }
 
-            service.addUpdateEntityRpc(update, new AddEntityAsyncCallback(box));
+            service.addUpdateEntityRpc(user, update, new AddEntityAsyncCallback(box));
 
         }
     }

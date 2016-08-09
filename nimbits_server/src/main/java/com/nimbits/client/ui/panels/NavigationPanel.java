@@ -161,7 +161,7 @@ public class NavigationPanel extends NavigationEventProvider {
 //            final String data = model.get(Const.PARAM_DATA);
             final Value value = new Value.Builder().doubleWithData(v).timestamp(timestamp).create();// Value.getInstance(SimpleValue.getInstance(v), timestamp);
 
-            valueService.recordValueRpc(model.getBaseEntity(), value, new SaveValueAsyncCallback(model, value));
+            valueService.recordValueRpc(user, model.getBaseEntity(), value, new SaveValueAsyncCallback(model, value));
             model.setDirty(false);
         }
         tree.getTreeStore().commitChanges();
@@ -404,10 +404,6 @@ public class NavigationPanel extends NavigationEventProvider {
                             context.showSummaryPanel(model.getBaseEntity());
                             break;
 
-                        case socket:
-                            context.showSocketPanel(model.getBaseEntity());
-                            break;
-
                         case schedule:
                             context.showSchedulePanel(model.getBaseEntity());
                             break;
@@ -555,7 +551,7 @@ public class NavigationPanel extends NavigationEventProvider {
 
                 draggedEntity.setParent(target.getId());
 
-                entityService.addUpdateEntityRpc(draggedEntity, new MoveEntityAsyncCallback());
+                entityService.addUpdateEntityRpc(user, draggedEntity, new MoveEntityAsyncCallback());
             }
         }
 
@@ -590,7 +586,7 @@ public class NavigationPanel extends NavigationEventProvider {
 
                     value = new Value.Builder().doubleWithData(valueAndNote).timestamp(timestamp).create();// Value.getInstance(SimpleValue.getInstance(valueAndNote), timestamp);
                     try {
-                        valueService.recordValueRpc(entity, value, new RecordValueCallback(value, be, model));
+                        valueService.recordValueRpc(user, entity, value, new RecordValueCallback(value, be, model));
                     } catch (ValueException e) {
                         FeedbackHelper.showError(e);
                     }
@@ -658,7 +654,7 @@ public class NavigationPanel extends NavigationEventProvider {
         }
 
         private void reloadCurrentValues(final Map<String, Point> entityMap) {
-            valueService.getCurrentValuesRpc(entityMap, new ReloadAsyncCallback());
+            valueService.getCurrentValuesRpc(user, entityMap, new ReloadAsyncCallback());
         }
 
         private Map<String, Point> getVisiblePoints() {

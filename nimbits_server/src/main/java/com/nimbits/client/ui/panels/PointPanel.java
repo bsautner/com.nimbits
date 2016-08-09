@@ -30,6 +30,7 @@ import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityServiceRpc;
 import com.nimbits.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.client.ui.helper.FeedbackHelper;
@@ -59,8 +60,8 @@ public class PointPanel extends BasePanel {
     private ComboBox<PointTypeOption> pointType;
 
 
-    public PointPanel(PanelEvent listener, final Entity entity) {
-        super(listener, "<a href=\"http://www.nimbits.com/howto_points.jsp\">Learn More: Data Points</a>");
+    public PointPanel(User user, PanelEvent listener, final Entity entity) {
+        super(user, listener, "<a href=\"http://www.nimbits.com/howto_points.jsp\">Learn More: Data Points</a>");
         this.entity = entity;
 
         createForm();
@@ -220,7 +221,7 @@ public class PointPanel extends BasePanel {
 
             final EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
             // PointServiceAsync service = GWT.create(PointService.class);
-            service.addUpdateEntityRpc(point, new AsyncCallback<Entity>() {
+            service.addUpdateEntityRpc(user, point, new AsyncCallback<Entity>() {
                 @Override
                 public void onFailure(final Throwable caught) {
                     box.close();

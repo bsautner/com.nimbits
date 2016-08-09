@@ -33,13 +33,14 @@ import com.extjs.gxt.ui.client.widget.layout.HBoxLayoutData;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 
 import java.util.logging.Logger;
 
 
 public abstract class BasePanel extends NavigationEventProvider {
-
+    public final User user;
     private Logger logger = Logger.getLogger(BasePanel.class.getName());
     protected static final String MESSAGE_SELECT_POINT = "Select a Data Point";
     public static final int WIDTH = 600;
@@ -56,7 +57,8 @@ public abstract class BasePanel extends NavigationEventProvider {
     protected final PanelEvent listener;
     private Html helpLink;
 
-    public BasePanel(PanelEvent listener, String helpHtml) {
+    public BasePanel(User user, PanelEvent listener, String helpHtml) {
+        this.user = user;
         this.listener = listener;
         formdata = new FormData("-20");
         helpLink = new Html();

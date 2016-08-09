@@ -100,7 +100,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
 
     private AddPointMenuItem addPointMenuItem;
     private AddFolderMenuItem addFolderMenuItem;
-    private MenuItem socketContext;
+
 
     private final User user;
 
@@ -133,7 +133,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
 
                         Point p = new PointModel.Builder().name(name).parent(currentEntity.getId()).create();
 
-                        service.addUpdateEntityRpc(p, new NewPointEntityAsyncCallback(box));
+                        service.addUpdateEntityRpc(user, p, new NewPointEntityAsyncCallback(box));
                     } catch (Exception e) {
                         box.close();
                         FeedbackHelper.showError(e);
@@ -203,7 +203,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
                         EntityName name = CommonFactory.createName(newEntityName, EntityType.category);
                         Category p = new CategoryModel.Builder().name(name).create();
                         p.setParent(currentEntity.getId());
-                        service.addUpdateEntityRpc(p, new NewFolderEntityAsyncCallback(box));
+                        service.addUpdateEntityRpc(user, p, new NewFolderEntityAsyncCallback(box));
                     } catch (Exception e) {
                         box.close();
                         FeedbackHelper.showError(e);
@@ -290,23 +290,6 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
         }
     }
 
-    private class SocketMenuEventSelectionListener extends SelectionListener<MenuEvent> {
-        SocketMenuEventSelectionListener() {
-        }
-
-        @Override
-        public void componentSelected(final MenuEvent ce) {
-            final TreeModel selectedModel = (TreeModel) tree.getSelectionModel().getSelectedItem();
-            final Entity entity = selectedModel.getBaseEntity();
-            try {
-                showSocketPanel(entity);
-            } catch (Exception e) {
-                FeedbackHelper.showError(e);
-            }
-        }
-
-    }
-
 
     public EntityContextMenu(final User user, final EntityTree<ModelData> tree) {
         super();
@@ -327,7 +310,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
 
         copyContext = copyContext();
         calcContext = calcContext();
-        socketContext = socketContext();
+
         summaryContext = summaryContext();
 
 
@@ -335,7 +318,6 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
 
         add(addPointMenuItem);
         add(addFolderMenuItem);
-        add(socketContext);
         add(propertyContext);
         add(alertContext);
         add(syncContext);
@@ -408,15 +390,6 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
         retObj.setText(CREATE_CALCULATION);
         retObj.setIcon((Icons.INSTANCE.formula()));
         retObj.addSelectionListener(new CalcMenuEventSelectionListener());
-        return retObj;
-    }
-
-    private MenuItem socketContext() {
-        final MenuItem retObj = new MenuItem();
-
-        retObj.setText(OUTBOUND_SOCKET);
-        retObj.setIcon((Icons.INSTANCE.socket()));
-        retObj.addSelectionListener(new SocketMenuEventSelectionListener());
         return retObj;
     }
 
@@ -519,51 +492,45 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
     }
 
     public void showCalcPanel(final Entity entity) {
-        final CalculationPanel panel = new CalculationPanel(this, entity);
+        final CalculationPanel panel = new CalculationPanel(user, this, entity);
         showModal(panel, CREATE_CALCULATION);
 
     }
 
     public void showWebHookPanel(final Entity entity) {
-        final WebHookPanel panel = new WebHookPanel(this, entity);
+        final WebHookPanel panel = new WebHookPanel(user, this, entity);
         showModal(panel, CREATE_WEBHOOK);
 
     }
 
     public void showSchedulePanel(final Entity entity) {
-        SchedulePanel panel = new SchedulePanel(this, entity);
+        SchedulePanel panel = new SchedulePanel(user, this, entity);
         showModal(panel, SCHEDULE_TIMER);
 
 
     }
 
-    public void showSocketPanel(final Entity entity) {
-        panel = new SocketPanel(this, entity);
-        showModal(panel, SYNCHRONIZE_POINTS);
-
-    }
-
 
     public void showPointPanel(final Entity entity) {
-        panel = new PointPanel(this, entity);
+        panel = new PointPanel(user, this, entity);
         showModal(panel, EDIT_PROPERTIES);
 
     }
 
     public void showSummaryPanel(final Entity entity) {
-        panel = new SummaryPanel(this, entity);
+        panel = new SummaryPanel(user, this, entity);
         showModal(panel, COMPUTE_STATISTICS);
 
     }
 
     private void showSyncPanel(final Entity entity) {
-        panel = new SyncPanel(this, entity);
+        panel = new SyncPanel(user, this, entity);
         showModal(panel, SYNCHRONIZE_POINTS);
     }
 
 
     private void showAlertPanel(final Entity entity) {
-        AlertPanel panel = new AlertPanel(this, entity);
+        AlertPanel panel = new AlertPanel(user, this, entity);
         showModal(panel, SET_ALERTS);
 
     }
@@ -702,7 +669,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
                 }
                 final Entity entity = currentModel.getBaseEntity();
 
-                service.copyEntity(entity, name, new CopyEntityAsyncCallback(box));
+                service.copyEntity(user, entity, name, new CopyEntityAsyncCallback(box));
 
             }
         }
@@ -800,7 +767,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
 
             if (btn.getHtml().equalsIgnoreCase("YES")) {
                 final Entity entityToDelete = currentModel.getBaseEntity();
-                service.deleteEntityRpc(entityToDelete, new DeleteEntityAsyncCallback());
+                service.deleteEntityRpc(user, entityToDelete, new DeleteEntityAsyncCallback());
 
             }
         }

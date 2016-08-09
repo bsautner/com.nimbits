@@ -18,35 +18,24 @@ package com.nimbits.server.transaction.user.service;
 
 import com.google.common.base.Optional;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
-import com.nimbits.client.constants.Const;
-import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.system.SystemDetails;
-import com.nimbits.client.model.system.SystemDetailsModel;
-import com.nimbits.client.model.user.*;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.user.UserSource;
 import com.nimbits.client.service.user.UserServiceRpc;
 import com.nimbits.client.service.user.UserServiceRpcException;
-import com.nimbits.server.auth.AuthService;
 import com.nimbits.server.communication.mail.EmailService;
 import com.nimbits.server.transaction.user.dao.UserDao;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.ServletException;
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @Service
 public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServiceRpc {
-
-    private static final String ANON_NIMBITS_COM = "anon@nimbits.com";
-    private static final Logger log = LoggerFactory.getLogger(UserServiceRpcImpl.class.getName());
 
     @Autowired
     private UserService userService;
@@ -55,91 +44,10 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
     private UserDao userDao;
 
     @Autowired
-    private AuthService authService;
-
-    @Autowired
     private EmailService emailService;
 
 
-    @Override
-    public User loginRpc(final String requestUri) {
 
-        User retObj = null;
-        EmailAddress internetAddress = null;
-        boolean isFirst = !userDao.usersExist();
-        UserStatus userStatus = UserStatus.unknown;
-
-
-        if (isFirst) {
-            userStatus = UserStatus.newServer;
-        }
-
-
-        List<EmailAddress> emailAddresses = authService.getCurrentUser(getThreadLocalRequest());
-
-        if (!emailAddresses.isEmpty()) {
-
-            internetAddress = emailAddresses.get(0);
-        } else {
-            String sessionEmail = (String) getThreadLocalRequest().getSession().getAttribute(Const.LOGGED_IN_EMAIL);
-            if (sessionEmail != null) {
-                internetAddress = CommonFactory.createEmailAddress(sessionEmail);
-            }
-        }
-
-        if (internetAddress != null) {
-
-            log.info("getting user with address: " + internetAddress.getValue());
-
-            if (!userExists(internetAddress.getValue())) {
-                log.info("user not found, creating record");
-                retObj = userService.createUserRecord(internetAddress, UUID.randomUUID().toString(), UserSource.google);
-
-                userStatus = UserStatus.newUser;
-
-
-            } else {
-                log.info("got user result");
-                Optional<User> optional = userDao.getUserByEmail(internetAddress.getValue());
-                if (optional.isPresent()) {
-                    retObj = optional.get();
-
-
-                    if (userService.userHasPoints(retObj)) {
-                        userStatus = UserStatus.loggedIn;
-
-                    } else {
-                        userStatus = UserStatus.newUser;
-                    }
-
-
-                    LoginInfo loginInfo = UserModelFactory.createLoginInfo(authService.createLoginURL(requestUri),
-                            authService.createLogoutURL(requestUri), userStatus);
-                    retObj.setLoginInfo(loginInfo);
-
-
-                }
-
-            }
-
-
-        } else {
-            final EntityName name = CommonFactory.createName(ANON_NIMBITS_COM, EntityType.user);
-
-            retObj = new UserModel.Builder().name(name).create();
-
-            LoginInfo loginInfo = UserModelFactory.createLoginInfo(authService.createLoginURL(requestUri),
-                    authService.createLogoutURL(requestUri), userStatus);
-            retObj.setLoginInfo(loginInfo);
-
-
-        }
-
-
-        return retObj;
-
-
-    }
 
     @Override
     public void logout() {
@@ -159,7 +67,7 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
     @Override
     public User doLogin(String email, String password) throws UserServiceRpcException {
         try {
-            return userService.doLogin(getThreadLocalRequest(), email, password);
+            return userService.doLogin(email, password);
         } catch (Exception ex) {
             throw new UserServiceRpcException(ex);
         }
@@ -187,11 +95,7 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
             if (!userExists(email)) {
 
                 user = userService.createUserRecord(emailAddress, password, UserSource.local);
-                LoginInfo loginInfo = UserModelFactory.createLoginInfo("", Const.WEBSITE, UserStatus.newUser);
-                user.setLoginInfo(loginInfo);
-                String authToken = userService.startSession(getThreadLocalRequest(), email);
 
-                user.setToken(authToken);
                 return user;
 
             } else {
@@ -216,12 +120,8 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
             User u = optional.get();
             if (u.getPasswordResetToken().equals(recoveryToken) && u.getSource().equals(UserSource.local)) {
                 if (new Date().getTime() - u.getPasswordResetTimestamp() < 60000 * 5) {
-                    User retObj = userService.updatePassword(u, password);
-                    LoginInfo loginInfo = UserModelFactory.createLoginInfo("", Const.WEBSITE, UserStatus.loggedIn);
-                    retObj.setLoginInfo(loginInfo);
-                    String authToken = userService.startSession(getThreadLocalRequest(), email);
-                    retObj.setToken(authToken);
-                    return retObj;
+
+                    return userService.updatePassword(u, password);
                 } else {
                     throw new UserServiceRpcException("Token has expired.");
                 }
@@ -251,18 +151,6 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
             }
         }
 
-    }
-
-
-    @Override
-    public Boolean verifyEmail(String email) {
-        return userExists(email);
-    }
-
-    @Override
-    public SystemDetails getSystemDetails() {
-        log.info("Get System Details: " + (authService == null));
-        return new SystemDetailsModel(Const.VERSION);
     }
 
 }

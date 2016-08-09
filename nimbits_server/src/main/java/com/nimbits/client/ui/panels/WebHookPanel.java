@@ -33,6 +33,7 @@ import com.nimbits.client.model.UrlContainer;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.webhook.DataChannel;
 import com.nimbits.client.model.webhook.HttpMethod;
 import com.nimbits.client.model.webhook.WebHook;
@@ -50,8 +51,8 @@ public class WebHookPanel extends BasePanel {
     public static final String GET_RESULTS_POINT = "GET Results Point";
     private final Entity entity;
 
-    public WebHookPanel(PanelEvent listener, final Entity entity) {
-        super(listener, "<a href=\"http://www.nimbits.com/howto_webhooks.jsp\">Learn More: WebHook Help</a>");
+    public WebHookPanel(User user, PanelEvent listener, final Entity entity) {
+        super(user, listener, "<a href=\"http://www.nimbits.com/howto_webhooks.jsp\">Learn More: WebHook Help</a>");
         this.entity = entity;
 
         createForm();
@@ -94,7 +95,7 @@ public class WebHookPanel extends BasePanel {
             method = hook.getMethod();
 
 
-            entityCombo = new EntityCombo(EntityType.point, hook.getDownloadTarget(), GET_RESULTS_POINT);
+            entityCombo = new EntityCombo(user, EntityType.point, hook.getDownloadTarget(), GET_RESULTS_POINT);
             entityCombo.setFieldLabel(GET_RESULTS_POINT);
             //  entityCombo.setVisible(hook.equals(HttpMethod.GET));
 
@@ -108,7 +109,7 @@ public class WebHookPanel extends BasePanel {
             method = HttpMethod.POST;
 
             enabled.setValue(true);
-            entityCombo = new EntityCombo(EntityType.point, "", GET_RESULTS_POINT);
+            entityCombo = new EntityCombo(user, EntityType.point, "", GET_RESULTS_POINT);
             entityCombo.setFieldLabel(GET_RESULTS_POINT);
             // entityCombo.setVisible(false);
 
@@ -321,7 +322,7 @@ public class WebHookPanel extends BasePanel {
             }
 
 
-            service.addUpdateEntityRpc(update, new AddEntityAsyncCallback(box));
+            service.addUpdateEntityRpc(user, update, new AddEntityAsyncCallback(box));
         }
 
     }

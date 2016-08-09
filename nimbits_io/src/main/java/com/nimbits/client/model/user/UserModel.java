@@ -37,17 +37,12 @@ public class UserModel extends EntityModel implements Serializable, User {
     @Expose
     private Boolean isAdmin;
 
-    @Expose
-    private String token;
-
     private String password;
 
     private String passwordSalt;
 
     @Expose
     private String source;
-
-    private LoginInfo loginInfo;
 
     private String passwordResetToken;
 
@@ -64,16 +59,15 @@ public class UserModel extends EntityModel implements Serializable, User {
 
 
     protected UserModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String emailAddress,
-                        Boolean isAdmin, String token, String password, String passwordSalt, String source, LoginInfo loginInfo, String passwordResetToken,
+                        Boolean isAdmin, String password, String passwordSalt, String source, String passwordResetToken,
                         Long passwordResetTokenTimestamp) {
         super(id, name, description, entityType, parent, owner);
         this.emailAddress = emailAddress;
         this.isAdmin = isAdmin;
-        this.token = token;
         this.password = password;
         this.passwordSalt = passwordSalt;
         this.source = source;
-        this.loginInfo = loginInfo;
+
         this.passwordResetToken = passwordResetToken;
         this.passwordResetTimestamp = passwordResetTokenTimestamp;
     }
@@ -109,24 +103,11 @@ public class UserModel extends EntityModel implements Serializable, User {
         return CommonFactory.createEmailAddress(emailAddress);
     }
 
-    public String getToken() {
-        return token;
-    }
-
-    @Override
+     @Override
     public void setEmail(EmailAddress emailAddress) {
         this.emailAddress = emailAddress.getValue();
     }
 
-    @Override
-    public void setLoginInfo(LoginInfo loginInfo) {
-        this.loginInfo = loginInfo;
-    }
-
-    @Override
-    public LoginInfo getLoginInfo() {
-        return loginInfo == null ? UserModelFactory.createNullLoginInfo() : loginInfo;
-    }
 
     @Override
     public void setPasswordResetToken(String token) {
@@ -144,11 +125,6 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     public Long getPasswordResetTimestamp() {
         return this.passwordResetTimestamp == null ? 0 : this.passwordResetTimestamp;
-    }
-
-    @Override
-    public void setToken(String token) {
-        this.token = token;
     }
 
     @Override
@@ -197,16 +173,11 @@ public class UserModel extends EntityModel implements Serializable, User {
 
         private Boolean isAdmin;
 
-        private String token;
-
         private String password;
 
         private String passwordSalt;
 
         private String source;
-
-        private LoginInfo loginInfo;
-
         private String passwordResetToken;
 
         private Long passwordResetTimestamp;
@@ -219,11 +190,6 @@ public class UserModel extends EntityModel implements Serializable, User {
 
         public Builder isAdmin(Boolean isAdmin) {
             this.isAdmin = isAdmin;
-            return this;
-        }
-
-        public Builder setToken(String token) {
-            this.token = token;
             return this;
         }
 
@@ -242,10 +208,6 @@ public class UserModel extends EntityModel implements Serializable, User {
             return this;
         }
 
-        public Builder setLoginInfo(LoginInfo loginInfo) {
-            this.loginInfo = loginInfo;
-            return this;
-        }
 
         public Builder setPasswordResetToken(String passwordResetToken) {
             this.passwordResetToken = passwordResetToken;
@@ -273,7 +235,7 @@ public class UserModel extends EntityModel implements Serializable, User {
 
 
             return new UserModel(id, name, description, type, parent, owner,
-                    emailAddress, isAdmin, token, password, passwordSalt, source, loginInfo, passwordResetToken, passwordResetTimestamp);
+                    emailAddress, isAdmin, password, passwordSalt, source,  passwordResetToken, passwordResetTimestamp);
         }
 
         @Override
@@ -289,11 +251,10 @@ public class UserModel extends EntityModel implements Serializable, User {
             this.emailAddress = u.getEmail().getValue();
 
             this.isAdmin = u.getIsAdmin();
-            this.token = u.getToken();
             this.password = u.getPassword();
             this.passwordSalt = u.getPasswordSalt();
             this.source = u.getSource().name();
-            this.loginInfo = u.getLoginInfo();
+
             this.passwordResetToken = u.getPasswordResetToken();
             this.passwordResetTimestamp = u.getPasswordResetTimestamp();
             return this;

@@ -78,11 +78,8 @@ public class EntityTree<ModelData extends com.extjs.gxt.ui.client.data.ModelData
                     return (Icons.INSTANCE.formula());
                 case summary:
                     return (Icons.INSTANCE.summary());
-
                 case sync:
                     return (Icons.INSTANCE.connection());
-                case socket:
-                    return (Icons.INSTANCE.socket());
                 case instance:
                     return (Icons.INSTANCE.connection());
                 case schedule:

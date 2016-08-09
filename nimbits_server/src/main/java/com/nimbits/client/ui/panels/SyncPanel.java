@@ -28,6 +28,7 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.sync.Sync;
 import com.nimbits.client.model.sync.SyncModel;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityServiceRpc;
 import com.nimbits.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.client.ui.helper.FeedbackHelper;
@@ -37,8 +38,8 @@ public class SyncPanel extends BasePanel {
     private final Entity entity;
 
 
-    public SyncPanel(PanelEvent listener, final Entity entity) {
-        super(listener, "<a href=\"http://www.nimbits.com/howto_sync.jsp\">Learn More</a>");
+    public SyncPanel(User user, PanelEvent listener, final Entity entity) {
+        super(user, listener, "<a href=\"http://www.nimbits.com/howto_sync.jsp\">Learn More</a>");
         this.entity = entity;
         createForm();
     }
@@ -168,7 +169,7 @@ public class SyncPanel extends BasePanel {
                         .create();
                 if (update != null) {
                     update.setName(name);
-                    service.addUpdateEntityRpc(update, new UpdateEntityAsyncCallback(box));
+                    service.addUpdateEntityRpc(user, update, new UpdateEntityAsyncCallback(box));
                 }
 
             } catch (Exception ex) {

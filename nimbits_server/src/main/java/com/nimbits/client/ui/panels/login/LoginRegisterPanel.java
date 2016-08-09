@@ -20,7 +20,6 @@ import com.extjs.gxt.ui.client.event.ButtonEvent;
 import com.extjs.gxt.ui.client.event.SelectionListener;
 import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.util.Padding;
-import com.extjs.gxt.ui.client.widget.Html;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.button.Button;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
@@ -30,9 +29,7 @@ import com.extjs.gxt.ui.client.widget.layout.HBoxLayout;
 import com.extjs.gxt.ui.client.widget.layout.HBoxLayoutData;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.model.user.LoginInfo;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserStatus;
 import com.nimbits.client.service.user.UserServiceRpc;
 import com.nimbits.client.service.user.UserServiceRpcAsync;
 import com.nimbits.client.ui.helper.FeedbackHelper;
@@ -45,7 +42,7 @@ public class LoginRegisterPanel extends AbstractLoginPanel {
 
 
     private final FormPanel simple = new FormPanel();
-    private LoginInfo loginInfo;
+
 
     private final LayoutContainer controlButtons = new LayoutContainer();
     private final Button register = new Button("Create Account");
@@ -53,14 +50,13 @@ public class LoginRegisterPanel extends AbstractLoginPanel {
 
     private String recoveryToken;
 
-    public LoginRegisterPanel(LoginListener loginListener, LoginInfo loginInfo) {
-        super(loginListener, loginInfo);
-        init(loginInfo);
+    public LoginRegisterPanel(LoginListener loginListener ) {
+        super(loginListener);
+        init();
         createForm();
     }
 
-    private void init(LoginInfo loginInfo) {
-        this.loginInfo = loginInfo;
+    private void init() {
 
 
         FormPanel simple = new FormPanel();
@@ -118,17 +114,17 @@ public class LoginRegisterPanel extends AbstractLoginPanel {
         simple.add(controlButtons);
 
         simple.add(tosHtml);
-        if (loginInfo.getUserStatus().equals(UserStatus.newServer)) {
-            Html helphtml = new Html("<br /><div><p><Strong>This appears to be a new Server Installation. " +
-                    "The first user you register here will be configured as the " +
-                    "system administrator. " +
-                    "<Strong></p></div>");
-            simple.add(helphtml);
-        }
+//        if (loginInfo.getUserStatus().equals(UserStatus.newServer)) {
+//            Html helphtml = new Html("<br /><div><p><Strong>This appears to be a new Server Installation. " +
+//                    "The first user you register here will be configured as the " +
+//                    "system administrator. " +
+//                    "<Strong></p></div>");
+//            simple.add(helphtml);
+//        }
         cancel.addSelectionListener(new SelectionListener<ButtonEvent>() {
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {
-                loginListener.showLoginDialog(loginInfo);
+                loginListener.showLoginDialog();
             }
         });
 

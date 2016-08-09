@@ -16,7 +16,6 @@
         <class>com.nimbits.server.orm.ScheduleEntity</class>
         <class>com.nimbits.server.orm.SessionStore</class>
         <class>com.nimbits.server.orm.SettingEntity</class>
-        <class>com.nimbits.server.orm.SocketEntity</class>
         <class>com.nimbits.server.orm.SubscriptionEntity</class>
         <class>com.nimbits.server.orm.SummaryEntity</class>
         <class>com.nimbits.server.orm.SyncEntity</class>
@@ -25,9 +24,6 @@
         <class>com.nimbits.server.orm.WebHookEntity</class>
         <class>com.nimbits.server.orm.ValueStore</class>
 
-
-        <!--<class>org.datanucleus.samples.jdo.tutorial.Product</class>-->
-        <!--<class>org.datanucleus.samples.jdo.tutorial.Book</class>-->
         <exclude-unlisted-classes/>
         <properties>
             <!-- ENABLE THESE FOR H2 -->

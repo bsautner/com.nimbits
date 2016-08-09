@@ -20,7 +20,6 @@ import com.extjs.gxt.ui.client.widget.Html;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
 import com.extjs.gxt.ui.client.widget.form.TextField;
-import com.nimbits.client.model.user.LoginInfo;
 import com.nimbits.client.ui.panels.login.LoginListener;
 
 public abstract class AbstractLoginPanel extends LayoutContainer {
@@ -28,7 +27,7 @@ public abstract class AbstractLoginPanel extends LayoutContainer {
     protected static final int WIDTH = 400;
     protected static final int BUTTON_WIDTH = 90;
     protected final LoginListener loginListener;
-    protected final LoginInfo loginInfo;
+
     protected final VerticalPanel vp;
     protected final Html tosHtml = new Html("<hr><p>By using this software you are agreeing to our " +
             "<a href = \"http://nimbits.com/nimbits_tos.pdf\">Terms of Use</a></p>");
@@ -36,9 +35,9 @@ public abstract class AbstractLoginPanel extends LayoutContainer {
     protected TextField<String> emailField = new TextField<String>();
 
 
-    public AbstractLoginPanel(LoginListener loginListener, LoginInfo loginInfo) {
+    public AbstractLoginPanel(LoginListener loginListener ) {
         this.loginListener = loginListener;
-        this.loginInfo = loginInfo;
+
         vp = new VerticalPanel();
         vp.setSpacing(15);
     }

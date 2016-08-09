@@ -29,7 +29,6 @@ import com.extjs.gxt.ui.client.widget.layout.HBoxLayout;
 import com.extjs.gxt.ui.client.widget.layout.HBoxLayoutData;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.model.user.LoginInfo;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.user.UserServiceRpc;
 import com.nimbits.client.service.user.UserServiceRpcAsync;
@@ -43,16 +42,15 @@ public class LoginPanel extends AbstractLoginPanel {
 
 
     private final FormPanel simple;
-    private final LoginInfo loginInfo;
     private final Button submit = new Button("Login");
 
     private final LayoutContainer controlButtons = new LayoutContainer();
     private final Button register = new Button("Register");
     private final Button forgot = new Button("Forgot Password");
 
-    public LoginPanel(LoginListener loginListener, LoginInfo loginInfo) {
-        super(loginListener, loginInfo);
-        this.loginInfo = loginInfo;
+    public LoginPanel(LoginListener loginListener ) {
+        super(loginListener);
+
         this.userService = GWT.create(UserServiceRpc.class);
 
         simple = new FormPanel();

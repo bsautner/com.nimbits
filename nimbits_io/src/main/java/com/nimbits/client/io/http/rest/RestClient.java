@@ -23,7 +23,6 @@ import com.nimbits.client.model.hal.ValueContainer;
 import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.schedule.Schedule;
-import com.nimbits.client.model.socket.Socket;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.sync.Sync;
@@ -157,9 +156,6 @@ public interface RestClient {
 
     @GET(API + "/me")
     User findUser(@Query("name") String entityName, @Query("type") int entityType);
-
-    @GET(API + "/me")
-    Socket findSocket(@Query("name") String entityName, @Query("type") int entityType);
 
     @POST(API + "/photo/{uuid}")
     void uploadFile(@Path("uuid") String uuid, @Body String encoded, Callback<Void> callback);

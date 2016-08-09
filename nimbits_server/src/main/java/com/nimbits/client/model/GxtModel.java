@@ -98,10 +98,6 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
         return isReadOnly;
     }
 
-    @Override
-    public void setReadOnly(boolean readOnly) {
-        isReadOnly = readOnly;
-    }
 
     @Override
     public boolean isDirty() {

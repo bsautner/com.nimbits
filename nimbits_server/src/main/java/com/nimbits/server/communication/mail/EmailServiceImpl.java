@@ -25,7 +25,6 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.auth.AuthService;
 import com.nimbits.server.system.ServerInfo;
 import com.nimbits.server.transaction.settings.SettingsService;
 import org.apache.commons.io.IOUtils;
@@ -48,12 +47,7 @@ public class EmailServiceImpl implements EmailService {
 
     private SettingsService settingsService;
 
-
-    private AuthService authService;
-
-
     private ServerInfo serverInfo;
-
 
     private static final Logger log = LoggerFactory.getLogger(EmailServiceImpl.class.getName());
 
@@ -61,9 +55,8 @@ public class EmailServiceImpl implements EmailService {
     private static final int SECONDS_IN_MINUTE = 60;
 
     @Autowired
-    public EmailServiceImpl(SettingsService settingsService, AuthService authService, ServerInfo serverInfo) {
+    public EmailServiceImpl(SettingsService settingsService, ServerInfo serverInfo) {
         this.settingsService = settingsService;
-        this.authService = authService;
         this.serverInfo = serverInfo;
     }
 

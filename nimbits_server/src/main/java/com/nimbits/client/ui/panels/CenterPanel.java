@@ -39,8 +39,6 @@ import com.nimbits.client.service.entity.EntityServiceRpc;
 import com.nimbits.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.client.service.user.UserServiceRpc;
 import com.nimbits.client.service.user.UserServiceRpcAsync;
-import com.nimbits.client.service.xmpp.XmppRpcService;
-import com.nimbits.client.service.xmpp.XmppRpcServiceAsync;
 import com.nimbits.client.ui.controls.MainMenuBar;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.panels.login.LoginListener;
@@ -124,10 +122,6 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
         return toolBar;
     }
 
-    private static void sendXMPPInvite() {
-        XmppRpcServiceAsync IMService = GWT.create(XmppRpcService.class);
-        IMService.sendInviteRpc(new XMPPInviteAsyncCallback());
-    }
 
     public void addEntity(final TreeModel model) {
 
@@ -225,7 +219,7 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
                     Window.Location.replace("/service/v3/rest/me");
                     break;
                 case logout:
-                    final String logoutUrl = user != null ? user.getLoginInfo().getLogoutUrl() : PATH_NIMBITS_HOME;
+                    final String logoutUrl = PATH_NIMBITS_HOME;
 
                     UserServiceRpcAsync userService = GWT.create(UserServiceRpc.class);
                     userService.logout(new AsyncCallback<Void>() {
@@ -250,14 +244,12 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
                     });
 
                     break;
-                case xmpp:
-                    sendXMPPInvite();
-                    break;
+
                 case save:
                     navigationPanel.saveAll();
                     break;
                 case admin:
-                    SettingPanel dp = new SettingPanel(listener);
+                    SettingPanel dp = new SettingPanel(user, listener);
                     w = new com.extjs.gxt.ui.client.widget.Window();
                     w.setWidth(BasePanel.WIDTH);
                     w.setHeight(BasePanel.HEIGHT);

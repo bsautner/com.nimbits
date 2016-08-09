@@ -37,16 +37,7 @@ public interface User extends Entity, Serializable {
 
     void setIsAdmin(boolean userAdmin);
 
-    void setToken(String authToken);
-
-    String getToken();
-
     void setEmail(EmailAddress emailAddress);
-
-    void setLoginInfo(LoginInfo loginInfo);
-
-    LoginInfo getLoginInfo();
-
 
     void setPasswordResetToken(String token);
 

@@ -19,12 +19,9 @@ package com.nimbits.server.orm;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.user.LoginInfo;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserModelFactory;
 import com.nimbits.client.model.user.UserSource;
 
-import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
@@ -42,13 +39,8 @@ public class UserEntity extends EntityStore implements User {
     @Persistent
     private String source;
 
-    @NotPersistent
-    private LoginInfo loginInfo;
-
-
     @Persistent
     private Boolean isAdmin;
-
 
     @Persistent
     private String passwordResetToken;
@@ -134,30 +126,12 @@ public class UserEntity extends EntityStore implements User {
         this.isAdmin = isAdmin;
     }
 
-    @Override
-    public void setToken(String sessionId) {
-
-    }
-
-    @Override
-    public String getToken() {
-        return null;
-    }
 
     @Override
     public void setEmail(EmailAddress emailAddress) {
 
     }
 
-    @Override
-    public void setLoginInfo(LoginInfo loginInfo) {
-        this.loginInfo = loginInfo;
-    }
-
-    @Override
-    public LoginInfo getLoginInfo() {
-        return loginInfo == null ? UserModelFactory.createNullLoginInfo() : loginInfo;
-    }
 
     @Override
     public void setPasswordResetToken(String token) {

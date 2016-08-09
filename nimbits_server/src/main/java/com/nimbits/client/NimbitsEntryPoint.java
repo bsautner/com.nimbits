@@ -30,9 +30,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.model.user.LoginInfo;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserModelFactory;
 import com.nimbits.client.service.user.UserServiceRpc;
 import com.nimbits.client.service.user.UserServiceRpcAsync;
 import com.nimbits.client.ui.helper.FeedbackHelper;
@@ -52,19 +50,17 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
     private LoginMainPanel loginMainPanel;
 
 
+
     @Override
     public void onModuleLoad() {
-        final UserServiceRpcAsync userService = GWT.create(UserServiceRpc.class);
 
         final String passwordResetToken = Window.Location.getParameter(Parameters.rToken.getText());
 
         if (passwordResetToken == null) {
-
-            userService.loginRpc(GWT.getHostPageBaseURL(),
-                    new LoginInfoAsyncCallback());
+            loadLoginView();
 
         } else {
-            loadLoginView(UserModelFactory.createNullLoginInfo());
+            loadLoginView( );
             loginMainPanel.showPasswordReset(passwordResetToken);
 
         }
@@ -72,7 +68,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
 
     }
 
-    private void loadLoginView(final LoginInfo loginInfo) {
+    private void loadLoginView() {
 
 
         Viewport viewport = new Viewport();
@@ -80,7 +76,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
         viewport.setLayout(new BorderLayout());
         viewport.setBorders(false);
 
-        loginMainPanel = new LoginMainPanel(this, loginInfo);
+        loginMainPanel = new LoginMainPanel(this);
 
 
         ContentPanel center = new ContentPanel();
@@ -113,15 +109,9 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
     }
 
     @Override
-    public void doGoogleLogin(LoginInfo loginInfo) {
+    public void showLoginDialog( ) {
         closeLoginWindows();
-        Window.Location.replace(loginInfo.getLoginUrl());
-    }
-
-    @Override
-    public void showLoginDialog(LoginInfo loginInfo) {
-        closeLoginWindows();
-        loadLoginView(loginInfo);
+        loadLoginView( );
     }
 
     @Override
@@ -143,7 +133,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
     public void onLogout() {
         closeLoginWindows();
 
-        loadLoginView(UserModelFactory.createNullLoginInfo());
+        loadLoginView( );
     }
 
     @Override
@@ -174,9 +164,6 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
 
         center.setScrollMode(Style.Scroll.AUTOX);
 
-
-        final ContentPanel east = new ContentPanel();
-        // east.setHeading(Const.TEXT_DATA_FEED);
         final BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
         centerData.setMargins(new Margins(0, 0, 5, 0));
 
@@ -207,32 +194,12 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
             FeedbackHelper.showError(caught);
             closeLoginWindows();
 
-            loadLoginView(UserModelFactory.createNullLoginInfo());
+            loadLoginView();
         }
 
         @Override
         public void onSuccess(final User result) {
-            LoginInfo loginInfo = result.getLoginInfo();
-
-            closeLoginWindows();
-            switch (loginInfo.getUserStatus()) {
-
-                case newServer:
-                    loadLoginView(result.getLoginInfo());
-                    break;
-                case newUser:
-                    loadPortalView(result);
-                    break;
-
-                case loggedIn:
-                    loadPortalView(result);
-                    break;
-                case unknown:
-                    loadLoginView(result.getLoginInfo());
-                    break;
-
-            }
-
+            loadPortalView(result);
 
         }
 

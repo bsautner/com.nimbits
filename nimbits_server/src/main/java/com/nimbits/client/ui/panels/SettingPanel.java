@@ -24,6 +24,7 @@ import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.enums.ServerSetting;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.settings.SettingsServiceRpc;
 import com.nimbits.client.service.settings.SettingsServiceRpcAsync;
 import com.nimbits.client.ui.helper.FeedbackHelper;
@@ -33,8 +34,8 @@ public class SettingPanel extends BasePanel {
 
     private SettingsServiceRpcAsync settingsService;
 
-    public SettingPanel(PanelEvent listener) {
-        super(listener, "<a href=\"http://www.nimbits.com/howto_server_mail.jsp\">Learn More: Settings Help</a>");
+    public SettingPanel(User user, PanelEvent listener) {
+        super(user, listener, "<a href=\"http://www.nimbits.com/howto_server_mail.jsp\">Learn More: Settings Help</a>");
         settingsService = GWT.create(SettingsServiceRpc.class);
         createForm();
     }

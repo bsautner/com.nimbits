@@ -25,7 +25,6 @@ import com.extjs.gxt.ui.client.widget.layout.FlowData;
 import com.extjs.gxt.ui.client.widget.layout.HBoxLayout;
 import com.extjs.gxt.ui.client.widget.layout.RowLayout;
 import com.google.gwt.user.client.Element;
-import com.nimbits.client.model.user.LoginInfo;
 
 
 public class LoginMainPanel extends LayoutContainer {
@@ -33,12 +32,12 @@ public class LoginMainPanel extends LayoutContainer {
     protected static final int SIZE = 400;
     private Window window;
 
-    private LoginInfo loginInfo;
+
     private final LoginListener loginListener;
 
 
-    public LoginMainPanel(LoginListener loginListener, final LoginInfo user) {
-        this.loginInfo = user;
+    public LoginMainPanel(LoginListener loginListener ) {
+
         this.loginListener = loginListener;
 
     }
@@ -73,24 +72,14 @@ public class LoginMainPanel extends LayoutContainer {
 
         layout(true);
 
+        showLoginDialog();
 
-        switch (loginInfo.getUserStatus()) {
-
-            case newServer:
-                showRegisterDialog(null);
-            case newUser:
-                break;
-            case loggedIn:
-                break;
-            case unknown:
-                showLoginDialog();
-        }
 
 
     }
 
     private void showLoginDialog() {
-        LoginPanel dp = new LoginPanel(loginListener, loginInfo);
+        LoginPanel dp = new LoginPanel(loginListener);
         window = new com.extjs.gxt.ui.client.widget.Window();
         window.setWidth(SIZE);
         window.setHeight(SIZE);
@@ -112,7 +101,7 @@ public class LoginMainPanel extends LayoutContainer {
 
     public void showRegisterDialog(String email) {
         hideWindows();
-        LoginRegisterPanel dp = new LoginRegisterPanel(loginListener, loginInfo);
+        LoginRegisterPanel dp = new LoginRegisterPanel(loginListener);
 
         dp.setEmail(email);
         window = new com.extjs.gxt.ui.client.widget.Window();
@@ -129,7 +118,7 @@ public class LoginMainPanel extends LayoutContainer {
 
     public void showForgotDialog() {
 
-        LoginForgotPanel dp = new LoginForgotPanel(loginListener, loginInfo);
+        LoginForgotPanel dp = new LoginForgotPanel(loginListener);
         window = new com.extjs.gxt.ui.client.widget.Window();
         window.setWidth(SIZE);
         window.setHeight(SIZE);
@@ -143,7 +132,7 @@ public class LoginMainPanel extends LayoutContainer {
 
     public void showPasswordReset(String p) {
         hideWindows();
-        LoginRegisterPanel dp = new LoginRegisterPanel(loginListener, loginInfo);
+        LoginRegisterPanel dp = new LoginRegisterPanel(loginListener);
         dp.setRecoveryToken(p);
         window = new com.extjs.gxt.ui.client.widget.Window();
         window.setWidth(SIZE);

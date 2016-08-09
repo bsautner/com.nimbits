@@ -27,7 +27,6 @@ import com.nimbits.client.model.hal.ValueContainer;
 import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.schedule.Schedule;
-import com.nimbits.client.model.socket.Socket;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.sync.Sync;
@@ -428,16 +427,6 @@ public class Nimbits {
 
     }
 
-    public Optional<Socket> findSocket(String name) {
-
-        try {
-            return Optional.of(api.findSocket(name, EntityType.socket.getCode()));
-        } catch (Throwable e) {
-
-            return Optional.absent();
-        }
-
-    }
 
 
     public Optional<Schedule> findSummary(String name) {

@@ -32,6 +32,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import javax.jdo.*;
@@ -44,8 +46,6 @@ public class EntityDao {
     private final static Logger logger = LoggerFactory.getLogger(EntityDao.class.getName());
     private static final int MAX_RECURSION = 10;
     private static final int INT = 1024;
-
-
     private PersistenceManagerFactory persistenceManagerFactory;
 
 
@@ -59,7 +59,7 @@ public class EntityDao {
 
     }
 
-
+    //@Cacheable(cacheNames = "entity")
     public List<Entity> getSubscriptionsToEntity(final User user, final Entity subscribedEntity) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
@@ -73,7 +73,6 @@ public class EntityDao {
         }
 
     }
-
 
     public List<Entity> getIdleEntities(User admin) {
 
@@ -92,7 +91,7 @@ public class EntityDao {
         }
     }
 
-
+    //@Cacheable(cacheNames = "entity")
     public Optional<Entity> getEntityByTrigger(final User user, final Entity entity, final EntityType type) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -117,7 +116,7 @@ public class EntityDao {
         }
     }
 
-
+    //@Cacheable(cacheNames = "entity")
     public Map<String, Entity> getEntityMap(final User user, final EntityType type, final int limit) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -150,7 +149,7 @@ public class EntityDao {
 
     }
 
-
+    //@Cacheable(cacheNames = "entity")
     public List<Entity> getChildren(final User user, final List<Entity> parents) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
@@ -166,7 +165,243 @@ public class EntityDao {
 
     }
 
+    //@Cacheable(cacheNames = "entity")
+    public List<Entity> getEntities(final User user) {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
+        try {
+            final Collection<String> ownerKeys = new ArrayList<String>(1);
+            ownerKeys.add(user.getId());
+
+
+            final List<Entity> retObj = new ArrayList<Entity>(INT);
+
+
+            for (final EntityType type : EntityType.values()) {
+                if (type.isTreeGridItem()) {
+                    final Query q1;
+                    Collection<Entity> result;
+                    try {
+                        q1 = pm.newQuery(Class.forName(type.getClassName()), ":p.contains(owner)");
+                        result = (Collection<Entity>) q1.execute(ownerKeys);
+                    } catch (ClassNotFoundException e) {
+                        result = Collections.emptyList();
+                    }
+
+
+                    final List<Entity> entities = EntityHelper.createModels(user, result);
+                    for (final Entity entity1 : entities) {
+
+                        retObj.add(entity1);
+
+
+                    }
+
+
+                }
+
+            }
+
+            return retObj;
+        } finally {
+            pm.close();
+        }
+
+
+    }
+
+    //@Cacheable(cacheNames = "entity")
+    public List<Entity> getEntitiesByType(final User user, final EntityType type) {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+
+        try {
+            final Collection<String> ownerKeys = new ArrayList<String>(1);
+            ownerKeys.add(user.getId());
+
+
+            final List<Entity> retObj = new ArrayList<Entity>(INT);
+
+
+            final Query q1;
+            Collection<Entity> result;
+
+            q1 = pm.newQuery(getEntityPersistentClass(type), ":p.contains(owner)");
+            result = (Collection<Entity>) q1.execute(ownerKeys);
+
+
+            final List<Entity> entities = EntityHelper.createModels(user, result);
+            for (final Entity entity1 : entities) {
+
+
+                retObj.add(entity1);
+
+
+            }
+
+
+            return retObj;
+        } finally {
+            pm.close();
+        }
+
+
+    }
+
+    //@Cacheable(cacheNames = "entity")
+    public Optional<Entity> getEntity(final User user, final String id, final EntityType type) {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+        Entity entity = null;
+
+        Class cls = getEntityPersistentClass(type);
+        try {
+            if (!StringUtils.isEmpty(id)) {
+                final Entity result = (Entity) pm.getObjectById(cls, id);
+                entity = EntityHelper.createModel(user, result);
+
+
+            }
+            return entity == null ? Optional.<Entity>absent() : Optional.of(entity);
+        } catch (Exception ex) {
+            return Optional.absent();
+        } finally {
+            pm.close();
+        }
+    }
+
+    //@Cacheable(cacheNames = "entity")
+    public Optional<Entity> findEntity(User user, String id) {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+        try {
+            for (EntityType type : EntityType.values()) {
+
+                Optional<Entity> sample = getEntity(user, id, type);
+                if (sample.isPresent()) {
+                    return sample;
+                }
+
+
+            }
+            return Optional.absent();
+        } finally {
+            pm.close();
+        }
+    }
+
+    //@Cacheable(cacheNames = "entity")
+    public Optional<Entity> getEntityByName(final User user, final EntityName name, final EntityType type) {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+        if (!user.getIsAdmin()) {
+            try {
+
+                final Query q1 = pm.newQuery(getEntityPersistentClass(type));
+
+                final List<Entity> c;
+
+                q1.setFilter("name==b && owner==o");
+                q1.declareParameters("String b, String o");
+                q1.setRange(0, 1);
+                c = (List<Entity>) q1.execute(name.getValue(), user.getId());
+
+                return getEntityOptional(user, c);
+            } finally {
+                pm.close();
+            }
+        } else {
+            try {
+                final Query q1 = pm.newQuery(getEntityPersistentClass(type));
+
+                final List<Entity> c;
+
+                q1.setFilter("name==b");
+                q1.declareParameters("String b");
+                q1.setRange(0, 1);
+                c = (List<Entity>) q1.execute(name.getValue());
+
+                return getEntityOptional(user, c);
+            } finally {
+                pm.close();
+            }
+        }
+    }
+
+    //@Cacheable(cacheNames = "entity")
+    public String getOwner(String point) {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+
+        try {
+
+
+            final Entity result = (Entity) pm.getObjectById(Class.forName(EntityType.point.getClassName()), point);
+
+
+            return result.getOwner();
+        } catch (Exception ex) {
+
+            return null;
+        } finally {
+            pm.close();
+        }
+    }
+
+    //@Cacheable(cacheNames = "entity")
+    public List<Schedule> getSchedules() {
+
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+        try {
+//TODO tasks, cursors etc - query only for those ready to run
+
+            final Query q1 = pm.newQuery(ScheduleEntity.class);
+            q1.setFilter("enabled==e");
+            q1.declareParameters("Boolean e");
+
+            final List<Schedule> result = (List<Schedule>) q1.execute(true);
+
+
+            return result;
+
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+            return Collections.emptyList();
+
+        } finally {
+            pm.close();
+        }
+
+
+    }
+
+
+    @CacheEvict(cacheNames = "entity")
+    public void deleteEntity(final User user, final Entity entity, final EntityType type) {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+        Class cls = getEntityPersistentClass(type);
+        if (user.getIsAdmin() || entity.isOwner(user)) {
+            try {
+                final Entity c = (Entity) pm.getObjectById(cls, entity.getId());
+                if (c != null) {
+                    List<Entity> list = new ArrayList<>(1);
+                    list.add(c);
+                    final List<Entity> entities = getEntityChildren(pm, list);
+                    entities.add(c);
+
+                    pm.deletePersistentAll(entities);
+
+                }
+            } catch (Throwable throwable) {
+                logger.error(throwable.getMessage());
+
+            } finally {
+                pm.close();
+            }
+        }
+    }
+
+    @CacheEvict(cacheNames = "entity")
     public Entity addUpdateEntity(final User user, final Entity entity) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -213,135 +448,17 @@ public class EntityDao {
 
     }
 
-    private Entity addEntity(final User user, final Entity entity) {
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
+    private Optional<Entity> getEntityOptional(User user, List<Entity> c) {
+        if (c.isEmpty()) {
+            return Optional.absent();
+        } else {
 
-        try {
+            final Entity result = c.get(0);
+            return Optional.of(EntityHelper.createModel(user, result));
 
-            if (entity.getEntityType().isUniqueNameFlag()) {
-                checkDuplicateEntity(user, Collections.singletonList(entity));
-
-            }
-            final Entity commit = EntityHelper.downcastEntity(entity);
-
-            if (StringUtils.isEmpty(commit.getId())) {
-                commit.setId(UUID.randomUUID().toString());
-
-            }
-
-            if (StringUtils.isEmpty(commit.getOwner())) {
-                commit.setOwner(user.getId());
-
-            }
-
-
-            if (!commit.getEntityType().equals(EntityType.user)) {
-                commit.validate(user);
-                if (commit.getEntityType().isTrigger()) {
-                    validate(user, (Trigger) commit);
-                }
-
-            }
-
-
-            pm.makePersistent(commit);
-
-            return EntityHelper.createModel(user, commit);
-
-        } catch (Exception ex) {
-
-            logger.error(ex.getMessage());
-            throw ex;
-
-        } finally {
-            pm.close();
         }
     }
-
-
-    public List<Entity> getEntities(final User user) {
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
-        try {
-            final Collection<String> ownerKeys = new ArrayList<String>(1);
-            ownerKeys.add(user.getId());
-
-
-            final List<Entity> retObj = new ArrayList<Entity>(INT);
-
-
-            for (final EntityType type : EntityType.values()) {
-                if (type.isTreeGridItem()) {
-                    final Query q1;
-                    Collection<Entity> result;
-                    try {
-                        q1 = pm.newQuery(Class.forName(type.getClassName()), ":p.contains(owner)");
-                        result = (Collection<Entity>) q1.execute(ownerKeys);
-                    } catch (ClassNotFoundException e) {
-                        result = Collections.emptyList();
-                    }
-
-
-                    final List<Entity> entities = EntityHelper.createModels(user, result);
-                    for (final Entity entity1 : entities) {
-
-                        retObj.add(entity1);
-
-
-                    }
-
-
-                }
-
-            }
-
-            return retObj;
-        } finally {
-            pm.close();
-        }
-
-
-    }
-
-
-    public List<Entity> getEntitiesByType(final User user, final EntityType type) {
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
-
-        try {
-            final Collection<String> ownerKeys = new ArrayList<String>(1);
-            ownerKeys.add(user.getId());
-
-
-            final List<Entity> retObj = new ArrayList<Entity>(INT);
-
-
-            final Query q1;
-            Collection<Entity> result;
-
-            q1 = pm.newQuery(getEntityPersistentClass(type), ":p.contains(owner)");
-            result = (Collection<Entity>) q1.execute(ownerKeys);
-
-
-            final List<Entity> entities = EntityHelper.createModels(user, result);
-            for (final Entity entity1 : entities) {
-
-
-                retObj.add(entity1);
-
-
-            }
-
-
-            return retObj;
-        } finally {
-            pm.close();
-        }
-
-
-    }
-
 
     private List<Entity> getEntityChildren(PersistenceManager pm, final List<Entity> parents) {
 
@@ -397,202 +514,51 @@ public class EntityDao {
 
     }
 
-
-    public void deleteEntity(final User user, final Entity entity, final EntityType type) {
+    private Entity addEntity(final User user, final Entity entity) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-        Class cls = getEntityPersistentClass(type);
-        if (user.getIsAdmin() || entity.isOwner(user)) {
-            try {
-                final Entity c = (Entity) pm.getObjectById(cls, entity.getId());
-                if (c != null) {
-                    List<Entity> list = new ArrayList<>(1);
-                    list.add(c);
-                    final List<Entity> entities = getEntityChildren(pm, list);
-                    entities.add(c);
 
-                    pm.deletePersistentAll(entities);
-
-                }
-            } catch (Throwable throwable) {
-                logger.error(throwable.getMessage());
-
-            } finally {
-                pm.close();
-            }
-        }
-    }
-
-
-    public Optional<Entity> getEntity(final User user, final String id, final EntityType type) {
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-        Entity entity = null;
-
-        Class cls = getEntityPersistentClass(type);
-        try {
-            if (!StringUtils.isEmpty(id)) {
-                final Entity result = (Entity) pm.getObjectById(cls, id);
-                entity = EntityHelper.createModel(user, result);
-
-
-            }
-            return entity == null ? Optional.<Entity>absent() : Optional.of(entity);
-        } catch (Exception ex) {
-            return Optional.absent();
-        } finally {
-            pm.close();
-        }
-    }
-
-
-    public Optional<Entity> findEntity(User user, String id) {
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
         try {
-            for (EntityType type : EntityType.values()) {
 
-                Optional<Entity> sample = getEntity(user, id, type);
-                if (sample.isPresent()) {
-                    return sample;
+            if (entity.getEntityType().isUniqueNameFlag()) {
+                checkDuplicateEntity(user, Collections.singletonList(entity));
+
+            }
+            final Entity commit = EntityHelper.downcastEntity(entity);
+
+            if (StringUtils.isEmpty(commit.getId())) {
+                commit.setId(UUID.randomUUID().toString());
+
+            }
+
+            if (StringUtils.isEmpty(commit.getOwner())) {
+                commit.setOwner(user.getId());
+
+            }
+
+
+            if (!commit.getEntityType().equals(EntityType.user)) {
+                commit.validate(user);
+                if (commit.getEntityType().isTrigger()) {
+                    validate(user, (Trigger) commit);
                 }
 
-
             }
-            return Optional.absent();
-        } finally {
-            pm.close();
-        }
-    }
 
 
-    public Optional<Entity> getEntityByName(final User user, final EntityName name, final EntityType type) {
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+            pm.makePersistent(commit);
 
-        if (!user.getIsAdmin()) {
-            try {
+            return EntityHelper.createModel(user, commit);
 
-                final Query q1 = pm.newQuery(getEntityPersistentClass(type));
-
-                final List<Entity> c;
-
-                q1.setFilter("name==b && owner==o");
-                q1.declareParameters("String b, String o");
-                q1.setRange(0, 1);
-                c = (List<Entity>) q1.execute(name.getValue(), user.getId());
-
-                return getEntityOptional(user, c);
-            } finally {
-                pm.close();
-            }
-        } else {
-            try {
-                final Query q1 = pm.newQuery(getEntityPersistentClass(type));
-
-                final List<Entity> c;
-
-                q1.setFilter("name==b");
-                q1.declareParameters("String b");
-                q1.setRange(0, 1);
-                c = (List<Entity>) q1.execute(name.getValue());
-
-                return getEntityOptional(user, c);
-            } finally {
-                pm.close();
-            }
-        }
-    }
-
-    private Optional<Entity> getEntityOptional(User user, List<Entity> c) {
-        if (c.isEmpty()) {
-            return Optional.absent();
-        } else {
-
-            final Entity result = c.get(0);
-            return Optional.of(EntityHelper.createModel(user, result));
-
-        }
-    }
-
-
-    public String getOwner(String point) {
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
-
-        try {
-
-
-            final Entity result = (Entity) pm.getObjectById(Class.forName(EntityType.point.getClassName()), point);
-
-
-            return result.getOwner();
         } catch (Exception ex) {
 
-            return null;
-        } finally {
-            pm.close();
-        }
-    }
-
-
-    public List<Schedule> getSchedules() {
-
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
-        try {
-//TODO tasks, cursors etc - query only for those ready to run
-
-            final Query q1 = pm.newQuery(ScheduleEntity.class);
-            q1.setFilter("enabled==e");
-            q1.declareParameters("Boolean e");
-
-            final List<Schedule> result = (List<Schedule>) q1.execute(true);
-
-
-            return result;
-
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return Collections.emptyList();
+            logger.error(ex.getMessage());
+            throw ex;
 
         } finally {
             pm.close();
         }
-
-
     }
-
-
-    public Optional<User> getUser(String email) {
-
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
-        try {
-
-
-            final Query q1 = pm.newQuery(UserEntity.class);
-            q1.setFilter("owner==e");
-            q1.declareParameters("String e");
-
-            final List<User> result = (List<User>) q1.execute(email);
-
-
-            if (result.isEmpty()) {
-                return Optional.absent();
-            } else {
-                User r = new UserModel.Builder().init(result.get(0)).create();
-                return Optional.of(r);
-            }
-
-        } catch (Exception e) {
-            logger.error(e.getMessage());
-            return Optional.absent();
-
-        } finally {
-            pm.close();
-        }
-
-
-    }
-
 
     private void checkDuplicateEntity(final User user, final List<Entity> entityList) {
 
@@ -645,7 +611,6 @@ public class EntityDao {
         }
     }
 
-
     private Class getEntityPersistentClass(EntityType type) {
         try {
             return Class.forName(type.getClassName());
@@ -654,8 +619,7 @@ public class EntityDao {
         }
     }
 
-
-    public void validate(final User user, final Trigger entity) {
+    private void validate(final User user, final Trigger entity) {
 
         if (StringUtils.isEmpty(entity.getTarget())) {
             throw new IllegalArgumentException("Missing target");

@@ -16,14 +16,11 @@
 
 package com.nimbits.client.ui.panels.login;
 
-import com.nimbits.client.model.user.LoginInfo;
 import com.nimbits.client.model.user.User;
 
 public interface LoginListener {
 
-    void doGoogleLogin(LoginInfo user);
-
-    void showLoginDialog(LoginInfo user);
+    void showLoginDialog();
 
     void doRegister();
 

@@ -38,6 +38,7 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.summary.SummaryModel;
 import com.nimbits.client.model.trigger.Trigger;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityServiceRpc;
 import com.nimbits.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.client.ui.controls.EntityCombo;
@@ -55,8 +56,8 @@ public class SummaryPanel extends BasePanel {
     private final Entity entity;
 
 
-    public SummaryPanel(PanelEvent listener, Entity entity) {
-        super(listener, "<a href=\"http://www.nimbits.com/howto_summary.jsp\">Learn More: Summary and Statistics</a>");
+    public SummaryPanel(User user, PanelEvent listener, Entity entity) {
+        super(user, listener, "<a href=\"http://www.nimbits.com/howto_summary.jsp\">Learn More: Summary and Statistics</a>");
         this.entity = entity;
 
         createForm();
@@ -136,7 +137,7 @@ public class SummaryPanel extends BasePanel {
         final ComboBox<SummaryTypeOption> typeCombo = summaryTypeOptionComboBox("Summary Type", type);
 
 
-        final EntityCombo targetCombo = new EntityCombo(EntityType.point, target, MESSAGE_SELECT_POINT);
+        final EntityCombo targetCombo = new EntityCombo(user, EntityType.point, target, MESSAGE_SELECT_POINT);
         targetCombo.setFieldLabel("Target");
 
         submit.addSelectionListener(new SubmitEventSelectionListener(typeCombo, spinnerField, targetCombo, name, enabled));
@@ -250,7 +251,7 @@ public class SummaryPanel extends BasePanel {
 //                            spinnerField.getValue().intValue() * 1000, new Date());
 
 
-                    service.addUpdateEntityRpc(update, new UpdateEntityAsyncCallback(box));
+                    service.addUpdateEntityRpc(user, update, new UpdateEntityAsyncCallback(box));
                 } catch (Exception e) {
                     FeedbackHelper.showError(e);
                 }
@@ -271,7 +272,7 @@ public class SummaryPanel extends BasePanel {
 
                     if (update != null) {
                         update.setName(name);
-                        service.addUpdateEntityRpc(update, new UpdateEntityAsyncCallback(box));
+                        service.addUpdateEntityRpc(user, update, new UpdateEntityAsyncCallback(box));
                     }
 
                 } catch (Exception e) {

@@ -39,8 +39,6 @@ import com.nimbits.server.transaction.user.dao.UserDao;
 import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -92,7 +90,7 @@ public class RestAPI {
             @RequestBody String json,
             @PathVariable String uuid) throws Exception {
 
-        User user = getUser(authorization);
+        User user = userService.getUser(authorization);
         Point entity = (Point) entityDao.getEntity(user, uuid, EntityType.point);
         Value value = gson.fromJson(json, Value.class);
         taskService.process(user, entity, value);
@@ -110,7 +108,7 @@ public class RestAPI {
 
         Type listType = new TypeToken<ArrayList<Value>>() {
         }.getType();
-        User user = getUser(authorization);
+        User user = userService.getUser(authorization);
         Optional<Entity> optional = entityDao.getEntity(user, uuid, EntityType.point);
         List<Value> values = gson.fromJson(json, listType);
 
@@ -134,7 +132,7 @@ public class RestAPI {
                                              @RequestBody String json,
                                              @PathVariable String uuid) throws IOException {
 
-        User user = getUser(authorization);
+        User user = userService.getUser(authorization);
         EntityType type = getEntityType(json);
         Entity newEntity = (Entity) gson.fromJson(json, type.getClz());
         Optional<Entity> parentOptional = entityDao.findEntity(user, uuid);
@@ -161,7 +159,7 @@ public class RestAPI {
     public ResponseEntity<String> postUser(@RequestHeader(name = "Authorization") String authorization,
                                            @RequestBody String json) throws IOException {
 
-        User user = getUser(authorization);
+        User user = userService.getUser(authorization);
 
         if (user.getIsAdmin()) {
             User newUser = GsonFactory.getInstance(false).fromJson(json, UserModel.class);
@@ -187,7 +185,7 @@ public class RestAPI {
                                               @RequestHeader(name = "Authorization") String authorization,
                                               @PathVariable String uuid) throws IOException {
 
-        User user = getUser(authorization);
+        User user = userService.getUser(authorization);
 
 
         Optional<Entity> optional = entityDao.findEntity(user, uuid);
@@ -227,7 +225,7 @@ public class RestAPI {
                                             @RequestParam(value = "count", required = false) String countParam,
                                             @RequestParam(value = "mask", required = false) String maskParam) throws IOException {
 
-        User user = getUser(authorization);
+        User user = userService.getUser(authorization);
 
         Optional<String> mask = StringUtils.isEmpty(maskParam) ? Optional.<String>absent() : Optional.of(maskParam);
         Date start = StringUtils.isEmpty(startParam) ? new Date(1) : new Date(Long.valueOf(startParam));
@@ -285,7 +283,7 @@ public class RestAPI {
                                            @RequestParam(value = "count", required = false) String countParam,
                                            @RequestParam(value = "mask", required = false) String maskParam) throws IOException {
 
-        User user = getUser(authorization);
+        User user = userService.getUser(authorization);
         Optional<String> mask = StringUtils.isEmpty(maskParam) ? Optional.<String>absent() : Optional.of(maskParam);
         Optional<Integer> count = StringUtils.isNotEmpty(countParam) ? Optional.of(Integer.valueOf(countParam)) : Optional.<Integer>absent();
 
@@ -333,7 +331,7 @@ public class RestAPI {
             calendar.add(Calendar.DAY_OF_YEAR, -1);
 
 
-            User user = getUser(authorization);
+            User user = userService.getUser(authorization);
 
             Self self = new Self(String.valueOf(getCurrentUrl(request) + uuid));
             Parent parent = new Parent(getCurrentUrl(request) + uuid);
@@ -361,28 +359,7 @@ public class RestAPI {
         }
     }
 
-    private User getUser(String authString) {
-
-        Optional<Credentials> credentials = userService.credentialsWithBasicAuthentication(authString);
-        if (credentials.isPresent()) {
-            Optional<User> user = userDao.getUserByEmail(credentials.get().getLogin());
-            if (user.isPresent()) {
-                if (userService.validatePassword(user.get(), credentials.get().getPassword())) {
-                    return user.get();
-                } else {
-
-                    throw new SecurityException("Invalid Password: " + authString);
-                }
-
-            } else {
-                throw new SecurityException("User Not Found: " + authString);
-            }
-        } else {
-            throw new SecurityException("Invalid Credentials: " + authString);
-        }
-
-
-    }
+   
 
     //Helper Methods
     @RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
@@ -395,7 +372,7 @@ public class RestAPI {
                                             @RequestParam(name = "type", required = false) String t) throws IOException {
 
 
-        User user = getUser(authorization);
+        User user = userService.getUser(authorization);
         String searchName = null;
         EntityType searchType;
 
@@ -495,7 +472,7 @@ public class RestAPI {
     public ResponseEntity doDelete(@RequestHeader(name = "Authorization") String authorization,
                                    @PathVariable String uuid) throws IOException {
 
-        User user = getUser(authorization);
+        User user = userService.getUser(authorization);
         Optional<Entity> optional = entityDao.findEntity(user, uuid);
         if (optional.isPresent()) {
             Entity entity = optional.get();
@@ -538,7 +515,7 @@ public class RestAPI {
             @RequestBody String json) {
 
 
-        User user = getUser(authorization);
+        User user = userService.getUser(authorization);
         EntityType type = getEntityType(json);
         Entity entity = (Entity) gson.fromJson(json, type.getClz());
 
@@ -552,7 +529,7 @@ public class RestAPI {
     public ResponseEntity putUser(@RequestHeader(name = "Authorization") String authorization, @RequestBody User update) {
 
 
-        User user = getUser(authorization);
+        User user = userService.getUser(authorization);
         if (user.getIsAdmin()) {
             if (!StringUtils.isEmpty(update.getPassword())) {
 

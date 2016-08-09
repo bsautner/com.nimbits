@@ -58,10 +58,7 @@ public class FilterBase implements Filter {
 
         } else {
 
-            ((HttpServletResponse) resp).sendError(HttpServletResponse.SC_UNAUTHORIZED, "You must supply a " + Parameters.token.getText() + " " +
-                    " parameter that matches what has been configured on this server, a user token parameter, or a " +
-                    Parameters.token.getText() + " parameter in either the header or querystring that has been returned " +
-                    "by a post to the Session API");
+            ((HttpServletResponse) resp).sendError(HttpServletResponse.SC_UNAUTHORIZED, "You must supply a user name and password");
 
         }
     }

@@ -59,9 +59,9 @@ public class AuthService {
 
         EmailAddress emailAddress;
 
-        String authToken = request.getHeader(Parameters.token.getText());
+        String authToken = request.getHeader("token");
         if (authToken == null) {
-            authToken = request.getParameter(Parameters.token.getText());
+            authToken = request.getParameter("token");
         }
         if (authToken != null) {
 
@@ -94,46 +94,5 @@ public class AuthService {
         return Const.WEBSITE;
     }
 
-    public Transport getMailTransport() {
-        //Use Properties object to set environment properties
 
-        String HOST = settingsService.getSetting(ServerSetting.smtp);
-        String USER = settingsService.getSetting(ServerSetting.admin);
-        String PASSWORD = settingsService.getSetting(ServerSetting.smtpPassword);
-        String PORT = "465";
-
-
-        Properties props = new Properties();
-
-        props.put("mail.smtp.host", HOST);
-        props.put("mail.smtp.port", PORT);
-        props.put("mail.smtp.user", USER);
-
-        String AUTH = "true";
-        props.put("mail.smtp.auth", AUTH);
-        String STARTTLS = "true";
-        props.put("mail.smtp.starttls.enable", STARTTLS);
-        String DEBUG = "true";
-        props.put("mail.smtp.debug", DEBUG);
-
-        props.put("mail.smtp.socketFactory.port", PORT);
-        String SOCKET_FACTORY = "javax.net.ssl.SSLSocketFactory";
-        props.put("mail.smtp.socketFactory.class", SOCKET_FACTORY);
-        props.put("mail.smtp.socketFactory.fallback", "false");
-
-
-        //Obtain the default mail session
-        Session session = Session.getDefaultInstance(props, null);
-        session.setDebug(true);
-
-
-        Transport transport = null;
-        try {
-            transport = session.getTransport("smtps");
-        } catch (NoSuchProviderException e) {
-            e.printStackTrace();
-        }
-        return transport;
-
-    }
 }

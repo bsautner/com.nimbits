@@ -134,9 +134,6 @@ public class PointEntity extends EntityStore implements Point {
         this.idleAlarmOn = point.isIdleAlarmOn();
         this.idleSeconds = point.getIdleSeconds();
         this.idleAlarmSent = point.getIdleAlarmSent();
-
-        this.values = point.getValues();
-        this.value = point.getValue();
         this.filterType = point.getFilterType().getCode();
         this.filterValue = point.getFilterValue();
         this.inferLocation = point.inferLocation();
@@ -175,18 +172,6 @@ public class PointEntity extends EntityStore implements Point {
     @Override
     public String getUnit() {
         return unit;
-    }
-
-    @Override
-    @NotPersistent
-    public Value getValue() {
-        return value;
-    }
-
-    @Override
-    @NotPersistent
-    public List<Value> getValues() {
-        return values;
     }
 
     @Override
@@ -233,16 +218,6 @@ public class PointEntity extends EntityStore implements Point {
     @Override
     public void setUnit(final String unit) {
         this.unit = unit;
-    }
-
-    @Override
-    public void setValue(final Value value) {
-        this.value = value;
-    }
-
-    @Override
-    public void setValues(final List<Value> values) {
-        this.values = values;
     }
 
     @Override

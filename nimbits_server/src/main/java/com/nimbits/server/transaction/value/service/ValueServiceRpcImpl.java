@@ -98,7 +98,7 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
     }
 
     @Override
-    public Map<String, Entity> getCurrentValuesRpc(final User user, final Map<String, Point> entities) throws Exception {
+    public Map<String, Value> getCurrentValuesRpc(final User user, final Map<String, Point> entities) throws Exception {
         return valueService.getCurrentValues(entities);
 
     }

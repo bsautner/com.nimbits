@@ -135,15 +135,14 @@ public class ValueServiceImpl implements ValueService {
 
 
     @Override
-    public Map<String, Entity> getCurrentValues(final Map<String, Point> entities) {
-        final Map<String, Entity> retObj = new HashMap<>(entities.size());
-        for (final Point p : entities.values()) {
+    public Map<String, Value> getCurrentValues(final Map<String, Point> entities) {
+        final Map<String, Value> retObj = new HashMap<>(entities.size());
+        for (final Entity p : entities.values()) {
 
             final Value v = getCurrentValue(p);
 
-            p.setValue(v);
 
-            retObj.put(p.getId(), p);
+            retObj.put(p.getId(), v);
         }
         return retObj;
 

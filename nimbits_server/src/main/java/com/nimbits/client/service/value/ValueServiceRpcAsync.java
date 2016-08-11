@@ -33,7 +33,7 @@ public interface ValueServiceRpcAsync {
 
     void recordValueRpc(final User user, final Entity point, final Value value, final AsyncCallback<Void> asyncCallback) throws ValueException;
 
-    void getCurrentValuesRpc(final User user, Map<String, Point> entities, AsyncCallback<Map<String, Entity>> async);
+    void getCurrentValuesRpc(final User user, Map<String, Point> entities, AsyncCallback<Map<String, Value>> async);
 
     void getChartTable(final User user, Entity entity, Integer count, AsyncCallback<String> asyncCallback);
 }

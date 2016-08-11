@@ -59,7 +59,6 @@ public class RestAPI {
 
 
     private final TaskService taskService;
-    private final UserDao userDao;
 
     private final EntityService entityService;
     private final ValueService valueService;
@@ -70,10 +69,9 @@ public class RestAPI {
 
     @Autowired
     public RestAPI(EntityService entityService, ValueService valueService, UserService userService,
-                   EntityDao entityDao, TaskService taskService, UserDao userDao) {
+                   EntityDao entityDao, TaskService taskService ) {
 
         this.taskService = taskService;
-        this.userDao = userDao;
         this.entityService = entityService;
         this.valueService = valueService;
         this.userService = userService;

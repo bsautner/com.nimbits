@@ -59,35 +59,6 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-websocket</artifactId>
-            <version>${jetty-jmx.version}</version>
-
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-annotations</artifactId>
-            <version>${jetty-jmx.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>${jetty-jmx.version}</version>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-jmx</artifactId>
-            <version>${jetty-jmx.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-util</artifactId>
-            <version>${jetty-jmx.version}</version>
-        </dependency>
 
 
         <dependency>
@@ -118,6 +89,13 @@
 
         </dependency>
 
+        <dependency>
+            <groupId>com.google.gwt.google-apis</groupId>
+            <artifactId>gwt-visualization</artifactId>
+            <version>1.0.2</version>
+
+        </dependency>
+
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -125,22 +103,6 @@
             <version>3.0.1</version>
 
         </dependency>
-
-
-        <!--JDO Dependencies-->
-        <!--<dependency>-->
-        <!--<groupId>javax.jdo</groupId>-->
-        <!--<artifactId>jdo-api</artifactId>-->
-        <!--<version>3.1</version>-->
-        <!--<scope>provided</scope>-->
-        <!--</dependency>-->
-
-
-        <!--<dependency>-->
-        <!--<groupId>org.datanucleus</groupId>-->
-        <!--<artifactId>datanucleus-cache</artifactId>-->
-        <!--<version>${datanucleus.version}</version>-->
-        <!--</dependency>-->
 
 
         <dependency>
@@ -177,12 +139,7 @@
         </dependency>
 
 
-        <dependency>
-            <groupId>com.google.gwt.google-apis</groupId>
-            <artifactId>gwt-visualization</artifactId>
-            <version>1.0.2</version>
 
-        </dependency>
         <!--Spring-->
 
         <dependency>

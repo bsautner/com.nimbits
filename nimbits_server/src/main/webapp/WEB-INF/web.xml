@@ -44,13 +44,13 @@
     <!--</filter-mapping>-->
 
     <servlet>
-        <servlet-name>RestAPI</servlet-name>
+        <servlet-name>api</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet-mapping>
 
-        <servlet-name>RestAPI</servlet-name>
+        <servlet-name>api</servlet-name>
         <url-pattern>/service/v3/rest/*</url-pattern>
     </servlet-mapping>
 

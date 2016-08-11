@@ -189,8 +189,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
 
             case webhook:
-                point.setValue(value);
-                doWebHook(user, point, subscription);
+
+                doWebHook(user, point, value, subscription);
                 break;
 
 
@@ -198,15 +198,15 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
 
-    private void doWebHook(User user, Point point, Subscription subscription) {
+    private void doWebHook(User user, Point point, Value value, Subscription subscription) {
         WebHook webHook = (WebHook) entityDao.getEntity(user, subscription.getTarget(), EntityType.webhook).get();
         switch (webHook.getMethod()) {
 
             case POST:
-                doPost(webHook, point);
+                doPost(webHook, point, value);
                 break;
             case GET:
-                doGet(user, webHook, point);
+                doGet(user, webHook, point, value);
                 break;
             case DELETE:
                 break;
@@ -217,12 +217,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
 
-    private void doPost(WebHook webHook, Point point) {
+    private void doPost(WebHook webHook, Point point, Value value) {
 
         try {
-            String message = buildPostBody(webHook, point);
+            String message = buildPostBody(webHook, point, value);
 
-            URL url = buildPath(webHook, point);
+            URL url = buildPath(webHook, point, value);
 
             logger.info("executing webhook POST: " + webHook.getUrl().getUrl());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -246,7 +246,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         }
     }
 
-    private URL buildPath(WebHook webHook, Point point) throws MalformedURLException {
+    private URL buildPath(WebHook webHook, Point point, Value value) throws MalformedURLException {
         URL url = null;
         String base = webHook.getUrl().getUrl();
 
@@ -256,71 +256,73 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 url = new URL(base);
                 break;
             case number:
-                url = new URL(base + point.getValue().getDoubleValue());
+                url = new URL(base + value.getDoubleValue());
                 break;
             case data:
-                url = new URL(base + point.getValue().getData());
+                url = new URL(base + value.getData());
                 break;
             case meta:
-                url = new URL(base + point.getValue().getMetaData());
+                url = new URL(base + value.getMetaData());
                 break;
             case timestamp:
-                url = new URL(base + point.getValue().getTimestamp());
+                url = new URL(base + value.getTimestamp());
                 break;
             case gps:
-                url = new URL(base + point.getValue().getLatitude() + "," + point.getValue().getLongitude());
+                url = new URL(base + value.getLatitude() + "," + value.getLongitude());
                 break;
             case object:
-                String json = GsonFactory.getInstance(true).toJson(point.getValue());
+                String json = GsonFactory.getInstance(true).toJson(value);
                 url = new URL(base + json);
                 break;
         }
         return url;
     }
 
-    private String buildPostBody(WebHook webHook, Point point) {
+    private String buildPostBody(WebHook webHook, Point point, Value value) {
         String message = "";
         switch (webHook.getBodyChannel()) {
 
             case none:
                 break;
             case number:
-                message = String.valueOf(point.getValue().getDoubleValue());
+                message = String.valueOf(value.getDoubleValue());
                 break;
             case data:
-                message = point.getValue().getData();
+                message = value.getData();
                 break;
             case meta:
-                message = point.getValue().getMetaData();
+                message = value.getMetaData();
                 break;
             case timestamp:
-                message = String.valueOf(point.getValue().getTimestamp());
+                message = String.valueOf(value.getTimestamp());
                 break;
             case gps:
-                message = point.getValue().getLatitude() + "," + point.getValue().getLatitude();
+                message = value.getLatitude() + "," + value.getLatitude();
                 break;
             case object:
-                message = GsonFactory.getInstance(true).toJson(point.getValue());
+                message = GsonFactory.getInstance(true).toJson(value);
                 break;
         }
         return message;
     }
 
-    private void doGet(final User user, WebHook webHook, Point point) {
+    private void doGet(final User user, WebHook webHook, Point point, Value value) {
 
 
         InputStream in = null;
 
         try {
             logger.info("executing webhook GET:" + webHook.getUrl().getUrl());
-            URL url = buildPath(webHook, point);
+            URL url = buildPath(webHook, point, value);
             in = url.openStream();
             String result = (IOUtils.toString(in));
             if (!StringUtils.isEmpty(webHook.getDownloadTarget()) && !StringUtils.isEmpty(result)) {
-                Point target = (Point) entityDao.getEntity(user, webHook.getDownloadTarget(), EntityType.point).get();
+                Optional<Entity> optional = entityDao.getEntity(user, webHook.getDownloadTarget(), EntityType.point);
 
-                Value value = new Value.Builder().data(result).create();
-                valueDao.storeValues(target, Collections.singletonList(value));
+                if (optional.isPresent()) {
+                    Value r = new Value.Builder().data(result).create();
+                    valueDao.storeValues(optional.get(), Collections.singletonList(r));
+                }
 
 
             }

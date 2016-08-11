@@ -445,7 +445,7 @@ public class NavigationPanel extends NavigationEventProvider {
         }
     }
 
-    private class ReloadAsyncCallback implements AsyncCallback<Map<String, Entity>> {
+    private class ReloadAsyncCallback implements AsyncCallback<Map<String, Value>> {
 
         ReloadAsyncCallback() {
         }
@@ -456,21 +456,22 @@ public class NavigationPanel extends NavigationEventProvider {
         }
 
         @Override
-        public void onSuccess(Map<String, Entity> stringPointMap) {
+        public void onSuccess(Map<String, Value> valueMap) {
             final TreeStore<ModelData> models = tree.getTreeStore();
             for (final ModelData m : models.getAllItems()) {
                 final TreeModel model = (TreeModel) m;
                 if (!model.isDirty() && model.getEntityType().equals(EntityType.point)) {
 
-                    if (stringPointMap.containsKey(model.getId())) {
-                        Point p = (Point) stringPointMap.get(model.getId());
-                        if (p.getValue() == null) {
+                    if (valueMap.containsKey(model.getId())) {
+                        Value value = valueMap.get(model.getId());
+                       //  Point p = (Point) valueMap.get(model.getId());
+                        if (value == null) {
                             model.setAlertType(AlertType.OK);
                             model.setValue(new Value.Builder().doubleValue(0.0).create());
 
                         } else {
-                            model.setAlertType(p.getValue().getAlertState());
-                            model.setValue(p.getValue());
+                            model.setAlertType(value.getAlertState());
+                            model.setValue(value);
                         }
 
 

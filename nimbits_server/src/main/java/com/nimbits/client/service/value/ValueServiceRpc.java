@@ -37,7 +37,7 @@ public interface ValueServiceRpc extends RemoteService {
 
     void recordValueRpc(final User user, final Entity entity, final Value value) throws ValueException;
 
-    Map<String, Entity> getCurrentValuesRpc(final User user, final Map<String, Point> entities) throws Exception;
+    Map<String, Value> getCurrentValuesRpc(final User user, final Map<String, Point> entities) throws Exception;
 
 
 }

@@ -34,7 +34,7 @@ public interface ValueService extends BaseProcessor {
 
     List<Value> getSeries(Entity entity, Optional<Range<Long>> timespan, final Optional<Range<Integer>> range, Optional<String> mask);
 
-    Map<String, Entity> getCurrentValues(Map<String, Point> entities);
+    Map<String, Value> getCurrentValues(Map<String, Point> entities);
 
     void recordValues(User user, Point point, List<Value> values);
 

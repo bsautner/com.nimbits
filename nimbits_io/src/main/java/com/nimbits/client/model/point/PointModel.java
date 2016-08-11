@@ -156,21 +156,6 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
 
     @Override
-    public Value getValue() {
-        return value;
-    }
-
-
-    @Override
-    public List<Value> getValues() {
-        if (values == null) {
-            values = new ArrayList<Value>(0);
-
-        }
-        return values;
-    }
-
-    @Override
     public boolean isHighAlarmOn() {
         return highAlarmOn;
     }
@@ -209,16 +194,6 @@ public class PointModel extends EntityModel implements Serializable, Point {
     @Override
     public void setUnit(final String unit) {
         this.unit = unit;
-    }
-
-    @Override
-    public void setValue(final Value value) {
-        this.value = value;
-    }
-
-    @Override
-    public void setValues(final List<Value> values) {
-        this.values = values;
     }
 
     @Override

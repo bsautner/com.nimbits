@@ -30,19 +30,19 @@ public class Value implements Serializable, Comparable<Value> {
     private static final int INT = 64;
 
     @Expose
-    Double lt;
+    private Double lt;
     @Expose
-    Double lg;
+    private Double lg;
     @Expose
-    Double d;
+    private Double d;
     @Expose
-    Long t;
+    private Long t;
     @Expose
-    String dx;
+    private String dx;
     @Expose
-    String m;
+    private String m;
 
-    Integer st;
+    private Integer st;
 
 
     @SuppressWarnings("unused")
@@ -61,9 +61,19 @@ public class Value implements Serializable, Comparable<Value> {
         this.st = alert;
     }
 
+    protected Value(Double lat, Double lng, Double v, Long time, String data, String metadata, Integer alert) {
+        this.d = v;
+        this.t = time == null ? System.currentTimeMillis() : time;
+        this.dx = data;
+        this.m = metadata;
+        this.lg = lng;
+        this.lt = lat;
+        this.st = alert;
+    }
+
     public Value(Value value) {
         this.d = value.getDoubleValue();
-        this.t = value.getTimestamp() == null ? System.currentTimeMillis() : value.getTimestamp().getTime();
+        this.t = value.getLTimestamp() == 0 ? System.currentTimeMillis() : value.getLTimestamp();
         this.dx = value.getData();
         this.m = value.getData();
         this.lg = value.getLongitude();
@@ -106,15 +116,13 @@ public class Value implements Serializable, Comparable<Value> {
     }
 
 
+    @Deprecated
     public Date getTimestamp() {
         return this.t == null ? new Date() : new Date(this.t);
     }
 
-
-    public void initTimestamp() {
-        if (this.t == null) {
-            this.t = System.currentTimeMillis();
-        }
+    public Long getLTimestamp() {
+        return this.t == null ? 0 : this.t;
     }
 
 
@@ -124,9 +132,9 @@ public class Value implements Serializable, Comparable<Value> {
 
     @Override
     public int compareTo(Value that) {
-        return this.getTimestamp().getTime() < that.getTimestamp().getTime()
+        return this.getLTimestamp() < that.getLTimestamp()
                 ? 1
-                : this.getTimestamp().getTime() > that.getTimestamp().getTime()
+                : this.getLTimestamp() > that.getLTimestamp()
                 ? -1
                 : 0;
 
@@ -186,7 +194,7 @@ public class Value implements Serializable, Comparable<Value> {
 
         Double doubleValue;
 
-        Date timestamp;
+        Long timestamp;
 
         String data;
 
@@ -223,7 +231,7 @@ public class Value implements Serializable, Comparable<Value> {
 
         public Builder initValue(Value value) {
             this.doubleValue = value.getDoubleValue();
-            this.timestamp = value.getTimestamp();
+            this.timestamp = value.getLTimestamp();
             this.lng = value.getLongitude();
             this.lat = value.getLatitude();
             this.data = value.getData();
@@ -270,7 +278,14 @@ public class Value implements Serializable, Comparable<Value> {
             return this;
         }
 
+        @Deprecated
         public Builder timestamp(Date time) {
+            this.timestamp = time.getTime();
+            return this;
+        }
+
+
+        public Builder timestamp(Long time) {
             this.timestamp = time;
             return this;
         }

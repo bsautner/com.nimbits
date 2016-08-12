@@ -30,7 +30,7 @@ public abstract class AbstractLoginPanel extends LayoutContainer {
 
     protected final VerticalPanel vp;
     protected final Html tosHtml = new Html("<hr><p>By using this software you are agreeing to our " +
-            "<a href = \"http://nimbits.com/nimbits_tos.pdf\">Terms of Use</a></p>");
+            "<a href = \"https://github.com/bsautner/com.nimbits/wiki/TOS\">Terms of Use</a></p>");
 
     protected TextField<String> emailField = new TextField<String>();
 

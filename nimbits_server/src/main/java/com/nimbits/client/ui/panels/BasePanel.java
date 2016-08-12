@@ -36,24 +36,23 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 
-import java.util.logging.Logger;
 
 
 public abstract class BasePanel extends NavigationEventProvider {
     public final User user;
-    private Logger logger = Logger.getLogger(BasePanel.class.getName());
-    protected static final String MESSAGE_SELECT_POINT = "Select a Data Point";
+
+    static final String MESSAGE_SELECT_POINT = "Select a Data Point";
     public static final int WIDTH = 600;
     public static final int HEIGHT = 600;
-    protected static final int FORM_WIDTH = 350;
+    private static final int FORM_WIDTH = 350;
     private static final String SUBMIT = "Submit";
     private static final String CANCEL = "Cancel";
-    protected final FormData formdata;
-    protected final VerticalPanel vp;
+    final FormData formdata;
+    final VerticalPanel vp;
     protected final FormPanel simple;
-    protected final LayoutContainer controlButtons = new LayoutContainer();
+    private final LayoutContainer controlButtons = new LayoutContainer();
     protected final Button submit = new Button(SUBMIT);
-    protected final Button cancel = new Button(CANCEL);
+    private final Button cancel = new Button(CANCEL);
     protected final PanelEvent listener;
     private Html helpLink;
 
@@ -120,7 +119,7 @@ public abstract class BasePanel extends NavigationEventProvider {
 
         @Override
         public void componentSelected(ButtonEvent buttonEvent) {
-            logger.info("Closing Panel");
+
             listener.close();
         }
     }

@@ -20,14 +20,12 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Range;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.SummaryType;
-import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.process.task.TaskService;
-import com.nimbits.server.transaction.BaseProcessor;
+import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.entity.EntityService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.subscription.SubscriptionService;
@@ -40,34 +38,29 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class SummaryService implements BaseProcessor {
+public class SummaryService {
 
 
     private final EntityDao entityDao;
     private final ValueService valueService;
-    private final TaskService taskService;
     private final EntityService entityService;
     private final SubscriptionService subscriptionService;
 
     @Autowired
     public SummaryService(final EntityDao entityDao,
                           final ValueService valueService,
-                          final TaskService taskService,
                           final EntityService entityService,
                           final SubscriptionService subscriptionService) {
 
         this.entityDao = entityDao;
         this.valueService = valueService;
-        this.taskService = taskService;
         this.entityService = entityService;
         this.subscriptionService = subscriptionService;
 
 
     }
 
-
-    @Override
-    public void process(final User user, final Point point, final Value v) throws ValueException {
+    public void process(ValueTask valueTask, final User user, final Point point, final Value v)  {
         final Optional<Entity> optional = entityDao.getEntityByTrigger(user, point, EntityType.summary);
         if (optional.isPresent()) {
 
@@ -106,7 +99,7 @@ public class SummaryService implements BaseProcessor {
 
                 final Point target = (Point) entityDao.getEntity(user, summary.getTarget(), EntityType.point).get();
 
-                taskService.process(user, target, value);
+                valueTask.process(user, target, value);
                 summary.setLastProcessed(new Date());
                 entityService.addUpdateEntity(valueService, user, summary);
 

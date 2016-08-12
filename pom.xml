@@ -54,7 +54,6 @@
     <modules>
         <module>nimbits_io</module>
         <module>nimbits_server</module>
-        <module>nimbits_deb</module>
     </modules>
 
     <distributionManagement>

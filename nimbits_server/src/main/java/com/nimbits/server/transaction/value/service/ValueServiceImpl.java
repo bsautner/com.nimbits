@@ -24,7 +24,7 @@ import com.google.common.collect.Table;
 import com.google.gson.Gson;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.exception.ValueException;
+
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
@@ -48,43 +48,11 @@ public class ValueServiceImpl implements ValueService {
 
     private final ValueDao valueDao;
     private final EntityDao entityDao;
-    private final EntityService entityService;
-    private final SubscriptionService subscriptionService;
-
     @Autowired
-    public ValueServiceImpl(ValueDao valueDao, EntityDao entityDao, EntityService entityService, SubscriptionService subscriptionService) {
+    public ValueServiceImpl(ValueDao valueDao, EntityDao entityDao) {
 
         this.valueDao = valueDao;
         this.entityDao = entityDao;
-        this.entityService = entityService;
-        this.subscriptionService = subscriptionService;
-    }
-
-    @Override //process points using system cron, send idle alerts etc.
-    public void process(final User user, final Point p, final Value value) throws ValueException {
-        final Calendar c = Calendar.getInstance();
-        c.add(Calendar.SECOND, p.getIdleSeconds() * -1);
-        // boolean retVal = false;
-
-        //
-        final User u = (User) entityDao.getEntity(user,
-                p.getOwner(), EntityType.user).get();
-
-
-        if (p.getIdleSeconds() > 0 &&
-                value.getTimestamp().getTime() <= c.getTimeInMillis() &&
-                !p.getIdleAlarmSent()) {
-            p.setIdleAlarmSent(true);
-            entityService.addUpdateEntity(this, u, p);
-            // PointServiceFactory.getInstance().updatePoint(u, p);
-
-            subscriptionService.process(u, p,
-                    new Value.Builder().initValue(value).alertType(AlertType.IdleAlert).create()
-            );
-            //retVal = true;
-        }
-
-
     }
 
 
@@ -119,11 +87,10 @@ public class ValueServiceImpl implements ValueService {
 
         }
         if (point.isIdleAlarmOn()) {
-            final Calendar c = Calendar.getInstance();
-            c.add(Calendar.SECOND, point.getIdleSeconds() * -1);
+
 
             if (point.getIdleSeconds() > 0 && value != null &&
-                    value.getTimestamp().getTime() <= c.getTimeInMillis()) {
+                    value.getLTimestamp() <= System.currentTimeMillis() - (point.getIdleSeconds() * 1000) ) {
 
                 retObj = AlertType.IdleAlert;
             }
@@ -259,8 +226,8 @@ public class ValueServiceImpl implements ValueService {
         List<Row> rows = new ArrayList<>();
 
 
-        Set<Date> timestamps = new HashSet<>();
-        Table<Entity, Date, Value> sensorTable = HashBasedTable.create();
+        Set<Long> timestamps = new HashSet<>();
+        Table<Entity, Long, Value> sensorTable = HashBasedTable.create();
         Optional<Range<Integer>> range;
         if (count.isPresent()) {
             range = Optional.of(Range.closed(0, count.get()));
@@ -274,11 +241,11 @@ public class ValueServiceImpl implements ValueService {
 
             for (Value value : values) {
 
-                if (value.getTimestamp().getTime() != new Date().getTime()) { //don't chart the 1970 init value
-                    timestamps.add(value.getTimestamp());
+                if (value.getLTimestamp() != new Date().getTime()) { //don't chart the 1970 init value
+                    timestamps.add(value.getLTimestamp());
 
 
-                    sensorTable.put(point, value.getTimestamp(), value);
+                    sensorTable.put(point, value.getLTimestamp(), value);
                 }
 
             }
@@ -287,11 +254,11 @@ public class ValueServiceImpl implements ValueService {
         }
 
 
-        for (Date timestamp : timestamps) {
+        for (Long timestamp : timestamps) {
             List<ChartDataColumn> chartDataColumns = new ArrayList<>();
 
             Calendar calendar = Calendar.getInstance();
-            calendar.setTime(timestamp);
+            calendar.setTimeInMillis(timestamp);
             ChartDataColumn dateEntry = new ChartDataColumn(
                     "Date("
                             + calendar.get(Calendar.YEAR) + "," +
@@ -323,7 +290,7 @@ public class ValueServiceImpl implements ValueService {
     }
 
 
-    private void addSensorData(Table<Entity, Date, Value> sensorTable, Date timestamp, List<ChartDataColumn> chartDataColumns, Entity point) {
+    private void addSensorData(Table<Entity, Long, Value> sensorTable, Long timestamp, List<ChartDataColumn> chartDataColumns, Entity point) {
         ChartDataColumn dataColumn;
         if (sensorTable.contains(point, timestamp)) {
 

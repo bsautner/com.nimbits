@@ -21,6 +21,7 @@ import com.google.common.base.Optional;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.trigger.Trigger;
 import com.nimbits.client.model.user.User;
@@ -74,22 +75,7 @@ public class EntityDao {
 
     }
 
-    public List<Entity> getIdleEntities(User admin) {
 
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-        try {
-
-            final Query q = pm
-                    .newQuery(PointEntity.class);
-            q.setFilter("idleAlarmOn == k && idleAlarmSent  == c");
-            q.declareParameters("Boolean k, Boolean c");
-
-            final Collection<Entity> points = (Collection<Entity>) q.execute(true, false);
-            return EntityHelper.createModels(admin, points);
-        } finally {
-            pm.close();
-        }
-    }
 
     //@Cacheable(cacheNames = "entity")
     public Optional<Entity> getEntityByTrigger(final User user, final Entity entity, final EntityType type) {

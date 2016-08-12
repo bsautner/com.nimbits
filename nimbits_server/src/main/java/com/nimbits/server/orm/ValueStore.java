@@ -38,7 +38,7 @@ public class ValueStore {
 
 
     public ValueStore(String entityId, Value value) {
-        this.timestamp = value.getTimestamp() == null ? System.currentTimeMillis() : value.getTimestamp().getTime();
+        this.timestamp = value.getLTimestamp() == null ? System.currentTimeMillis() : value.getLTimestamp();
         this.entityId = entityId;
         this.lat = value.getLatitude();
         this.lng = value.getLongitude();

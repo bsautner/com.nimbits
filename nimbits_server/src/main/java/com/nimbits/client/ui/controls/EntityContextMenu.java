@@ -46,10 +46,9 @@ import com.nimbits.client.ui.panels.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+
 
 public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
-    private final Logger logger = Logger.getLogger(EntityContextMenu.class.getName());
 
     private static final String SCHEDULE_TIMER = "Schedule Timer";
     private static final String CREATE_CALCULATION = "Create Calculation";
@@ -61,7 +60,6 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
     private static final String SUBSCRIBE_TO_EVENTS1 = "Subscribe To Events";
     private static final String COPY_ENTITY = "Copy Entity";
     private static final String DELETE = "Delete";
-    private static final String OUTBOUND_SOCKET = "Outbound Socket";
     private static final String SUMMARIZE = "Summarize";
     private static final String EXTERNAL_WEB_HOOK = "External Web Hook";
     private static final String SUBSCRIBE_TO_EVENTS = "Subscribe to Events";
@@ -463,9 +461,9 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
 
     @Override
     public void close() {
-        logger.info("Closing Modal");
+
         if (w != null && w.isClosable() && w.isVisible()) {
-            logger.info("hiding...");
+
             w.hide();
         }
     }
@@ -545,7 +543,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
 
         @Override
         public void onEntityAdded(final Entity entity) {
-            logger.info("entity added");
+
             close();
             notifyEntityModifiedListener(new GxtModel(entity), Action.create);
 

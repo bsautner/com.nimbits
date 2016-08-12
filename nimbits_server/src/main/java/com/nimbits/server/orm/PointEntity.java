@@ -108,7 +108,7 @@ public class PointEntity extends EntityStore implements Point {
     }
 
     @Override
-    public boolean getIdleAlarmSent() {
+    public boolean idleAlarmSent() {
         return idleAlarmSent == null ? false : idleAlarmSent;
     }
 
@@ -133,7 +133,7 @@ public class PointEntity extends EntityStore implements Point {
         this.lowAlarmOn = point.isLowAlarmOn();
         this.idleAlarmOn = point.isIdleAlarmOn();
         this.idleSeconds = point.getIdleSeconds();
-        this.idleAlarmSent = point.getIdleAlarmSent();
+        this.idleAlarmSent = point.idleAlarmSent();
         this.filterType = point.getFilterType().getCode();
         this.filterValue = point.getFilterValue();
         this.inferLocation = point.inferLocation();
@@ -312,7 +312,7 @@ public class PointEntity extends EntityStore implements Point {
         this.idleAlarmOn = p.isIdleAlarmOn();
         this.highAlarmOn = p.isHighAlarmOn();
         this.lowAlarmOn = p.isLowAlarmOn();
-        this.idleAlarmSent = p.getIdleAlarmSent();
+        this.idleAlarmSent = p.idleAlarmSent();
         this.idleSeconds = p.getIdleSeconds();
         this.filterType = p.getFilterType().getCode();
         this.filterValue = p.getFilterValue();

@@ -160,8 +160,8 @@ public class V3RestClientTester extends NimbitsTest {
             for (Value value : stored) {
                 if (StringUtils.isEmpty(mask) || mask.equals(value.getMetaData()) || containsMask(value, mask))
                     if (!downloadedValues.contains(value)) {
-                        log("R Range: " + stored.get(0).getTimestamp() + " to " +
-                                stored.get(stored.size() - 1).getTimestamp());
+                        log("R Range: " + stored.get(0).getLTimestamp() + " to " +
+                                stored.get(stored.size() - 1).getLTimestamp());
                         log("Q Range: " + calendar.getTime() + " to " + new Date());
 
 

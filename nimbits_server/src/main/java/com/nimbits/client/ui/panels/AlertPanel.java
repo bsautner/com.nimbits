@@ -125,7 +125,7 @@ public class AlertPanel extends BasePanel {
             final Html h2 = new Html();
 
             String s = "<P>Based on the current settings, this point is currently ";
-            if (point.getIdleAlarmSent()) {
+            if (point.idleAlarmSent()) {
                 s += "idle.";
             } else {
                 s += "not idle.";

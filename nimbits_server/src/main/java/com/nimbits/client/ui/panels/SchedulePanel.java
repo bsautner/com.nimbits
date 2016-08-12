@@ -40,13 +40,12 @@ import com.nimbits.client.ui.helper.FeedbackHelper;
 
 import java.util.Date;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class SchedulePanel extends BasePanel {
     private final Entity entity;
-    Logger logger = Logger.getLogger(SchedulePanel.class.getName());
-    DateTimeFormat fmt = DateTimeFormat.getFormat(Const.FORMAT_DATE_TIME);
+
+    private DateTimeFormat fmt = DateTimeFormat.getFormat(Const.FORMAT_DATE_TIME);
 
     public SchedulePanel(User user, PanelEvent listener, final Entity entity) {
         super(user, listener, "<a href=\"http://www.nimbits.com/howto_schedule.jsp\">Learn More: Schedule Help</a>");
@@ -164,7 +163,7 @@ public class SchedulePanel extends BasePanel {
 
         @Override
         public void onFailure(final Throwable e) {
-            logger.log(Level.SEVERE, "error in rpc", e);
+
             box.close();
             FeedbackHelper.showError(e);
             try {
@@ -176,11 +175,11 @@ public class SchedulePanel extends BasePanel {
 
         @Override
         public void onSuccess(final Entity result) {
-            logger.info("successful callback AddScheduleEntityAsyncCallback");
+
             box.close();
 
             try {
-                logger.info("successful callback AddScheduleEntityAsyncCallback 2");
+
                 notifyEntityAddedListener(result);
             } catch (Exception e) {
                 FeedbackHelper.showError(e);
@@ -216,19 +215,15 @@ public class SchedulePanel extends BasePanel {
                     "Creating Schedule", "please wait...");
             //box.show();
             final Schedule update;
-            logger.log(Level.INFO, "doing update");
+
             final EntityName entityName = CommonFactory.createName(nameField.getValue(), EntityType.schedule);
 
             update = createSchedule(entityName, sourceCombo, targetCombo, enabledCheckbox, interval, dateSelector);
-            logger.log(Level.INFO, "created schedule");
+
 
             Date date = fmt.parse(dateSelector.getValue());
 
 
-            logger.log(Level.INFO, "DATE LOGGED: " + date.getTime() + "  " + date);
-            // Date combined = new Date(date.getTime() + time.getTime() - 1);
-            // update.setLastProcessed(date.getTime());
-            logger.log(Level.INFO, "doing rpc");
             service.addUpdateEntityRpc(user, update, new AddScheduleEntityAsyncCallback(box));
 
         }

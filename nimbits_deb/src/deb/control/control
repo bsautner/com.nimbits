@@ -1,7 +1,0 @@
-Package: nimbits
-Version: 3.9.56
-Section: devel
-Priority: optional
-Architecture: all
-Description: Nimbits Data Acquisition Platform. Visit nimbits.com to learn more.
-Maintainer: Benjamin Sautner <bsautner@nimbits.com>

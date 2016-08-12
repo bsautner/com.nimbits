@@ -29,7 +29,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
 //TODO - create access keys on the forign instance and use the id of the id entity as the apikey field here
-
+@Deprecated
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class InstanceEntity extends EntityStore implements Instance {
 

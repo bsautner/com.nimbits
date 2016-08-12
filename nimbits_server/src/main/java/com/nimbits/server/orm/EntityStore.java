@@ -37,7 +37,7 @@ public abstract class EntityStore implements Entity {
     @Persistent
     protected String id;
 
-    @Persistent
+    @Persistent @Index
     private String name;
 
     @Persistent

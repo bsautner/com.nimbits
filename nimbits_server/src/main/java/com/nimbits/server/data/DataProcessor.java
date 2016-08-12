@@ -32,9 +32,9 @@ public class DataProcessor {
         boolean retVal = ignored;
 
         if (p.getExpire() > 0) {
-            final Calendar c = Calendar.getInstance();
-            c.add(Calendar.DATE, p.getExpire() * -1);
-            if (value.getTimestamp().getTime() < c.getTimeInMillis()) {
+            long exp = (System.currentTimeMillis() - (86400000 * p.getExpire()));
+
+            if (value.getLTimestamp() >= exp) {
                 retVal = true;
             }
         }

@@ -17,7 +17,7 @@
 package com.nimbits.client.service.value;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.exception.ValueException;
+
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
@@ -31,7 +31,7 @@ public interface ValueServiceRpcAsync {
 
     void solveEquationRpc(final User user, final Calculation calculation, final AsyncCallback<List<Value>> async);
 
-    void recordValueRpc(final User user, final Entity point, final Value value, final AsyncCallback<Void> asyncCallback) throws ValueException;
+    void recordValueRpc(final User user, final Entity point, final Value value, final AsyncCallback<Void> asyncCallback) ;
 
     void getCurrentValuesRpc(final User user, Map<String, Point> entities, AsyncCallback<Map<String, Value>> async);
 

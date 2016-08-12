@@ -17,14 +17,116 @@
 package com.nimbits.server.transaction.calculation;
 
 import com.google.common.base.Optional;
+import com.nimbits.client.common.Utils;
+import com.nimbits.client.enums.EntityType;
+
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.transaction.BaseProcessor;
+import com.nimbits.server.math.MathEvaluator;
+import com.nimbits.server.math.MathEvaluatorImpl;
+import com.nimbits.server.process.task.ValueTask;
+import com.nimbits.server.transaction.entity.dao.EntityDao;
+import com.nimbits.server.transaction.value.service.ValueService;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
+public class CalculationService   {
 
 
-public interface CalculationService extends BaseProcessor {
+    private MathEvaluator m;
 
-    Optional<Value> solveEquation(User user, Calculation calculation, Entity point, Value value);
+    private EntityDao entityDao;
+
+    private ValueService valueService;
+
+    @Autowired
+    public CalculationService(EntityDao entityDao, ValueService valueService) {
+
+        this.entityDao = entityDao;
+        this.valueService = valueService;
+
+
+    }
+
+
+    public void process(ValueTask valueTask, final User u, final Point point, final Value value)  {
+
+        final Optional<Entity> optional = entityDao.getEntityByTrigger(u, point, EntityType.calculation);
+        if (optional.isPresent()) {
+
+
+            Calculation c = (Calculation) optional.get();
+
+
+            final Optional<Entity> target = entityDao.getEntity(u, c.getTarget(), EntityType.point);
+
+            if (target.isPresent()) {
+                final Optional<Value> result = solveEquation(u, c, point, value);
+                if (result.isPresent()) {
+
+                    Value v = new Value.Builder().initValue(result.get()).timestamp(value.getLTimestamp()).create();
+
+
+                    valueTask.process(u, (Point) target.get(), v);
+
+                }
+            }
+
+
+        }
+    }
+
+
+    public Optional<Value> solveEquation(final User user, final Calculation calculation, Entity point, Value value) {
+
+
+        m = new MathEvaluatorImpl(calculation.getFormula());
+        if (calculation.getFormula().contains("x") && !StringUtils.isEmpty(calculation.getX())) {
+            addVar(user, calculation, point, value, "x", calculation.getX());
+        }
+        if (calculation.getFormula().contains("y") && !StringUtils.isEmpty(calculation.getY())) {
+            addVar(user, calculation, point, value, "y", calculation.getY());
+        }
+        if (calculation.getFormula().contains("z") && !StringUtils.isEmpty(calculation.getZ())) {
+            addVar(user, calculation, point, value, "z", calculation.getZ());
+        }
+
+
+        final Double retVal = m.getValue();
+
+
+        if (retVal == null) {
+            return Optional.absent();
+
+        } else {
+            Value v = new Value.Builder().doubleValue(retVal).create();
+            return Optional.of(v);
+        }
+
+    }
+
+    private void addVar(User user, Calculation calculation, Entity point, Value value, String var, String varEntityId) {
+        if (!Utils.isEmptyString(calculation.getX()) && calculation.getFormula().contains(var)) {
+
+            double currentValue = 0;
+            if (varEntityId.equals(point.getId())) {
+                currentValue = value.getDoubleValue();
+            } else {
+                Optional<Entity> sample = entityDao.getEntity(user, varEntityId, EntityType.point);
+
+                if (sample.isPresent()) {
+                    final Value val = valueService.getCurrentValue(sample.get());
+                    currentValue = val.getDoubleValue();
+                }
+
+            }
+            m.addVariable(var, currentValue);
+
+        }
+    }
 }

@@ -16,10 +16,52 @@
 
 package com.nimbits.server.transaction.sync;
 
-import com.nimbits.server.transaction.BaseProcessor;
+import com.google.common.base.Optional;
+import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.io.Nimbits;
+import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.sync.Sync;
+import com.nimbits.client.model.user.User;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.server.transaction.entity.dao.EntityDao;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+@Service
+public class SyncService {
+
+    private final EntityDao entityDao;
 
 
-public interface SyncService extends BaseProcessor {
+    @Autowired
+    public SyncService(final EntityDao entityDao) {
+
+        this.entityDao = entityDao;
+
+    }
+
+    public void process(final User user, final Point point, final Value value) {
+        final Optional<Entity> optional = entityDao.getEntityByTrigger(user, point, EntityType.sync);
+        if (optional.isPresent()) {
+
+            Sync sync = (Sync) optional.get();
+            String u = sync.getTargetInstance();
+
+            Nimbits nimbits = new Nimbits.Builder()
+                    .instance(u)
+                    .email(user.getEmail().getValue())
+                    .token(sync.getAccessKey()).create();
+
+            // Point target = (Point) entityDao.getEntity(user,((Sync) syncEntity).getTargetPoint(), EntityType.point );
+            String targetName = sync.getTarget().split("/")[1];
+
+            nimbits.recordValue(targetName, value);
+
+        }
+    }
 
 
 }

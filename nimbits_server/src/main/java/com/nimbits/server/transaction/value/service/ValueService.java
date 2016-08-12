@@ -23,13 +23,12 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.server.transaction.BaseProcessor;
 
 import java.util.List;
 import java.util.Map;
 
 
-public interface ValueService extends BaseProcessor {
+public interface ValueService  {
 
 
     List<Value> getSeries(Entity entity, Optional<Range<Long>> timespan, final Optional<Range<Integer>> range, Optional<String> mask);

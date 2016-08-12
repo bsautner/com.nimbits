@@ -16,113 +16,63 @@
 
 package com.nimbits.server.process.task;
 
-import com.google.gson.Gson;
 import com.nimbits.client.enums.AlertType;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.exception.ValueException;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.data.DataProcessor;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transaction.BaseProcessor;
 import com.nimbits.server.transaction.calculation.CalculationService;
 import com.nimbits.server.transaction.entity.EntityService;
-import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.subscription.SubscriptionService;
 import com.nimbits.server.transaction.summary.SummaryService;
 import com.nimbits.server.transaction.sync.SyncService;
-import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.ValueDao;
 import com.nimbits.server.transaction.value.service.ValueService;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
+import org.springframework.stereotype.Component;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.Date;
 
-@Service
-public class ValueTask extends HttpServlet implements BaseProcessor {
+@Component
+public class ValueTask {
+
     private final Logger logger = LoggerFactory.getLogger(ValueTask.class.getName());
 
-    @Autowired
     private EntityService entityService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
+    
     private CalculationService calculationService;
 
-    @Autowired
     private SummaryService summaryService;
-
-    @Autowired
+    
     private SyncService syncService;
-
-    @Autowired
+    
     private ValueService valueService;
-
-    @Autowired
+    
     private SubscriptionService subscriptionService;
-
-    @Autowired
+    
     private DataProcessor dataProcessor;
-
-    @Autowired
-    private EntityDao entityDao;
-
-
-    @Autowired
+    
     private ValueDao valueDao;
 
-    @Override
-    public void init() throws ServletException {
-        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 
-
+    @Autowired
+    public ValueTask(EntityService entityService, CalculationService calculationService, SummaryService summaryService, SyncService syncService,
+                     ValueService valueService, SubscriptionService subscriptionService, DataProcessor dataProcessor, ValueDao valueDao) {
+        this.entityService = entityService;
+        this.calculationService = calculationService;
+        this.summaryService = summaryService;
+        this.syncService = syncService;
+        this.valueService = valueService;
+        this.subscriptionService = subscriptionService;
+        this.dataProcessor = dataProcessor;
+        this.valueDao = valueDao;
     }
 
-
-    @Override
-    public void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws ServletException, IOException {
-        logger.info("value task post");
-
-        String u = req.getParameter(Parameters.user.getText());
-        String j = req.getParameter(Parameters.json.getText());
-        String id = req.getParameter(Parameters.id.getText());
-        Gson gson = GsonFactory.getInstance(true);
-
-
-        User user = userService.getUserByKey(u).get();
-        Value value = gson.fromJson(j, Value.class);
-
-
-        Point point = (Point) entityDao.getEntity(user, id, EntityType.point).get();
-
-
-        try {
-            process(user, point, value);
-        } catch (ValueException e) {
-            logger.error(ExceptionUtils.getStackTrace(e));
-        }
-
-
-    }
-
-    @Override
-    public void process(final User user, final Point point, Value value) throws ValueException {
+    public void process(final User user, final Point point, Value value)  {
 
         final boolean ignored = false;
         final boolean ignoredByDate = dataProcessor.ignoreDataByExpirationDate(point, value, ignored);
@@ -130,7 +80,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
 
         boolean ignoredByCompression = false;
 
-        if (value.getTimestamp() != null && (value.getTimestamp().getTime() > sample.getTimestamp().getTime())) {
+        if (value.getLTimestamp() > sample.getLTimestamp()) {
             ignoredByCompression = dataProcessor.ignoreByFilter(point, sample, value);
         }
 
@@ -153,7 +103,7 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
                     previousValue = valueService.getCurrentValue(point);
 
 
-                    if (previousValue.getTimestamp().getTime() < value.getTimestamp().getTime()) {
+                    if (previousValue.getLTimestamp()  < value.getLTimestamp()) {
                         value = new Value.Builder().initValue(value).doubleValue(value.getDoubleValue() + previousValue.getDoubleValue()).create();
                         valueService.recordValues(user, point, Collections.singletonList(value));
                     }
@@ -204,33 +154,24 @@ public class ValueTask extends HttpServlet implements BaseProcessor {
 
     private void completeRequest(User u,
                                  Point point,
-                                 Value value) throws ValueException {
-        try {
+                                 Value value)  {
 
-            if (point.isIdleAlarmOn() && point.getIdleAlarmSent()) {
+
+            if (point.isIdleAlarmOn() && point.idleAlarmSent()) {
                 point.setIdleAlarmSent(false);
                 entityService.addUpdateEntity(valueService, u, point);
             }
 
 
-            Value snapshot = valueService.getSnapshot(point);
-            if (snapshot.getTimestamp().getTime() < value.getTimestamp().getTime()) {
-                valueDao.setSnapshot(point, value);
-            }
+            calculationService.process(this, u, point, value);
 
-            calculationService.process(u, point, value);
-
-            summaryService.process(u, point, value);
+            summaryService.process(this, u, point, value);
 
             syncService.process(u, point, value);
 
             subscriptionService.process(u, point, value);
 
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            logger.error(ex.getMessage());
-        }
 
 
     }

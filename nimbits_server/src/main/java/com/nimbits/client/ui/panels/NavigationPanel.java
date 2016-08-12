@@ -33,7 +33,7 @@ import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.exception.ValueException;
+
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.entity.Entity;
@@ -49,7 +49,6 @@ import com.nimbits.client.ui.controls.EntityTree;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 
 import java.util.*;
-import java.util.logging.Logger;
 
 
 public class NavigationPanel extends NavigationEventProvider {
@@ -64,7 +63,6 @@ public class NavigationPanel extends NavigationEventProvider {
     private final static int valueColumnIndex = 1;
     private final ValueServiceRpcAsync valueService;
     private final EntityServiceRpcAsync entityService;
-    private final Logger logger = Logger.getLogger(NavigationPanel.class.getName());
 
     public NavigationPanel(final User user) {
 
@@ -100,7 +98,7 @@ public class NavigationPanel extends NavigationEventProvider {
     private void updateModel(final Value value, final TreeModel model) {
         model.set(Parameters.value.getText(), value.getValueWithData());
         model.set(Parameters.data.getText(), value.getData());
-        model.set(Parameters.timestamp.getText(), value.getTimestamp());
+        model.set(Parameters.timestamp.getText(), new Date(value.getLTimestamp()));
 
         model.setAlertType(value.getAlertState());
         model.setDirty(false);
@@ -147,7 +145,7 @@ public class NavigationPanel extends NavigationEventProvider {
 
     }
 
-    public void saveAll() throws ValueException {
+    public void saveAll()  {
 
         //  final List<GxtModel> models = grid.getSelectionModel().getSelectedItems();
 
@@ -277,7 +275,7 @@ public class NavigationPanel extends NavigationEventProvider {
             final List<ModelData> model = new ArrayList<ModelData>(result.size());
             parents = new ArrayList<String>(result.size());
             for (final Entity entity : result) {
-                logger.info("Entity: " + entity.getName().getValue());
+
                 addEntity(entity);
 
             }
@@ -586,11 +584,8 @@ public class NavigationPanel extends NavigationEventProvider {
                     final Value value;
 
                     value = new Value.Builder().doubleWithData(valueAndNote).timestamp(timestamp).create();// Value.getInstance(SimpleValue.getInstance(valueAndNote), timestamp);
-                    try {
+
                         valueService.recordValueRpc(user, entity, value, new RecordValueCallback(value, be, model));
-                    } catch (ValueException e) {
-                        FeedbackHelper.showError(e);
-                    }
 
 
                 }

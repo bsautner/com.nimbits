@@ -32,7 +32,7 @@ public interface Point extends Entity, Serializable {
 
     double getHighAlarm();
 
-    boolean getIdleAlarmSent();
+    boolean idleAlarmSent();
 
     int getIdleSeconds();
 

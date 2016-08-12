@@ -28,7 +28,6 @@ public class ValueDao {
 
 
     private PersistenceManagerFactory persistenceManagerFactory;
-    private final org.slf4j.Logger logger = LoggerFactory.getLogger(ValueDao.class);
 
     @Autowired
     public void setPersistenceManagerFactory(PersistenceManagerFactory persistenceManagerFactory) {
@@ -40,7 +39,7 @@ public class ValueDao {
     public Value getSnapshot(Entity entity) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-        logger.info("getting snapshot");
+
         try {
             final Query<ValueStore> q1;
 
@@ -66,23 +65,6 @@ public class ValueDao {
         }
     }
 
-    @CacheEvict(cacheNames = "snapshots", key="#entity.id")
-    public void setSnapshot(Entity entity, Value value) {
-
-
-        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-        logger.info("storing snapshot");
-        try {
-            ValueStore valueStore = new ValueStore(entity.getId(), value);
-
-            pm.makePersistent(valueStore);
-
-        } finally {
-            pm.close();
-        }
-
-
-    }
 
     public List<Value> getSeries(Entity entity, Optional<Range<Long>> timespan, Optional<Range<Integer>> range, Optional<String> mask) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();

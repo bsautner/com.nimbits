@@ -97,6 +97,9 @@ public class SystemTaskExecutor {
 
 
             processIdlePoints();
+            processSchedules();
+
+
 
 
 
@@ -111,7 +114,9 @@ public class SystemTaskExecutor {
 
     }
 
-    public void processIdlePoints()  {
+
+
+    private void processIdlePoints()  {
 
         // final List<Entity> points = entityDao.getIdleEntities(userService.getAdmin());
 
@@ -167,10 +172,6 @@ public class SystemTaskExecutor {
 
 
     }
-
-
-
-
 
     private long processSchedules()  {
 

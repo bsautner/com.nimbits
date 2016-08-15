@@ -33,15 +33,6 @@
         <listener-class>com.nimbits.server.ApplicationListener</listener-class>
     </listener>
 
-    <!--<filter>-->
-        <!--<filter-name>Rest filter</filter-name>-->
-        <!--<filter-class>com.nimbits.server.api.v3.filter.RestApiAuthFilter</filter-class>-->
-    <!--</filter>-->
-    <!--<filter-mapping>-->
-        <!--<filter-name>Rest filter</filter-name>-->
-        <!--<url-pattern>/service/v3/Rest/*</url-pattern>-->
-
-    <!--</filter-mapping>-->
 
     <servlet>
         <servlet-name>api</servlet-name>
@@ -122,17 +113,5 @@
 
 
 
-    <!--cron-->
 
-    <servlet>
-        <servlet-name>systemCron</servlet-name>
-
-        <servlet-class>com.nimbits.server.process.cron.SystemCron</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>systemCron</servlet-name>
-        <url-pattern>/cron/systemCron</url-pattern>
-    </servlet-mapping>
-
-    <!--end cron-->
 </web-app>

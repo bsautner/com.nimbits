@@ -54,7 +54,6 @@
     <modules>
         <module>nimbits_io</module>
         <module>nimbits_server</module>
-        <module>nimbits_deb</module>
     </modules>
 
     <distributionManagement>
@@ -167,21 +166,10 @@
                     <artifactId>maven-war-plugin</artifactId>
                     <version>2.6</version>
 
-
-                    <!--<configuration>-->
-                    <!--<warName>root</warName>-->
-                    <!--<webappDirectory>../nimbits_deb/src/main/opt/nimbits/webapps</webappDirectory>-->
-                    <!--</configuration>-->
                 </plugin>
 
 
-                <!--<plugin>-->
-                <!--<groupId>org.datanucleus</groupId>-->
-                <!--<artifactId>datanucleus-maven-plugin</artifactId>-->
-                <!--<version>5.0.0-release</version>-->
 
-
-                <!--</plugin>-->
             </plugins>
         </pluginManagement>
     </build>

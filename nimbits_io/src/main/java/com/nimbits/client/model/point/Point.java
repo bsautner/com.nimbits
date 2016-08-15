@@ -32,17 +32,13 @@ public interface Point extends Entity, Serializable {
 
     double getHighAlarm();
 
-    boolean getIdleAlarmSent();
+    boolean idleAlarmSent();
 
     int getIdleSeconds();
 
     double getLowAlarm();
 
     String getUnit();
-
-    Value getValue();
-
-    List<Value> getValues();
 
     boolean isHighAlarmOn();
 
@@ -67,12 +63,6 @@ public interface Point extends Entity, Serializable {
     void setLowAlarmOn(final boolean lowAlarmOn);
 
     void setUnit(final String unit);
-
-    @Deprecated
-    void setValue(final Value value);
-
-    @Deprecated
-    void setValues(final List<Value> values);
 
     FilterType getFilterType();
 

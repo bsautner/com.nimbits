@@ -28,6 +28,8 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 
+import java.util.Date;
+
 
 @SuppressWarnings("unused")
 public class GxtModel extends BaseTreeModel implements TreeModel {
@@ -129,7 +131,7 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
         }
         set(Parameters.value.getText(), sb.toString().trim());
         set(Parameters.data.getText(), value.getData());
-        set(Parameters.timestamp.getText(), value.getTimestamp());
+        set(Parameters.timestamp.getText(), new Date(value.getLTimestamp()));
     }
 
     @Override

@@ -13,11 +13,14 @@ public class ValueStore {
     @Persistent(valueStrategy = IdGeneratorStrategy.INCREMENT)
     protected String id;
 
-    @Persistent
+    @Persistent @Index
     private long timestamp;
 
-    @Persistent
+    @Persistent @Index
     private String entityId;
+
+    @Persistent @Index
+    private String meta;
 
     @Persistent
     private Double lat;
@@ -31,12 +34,11 @@ public class ValueStore {
     @Persistent
     private String data;
 
-    @Persistent
-    private String meta;
+
 
 
     public ValueStore(String entityId, Value value) {
-        this.timestamp = value.getTimestamp() == null ? System.currentTimeMillis() : value.getTimestamp().getTime();
+        this.timestamp = value.getLTimestamp() == null ? System.currentTimeMillis() : value.getLTimestamp();
         this.entityId = entityId;
         this.lat = value.getLatitude();
         this.lng = value.getLongitude();

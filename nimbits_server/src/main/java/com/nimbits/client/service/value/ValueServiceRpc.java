@@ -18,7 +18,7 @@ package com.nimbits.client.service.value;
 
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
-import com.nimbits.client.exception.ValueException;
+
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
@@ -33,11 +33,11 @@ public interface ValueServiceRpc extends RemoteService {
 
     String getChartTable(final User user, Entity entity, Integer count);
 
-    List<Value> solveEquationRpc(final User user, final Calculation calculation) throws Exception;
+    List<Value> solveEquationRpc(final User user, final Calculation calculation) ;
 
-    void recordValueRpc(final User user, final Entity entity, final Value value) throws ValueException;
+    void recordValueRpc(final User user, final Entity entity, final Value value) ;
 
-    Map<String, Entity> getCurrentValuesRpc(final User user, final Map<String, Point> entities) throws Exception;
+    Map<String, Value> getCurrentValuesRpc(final User user, final Map<String, Point> entities) ;
 
 
 }

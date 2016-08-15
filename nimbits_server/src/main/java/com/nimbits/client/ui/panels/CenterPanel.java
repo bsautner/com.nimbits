@@ -29,7 +29,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.exception.ValueException;
+
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.entity.Entity;
@@ -210,7 +210,7 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
         }
 
         @Override
-        public void onAction(Action action) throws ValueException {
+        public void onAction(Action action)  {
             switch (action) {
                 case expand:
                     navigationPanel.toggleExpansion();

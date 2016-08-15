@@ -18,8 +18,7 @@ package com.nimbits.client.ui.helper;
 
 import com.extjs.gxt.ui.client.widget.MessageBox;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 
 public class FeedbackHelper {
@@ -33,9 +32,7 @@ public class FeedbackHelper {
             box.show();
         }
 
-        Logger logger = Logger.getLogger(FeedbackHelper.class.getName());
 
-        logger.log(Level.SEVERE, "Null Exception Hit", caught);
     }
 
     public static void showInfo(String message) {

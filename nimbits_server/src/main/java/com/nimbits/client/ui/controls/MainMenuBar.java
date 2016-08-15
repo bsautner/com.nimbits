@@ -27,7 +27,7 @@ import com.extjs.gxt.ui.client.widget.menu.SeparatorMenuItem;
 import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
 import com.nimbits.client.enums.Action;
-import com.nimbits.client.exception.ValueException;
+
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.icons.Icons;
@@ -182,7 +182,7 @@ public class MainMenuBar extends ToolBar {
     private Collection<ActionListener> actionListeners = new ArrayList<ActionListener>(1);
 
     public interface ActionListener {
-        void onAction(Action action) throws ValueException;
+        void onAction(Action action) ;
 
     }
 
@@ -190,7 +190,7 @@ public class MainMenuBar extends ToolBar {
         this.actionListeners.add(listener);
     }
 
-    void notifyActionListener(Action action) throws ValueException {
+    void notifyActionListener(Action action)  {
         for (ActionListener listener : actionListeners) {
             listener.onAction(action);
         }

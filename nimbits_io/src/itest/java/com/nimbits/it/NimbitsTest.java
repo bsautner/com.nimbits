@@ -41,7 +41,7 @@ public abstract class NimbitsTest {
         List<Entity> entityList = nimbits.getChildren(user);
         for (Entity entity : entityList) {
             log("teardown deletinging child: " + entity.getName().getValue());
-            nimbits.deleteEntity(entity);
+            // nimbits.deleteEntity(entity);
         }
 
 

@@ -108,7 +108,7 @@ public class PointEntity extends EntityStore implements Point {
     }
 
     @Override
-    public boolean getIdleAlarmSent() {
+    public boolean idleAlarmSent() {
         return idleAlarmSent == null ? false : idleAlarmSent;
     }
 
@@ -133,10 +133,7 @@ public class PointEntity extends EntityStore implements Point {
         this.lowAlarmOn = point.isLowAlarmOn();
         this.idleAlarmOn = point.isIdleAlarmOn();
         this.idleSeconds = point.getIdleSeconds();
-        this.idleAlarmSent = point.getIdleAlarmSent();
-
-        this.values = point.getValues();
-        this.value = point.getValue();
+        this.idleAlarmSent = point.idleAlarmSent();
         this.filterType = point.getFilterType().getCode();
         this.filterValue = point.getFilterValue();
         this.inferLocation = point.inferLocation();
@@ -175,18 +172,6 @@ public class PointEntity extends EntityStore implements Point {
     @Override
     public String getUnit() {
         return unit;
-    }
-
-    @Override
-    @NotPersistent
-    public Value getValue() {
-        return value;
-    }
-
-    @Override
-    @NotPersistent
-    public List<Value> getValues() {
-        return values;
     }
 
     @Override
@@ -233,16 +218,6 @@ public class PointEntity extends EntityStore implements Point {
     @Override
     public void setUnit(final String unit) {
         this.unit = unit;
-    }
-
-    @Override
-    public void setValue(final Value value) {
-        this.value = value;
-    }
-
-    @Override
-    public void setValues(final List<Value> values) {
-        this.values = values;
     }
 
     @Override
@@ -337,7 +312,7 @@ public class PointEntity extends EntityStore implements Point {
         this.idleAlarmOn = p.isIdleAlarmOn();
         this.highAlarmOn = p.isHighAlarmOn();
         this.lowAlarmOn = p.isLowAlarmOn();
-        this.idleAlarmSent = p.getIdleAlarmSent();
+        this.idleAlarmSent = p.idleAlarmSent();
         this.idleSeconds = p.getIdleSeconds();
         this.filterType = p.getFilterType().getCode();
         this.filterValue = p.getFilterValue();

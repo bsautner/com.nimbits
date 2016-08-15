@@ -1,6 +1,5 @@
 package com.nimbits.it;
 
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
@@ -24,6 +23,7 @@ public class CacheTest  extends NimbitsTest {
         @Test
         public void executeTest() throws InterruptedException {
 
+            double t = 54;
             String name = UUID.randomUUID().toString();
 
             User me = nimbits.getMe(true);
@@ -34,13 +34,13 @@ public class CacheTest  extends NimbitsTest {
 
             assertTrue(nimbits.findPointByName(name).isPresent());
 
-            nimbits.recordValue(name, new Value.Builder().doubleValue(42.0).create());
+            nimbits.recordValue(name, new Value.Builder().data("debugging1").doubleValue(t).create());
 
             Thread.sleep(1000);
 
             double r = nimbits.getSnapshot(name).getDoubleValue();
 
-            assertEquals(42.0, r, 0.001);
+            assertEquals(t, r, 0.001);
 
             for (int i = 0; i < 3; i++) {
                 System.out.println(nimbits.getSnapshot(name));

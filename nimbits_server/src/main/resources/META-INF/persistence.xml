@@ -9,7 +9,6 @@
 
         <class>com.nimbits.server.orm.CalcEntity</class>
         <class>com.nimbits.server.orm.CategoryEntity</class>
-        <class>com.nimbits.server.orm.DateCounter</class>
         <class>com.nimbits.server.orm.EntityStore</class>
         <class>com.nimbits.server.orm.InstanceEntity</class>
         <class>com.nimbits.server.orm.PointEntity</class>

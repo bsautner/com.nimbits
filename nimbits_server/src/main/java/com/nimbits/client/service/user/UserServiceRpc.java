@@ -16,6 +16,7 @@
 
 package com.nimbits.client.service.user;
 
+import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.nimbits.client.model.user.User;
@@ -23,15 +24,15 @@ import com.nimbits.client.model.user.User;
 @RemoteServiceRelativePath("rpc/userService")
 public interface UserServiceRpc extends RemoteService {
 
-    User doLogin(final String email, final String password) throws UserServiceRpcException;
+    Optional<User> doLogin(final String email, final String password);
 
-    User register(final String email, final String password) throws UserServiceRpcException;
+    User register(final String email, final String password);
 
-    User resetPassword(String email, String password, String recoveryToken) throws UserServiceRpcException;
+    User resetPassword(String email, String password, String recoveryToken);
 
     void logout();
 
-    void doForgotPassword(String value) throws UserServiceRpcException;
+    void doForgotPassword(String value);
 
 
 

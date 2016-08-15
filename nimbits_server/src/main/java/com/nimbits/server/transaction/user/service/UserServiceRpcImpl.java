@@ -23,7 +23,6 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserSource;
 import com.nimbits.client.service.user.UserServiceRpc;
-import com.nimbits.client.service.user.UserServiceRpcException;
 import com.nimbits.server.communication.mail.EmailService;
 import com.nimbits.server.transaction.user.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +45,6 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
     @Autowired
     private EmailService emailService;
 
-
-
-
     @Override
     public void logout() {
         if (getThreadLocalRequest().getSession() != null) {
@@ -65,12 +61,9 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
     }
 
     @Override
-    public User doLogin(String email, String password) throws UserServiceRpcException {
-        try {
-            return userService.doLogin(email, password);
-        } catch (Exception ex) {
-            throw new UserServiceRpcException(ex);
-        }
+    public Optional<User> doLogin(String email, String password) {
+
+        return userService.doLogin(email, password);
 
     }
 
@@ -86,31 +79,26 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
     }
 
     @Override
-    public User register(String email, String password) throws UserServiceRpcException {
+    public User register(String email, String password) {
         EmailAddress emailAddress = CommonFactory.createEmailAddress(email);
         User user;
 
+        if (!userExists(email)) {
 
-        try {
-            if (!userExists(email)) {
+            user = userService.createUserRecord(emailAddress, password, UserSource.local);
 
-                user = userService.createUserRecord(emailAddress, password, UserSource.local);
+            return user;
 
-                return user;
-
-            } else {
-                throw new Exception("A user with that email is already registered on this system");
+        } else {
+            throw new RuntimeException("A user with that email is already registered on this system");
 
 
-            }
-        } catch (Exception ex) {
-            throw new UserServiceRpcException(ex);
         }
 
     }
 
     @Override
-    public User resetPassword(String email, String password, String recoveryToken) throws UserServiceRpcException {
+    public User resetPassword(String email, String password, String recoveryToken) {
 
         Optional<User> optional = userService.getUserByKey(email);
 
@@ -123,32 +111,29 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
 
                     return userService.updatePassword(u, password);
                 } else {
-                    throw new UserServiceRpcException("Token has expired.");
+                    throw new RuntimeException("Token has expired.");
                 }
             } else {
-                throw new UserServiceRpcException("Invalid Token or not a nimbits user");
+                throw new RuntimeException("Invalid Token or not a nimbits user");
             }
         } else {
-            throw new UserServiceRpcException("User not found");
+            throw new RuntimeException("User not found");
         }
 
 
     }
 
     @Override
-    public void doForgotPassword(String value) throws UserServiceRpcException {
+    public void doForgotPassword(String value) {
         Optional<User> optional = userService.getUserByKey(value);
 
         if (optional.isPresent()) {
             User user = optional.get();
-            if (user.getSource().equals(UserSource.google)) {
-                throw new UserServiceRpcException("We can't reset your password since with is account is not managed by Nimbits. Please reset your " +
-                        "password using services provided by " + user.getSource().name());
-            } else {
-                String token = UUID.randomUUID().toString() + "" + UUID.randomUUID().toString();
-                userService.setResetPasswordToken(user, token);
-                emailService.sendPasswordRecovery(value, token);
-            }
+
+            String token = UUID.randomUUID().toString() + "" + UUID.randomUUID().toString();
+            userService.setResetPasswordToken(user, token);
+            emailService.sendPasswordRecovery(value, token);
+
         }
 
     }

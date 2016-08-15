@@ -28,7 +28,6 @@ import com.nimbits.client.model.entity.EntityName;
 import com.nimbits.client.model.value.Value;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -52,10 +51,6 @@ public class PointModel extends EntityModel implements Serializable, Point {
     private int pointType;
     @Expose
     private int precision;
-    @Expose
-    private List<Value> values;
-    @Expose
-    private Value value;
     @Expose
     private boolean highAlarmOn;
     @Expose
@@ -156,21 +151,6 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
 
     @Override
-    public Value getValue() {
-        return value;
-    }
-
-
-    @Override
-    public List<Value> getValues() {
-        if (values == null) {
-            values = new ArrayList<Value>(0);
-
-        }
-        return values;
-    }
-
-    @Override
     public boolean isHighAlarmOn() {
         return highAlarmOn;
     }
@@ -209,16 +189,6 @@ public class PointModel extends EntityModel implements Serializable, Point {
     @Override
     public void setUnit(final String unit) {
         this.unit = unit;
-    }
-
-    @Override
-    public void setValue(final Value value) {
-        this.value = value;
-    }
-
-    @Override
-    public void setValues(final List<Value> values) {
-        this.values = values;
     }
 
     @Override
@@ -263,7 +233,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
     }
 
     @Override
-    public boolean getIdleAlarmSent() {
+    public boolean idleAlarmSent() {
         return idleAlarmSent;
     }
 
@@ -476,7 +446,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
             this.lowAlarmOn = point.isLowAlarmOn();
             this.idleAlarmOn = point.isIdleAlarmOn();
             this.idleSeconds = point.getIdleSeconds();
-            this.idleAlarmSent = point.getIdleAlarmSent();
+            this.idleAlarmSent = point.idleAlarmSent();
             this.filterType = point.getFilterType();
             this.filterValue = point.getFilterValue();
             this.inferLocation = point.inferLocation();

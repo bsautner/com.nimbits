@@ -28,13 +28,17 @@ import java.util.Calendar;
 @Component
 public class DataProcessor {
 
+    public long getExpireTime(final Point point) {
+        return (System.currentTimeMillis() - (86400000 * point.getExpire()));
+    }
+
     public boolean ignoreDataByExpirationDate(final Point p, final Value value, final boolean ignored) {
         boolean retVal = ignored;
 
         if (p.getExpire() > 0) {
-            final Calendar c = Calendar.getInstance();
-            c.add(Calendar.DATE, p.getExpire() * -1);
-            if (value.getTimestamp().getTime() < c.getTimeInMillis()) {
+            long exp = getExpireTime(p);
+
+            if (value.getLTimestamp() >= exp) {
                 retVal = true;
             }
         }

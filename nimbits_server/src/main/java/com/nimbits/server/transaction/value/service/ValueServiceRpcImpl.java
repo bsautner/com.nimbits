@@ -21,7 +21,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Range;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.exception.ValueException;
+
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
@@ -29,7 +29,7 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.value.ValueServiceRpc;
 import com.nimbits.server.data.DataProcessor;
-import com.nimbits.server.process.task.TaskService;
+import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.calculation.CalculationService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.user.service.UserService;
@@ -48,20 +48,22 @@ import java.util.Map;
 public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueServiceRpc {
 
     private final static Logger logger = LoggerFactory.getLogger(ValueServiceRpcImpl.class.getName());
+
     @Autowired
-    private TaskService taskService;
-    @Autowired
-    private UserService userService;
+    private ValueTask valueTask;
+
     @Autowired
     private ValueService valueService;
+
     @Autowired
     private EntityDao entityDao;
+
     @Autowired
     private CalculationService calculationService;
 
-
     @Autowired
     private DataProcessor dataProcessor;
+
 
 
     @Override
@@ -87,18 +89,18 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
 
     @Override
     public void recordValueRpc(final User user, final Entity point,
-                               final Value value) throws ValueException {
+                               final Value value)  {
 
 
         Point p = (Point) entityDao.getEntity(user, point.getId(), EntityType.point).get();
         logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
-        taskService.process(user, p, value);
+        valueTask.process(user, p, value);
 
 
     }
 
     @Override
-    public Map<String, Entity> getCurrentValuesRpc(final User user, final Map<String, Point> entities) throws Exception {
+    public Map<String, Value> getCurrentValuesRpc(final User user, final Map<String, Point> entities)  {
         return valueService.getCurrentValues(entities);
 
     }

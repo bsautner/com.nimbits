@@ -21,21 +21,19 @@ import com.google.common.collect.Range;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.exception.ValueException;
+
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.hal.*;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.user.Credentials;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.user.UserSource;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.process.task.TaskService;
+import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.entity.EntityService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.user.dao.UserDao;
 import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.lang3.StringUtils;
@@ -58,20 +56,20 @@ import java.util.*;
 public class RestAPI {
 
 
-    private final TaskService taskService;
 
     private final EntityService entityService;
     private final ValueService valueService;
     private final UserService userService;
     private final EntityDao entityDao;
     private final Gson gson;
+    private final ValueTask valueTask;
 
 
     @Autowired
     public RestAPI(EntityService entityService, ValueService valueService, UserService userService,
-                   EntityDao entityDao, TaskService taskService ) {
+                   EntityDao entityDao, ValueTask valueTask ) {
 
-        this.taskService = taskService;
+        this.valueTask = valueTask;
         this.entityService = entityService;
         this.valueService = valueService;
         this.userService = userService;
@@ -91,7 +89,8 @@ public class RestAPI {
         User user = userService.getUser(authorization);
         Point entity = (Point) entityDao.getEntity(user, uuid, EntityType.point);
         Value value = gson.fromJson(json, Value.class);
-        taskService.process(user, entity, value);
+        valueTask.process(user, entity, value);
+
         return new ResponseEntity(HttpStatus.OK);
 
 
@@ -101,7 +100,7 @@ public class RestAPI {
     public ResponseEntity postSeries(
             @RequestHeader(name = "Authorization") String authorization,
             @RequestBody String json,
-            @PathVariable String uuid) throws ValueException {
+            @PathVariable String uuid)  {
 
 
         Type listType = new TypeToken<ArrayList<Value>>() {
@@ -110,10 +109,10 @@ public class RestAPI {
         Optional<Entity> optional = entityDao.getEntity(user, uuid, EntityType.point);
         List<Value> values = gson.fromJson(json, listType);
 
-        if (optional.isPresent()) {
+        if (optional.isPresent() && ! values.isEmpty()) {
             if (values.size() == 1) {
 
-                taskService.process(user, (Point) optional.get(), values.get(0));
+                valueTask.process(user, (Point) optional.get(), values.get(0));
 
             } else {
 
@@ -324,9 +323,6 @@ public class RestAPI {
                                               @PathVariable String uuid) {
 
         try {
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.add(Calendar.DAY_OF_YEAR, -1);
 
 
             User user = userService.getUser(authorization);

@@ -27,6 +27,7 @@ import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.extjs.gxt.ui.client.widget.layout.BoxLayout;
 import com.extjs.gxt.ui.client.widget.layout.HBoxLayout;
 import com.extjs.gxt.ui.client.widget.layout.HBoxLayoutData;
+import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.model.user.User;
@@ -106,15 +107,20 @@ public class LoginPanel extends AbstractLoginPanel {
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {
                 try {
-                    userService.doLogin(email.getValue(), password.getValue(), new AsyncCallback<User>() {
+                    userService.doLogin(email.getValue(), password.getValue(), new AsyncCallback<Optional<User>>() {
                         @Override
                         public void onFailure(Throwable throwable) {
                             FeedbackHelper.showError(throwable);
                         }
 
                         @Override
-                        public void onSuccess(User user) {
-                            loginListener.loginSuccess(user);
+                        public void onSuccess(Optional<User> user) {
+                            if (user.isPresent()) {
+                                loginListener.loginSuccess(user.get());
+                            }
+                            else {
+                                FeedbackHelper.showInfo("Invalid password or user not found");
+                            }
                         }
                     });
                 } catch (Throwable throwable) {

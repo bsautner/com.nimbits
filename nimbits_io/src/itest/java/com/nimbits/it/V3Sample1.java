@@ -283,7 +283,7 @@ public class V3Sample1 extends NimbitsTest {
             Value newValue = new Value.Builder()
                     .data("Some Random Data " + i)
                     .meta(i % 2 == 1 ? DOG : CAT) //alternate recording different meta values
-                    .timestamp(calendar.getTime())
+                    .timestamp(calendar.getTimeInMillis())
                     .lat(0.0)
                     .lng(0.0)
                     .create();
@@ -352,20 +352,20 @@ public class V3Sample1 extends NimbitsTest {
 
 
         snap = client.getSnapshot(snapshotTestPoint);
-        log("Snapshot on a newly created point: " + snap.toString() + " timestamp:" + snap.getTimestamp());
+        log("Snapshot on a newly created point: " + snap.toString() + " timestamp:" + snap.getLTimestamp());
         if (snap.getTimestamp().getTime() != 0) {
             error("Snapshot on newly created point wasn't at unix epoch");
         }
 
 
-        Value test1 = new Value.Builder().data("Test Snapshot 1").timestamp(new Date()).create();
+        Value test1 = new Value.Builder().data("Test Snapshot 1").timestamp(System.currentTimeMillis()).create();
         log("Recording new Value: " + test1);
         client.recordValue(snapshotTestPoint, test1);
 
         Thread.sleep(1000);
 
         snap = client.getSnapshot(snapshotTestPoint);
-        log("Snapshot on a newly recorded value: " + snap.toString() + " timestamp:" + snap.getTimestamp());
+        log("Snapshot on a newly recorded value: " + snap.toString() + " timestamp:" + snap.getLTimestamp());
 
         if (!snap.getData().equals(test1.getData())) {
 

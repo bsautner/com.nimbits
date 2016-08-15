@@ -17,7 +17,7 @@ sudo apt-get install mysql-server -y
 echo "create database if not exists nimbits" | mysql -u root -p
 
 mvn clean install
-cp ./nimbits_server/target/nimbits_server.war /opt/tomcat/webapps
+cp ./nimbits_server/target/nimbits_server.war /opt/tomcat/webapps/nimbits.war
 cp ./tomcat8 /etc/init.d/tomcat8
 chmod 755 /etc/init.d/tomcat8
 update-rc.d tomcat8 defaults

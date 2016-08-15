@@ -18,15 +18,9 @@ echo "create database if not exists nimbits" | mysql -u root -p
 
 mvn clean install
 cp ./nimbits_server/target/nimbits_server.war /opt/tomcat/webapps
-
-
-
- 
-
-
-#set java home for tomcat
-#http://askubuntu.com/questions/154953/specify-jdk-for-tomcat7
-#update-alternatives --display java
-#sudo vi /etc/default/tomcat7
+cp ./tomcat8 /etc/init.d/tomcat8
+chmod 755 /etc/init.d/tomcat8
+update-rc.d tomcat8 defaults
+reboot
 
 

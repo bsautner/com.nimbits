@@ -61,9 +61,15 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
     }
 
     @Override
-    public Optional<User> doLogin(String email, String password) {
+    public User doLogin(String email, String password) {
 
-        return userService.doLogin(email, password);
+        Optional<User> userOptional =  userService.doLogin(email, password);
+        if (userOptional.isPresent()) {
+            return userOptional.get();
+        }
+        else {
+            return null;
+        }
 
     }
 

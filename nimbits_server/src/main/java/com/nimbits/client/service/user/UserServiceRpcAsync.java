@@ -16,13 +16,12 @@
 
 package com.nimbits.client.service.user;
 
-import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.model.user.User;
 
 public interface UserServiceRpcAsync {
 
-    void doLogin(final String email, final String password, final AsyncCallback<Optional<User>> async);
+    void doLogin(final String email, final String password, final AsyncCallback<User> async);
 
     void register(final String email, final String password, final AsyncCallback<User> async);
 

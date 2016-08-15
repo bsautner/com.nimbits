@@ -322,7 +322,7 @@
 
 
                     <api>JDO</api>
-                    <persistenceUnitName>Tutorial</persistenceUnitName>
+                    <persistenceUnitName>Nimbits</persistenceUnitName>
                     <!--<log4jConfiguration>src/main/resources/log4j.properties</log4jConfiguration>-->
                     <verbose>false</verbose>
 

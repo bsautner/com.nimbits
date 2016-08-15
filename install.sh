@@ -17,6 +17,8 @@ sudo apt-get install mysql-server
 echo "create database if not exists nimbits" | mysql -u root -p
 
 mvn clean install
+cp ./nimbits_server/target/nimbits_server.war /opt/tomcat/webapps
+
 
 
  

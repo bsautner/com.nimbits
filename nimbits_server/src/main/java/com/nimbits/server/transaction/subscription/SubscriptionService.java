@@ -105,7 +105,7 @@ public class SubscriptionService  {
                 case none:
                     break;
                 case anyAlert:
-                    if (!alert.equals(AlertType.OK) && (point.isHighAlarmOn() || point.isLowAlarmOn())) {
+                    if (!alert.equals(AlertType.OK) && (point.isHighAlarmOn() || point.isLowAlarmOn() || point.isIdleAlarmOn())) {
                         sendNotification(subscriber, subscription, point, v);
                     }
                     break;
@@ -163,7 +163,6 @@ public class SubscriptionService  {
         }
     }
 
-    //todo this looks like it can be moved out to a new class that excends base processor
     private void sendNotification(
 
 
@@ -172,7 +171,7 @@ public class SubscriptionService  {
             final Point point,
             final Value value) {
 
-        logger.info("sendNotification: " + subscription.getNotifyMethod());
+
         switch (subscription.getNotifyMethod()) {
             case none:
                 break;

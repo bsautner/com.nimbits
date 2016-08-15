@@ -4,8 +4,14 @@ apt-get upgrade -y
 add-apt-repository ppa:webupd8team/java -y
 apt-get update
 apt-get install oracle-java8-installer -y
-apt-get install tomcat7
-rm -fR /var/lib/tomcat7/webapps/ROOT
+bash -c 'echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment'
+bash -c 'echo "CATALINA_HOME=/opt/tomcat"  >> /etc/environment'
+source /etc/environment
+
+wget http://mirrors.gigenet.com/apache/tomcat/tomcat-8/v8.5.4/bin/apache-tomcat-8.5.4.tar.gz 
+tar xvzf apache-tomcat-8.5.4.tar.gz
+mv apache-tomcat-8.5.4 /opt/tomcat
+ 
 mvn clean package
 cp ./nimbits_server/target/nimbits_server.war /var/lib/tomcat7/webapps/ROOT.war -v
 service tomcat7 restart

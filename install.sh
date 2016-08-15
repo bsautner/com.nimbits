@@ -13,7 +13,7 @@ wget http://mirrors.gigenet.com/apache/tomcat/tomcat-8/v8.5.4/bin/apache-tomcat-
 tar xvzf apache-tomcat-8.5.4.tar.gz
 mv apache-tomcat-8.5.4 /opt/tomcat
 
-sudo apt-get install mysql-server -y
+apt-get install mysql-server -y
 echo "create database if not exists nimbits" | mysql -u root -p
 
 mvn clean install

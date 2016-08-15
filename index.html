@@ -1,31 +1,42 @@
 <!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="UTF-8">
-    <title>nimbits platform by bsautner</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">nimbits platform</h1>
-      <h2 class="project-tagline">Nimbits Server is a web portal and REST API (json+hal) designed to store and process time and geo stamp data, filter incoming data and trigger events based on rules. It stores data in a way that makes it easy to retrieve chucks of data sets using date ranges or gps coordinates. </h2>
-      <a href="https://github.com/bsautner/com.nimbits" class="btn">View on GitHub</a>
-      <a href="https://github.com/bsautner/com.nimbits/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/bsautner/com.nimbits/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+<html>
 
-    <section class="main-content">
-      
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="nimbits platform : Nimbits Server is a web portal and REST API (json+hal) designed to store and process time and geo stamp data, filter incoming data and trigger events based on rules. It stores data in a way that makes it easy to retrieve chucks of data sets using date ranges or gps coordinates. ">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>nimbits platform</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/bsautner/com.nimbits">View on GitHub</a>
+
+          <h1 id="project_title">nimbits platform</h1>
+          <h2 id="project_tagline">Nimbits Server is a web portal and REST API (json+hal) designed to store and process time and geo stamp data, filter incoming data and trigger events based on rules. It stores data in a way that makes it easy to retrieve chucks of data sets using date ranges or gps coordinates. </h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/bsautner/com.nimbits/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/bsautner/com.nimbits/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        
 
 <p><a href="http://54.152.79.41:42421/job/nimbits/"><img src="http://52.86.203.20:42421/buildStatus/icon?job=nimbits" alt="Build Status"></a></p>
 
-<p><a href="https://github.com/bsautner/com.nimbits/wiki">Wiki</a> | <a href="https://groups.google.com/forum/#!forum/nimbits">Community Forum</a> | <a href="https://github.com/bsautner/com.nimbits/issues">Bug Report</a> </p>
-
-<p>** Please be aware of a recent breaking change when uprading to 3.9.55 and above.  We consolidated the multiple unique keys for entities into one database id.  New installs of nimbits server will setup a new empty database.**</p>
+<p><a href="https://github.com/bsautner/com.nimbits/wiki">Wiki</a> | <a href="https://groups.google.com/forum/#!forum/nimbits">Community Forum</a> | <a href="https://github.com/bsautner/com.nimbits/issues">Bug Report</a> |
+<a href="https://github.com/bsautner/com.nimbits/wiki/Install:-Build-from-source">Building a Nimbits Server</a></p>
 
 <h2>
 <a id="about" class="anchor" href="#about" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>About</h2>
@@ -68,11 +79,7 @@ You can then perform GET requests to download a series of data based on filter c
 
 <ul>
 <li>
-<code>nimbits_core</code>: core project containing the guts of nimbits server</li>
-<li>
 <code>nimbits_server</code>: an implementation of nimbits_core for J2EE servers like jetty or tomcat with an embedded H2 Database</li>
-<li>
-<code>nimbits_gae</code>: an implementation of nimbits_core for Google App Engine</li>
 <li>
 <code>nimbits_io</code>: the java client and wrapper for the API and the object model</li>
 <li>
@@ -156,7 +163,7 @@ server such as jboss.  Rename the file to root.war if you want to load it in the
 <pre><code>&lt;dependency&gt;
   &lt;groupId&gt;com.nimbits&lt;/groupId&gt;
   &lt;artifactId&gt;nimbits_io&lt;/artifactId&gt;
-  &lt;version&gt;3.9.55&lt;/version&gt;
+  &lt;version&gt;3.9.56&lt;/version&gt;
   &lt;type&gt;pom&lt;/type&gt;
 &lt;/dependency&gt;
 </code></pre>
@@ -164,7 +171,7 @@ server such as jboss.  Rename the file to root.war if you want to load it in the
 <h3>
 <a id="gradle" class="anchor" href="#gradle" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Gradle</h3>
 
-<p><code>compile 'com.nimbits:nimbits_io:3.9.55'</code></p>
+<p><code>compile 'com.nimbits:nimbits_io:3.9.56'</code></p>
 
 <h2>
 <a id="licence" class="anchor" href="#licence" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Licence</h2>
@@ -183,15 +190,18 @@ server such as jboss.  Rename the file to root.war if you want to load it in the
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.</p>
+      </section>
+    </div>
 
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/bsautner/com.nimbits">nimbits platform</a> is maintained by <a href="https://github.com/bsautner">bsautner</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">nimbits platform maintained by <a href="https://github.com/bsautner">bsautner</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
       </footer>
+    </div>
 
-    </section>
+    
 
-  
   </body>
 </html>

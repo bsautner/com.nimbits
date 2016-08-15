@@ -16,19 +16,20 @@
 
 package com.nimbits.client.service.user;
 
+import com.google.common.base.Optional;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.model.user.User;
 
 public interface UserServiceRpcAsync {
 
-    void doLogin(final String email, final String password, final AsyncCallback<User> async) throws UserServiceRpcException;
+    void doLogin(final String email, final String password, final AsyncCallback<Optional<User>> async);
 
-    void register(final String email, final String password, final AsyncCallback<User> async) throws UserServiceRpcException;
+    void register(final String email, final String password, final AsyncCallback<User> async);
 
     void logout(AsyncCallback<Void> asyncCallback);
 
-    void doForgotPassword(String value, AsyncCallback<Void> asyncCallback) throws UserServiceRpcException;
+    void doForgotPassword(String value, AsyncCallback<Void> asyncCallback);
 
-    void resetPassword(String email, String password, String recoveryToken, AsyncCallback<User> asyncCallback) throws UserServiceRpcException;
+    void resetPassword(String email, String password, String recoveryToken, AsyncCallback<User> asyncCallback);
 
 }

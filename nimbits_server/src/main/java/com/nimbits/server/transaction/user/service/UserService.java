@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.swing.text.html.Option;
 import java.util.StringTokenizer;
 
 @Service
@@ -191,18 +192,18 @@ public class UserService {
     }
 
 
-    User doLogin(String email, String token) {
+    Optional<User> doLogin(String email, String token) {
 
         Optional<User> optional = userDao.getUserByEmail(email);
         if (optional.isPresent()) {
             User user = optional.get();
             if (validatePassword(user, token)) {
-                return user;
+                return Optional.of(user);
             } else {
-                throw new SecurityException("Invalid user name or password");
+                return Optional.absent();
             }
         } else {
-            throw new SecurityException("User not found!");
+            return Optional.absent();
         }
     }
 

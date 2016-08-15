@@ -1,6 +1,7 @@
 apt-get update
 apt-get upgrade -y
-
+apt-get install git -y
+apt-get install maven -y 
 add-apt-repository ppa:webupd8team/java -y
 apt-get update
 apt-get install oracle-java8-installer -y
@@ -11,14 +12,19 @@ source /etc/environment
 wget http://mirrors.gigenet.com/apache/tomcat/tomcat-8/v8.5.4/bin/apache-tomcat-8.5.4.tar.gz 
 tar xvzf apache-tomcat-8.5.4.tar.gz
 mv apache-tomcat-8.5.4 /opt/tomcat
+
+sudo apt-get install mysql-server 
+echo "create database if not exists nimbits" | mysql -u root -p
+
+mvn clean install
+
+
  
-mvn clean package
-cp ./nimbits_server/target/nimbits_server.war /var/lib/tomcat7/webapps/ROOT.war -v
-service tomcat7 restart
+
 
 #set java home for tomcat
 #http://askubuntu.com/questions/154953/specify-jdk-for-tomcat7
 #update-alternatives --display java
 #sudo vi /etc/default/tomcat7
 
-apt-get install git maven -y
+

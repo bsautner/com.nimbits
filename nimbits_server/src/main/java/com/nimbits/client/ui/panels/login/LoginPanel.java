@@ -107,16 +107,16 @@ public class LoginPanel extends AbstractLoginPanel {
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {
                 try {
-                    userService.doLogin(email.getValue(), password.getValue(), new AsyncCallback<Optional<User>>() {
+                    userService.doLogin(email.getValue(), password.getValue(), new AsyncCallback<User>() {
                         @Override
                         public void onFailure(Throwable throwable) {
                             FeedbackHelper.showError(throwable);
                         }
 
                         @Override
-                        public void onSuccess(Optional<User> user) {
-                            if (user.isPresent()) {
-                                loginListener.loginSuccess(user.get());
+                        public void onSuccess(User user) {
+                            if (user != null) {
+                                loginListener.loginSuccess(user);
                             }
                             else {
                                 FeedbackHelper.showInfo("Invalid password or user not found");

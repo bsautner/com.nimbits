@@ -26,8 +26,6 @@ import com.extjs.gxt.ui.client.widget.menu.MenuItem;
 import com.extjs.gxt.ui.client.widget.menu.SeparatorMenuItem;
 import com.extjs.gxt.ui.client.widget.toolbar.ToolBar;
 import com.google.gwt.user.client.ui.AbstractImagePrototype;
-import com.nimbits.client.enums.Action;
-
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.icons.Icons;
@@ -42,9 +40,9 @@ public class MainMenuBar extends ToolBar {
     private Collection<EntityModifiedListener> entityModifiedListeners = new ArrayList<EntityModifiedListener>(1);
 
     public MainMenuBar(final User user) {
-        addNavigateMenu();
+
         addOptionsMenu();
-        addActionMenu();
+
 
         addHelpMenu();
 
@@ -65,30 +63,7 @@ public class MainMenuBar extends ToolBar {
 
     }
 
-    private void addActionMenu() {
-        Button button = new Button("Enable External Services");
-        Menu menu = new Menu();
 
-
-        menu.add(actionMenuItem("Instant Message (XMPP)",
-                (Icons.INSTANCE.list_items()),
-                Action.xmpp));
-
-        button.setMenu(menu);
-        add(button);
-    }
-
-    private void addNavigateMenu() {
-        Button button = new Button("Navigate");
-        Menu menu = new Menu();
-        menu.add(actionMenuItem("Toggle Expansion",
-                (Icons.INSTANCE.expand()),
-                Action.expand));
-
-
-        button.setMenu(menu);
-        add(button);
-    }
 
     private void addOptionsMenu() {
         Button button = new Button("Options");

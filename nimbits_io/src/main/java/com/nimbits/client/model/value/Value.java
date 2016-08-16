@@ -104,7 +104,7 @@ public class Value implements Serializable, Comparable<Value> {
 
     public String getValueWithData() {
         StringBuilder sb = new StringBuilder(INT);
-        if (this.d != null && this.d != Const.CONST_IGNORED_NUMBER_VALUE) {
+        if (this.d != null) {
             sb.append(this.d);
         }
         if (this.dx != null && this.dx.trim().length() > 0) {

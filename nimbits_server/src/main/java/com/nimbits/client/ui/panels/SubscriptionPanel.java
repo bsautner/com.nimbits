@@ -56,7 +56,7 @@ public class SubscriptionPanel extends BasePanel {
 
     public SubscriptionPanel(PanelEvent listener, final Entity entity, User user) {
 
-        super(user, listener, "<a href=\"http://www.nimbits.com/howto_subscribe.jsp\">Learn More: Subscription Help</a>");
+        super(user, listener, "<a href=\"https://github.com/bsautner/com.nimbits/wiki/Usage:-summaries-and-subscriptions\">Learn More: Subscription Help</a>");
 
         this.entity = entity;
         createForm();

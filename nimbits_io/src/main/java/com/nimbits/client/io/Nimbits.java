@@ -22,7 +22,6 @@ import com.nimbits.client.io.http.rest.RestClient;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.file.FileModel;
 import com.nimbits.client.model.hal.ValueContainer;
 import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.point.Point;
@@ -72,37 +71,7 @@ public class Nimbits {
                 .setEndpoint(instance)
                 .setRequestInterceptor(requestInterceptor)
                 .setConverter(new GsonConverter(GsonFactory.getInstance(false)))
-//                .setErrorHandler(new ErrorHandler() {
-//                    @Override
-//                    public Throwable handleError(RetrofitError retrofitError) {
-//
-//
-//                        StringBuilder out = new StringBuilder();
-//                        if (retrofitError.getResponse() != null) {
-//                            TypedInput body = retrofitError.getResponse().getBody();
-//                            try {
-//                                if (body != null) {
-//                                    BufferedReader reader = new BufferedReader(new InputStreamReader(body.in()));
-//
-//                                    String newLine = System.getProperty("line.separator");
-//                                    String line;
-//                                    while ((line = reader.readLine()) != null) {
-//                                        out.append(line);
-//                                        out.append(newLine);
-//                                    }
-//                                }
-//
-//                                // Prints the correct String representation of body.
-//
-//                            } catch (IOException e) {
-//
-//                            }
-//                        }
-//
-//                        throw new NimbitsClientException(retrofitError.getMessage() + " " + out, retrofitError);
-//
-//                    }
-//                })
+
                 .build();
 
         api = restAdapter.create(RestClient.class);
@@ -440,19 +409,6 @@ public class Nimbits {
 
     }
 
-    public void uploadFile(FileModel fileModel) {
-        api.uploadFile(fileModel.getId(), fileModel.getEncoded(), new Callback<Void>() {
-            @Override
-            public void success(Void aVoid, Response response) {
-
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-
-            }
-        });
-    }
 
     public Optional<String> getFile(String id) {
         try {
@@ -478,19 +434,7 @@ public class Nimbits {
         });
     }
 
-    public void updateFile(FileModel fileModel) {
-        api.updateFile(fileModel.getId(), fileModel.getEncoded(), new Callback<Void>() {
-            @Override
-            public void success(Void aVoid, Response response) {
 
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-
-            }
-        });
-    }
 
 
     public Point getPoint(String uuid) {
@@ -571,7 +515,7 @@ public class Nimbits {
     }
 
     @Deprecated //user Builder()
-    public static class NimbitsBuilder {
+    private static class NimbitsBuilder {
 
         private String email;
         private String token;

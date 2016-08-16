@@ -16,7 +16,6 @@
 
 package com.nimbits.server.orm;
 
-import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.common.impl.CommonFactory;
@@ -262,16 +261,6 @@ public abstract class EntityStore implements Entity {
         return result;
     }
 
-
-    @Override
-    public Action getAction() {
-        return Action.none;
-    }
-
-    @Override
-    public void setAction(Action action) {
-
-    }
 
     @Override
     public void setEmbedded(com.nimbits.client.model.hal.Embedded embedded) {

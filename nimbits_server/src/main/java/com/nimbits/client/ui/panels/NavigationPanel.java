@@ -29,7 +29,6 @@ import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.common.Utils;
 import com.nimbits.client.constants.Const;
-import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
@@ -51,11 +50,11 @@ import com.nimbits.client.ui.helper.FeedbackHelper;
 import java.util.*;
 
 
-public class NavigationPanel extends NavigationEventProvider {
+class NavigationPanel extends NavigationEventProvider {
 
     private EntityTree<ModelData> tree;
     private Timer updater;
-    private boolean expanded = false;
+
     private List<String> parents;
     private EntityContextMenu context;
     private final User user;
@@ -64,7 +63,7 @@ public class NavigationPanel extends NavigationEventProvider {
     private final ValueServiceRpcAsync valueService;
     private final EntityServiceRpcAsync entityService;
 
-    public NavigationPanel(final User user) {
+    NavigationPanel(final User user) {
 
 
         this.user = user;
@@ -83,16 +82,6 @@ public class NavigationPanel extends NavigationEventProvider {
 
         getUserEntities(false);
 
-    }
-
-    public void toggleExpansion() {
-        if (expanded) {
-            tree.collapseAll();
-            expanded = false;
-        } else {
-            tree.expandAll();
-            expanded = true;
-        }
     }
 
     private void updateModel(final Value value, final TreeModel model) {
@@ -145,27 +134,7 @@ public class NavigationPanel extends NavigationEventProvider {
 
     }
 
-    public void saveAll()  {
 
-        //  final List<GxtModel> models = grid.getSelectionModel().getSelectedItems();
-
-
-        for (final ModelData x : tree.getTreeStore().findModels(Parameters.dirty.getText(), "yes")) {
-            final TreeModel model = (TreeModel) x;
-            Date date = model.get(Parameters.timestamp.getText()) == null ? new Date() : (Date) model.get(Parameters.timestamp.getText());
-            final Date timestamp = saveWithCurrentTime ? new Date() : date;
-            final String v = model.get(Parameters.value.getText());
-//            final String note = model.get(Const.Params.PARAM_NOTE);
-//            final String data = model.get(Const.PARAM_DATA);
-            final Value value = new Value.Builder().doubleWithData(v).timestamp(timestamp).create();// Value.getInstance(SimpleValue.getInstance(v), timestamp);
-
-            valueService.recordValueRpc(user, model.getBaseEntity(), value, new SaveValueAsyncCallback(model, value));
-            model.setDirty(false);
-        }
-        tree.getTreeStore().commitChanges();
-
-
-    }
 
     private static class MoveEntityAsyncCallback implements AsyncCallback<Entity> {
         MoveEntityAsyncCallback() {
@@ -336,19 +305,20 @@ public class NavigationPanel extends NavigationEventProvider {
             }
 
             @Override
-            public void onEntityModified(TreeModel model, Action action) {
-                switch (action) {
-                    case delete:
+            public void onEntityDeleted(TreeModel model) {
+
                         removeEntity(model);
-                        break;
-                    case update:
-                    case create:
-                        addUpdateTreeModel(model, false);
-                        break;
-                    default:
-                        break;
+
                 }
-            }
+
+
+            @Override
+            public void onEntityModifed(TreeModel model) {
+
+                        addUpdateTreeModel(model, false);
+
+                }
+
 
             private void removeEntity(TreeModel currentModel) {
 

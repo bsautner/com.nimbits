@@ -16,7 +16,6 @@
 
 package com.nimbits.client.model.entity;
 
-import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.hal.Embedded;
@@ -73,10 +72,6 @@ public interface Entity extends Serializable, Comparable<Entity> {
     void setEmbedded(Embedded embedded);
 
     void setLinks(Links links);
-
-    Action getAction();
-
-    void setAction(Action action);
 
     void init(Entity anEntity);
 

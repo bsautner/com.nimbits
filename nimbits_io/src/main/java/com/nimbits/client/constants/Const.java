@@ -19,25 +19,16 @@ package com.nimbits.client.constants;
 
 public class Const {
 
-    public static final String VERSION = "3.9.56";
+    public static final String VERSION = "4.0.0";
 
-    public static final String SOCKET_RELAY = "130.211.147.107:8080";
 
-    public static final String WEBSITE = "http://www.nimbits.com";
-    public static final String LOGGED_IN_EMAIL = "LOGGED_IN_EMAIL";
 
     public static final int DEFAULT_TIMER_UPDATE_SPEED = 5000;
 
     public static final String FORMAT_DATE_TIME = "MM/dd/y HH:mm:ss";
     public static final String GSON_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss Z";
-    public static final String WARNING_UNCHECKED = "unchecked";
-
-
     public static final String CONTENT_TYPE_HTML = "text/html";
     public static final String CONTENT_TYPE_PLAIN = "text/plain";
-
-    public static final double CONST_IGNORED_NUMBER_VALUE = -9999999.9999999;
-
     public static final int CONST_MAX_NAME_LENGTH = 250;
 
 

@@ -27,18 +27,16 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.EntityType;
-
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserSource;
 import com.nimbits.client.service.entity.EntityServiceRpc;
 import com.nimbits.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.client.service.user.UserServiceRpc;
 import com.nimbits.client.service.user.UserServiceRpcAsync;
+import com.nimbits.client.ui.controls.Action;
 import com.nimbits.client.ui.controls.MainMenuBar;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.panels.login.LoginListener;
@@ -212,14 +210,11 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
         @Override
         public void onAction(Action action)  {
             switch (action) {
-                case expand:
-                    navigationPanel.toggleExpansion();
-                    break;
+
                 case rest:
                     Window.Location.replace("/service/v3/rest/me");
                     break;
                 case logout:
-                    final String logoutUrl = PATH_NIMBITS_HOME;
 
                     UserServiceRpcAsync userService = GWT.create(UserServiceRpc.class);
                     userService.logout(new AsyncCallback<Void>() {
@@ -240,9 +235,7 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
 
                     break;
 
-                case save:
-                    navigationPanel.saveAll();
-                    break;
+
                 case admin:
                     SettingPanel dp = new SettingPanel(user, listener);
                     w = new com.extjs.gxt.ui.client.widget.Window();

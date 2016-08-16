@@ -18,7 +18,6 @@ package com.nimbits.client.model;
 
 import com.extjs.gxt.ui.client.data.BaseTreeModel;
 import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
@@ -30,8 +29,6 @@ import com.nimbits.client.model.value.Value;
 
 import java.util.Date;
 
-
-@SuppressWarnings("unused")
 public class GxtModel extends BaseTreeModel implements TreeModel {
     private static final int INT = 40;
     private String id;
@@ -122,7 +119,7 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
     public void setValue(Value value) {
 
         StringBuilder sb = new StringBuilder(INT);
-        if (value != null && value.getDoubleValue() != null && value.getDoubleValue() != Const.CONST_IGNORED_NUMBER_VALUE) {
+        if (value != null && value.getDoubleValue() != null) {
             sb.append(value.getDoubleValue());
         }
         if (value != null && !Utils.isEmptyString(value.getData())) {
@@ -130,8 +127,11 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
             sb.append(value.getData());
         }
         set(Parameters.value.getText(), sb.toString().trim());
-        set(Parameters.data.getText(), value.getData());
-        set(Parameters.timestamp.getText(), new Date(value.getLTimestamp()));
+        if (value != null) {
+            set(Parameters.data.getText(), value.getData());
+            set(Parameters.timestamp.getText(), new Date(value.getLTimestamp()));
+        }
+
     }
 
     @Override

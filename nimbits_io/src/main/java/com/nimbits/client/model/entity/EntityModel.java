@@ -20,7 +20,6 @@ package com.nimbits.client.model.entity;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.nimbits.client.common.Utils;
-import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.common.CommonIdentifier;
@@ -112,18 +111,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
     @Override
     public void setLinks(Links links) {
         this.links = links;
-    }
-
-
-    @Override
-    public Action getAction() {
-        Action a = Action.get(this.action);
-        return a == null ? Action.none : a;
-    }
-
-    @Override
-    public void setAction(Action action) {
-        this.action = action.getCode();
     }
 
     @Override

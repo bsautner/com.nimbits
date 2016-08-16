@@ -39,7 +39,7 @@ public class SyncPanel extends BasePanel {
 
 
     public SyncPanel(User user, PanelEvent listener, final Entity entity) {
-        super(user, listener, "<a href=\"http://www.nimbits.com/howto_sync.jsp\">Learn More</a>");
+        super(user, listener, "<a href=\"https://github.com/bsautner/com.nimbits/wiki/Usage:-summaries-and-subscriptions\">Learn More</a>");
         this.entity = entity;
         createForm();
     }

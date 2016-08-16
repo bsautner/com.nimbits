@@ -24,7 +24,6 @@ import com.extjs.gxt.ui.client.widget.menu.MenuItem;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.common.Utils;
-import com.nimbits.client.enums.Action;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
@@ -164,7 +163,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
             public void onSuccess(Entity result) {
 
                 try {
-                    notifyEntityModifiedListener(new GxtModel(result), Action.create);
+                    notifyEntityModifiedListener(new GxtModel(result));
                 } catch (Exception e) {
                     FeedbackHelper.showError(e);
                 }
@@ -234,7 +233,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
             public void onSuccess(Entity result) {
 
                 try {
-                    notifyEntityModifiedListener(new GxtModel(result), Action.create);
+                    notifyEntityModifiedListener(new GxtModel(result));
                 } catch (Exception e) {
                     FeedbackHelper.showError(e);
                 }
@@ -249,16 +248,26 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
         this.entityModifiedListeners.add(listener);
     }
 
-    private void notifyEntityModifiedListener(final TreeModel model, final Action action) {
+    private void notifyEntityModifiedListener(final TreeModel model) {
         for (final EntityModifiedListener listener : entityModifiedListeners) {
-            listener.onEntityModified(model, action);
+            listener.onEntityModifed(model);
+        }
+    }
+
+    private void notifyEntityDeletedListener(final TreeModel model) {
+        for (final EntityModifiedListener listener : entityModifiedListeners) {
+            listener.onEntityDeleted(model);
         }
     }
 
     public interface EntityModifiedListener {
-        void onEntityModified(final TreeModel model, final Action action);
+
+        void onEntityDeleted(TreeModel model);
+        void onEntityModifed(TreeModel model);
 
     }
+
+
 
     private class NewPointBaseEventListener implements Listener<BaseEvent> {
         NewPointBaseEventListener() {
@@ -545,7 +554,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
         public void onEntityAdded(final Entity entity) {
 
             close();
-            notifyEntityModifiedListener(new GxtModel(entity), Action.create);
+            notifyEntityModifiedListener(new GxtModel(entity));
 
         }
     }
@@ -635,7 +644,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
             box.close();
             try {
                 final TreeModel model = new GxtModel(entity);
-                notifyEntityModifiedListener(model, Action.create);
+                notifyEntityModifiedListener(model);
             } catch (Exception e) {
                 FeedbackHelper.showError(e);
             }
@@ -685,7 +694,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
         @Override
         public void onSuccess(Void result) {
             try {
-                notifyEntityModifiedListener(currentModel, Action.delete);
+                notifyEntityDeletedListener(currentModel);
             } catch (Exception e) {
                 FeedbackHelper.showError(e);
             }

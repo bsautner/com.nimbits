@@ -83,23 +83,6 @@ You can PUT updated to the object, post data values and get a series of data
 For more on what you can do with the API, reference the [WIKI](https://github.com/bsautner/com.nimbits/wiki)
 
 
-### Install debian linux (ubuntu etc) 
-
-Add the debian repository to your sources.list file
-
-```echo "deb https://dl.bintray.com/bsautner/nimbits.deb wheezy main" | sudo tee -a /etc/apt/sources.list```
-
-then run 
-
-```
-apt-get update
-apt-get install nimbits
-```
-
-Your server will be running on localhost:8080 and you can configure it like any jetty based server in ```/opt/nimbits```
-
-*please be sure to check this readme before upgraded to be notified of breaking changes*
-
 ### Install from source
 
 Clone this repository and compule using maven

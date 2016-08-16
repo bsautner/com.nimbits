@@ -232,13 +232,8 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
                         @Override
                         public void onSuccess(Void aVoid) {
 
-                            if (user != null && user.getSource().equals(UserSource.google)) {
-
-                                Window.Location.replace(logoutUrl);
-                            } else {
                                 loginListener.onLogout();
 
-                            }
 
                         }
                     });

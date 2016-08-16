@@ -24,16 +24,11 @@ import com.extjs.gxt.ui.client.widget.Viewport;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.service.user.UserServiceRpc;
-import com.nimbits.client.service.user.UserServiceRpcAsync;
-import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.panels.CenterPanel;
 import com.nimbits.client.ui.panels.NavigationEventProvider;
 import com.nimbits.client.ui.panels.login.LoginListener;
@@ -47,6 +42,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
     private static final String MAIN = "main";
 
     private static final String HEIGHT = "100%";
+
     private LoginMainPanel loginMainPanel;
 
 
@@ -62,10 +58,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
         } else {
             loadLoginView( );
             loginMainPanel.showPasswordReset(passwordResetToken);
-
         }
-
-
     }
 
     private void loadLoginView() {
@@ -86,13 +79,8 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
         final BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
         centerData.setMargins(new Margins(0, 0, 5, 0));
 
-
         center.add(loginMainPanel);
-
-
         viewport.add(center, centerData);
-
-
         viewport.setHeight(HEIGHT);
         RootPanel.get(MAIN).clear();
         RootPanel.get(MAIN).add(viewport);
@@ -181,30 +169,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
 
     }
 
-    private class LoginInfoAsyncCallback implements AsyncCallback<User> {
 
-
-        LoginInfoAsyncCallback() {
-
-
-        }
-
-        @Override
-        public void onFailure(final Throwable caught) {
-            FeedbackHelper.showError(caught);
-            closeLoginWindows();
-
-            loadLoginView();
-        }
-
-        @Override
-        public void onSuccess(final User result) {
-            loadPortalView(result);
-
-        }
-
-
-    }
 
 
 }

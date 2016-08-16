@@ -58,7 +58,7 @@ public class UserService {
     }
 
 
-    public Optional<Credentials> credentialsWithBasicAuthentication(String authHeader) {
+    private Optional<Credentials> credentialsWithBasicAuthentication(String authHeader) {
 
         if (authHeader != null) {
             StringTokenizer st = new StringTokenizer(authHeader);
@@ -90,10 +90,6 @@ public class UserService {
 
         return Optional.absent();
     }
-
-
-
-
 
 
     public User createUserRecord(final EmailAddress internetAddress, String password, UserSource source) {
@@ -128,8 +124,7 @@ public class UserService {
 
     }
 
-
-    public User getAdmin() {
+    private User getAdmin() {
         final String adminStr = settingsService.getSetting(ServerSetting.admin);
         if (StringUtils.isEmpty(adminStr)) {
             throw new IllegalArgumentException("Server is missing admin setting!");
@@ -157,7 +152,7 @@ public class UserService {
 
     }
 
-    public boolean validatePassword(User user, String password) {
+    private boolean validatePassword(User user, String password) {
 
         String storedEncodedPassword = user.getPassword();
         String salt = user.getPasswordSalt();
@@ -191,7 +186,6 @@ public class UserService {
 
     }
 
-
     Optional<User> doLogin(String email, String token) {
 
         Optional<User> optional = userDao.getUserByEmail(email);
@@ -207,8 +201,6 @@ public class UserService {
         }
     }
 
-
-
     public User updatePassword(User u, String password) {
 
         return userDao.updatePassword(u, password);
@@ -221,10 +213,6 @@ public class UserService {
         userDao.setResetPasswordToken(user, token);
 
     }
-
-
-
-
 
     protected EntityType getEntityType(HttpServletRequest req) {
         EntityType entityType = null;

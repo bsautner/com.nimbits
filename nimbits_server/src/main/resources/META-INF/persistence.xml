@@ -27,7 +27,7 @@
         <properties>
             <property name="javax.jdo.option.ConnectionURL" value="jdbc:mysql://127.0.0.1/nimbits?useServerPrepStmts=false"/>
             <property name="javax.jdo.option.ConnectionDriverName" value="com.mysql.jdbc.Driver"/>
-            <property name="javax.jdo.option.ConnectionUserName" value="nimbits"/>
+            <property name="javax.jdo.option.ConnectionUserName" value="root"/>
             <property name="javax.jdo.option.ConnectionPassword" value="nimbits"/>
             <property name="javax.jdo.option.Mapping" value="mysql" />
             <property name="datanucleus.schema.autoCreateAll" value="true"/>

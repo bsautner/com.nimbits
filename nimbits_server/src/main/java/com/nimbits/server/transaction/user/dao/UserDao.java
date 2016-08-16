@@ -125,7 +125,7 @@ public class UserDao {
 
             final List<User> result = (List<User>) q1.execute(email);
             if (result.isEmpty()) {
-                throw new SecurityException("User Not Found");
+                return Optional.absent();
             } else {
                 User user = result.get(0);
 

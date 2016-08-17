@@ -22,7 +22,7 @@
     <artifactId>nimbits-parent</artifactId>
     <packaging>pom</packaging>
 
-    <version>4.0.2-SNAPSHOT</version>
+    <version>4.0.3-SNAPSHOT</version>
     <properties>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -134,6 +134,8 @@
                         <nohelp>true</nohelp>
                         <reportOutputDirectory>/tmp</reportOutputDirectory>
                         <destDir>/tmp</destDir>
+                        <failOnError>false</failOnError>
+
                     </configuration>
                     <executions>
                         <execution>

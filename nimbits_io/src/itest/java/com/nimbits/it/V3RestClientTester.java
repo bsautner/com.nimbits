@@ -32,7 +32,7 @@ public class V3RestClientTester extends NimbitsTest {
     }
 
     @Test
-    @Ignore
+
     public void executeTest() throws InterruptedException {
 
         log("Starting up");

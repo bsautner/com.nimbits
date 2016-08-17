@@ -59,7 +59,7 @@ public class UserDao {
 
 
    
-    @CacheEvict(cacheNames = "user", key="#user.email.value")
+  //  @CacheEvict(cacheNames = "user", key="#user.email.value")
     public void setResetPasswordToken(User user, String token) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
@@ -81,7 +81,7 @@ public class UserDao {
     }
 
    
-    @CacheEvict(cacheNames = "user", key="#user.email.value")
+  //  @CacheEvict(cacheNames = "user", key="#user.email.value")
     public User updatePassword(User user, String password) {
         String passwordSalt = RandomStringUtils.randomAscii(20);
 
@@ -110,7 +110,7 @@ public class UserDao {
     }
 
    
-    @Cacheable(cacheNames = "user", key="#email")
+   // @Cacheable(cacheNames = "user", key="#email")
     public Optional<User> getUserByEmail(String email) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
@@ -141,7 +141,7 @@ public class UserDao {
         }
     }
 
-    @CacheEvict(cacheNames = "user")
+  //  @CacheEvict(cacheNames = "user")
     public boolean usersExist() {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();

@@ -7,7 +7,6 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.orm.ValueStore;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -41,14 +40,14 @@ public class ValueDao {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
         try {
-            final Query<ValueStore> q1;
+            final Query q1;
 
             q1 = pm.newQuery(ValueStore.class);
 
 
             q1.setFilter("entityId==i");
             q1.declareParameters("String i");
-            q1.orderBy("timestamp desc");
+            q1.setOrdering("timestamp desc");
             q1.setRange(0, 1);
 
 
@@ -70,32 +69,32 @@ public class ValueDao {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
         try {
-            final Query<ValueStore> q1 = pm.newQuery(ValueStore.class);
+            final Query  q1 = pm.newQuery(ValueStore.class);
             final List<ValueStore> result;
             final List<Value> retList = new ArrayList<>();
 
             if (timespan.isPresent() && !range.isPresent()) {
                 q1.setFilter("entityId==i && timestamp >= sd && timestamp <= ed");
                 q1.declareParameters("String i, Long sd, Long ed");
-                q1.orderBy("timestamp desc");
+                q1.setOrdering("timestamp desc");
                 result = (List<ValueStore>) q1.execute(entity.getId(), timespan.get().lowerEndpoint(), timespan.get().upperEndpoint());
             } else if (!timespan.isPresent() && range.isPresent()) {
                 q1.setFilter("entityId==i");
                 q1.declareParameters("String i");
-                q1.orderBy("timestamp desc");
+                q1.setOrdering("timestamp desc");
                 q1.setRange(range.get().lowerEndpoint(), range.get().upperEndpoint());
                 result = (List<ValueStore>) q1.execute(entity.getId());
             } else if (timespan.isPresent() && range.isPresent()) {
                 q1.setFilter("entityId==i && timestamp >= sd && timestamp <= ed");
                 q1.declareParameters("String i, Long sd, Long ed");
-                q1.orderBy("timestamp desc");
+                q1.setOrdering("timestamp desc");
                 q1.setRange(range.get().lowerEndpoint(), range.get().upperEndpoint());
                 result = (List<ValueStore>) q1.execute(entity.getId(), timespan.get().lowerEndpoint(), timespan.get().upperEndpoint());
 
             } else {
                 q1.setFilter("entityId==i");
                 q1.declareParameters("String i");
-                q1.orderBy("timestamp desc");
+                q1.setOrdering("timestamp desc");
 
                 result = (List<ValueStore>) q1.execute(entity.getId());
             }
@@ -145,7 +144,7 @@ public class ValueDao {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
         try {
-            final Query<ValueStore> q1;
+            final Query q1;
 
             q1 = pm.newQuery(ValueStore.class);
 

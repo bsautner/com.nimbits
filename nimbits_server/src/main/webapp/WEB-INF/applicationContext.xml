@@ -62,6 +62,7 @@
                 <prop key="javax.jdo.option.ConnectionURL">
                     jdbc:mysql://localhost:3306/nimbits
                 </prop>
+
                 <prop key="javax.jdo.option.ConnectionUserName">root</prop>
                 <prop key="javax.jdo.option.ConnectionPassword">nimbits</prop>
                 <prop key="javax.jdo.option.ConnectionDriverName">com.mysql.jdbc.Driver</prop>

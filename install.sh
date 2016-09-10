@@ -9,7 +9,7 @@ bash -c 'echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment'
 bash -c 'echo "CATALINA_HOME=/opt/tomcat"  >> /etc/environment'
 source /etc/environment
 
-wget http://mirrors.gigenet.com/apache/tomcat/tomcat-8/v8.5.4/bin/apache-tomcat-8.5.4.tar.gz 
+wget http://mirrors.gigenet.com/apache/tomcat/tomcat-8/v8.5.5/bin/apache-tomcat-8.5.5.tar.gz 
 tar xvzf apache-tomcat-8.5.4.tar.gz
 mv apache-tomcat-8.5.4 /opt/tomcat
 

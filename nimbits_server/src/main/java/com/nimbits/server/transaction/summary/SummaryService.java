@@ -34,6 +34,7 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -60,7 +61,7 @@ public class SummaryService {
 
     }
 
-    public void process(ValueTask valueTask, final User user, final Point point, final Value v)  {
+    public void process(ValueTask valueTask, final User user, final Point point, final Value v) throws IOException {
         final Optional<Entity> optional = entityDao.getEntityByTrigger(user, point, EntityType.summary);
         if (optional.isPresent()) {
 

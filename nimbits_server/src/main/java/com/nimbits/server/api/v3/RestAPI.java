@@ -100,7 +100,7 @@ public class RestAPI {
     public ResponseEntity postSeries(
             @RequestHeader(name = "Authorization") String authorization,
             @RequestBody String json,
-            @PathVariable String uuid)  {
+            @PathVariable String uuid) throws IOException {
 
 
         Type listType = new TypeToken<ArrayList<Value>>() {

@@ -40,6 +40,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.ServletException;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -92,9 +93,15 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
                                final Value value)  {
 
 
-        Point p = (Point) entityDao.getEntity(user, point.getId(), EntityType.point).get();
-        logger.info("DP:: " + this.getClass().getName() + " " + (dataProcessor == null));
-        valueTask.process(user, p, value);
+        Optional<Entity>  entityOptional = entityDao.getEntity(user, point.getId(), EntityType.point);
+
+        try {
+            if (entityOptional.isPresent()) {
+                valueTask.process(user, (Point) entityOptional.get(), value);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
 
     }

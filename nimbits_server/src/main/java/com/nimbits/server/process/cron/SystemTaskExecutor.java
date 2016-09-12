@@ -44,6 +44,7 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
+import java.io.IOException;
 import java.util.*;
 
 
@@ -97,10 +98,11 @@ public class SystemTaskExecutor {
 
 
             processIdlePoints();
-            processSchedules();
-
-
-
+            try {
+                processSchedules();
+            } catch (IOException e) {
+                logger.error("Error Processing Schedules", e);
+            }
 
 
         }
@@ -173,7 +175,7 @@ public class SystemTaskExecutor {
 
     }
 
-    private long processSchedules()  {
+    private long processSchedules() throws IOException {
 
         List<Schedule> schedules = entityDao.getSchedules();
 

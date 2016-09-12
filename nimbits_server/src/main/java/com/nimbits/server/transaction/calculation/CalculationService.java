@@ -34,6 +34,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+
 @Component
 public class CalculationService   {
 
@@ -54,7 +56,7 @@ public class CalculationService   {
     }
 
 
-    public void process(ValueTask valueTask, final User u, final Point point, final Value value)  {
+    public void process(ValueTask valueTask, final User u, final Point point, final Value value) throws IOException {
 
         final Optional<Entity> optional = entityDao.getEntityByTrigger(u, point, EntityType.calculation);
         if (optional.isPresent()) {

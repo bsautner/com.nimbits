@@ -41,7 +41,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,26 +59,27 @@ import static java.lang.Math.abs;
 public class SubscriptionService  {
     private static final Logger logger = LoggerFactory.getLogger(SubscriptionService.class.getName());
 
+
+    private final EmailService emailService;
+
+
+    private final EntityDao entityDao;
+
+
+    private final UserService userService;
+
+
+    private final ValueDao valueDao;
+
     @Autowired
-    private EmailService emailService;
-
-
-    @Autowired
-    private EntityDao entityDao;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ValueDao valueDao;
-
-
-    public SubscriptionService() {
-
-
+    public SubscriptionService(EmailService emailService, EntityDao entityDao, UserService userService, ValueDao valueDao) {
+        this.emailService = emailService;
+        this.entityDao = entityDao;
+        this.userService = userService;
+        this.valueDao = valueDao;
     }
 
-    public void process(final User user, final Point point, final Value v) {
+    public void process(final User user, final Point point, final Value v) throws IOException {
 
         final List<Entity> subscriptions = entityDao.getSubscriptionsToEntity(user, point);
         logger.info("subscription service processing " + subscriptions.size());
@@ -87,59 +87,60 @@ public class SubscriptionService  {
 
             Subscription subscription = (Subscription) entity;
 
-
             logger.info("Processing Subscription " + subscription.getName().getValue());
-            //  nimbitsCache.put(LAST_SENT_CACHE_KEY_PREFIX + subscription.getId(), new Date());
 
 
-            //EntityServiceImpl.addUpdateSingleEntity(user, subscription);
+            final Optional<Entity> entityOptional = entityDao.getEntity(user, subscription.getId(),
+                    EntityType.subscription);
 
-            final Entity subscriptionEntity = entityDao.getEntity(user, subscription.getId(),
-                    EntityType.subscription).get();
+            if (entityOptional.isPresent()) {
+                final Entity subscriptionEntity = entityOptional.get();
+                final Optional<User> subscriberOptional = userService.getUserByKey(subscriptionEntity.getOwner());
 
+                if (subscriberOptional.isPresent()) {
+                    final User subscriber = subscriberOptional.get();
+                    final AlertType alert = v.getAlertState();
 
-            final User subscriber = userService.getUserByKey(subscriptionEntity.getOwner()).get();
-            final AlertType alert = v.getAlertState();
+                    switch (subscription.getSubscriptionType()) {
+                        case none:
+                            break;
+                        case anyAlert:
+                            if (!alert.equals(AlertType.OK) && (point.isHighAlarmOn() || point.isLowAlarmOn() || point.isIdleAlarmOn())) {
+                                sendNotification(subscriber, subscription, point, v);
+                            }
+                            break;
+                        case high:
+                            if (alert.equals(AlertType.HighAlert) && point.isHighAlarmOn()) {
+                                sendNotification(subscriber, subscription, point, v);
+                            }
+                            break;
+                        case low:
+                            if (alert.equals(AlertType.LowAlert) && point.isLowAlarmOn()) {
+                                sendNotification(subscriber, subscription, point, v);
+                            }
+                            break;
+                        case idle:
+                            if (alert.equals(AlertType.IdleAlert) && point.isIdleAlarmOn()) {
+                                sendNotification(subscriber, subscription, point, v);
+                            }
+                            break;
+                        case newValue:
+                            sendNotification(subscriber, subscription, point, v);
+                            break;
 
-            switch (subscription.getSubscriptionType()) {
-                case none:
-                    break;
-                case anyAlert:
-                    if (!alert.equals(AlertType.OK) && (point.isHighAlarmOn() || point.isLowAlarmOn() || point.isIdleAlarmOn())) {
-                        sendNotification(subscriber, subscription, point, v);
+                        case deltaAlert:
+                            if (calculateDelta(point) > point.getDeltaAlarm()) {
+                                sendNotification(subscriber, subscription, point, v);
+                            }
+                            break;
+                        case increase:
+                        case decrease:
+                            processSubscriptionToIncreaseOrDecrease(point, v, subscription, subscriber);
+                            break;
+
                     }
-                    break;
-                case high:
-                    if (alert.equals(AlertType.HighAlert) && point.isHighAlarmOn()) {
-                        sendNotification(subscriber, subscription, point, v);
-                    }
-                    break;
-                case low:
-                    if (alert.equals(AlertType.LowAlert) && point.isLowAlarmOn()) {
-                        sendNotification(subscriber, subscription, point, v);
-                    }
-                    break;
-                case idle:
-                    if (alert.equals(AlertType.IdleAlert) && point.isIdleAlarmOn()) {
-                        sendNotification(subscriber, subscription, point, v);
-                    }
-                    break;
-                case newValue:
-                    sendNotification(subscriber, subscription, point, v);
-                    break;
-
-                case deltaAlert:
-                    if (calculateDelta(point) > point.getDeltaAlarm()) {
-                        sendNotification(subscriber, subscription, point, v);
-                    }
-                    break;
-                case increase:
-                case decrease:
-                    processSubscriptionToIncreaseOrDecrease(point, v, subscription, subscriber);
-                    break;
-
+                }
             }
-
 
         }
 
@@ -152,7 +153,7 @@ public class SubscriptionService  {
             final Value v,
             final Subscription subscription,
             final User subscriber
-    ) {
+    ) throws IOException {
         Value prevValue = valueDao.getSnapshot(point);
 
         if (subscription.getSubscriptionType().equals(SubscriptionType.decrease) && (prevValue.getDoubleValue() > v.getDoubleValue())) {
@@ -169,7 +170,7 @@ public class SubscriptionService  {
             final User user,
             final Subscription subscription,
             final Point point,
-            final Value value) {
+            final Value value) throws IOException {
 
 
         switch (subscription.getNotifyMethod()) {
@@ -188,7 +189,7 @@ public class SubscriptionService  {
 
             case webhook:
 
-                doWebHook(user, point, value, subscription);
+                doWebHook(user, value, subscription);
                 break;
 
 
@@ -196,33 +197,37 @@ public class SubscriptionService  {
     }
 
 
-    private void doWebHook(User user, Point point, Value value, Subscription subscription) {
-        WebHook webHook = (WebHook) entityDao.getEntity(user, subscription.getTarget(), EntityType.webhook).get();
-        switch (webHook.getMethod()) {
+    private void doWebHook(User user, Value value, Subscription subscription) throws IOException {
+        Optional<Entity> webHookOptional =  entityDao.getEntity(user, subscription.getTarget(), EntityType.webhook);
 
-            case POST:
-                doPost(webHook, point, value);
-                break;
-            case GET:
-                doGet(user, webHook, point, value);
-                break;
-            case DELETE:
-                break;
-            case PUT:
-                break;
+        if (webHookOptional.isPresent()) {
+            WebHook webHook = (WebHook) webHookOptional.get();
+            switch (webHook.getMethod()) {
+
+                case POST:
+                    doPost(webHook, value);
+                    break;
+                case GET:
+                    doGet(user, webHook, value);
+                    break;
+                case DELETE:
+                    break;
+                case PUT:
+                    break;
+            }
         }
 
     }
 
 
-    private void doPost(WebHook webHook, Point point, Value value) {
+    private void doPost(WebHook webHook, Value value) throws IOException {
 
-        try {
-            String message = buildPostBody(webHook, point, value);
 
-            URL url = buildPath(webHook, point, value);
+            String message = buildPostBody(webHook, value);
 
-            logger.info("executing webhook POST: " + webHook.getUrl().getUrl());
+            URL url = buildPath(webHook,  value);
+
+            logger.info("executing web hook POST: " + webHook.getUrl().getUrl());
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
             connection.setRequestMethod("POST");
@@ -232,19 +237,17 @@ public class SubscriptionService  {
             writer.close();
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                logger.info("sent user to nimbits.com");
+                logger.info("web hook succeeded 200 OK");
             } else {
-                logger.error("error sending user info to nimbits.com: "
+                logger.error("web hook failed with error. Web hook URL responded with: "
                         + connection.getResponseCode() + " "
                         + connection.getResponseMessage());
             }
 
-        } catch (Exception e) {
-            logger.error("error sending user info to nimbits.com", e);
-        }
+
     }
 
-    private URL buildPath(WebHook webHook, Point point, Value value) throws MalformedURLException {
+    private URL buildPath(WebHook webHook, Value value) throws MalformedURLException {
         URL url = null;
         String base = webHook.getUrl().getUrl();
 
@@ -276,7 +279,7 @@ public class SubscriptionService  {
         return url;
     }
 
-    private String buildPostBody(WebHook webHook, Point point, Value value) {
+    private String buildPostBody(WebHook webHook, Value value) {
         String message = "";
         switch (webHook.getBodyChannel()) {
 
@@ -304,14 +307,14 @@ public class SubscriptionService  {
         return message;
     }
 
-    private void doGet(final User user, WebHook webHook, Point point, Value value) {
+    private void doGet(final User user, WebHook webHook, Value value) throws IOException {
 
 
         InputStream in = null;
 
         try {
             logger.info("executing webhook GET:" + webHook.getUrl().getUrl());
-            URL url = buildPath(webHook, point, value);
+            URL url = buildPath(webHook,  value);
             in = url.openStream();
             String result = (IOUtils.toString(in));
             if (!StringUtils.isEmpty(webHook.getDownloadTarget()) && !StringUtils.isEmpty(result)) {
@@ -324,9 +327,7 @@ public class SubscriptionService  {
 
 
             }
-        } catch (IOException e) {
-            logger.error("error with subscription", e);
-        } finally {
+        }  finally {
             IOUtils.closeQuietly(in);
         }
 

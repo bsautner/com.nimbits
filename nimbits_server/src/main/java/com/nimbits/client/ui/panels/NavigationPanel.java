@@ -58,7 +58,6 @@ class NavigationPanel extends NavigationEventProvider {
     private List<String> parents;
     private EntityContextMenu context;
     private final User user;
-    private boolean saveWithCurrentTime = true;
     private final static int valueColumnIndex = 1;
     private final ValueServiceRpcAsync valueService;
     private final EntityServiceRpcAsync entityService;
@@ -542,14 +541,11 @@ class NavigationPanel extends NavigationEventProvider {
 
 
                     final Entity entity = model.getBaseEntity();
-                    Date timestamp = saveWithCurrentTime ? new Date() : (Date) model.get(Parameters.timestamp.getText());
+                    long timestamp = System.currentTimeMillis();
 
 
                     final String valueAndNote = model.get(Parameters.value.getText());
 
-                    if (timestamp == null) {
-                        timestamp = new Date();
-                    }
 
                     final Value value;
 

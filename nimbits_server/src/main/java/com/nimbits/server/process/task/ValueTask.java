@@ -73,10 +73,11 @@ public class ValueTask {
     public void process(final User user, final Point point, Value value) throws IOException {
 
         final boolean ignored = false;
+        boolean ignoredByCompression = false;
         final boolean ignoredByDate = dataProcessor.ignoreDataByExpirationDate(point, value, ignored);
         final Value sample = valueService.getCurrentValue(point);
 
-        boolean ignoredByCompression = false;
+
 
         if (value.getLTimestamp() > sample.getLTimestamp()) {
             ignoredByCompression = dataProcessor.ignoreByFilter(point, sample, value);

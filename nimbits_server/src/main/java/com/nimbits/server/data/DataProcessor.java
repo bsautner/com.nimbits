@@ -45,27 +45,30 @@ public class DataProcessor {
         return retVal;
     }
 
-    public boolean ignoreByFilter(final Point point, final Value pv, final Value v) {
+    public boolean ignoreByFilter(final Point point, final Value previousValue, final Value incomingValue) {
 
 
-        if (v.getData() != null && !v.getData().equals(pv.getData())) {
+        if (incomingValue.getData() != null && !incomingValue.getData().equals(previousValue.getData())) {
+            return false;
+        }
+        if (previousValue.getDoubleValue() == null && incomingValue.getDoubleValue() != null) {
             return false;
         }
 
         if (point.getPointType().equals(PointType.flag)) {
-            Integer prevWhole = BigDecimal.valueOf(pv.getDoubleValue()).intValue();
-            Integer newWhole = BigDecimal.valueOf(v.getDoubleValue()).intValue();
+            Integer prevWhole = BigDecimal.valueOf(previousValue.getDoubleValue()).intValue();
+            Integer newWhole = BigDecimal.valueOf(incomingValue.getDoubleValue()).intValue();
             return ((prevWhole != 0) && (newWhole != 0)) || ((prevWhole == 0) && (newWhole == 0));
 
         } else {
-            double current = pv.getDoubleValue() == null ? 0.0 : pv.getDoubleValue();
+            double current = previousValue.getDoubleValue() == null ? 0.0 : previousValue.getDoubleValue();
             switch (point.getFilterType()) {
 
                 case fixedHysteresis:
 
                     double min = current - point.getFilterValue();
                     double max = current + point.getFilterValue();
-                    double newValue = v.getDoubleValue();
+                    double newValue = incomingValue.getDoubleValue();
                     Range<Double> range = Range.closed(min, max);
                     return range.contains(newValue);
 //                    return newValue <= max
@@ -74,8 +77,8 @@ public class DataProcessor {
                 case percentageHysteresis:
                     if (point.getFilterValue() > 0) {
                         final double p = current * point.getFilterValue() / 100;
-                        return v.getDoubleValue() <= current + p
-                                && v.getDoubleValue() >= current - p;
+                        return incomingValue.getDoubleValue() <= current + p
+                                && incomingValue.getDoubleValue() >= current - p;
 
 
                     } else {
@@ -84,10 +87,10 @@ public class DataProcessor {
                     }
 
                 case ceiling:
-                    return v.getDoubleValue() >= point.getFilterValue();
+                    return incomingValue.getDoubleValue() >= point.getFilterValue();
 
                 case floor:
-                    return v.getDoubleValue() <= point.getFilterValue();
+                    return incomingValue.getDoubleValue() <= point.getFilterValue();
 
                 case none:
                     return false;

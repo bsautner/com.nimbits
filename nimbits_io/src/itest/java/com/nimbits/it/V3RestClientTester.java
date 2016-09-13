@@ -122,7 +122,7 @@ public class V3RestClientTester extends NimbitsTest {
         }
 
         log("Waiting for things to settle down server side");
-        Thread.sleep(5000);
+        Thread.sleep(15000);
         log("Verifying Data");
         verifySeriesData(null);
 

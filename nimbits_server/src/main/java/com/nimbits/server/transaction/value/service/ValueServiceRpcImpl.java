@@ -21,20 +21,15 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Range;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.enums.EntityType;
-
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.value.ValueServiceRpc;
-import com.nimbits.server.data.DataProcessor;
 import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.calculation.CalculationService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.user.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -48,24 +43,27 @@ import java.util.Map;
 @Service
 public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueServiceRpc {
 
-    private final static Logger logger = LoggerFactory.getLogger(ValueServiceRpcImpl.class.getName());
+
+
+    private final ValueTask valueTask;
+
+
+    private final ValueService valueService;
+
+
+    private final EntityDao entityDao;
+
+
+    private final CalculationService calculationService;
+
 
     @Autowired
-    private ValueTask valueTask;
-
-    @Autowired
-    private ValueService valueService;
-
-    @Autowired
-    private EntityDao entityDao;
-
-    @Autowired
-    private CalculationService calculationService;
-
-    @Autowired
-    private DataProcessor dataProcessor;
-
-
+    public ValueServiceRpcImpl(ValueTask valueTask, ValueService valueService, EntityDao entityDao, CalculationService calculationService) {
+        this.valueTask = valueTask;
+        this.valueService = valueService;
+        this.entityDao = entityDao;
+        this.calculationService = calculationService;
+    }
 
     @Override
     public void init() throws ServletException {

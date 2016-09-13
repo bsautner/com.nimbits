@@ -120,9 +120,6 @@ public class SystemTaskExecutor {
 
     private void processIdlePoints()  {
 
-        // final List<Entity> points = entityDao.getIdleEntities(userService.getAdmin());
-
-//        User admin = userService.getAdmin();
         final PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         Transaction tx = null;
 
@@ -140,13 +137,13 @@ public class SystemTaskExecutor {
 
             final List<Point> result = (List<Point>) q.execute(true, false);
             for (Point p : result) {
-                logger.info("processing  idle point " + p.getName().getValue());
-                if (p.isIdleAlarmOn() && !p.idleAlarmSent() && p.getIdleSeconds() > 0) {
+                logger.info("processing idle point " + p.getName().getValue());
+                if (p.isIdleAlarmOn() && ! p.idleAlarmSent() && p.getIdleSeconds() > 0) {
 
                     Value value = valueService.getSnapshot(p);
                     long idleDuration = p.getIdleSeconds() * 1000;
                     if (value.getLTimestamp() <= (System.currentTimeMillis() - idleDuration)) {
-                        Optional<User> userOptional = userDao.getUserByEmail(p.getOwner());
+                        Optional<User> userOptional = userDao.getUserById(p.getOwner());
                         if (userOptional.isPresent()) {
                             subscriptionService.process(userOptional.get(), p, new Value.Builder().initValue(value).alertType(AlertType.IdleAlert).create());
                             p.setIdleAlarmSent(true);

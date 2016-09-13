@@ -169,6 +169,7 @@ public class SubscriptionPanel extends BasePanel {
 
             webHookCombo = new EntityCombo(user, EntityType.webhook, "", "Web Hook Target");
             webHookCombo.setVisible(false);
+            enabled.setValue(true);
         }
 
         webHookCombo.setFieldLabel("Web Hook Target");

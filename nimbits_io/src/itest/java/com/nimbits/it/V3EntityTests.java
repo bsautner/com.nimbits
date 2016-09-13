@@ -206,12 +206,12 @@ public class V3EntityTests extends NimbitsTest {
         //create a webhook and a subscription to the input point configured to execute the hook when a new value is recorded.
         WebHook webHook = nimbits.addWebHook(category, new WebHookModel.Builder()
 
-                .url("http://cloud.nimbits.com/service/v2/time")
+                .url("http://time.jsontest.com/")
                 .method(HttpMethod.GET)
                 .downloadTarget(outputPoint)
                 .create());
 
-        Subscription subscription = nimbits.addSubscription(category, new SubscriptionModel.Builder()
+         nimbits.addSubscription(category, new SubscriptionModel.Builder()
                 .notifyMethod(SubscriptionNotifyMethod.webhook)
                 .subscribedEntity(inputPoint)
                 .target(webHook)

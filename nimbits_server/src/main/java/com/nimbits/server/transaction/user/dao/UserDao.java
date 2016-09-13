@@ -141,6 +141,36 @@ public class UserDao {
         }
     }
 
+    public Optional<User> getUserById(String id) {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+        try {
+            final Query q1;
+
+            q1 = pm.newQuery(UserEntity.class);
+
+
+            q1.setFilter("id==b");
+            q1.declareParameters("String b");
+
+            final List<User> result = (List<User>) q1.execute(id);
+            if (result.isEmpty()) {
+                return Optional.absent();
+            } else {
+                User user = result.get(0);
+
+                return Optional.of((User) EntityHelper.createModel(user, user));
+
+            }
+        } catch (Exception ex) {
+            return Optional.absent();
+
+
+        } finally {
+            pm.close();
+        }
+    }
+
   //  @CacheEvict(cacheNames = "user")
     public boolean usersExist() {
 

@@ -36,6 +36,7 @@
         <gxt.version>2.2.5</gxt.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>4.2.4.RELEASE</spring.version>
+        <datanucleus.version>4.0.0-release</datanucleus.version>
 
         <jetty-jmx.version>8.1.15.v20140411</jetty-jmx.version>
 
@@ -232,24 +233,28 @@
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-core</artifactId>
-            <version>[5.0.0-m1, 5.9)</version>
+            <version>4.1.12</version>
         </dependency>
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-api-jdo</artifactId>
-            <version>[5.0.0-m1, 5.9)</version>
+            <version>4.1.2</version>
         </dependency>
-        <dependency>
-            <groupId>org.datanucleus</groupId>
-            <artifactId>javax.jdo</artifactId>
-            <version>[3.2.0-m5, )</version>
-        </dependency>
-
-
         <dependency>
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-rdbms</artifactId>
-            <version>[5.0.0-m1, 5.9)</version>
+            <version>4.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.jdo</groupId>
+            <artifactId>jdo-api</artifactId>
+            <version>3.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.jdo</groupId>
+            <artifactId>jdo-api</artifactId>
+            <version>3.1</version>
         </dependency>
         <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
         <dependency>
@@ -317,7 +322,7 @@
             <plugin>
                 <groupId>org.datanucleus</groupId>
                 <artifactId>datanucleus-maven-plugin</artifactId>
-                <version>5.0.0-release</version>
+                <version>${datanucleus.version}</version>
                 <configuration>
 
 

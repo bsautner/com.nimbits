@@ -74,7 +74,7 @@ public class EntityService {
         switch (entity.getEntityType()) {
 
             case point:
-                Value init = new Value.Builder().doubleValue(0.0).timestamp(new Date(0)).meta(POINT_INITIALISED).create();
+                Value init = new Value.Builder().doubleValue(0.0).timestamp(0L).meta(POINT_INITIALISED).create();
 
                 valueService.recordValues(user, (Point) created, Collections.singletonList(init));
 

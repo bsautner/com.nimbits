@@ -20,13 +20,14 @@ public abstract class NimbitsTest {
     public User user;
 
     static final String EMAIL_ADDRESS = "admin@example.com";
-    static final String INSTANCE_URL = "http://localhost:8080";
+    static final String INSTANCE_URL = "http://192.168.1.145:8080";
     static final String PASSWORD = "1234"; //just like my luggage!
     int errors = 0;
 
 
     static final Nimbits nimbits = new Nimbits.Builder()
             .email(EMAIL_ADDRESS).token(PASSWORD).instance(INSTANCE_URL).create();
+
 
 
     @Before

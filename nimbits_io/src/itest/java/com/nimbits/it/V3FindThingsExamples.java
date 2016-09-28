@@ -12,11 +12,13 @@ import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
 import org.junit.Before;
 import org.junit.Test;
+import retrofit.RetrofitError;
 
 import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class V3FindThingsExamples extends NimbitsTest {
 
@@ -56,11 +58,11 @@ public class V3FindThingsExamples extends NimbitsTest {
         }
 
         //search for a point that was never created to test absent condition
-        Optional<Point> shouldNotExist = nimbits.findPointByName(UUID.randomUUID().toString());
-        if (shouldNotExist.isPresent()) {
-            throw new RuntimeException("Point found that was never created!");
-        } else {
-            log("verified absent point");
+        try {
+            Optional<Point> shouldNotExist = nimbits.findPointByName(UUID.randomUUID().toString());
+
+        } catch (RetrofitError error) {
+            assertEquals(404, error.getResponse().getStatus());
         }
 
 
@@ -81,21 +83,31 @@ public class V3FindThingsExamples extends NimbitsTest {
     private void veryifyFindCategory() {
         String name = UUID.randomUUID().toString();
 
-        Optional<Category> result = nimbits.findCategory("i don't exist");
-        verifyReponse(result, false);
+        try {
+            Optional<Category> result = nimbits.findCategory("i dont exist");
+
+        } catch (RetrofitError error) {
+            assertEquals(404, error.getResponse().getStatus());
+        }
+
 
         Category category = new CategoryModel.Builder().name(name).create();
         nimbits.addCategory(user, category);
 
         Optional<Category> verify = nimbits.findCategory(name);
-        verifyReponse(verify, true);
+        assertTrue(verify.isPresent());
     }
 
     private void veryifyFindWebHook() {
         String name = UUID.randomUUID().toString();
 
-        Optional<WebHook> result = nimbits.findWebHook("i don't exist");
-        verifyReponse(result, false);
+
+        try {
+         Optional<WebHook> result = nimbits.findWebHook("i dont exist");
+
+        } catch (RetrofitError error) {
+            assertEquals(404, error.getResponse().getStatus());
+        }
 
         WebHook webHook = new WebHookModel.Builder()
                 .name(name)
@@ -105,24 +117,10 @@ public class V3FindThingsExamples extends NimbitsTest {
         nimbits.addWebHook(user, webHook);
 
         Optional<WebHook> verify = nimbits.findWebHook(name);
-        verifyReponse(verify, true);
+        assertTrue(verify.isPresent());
     }
 
-    private void verifyReponse(Optional result, boolean shouldExist) {
 
-        //  assertEquals(! shouldExist, result.isPresent());
-
-
-        if (!shouldExist && result.isPresent()) {
-            throw new RuntimeException("Found an object that should not exist!");
-        } else if (shouldExist && !result.isPresent()) {
-            throw new RuntimeException("Did NOT find an object that should exist!");
-        } else {
-
-            log("Got expected result looking for  entity");
-
-        }
-    }
 }
 
 

@@ -504,10 +504,13 @@ public class EntityDao {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
 
-        try {
-
+        try{
             if (entity.getEntityType().isUniqueNameFlag()) {
-                checkDuplicateEntity(user, Collections.singletonList(entity));
+                Optional<Entity> existingEntity = checkDuplicateEntity(user, Collections.singletonList(entity));
+                if (existingEntity.isPresent()) {
+                    return existingEntity.get();
+                }
+
 
             }
             final Entity commit = EntityHelper.downcastEntity(entity);
@@ -536,17 +539,13 @@ public class EntityDao {
 
             return EntityHelper.createModel(user, commit);
 
-        } catch (Exception ex) {
-
-            logger.error(ex.getMessage());
-            throw ex;
 
         } finally {
             pm.close();
         }
     }
 
-    private void checkDuplicateEntity(final User user, final List<Entity> entityList) {
+    private Optional<Entity> checkDuplicateEntity(final User user, final List<Entity> entityList) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
@@ -558,14 +557,12 @@ public class EntityDao {
                     q1.setFilter("name==b && entityType==t");
                     q1.declareParameters("String b, Integer t");
                     q1.setRange(0, 1);
-                    final Collection<Entity> c = (Collection<Entity>) q1.execute(
+                    final List<Entity> c = (List<Entity>) q1.execute(
                             entity.getName().getValue(),
                             entity.getEntityType().getCode());
                     if (!c.isEmpty()) {
 
-                        throw new IllegalArgumentException("A User with the email address " + entity.getName().getValue() +
-                                " already exists. Entities of type [" + entity.getEntityType().name() + "] must have a " +
-                                "unique name on your account");
+                        return Optional.of(c.get(0));
 
 
                     }
@@ -576,22 +573,21 @@ public class EntityDao {
                     q1.setFilter("name==b && owner==o && entityType==t");
                     q1.declareParameters("String b, String o, Integer t");
                     q1.setRange(0, 1);
-                    final Collection<Entity> c = (Collection<Entity>) q1.execute(
+                    final List<Entity> c = (List<Entity>) q1.execute(
                             entity.getName().getValue(),
                             user.getId(),
                             entity.getEntityType().getCode());
                     if (!c.isEmpty()) {
 
-                        throw new IllegalArgumentException("An Entity with the name " + entity.getName().getValue() +
-                                " already exists. Entities of type [" + entity.getEntityType().name() + "] must have a " +
-                                "unique name on your account");
+                        return Optional.of(c.get(0));
 
                     }
                 }
             }
+           return Optional.absent();
 
         } catch (ClassNotFoundException e) {
-            throw new IllegalArgumentException(e);
+            throw new RuntimeException(e);
         } finally {
             pm.close();
         }

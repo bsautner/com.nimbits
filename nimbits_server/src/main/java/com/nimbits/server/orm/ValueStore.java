@@ -31,10 +31,8 @@ public class ValueStore {
     @Persistent
     private BigDecimal d;
 
-    @Persistent
+    @Persistent @Column(length=65534)
     private String data;
-
-
 
 
     public ValueStore(String entityId, Value value) {
@@ -68,6 +66,6 @@ public class ValueStore {
         if (d != null) {
             builder.doubleValue(d.doubleValue());
         }
-        return builder.lat(lat).lng(lng).timestamp(new Date(timestamp)).data(data).meta(meta).create();
+        return builder.lat(lat).lng(lng).timestamp((timestamp)).data(data).meta(meta).create();
     }
 }

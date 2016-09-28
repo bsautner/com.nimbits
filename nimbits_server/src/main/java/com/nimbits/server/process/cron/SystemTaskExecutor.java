@@ -191,7 +191,7 @@ public class SystemTaskExecutor {
 
                 if (sourcePoint.isPresent() && targetPoint.isPresent()) {
                     Value value = valueService.getCurrentValue(sourcePoint.get());
-                    Value newValue = new Value.Builder().initValue(value).timestamp(new Date()).create();// ValueFactory.createValue(value, new Date());
+                    Value newValue = new Value.Builder().initValue(value).timestamp(System.currentTimeMillis()).create();// ValueFactory.createValue(value, new Date());
                     counter++;
 
                     valueTask.process(owner, (Point) targetPoint.get(), newValue);

@@ -19,9 +19,12 @@ import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
 import org.junit.Before;
 import org.junit.Test;
+import retrofit.RetrofitError;
 
 import java.util.*;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class V3Sample1 extends NimbitsTest {
@@ -117,11 +120,14 @@ public class V3Sample1 extends NimbitsTest {
             Thread.sleep(1000);
             //make sure it was deleted
 
-            Optional<User> retrieved2 = nimbits.findUser(email2);
-            if (retrieved2.isPresent()) {
-                log("Unexpected:   " + retrieved2.get().toString());
-                error("User was not deleted");
+            try {
+                Optional<User> retrieved2 = nimbits.findUser(email2);
+            } catch (RetrofitError error) {
+                assertEquals(404, error.getResponse().getStatus());
+
             }
+
+
         } else {
             fail();
             error("got expected result: user didn't exist after adding: " + email2);
@@ -353,8 +359,10 @@ public class V3Sample1 extends NimbitsTest {
 
         snap = client.getSnapshot(snapshotTestPoint);
         log("Snapshot on a newly created point: " + snap.toString() + " timestamp:" + snap.getLTimestamp());
-        if (snap.getTimestamp().getTime() != 0) {
+
+        if (snap.getLTimestamp() != 0) {
             error("Snapshot on newly created point wasn't at unix epoch");
+
         }
 
 

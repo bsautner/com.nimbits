@@ -315,84 +315,56 @@ public class Nimbits {
     }
 
     public Optional<Point> findPointByName(String pointName) {
-        try {
-            Point p = api.findPoint(pointName);
 
-            if (p != null) {
-                return Optional.of(p);
-            } else {
-                return Optional.absent();
-            }
+        Point p = api.findPoint(pointName);
 
-        } catch (Throwable throwable) {
-            return Optional.absent();
-        }
+        return Optional.of(p);
+
 
     }
 
     public Optional<Category> findCategory(String name) {
 
-        try {
-            return Optional.of(api.findCategory(name, EntityType.category.getCode()));
-        } catch (Throwable e) {
 
-            return Optional.absent();
-        }
+        return Optional.of(api.findCategory(name, EntityType.category.getCode()));
+
 
     }
 
     public Optional<WebHook> findWebHook(String name) {
 
-        try {
-            return Optional.of(api.findWebHook(name, EntityType.webhook.getCode()));
-        } catch (Throwable e) {
 
-            return Optional.absent();
-        }
+        return Optional.of(api.findWebHook(name, EntityType.webhook.getCode()));
+
 
     }
 
     public Optional<Subscription> findSubscription(String name) {
 
-        try {
-            return Optional.of(api.findSubscription(name, EntityType.subscription.getCode()));
-        } catch (Throwable e) {
+        return Optional.of(api.findSubscription(name, EntityType.subscription.getCode()));
 
-            return Optional.absent();
-        }
 
     }
 
     public Optional<Sync> findSync(String name) {
 
-        try {
-            return Optional.of(api.findSync(name, EntityType.sync.getCode()));
-        } catch (Throwable e) {
 
-            return Optional.absent();
-        }
+        return Optional.of(api.findSync(name, EntityType.sync.getCode()));
+
 
     }
 
     public Optional<Calculation> findCalculation(String name) {
 
-        try {
-            return Optional.of(api.findCalculation(name, EntityType.calculation.getCode()));
-        } catch (Throwable e) {
 
-            return Optional.absent();
-        }
+            return Optional.of(api.findCalculation(name, EntityType.calculation.getCode()));
 
     }
 
     public Optional<Instance> findInstance(String name) {
 
-        try {
-            return Optional.of(api.findInstance(name, EntityType.instance.getCode()));
-        } catch (Throwable e) {
 
-            return Optional.absent();
-        }
+            return Optional.of(api.findInstance(name, EntityType.instance.getCode()));
 
     }
 
@@ -400,40 +372,11 @@ public class Nimbits {
 
     public Optional<Schedule> findSummary(String name) {
 
-        try {
+
             return Optional.of(api.findSchedule(name, EntityType.schedule.getCode()));
-        } catch (Throwable e) {
 
-            return Optional.absent();
-        }
 
     }
-
-
-    public Optional<String> getFile(String id) {
-        try {
-            String s = api.getFile(id);
-            return Optional.of(s);
-        } catch (Exception e) {
-            return Optional.absent();
-        }
-
-    }
-
-    public void deleteFile(String id) {
-        api.deleteFile(id, new Callback<Void>() {
-            @Override
-            public void success(Void aVoid, Response response) {
-
-            }
-
-            @Override
-            public void failure(RetrofitError retrofitError) {
-
-            }
-        });
-    }
-
 
 
 
@@ -454,12 +397,9 @@ public class Nimbits {
     }
 
     public Optional<User> findUser(String email) {
-        try {
-            return Optional.of(api.findUser(email, EntityType.user.getCode()));
-        } catch (Throwable e) {
 
-            return Optional.absent();
-        }
+            return Optional.of(api.findUser(email, EntityType.user.getCode()));
+
 
     }
 

@@ -102,7 +102,7 @@ public class SummaryService {
 
                 valueTask.process(user, target, value);
                 summary.setLastProcessed(new Date());
-                entityService.addUpdateEntity(valueService, user, summary);
+                entityService.addUpdateEntity(user, summary);
 
 
             }

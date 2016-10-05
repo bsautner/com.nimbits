@@ -197,7 +197,7 @@ public class SystemTaskExecutor {
                     valueTask.process(owner, (Point) targetPoint.get(), newValue);
                 } else {
                     schedule.setEnabled(false);
-                    entityService.addUpdateEntity(valueService, owner, schedule);
+                    entityService.addUpdateEntity(owner, schedule);
                 }
 
 

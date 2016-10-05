@@ -39,11 +39,11 @@ public abstract class NimbitsTest {
     @After
     public void tearDown() throws Exception {
 
-        List<Entity> entityList = nimbits.getChildren(user);
-        for (Entity entity : entityList) {
-            log("teardown deletinging child: " + entity.getName().getValue());
-            // nimbits.deleteEntity(entity);
-        }
+//        List<Entity> entityList = nimbits.getChildren(user);
+//        for (Entity entity : entityList) {
+//            log("teardown deletinging child: " + entity.getName().getValue());
+//             nimbits.deleteEntity(entity);
+//        }
 
 
     }

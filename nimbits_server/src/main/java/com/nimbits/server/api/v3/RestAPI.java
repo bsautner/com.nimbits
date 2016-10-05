@@ -137,11 +137,9 @@ public class RestAPI {
 
         if (parentOptional.isPresent()) {
             Entity parent = parentOptional.get();
-            //  EntityType type = e.getEntityType();
-            //  Entity newEntity = (Entity) gson.fromJson(json, type.getClz());
             newEntity.setParent(parent.getId());
             newEntity.setOwner(user.getId());
-            Entity stored = entityService.addUpdateEntity(valueService, user, newEntity);
+            Entity stored = entityService.addUpdateEntity(user, newEntity);
 
             return new ResponseEntity<>(gson.toJson(stored), HttpStatus.OK);
 
@@ -300,7 +298,8 @@ public class RestAPI {
 
             Optional<Entity> optional = entityDao.getEntity(user, uuid, EntityType.point);
             if (optional.isPresent()) {
-                String chartData = valueService.getChartTable(user, optional.get(), timespan, count, mask);
+                List<Entity> children = entityDao.getChildren(user, Collections.singletonList(optional.get()));
+                String chartData = valueService.getChartTable(user, optional.get(), children, timespan, count, mask);
                 return new ResponseEntity<>(chartData, HttpStatus.OK);
             }
             else {
@@ -513,7 +512,7 @@ public class RestAPI {
         EntityType type = getEntityType(json);
         Entity entity = (Entity) gson.fromJson(json, type.getClz());
 
-        entityService.addUpdateEntity(valueService, user, entity);
+        entityService.addUpdateEntity(user, entity);
         return new ResponseEntity(HttpStatus.OK);
 
 
@@ -532,7 +531,7 @@ public class RestAPI {
 
             } else {
 
-                entityService.addUpdateEntity(valueService, user, update);
+                entityService.addUpdateEntity(user, update);
             }
             return new ResponseEntity(HttpStatus.OK);
         } else {

@@ -37,12 +37,14 @@ public class EntityService {
 
 
     private final EntityDao entityDao;
+    private final ValueService valueService;
 
 
     @Autowired
-    public EntityService(EntityDao entityDao) {
+    public EntityService(EntityDao entityDao, ValueService valueService) {
 
         this.entityDao = entityDao;
+        this.valueService = valueService;
 
     }
 
@@ -67,7 +69,7 @@ public class EntityService {
     }
 
 
-    public Entity addUpdateEntity(final ValueService valueService, final User user, Entity entity) {
+    public Entity addUpdateEntity(final User user, Entity entity) {
 
 
         Entity created = entityDao.addUpdateEntity(user, entity);

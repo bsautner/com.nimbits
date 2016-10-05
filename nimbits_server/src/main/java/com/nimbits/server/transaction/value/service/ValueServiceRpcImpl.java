@@ -69,7 +69,8 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
     @Override
     public String getChartTable(User user, Entity entity, Integer countParam) {
         Optional<Integer> count = (countParam != null && countParam > 0) ? Optional.of(countParam) : Optional.<Integer>absent();
-        return valueService.getChartTable(user, entity, Optional.<Range<Long>>absent(), count, Optional.<String>absent());
+        List<Entity> children = entityDao.getChildren(user, Collections.singletonList(entity));
+        return valueService.getChartTable(user, entity, children, Optional.<Range<Long>>absent(), count, Optional.<String>absent());
     }
 
     @Override

@@ -158,7 +158,7 @@ public class ValueTask {
 
             if (point.isIdleAlarmOn() && point.idleAlarmSent()) {
                 point.setIdleAlarmSent(false);
-                entityService.addUpdateEntity(valueService, u, point);
+                entityService.addUpdateEntity(u, point);
             }
 
 

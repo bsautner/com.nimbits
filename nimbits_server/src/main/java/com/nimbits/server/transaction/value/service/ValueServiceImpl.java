@@ -47,18 +47,18 @@ import java.util.*;
 public class ValueServiceImpl implements ValueService {
 
     private final ValueDao valueDao;
-    private final EntityDao entityDao;
+
     @Autowired
-    public ValueServiceImpl(ValueDao valueDao, EntityDao entityDao) {
+    public ValueServiceImpl(ValueDao valueDao) {
 
         this.valueDao = valueDao;
-        this.entityDao = entityDao;
+
     }
 
 
     @Override
-    public String getChartTable(User user, Entity entity, Optional<Range<Long>> timespan, Optional<Integer> count, Optional<String> mask) {
-        return createChart(user, entity, timespan, count, mask);
+    public String getChartTable(User user, Entity entity, List<Entity> children, Optional<Range<Long>> timespan, Optional<Integer> count, Optional<String> mask) {
+        return createChart(user, entity, children, timespan, count, mask);
 
     }
 
@@ -160,10 +160,10 @@ public class ValueServiceImpl implements ValueService {
     }
 
 
-    private String createChart(User user, Entity entity, Optional<Range<Long>> timespan, Optional<Integer> count, Optional<String> mask) {
+    private String createChart(User user, Entity entity, List<Entity> children, Optional<Range<Long>> timespan, Optional<Integer> count, Optional<String> mask) {
 
 
-        final List<Entity> list = getList(user, entity);
+        final List<Entity> list = getList(user, entity, children);
 
         ChartDTO dto = createChartData(list, timespan, count, mask);
 
@@ -175,13 +175,13 @@ public class ValueServiceImpl implements ValueService {
     }
 
 
-    private List<Entity> getList(User user, Entity entity) {
+    private List<Entity> getList(User user, Entity entity,  List<Entity> children) {
         final List<Entity> list;
 
         if (entity.getEntityType().equals(EntityType.point)) {
             list = Collections.singletonList(entity);
         } else if (entity.getEntityType().equals(EntityType.category)) {
-            List<Entity> children = entityDao.getChildren(user, Collections.singletonList(entity));
+
             list = new ArrayList<>(children.size());
             for (Entity child : children) {
                 if (child.getEntityType().equals(EntityType.point)) {

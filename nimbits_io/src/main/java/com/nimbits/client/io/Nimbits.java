@@ -418,6 +418,8 @@ public class Nimbits {
         });
     }
 
+
+
     /**
      * @param entity   a valid entity with a key and updated values
      * @param callback returnes success or error

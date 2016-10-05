@@ -39,7 +39,7 @@ public interface ValueService  {
 
     Value getCurrentValue(Entity p);
 
-    String getChartTable(User user, Entity entity, Optional<Range<Long>> timespan, Optional<Integer> count, Optional<String> mask);
+    String getChartTable(User user, Entity entity, List<Entity> children, Optional<Range<Long>> timespan, Optional<Integer> count, Optional<String> mask);
 
     AlertType getAlertType(final Point point, final Value value);
 

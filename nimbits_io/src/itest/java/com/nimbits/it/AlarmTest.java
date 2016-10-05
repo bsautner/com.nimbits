@@ -44,6 +44,7 @@ public class AlarmTest extends NimbitsTest {
     private void doTest(boolean idleSetting, boolean lowSetting, boolean highSetting) throws InterruptedException {
 
         String pointName = UUID.randomUUID().toString();
+
         final boolean[] gotCallback = {false};
 
         Point point;
@@ -70,8 +71,6 @@ public class AlarmTest extends NimbitsTest {
         point = serversVersion.get();
         assertEquals(pointName, point.getName().getValue());
 
-
-
         point.setIdleAlarmOn(idleSetting);
         point.setLowAlarmOn(lowSetting);
         point.setHighAlarmOn(highSetting);
@@ -82,6 +81,7 @@ public class AlarmTest extends NimbitsTest {
 
 
         nimbits.updateEntity(point, callback);
+
         while (! gotCallback[0]) {
             Thread.sleep(1); //wait for callback
         }
@@ -96,11 +96,4 @@ public class AlarmTest extends NimbitsTest {
     }
 
 
-
-    private void verify(Point local, Point remote) {
-        assertEquals(local.isIdleAlarmOn(), remote.isIdleAlarmOn());
-        assertEquals(local.isIdleAlarmOn(), remote.isIdleAlarmOn());
-        assertEquals(local.isIdleAlarmOn(), remote.isIdleAlarmOn());
-
-    }
 }

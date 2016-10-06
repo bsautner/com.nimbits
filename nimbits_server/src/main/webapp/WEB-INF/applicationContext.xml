@@ -74,13 +74,14 @@
     </bean>
 
 
+    <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
+        <property name="corePoolSize" value="5" />
+        <property name="maxPoolSize" value="1000" />
+        <property name="queueCapacity" value="250" />
+    </bean>
 
-
-    <task:scheduled-tasks scheduler="myScheduler">
-        <task:scheduled ref="systemTaskExecutor" method="heartbeat" fixed-delay="5000"/>
-    </task:scheduled-tasks>
-
-    <task:scheduler id="myScheduler" pool-size="10"/>
-
+    <!--<bean id="SubscriptionService" class="com.nimbits.server.transaction.subscription.SubscriptionService">-->
+        <!--<constructor-arg ref="taskExecutor" />-->
+    <!--</bean>-->
 
 </beans>

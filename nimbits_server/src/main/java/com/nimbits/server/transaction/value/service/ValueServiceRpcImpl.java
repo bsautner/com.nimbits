@@ -88,13 +88,11 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
 
         Optional<Entity>  entityOptional = entityDao.getEntity(user, point.getId(), EntityType.point);
 
-        try {
-            if (entityOptional.isPresent()) {
-                valueTask.process(user, (Point) entityOptional.get(), value);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+
+        if (entityOptional.isPresent()) {
+            valueTask.process(user, (Point) entityOptional.get(), value);
         }
+
 
 
     }

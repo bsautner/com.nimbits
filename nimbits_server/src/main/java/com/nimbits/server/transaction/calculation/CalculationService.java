@@ -27,6 +27,7 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.math.MathEvaluator;
 import com.nimbits.server.math.MathEvaluatorImpl;
+import com.nimbits.server.process.task.ValueGeneratedListener;
 import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.value.service.ValueService;
@@ -40,11 +41,12 @@ import java.io.IOException;
 public class CalculationService   {
 
 
-    private MathEvaluator m;
+    private  MathEvaluator m;
 
     private EntityDao entityDao;
 
     private ValueService valueService;
+
 
     @Autowired
     public CalculationService(EntityDao entityDao, ValueService valueService) {
@@ -53,10 +55,11 @@ public class CalculationService   {
         this.valueService = valueService;
 
 
+
     }
 
 
-    public void process(ValueTask valueTask, final User u, final Point point, final Value value) throws IOException {
+    public void process(final User u, final Point point, final Value value, final ValueGeneratedListener valueGeneratedListener) {
 
         final Optional<Entity> optional = entityDao.getEntityByTrigger(u, point, EntityType.calculation);
         if (optional.isPresent()) {
@@ -74,7 +77,8 @@ public class CalculationService   {
                     Value v = new Value.Builder().initValue(result.get()).timestamp(value.getLTimestamp()).create();
 
 
-                    valueTask.process(u, (Point) target.get(), v);
+
+                    valueGeneratedListener.newValue(u, (Point) target.get(), v);
 
                 }
             }

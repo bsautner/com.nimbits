@@ -25,6 +25,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.server.process.task.ValueGeneratedListener;
 import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.entity.EntityService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
@@ -47,6 +48,7 @@ public class SummaryService {
     private final EntityService entityService;
     private final SubscriptionService subscriptionService;
 
+
     @Autowired
     public SummaryService(final EntityDao entityDao,
                           final ValueService valueService,
@@ -58,10 +60,9 @@ public class SummaryService {
         this.entityService = entityService;
         this.subscriptionService = subscriptionService;
 
-
     }
 
-    public void process(ValueTask valueTask, final User user, final Point point, final Value v) throws IOException {
+    public void process(final User user, final Point point, ValueGeneratedListener valueGeneratedListener)  {
         final Optional<Entity> optional = entityDao.getEntityByTrigger(user, point, EntityType.summary);
         if (optional.isPresent()) {
 
@@ -100,7 +101,7 @@ public class SummaryService {
 
                 final Point target = (Point) entityDao.getEntity(user, summary.getTarget(), EntityType.point).get();
 
-                valueTask.process(user, target, value);
+                valueGeneratedListener.newValue(user, target, value);
                 summary.setLastProcessed(new Date());
                 entityService.addUpdateEntity(user, summary);
 

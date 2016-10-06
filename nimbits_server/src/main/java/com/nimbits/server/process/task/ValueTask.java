@@ -30,6 +30,7 @@ import com.nimbits.server.transaction.value.service.ValueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -43,24 +44,26 @@ public class ValueTask {
     private final Logger logger = LoggerFactory.getLogger(ValueTask.class.getName());
 
     private EntityService entityService;
-    
+
     private CalculationService calculationService;
 
     private SummaryService summaryService;
-    
+
     private SyncService syncService;
-    
+
     private ValueService valueService;
-    
+
     private SubscriptionService subscriptionService;
-    
+
     private DataProcessor dataProcessor;
+
+    private TaskExecutor taskExecutor;
 
 
 
     @Autowired
     public ValueTask(EntityService entityService, CalculationService calculationService, SummaryService summaryService, SyncService syncService,
-                     ValueService valueService, SubscriptionService subscriptionService, DataProcessor dataProcessor) {
+                     ValueService valueService, SubscriptionService subscriptionService, DataProcessor dataProcessor, TaskExecutor taskExecutor) {
         this.entityService = entityService;
         this.calculationService = calculationService;
         this.summaryService = summaryService;
@@ -68,92 +71,118 @@ public class ValueTask {
         this.valueService = valueService;
         this.subscriptionService = subscriptionService;
         this.dataProcessor = dataProcessor;
+        this.taskExecutor = taskExecutor;
+
     }
 
-    public void process(final User user, final Point point, Value value) throws IOException {
+    public void process(final User user, final Point point, Value value) {
 
-        final boolean ignored = false;
-        boolean ignoredByCompression = false;
-        final boolean ignoredByDate = dataProcessor.ignoreDataByExpirationDate(point, value, ignored);
-        final Value sample = valueService.getCurrentValue(point);
+        taskExecutor.execute(new ValueRunner(user, point, value, new ValueGeneratedListener() {
+            @Override
+            public void newValue(User u, Point p, Value v) {
+                process(u, p, v);
+            }
+        }));
+    }
 
+    private class ValueRunner implements Runnable {
 
+        private final User user;
+        private final Point point;
+        private Value value;
+        private final ValueGeneratedListener valueGeneratedListener;
 
-        if (value.getLTimestamp() > sample.getLTimestamp()) {
-            ignoredByCompression = dataProcessor.ignoreByFilter(point, sample, value);
+        public ValueRunner(User user, Point point, Value value, ValueGeneratedListener valueGeneratedListener) {
+            this.user = user;
+            this.point = point;
+            this.value = value;
+            this.valueGeneratedListener = valueGeneratedListener;
+
         }
 
+        public void run() {
 
-        Value previousValue;
-
-        if (!ignoredByDate && !ignoredByCompression) {
-
-            switch (point.getPointType()) {
-                case basic:
-
-                    valueService.recordValues(user, point, Collections.singletonList(value));
-                    break;
+            final boolean ignored = false;
+            boolean ignoredByCompression = false;
+            final boolean ignoredByDate = dataProcessor.ignoreDataByExpirationDate(point, value, ignored);
+            final Value sample = valueService.getCurrentValue(point);
 
 
-                case backend:
-                    valueService.recordValues(user, point, Collections.singletonList(value));
-                    break;
-                case cumulative:
-                    previousValue = valueService.getCurrentValue(point);
-
-
-                    if (previousValue.getLTimestamp()  < value.getLTimestamp()) {
-                        value = new Value.Builder().initValue(value).doubleValue(value.getDoubleValue() + previousValue.getDoubleValue()).create();
-                        valueService.recordValues(user, point, Collections.singletonList(value));
-                    }
-                    break;
-                case timespan:
-                    valueService.recordValues(user, point, Collections.singletonList(value));
-                    break;
-                case flag:
-                    Integer whole = BigDecimal.valueOf(value.getDoubleValue()).intValue();
-                    double d = whole != 0 ? 1.0 : 0.0;
-                    value = new Value.Builder().initValue(value).doubleValue(d).create();
-                    valueService.recordValues(user, point, Collections.singletonList(value));
-                    break;
-                case high:
-                    previousValue = valueService.getCurrentValue(point);
-
-                    if (value.getDoubleValue() > previousValue.getDoubleValue()) {
-                        valueService.recordValues(user, point, Collections.singletonList(value));
-                    }
-
-                    break;
-                case low:
-                    previousValue = valueService.getCurrentValue(point);
-
-                    if (value.getDoubleValue() < previousValue.getDoubleValue()) {
-                        valueService.recordValues(user, point, Collections.singletonList(value));
-                    }
-
-                    break;
-                default:
-                    return;
-
+            if (value.getLTimestamp() > sample.getLTimestamp()) {
+                ignoredByCompression = dataProcessor.ignoreByFilter(point, sample, value);
             }
 
 
-            final AlertType t = valueService.getAlertType(point, value);
-            final Value v = new Value.Builder().initValue(value).timestamp(new Date()).alertType(t).create();
-            completeRequest(user, point, v);
+            Value previousValue;
+
+            if (!ignoredByDate && !ignoredByCompression) {
+
+                switch (point.getPointType()) {
+                    case basic:
+
+                        valueService.recordValues(user, point, Collections.singletonList(value));
+                        break;
 
 
-        } else {
-            logger.info("Value was ignored by date or compression setting");
+                    case backend:
+                        valueService.recordValues(user, point, Collections.singletonList(value));
+                        break;
+                    case cumulative:
+                        previousValue = valueService.getCurrentValue(point);
+
+
+                        if (previousValue.getLTimestamp() < value.getLTimestamp()) {
+                            value = new Value.Builder().initValue(value).doubleValue(value.getDoubleValue() + previousValue.getDoubleValue()).create();
+                            valueService.recordValues(user, point, Collections.singletonList(value));
+                        }
+                        break;
+                    case timespan:
+                        valueService.recordValues(user, point, Collections.singletonList(value));
+                        break;
+                    case flag:
+                        Integer whole = BigDecimal.valueOf(value.getDoubleValue()).intValue();
+                        double d = whole != 0 ? 1.0 : 0.0;
+                        value = new Value.Builder().initValue(value).doubleValue(d).create();
+                        valueService.recordValues(user, point, Collections.singletonList(value));
+                        break;
+                    case high:
+                        previousValue = valueService.getCurrentValue(point);
+
+                        if (value.getDoubleValue() > previousValue.getDoubleValue()) {
+                            valueService.recordValues(user, point, Collections.singletonList(value));
+                        }
+
+                        break;
+                    case low:
+                        previousValue = valueService.getCurrentValue(point);
+
+                        if (value.getDoubleValue() < previousValue.getDoubleValue()) {
+                            valueService.recordValues(user, point, Collections.singletonList(value));
+                        }
+
+                        break;
+                    default:
+                        return;
+
+                }
+
+
+                final AlertType t = valueService.getAlertType(point, value);
+                final Value v = new Value.Builder().initValue(value).timestamp(new Date()).alertType(t).create();
+                completeRequest(user, point, v);
+
+
+            } else {
+                logger.info("Value was ignored by date or compression setting");
+            }
+
+
         }
 
 
-    }
-
-
-    private void completeRequest(User u,
-                                 Point point,
-                                 Value value) throws IOException {
+        private void completeRequest(User u,
+                                     Point point,
+                                     Value value) {
 
 
             if (point.isIdleAlarmOn() && point.idleAlarmSent()) {
@@ -162,16 +191,15 @@ public class ValueTask {
             }
 
 
-            calculationService.process(this, u, point, value);
+            calculationService.process(u, point, value, valueGeneratedListener);
 
-            summaryService.process(this, u, point, value);
+            summaryService.process(u, point, valueGeneratedListener);
 
             syncService.process(u, point, value);
 
             subscriptionService.process(u, point, value);
 
 
-
-
+        }
     }
 }

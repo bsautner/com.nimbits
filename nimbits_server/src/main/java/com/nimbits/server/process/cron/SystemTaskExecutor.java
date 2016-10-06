@@ -38,6 +38,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.jdo.PersistenceManager;
@@ -52,7 +53,7 @@ import java.util.*;
 public class SystemTaskExecutor {
     private final Logger logger = LoggerFactory.getLogger(SystemTaskExecutor.class.getName());
 
-    private TaskExecutor taskExecutor;
+    // private TaskExecutor taskExecutor;
 
     private EntityDao entityDao;
 
@@ -72,10 +73,13 @@ public class SystemTaskExecutor {
 
 
     @Autowired
-    public SystemTaskExecutor(PersistenceManagerFactory persistenceManagerFactory, UserDao userDao,  SubscriptionService subscriptionService, TaskExecutor taskExecutor, EntityDao entityDao, UserService userService, ValueService valueService, ValueTask valueTask, EntityService entityService) {
+    public SystemTaskExecutor(PersistenceManagerFactory persistenceManagerFactory, UserDao userDao,
+                              SubscriptionService subscriptionService,
+                              EntityDao entityDao, UserService userService, ValueService valueService,
+                              ValueTask valueTask, EntityService entityService) {
         this.persistenceManagerFactory = persistenceManagerFactory;
         this.subscriptionService = subscriptionService;
-        this.taskExecutor = taskExecutor;
+
         this.entityDao = entityDao;
         this.userService = userService;
         this.valueService = valueService;
@@ -86,58 +90,27 @@ public class SystemTaskExecutor {
 
 
 
-    private class SystemTask implements Runnable {
 
+    @Scheduled(initialDelay=1000, fixedRate=5000)
+    private void processIdlePoints() throws IOException {
 
-        SystemTask() {
-
-        }
-
-        public void run() {
-
-
-
-            processIdlePoints();
-            try {
-                processSchedules();
-            } catch (IOException e) {
-                logger.error("Error Processing Schedules", e);
-            }
-
-
-        }
-
-    }
-
-
-    public void heartbeat() {
-        logger.info("nimbits heartbeat - running background tasks");
-        taskExecutor.execute(new SystemTask());
-
-    }
-
-
-
-    private void processIdlePoints()  {
 
         final PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-        Transaction tx = null;
+
 
         try {
 
-            final Query q = pm
-                    .newQuery(PointEntity.class);
-            q.setFilter("idleAlarmOn == k && idleAlarmSent  == c");
+            final Query q = pm.newQuery(PointEntity.class);
+            q.setFilter("idleAlarmOn == k && idleAlarmSent == c");
             q.declareParameters("Boolean k, Boolean c");
-            tx = pm.currentTransaction();
+            //  tx = pm.currentTransaction();
 
-
-            tx.begin();
+            //  tx.begin();
 
 
             final List<Point> result = (List<Point>) q.execute(true, false);
             for (Point p : result) {
-                logger.info("processing idle point " + p.getName().getValue());
+
                 if (p.isIdleAlarmOn() && ! p.idleAlarmSent() && p.getIdleSeconds() > 0) {
 
                     Value value = valueService.getSnapshot(p);
@@ -145,59 +118,64 @@ public class SystemTaskExecutor {
                     if (value.getLTimestamp() <= (System.currentTimeMillis() - idleDuration)) {
                         Optional<User> userOptional = userDao.getUserById(p.getOwner());
                         if (userOptional.isPresent()) {
+                            Transaction transaction = pm.currentTransaction();
+                            try {
+
+                                transaction.begin();
+                                Point update = pm.getObjectById(PointEntity.class, p.getId());
+                                update.setIdleAlarmSent(true);
+                                transaction.commit();
+                            } catch (Throwable throwable) {
+                                transaction.rollback();
+                            }
+
+                            //  p.setIdleAlarmSent(true);
                             subscriptionService.process(userOptional.get(), p, new Value.Builder().initValue(value).alertType(AlertType.IdleAlert).create());
-                            p.setIdleAlarmSent(true);
+
                         }
-
-
                     }
-
                 }
             }
 
-            tx.commit();
-
-        } catch (Exception ex) {
-
-            logger.error("rolling back heartbeat due to errors", ex);
 
         } finally {
-            if (tx != null && tx.isActive()) {
 
-                tx.rollback();
-            }
             pm.close();
         }
 
 
     }
 
-    private long processSchedules() throws IOException {
+    @Scheduled(initialDelay=2000, fixedRate=5000)
+    private void processSchedules() throws IOException {
 
         List<Schedule> schedules = entityDao.getSchedules();
 
-        long counter = 0;
         for (Schedule schedule : schedules) {
 
             if (schedule.getLastProcessed() + schedule.getInterval() < new Date().getTime()) {
 
-                User owner = userService.getUserByKey(schedule.getOwner()).get();
+                Optional<User> ownerOptional = userService.getUserByKey(schedule.getOwner());
 
-                schedule.setLastProcessed(new Date().getTime());
+                if (ownerOptional.isPresent()) {
+                    User owner = ownerOptional.get();
 
-                entityDao.addUpdateEntity(owner, schedule);
-                Optional<Entity> sourcePoint = entityDao.getEntity(owner, schedule.getSource(), EntityType.point);
-                Optional<Entity> targetPoint = entityDao.getEntity(owner, schedule.getTarget(), EntityType.point);
+                    schedule.setLastProcessed(new Date().getTime());
 
-                if (sourcePoint.isPresent() && targetPoint.isPresent()) {
-                    Value value = valueService.getCurrentValue(sourcePoint.get());
-                    Value newValue = new Value.Builder().initValue(value).timestamp(System.currentTimeMillis()).create();// ValueFactory.createValue(value, new Date());
-                    counter++;
+                    entityDao.addUpdateEntity(owner, schedule);
+                    Optional<Entity> sourcePoint = entityDao.getEntity(owner, schedule.getSource(), EntityType.point);
+                    Optional<Entity> targetPoint = entityDao.getEntity(owner, schedule.getTarget(), EntityType.point);
 
-                    valueTask.process(owner, (Point) targetPoint.get(), newValue);
-                } else {
-                    schedule.setEnabled(false);
-                    entityService.addUpdateEntity(owner, schedule);
+                    if (sourcePoint.isPresent() && targetPoint.isPresent()) {
+                        Value value = valueService.getCurrentValue(sourcePoint.get());
+                        Value newValue = new Value.Builder().initValue(value).timestamp(System.currentTimeMillis()).create();// ValueFactory.createValue(value, new Date());
+
+
+                        valueTask.process(owner, (Point) targetPoint.get(), newValue);
+                    } else {
+                        schedule.setEnabled(false);
+                        entityService.addUpdateEntity(owner, schedule);
+                    }
                 }
 
 
@@ -205,7 +183,7 @@ public class SystemTaskExecutor {
 
 
         }
-        return counter;
+
     }
 
 }

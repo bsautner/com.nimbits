@@ -23,6 +23,7 @@ import com.nimbits.client.enums.EntityType;
 
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
@@ -103,34 +104,28 @@ public class SystemTaskExecutor {
             final Query q = pm.newQuery(PointEntity.class);
             q.setFilter("idleAlarmOn == k && idleAlarmSent == c");
             q.declareParameters("Boolean k, Boolean c");
+
             //  tx = pm.currentTransaction();
 
             //  tx.begin();
 
 
             final List<Point> result = (List<Point>) q.execute(true, false);
-            for (Point p : result) {
+            for (Point entity : result) {
+                Point model = new PointModel.Builder().init(entity).create();
 
-                if (p.isIdleAlarmOn() && ! p.idleAlarmSent() && p.getIdleSeconds() > 0) {
+                if (model.isIdleAlarmOn() && ! model.idleAlarmSent() && model.getIdleSeconds() > 0) {
 
-                    Value value = valueService.getSnapshot(p);
-                    long idleDuration = p.getIdleSeconds() * 1000;
+                    Value value = valueService.getSnapshot(model);
+                    long idleDuration = model.getIdleSeconds() * 1000;
                     if (value.getLTimestamp() <= (System.currentTimeMillis() - idleDuration)) {
-                        Optional<User> userOptional = userDao.getUserById(p.getOwner());
+                        Optional<User> userOptional = userDao.getUserById(model.getOwner());
                         if (userOptional.isPresent()) {
-                            Transaction transaction = pm.currentTransaction();
-                            try {
+                            entityDao.setIdleAlarmSentFlag(model.getId(), true);
 
-                                transaction.begin();
-                                Point update = pm.getObjectById(PointEntity.class, p.getId());
-                                update.setIdleAlarmSent(true);
-                                transaction.commit();
-                            } catch (Throwable throwable) {
-                                transaction.rollback();
-                            }
 
                             //  p.setIdleAlarmSent(true);
-                            subscriptionService.process(userOptional.get(), p, new Value.Builder().initValue(value).alertType(AlertType.IdleAlert).create());
+                            subscriptionService.process(userOptional.get(), model, new Value.Builder().initValue(value).alertType(AlertType.IdleAlert).create());
 
                         }
                     }

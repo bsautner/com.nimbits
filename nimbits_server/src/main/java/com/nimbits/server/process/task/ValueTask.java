@@ -23,6 +23,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.server.data.DataProcessor;
 import com.nimbits.server.transaction.calculation.CalculationService;
 import com.nimbits.server.transaction.entity.EntityService;
+import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.subscription.SubscriptionService;
 import com.nimbits.server.transaction.summary.SummaryService;
 import com.nimbits.server.transaction.sync.SyncService;
@@ -45,6 +46,8 @@ public class ValueTask {
 
     private EntityService entityService;
 
+    private EntityDao entityDao;
+
     private CalculationService calculationService;
 
     private SummaryService summaryService;
@@ -62,7 +65,7 @@ public class ValueTask {
 
 
     @Autowired
-    public ValueTask(EntityService entityService, CalculationService calculationService, SummaryService summaryService, SyncService syncService,
+    public ValueTask(EntityDao entityDao, EntityService entityService, CalculationService calculationService, SummaryService summaryService, SyncService syncService,
                      ValueService valueService, SubscriptionService subscriptionService, DataProcessor dataProcessor, TaskExecutor taskExecutor) {
         this.entityService = entityService;
         this.calculationService = calculationService;
@@ -72,6 +75,7 @@ public class ValueTask {
         this.subscriptionService = subscriptionService;
         this.dataProcessor = dataProcessor;
         this.taskExecutor = taskExecutor;
+        this.entityDao = entityDao;
 
     }
 
@@ -186,8 +190,7 @@ public class ValueTask {
 
 
             if (point.isIdleAlarmOn() && point.idleAlarmSent()) {
-                point.setIdleAlarmSent(false);
-                entityService.addUpdateEntity(u, point);
+                entityDao.setIdleAlarmSentFlag(point.getId(), false);
             }
 
 

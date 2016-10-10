@@ -32,6 +32,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.server.communication.mail.EmailService;
 import com.nimbits.server.gson.GsonFactory;
+import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.ValueDao;
@@ -72,6 +73,7 @@ public class SubscriptionService  {
 
     private final ValueDao valueDao;
 
+
     private final TaskExecutor taskExecutor;
 
     @Autowired
@@ -82,6 +84,8 @@ public class SubscriptionService  {
         this.userService = userService;
         this.valueDao = valueDao;
         this.taskExecutor = taskExecutor;
+
+
     }
 
     public void process(final User user, final Point point, final Value v)   {
@@ -122,7 +126,7 @@ public class SubscriptionService  {
 
 
             final List<Entity> subscriptions = entityDao.getSubscriptionsToEntity(user, point);
-            logger.info("subscription service processing " + subscriptions.size());
+            logger.info(String.format("subscription service processing point: %s count: %s",  point.getName(), subscriptions.size()));
             for (final Entity entity : subscriptions) {
 
                 Subscription subscription = (Subscription) entity;
@@ -367,7 +371,19 @@ public class SubscriptionService  {
 
                     if (optional.isPresent()) {
                         Value r = new Value.Builder().data(result).create();
-                        valueDao.storeValues(optional.get(), Collections.singletonList(r));
+                        Optional<Entity> targetOptional = entityDao.getEntity(user, webHook.getDownloadTarget(), EntityType.point);
+                        if (targetOptional.isPresent()) {
+                           // valueTask.process(user, (Point) targetOptional.get(), r );
+                            Point target = (Point) targetOptional.get();
+                            valueDao.storeValues(target, Collections.singletonList(r));
+
+                            if (target.isIdleAlarmOn() && target.idleAlarmSent()) {
+                                entityDao.setIdleAlarmSentFlag(target.getId(), false);
+//                                target.setIdleAlarmSent(false);
+//                                entityDao.addUpdateEntity(user, target);
+                                //entityService.addUpdateEntity(user, point);
+                            }
+                        }
                     }
 
 

@@ -75,6 +75,20 @@ public class EntityDao {
 
     }
 
+    public void setIdleAlarmSentFlag(String id, boolean sent) {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+        Transaction tx = pm.currentTransaction();
+        try {
+            tx.begin();
+            Point update = pm.getObjectById(PointEntity.class, id);
+            update.setIdleAlarmSent(sent);
+            tx.commit();
+        } finally {
+            pm.close();
+        }
+
+    }
+
 
 
     //@Cacheable(cacheNames = "entity")

@@ -31,7 +31,7 @@ public class ValueStore {
     @Persistent
     private BigDecimal d;
 
-    @Persistent @Column(length=65534)
+    @Persistent @Column(jdbcType = "CLOB")
     private String data;
 
 

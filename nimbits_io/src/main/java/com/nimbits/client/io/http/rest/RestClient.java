@@ -171,4 +171,8 @@ public interface RestClient {
 
     @PUT(API + "/{uuid}")
     void updateEntity(@Path("uuid") String uuid, @Body Entity entity, Callback<Void> callback);
+
+    @POST(API + "/{uuid}/snapshot")
+    void setSnapshot(@Path("uuid") String id, @Body Value value, Callback<Void> callback);
+
 }

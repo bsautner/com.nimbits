@@ -87,11 +87,17 @@ public class RestAPI {
             @PathVariable String uuid) throws Exception {
 
         User user = userService.getUser(authorization);
-        Point entity = (Point) entityDao.getEntity(user, uuid, EntityType.point);
-        Value value = gson.fromJson(json, Value.class);
-        valueTask.process(user, entity, value);
+        Optional<Entity> entityOptional =  entityDao.getEntity(user, uuid, EntityType.point);
 
-        return new ResponseEntity(HttpStatus.OK);
+        if (entityOptional.isPresent()) {
+            Value value = gson.fromJson(json, Value.class);
+            valueTask.process(user, (Point) entityOptional.get(), value);
+
+            return new ResponseEntity(HttpStatus.OK);
+        }
+        else {
+            return new ResponseEntity(HttpStatus.NOT_FOUND);
+        }
 
 
     }

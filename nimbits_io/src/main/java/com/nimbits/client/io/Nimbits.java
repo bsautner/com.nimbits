@@ -428,6 +428,11 @@ public class Nimbits {
         api.updateEntity(entity.getId(), entity, callback);
     }
 
+    public void setSnapshot(String pointName, Value value, Callback<Void> callback) {
+        Point p = api.findPoint(pointName);
+        api.setSnapshot(p.getId(), value, callback);
+    }
+
 
     public static class Builder {
 

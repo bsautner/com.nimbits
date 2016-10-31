@@ -191,6 +191,10 @@ public class Nimbits {
         });
     }
 
+    private void recordValuesSync(Entity entity, Value value) {
+        api.recordSnapshotSync(entity.getId(), value);
+    }
+
 
     public void recordValue(Point point, Value newValue) {
         recordValues(point, Collections.singletonList(newValue));
@@ -433,6 +437,16 @@ public class Nimbits {
         api.setSnapshot(p.getId(), value, callback);
     }
 
+
+
+    public void recordValueSync(String pointName, Value value) {
+        Optional<Point> point = findPointByName(pointName);
+        if (point.isPresent()) {
+            recordValuesSync(point.get(), value);
+        } else {
+            throw new RuntimeException("Point Not Found");
+        }
+    }
 
     public static class Builder {
 

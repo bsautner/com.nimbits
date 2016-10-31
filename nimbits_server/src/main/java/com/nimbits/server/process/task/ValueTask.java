@@ -44,8 +44,6 @@ public class ValueTask {
 
     private final Logger logger = LoggerFactory.getLogger(ValueTask.class.getName());
 
-    private EntityService entityService;
-
     private EntityDao entityDao;
 
     private CalculationService calculationService;
@@ -65,9 +63,9 @@ public class ValueTask {
 
 
     @Autowired
-    public ValueTask(EntityDao entityDao, EntityService entityService, CalculationService calculationService, SummaryService summaryService, SyncService syncService,
+    public ValueTask(EntityDao entityDao, CalculationService calculationService, SummaryService summaryService, SyncService syncService,
                      ValueService valueService, SubscriptionService subscriptionService, DataProcessor dataProcessor, TaskExecutor taskExecutor) {
-        this.entityService = entityService;
+
         this.calculationService = calculationService;
         this.summaryService = summaryService;
         this.syncService = syncService;
@@ -89,6 +87,17 @@ public class ValueTask {
         }));
     }
 
+    public void processSync(final User user, final Point point, Value value) {
+
+        ValueRunner valueRunner = new ValueRunner(user, point, value, new ValueGeneratedListener() {
+            @Override
+            public void newValue(User u, Point p, Value v) {
+                processSync(u, p, v);
+            }
+        });
+        valueRunner.run();
+    }
+
     private class ValueRunner implements Runnable {
 
         private final User user;
@@ -96,7 +105,7 @@ public class ValueTask {
         private Value value;
         private final ValueGeneratedListener valueGeneratedListener;
 
-        public ValueRunner(User user, Point point, Value value, ValueGeneratedListener valueGeneratedListener) {
+        ValueRunner(User user, Point point, Value value, ValueGeneratedListener valueGeneratedListener) {
             this.user = user;
             this.point = point;
             this.value = value;
@@ -172,7 +181,7 @@ public class ValueTask {
 
 
                 final AlertType t = valueService.getAlertType(point, value);
-                final Value v = new Value.Builder().initValue(value).timestamp(new Date()).alertType(t).create();
+                final Value v = new Value.Builder().initValue(value).timestamp(System.currentTimeMillis()).alertType(t).create();
                 completeRequest(user, point, v);
 
 

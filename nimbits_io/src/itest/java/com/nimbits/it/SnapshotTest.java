@@ -12,6 +12,7 @@ import retrofit.client.Response;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class SnapshotTest extends NimbitsTest {
@@ -31,7 +32,7 @@ public class SnapshotTest extends NimbitsTest {
 
         nimbits.addPoint(user, new PointModel.Builder().name(pointName).create());
 
-        nimbits.setSnapshot(pointName, new Value.Builder().doubleValue(11.0).create(), new Callback<Void>() {
+        nimbits.setSnapshot(pointName, new Value.Builder().timestamp(0L).doubleValue(11.0).create(), new Callback<Void>() {
             @Override
             public void success(Void aVoid, Response response) {
 
@@ -47,6 +48,7 @@ public class SnapshotTest extends NimbitsTest {
         Thread.sleep(1000);
         Value v = nimbits.getSnapshot(pointName);
         assertEquals(11.0, v.getDoubleValue(), 0.01);
+        assertTrue(v.getLTimestamp() > 0);
 
 
 

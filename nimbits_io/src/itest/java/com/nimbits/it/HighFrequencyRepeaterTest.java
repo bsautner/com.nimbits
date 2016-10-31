@@ -31,6 +31,7 @@ public class HighFrequencyRepeaterTest extends NimbitsTest {
         Point point = nimbits.addPoint(user, new PointModel.Builder().name(pointName).filterType(FilterType.fixedHysteresis).filterValue(0.5).create());
         double v = 0.0;
 
+
         for (int i = 0; i < c; i++) {
 
            if (v == 1.0) {
@@ -38,8 +39,7 @@ public class HighFrequencyRepeaterTest extends NimbitsTest {
            } else {
                v = 1.0;
            }
-           nimbits.recordValue(pointName, new Value.Builder().doubleValue(v).create());
-            Thread.sleep(5);
+           nimbits.recordValueSync(pointName, new Value.Builder().doubleValue(v).create());
 
 
 

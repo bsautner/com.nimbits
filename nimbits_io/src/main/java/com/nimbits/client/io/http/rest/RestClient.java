@@ -72,6 +72,10 @@ public interface RestClient {
     @POST(API + "/{uuid}/series")
     void recordData(@Path("uuid") String uuid, @Body List<Value> values, Callback<Void> callback);
 
+    @POST(API + "/sync/{uuid}/snapshot")
+    Void recordSnapshotSync(@Path("uuid") String uuid, @Body Value value);
+
+
     @GET(API + "/{uuid}/series")
     List<Value> getData(@Path("uuid") String uuid, @Query("start") long start, @Query("end") long end, @Query("mask") String mask);
 

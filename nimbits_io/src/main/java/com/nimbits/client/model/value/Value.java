@@ -18,7 +18,6 @@ package com.nimbits.client.model.value;
 
 
 import com.google.gson.annotations.Expose;
-import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.AlertType;
 
 import java.io.Serializable;
@@ -122,7 +121,7 @@ public class Value implements Serializable, Comparable<Value> {
     }
 
     public Long getLTimestamp() {
-        return this.t == null ? 0 : this.t;
+        return this.t == null ? System.currentTimeMillis() : this.t;
     }
 
 

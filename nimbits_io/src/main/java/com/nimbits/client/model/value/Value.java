@@ -18,7 +18,6 @@ package com.nimbits.client.model.value;
 
 
 import com.google.gson.annotations.Expose;
-import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.AlertType;
 
 import java.io.Serializable;

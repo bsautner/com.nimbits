@@ -73,6 +73,7 @@ public abstract class NimbitsTest {
 
         log("Got User:" + user.toString());
 
+
         return nimbits.getMe(true);
 
 

@@ -122,7 +122,7 @@ public class Value implements Serializable, Comparable<Value> {
     }
 
     public Long getLTimestamp() {
-        return this.t == null ? 0 : this.t;
+        return this.t == null ? System.currentTimeMillis() : this.t;
     }
 
 

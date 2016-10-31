@@ -32,7 +32,7 @@ public class SnapshotTest extends NimbitsTest {
 
         nimbits.addPoint(user, new PointModel.Builder().name(pointName).create());
 
-        nimbits.setSnapshot(pointName, new Value.Builder().timestamp(0L).doubleValue(11.0).create(), new Callback<Void>() {
+        nimbits.setSnapshot(pointName, new Value.Builder().doubleValue(11.0).create(), new Callback<Void>() {
             @Override
             public void success(Void aVoid, Response response) {
 

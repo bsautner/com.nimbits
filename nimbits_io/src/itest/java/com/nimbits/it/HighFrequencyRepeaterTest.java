@@ -46,8 +46,8 @@ public class HighFrequencyRepeaterTest extends NimbitsTest {
 
 
         }
-        System.out.println("Sleeping...");
-        Thread.sleep(5000);
+//        System.out.println("Sleeping...");
+      //  Thread.sleep(5000);
 
         List<Value> valueList = nimbits.getValues(point, c);
         for (Value vx : valueList) {

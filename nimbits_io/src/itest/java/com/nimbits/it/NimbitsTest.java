@@ -20,7 +20,7 @@ public abstract class NimbitsTest {
     public User user;
 
     static final String EMAIL_ADDRESS = "r@r.com";
-    static final String INSTANCE_URL = "http://192.168.1.145:8080";
+    static final String INSTANCE_URL = "http://localhost:8080";
     static final String PASSWORD = "r"; //just like my luggage!
     int errors = 0;
 

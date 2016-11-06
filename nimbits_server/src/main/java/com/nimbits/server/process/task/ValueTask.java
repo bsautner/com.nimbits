@@ -115,9 +115,9 @@ public class ValueTask {
 
         public void run() {
 
-            final boolean ignored = false;
+
             boolean ignoredByCompression = false;
-            final boolean ignoredByDate = dataProcessor.ignoreDataByExpirationDate(point, value, ignored);
+            final boolean ignoredByDate = dataProcessor.ignoreDataByExpirationDate(point, value);
             final Value sample = valueService.getCurrentValue(point);
 
 

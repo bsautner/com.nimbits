@@ -99,12 +99,12 @@ public class V3EntityTests extends NimbitsTest {
 
         Random random = new Random();
         for (int i = 0; i < 100; i++) {
-            nimbits.recordValue(inputPoint, new Value.Builder().doubleValue(random.nextDouble() * 100).meta(foo).create());
+            nimbits.recordValueSync(inputPoint.getName().getValue(), new Value.Builder().doubleValue(random.nextDouble() * 100).meta(foo).create());
 
         }
 
         int count = 10;
-        List<Value> values = nimbits.getValues(inputPoint, start, new Date(), 10, foo);
+        List<Value> values = nimbits.getValues(inputPoint, start, new Date(), count, foo);
         assertEquals(count, values.size());
 
     }

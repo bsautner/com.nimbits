@@ -23,22 +23,22 @@ import com.nimbits.client.model.value.Value;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.util.Calendar;
 
 @Component
 public class DataProcessor {
 
-    public long getExpireTime(final Point point) {
-        return (System.currentTimeMillis() - (86400000 * point.getExpire()));
+    private long getExpireTime(final Point point) {
+        BigDecimal MS_IN_DAY = BigDecimal.valueOf(86400000);
+        return System.currentTimeMillis() - (MS_IN_DAY.multiply(BigDecimal.valueOf(point.getExpire()))).longValue();
     }
 
-    public boolean ignoreDataByExpirationDate(final Point p, final Value value, final boolean ignored) {
-        boolean retVal = ignored;
+    public boolean ignoreDataByExpirationDate(final Point p, final Value value) {
+        boolean retVal = false;
 
         if (p.getExpire() > 0) {
             long exp = getExpireTime(p);
 
-            if (value.getLTimestamp() >= exp) {
+            if (value.getLTimestamp() <= exp) {
                 retVal = true;
             }
         }

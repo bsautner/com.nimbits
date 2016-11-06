@@ -19,7 +19,7 @@ package com.nimbits.client.constants;
 
 public class Const {
 
-    public static final String VERSION = "4.0.7";
+    public static final String VERSION = "4.0.8";
 
 
 

@@ -21,7 +21,7 @@
     <artifactId>nimbits-parent</artifactId>
     <packaging>pom</packaging>
 
-    <version>4.0.10-SNAPSHOT</version>
+    <version>4.0.11-SNAPSHOT</version>
     <properties>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

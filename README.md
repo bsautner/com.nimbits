@@ -1,6 +1,3 @@
-<!--[![Build Status](http://www.nimbits.com:8080/buildStatus/icon?job=nimbits_parent)](http://www.nimbits.com:8080/job/nimbits_parent/)-->
-[![Build Status](http://52.86.203.20:42421/buildStatus/icon?job=nimbits)](http://54.152.79.41:42421/job/nimbits/)
-
 [Wiki](https://github.com/bsautner/com.nimbits/wiki) | [Community Forum](https://groups.google.com/forum/#!forum/nimbits) | [Bug Report](https://github.com/bsautner/com.nimbits/issues) |
 [Building a Nimbits Server] (https://github.com/bsautner/com.nimbits/wiki/Install:-Build-from-source)
 
@@ -83,36 +80,6 @@ You can PUT updated to the object, post data values and get a series of data
 For more on what you can do with the API, reference the [WIKI](https://github.com/bsautner/com.nimbits/wiki)
 
 
-### Install from source
-
-Clone this repository and compule using maven
-
-```mvn clean package```
-
-copy the resulting war file in nimbits_server/target/nimbits_server.war to the webapps directory of a jetty or tomcat web server or any other J2EE 
-server such as jboss.  Rename the file to root.war if you want to load it in the root context.
-
-## nimbits.io client
-
-The nimbits.io client library is a wrapper for the nimbits server API and provides deep automation of the server and methods for reading and writing data
-
-You can import the library into your java or android project from the jcenter public repository.
-
-[Browse bintray Repository](https://bintray.com/bsautner/nimbits/com.nimbits.io/view)
-
-### Maven
-```
-<dependency>
-  <groupId>com.nimbits</groupId>
-  <artifactId>nimbits_io</artifactId>
-  <version>4.0.11</version>
-  <type>pom</type>
-</dependency>
-```
-
-### Gradle
-
-```compile 'com.nimbits:nimbits_io:4.0.11'```
 
 ## Licence
 

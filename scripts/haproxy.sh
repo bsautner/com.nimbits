@@ -9,3 +9,5 @@ apt-get install oracle-java8-installer -y
 bash -c 'echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment'
 source /etc/environment
 apt-get install haproxy -y
+rm -f /etc/default/haproxy
+cp -fv ./haproxy /etc/default/

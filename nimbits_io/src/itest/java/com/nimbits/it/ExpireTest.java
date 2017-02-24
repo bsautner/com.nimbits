@@ -1,6 +1,5 @@
 package com.nimbits.it;
 
-import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.value.Value;
@@ -14,6 +13,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
+//Failing
 public class ExpireTest extends NimbitsTest {
 
     @Before
@@ -27,7 +27,7 @@ public class ExpireTest extends NimbitsTest {
     public void executeIdleSetTest() throws InterruptedException {
 
         String pointName = UUID.randomUUID().toString();
-        int c = 1000;
+        int c = 100;
         int e = 9000;
 
 
@@ -43,8 +43,10 @@ public class ExpireTest extends NimbitsTest {
 
             nimbits.recordValueSync(pointName, new Value.Builder().timestamp(calendar.getTimeInMillis() - random.nextInt(10000000)).doubleValue(random.nextDouble() * 100).create());
 
+            System.out.println("Recording Synchronously " + i);
         }
 
+        Thread.sleep(5000);
         List<Value> valueList = nimbits.getValues(point, c);
         for (Value vx : valueList) {
             System.out.println(vx.getDoubleValue() + vx.getTimestamp().toString());

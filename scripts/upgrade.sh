@@ -10,10 +10,10 @@ git checkout -b nimbits_update_tmp_branch
 git branch -D master
 git checkout -b master origin/master
 mvn clean install
-cp -v $CATALINA_HOME/webapps/nimbits/WEB-INF/applicationContext.xml /tmp/applicationContext.xml.backup
+cp -v /opt/tomcat/webapps/nimbits/WEB-INF/applicationContext.xml /tmp/applicationContext.xml.backup
 cp ./nimbits_server/target/nimbits_server.war /opt/tomcat/webapps/nimbits.war
 service tomcat8 start
-cp -fv /tmp/applicationContext.xml.backup $CATALINA_HOME/webapps/nimbits/WEB-INF/applicationContext.xml
+cp -fv /tmp/applicationContext.xml.backup /opt/tomcat/webapps/nimbits/WEB-INF/applicationContext.xml
 service tomcat8 restart
 
 

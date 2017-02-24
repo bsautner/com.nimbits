@@ -15,7 +15,6 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.schedule.ScheduleModel;
-import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.subscription.SubscriptionModel;
 import com.nimbits.client.model.summary.SummaryModel;
 import com.nimbits.client.model.sync.Sync;
@@ -73,7 +72,7 @@ public class V3EntityTests extends NimbitsTest {
 //        testSync();
 
         testCalc();
-
+        Thread.sleep(5000);
         testSummary();
 
         log("Done " + getClass().getName());
@@ -211,7 +210,7 @@ public class V3EntityTests extends NimbitsTest {
                 .downloadTarget(outputPoint)
                 .create());
 
-         nimbits.addSubscription(category, new SubscriptionModel.Builder()
+        nimbits.addSubscription(category, new SubscriptionModel.Builder()
                 .notifyMethod(SubscriptionNotifyMethod.webhook)
                 .subscribedEntity(inputPoint)
                 .target(webHook)

@@ -8,7 +8,6 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.*;
@@ -42,6 +41,7 @@ public class V3RestClientTester extends NimbitsTest {
 
             createRegularUsers();
             createPoints();
+            Thread.sleep(5000);
             recordSeriesData();
         } else {
             log("User was null! Exiting Test");
@@ -145,13 +145,16 @@ public class V3RestClientTester extends NimbitsTest {
 
     }
 
-    private void verifySeriesData(String mask) {
+    private void verifySeriesData(String mask) throws InterruptedException {
         for (Entity entity : pointList) {
             Calendar calendar = Calendar.getInstance();
             calendar.add(Calendar.DAY_OF_YEAR, -31);
             log(entity.getId());
             List<Value> downloadedValues = nimbits.getValues(entity, calendar.getTime(), new Date(), mask);
             log("Downloaded " + downloadedValues.size() + " for " + entity.getName());
+
+
+            Thread.sleep(5000);
             List<Value> stored = storedValues.get(entity);
             Collections.sort(stored);
             Collections.sort(downloadedValues);

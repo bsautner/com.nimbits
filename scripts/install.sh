@@ -10,9 +10,9 @@ bash -c 'echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment'
 bash -c 'echo "CATALINA_HOME=/opt/tomcat"  >> /etc/environment'
 source /etc/environment
 
-wget http://mirrors.gigenet.com/apache/tomcat/tomcat-8/v8.5.5/bin/apache-tomcat-8.5.5.tar.gz 
-tar xvzf apache-tomcat-8.5.5.tar.gz
-mv apache-tomcat-8.5.5 /opt/tomcat
+wget http://mirrors.gigenet.com/apache/tomcat/tomcat-8/v8.5.11/bin/apache-tomcat-8.5.11.tar.gz
+tar xvzf apache-tomcat-8.5.11.tar.gz
+mv apache-tomcat-8.5.11 /opt/tomcat
 
 apt-get install mysql-server -y
 echo "create database if not exists nimbits" | mysql -u root -p

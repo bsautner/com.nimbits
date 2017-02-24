@@ -22,7 +22,7 @@ echo "create database if not exists nimbits" | mysql -u root -p
 cd ..
 mvn clean install
 cp ./nimbits_server/target/nimbits_server.war /opt/tomcat/webapps/nimbits.war
-cp ./tomcat8 /etc/init.d/tomcat8
+cp ./scripts/tomcat8 /etc/init.d/tomcat8
 chmod 755 /etc/init.d/tomcat8
 update-rc.d tomcat8 defaults
 reboot

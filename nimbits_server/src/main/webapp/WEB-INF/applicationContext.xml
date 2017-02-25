@@ -60,7 +60,7 @@
                     org.datanucleus.api.jdo.JDOPersistenceManagerFactory
                 </prop>
                 <prop key="javax.jdo.option.ConnectionURL">
-                    jdbc:mysql://107.23.4.19:3306/nimbits
+                    jdbc:mysql://sql:3306/nimbits
                 </prop>
 
                 <prop key="javax.jdo.option.ConnectionUserName">me</prop>

@@ -60,10 +60,10 @@
                     org.datanucleus.api.jdo.JDOPersistenceManagerFactory
                 </prop>
                 <prop key="javax.jdo.option.ConnectionURL">
-                    jdbc:mysql://localhost:3306/nimbits
+                    jdbc:mysql://107.23.4.19:3306/nimbits
                 </prop>
 
-                <prop key="javax.jdo.option.ConnectionUserName">root</prop>
+                <prop key="javax.jdo.option.ConnectionUserName">me</prop>
                 <prop key="javax.jdo.option.ConnectionPassword">nimbits</prop>
                 <prop key="javax.jdo.option.ConnectionDriverName">com.mysql.jdbc.Driver</prop>
                 <prop key="org.jpox.autoCreateSchema">true</prop>

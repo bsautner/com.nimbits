@@ -27,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -50,7 +49,7 @@ public class EntityService {
 
     public void deleteEntity(final User user, Entity entity) {
 
-        List<Entity> children = entityDao.getChildren(user, Collections.singletonList(entity));
+        List<Entity> children = entityDao.getChildren(user, entity);
 
 
         for (Entity c : children) {

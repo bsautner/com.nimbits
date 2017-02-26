@@ -217,7 +217,7 @@ public class RestAPI {
 
 
         if (optional.isPresent()) {
-            List<Entity> children = entityDao.getChildren(user, Collections.singletonList(optional.get()));
+            List<Entity> children = entityDao.getChildren(user, optional.get());
             for (Entity e : children) {
                 setHAL(user, e, Collections.<Entity>emptyList(), getCurrentUrl(request), null);
             }
@@ -234,7 +234,7 @@ public class RestAPI {
 
         List<Entity> children;
         if (includeChildren) {
-            children = entityDao.getChildren(user, Collections.<Entity>singletonList(user));
+            children = entityDao.getChildren(user, user);
         } else {
             children = Collections.emptyList();
         }
@@ -328,7 +328,7 @@ public class RestAPI {
 
             Optional<Entity> optional = entityDao.getEntity(user, uuid, EntityType.point);
             if (optional.isPresent()) {
-                List<Entity> children = entityDao.getChildren(user, Collections.singletonList(optional.get()));
+                List<Entity> children = entityDao.getChildren(user, optional.get());
                 String chartData = valueService.getChartTable(user, optional.get(), children, timespan, count, mask);
                 return new ResponseEntity<>(chartData, HttpStatus.OK);
             }
@@ -437,7 +437,7 @@ public class RestAPI {
 
                 List<Entity> children;
                 if (includeChildren) {
-                    children = entityDao.getChildren(user, Collections.singletonList(entity));
+                    children = entityDao.getChildren(user, entity);
                 } else {
                     children = Collections.emptyList();
                 }

@@ -79,7 +79,7 @@ class NavigationPanel extends NavigationEventProvider {
     protected void onLoad() {
         super.onLoad();
 
-        getUserEntities(false);
+        getUserEntities();
 
     }
 
@@ -127,9 +127,9 @@ class NavigationPanel extends NavigationEventProvider {
     }
 
     //service calls
-    public void getUserEntities(final boolean refresh) {
+    private void getUserEntities() {
 
-        entityService.getEntitiesRpc(user, new GetUserListAsyncCallback(refresh));
+        entityService.getEntitiesRpc(user, new GetUserListAsyncCallback());
 
     }
 
@@ -150,33 +150,10 @@ class NavigationPanel extends NavigationEventProvider {
         }
     }
 
-    private class SaveValueAsyncCallback implements AsyncCallback<Void> {
-        private final TreeModel model;
-        private final Value value;
-
-        SaveValueAsyncCallback(TreeModel model, Value value) {
-            this.model = model;
-            this.value = value;
-        }
-
-        @Override
-        public void onFailure(final Throwable throwable) {
-
-            GWT.log(throwable.getMessage(), throwable);
-        }
-
-        @Override
-        public void onSuccess(final Void object) {
-            updateModel(value, model);
-
-        }
-    }
 
     private class GetUserListAsyncCallback implements AsyncCallback<List<Entity>> {
-        private final boolean refresh;
+         GetUserListAsyncCallback() {
 
-        GetUserListAsyncCallback(boolean refresh) {
-            this.refresh = refresh;
         }
 
         @Override
@@ -190,15 +167,7 @@ class NavigationPanel extends NavigationEventProvider {
         public void onSuccess(List<Entity> result) {
 
 
-            if (refresh) {
-                for (final Entity e : result) {
-
-                    addUpdateTreeModel(new GxtModel(e), true);
-                }
-            } else {
-
                 reloadTree(result);
-            }
 
 
         }
@@ -489,7 +458,7 @@ class NavigationPanel extends NavigationEventProvider {
                         //fixes a bug where the dragged object vanishes - we can't seem to put it back right, we have to reload the tree
                         //  e.setCancelled(true);
                         //  e.getStatus().setStatus(false);
-                        getUserEntities(false);
+                        getUserEntities();
                     }
 
 

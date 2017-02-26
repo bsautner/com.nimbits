@@ -20,7 +20,6 @@ package com.nimbits.server.process.cron;
 import com.google.common.base.Optional;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
-
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
@@ -38,16 +37,15 @@ import com.nimbits.server.transaction.value.service.ValueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.task.TaskExecutor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
-import javax.jdo.Transaction;
 import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 
 @Component
@@ -72,12 +70,20 @@ public class SystemTaskExecutor {
 
     private SubscriptionService subscriptionService;
 
+    @org.springframework.beans.factory.annotation.Value("${system.task.schedule.enabled}")
+    private Boolean scheduleEnabled;
+
+    @org.springframework.beans.factory.annotation.Value("${system.task.idle.enabled}")
+    private Boolean idleEnabled;
+
+
 
     @Autowired
     public SystemTaskExecutor(PersistenceManagerFactory persistenceManagerFactory, UserDao userDao,
                               SubscriptionService subscriptionService,
                               EntityDao entityDao, UserService userService, ValueService valueService,
                               ValueTask valueTask, EntityService entityService) {
+
         this.persistenceManagerFactory = persistenceManagerFactory;
         this.subscriptionService = subscriptionService;
 
@@ -92,91 +98,102 @@ public class SystemTaskExecutor {
 
 
 
-    @Scheduled(initialDelay=1000, fixedRate=5000)
+    @Scheduled(
+            initialDelayString = "${system.task.idle.initialDelay}",
+            fixedDelayString = "${system.task.idle.initialDelay}"
+    )
     private void processIdlePoints() throws IOException {
 
+        if (idleEnabled) {
 
-        final PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
-
-        try {
-
-            final Query q = pm.newQuery(PointEntity.class);
-            q.setFilter("idleAlarmOn == k && idleAlarmSent == c");
-            q.declareParameters("Boolean k, Boolean c");
-
-            //  tx = pm.currentTransaction();
-
-            //  tx.begin();
+            final PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
 
-            final List<Point> result = (List<Point>) q.execute(true, false);
-            for (Point entity : result) {
-                Point model = new PointModel.Builder().init(entity).create();
+            try {
 
-                if (model.isIdleAlarmOn() && ! model.idleAlarmSent() && model.getIdleSeconds() > 0) {
+                final Query q = pm.newQuery(PointEntity.class);
+                q.setFilter("idleAlarmOn == k && idleAlarmSent == c");
+                q.declareParameters("Boolean k, Boolean c");
 
-                    Value value = valueService.getSnapshot(model);
-                    long idleDuration = model.getIdleSeconds() * 1000;
-                    if (value.getLTimestamp() <= (System.currentTimeMillis() - idleDuration)) {
-                        Optional<User> userOptional = userDao.getUserById(model.getOwner());
-                        if (userOptional.isPresent()) {
-                            entityDao.setIdleAlarmSentFlag(model.getId(), true);
+                //  tx = pm.currentTransaction();
+
+                //  tx.begin();
 
 
-                            //  p.setIdleAlarmSent(true);
-                            subscriptionService.process(userOptional.get(), model, new Value.Builder().initValue(value).alertType(AlertType.IdleAlert).create());
+                final List<Point> result = (List<Point>) q.execute(true, false);
+                for (Point entity : result) {
+                    Point model = new PointModel.Builder().init(entity).create();
 
+                    if (model.isIdleAlarmOn() && !model.idleAlarmSent() && model.getIdleSeconds() > 0) {
+
+                        Value value = valueService.getSnapshot(model);
+                        long idleDuration = model.getIdleSeconds() * 1000;
+                        if (value.getLTimestamp() <= (System.currentTimeMillis() - idleDuration)) {
+                            Optional<User> userOptional = userDao.getUserById(model.getOwner());
+                            if (userOptional.isPresent()) {
+                                entityDao.setIdleAlarmSentFlag(model.getId(), true);
+
+
+                                //  p.setIdleAlarmSent(true);
+                                subscriptionService.process(userOptional.get(), model, new Value.Builder().initValue(value).alertType(AlertType.IdleAlert).create());
+
+                            }
                         }
                     }
                 }
+
+
+            } finally {
+
+                pm.close();
             }
-
-
-        } finally {
-
-            pm.close();
         }
 
 
     }
 
-    @Scheduled(initialDelay=2000, fixedRate=5000)
+    @Scheduled(
+            initialDelayString = "${system.task.schedule.initialDelay}",
+            fixedDelayString = "${system.task.schedule.initialDelay}"
+    )
     private void processSchedules() throws IOException {
 
-        List<Schedule> schedules = entityDao.getSchedules();
+        if (scheduleEnabled) {
 
-        for (Schedule schedule : schedules) {
+            List<Schedule> schedules = entityDao.getSchedules();
 
-            if (schedule.getLastProcessed() + schedule.getInterval() < new Date().getTime()) {
+            for (Schedule schedule : schedules) {
 
-                Optional<User> ownerOptional = userService.getUserByKey(schedule.getOwner());
+                if (schedule.getLastProcessed() + schedule.getInterval() < new Date().getTime()) {
 
-                if (ownerOptional.isPresent()) {
-                    User owner = ownerOptional.get();
+                    Optional<User> ownerOptional = userService.getUserByKey(schedule.getOwner());
 
-                    schedule.setLastProcessed(new Date().getTime());
+                    if (ownerOptional.isPresent()) {
+                        User owner = ownerOptional.get();
 
-                    entityDao.addUpdateEntity(owner, schedule);
-                    Optional<Entity> sourcePoint = entityDao.getEntity(owner, schedule.getSource(), EntityType.point);
-                    Optional<Entity> targetPoint = entityDao.getEntity(owner, schedule.getTarget(), EntityType.point);
+                        schedule.setLastProcessed(new Date().getTime());
 
-                    if (sourcePoint.isPresent() && targetPoint.isPresent()) {
-                        Value value = valueService.getCurrentValue(sourcePoint.get());
-                        Value newValue = new Value.Builder().initValue(value).timestamp(System.currentTimeMillis()).create();// ValueFactory.createValue(value, new Date());
+                        entityDao.addUpdateEntity(owner, schedule);
+                        Optional<Entity> sourcePoint = entityDao.getEntity(owner, schedule.getSource(), EntityType.point);
+                        Optional<Entity> targetPoint = entityDao.getEntity(owner, schedule.getTarget(), EntityType.point);
+
+                        if (sourcePoint.isPresent() && targetPoint.isPresent()) {
+                            Value value = valueService.getCurrentValue(sourcePoint.get());
+                            Value newValue = new Value.Builder().initValue(value).timestamp(System.currentTimeMillis()).create();// ValueFactory.createValue(value, new Date());
 
 
-                        valueTask.process(owner, (Point) targetPoint.get(), newValue);
-                    } else {
-                        schedule.setEnabled(false);
-                        entityService.addUpdateEntity(owner, schedule);
+                            valueTask.process(owner, (Point) targetPoint.get(), newValue);
+                        } else {
+                            schedule.setEnabled(false);
+                            entityService.addUpdateEntity(owner, schedule);
+                        }
                     }
+
+
                 }
 
 
             }
-
-
         }
 
     }

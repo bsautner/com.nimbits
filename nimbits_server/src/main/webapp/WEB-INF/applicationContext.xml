@@ -33,6 +33,9 @@
     <tx:annotation-driven/>
     <mvc:annotation-driven />
 
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="locations" value="classpath:application.properties"/>
+    </bean>
     <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
         <property name="caches">
             <set>

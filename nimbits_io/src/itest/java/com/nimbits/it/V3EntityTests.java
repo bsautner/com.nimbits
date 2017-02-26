@@ -58,21 +58,29 @@ public class V3EntityTests extends NimbitsTest {
                 .name(UUID.randomUUID().toString())
                 .create());
 
+        log("test value");
         testValue();
 
+        log("Test socket");
         testSocket();
 
+        log("test schedule");
         testSchedule();
 
+        log("test instance");
         testInstance();
 
-
+        log("test webhook");
         testWebhook();
 
 //        testSync();
 
+        log("test calc");
         testCalc();
+
         Thread.sleep(5000);
+
+        log("test summary");
         testSummary();
 
         log("Done " + getClass().getName());
@@ -89,7 +97,7 @@ public class V3EntityTests extends NimbitsTest {
         log("input point id: " + inputPoint.getId());
 
         nimbits.recordValue(inputPoint, new Value.Builder().meta(foo).create());
-        Thread.sleep(1000);
+        Thread.sleep(5000);
         Value value = nimbits.getSnapshot(inputPoint);
         log(value.toString());
         if (!foo.equals(value.getMetaData())) {

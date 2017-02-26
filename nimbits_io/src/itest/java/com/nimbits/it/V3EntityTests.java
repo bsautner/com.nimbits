@@ -80,12 +80,12 @@ public class V3EntityTests extends NimbitsTest {
 
         Thread.sleep(5000);
 
-        log("test summary");
-        testSummary();
+
 
         log("Done " + getClass().getName());
 
     }
+
 
     private void testValue() throws InterruptedException {
         String foo = "foo";
@@ -167,8 +167,15 @@ public class V3EntityTests extends NimbitsTest {
 
     }
 
+    @Test
+    public void testSummary() throws InterruptedException {
 
-    private void testSummary() throws InterruptedException {
+        Category category = nimbits.addCategory(user, new CategoryModel.Builder().create());
+        Point outputPoint = nimbits.addPoint(category, new PointModel.Builder()
+                .name(UUID.randomUUID().toString())
+                .create());
+
+
         Point inputPoint = nimbits.addPoint(category, new PointModel.Builder()
                 .name(UUID.randomUUID().toString())
                 .create());
@@ -182,15 +189,18 @@ public class V3EntityTests extends NimbitsTest {
                         .trigger(inputPoint)
                         .create());
 
-        for (int i = 0; i < 10; i++) {
-            double v = i;
+        Thread.sleep(2000);
 
-            log("Summary Test Recording: " + v);
-            nimbits.recordValue(inputPoint, new Value.Builder().doubleValue(v).create());
+        for (int i = 0; i < 10; i++) {
+
+            log("Summary Test Recording: " + i);
+            nimbits.recordValueSync(inputPoint.getName().getValue(), new Value.Builder().doubleValue(i).create());
             Thread.sleep(500);
 
         }
 
+
+        Thread.sleep(30000);
         Value v = nimbits.getSnapshot(outputPoint);
         log("Summary Test:" + v.toString());
         if (v.getDoubleValue() <= 3) {

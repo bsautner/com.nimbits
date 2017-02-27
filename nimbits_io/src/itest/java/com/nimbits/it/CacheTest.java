@@ -28,7 +28,7 @@ public class CacheTest  extends NimbitsTest {
 
             User me = nimbits.getMe(true);
 
-            System.out.println(me.toString());
+            log(me.toString());
 
             nimbits.addPoint(me, new PointModel.Builder().name(name).create());
 
@@ -36,17 +36,19 @@ public class CacheTest  extends NimbitsTest {
 
             nimbits.recordValue(name, new Value.Builder().data("debugging1").doubleValue(t).create());
 
-            Thread.sleep(1000);
+            sleep();
 
             double r = nimbits.getSnapshot(name).getDoubleValue();
 
             assertEquals(t, r, 0.001);
 
             for (int i = 0; i < 3; i++) {
-                System.out.println(nimbits.getSnapshot(name));
+                log(nimbits.getSnapshot(name));
             }
 
 
 
         }
+
+
 }

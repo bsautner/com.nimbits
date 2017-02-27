@@ -26,7 +26,7 @@ public class V3ApiChildrenTest extends NimbitsTest {
 
         User me = nimbits.getMe(true);
 
-        System.out.println(me.toString());
+        log(me.toString());
 
 
         for (int i = 0; i < 10; i++) {

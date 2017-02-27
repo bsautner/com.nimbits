@@ -24,6 +24,7 @@ import com.nimbits.client.model.webhook.HttpMethod;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.Date;
@@ -44,50 +45,17 @@ public class V3EntityTests extends NimbitsTest {
     @Before
     public void setUp() throws Exception {
         super.setUp();
-
-
-    }
-
-    @Test
-    public void executeTest() throws InterruptedException {
-
-
-        //create a folder for putting things in, my user account object is the folders parent in the tree (user is setup in the super.execute).
         category = nimbits.addCategory(user, new CategoryModel.Builder().create());
         outputPoint = nimbits.addPoint(category, new PointModel.Builder()
                 .name(UUID.randomUUID().toString())
                 .create());
 
-        log("test value");
-        testValue();
-
-        log("Test socket");
-        testSocket();
-
-        log("test schedule");
-        testSchedule();
-
-        log("test instance");
-        testInstance();
-
-        log("test webhook");
-        testWebhook();
-
-//        testSync();
-
-        log("test calc");
-        testCalc();
-
-        Thread.sleep(5000);
-
-
-
-        log("Done " + getClass().getName());
-
     }
 
 
-    private void testValue() throws InterruptedException {
+
+    @Test
+    public void testValue() throws InterruptedException {
         String foo = "foo";
         Date start = new Date();
         Point inputPoint = nimbits.addPoint(category, new PointModel.Builder()
@@ -97,7 +65,9 @@ public class V3EntityTests extends NimbitsTest {
         log("input point id: " + inputPoint.getId());
 
         nimbits.recordValue(inputPoint, new Value.Builder().meta(foo).create());
-        Thread.sleep(5000);
+
+        sleep();
+
         Value value = nimbits.getSnapshot(inputPoint);
         log(value.toString());
         if (!foo.equals(value.getMetaData())) {
@@ -116,12 +86,9 @@ public class V3EntityTests extends NimbitsTest {
 
     }
 
-    private void testSocket() {
 
-    }
-
-
-    private void testSchedule() throws InterruptedException {
+    @Test
+    public void testSchedule() throws InterruptedException {
 
         Point inputPoint = nimbits.addPoint(category, new PointModel.Builder()
                 .name(UUID.randomUUID().toString())
@@ -142,7 +109,8 @@ public class V3EntityTests extends NimbitsTest {
 
         nimbits.recordValue(inputPoint, new Value.Builder().doubleValue(42.0).create());
 
-        Thread.sleep(10000);
+        sleep();
+
 
         Value outputValue = nimbits.getSnapshot(output);
 
@@ -151,7 +119,8 @@ public class V3EntityTests extends NimbitsTest {
 
     }
 
-    private void testInstance() {
+    @Test
+    public  void testInstance() {
 
 
         nimbits.addInstance(category,
@@ -170,15 +139,16 @@ public class V3EntityTests extends NimbitsTest {
     @Test
     public void testSummary() throws InterruptedException {
 
-        Category category = nimbits.addCategory(user, new CategoryModel.Builder().create());
+        Category category = nimbits.addCategory(user, new CategoryModel.Builder().name("testsummary_" + UUID.randomUUID().toString()).create());
         Point outputPoint = nimbits.addPoint(category, new PointModel.Builder()
-                .name(UUID.randomUUID().toString())
+                .name("output_" + UUID.randomUUID().toString())
                 .create());
 
 
         Point inputPoint = nimbits.addPoint(category, new PointModel.Builder()
-                .name(UUID.randomUUID().toString())
+                .name("input_" + UUID.randomUUID().toString())
                 .create());
+        log("input::", inputPoint);
 
 
         nimbits.addSummary(category,
@@ -187,9 +157,10 @@ public class V3EntityTests extends NimbitsTest {
                         .summaryIntervalMs(2000L)
                         .target(outputPoint)
                         .trigger(inputPoint)
+                        .name("summary_" + UUID.randomUUID().toString())
                         .create());
 
-        Thread.sleep(2000);
+        sleep();
 
         for (int i = 0; i < 10; i++) {
 
@@ -198,9 +169,13 @@ public class V3EntityTests extends NimbitsTest {
             Thread.sleep(500);
 
         }
+        sleep(5);
+        List<Value> values = nimbits.getValues(inputPoint, 10);
+        log("uuid", inputPoint.getId());
+        assertEquals(10, values.size());
 
+        sleep(5);
 
-        Thread.sleep(30000);
         Value v = nimbits.getSnapshot(outputPoint);
         log("Summary Test:" + v.toString());
         if (v.getDoubleValue() <= 3) {
@@ -211,7 +186,8 @@ public class V3EntityTests extends NimbitsTest {
 
     }
 
-    private void testWebhook() throws InterruptedException {
+    @Test
+    public  void testWebhook() throws InterruptedException {
         Point inputPoint = nimbits.addPoint(category, new PointModel.Builder()
                 .name(UUID.randomUUID().toString())
                 .create());
@@ -240,7 +216,9 @@ public class V3EntityTests extends NimbitsTest {
 
         double testValue = new Random().nextDouble() * 100;
         nimbits.recordValue(inputPoint, new Value.Builder().doubleValue(testValue).create());
-        Thread.sleep(1000);
+
+        sleep();
+
         Value value = nimbits.getSnapshot(outputPoint);
 
 
@@ -255,7 +233,8 @@ public class V3EntityTests extends NimbitsTest {
 
     }
 
-    private void testCalc() throws InterruptedException {
+    @Test
+    public  void testCalc() throws InterruptedException {
         Point outputPointCalc = nimbits.addPoint(category, new PointModel.Builder()
                 .name("calc output " + UUID.randomUUID().toString())
                 .create());
@@ -276,7 +255,7 @@ public class V3EntityTests extends NimbitsTest {
         log("sending into calc: " + testValue3);
         nimbits.recordValue(inputPoint, new Value.Builder().doubleValue(testValue3).create());
 
-        Thread.sleep(2000);
+        sleep();
 
 
         Value snapshot3 = nimbits.getSnapshot(outputPointCalc);
@@ -289,7 +268,8 @@ public class V3EntityTests extends NimbitsTest {
         log("calc: " + snapshot3.toString());
     }
 
-    private void testSync() throws InterruptedException {
+    @Test @Ignore
+    public  void testSync() throws InterruptedException {
         Point outputPoint2 = nimbits.addPoint(category, new PointModel.Builder()
                 .name(UUID.randomUUID().toString())
                 .create());
@@ -311,7 +291,8 @@ public class V3EntityTests extends NimbitsTest {
         double testValue2 = new Random().nextDouble() * 100;
         nimbits.recordValue(inputPoint, new Value.Builder().doubleValue(testValue2).create());
 
-        Thread.sleep(2000);
+       sleep();
+
 
         Value snapshot = nimbits.getSnapshot(outputPoint2);
         log("sync: " + snapshot.toString());

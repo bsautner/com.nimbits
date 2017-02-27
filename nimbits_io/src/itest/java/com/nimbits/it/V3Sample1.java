@@ -24,7 +24,6 @@ import retrofit.RetrofitError;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 public class V3Sample1 extends NimbitsTest {
@@ -245,7 +244,7 @@ public class V3Sample1 extends NimbitsTest {
         client.recordValues(newTrigger, Collections.singletonList(value));
 
         //That value should now be the current value for the point, let's download the snapshot (aka most recent value) and verify
-        Thread.sleep(1000); //give the value time to be processed
+        sleep();
         Value snapshot = client.getSnapshot(newTrigger);
 
         log("Verified value: " + snapshot.toString());

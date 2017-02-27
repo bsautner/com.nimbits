@@ -18,10 +18,10 @@ public abstract class NimbitsTest {
     public User user;
 
     static final String EMAIL_ADDRESS = "remote1@nimbits.com";
-   // static final String INSTANCE_URL = "http://52.87.221.104:8080/nimbits";
+    // static final String INSTANCE_URL = "http://52.87.221.104:8080/nimbits";
     static final String INSTANCE_URL = "http://ha:8080/nimbits";
 
-   // static final String INSTANCE_URL = "http://localhost:8080";
+    // static final String INSTANCE_URL = "http://localhost:8080";
     static final String PASSWORD = "r"; //just like my luggage!
     int errors = 0;
 
@@ -49,8 +49,30 @@ public abstract class NimbitsTest {
 
     }
 
-    static void log(String msg) {
-        System.out.println(new Date() + "  " + msg);
+    static void log(Object... msg) {
+        StringBuilder sb = new StringBuilder();
+        for (Object o : msg) {
+            sb.append("-> ").append(String.valueOf(o)).append("\n");
+        }
+        System.out.println(String.format("%s %s", new Date(), sb.toString()));
+    }
+
+
+
+    void sleep() {
+        try {
+            log("sleeping...");
+            Thread.sleep(5000);
+        } catch (InterruptedException ignored) {
+
+        }
+    }
+
+    void sleep(int i) {
+        log("big sleep " + i);
+        for (int c = 0; c < i; c++) {
+            sleep();
+        }
     }
 
 
@@ -83,7 +105,7 @@ public abstract class NimbitsTest {
     /**
      * Creates a new user, if this is the first user on the system, it will be the admin
      */
-    public User createUser(String email, String password) {
+    User createUser(String email, String password) {
 
         User postObject = new UserModel.Builder().email(email).password(password).create();
         User newUser = nimbits.addUser(postObject);
@@ -95,7 +117,7 @@ public abstract class NimbitsTest {
         }
     }
 
-    public void error(String message) {
+    void error(String message) {
         log("Error: " + message);
         errors++;
         throw new RuntimeException(message);

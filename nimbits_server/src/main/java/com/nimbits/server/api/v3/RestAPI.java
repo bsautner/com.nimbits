@@ -106,15 +106,16 @@ public class RestAPI {
     @RequestMapping(value = "sync/{uuid}/snapshot", method = RequestMethod.POST)
     public ResponseEntity postSnapshotSync(
             @RequestHeader(name = "Authorization") String authorization,
-            @RequestBody String json,
+            @RequestBody Value value,
             @PathVariable String uuid) throws Exception {
 
         User user = userService.getUser(authorization);
         Optional<Entity> entityOptional =  entityDao.getEntity(user, uuid, EntityType.point);
 
         if (entityOptional.isPresent()) {
-            Value value = gson.fromJson(json, Value.class);
-            valueTask.processSync(user, (Point) entityOptional.get(), value);
+            //Value value = gson.fromJson(json, Value.class);
+            ValueTask.ValueStatus status =  valueTask.processSync(user, (Point) entityOptional.get(), value);
+
 
             return new ResponseEntity(HttpStatus.OK);
         }

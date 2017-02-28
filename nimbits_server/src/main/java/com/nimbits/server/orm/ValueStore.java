@@ -28,7 +28,7 @@ public class ValueStore {
     @Persistent
     private Double lng;
 
-    @Persistent
+    @Persistent @Column(length = 9, scale = 5)
     private BigDecimal d;
 
     @Persistent @Column(jdbcType = "CLOB")

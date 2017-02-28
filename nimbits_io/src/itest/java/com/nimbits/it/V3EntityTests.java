@@ -253,19 +253,20 @@ public class V3EntityTests extends NimbitsTest {
 
         double testValue3 = new Random().nextDouble() * 100;
         log("sending into calc: " + testValue3);
+
         nimbits.recordValue(inputPoint, new Value.Builder().doubleValue(testValue3).create());
 
-        sleep();
+        sleep(2);
 
 
         Value snapshot3 = nimbits.getSnapshot(outputPointCalc);
 
-        log(snapshot3.toString());
-        if (snapshot3.getDoubleValue() != testValue3 * 2) {
-            error("calc failed: " + testValue3 + "vs" + snapshot3.getDoubleValue());
-        }
         log("calc: " + calculation.toString());
         log("calc: " + snapshot3.toString());
+        log(snapshot3.toString());
+        assertEquals(snapshot3.getDoubleValue(), (testValue3 * 2), 0.001);
+
+
     }
 
     @Test @Ignore

@@ -22,11 +22,12 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserSource;
 
+import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
 
-@PersistenceCapable
+@PersistenceCapable @Cacheable
 public class UserEntity extends EntityStore implements User {
 
 

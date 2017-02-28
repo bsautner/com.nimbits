@@ -4,8 +4,8 @@ import com.nimbits.client.model.value.Value;
 
 import javax.jdo.annotations.*;
 import java.math.BigDecimal;
-import java.util.Date;
 
+@Cacheable("false")
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class ValueStore {
 

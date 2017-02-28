@@ -21,11 +21,12 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.trigger.Trigger;
 import com.nimbits.client.model.user.User;
 
+import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
 
-@PersistenceCapable
+@PersistenceCapable @Cacheable("true")
 public class CalcEntity extends TriggerEntity implements Calculation {
 
 

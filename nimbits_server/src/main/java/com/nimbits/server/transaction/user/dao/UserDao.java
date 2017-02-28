@@ -18,19 +18,12 @@ package com.nimbits.server.transaction.user.dao;
 
 
 import com.google.common.base.Optional;
-import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.orm.SessionStore;
 import com.nimbits.server.orm.UserEntity;
 import com.nimbits.server.transaction.entity.EntityHelper;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -38,9 +31,6 @@ import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
 import javax.jdo.Transaction;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -58,8 +48,7 @@ public class UserDao {
     }
 
 
-   
-  //  @CacheEvict(cacheNames = "user", key="#user.email.value")
+
     public void setResetPasswordToken(User user, String token) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
@@ -80,8 +69,6 @@ public class UserDao {
 
     }
 
-   
-  //  @CacheEvict(cacheNames = "user", key="#user.email.value")
     public User updatePassword(User user, String password) {
         String passwordSalt = RandomStringUtils.randomAscii(20);
 
@@ -109,8 +96,6 @@ public class UserDao {
 
     }
 
-   
-   // @Cacheable(cacheNames = "user", key="#email")
     public Optional<User> getUserByEmail(String email) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
@@ -171,7 +156,7 @@ public class UserDao {
         }
     }
 
-  //  @CacheEvict(cacheNames = "user")
+
     public boolean usersExist() {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();

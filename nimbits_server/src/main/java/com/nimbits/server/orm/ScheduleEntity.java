@@ -19,10 +19,12 @@ package com.nimbits.server.orm;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.schedule.Schedule;
 
+import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import java.io.Serializable;
 
+@Cacheable("false")
 @PersistenceCapable()
 public class ScheduleEntity extends EntityStore implements Serializable, Schedule {
 

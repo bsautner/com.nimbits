@@ -23,12 +23,13 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 
+import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import java.util.List;
 
-@PersistenceCapable
+@PersistenceCapable @Cacheable("false")
 public class PointEntity extends EntityStore implements Point {
     private static final int DEFAULT_EXPIRE = 90;
     private static final double DEFAULT_FILTER_VALUE = 0.1;

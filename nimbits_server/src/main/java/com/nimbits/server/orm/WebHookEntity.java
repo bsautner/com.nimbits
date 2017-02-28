@@ -22,11 +22,12 @@ import com.nimbits.client.model.webhook.DataChannel;
 import com.nimbits.client.model.webhook.HttpMethod;
 import com.nimbits.client.model.webhook.WebHook;
 
+import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
-
+@Cacheable("false")
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class WebHookEntity extends EntityStore implements WebHook {
 

@@ -61,7 +61,6 @@ public class EntityDao {
 
     }
 
-    //@Cacheable(cacheNames = "entity")
     public List<Entity> getSubscriptionsToEntity(final User user, final Entity subscribedEntity) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
@@ -90,9 +89,6 @@ public class EntityDao {
 
     }
 
-
-
-    //@Cacheable(cacheNames = "entity")
     public Optional<Entity> getEntityByTrigger(final User user, final Entity entity, final EntityType type) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -117,7 +113,6 @@ public class EntityDao {
         }
     }
 
-    //@Cacheable(cacheNames = "entity")
     public Map<String, Entity> getEntityMap(final User user, final EntityType type, final int limit) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -324,7 +319,6 @@ public class EntityDao {
         }
     }
 
-    //@Cacheable(cacheNames = "entity")
     public String getOwner(String point) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
@@ -344,7 +338,6 @@ public class EntityDao {
         }
     }
 
-    //@Cacheable(cacheNames = "entity")
     public List<Schedule> getSchedules() {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();

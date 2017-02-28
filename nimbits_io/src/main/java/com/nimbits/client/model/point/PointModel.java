@@ -25,10 +25,8 @@ import com.nimbits.client.model.common.CommonIdentifier;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.EntityModel;
 import com.nimbits.client.model.entity.EntityName;
-import com.nimbits.client.model.value.Value;
 
 import java.io.Serializable;
-import java.util.List;
 
 
 public class PointModel extends EntityModel implements Serializable, Point {
@@ -522,6 +520,62 @@ public class PointModel extends EntityModel implements Serializable, Point {
         public Builder action(String action) {
             this.action = action;
             return this;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof Builder)) return false;
+
+            Builder builder = (Builder) o;
+
+            if (Double.compare(builder.highAlarm, highAlarm) != 0) return false;
+            if (Double.compare(builder.lowAlarm, lowAlarm) != 0) return false;
+            if (Double.compare(builder.deltaAlarm, deltaAlarm) != 0) return false;
+            if (deltaSeconds != builder.deltaSeconds) return false;
+            if (expire != builder.expire) return false;
+            if (highAlarmOn != builder.highAlarmOn) return false;
+            if (lowAlarmOn != builder.lowAlarmOn) return false;
+            if (idleAlarmOn != builder.idleAlarmOn) return false;
+            if (deltaAlarmOn != builder.deltaAlarmOn) return false;
+            if (idleSeconds != builder.idleSeconds) return false;
+            if (idleAlarmSent != builder.idleAlarmSent) return false;
+            if (Double.compare(builder.filterValue, filterValue) != 0) return false;
+            if (inferLocation != builder.inferLocation) return false;
+            if (precision != builder.precision) return false;
+            if (type != builder.type) return false;
+            if (unit != null ? !unit.equals(builder.unit) : builder.unit != null) return false;
+            if (filterType != builder.filterType) return false;
+            return pointType == builder.pointType;
+        }
+
+        @Override
+        public int hashCode() {
+            int result;
+            long temp;
+            result = type.hashCode();
+            temp = Double.doubleToLongBits(highAlarm);
+            result = 31 * result + (int) (temp ^ (temp >>> 32));
+            temp = Double.doubleToLongBits(lowAlarm);
+            result = 31 * result + (int) (temp ^ (temp >>> 32));
+            temp = Double.doubleToLongBits(deltaAlarm);
+            result = 31 * result + (int) (temp ^ (temp >>> 32));
+            result = 31 * result + deltaSeconds;
+            result = 31 * result + expire;
+            result = 31 * result + (unit != null ? unit.hashCode() : 0);
+            result = 31 * result + (highAlarmOn ? 1 : 0);
+            result = 31 * result + (lowAlarmOn ? 1 : 0);
+            result = 31 * result + (idleAlarmOn ? 1 : 0);
+            result = 31 * result + (deltaAlarmOn ? 1 : 0);
+            result = 31 * result + idleSeconds;
+            result = 31 * result + (idleAlarmSent ? 1 : 0);
+            result = 31 * result + filterType.hashCode();
+            temp = Double.doubleToLongBits(filterValue);
+            result = 31 * result + (int) (temp ^ (temp >>> 32));
+            result = 31 * result + (inferLocation ? 1 : 0);
+            result = 31 * result + pointType.hashCode();
+            result = 31 * result + precision;
+            return result;
         }
 
 

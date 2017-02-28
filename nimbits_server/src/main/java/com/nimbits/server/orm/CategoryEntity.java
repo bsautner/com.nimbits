@@ -19,10 +19,11 @@ package com.nimbits.server.orm;
 import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.entity.Entity;
 
+import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
-
+@Cacheable
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class CategoryEntity extends EntityStore implements Category {
 

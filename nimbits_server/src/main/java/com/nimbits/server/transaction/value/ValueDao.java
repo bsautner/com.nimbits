@@ -8,8 +8,6 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.server.orm.ValueStore;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import javax.jdo.PersistenceManager;
@@ -34,7 +32,6 @@ public class ValueDao {
 
     }
 
-    @Cacheable(cacheNames = "snapshots", key="#entity.id")
     public Value getSnapshot(Entity entity) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -63,7 +60,6 @@ public class ValueDao {
             pm.close();
         }
     }
-
 
     public List<Value> getSeries(Entity entity, Optional<Range<Long>> timespan, Optional<Range<Integer>> range, Optional<String> mask) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -124,7 +120,6 @@ public class ValueDao {
         }
     }
 
-    @CacheEvict(cacheNames = "snapshots", key="#entity.id")
     public void storeValues(Entity entity, List<Value> values) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
@@ -139,7 +134,6 @@ public class ValueDao {
         }
     }
 
-    @CacheEvict(cacheNames = "snapshots", key="#entity.id")
     public void deleteAllData(Entity entity) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
@@ -159,7 +153,6 @@ public class ValueDao {
             pm.close();
         }
     }
-
 
     private boolean containsMask(String metadata, String mask) {
 

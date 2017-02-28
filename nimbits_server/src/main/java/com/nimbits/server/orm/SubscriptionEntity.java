@@ -21,11 +21,12 @@ import com.nimbits.client.enums.subscription.SubscriptionType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.subscription.Subscription;
 
+import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import java.io.Serializable;
 
-
+@Cacheable("false")
 @PersistenceCapable()
 public class SubscriptionEntity extends EntityStore implements Serializable, Subscription {
 

@@ -23,7 +23,7 @@ public class ExpireTest extends NimbitsTest {
 
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test
     public void executeIdleSetTest() throws InterruptedException {
 
         String pointName = UUID.randomUUID().toString();

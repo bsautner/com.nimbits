@@ -20,11 +20,12 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.sync.Sync;
 import com.nimbits.client.model.trigger.Trigger;
 
+import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
 
-@SuppressWarnings("unused")
+@Cacheable("false")
 @PersistenceCapable
 public class SyncEntity extends TriggerEntity implements Sync {
 

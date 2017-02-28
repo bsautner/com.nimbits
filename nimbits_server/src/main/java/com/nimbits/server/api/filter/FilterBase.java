@@ -16,18 +16,11 @@
 
 package com.nimbits.server.api.filter;
 
-import com.google.common.base.Optional;
 import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.model.common.impl.CommonFactory;
-import com.nimbits.client.model.email.EmailAddress;
-import com.nimbits.client.model.user.Credentials;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.user.service.UserService;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.apache.http.protocol.HTTP;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

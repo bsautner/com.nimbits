@@ -100,7 +100,7 @@ public class SystemTaskExecutor {
 
     @Scheduled(
             initialDelayString = "${system.task.idle.initialDelay}",
-            fixedDelayString = "${system.task.idle.initialDelay}"
+            fixedDelayString = "${system.task.idle.fixedRate}"
     )
     private void processIdlePoints() throws IOException {
 
@@ -154,7 +154,7 @@ public class SystemTaskExecutor {
 
     @Scheduled(
             initialDelayString = "${system.task.schedule.initialDelay}",
-            fixedDelayString = "${system.task.schedule.initialDelay}"
+            fixedDelayString = "${system.task.schedule.fixedRate}"
     )
     private void processSchedules() throws IOException {
 

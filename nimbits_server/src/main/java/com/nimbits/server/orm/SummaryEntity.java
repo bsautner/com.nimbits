@@ -21,12 +21,12 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.trigger.Trigger;
 
+import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import java.util.Date;
 
-
-@SuppressWarnings("unused")
+@Cacheable
 @PersistenceCapable
 public class SummaryEntity extends TriggerEntity implements Summary {
 

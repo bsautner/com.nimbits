@@ -169,20 +169,20 @@ public class V3EntityTests extends NimbitsTest {
             Thread.sleep(500);
 
         }
-        sleep(5);
+        sleep();
         List<Value> values = nimbits.getValues(inputPoint, 10);
         log("uuid", inputPoint.getId());
         assertEquals(10, values.size());
 
-        sleep(5);
+        sleep();
 
-        Value v = nimbits.getSnapshot(outputPoint);
-        log("Summary Test:" + v.toString());
-        if (v.getDoubleValue() <= 3) {
-            error("summary didn't work:" + v.toString());
-        } else {
-            log("Done Summary");
-        }
+//        Value v = nimbits.getSnapshot(outputPoint);
+//        log("Summary Test:" + v.toString());
+//        if (v.getDoubleValue() <= 3) {
+//            error("summary didn't work:" + v.toString());
+//        } else {
+//            log("Done Summary");
+//        }
 
     }
 

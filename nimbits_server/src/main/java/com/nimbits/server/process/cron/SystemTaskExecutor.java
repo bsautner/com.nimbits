@@ -43,16 +43,16 @@ import org.springframework.stereotype.Component;
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.Query;
+import javax.jdo.Transaction;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 
 @Component
 public class SystemTaskExecutor {
     private final Logger logger = LoggerFactory.getLogger(SystemTaskExecutor.class.getName());
-
-    // private TaskExecutor taskExecutor;
 
     private EntityDao entityDao;
 
@@ -76,7 +76,8 @@ public class SystemTaskExecutor {
     @org.springframework.beans.factory.annotation.Value("${system.task.idle.enabled}")
     private Boolean idleEnabled;
 
-
+    @org.springframework.beans.factory.annotation.Value("${system.task.idle.limit}")
+    private String idleLimit;
 
     @Autowired
     public SystemTaskExecutor(PersistenceManagerFactory persistenceManagerFactory, UserDao userDao,
@@ -106,21 +107,26 @@ public class SystemTaskExecutor {
 
         if (idleEnabled) {
 
+            logger.info("Processing Idle Points");
+            String batchID = UUID.randomUUID().toString();
+            markIdleBatch(batchID);
+
+
+            Transaction tx;
+
             final PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
-
             try {
 
-                final Query q = pm.newQuery(PointEntity.class);
-                q.setFilter("idleAlarmOn == k && idleAlarmSent == c");
-                q.declareParameters("Boolean k, Boolean c");
+                final Query processQuery = pm.newQuery(PointEntity.class);
+                processQuery.setFilter("idleAlarmOn == k && idleAlarmSent == c && batchId == b");
+                processQuery.declareParameters("Boolean k, Boolean c, String b");
 
-                //  tx = pm.currentTransaction();
+                tx = pm.currentTransaction();
 
-                //  tx.begin();
+                tx.begin();
 
 
-                final List<Point> result = (List<Point>) q.execute(true, false);
+                final List<Point> result = (List<Point>) processQuery.execute(true, false, batchID);
                 for (Point entity : result) {
                     Point model = new PointModel.Builder().init(entity).create();
 
@@ -135,6 +141,7 @@ public class SystemTaskExecutor {
 
 
                                 //  p.setIdleAlarmSent(true);
+
                                 subscriptionService.process(userOptional.get(), model, new Value.Builder().initValue(value).alertType(AlertType.IdleAlert).create());
 
                             }
@@ -164,14 +171,14 @@ public class SystemTaskExecutor {
 
             for (Schedule schedule : schedules) {
 
-                if (schedule.getLastProcessed() + schedule.getInterval() < new Date().getTime()) {
+                if (schedule.getProcessedTimestamp() + schedule.getInterval() < new Date().getTime()) {
 
                     Optional<User> ownerOptional = userService.getUserByKey(schedule.getOwner());
 
                     if (ownerOptional.isPresent()) {
                         User owner = ownerOptional.get();
 
-                        schedule.setLastProcessed(new Date().getTime());
+                        schedule.setProcessedTimestamp(new Date().getTime());
 
                         entityDao.addUpdateEntity(owner, schedule);
                         Optional<Entity> sourcePoint = entityDao.getEntity(owner, schedule.getSource(), EntityType.point);
@@ -196,6 +203,37 @@ public class SystemTaskExecutor {
             }
         }
 
+    }
+
+    private void markIdleBatch(String batchID) {
+        final PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+
+        Query q = pm.newQuery("javax.jdo.query.SQL","UPDATE POINTENTITY " +
+                "SET BATCHID = \"" + batchID +"\" WHERE " +
+                "\nIDLEALARMON = true &&" +
+                "\nIDLEALARMSENT = false &&" +
+                "\nBATCHID IS NULL " +
+                "\nORDER BY PROCESSEDTIMESTAMP ASC" +
+                "\nLIMIT " + idleLimit);
+
+        Transaction tx = pm.currentTransaction();
+
+        try {
+
+            tx.begin();
+            q.execute();
+
+        }
+        catch (Exception ex) {
+            logger.error("Error in Idle Processing", ex);
+            tx.rollback();
+            throw ex;
+        }
+        finally {
+            tx.commit();
+            pm.close();
+        }
     }
 
 }

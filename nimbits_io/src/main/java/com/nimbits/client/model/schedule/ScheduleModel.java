@@ -36,20 +36,20 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
     @Expose
     private String target;
     @Expose
-    private Long lastProcessed;
+    private Long processedTimestamp;
 
 
     private ScheduleModel() {
 
     }
 
-    protected ScheduleModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, Boolean enabled, Long interval, String source, String target, Long lastProcessed) {
+    protected ScheduleModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, Boolean enabled, Long interval, String source, String target, Long processedTimestamp) {
         super(id, name, description, entityType, parent, owner);
         this.enabled = enabled;
         this.interval = interval;
         this.source = source;
         this.target = target;
-        this.lastProcessed = lastProcessed;
+        this.processedTimestamp = processedTimestamp;
     }
 
 
@@ -74,14 +74,14 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
     }
 
     @Override
-    public void setLastProcessed(Long lastProcessed) {
-        this.lastProcessed = lastProcessed;
+    public void setProcessedTimestamp(long processedTimestamp) {
+        this.processedTimestamp = processedTimestamp;
     }
 
     @Override
-    public Long getLastProcessed() {
+    public long getProcessedTimestamp() {
 
-        return lastProcessed == null ? 0 : lastProcessed;
+        return processedTimestamp == null ? 0 : processedTimestamp;
     }
 
     @Override
@@ -116,7 +116,7 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
 
         private String target;
 
-        private Long lastProcessed;
+        private Long processedTimestamp;
 
 
         public Builder name(String name) {
@@ -131,13 +131,13 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
                 enabled = true;
             }
 
-            if (lastProcessed == null) {
-                lastProcessed = 0L;
+            if (processedTimestamp == null) {
+                processedTimestamp = 0L;
             }
 
 
             return new ScheduleModel(id, name, description, type, parent, owner,
-                    enabled, interval, source, target, lastProcessed);
+                    enabled, interval, source, target, processedTimestamp);
         }
 
         @Override
@@ -159,7 +159,7 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
 
             target = e.getTarget();
 
-            lastProcessed = e.getLastProcessed();
+            processedTimestamp = e.getProcessedTimestamp();
 
             return this;
         }
@@ -238,8 +238,8 @@ public class ScheduleModel extends EntityModel implements Serializable, Schedule
             return this;
         }
 
-        public Builder lastProcessed(Long lastProcessed) {
-            this.lastProcessed = lastProcessed;
+        public Builder processedTimestamp(Long processedTimestamp) {
+            this.processedTimestamp = processedTimestamp;
             return this;
         }
 

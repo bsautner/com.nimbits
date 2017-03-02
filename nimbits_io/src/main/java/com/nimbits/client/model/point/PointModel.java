@@ -65,6 +65,11 @@ public class PointModel extends EntityModel implements Serializable, Point {
     private double filterValue;
     @Expose
     private boolean inferLocation;
+    @Expose
+    private String batchId;
+
+    @Expose
+    private long processedTimestamp;
 
     //reset on any data write
     private boolean idleAlarmSent;
@@ -95,7 +100,8 @@ public class PointModel extends EntityModel implements Serializable, Point {
             final double deltaAlarm,
             final boolean deltaAlarmOn,
             final int deltaSeconds,
-            final int precision) {
+            final int precision,
+            final String batchId) {
         super(id, name, description, entityType, parent, owner);
         this.highAlarm = highAlarm;
         this.expire = expire;
@@ -114,6 +120,8 @@ public class PointModel extends EntityModel implements Serializable, Point {
         this.deltaAlarmOn = deltaAlarmOn;
         this.deltaSeconds = deltaSeconds;
         this.precision = precision;
+        this.batchId = batchId;
+        this.processedTimestamp = 0;
     }
 
     // Constructors
@@ -300,6 +308,26 @@ public class PointModel extends EntityModel implements Serializable, Point {
         this.precision = precision;
     }
 
+    @Override
+    public String getBatchId() {
+        return batchId;
+    }
+
+    @Override
+    public void setBatchId(String batchId) {
+        this.batchId = batchId;
+    }
+
+    @Override
+    public long getProcessedTimestamp() {
+        return this.processedTimestamp;
+    }
+
+    @Override
+    public void setProcessedTimestamp(long timestamp) {
+
+    }
+
 
     public static class Builder extends EntityBuilder<Builder> {
 
@@ -339,6 +367,10 @@ public class PointModel extends EntityModel implements Serializable, Point {
         private PointType pointType;
 
         private int precision;
+
+        private String batchId;
+
+        private long processedTimestamp;
 
 
         public Builder name(String v) {
@@ -434,6 +466,16 @@ public class PointModel extends EntityModel implements Serializable, Point {
             return this;
         }
 
+        public Builder batchId(String batchId) {
+            this.batchId = batchId;
+            return this;
+        }
+
+        public Builder processedTimestamp(long timestamp) {
+            this.processedTimestamp = timestamp;
+            return this;
+        }
+
         public Builder init(Point point) {
             super.init(point);
             this.highAlarm = point.getHighAlarm();
@@ -453,6 +495,8 @@ public class PointModel extends EntityModel implements Serializable, Point {
             this.deltaAlarm = point.getDeltaAlarm();
             this.deltaAlarmOn = point.isDeltaAlarmOn();
             this.precision = point.getPrecision();
+            this.batchId = point.getBatchId();
+            this.processedTimestamp = point.getProcessedTimestamp();
             return this;
         }
 
@@ -469,7 +513,7 @@ public class PointModel extends EntityModel implements Serializable, Point {
 
             return new PointModel(id, name, description, type, parent, owner, highAlarm, expire
                     , unit, lowAlarm, highAlarmOn, lowAlarmOn, idleAlarmOn, idleSeconds, idleAlarmSent, filterType, filterValue, inferLocation,
-                    pointType, deltaAlarm, deltaAlarmOn, deltaSeconds, precision);
+                    pointType, deltaAlarm, deltaAlarmOn, deltaSeconds, precision, batchId);
         }
 
         @Override

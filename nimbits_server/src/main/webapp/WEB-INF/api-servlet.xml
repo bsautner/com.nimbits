@@ -18,7 +18,6 @@
 
     <bean id="api"  class="com.nimbits.server.api.v3.RestAPI">
 
-
     </bean>
 
 

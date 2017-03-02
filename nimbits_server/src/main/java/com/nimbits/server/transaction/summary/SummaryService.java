@@ -34,7 +34,6 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 
 @Service @Deprecated
@@ -67,7 +66,7 @@ public class SummaryService {
             final long now = System.currentTimeMillis();
             final Summary summary = (Summary) optional.get();
 
-            if (summary.getLastProcessed().getTime() + summary.getSummaryIntervalMs() < System.currentTimeMillis()) {
+            if (summary.getProcessedTimestamp() + summary.getSummaryIntervalMs() < System.currentTimeMillis()) {
 
                 final Entity source = entityDao.getEntity(user, summary.getTrigger(), EntityType.point).get();
 
@@ -100,7 +99,7 @@ public class SummaryService {
                 final Point target = (Point) entityDao.getEntity(user, summary.getTarget(), EntityType.point).get();
 
                 valueGeneratedListener.newValue(user, target, value);
-                summary.setLastProcessed(new Date());
+                summary.setProcessedTimestamp(System.currentTimeMillis());
                 entityService.addUpdateEntity(user, summary);
 
 

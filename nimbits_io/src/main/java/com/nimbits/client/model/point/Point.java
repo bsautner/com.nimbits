@@ -19,10 +19,8 @@ package com.nimbits.client.model.point;
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.enums.point.PointType;
 import com.nimbits.client.model.entity.Entity;
-import com.nimbits.client.model.value.Value;
 
 import java.io.Serializable;
-import java.util.List;
 
 
 public interface Point extends Entity, Serializable {
@@ -96,5 +94,12 @@ public interface Point extends Entity, Serializable {
 
     void setPrecision(int precision);
 
+    String getBatchId();
+
+    void setBatchId(String batchId);
+
+    long getProcessedTimestamp();
+
+    void setProcessedTimestamp(long timestamp);
 
 }

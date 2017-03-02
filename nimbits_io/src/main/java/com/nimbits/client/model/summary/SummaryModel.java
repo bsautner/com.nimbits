@@ -35,14 +35,14 @@ public class SummaryModel extends TriggerModel implements Summary {
     @Expose
     private Long summaryIntervalMs;
 
-    private Date lastProcessed;
+    private long processedTimestamp;
 
 
-    protected SummaryModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String target, String trigger, boolean enabled, Integer summaryType, Long summaryIntervalMs, Date lastProcessed) {
+    protected SummaryModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String target, String trigger, boolean enabled, Integer summaryType, Long summaryIntervalMs, long processedTimestamp) {
         super(id, name, description, entityType, parent, owner, target, trigger, enabled);
         this.summaryType = summaryType;
         this.summaryIntervalMs = summaryIntervalMs;
-        this.lastProcessed = lastProcessed;
+        this.processedTimestamp = processedTimestamp;
     }
 
 
@@ -67,19 +67,19 @@ public class SummaryModel extends TriggerModel implements Summary {
     }
 
     @Override
-    public Date getLastProcessed() {
-        return lastProcessed;
+    public long getProcessedTimestamp() {
+        return processedTimestamp;
     }
 
     @Override
-    public void setLastProcessed(Date date) {
-        this.lastProcessed = new Date(date.getTime());
+    public void setProcessedTimestamp(long date) {
+        this.processedTimestamp = date;
     }
 
-    @Override
+
     public boolean isReady() {
 
-        return this.lastProcessed.getTime() + summaryIntervalMs < new Date().getTime();
+        return this.processedTimestamp + summaryIntervalMs < new Date().getTime();
 
     }
 
@@ -99,7 +99,7 @@ public class SummaryModel extends TriggerModel implements Summary {
 
         private Long summaryIntervalMs;
 
-        private Date lastProcessed;
+        private long processTimestamp;
 
 
         public Builder summaryType(SummaryType summaryType) {
@@ -112,8 +112,8 @@ public class SummaryModel extends TriggerModel implements Summary {
             return this;
         }
 
-        public Builder lastProcessed(Date lastProcessed) {
-            this.lastProcessed = lastProcessed;
+        public Builder processedTimestamp(long processedTimestamp) {
+            this.processTimestamp = processedTimestamp;
             return this;
         }
 
@@ -157,7 +157,7 @@ public class SummaryModel extends TriggerModel implements Summary {
             this.enabled = true;
 
             return new SummaryModel(id, name, description, type, parent, owner, target,
-                    trigger, enabled, summaryType.getCode(), summaryIntervalMs, lastProcessed);
+                    trigger, enabled, summaryType.getCode(), summaryIntervalMs, processTimestamp);
         }
 
         @Override
@@ -174,7 +174,7 @@ public class SummaryModel extends TriggerModel implements Summary {
 
             this.summaryType = c.getSummaryType();
             this.summaryIntervalMs = c.getSummaryIntervalMs();
-            this.lastProcessed = c.getLastProcessed();
+            this.processTimestamp = c.getProcessedTimestamp();
             return this;
         }
 

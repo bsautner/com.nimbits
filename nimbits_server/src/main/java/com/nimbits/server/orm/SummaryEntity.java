@@ -22,9 +22,9 @@ import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.trigger.Trigger;
 
 import javax.jdo.annotations.Cacheable;
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import java.util.Date;
 
 @Cacheable
 @PersistenceCapable
@@ -36,8 +36,8 @@ public class SummaryEntity extends TriggerEntity implements Summary {
     @Persistent
     private Long summaryIntervalMs;
 
-    @Persistent
-    private Date lastProcessed;
+    @Persistent @Column(defaultValue = "0")
+    private Long processedTimestamp;
 
 
     protected SummaryEntity() {
@@ -47,7 +47,8 @@ public class SummaryEntity extends TriggerEntity implements Summary {
         super(summary);
         this.summaryType = summary.getSummaryType().getCode();
         this.summaryIntervalMs = summary.getSummaryIntervalMs();
-        this.lastProcessed = summary.getLastProcessed();
+        this.processedTimestamp = summary.getProcessedTimestamp();
+
 
     }
 
@@ -68,11 +69,11 @@ public class SummaryEntity extends TriggerEntity implements Summary {
     }
 
     @Override
-    public Date getLastProcessed() {
-        if (lastProcessed != null) {
-            return new Date(lastProcessed.getTime());
+    public long getProcessedTimestamp() {
+        if (processedTimestamp != null) {
+            return processedTimestamp;
         } else {
-            return new Date(0);
+            return 0L;
         }
     }
 
@@ -85,13 +86,8 @@ public class SummaryEntity extends TriggerEntity implements Summary {
     }
 
     @Override
-    public void setLastProcessed(final Date lastProcessed) {
-        this.lastProcessed = new Date(lastProcessed.getTime());
-    }
-
-    @Override
-    public boolean isReady() {
-        return false;
+    public void setProcessedTimestamp(final long processedTimestamp) {
+        this.processedTimestamp = processedTimestamp;
     }
 
     @Override
@@ -100,7 +96,7 @@ public class SummaryEntity extends TriggerEntity implements Summary {
         final Summary summary = (Summary) update;
         this.summaryType = summary.getSummaryType().getCode();
         this.summaryIntervalMs = summary.getSummaryIntervalMs();
-        this.lastProcessed = summary.getLastProcessed();
+        this.processedTimestamp = summary.getProcessedTimestamp();
     }
 
     @Override

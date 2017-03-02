@@ -23,10 +23,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 
-import javax.jdo.annotations.Cacheable;
-import javax.jdo.annotations.NotPersistent;
-import javax.jdo.annotations.PersistenceCapable;
-import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.*;
 import java.util.List;
 
 @PersistenceCapable @Cacheable("false")
@@ -87,6 +84,13 @@ public class PointEntity extends EntityStore implements Point {
     @Persistent
     private Integer precision;
 
+    @Persistent
+    private String batchId;
+
+
+    @Persistent
+    private Long processedTimestamp;
+
 
     @Override
     public boolean isIdleAlarmOn() {
@@ -143,6 +147,7 @@ public class PointEntity extends EntityStore implements Point {
         this.deltaSeconds = point.getDeltaSeconds();
         this.deltaAlarmOn = point.isDeltaAlarmOn();
         this.precision = point.getPrecision();
+        this.processedTimestamp = point.getProcessedTimestamp();
     }
 
 
@@ -303,6 +308,27 @@ public class PointEntity extends EntityStore implements Point {
     }
 
     @Override
+    public String getBatchId() {
+        return batchId;
+    }
+
+    @Override
+    public void setBatchId(String batchId) {
+        this.batchId = batchId;
+    }
+
+    @Override
+    public long getProcessedTimestamp() {
+        return processedTimestamp == null ? 0 : processedTimestamp;
+    }
+
+    @Override
+    public void setProcessedTimestamp(long timestamp) {
+        this.processedTimestamp = timestamp;
+    }
+
+
+    @Override
     public void update(final Entity update) {
         super.update(update);
         final Point p = (Point) update;
@@ -323,6 +349,7 @@ public class PointEntity extends EntityStore implements Point {
         this.deltaAlarm = p.getDeltaAlarm();
         this.deltaAlarmOn = p.isDeltaAlarmOn();
         this.precision = p.getPrecision();
+        this.processedTimestamp = p.getProcessedTimestamp();
     }
 
     @Override

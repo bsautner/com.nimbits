@@ -82,6 +82,7 @@ public class EntityDao {
             tx.begin();
             Point update = pm.getObjectById(PointEntity.class, id);
             update.setIdleAlarmSent(sent);
+            update.setBatchId(null);
             tx.commit();
         } finally {
             pm.close();

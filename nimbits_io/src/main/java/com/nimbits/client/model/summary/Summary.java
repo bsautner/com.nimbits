@@ -20,7 +20,6 @@ import com.nimbits.client.enums.SummaryType;
 import com.nimbits.client.model.trigger.Trigger;
 
 import java.io.Serializable;
-import java.util.Date;
 
 
 public interface Summary extends Trigger, Serializable {
@@ -31,9 +30,8 @@ public interface Summary extends Trigger, Serializable {
 
     int getSummaryIntervalSeconds();
 
-    Date getLastProcessed();
+    long getProcessedTimestamp();
 
-    void setLastProcessed(final Date date);
+    void setProcessedTimestamp(final long date);
 
-    boolean isReady();
 }

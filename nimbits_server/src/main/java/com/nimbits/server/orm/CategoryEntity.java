@@ -20,11 +20,10 @@ import com.nimbits.client.model.category.Category;
 import com.nimbits.client.model.entity.Entity;
 
 import javax.jdo.annotations.Cacheable;
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.PersistenceCapable;
 
 @Cacheable
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
+@PersistenceCapable
 public class CategoryEntity extends EntityStore implements Category {
 
     private static final long serialVersionUID = -4488132572071199717L;

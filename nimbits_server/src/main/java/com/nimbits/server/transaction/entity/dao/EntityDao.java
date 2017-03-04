@@ -501,6 +501,15 @@ public class EntityDao {
             }
 
 
+
+            try {
+                if (commit.getEntityType() == null) {
+                    System.out.println("null!");
+                }
+            } catch (NullPointerException p) {
+                p.printStackTrace();
+            }
+
             if (!commit.getEntityType().equals(EntityType.user)) {
                 commit.validate(user);
                 if (commit.getEntityType().isTrigger()) {

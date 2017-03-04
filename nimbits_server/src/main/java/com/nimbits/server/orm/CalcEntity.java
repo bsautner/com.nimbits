@@ -26,7 +26,7 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
 
-@PersistenceCapable @Cacheable("true")
+@PersistenceCapable @Cacheable
 public class CalcEntity extends TriggerEntity implements Calculation {
 
 

@@ -35,21 +35,16 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityServiceRpc;
 import com.nimbits.client.service.entity.EntityServiceRpcAsync;
 import com.nimbits.client.ui.helper.FeedbackHelper;
-import com.nimbits.client.ui.panels.login.LoginListener;
 
 
 public class CenterPanel extends NavigationEventProvider implements BasePanel.PanelEvent {
-    private static final String PATH_NIMBITS_HOME = "http://www.nimbits.com";
 
     private NavigationPanel navigationPanel;
-    private com.extjs.gxt.ui.client.widget.Window w;
 
     private final User user;
-    private final LoginListener loginListener;
 
-    public CenterPanel(final User user, LoginListener loginListener) {
+    public CenterPanel(final User user ) {
         this.user = user;
-        this.loginListener = loginListener;
 
     }
 
@@ -93,7 +88,7 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
 
         navigationPanel = createNavigationPanel();
         navigationPanel.setLayout(new FillLayout());
-        navigationPanel.setHeight(Window.getClientHeight() - 100);
+        navigationPanel.setHeight(Window.getClientHeight());
         panel.add(navigationPanel);
 
         HBoxLayout layout = new HBoxLayout();
@@ -108,7 +103,7 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
 
 
 
-    public void addEntity(final TreeModel model) {
+    private void addEntity(final TreeModel model) {
 
         switch (model.getEntityType()) {
             case user:
@@ -130,27 +125,9 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
 
     @Override
     public void close() {
-        w.hide();
-    }
-
-    private static class XMPPInviteAsyncCallback implements AsyncCallback<Void> {
-
-        XMPPInviteAsyncCallback() {
-        }
-
-        @Override
-        public void onFailure(Throwable caught) {
-
-            FeedbackHelper.showError(caught);
-        }
-
-        @Override
-        public void onSuccess(Void result) {
-            FeedbackHelper.showInfo("Please check your instant messaging client for an invite to chat from nimbits1.appspot.com. You must accept the invitation in order for Nimbits to IM you.");
-
-        }
 
     }
+
 
     private class GetSubscribedEntityAsyncCallback implements AsyncCallback<Entity> {
 

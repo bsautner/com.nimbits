@@ -23,7 +23,7 @@ import com.nimbits.client.model.user.User;
 import javax.jdo.annotations.*;
 
 
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
+@PersistenceCapable(identityType = IdentityType.APPLICATION)
 @Inheritance(strategy = InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class TriggerEntity extends EntityStore implements Trigger {
 

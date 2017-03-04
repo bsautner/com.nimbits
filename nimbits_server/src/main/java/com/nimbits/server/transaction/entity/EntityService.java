@@ -17,6 +17,7 @@
 package com.nimbits.server.transaction.entity;
 
 
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
@@ -37,6 +38,8 @@ public class EntityService {
 
     private final EntityDao entityDao;
     private final ValueService valueService;
+    @org.springframework.beans.factory.annotation.Value("${system.init_points}")
+    private boolean initPoints;
 
 
     @Autowired
@@ -72,16 +75,13 @@ public class EntityService {
 
 
         Entity created = entityDao.addUpdateEntity(user, entity);
-        switch (entity.getEntityType()) {
 
-            case point:
-                Value init = new Value.Builder().doubleValue(0.0).timestamp(0L).meta(POINT_INITIALISED).create();
+        if (initPoints && EntityType.point.equals(entity.getEntityType())) {
 
-                valueService.recordValues(user, (Point) created, Collections.singletonList(init));
+            Value init = new Value.Builder().doubleValue(0.0).timestamp(0L).meta(POINT_INITIALISED).create();
 
-                //  if (entity.getEntityType().equals(EntityType.))
+            valueService.recordValues(user, (Point) created, Collections.singletonList(init));
 
-                break;
 
         }
 

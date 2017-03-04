@@ -13,8 +13,6 @@
         <class>com.nimbits.server.orm.InstanceEntity</class>
         <class>com.nimbits.server.orm.PointEntity</class>
         <class>com.nimbits.server.orm.ScheduleEntity</class>
-        <class>com.nimbits.server.orm.SessionStore</class>
-        <class>com.nimbits.server.orm.SettingEntity</class>
         <class>com.nimbits.server.orm.SubscriptionEntity</class>
         <class>com.nimbits.server.orm.SummaryEntity</class>
         <class>com.nimbits.server.orm.SyncEntity</class>

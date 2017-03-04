@@ -28,7 +28,7 @@ import org.apache.commons.lang3.StringUtils;
 import javax.jdo.annotations.*;
 import java.util.List;
 
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
+@PersistenceCapable
 @Inheritance(strategy = InheritanceStrategy.SUBCLASS_TABLE)
 public abstract class EntityStore implements Entity {
 

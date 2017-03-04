@@ -69,7 +69,7 @@ class NavigationPanel extends NavigationEventProvider {
         this.tree = new EntityTree<ModelData>();
         this.valueService = GWT.create(ValueServiceRpc.class);
         this.entityService = GWT.create(EntityServiceRpc.class);
-        setBorders(true);
+        setBorders(false);
         setScrollMode(Scroll.ALWAYS);
 
 

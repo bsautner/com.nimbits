@@ -6,7 +6,7 @@ import javax.jdo.annotations.*;
 import java.math.BigDecimal;
 
 @Cacheable("false")
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
+@PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class ValueStore {
 
     @PrimaryKey

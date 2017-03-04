@@ -140,10 +140,8 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
         viewport.setLayout(new BorderLayout());
         viewport.setBorders(false);
 
-        //feedPanel.setLayout(new FitLayout());
-        //feedPanel.setHeight("100%");
 
-        CenterPanel centerPanel = new CenterPanel(user, this);
+        CenterPanel centerPanel = new CenterPanel(user);
 
 
         ContentPanel center = new ContentPanel();

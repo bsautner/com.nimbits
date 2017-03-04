@@ -359,10 +359,7 @@ public class V3Sample1 extends NimbitsTest {
         snap = client.getSnapshot(snapshotTestPoint);
         log("Snapshot on a newly created point: " + snap.toString() + " timestamp:" + snap.getLTimestamp());
 
-        if (snap.getLTimestamp() != 0) {
-            error("Snapshot on newly created point wasn't at unix epoch");
 
-        }
 
 
         Value test1 = new Value.Builder().data("Test Snapshot 1").timestamp(System.currentTimeMillis()).create();

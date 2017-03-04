@@ -23,14 +23,13 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.instance.Instance;
 import com.nimbits.client.model.server.Protocol;
 
-import javax.jdo.annotations.IdentityType;
 import javax.jdo.annotations.NotPersistent;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 
 //TODO - create access keys on the forign instance and use the id of the id entity as the apikey field here
 @Deprecated
-@PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
+@PersistenceCapable
 public class InstanceEntity extends EntityStore implements Instance {
 
     @NotPersistent

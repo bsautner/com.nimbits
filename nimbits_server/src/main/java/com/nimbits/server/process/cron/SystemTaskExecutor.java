@@ -22,7 +22,6 @@ import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
-import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
@@ -33,6 +32,7 @@ import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.subscription.SubscriptionService;
 import com.nimbits.server.transaction.user.dao.UserDao;
 import com.nimbits.server.transaction.user.service.UserService;
+import com.nimbits.server.transaction.value.ValueDao;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +60,8 @@ public class SystemTaskExecutor {
 
     private UserService userService;
 
+    private ValueDao valueDao;
+
     private ValueService valueService;
 
     private ValueTask valueTask;
@@ -83,7 +85,7 @@ public class SystemTaskExecutor {
     public SystemTaskExecutor(PersistenceManagerFactory persistenceManagerFactory, UserDao userDao,
                               SubscriptionService subscriptionService,
                               EntityDao entityDao, UserService userService, ValueService valueService,
-                              ValueTask valueTask, EntityService entityService) {
+                              ValueTask valueTask, EntityService entityService, ValueDao valueDao) {
 
         this.persistenceManagerFactory = persistenceManagerFactory;
         this.subscriptionService = subscriptionService;
@@ -94,6 +96,7 @@ public class SystemTaskExecutor {
         this.valueTask = valueTask;
         this.entityService = entityService;
         this.userDao = userDao;
+        this.valueDao = valueDao;
     }
 
 
@@ -112,45 +115,50 @@ public class SystemTaskExecutor {
             markIdleBatch(batchID);
 
 
-            Transaction tx;
+            Transaction tx = null;
 
             final PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
             try {
 
                 final Query processQuery = pm.newQuery(PointEntity.class);
-                processQuery.setFilter("idleAlarmOn == k && idleAlarmSent == c && batchId == b");
-                processQuery.declareParameters("Boolean k, Boolean c, String b");
+                processQuery.setFilter("batchId == b");
+                processQuery.declareParameters("String b");
+
 
                 tx = pm.currentTransaction();
 
                 tx.begin();
 
 
-                final List<Point> result = (List<Point>) processQuery.execute(true, false, batchID);
+                final List<Point> result = (List<Point>) processQuery.execute(batchID);
+                logger.info("Idle Points Being Processed: " + result.size());
                 for (Point entity : result) {
-                    Point model = new PointModel.Builder().init(entity).create();
 
-                    if (model.isIdleAlarmOn() && !model.idleAlarmSent() && model.getIdleSeconds() > 0) {
+                    Optional<User> userOptional = userDao.getUserById(entity.getOwner());
+                    if (userOptional.isPresent()) {
+                        entityDao.setIdleAlarmSentFlag(entity.getId(), true, true);
 
-                        Value value = valueService.getSnapshot(model);
-                        long idleDuration = model.getIdleSeconds() * 1000;
-                        if (value.getLTimestamp() <= (System.currentTimeMillis() - idleDuration)) {
-                            Optional<User> userOptional = userDao.getUserById(model.getOwner());
-                            if (userOptional.isPresent()) {
-                                entityDao.setIdleAlarmSentFlag(model.getId(), true);
+                        Value value = valueDao.getSnapshot(entity);
 
+                        subscriptionService.process(userOptional.get(), entity, new Value.Builder().initValue(value).alertType(AlertType.IdleAlert).create());
 
-                                //  p.setIdleAlarmSent(true);
-
-                                subscriptionService.process(userOptional.get(), model, new Value.Builder().initValue(value).alertType(AlertType.IdleAlert).create());
-
-                            }
-                        }
                     }
+
+
                 }
 
 
-            } finally {
+            } catch (Throwable throwable) {
+                if (tx != null) {
+                    tx.rollback();
+                    logger.error("idle point processing failed", throwable);
+                }
+            }
+            finally  {
+
+                if (tx != null) {
+                    tx.commit();
+                }
 
                 pm.close();
             }
@@ -166,6 +174,7 @@ public class SystemTaskExecutor {
     private void processSchedules() throws IOException {
 
         if (scheduleEnabled) {
+            logger.info("Processing Schedules");
 
             List<Schedule> schedules = entityDao.getSchedules();
 
@@ -208,14 +217,21 @@ public class SystemTaskExecutor {
     private void markIdleBatch(String batchID) {
         final PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
+        String query = "UPDATE POINTENTITY P" +
+                "\nSET BATCHID = \"" + batchID + "\"" +
+                "\nwhere not exists(" +
+                "\nselect 1 from VALUESTORE V" +
+                "\n    WHERE   V.ENTITYID = P.ID" +
+                "\n    AND ((((UNIX_TIMESTAMP() * 1000) -  V.TIMESTAMP) / 1000) < P.IDLESECONDS)" +
+                "\n    AND P.BATCHID is NULL " +
+                "\n    ORDER BY P.PROCESSEDTIMESTAMP ASC" +
+                "\n    LIMIT " + idleLimit +
+                "\n)" +
+                "\nAND IDLEALARMON = true AND IDLEALARMSENT = false";
 
-        Query q = pm.newQuery("javax.jdo.query.SQL","UPDATE POINTENTITY " +
-                "SET BATCHID = \"" + batchID +"\" WHERE " +
-                "\nIDLEALARMON = true &&" +
-                "\nIDLEALARMSENT = false &&" +
-                "\nBATCHID IS NULL " +
-                "\nORDER BY PROCESSEDTIMESTAMP ASC" +
-                "\nLIMIT " + idleLimit);
+        Query q = pm.newQuery("javax.jdo.query.SQL",query);
+
+        logger.info(query);
 
         Transaction tx = pm.currentTransaction();
 
@@ -235,5 +251,8 @@ public class SystemTaskExecutor {
             pm.close();
         }
     }
+
+
+
 
 }

@@ -51,13 +51,7 @@ public class WebHookEntity extends EntityStore implements WebHook {
 
 
     public WebHookEntity(WebHook webHook) {
-        super(webHook);
-        this.method = webHook.getMethod().getCode();
-        this.url = webHook.getUrl().getUrl();
-        this.enabled = webHook.isEnabled();
-        this.downloadTarget = webHook.getDownloadTarget();
-        this.pathChannel = webHook.getPathChannel().getCode();
-        this.bodyChannel = webHook.getBodyChannel().getCode();
+        update(webHook);
     }
 
     @Override

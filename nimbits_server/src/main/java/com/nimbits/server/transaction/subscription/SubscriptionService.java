@@ -32,7 +32,6 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.server.communication.mail.EmailService;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.ValueDao;
@@ -378,7 +377,7 @@ public class SubscriptionService  {
                             valueDao.storeValues(target, Collections.singletonList(r));
 
                             if (target.isIdleAlarmOn() && target.idleAlarmSent()) {
-                                entityDao.setIdleAlarmSentFlag(target.getId(), false);
+                                entityDao.setIdleAlarmSentFlag(target.getId(), false, false);
 //                                target.setIdleAlarmSent(false);
 //                                entityDao.addUpdateEntity(user, target);
                                 //entityService.addUpdateEntity(user, point);

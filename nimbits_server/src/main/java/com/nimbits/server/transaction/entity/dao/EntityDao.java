@@ -75,7 +75,7 @@ public class EntityDao {
 
     }
 
-    public void setIdleAlarmSentFlag(String id, boolean sent) {
+    public void setIdleAlarmSentFlag(String id, boolean sent, boolean isProcessed) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         Transaction tx = pm.currentTransaction();
         try {
@@ -83,8 +83,15 @@ public class EntityDao {
             Point update = pm.getObjectById(PointEntity.class, id);
             update.setIdleAlarmSent(sent);
             update.setBatchId(null);
+            if (isProcessed) {
+                update.setProcessedTimestamp(System.currentTimeMillis());
+            }
             tx.commit();
+        } catch (Throwable throwable) {
+            logger.error("Error setting alart sent flag", throwable);
+            tx.rollback();
         } finally {
+
             pm.close();
         }
 

@@ -83,14 +83,13 @@ public class RestAPI {
     @RequestMapping(value = "/{uuid}/snapshot", method = RequestMethod.POST)
     public ResponseEntity postSnapshot(
             @RequestHeader(name = "Authorization") String authorization,
-            @RequestBody String json,
+            @RequestBody Value value,
             @PathVariable String uuid) throws Exception {
 
         User user = userService.getUser(authorization);
         Optional<Entity> entityOptional =  entityDao.getEntity(user, uuid, EntityType.point);
 
         if (entityOptional.isPresent()) {
-            Value value = gson.fromJson(json, Value.class);
             valueTask.process(user, (Point) entityOptional.get(), value);
 
             return new ResponseEntity(HttpStatus.OK);

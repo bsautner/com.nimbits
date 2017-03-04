@@ -214,7 +214,7 @@ public class ValueTask {
 
 
             if (point.isIdleAlarmOn() && point.idleAlarmSent()) {
-                entityDao.setIdleAlarmSentFlag(point.getId(), false);
+                entityDao.setIdleAlarmSentFlag(point.getId(), false, false);
             }
 
 

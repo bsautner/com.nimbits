@@ -54,7 +54,7 @@
 
 
                 <prop key="javax.jdo.option.ConnectionUserName">root</prop>
-                <prop key="javax.jdo.option.ConnectionPassword">nimbits</prop>
+                <prop key="javax.jdo.option.ConnectionPassword">password</prop>
                 <prop key="javax.jdo.option.ConnectionDriverName">com.mysql.jdbc.Driver</prop>
                 <prop key="org.jpox.autoCreateSchema">true</prop>
                 <prop key="datanucleus.query.sql.allowAll">true</prop>

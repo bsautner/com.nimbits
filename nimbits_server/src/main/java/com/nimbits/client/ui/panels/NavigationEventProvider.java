@@ -88,7 +88,7 @@ public abstract class NavigationEventProvider extends LayoutContainer {
 
     }
 
-    public void addEntityClickedListeners(final EntityClickedListener listener) {
+    void addEntityClickedListeners(final EntityClickedListener listener) {
         entityClickedListeners.add(listener);
     }
 

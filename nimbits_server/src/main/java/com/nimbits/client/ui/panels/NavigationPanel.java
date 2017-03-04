@@ -150,28 +150,6 @@ class NavigationPanel extends NavigationEventProvider {
         }
     }
 
-    private class SaveValueAsyncCallback implements AsyncCallback<Void> {
-        private final TreeModel model;
-        private final Value value;
-
-        SaveValueAsyncCallback(TreeModel model, Value value) {
-            this.model = model;
-            this.value = value;
-        }
-
-        @Override
-        public void onFailure(final Throwable throwable) {
-
-            GWT.log(throwable.getMessage(), throwable);
-        }
-
-        @Override
-        public void onSuccess(final Void object) {
-            updateModel(value, model);
-
-        }
-    }
-
     private class GetUserListAsyncCallback implements AsyncCallback<List<Entity>> {
 
         GetUserListAsyncCallback() {
@@ -334,42 +312,51 @@ class NavigationPanel extends NavigationEventProvider {
                         .getSelectedItem();
 
                 if (mx != null) {
-                    TreeModel model = (TreeModel) mx;
+                    final TreeModel model = (TreeModel) mx;
+                    Entity entity = model.getBaseEntity();
+                    entityService.getEntityByKeyRpc(user, entity.getId(), entity.getEntityType(),
+                            new AsyncCallback<Entity>() {
+                                @Override
+                                public void onFailure(Throwable throwable) {
+                                    FeedbackHelper.showError(throwable);
+                                }
 
-                    switch (model.getBaseEntity().getEntityType()) {
-                        case user:
-                            break;
-                        case point:
-//                            notifyEntityClickedListener(model);
-//                            ReportHelper.openUrl(user, model.getUuid(), model.getName().getValue(), model.getBaseEntity().getEntityType());
-                            notifyEntityClickedListener(model);
-                            context.showChartPanel(model.getBaseEntity());
-                            break;
-                        case category:
-                            notifyEntityClickedListener(model);
-                            context.showChartPanel(model.getBaseEntity());
-//                            ReportHelper.openUrl(user, model.getUuid(), model.getName().getValue(), model.getBaseEntity().getEntityType());
-//                            notifyEntityClickedListener(model);
-                            break;
-                        case subscription:
-                            notifyEntityClickedListener(model);
-                            context.showSubscriptionPanel(model.getBaseEntity());
-                            break;
+                                @Override
+                                public void onSuccess(Entity entity) {
+                                    switch (entity.getEntityType()) {
+                                        case user:
+                                            break;
+                                        case point:
+                                            notifyEntityClickedListener(model);
+                                            context.showChartPanel(entity);
+                                            break;
+                                        case category:
+                                            notifyEntityClickedListener(model);
+                                            context.showChartPanel(entity);
+                                            break;
+                                        case subscription:
+                                            notifyEntityClickedListener(model);
+                                            context.showSubscriptionPanel(entity);
+                                            break;
 
-                        case calculation:
-                            context.showCalcPanel(model.getBaseEntity());
-                            break;
-                        case summary:
-                            context.showSummaryPanel(model.getBaseEntity());
-                            break;
+                                        case calculation:
+                                            context.showCalcPanel(entity);
+                                            break;
+                                        case summary:
+                                            context.showSummaryPanel(entity);
+                                            break;
 
-                        case schedule:
-                            context.showSchedulePanel(model.getBaseEntity());
-                            break;
-                        case webhook:
-                            context.showWebHookPanel(model.getBaseEntity());
-                            break;
-                    }
+                                        case schedule:
+                                            context.showSchedulePanel(entity);
+                                            break;
+                                        case webhook:
+                                            context.showWebHookPanel(entity);
+                                            break;
+                                    }
+                                }
+                            });
+
+
 
 
                 }

@@ -99,9 +99,12 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
     private AddFolderMenuItem addFolderMenuItem;
 
 
+
     private final User user;
 
     private List<EntityModifiedListener> entityModifiedListeners;
+
+    private final EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
 
     private class NewPointMessageBoxEventListener implements Listener<MessageBoxEvent> {
 
@@ -518,7 +521,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
     }
 
 
-    public void showPointPanel(final Entity entity) {
+    private void showPointPanel(final Entity entity) {
         panel = new PointPanel(user, this, entity);
         showModal(panel, EDIT_PROPERTIES);
 
@@ -583,11 +586,20 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
         public void componentSelected(final MenuEvent ce) {
             final TreeModel selectedModel = (TreeModel) tree.getSelectionModel().getSelectedItem();
             final Entity entity = selectedModel.getBaseEntity();
-            try {
-                showWebHookPanel(entity);
-            } catch (Exception e) {
-                FeedbackHelper.showError(e);
-            }
+
+            service.getEntityByKeyRpc(user, entity.getId(), entity.getEntityType(),
+                    new AsyncCallback<Entity>() {
+                        @Override
+                        public void onFailure(Throwable e) {
+                            FeedbackHelper.showError(e);
+                        }
+
+                        @Override
+                        public void onSuccess(Entity entity) {
+                            showWebHookPanel(entity);
+                        }
+                    });
+
 
         }
     }

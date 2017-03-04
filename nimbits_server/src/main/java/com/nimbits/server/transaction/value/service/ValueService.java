@@ -43,7 +43,5 @@ public interface ValueService  {
 
     AlertType getAlertType(final Point point, final Value value);
 
-    Value getSnapshot(Point point);
-
     void deleteAllData(Point point);
 }

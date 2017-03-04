@@ -18,6 +18,8 @@ package com.nimbits.server.transaction.entity.dao;
 
 
 import com.google.common.base.Optional;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.entity.EntityName;
@@ -25,16 +27,15 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.trigger.Trigger;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.user.UserModel;
-import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.orm.*;
+import com.nimbits.server.orm.PointEntity;
+import com.nimbits.server.orm.ScheduleEntity;
+import com.nimbits.server.orm.SubscriptionEntity;
+import com.nimbits.server.orm.TriggerEntity;
 import com.nimbits.server.transaction.entity.EntityHelper;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 
 import javax.jdo.*;
@@ -60,7 +61,6 @@ public class EntityDao {
 
     }
 
-    //@Cacheable(cacheNames = "entity")
     public List<Entity> getSubscriptionsToEntity(final User user, final Entity subscribedEntity) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
@@ -75,23 +75,28 @@ public class EntityDao {
 
     }
 
-    public void setIdleAlarmSentFlag(String id, boolean sent) {
+    public void setIdleAlarmSentFlag(String id, boolean sent, boolean isProcessed) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         Transaction tx = pm.currentTransaction();
         try {
             tx.begin();
             Point update = pm.getObjectById(PointEntity.class, id);
             update.setIdleAlarmSent(sent);
+            update.setBatchId(null);
+            if (isProcessed) {
+                update.setProcessedTimestamp(System.currentTimeMillis());
+            }
             tx.commit();
+        } catch (Throwable throwable) {
+            logger.error("Error setting alart sent flag", throwable);
+            tx.rollback();
         } finally {
+
             pm.close();
         }
 
     }
 
-
-
-    //@Cacheable(cacheNames = "entity")
     public Optional<Entity> getEntityByTrigger(final User user, final Entity entity, final EntityType type) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -116,7 +121,6 @@ public class EntityDao {
         }
     }
 
-    //@Cacheable(cacheNames = "entity")
     public Map<String, Entity> getEntityMap(final User user, final EntityType type, final int limit) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -149,13 +153,13 @@ public class EntityDao {
 
     }
 
-    //@Cacheable(cacheNames = "entity")
-    public List<Entity> getChildren(final User user, final List<Entity> parents) {
+
+    public List<Entity> getChildren(final User user, final Entity parent) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         try {
-            final List<Entity> r = new ArrayList<Entity>(INT);
+            final List<Entity> r = new ArrayList<>(INT);
 
-            final List<Entity> result = getEntityChildren(pm, parents);
+            final List<Entity> result = getEntityChildren(user, parent);
             r.addAll(result);
 
             return EntityHelper.createModels(user, r);
@@ -165,16 +169,15 @@ public class EntityDao {
 
     }
 
-    //@Cacheable(cacheNames = "entity")
     public List<Entity> getEntities(final User user) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
         try {
-            final Collection<String> ownerKeys = new ArrayList<String>(1);
+            final Collection<String> ownerKeys = new ArrayList<>(1);
             ownerKeys.add(user.getId());
 
 
-            final List<Entity> retObj = new ArrayList<Entity>(INT);
+            final List<Entity> retObj = new ArrayList<>(INT);
 
 
             for (final EntityType type : EntityType.values()) {
@@ -210,17 +213,16 @@ public class EntityDao {
 
     }
 
-    //@Cacheable(cacheNames = "entity")
     public List<Entity> getEntitiesByType(final User user, final EntityType type) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
 
         try {
-            final Collection<String> ownerKeys = new ArrayList<String>(1);
+            final Collection<String> ownerKeys = new ArrayList<>(1);
             ownerKeys.add(user.getId());
 
 
-            final List<Entity> retObj = new ArrayList<Entity>(INT);
+            final List<Entity> retObj = new ArrayList<>();
 
 
             final Query q1;
@@ -248,7 +250,6 @@ public class EntityDao {
 
     }
 
-    //@Cacheable(cacheNames = "entity")
     public Optional<Entity> getEntity(final User user, final String id, final EntityType type) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         Entity entity = null;
@@ -269,7 +270,6 @@ public class EntityDao {
         }
     }
 
-    //@Cacheable(cacheNames = "entity")
     public Optional<Entity> findEntity(User user, String id) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
@@ -289,7 +289,7 @@ public class EntityDao {
         }
     }
 
-    //@Cacheable(cacheNames = "entity")
+
     public Optional<Entity> getEntityByName(final User user, final EntityName name, final EntityType type) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
@@ -327,7 +327,6 @@ public class EntityDao {
         }
     }
 
-    //@Cacheable(cacheNames = "entity")
     public String getOwner(String point) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
@@ -347,7 +346,6 @@ public class EntityDao {
         }
     }
 
-    //@Cacheable(cacheNames = "entity")
     public List<Schedule> getSchedules() {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -376,7 +374,6 @@ public class EntityDao {
     }
 
 
-    @CacheEvict(cacheNames = "entity")
     public void deleteEntity(final User user, final Entity entity, final EntityType type) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         Class cls = getEntityPersistentClass(type);
@@ -384,9 +381,8 @@ public class EntityDao {
             try {
                 final Entity c = (Entity) pm.getObjectById(cls, entity.getId());
                 if (c != null) {
-                    List<Entity> list = new ArrayList<>(1);
-                    list.add(c);
-                    final List<Entity> entities = getEntityChildren(pm, list);
+
+                    final List<Entity> entities = getEntityChildren(user, c);
                     entities.add(c);
 
                     pm.deletePersistentAll(entities);
@@ -401,7 +397,6 @@ public class EntityDao {
         }
     }
 
-    @CacheEvict(cacheNames = "entity")
     public Entity addUpdateEntity(final User user, final Entity entity) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -460,57 +455,44 @@ public class EntityDao {
         }
     }
 
-    private List<Entity> getEntityChildren(PersistenceManager pm, final List<Entity> parents) {
+    private void extractChildren(List<Entity> result, List<Entity> parents, Table<String, String, Entity> all) {
 
+        List<Entity> children = new ArrayList<>();
 
-        final List<Entity> retObj = new ArrayList<Entity>(INT);
-
-
-        for (EntityType type : EntityType.values()) {
-            Query q1;
-
-            for (Entity entity : parents) {
-
-
-                q1 = pm.newQuery(getEntityPersistentClass(type));
-
-
-                q1.setFilter("parent==b");
-                q1.declareParameters("String b");
-                String id = entity.getId();
-                if (id != null) {
-                    final Object sample = q1.execute(id);
-                    if (sample != null) {
-                        List<Entity> result = (List<Entity>) sample;
-                        if (!result.isEmpty()) {
-                            List<Entity> filtered = new ArrayList<>(result.size()); //avoid recursion on the user entity with the parent same as id
-                            for (Entity c : result) {
-                                if (c.getEntityType() != null && c.getParent() != null) {
-                                    if (!c.getEntityType().equals(EntityType.user) && !c.getParent().equals(c.getId())) {
-                                        filtered.add(c);
-                                    }
-                                } else {
-                                    logger.warn("unexpected null values : " + GsonFactory.getInstance(true).toJson(c));
-                                }
-                            }
-                            if (!filtered.isEmpty()) {
-                                retObj.addAll(filtered);
-                                //  for (final Entity e : result) {
-                                List<Entity> children = getEntityChildren(pm, filtered);
-                                retObj.addAll(children);
-                            }
-                            //}
-                        }
-                    }
-                }
+        for (Entity entity : parents) {
+            if (! all.column(entity.getId()).isEmpty()) {
+                children.addAll(all.column(entity.getId()).values());
 
             }
 
-
         }
+        if (! children.isEmpty()) {
+            extractChildren(result, children, all);
+        }
+        result.addAll(children);
 
 
-        return retObj;
+    }
+
+    private List<Entity> getEntityChildren(final User user, final Entity parent) {
+        List<Entity> entities = getEntities(user);
+        Table<String, String, Entity> table = HashBasedTable.create();
+        List<Entity> result = new ArrayList<>();
+        List<Entity> children = new ArrayList<>();
+        for (Entity entity : entities) {
+
+            if (entity.getParent().equals(parent.getId())) {
+                children.add(entity);
+            }
+            else {
+                table.put(entity.getId(), entity.getParent(), entity);
+            }
+        }
+        result.addAll(children);
+        extractChildren(result, children, table);
+
+
+        return result;
 
     }
 
@@ -598,7 +580,7 @@ public class EntityDao {
                     }
                 }
             }
-           return Optional.absent();
+            return Optional.absent();
 
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);

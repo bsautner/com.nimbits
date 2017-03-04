@@ -29,9 +29,9 @@ public interface Schedule extends Entity, Serializable {
 
     String getTarget();
 
-    void setLastProcessed(Long lastProcessed);
+    void setProcessedTimestamp(long processedTimestamp);
 
-    Long getLastProcessed();
+    long getProcessedTimestamp();
 
     void setEnabled(Boolean enabled);
 

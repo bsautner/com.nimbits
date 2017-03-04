@@ -21,7 +21,7 @@ import com.nimbits.client.model.setting.Setting;
 
 import javax.jdo.annotations.*;
 
-@SuppressWarnings("unused")
+@Cacheable
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class SettingEntity implements Setting {
 

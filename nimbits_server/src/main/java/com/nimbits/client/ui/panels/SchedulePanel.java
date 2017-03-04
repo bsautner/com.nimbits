@@ -75,7 +75,7 @@ public class SchedulePanel extends BasePanel {
 
             enabled.setValue(((Schedule) entity).isEnabled());
             interval.setValue(((Schedule) entity).getInterval() / (60 * 1000));
-            dateSelector.setValue(fmt.format(new Date(((Schedule) entity).getLastProcessed())));
+            dateSelector.setValue(fmt.format(new Date(((Schedule) entity).getProcessedTimestamp())));
 
 
         } else {
@@ -147,7 +147,7 @@ public class SchedulePanel extends BasePanel {
                 .source(source)
                 .target(target)
                 .enabled(enabledCheckbox.getValue())
-                .lastProcessed(fmt.parse(dateField.getValue()).getTime());
+                .processedTimestamp(fmt.parse(dateField.getValue()).getTime());
 
 
         return builder.create();

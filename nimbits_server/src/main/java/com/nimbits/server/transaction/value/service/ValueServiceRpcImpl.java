@@ -35,7 +35,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.ServletException;
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -69,7 +68,7 @@ public class ValueServiceRpcImpl extends RemoteServiceServlet implements ValueSe
     @Override
     public String getChartTable(User user, Entity entity, Integer countParam) {
         Optional<Integer> count = (countParam != null && countParam > 0) ? Optional.of(countParam) : Optional.<Integer>absent();
-        List<Entity> children = entityDao.getChildren(user, Collections.singletonList(entity));
+        List<Entity> children = entityDao.getChildren(user, entity);
         return valueService.getChartTable(user, entity, children, Optional.<Range<Long>>absent(), count, Optional.<String>absent());
     }
 

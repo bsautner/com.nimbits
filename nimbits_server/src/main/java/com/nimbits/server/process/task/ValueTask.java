@@ -22,27 +22,25 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.data.DataProcessor;
 import com.nimbits.server.transaction.calculation.CalculationService;
-import com.nimbits.server.transaction.entity.EntityService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.subscription.SubscriptionService;
 import com.nimbits.server.transaction.summary.SummaryService;
 import com.nimbits.server.transaction.sync.SyncService;
 import com.nimbits.server.transaction.value.service.ValueService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Collections;
-import java.util.Date;
 
 @Component
 public class ValueTask {
 
-    private final Logger logger = LoggerFactory.getLogger(ValueTask.class.getName());
+    public enum ValueStatus {
+        stored, ignoredExpired, ignoredCompressed, ignoredExpiredAndCompression, unknownPointType
+    }
+
 
     private EntityDao entityDao;
 
@@ -87,7 +85,7 @@ public class ValueTask {
         }));
     }
 
-    public void processSync(final User user, final Point point, Value value) {
+    public ValueStatus processSync(final User user, final Point point, Value value) {
 
         ValueRunner valueRunner = new ValueRunner(user, point, value, new ValueGeneratedListener() {
             @Override
@@ -95,7 +93,7 @@ public class ValueTask {
                 processSync(u, p, v);
             }
         });
-        valueRunner.run();
+        return valueRunner.processValue();
     }
 
     private class ValueRunner implements Runnable {
@@ -105,6 +103,8 @@ public class ValueTask {
         private Value value;
         private final ValueGeneratedListener valueGeneratedListener;
 
+
+
         ValueRunner(User user, Point point, Value value, ValueGeneratedListener valueGeneratedListener) {
             this.user = user;
             this.point = point;
@@ -113,7 +113,12 @@ public class ValueTask {
 
         }
 
+        @Override
         public void run() {
+            processValue();
+        }
+
+        ValueStatus processValue() {
 
 
             boolean ignoredByCompression = false;
@@ -128,7 +133,18 @@ public class ValueTask {
 
             Value previousValue;
 
-            if (!ignoredByDate && !ignoredByCompression) {
+
+
+            if (ignoredByCompression && ignoredByDate) {
+                return ValueStatus.ignoredExpiredAndCompression;
+            }
+            if (ignoredByCompression) {
+                return ValueStatus.ignoredCompressed;
+            }
+            else if (ignoredByDate) {
+                return ValueStatus.ignoredExpired;
+            }
+            else {
 
                 switch (point.getPointType()) {
                     case basic:
@@ -175,7 +191,7 @@ public class ValueTask {
 
                         break;
                     default:
-                        return;
+                        return ValueStatus.unknownPointType;
 
                 }
 
@@ -183,10 +199,9 @@ public class ValueTask {
                 final AlertType t = valueService.getAlertType(point, value);
                 final Value v = new Value.Builder().initValue(value).timestamp(System.currentTimeMillis()).alertType(t).create();
                 completeRequest(user, point, v);
+                return ValueStatus.stored;
 
 
-            } else {
-                logger.info("Value was ignored by date or compression setting");
             }
 
 
@@ -199,7 +214,7 @@ public class ValueTask {
 
 
             if (point.isIdleAlarmOn() && point.idleAlarmSent()) {
-                entityDao.setIdleAlarmSentFlag(point.getId(), false);
+                entityDao.setIdleAlarmSentFlag(point.getId(), false, false);
             }
 
 

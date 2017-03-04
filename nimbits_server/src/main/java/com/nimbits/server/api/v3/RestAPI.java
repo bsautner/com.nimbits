@@ -83,14 +83,13 @@ public class RestAPI {
     @RequestMapping(value = "/{uuid}/snapshot", method = RequestMethod.POST)
     public ResponseEntity postSnapshot(
             @RequestHeader(name = "Authorization") String authorization,
-            @RequestBody String json,
+            @RequestBody Value value,
             @PathVariable String uuid) throws Exception {
 
         User user = userService.getUser(authorization);
         Optional<Entity> entityOptional =  entityDao.getEntity(user, uuid, EntityType.point);
 
         if (entityOptional.isPresent()) {
-            Value value = gson.fromJson(json, Value.class);
             valueTask.process(user, (Point) entityOptional.get(), value);
 
             return new ResponseEntity(HttpStatus.OK);
@@ -106,15 +105,16 @@ public class RestAPI {
     @RequestMapping(value = "sync/{uuid}/snapshot", method = RequestMethod.POST)
     public ResponseEntity postSnapshotSync(
             @RequestHeader(name = "Authorization") String authorization,
-            @RequestBody String json,
+            @RequestBody Value value,
             @PathVariable String uuid) throws Exception {
 
         User user = userService.getUser(authorization);
         Optional<Entity> entityOptional =  entityDao.getEntity(user, uuid, EntityType.point);
 
         if (entityOptional.isPresent()) {
-            Value value = gson.fromJson(json, Value.class);
-            valueTask.processSync(user, (Point) entityOptional.get(), value);
+            //Value value = gson.fromJson(json, Value.class);
+            ValueTask.ValueStatus status =  valueTask.processSync(user, (Point) entityOptional.get(), value);
+
 
             return new ResponseEntity(HttpStatus.OK);
         }
@@ -217,7 +217,7 @@ public class RestAPI {
 
 
         if (optional.isPresent()) {
-            List<Entity> children = entityDao.getChildren(user, Collections.singletonList(optional.get()));
+            List<Entity> children = entityDao.getChildren(user, optional.get());
             for (Entity e : children) {
                 setHAL(user, e, Collections.<Entity>emptyList(), getCurrentUrl(request), null);
             }
@@ -234,7 +234,7 @@ public class RestAPI {
 
         List<Entity> children;
         if (includeChildren) {
-            children = entityDao.getChildren(user, Collections.<Entity>singletonList(user));
+            children = entityDao.getChildren(user, user);
         } else {
             children = Collections.emptyList();
         }
@@ -328,7 +328,7 @@ public class RestAPI {
 
             Optional<Entity> optional = entityDao.getEntity(user, uuid, EntityType.point);
             if (optional.isPresent()) {
-                List<Entity> children = entityDao.getChildren(user, Collections.singletonList(optional.get()));
+                List<Entity> children = entityDao.getChildren(user, optional.get());
                 String chartData = valueService.getChartTable(user, optional.get(), children, timespan, count, mask);
                 return new ResponseEntity<>(chartData, HttpStatus.OK);
             }
@@ -437,7 +437,7 @@ public class RestAPI {
 
                 List<Entity> children;
                 if (includeChildren) {
-                    children = entityDao.getChildren(user, Collections.singletonList(entity));
+                    children = entityDao.getChildren(user, entity);
                 } else {
                     children = Collections.emptyList();
                 }

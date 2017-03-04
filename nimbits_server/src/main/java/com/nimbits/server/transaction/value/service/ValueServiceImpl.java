@@ -24,7 +24,6 @@ import com.google.common.collect.Table;
 import com.google.gson.Gson;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
-
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
@@ -34,9 +33,6 @@ import com.nimbits.server.chart.ChartDTO;
 import com.nimbits.server.chart.ChartDataColumn;
 import com.nimbits.server.chart.Row;
 import com.nimbits.server.gson.GsonFactory;
-import com.nimbits.server.transaction.entity.EntityService;
-import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.subscription.SubscriptionService;
 import com.nimbits.server.transaction.value.ValueDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -124,11 +120,6 @@ public class ValueServiceImpl implements ValueService {
 
     }
 
-
-    @Override
-    public Value getSnapshot(Point point) {
-        return valueDao.getSnapshot(point);
-    }
 
     @Override
     public void deleteAllData(Point point) {

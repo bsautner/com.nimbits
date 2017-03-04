@@ -19,10 +19,12 @@ package com.nimbits.server.orm;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.schedule.Schedule;
 
+import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import java.io.Serializable;
 
+@Cacheable("false")
 @PersistenceCapable()
 public class ScheduleEntity extends EntityStore implements Serializable, Schedule {
 
@@ -39,7 +41,7 @@ public class ScheduleEntity extends EntityStore implements Serializable, Schedul
     private String target;
 
     @Persistent
-    private Long lastProcessed;
+    private Long processedTimestamp;
 
 
     public ScheduleEntity(Schedule schedule) {
@@ -48,7 +50,7 @@ public class ScheduleEntity extends EntityStore implements Serializable, Schedul
         this.interval = schedule.getInterval();
         this.source = schedule.getSource();
         this.target = schedule.getTarget();
-        this.lastProcessed = schedule.getLastProcessed();
+        this.processedTimestamp = schedule.getProcessedTimestamp();
     }
 
     @Override
@@ -72,14 +74,16 @@ public class ScheduleEntity extends EntityStore implements Serializable, Schedul
     }
 
     @Override
-    public void setLastProcessed(Long lastProcessed) {
-        this.lastProcessed = lastProcessed;
+    public void setProcessedTimestamp(long processedTimestamp) {
+        this.processedTimestamp = processedTimestamp;
     }
 
-    @Override
-    public Long getLastProcessed() {
 
-        return lastProcessed == null ? 0 : Long.valueOf(lastProcessed);
+
+    @Override
+    public long getProcessedTimestamp() {
+
+        return processedTimestamp == null ? 0 : Long.valueOf(processedTimestamp);
     }
 
     @Override

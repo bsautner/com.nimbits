@@ -34,24 +34,24 @@ public class HighFrequencyRepeaterTest extends NimbitsTest {
 
         for (int i = 0; i < c; i++) {
 
-           if (v == 1.0) {
-               v = 0.0;
-           } else {
-               v = 1.0;
-           }
-           nimbits.recordValueSync(pointName, new Value.Builder().doubleValue(v).create());
+            if (v == 1.0) {
+                v = 0.0;
+            } else {
+                v = 1.0;
+            }
+            nimbits.recordValueSync(pointName, new Value.Builder().doubleValue(v).create());
 
 
 
 
 
         }
-       System.out.println("Sleeping...");
-       Thread.sleep(60000);
+
+        sleep(5);
 
         List<Value> valueList = nimbits.getValues(point, c);
         for (Value vx : valueList) {
-            System.out.println(vx.getDoubleValue());
+            log(vx.getDoubleValue());
         }
         assertEquals(c, valueList.size());
 

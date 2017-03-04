@@ -26,7 +26,6 @@ import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.process.task.ValueGeneratedListener;
-import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.entity.EntityService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.subscription.SubscriptionService;
@@ -35,11 +34,9 @@ import org.apache.commons.math3.stat.descriptive.DescriptiveStatistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 
-@Service
+@Service @Deprecated
 public class SummaryService {
 
 
@@ -66,10 +63,10 @@ public class SummaryService {
         final Optional<Entity> optional = entityDao.getEntityByTrigger(user, point, EntityType.summary);
         if (optional.isPresent()) {
 
-            final Long now = System.currentTimeMillis();
+            final long now = System.currentTimeMillis();
             final Summary summary = (Summary) optional.get();
 
-            if (summary.getLastProcessed().getTime() + summary.getSummaryIntervalMs() < new Date().getTime()) {
+            if (summary.getProcessedTimestamp() + summary.getSummaryIntervalMs() < System.currentTimeMillis()) {
 
                 final Entity source = entityDao.getEntity(user, summary.getTrigger(), EntityType.point).get();
 
@@ -80,7 +77,7 @@ public class SummaryService {
                     Point pointSource = ((Point) source);
                     pointSource.setDeltaSeconds(summary.getSummaryIntervalSeconds());
                     double delta = subscriptionService.calculateDelta(pointSource);
-                    value = new Value.Builder().doubleValue(delta).timestamp(new Date()).create();
+                    value = new Value.Builder().doubleValue(delta).timestamp(System.currentTimeMillis()).create();
 
                 } else {
                     final List<Value> values = valueService.getSeries(source, timespan, Optional.<Range<Integer>>absent(), Optional.<String>absent());
@@ -102,7 +99,7 @@ public class SummaryService {
                 final Point target = (Point) entityDao.getEntity(user, summary.getTarget(), EntityType.point).get();
 
                 valueGeneratedListener.newValue(user, target, value);
-                summary.setLastProcessed(new Date());
+                summary.setProcessedTimestamp(System.currentTimeMillis());
                 entityService.addUpdateEntity(user, summary);
 
 

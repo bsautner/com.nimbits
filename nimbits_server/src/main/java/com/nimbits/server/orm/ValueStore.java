@@ -4,8 +4,8 @@ import com.nimbits.client.model.value.Value;
 
 import javax.jdo.annotations.*;
 import java.math.BigDecimal;
-import java.util.Date;
 
+@Cacheable("false")
 @PersistenceCapable(identityType = IdentityType.APPLICATION, detachable = "false")
 public class ValueStore {
 
@@ -28,7 +28,7 @@ public class ValueStore {
     @Persistent
     private Double lng;
 
-    @Persistent
+    @Persistent @Column(length = 9, scale = 5)
     private BigDecimal d;
 
     @Persistent @Column(jdbcType = "CLOB")

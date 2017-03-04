@@ -1,6 +1,5 @@
 package com.nimbits.it;
 
-import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.value.Value;
 import org.junit.Before;
@@ -11,9 +10,7 @@ import retrofit.client.Response;
 
 import java.util.UUID;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 public class SnapshotTest extends NimbitsTest {
 
@@ -45,7 +42,7 @@ public class SnapshotTest extends NimbitsTest {
         });
 
 
-        Thread.sleep(1000);
+        sleep();
         Value v = nimbits.getSnapshot(pointName);
         assertEquals(11.0, v.getDoubleValue(), 0.01);
         assertTrue(v.getLTimestamp() > 0);

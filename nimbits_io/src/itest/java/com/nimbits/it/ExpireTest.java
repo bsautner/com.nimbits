@@ -43,13 +43,14 @@ public class ExpireTest extends NimbitsTest {
 
             nimbits.recordValueSync(pointName, new Value.Builder().timestamp(calendar.getTimeInMillis() - random.nextInt(10000000)).doubleValue(random.nextDouble() * 100).create());
 
-            System.out.println("Recording Synchronously " + i);
+            log("Recording Synchronously " + i);
         }
 
-        Thread.sleep(5000);
+        sleep();
+
         List<Value> valueList = nimbits.getValues(point, c);
         for (Value vx : valueList) {
-            System.out.println(vx.getDoubleValue() + vx.getTimestamp().toString());
+            log(vx);
         }
         assertEquals(0, valueList.size());
 
@@ -61,10 +62,11 @@ public class ExpireTest extends NimbitsTest {
             nimbits.recordValueSync(pointName, new Value.Builder().timestamp(System.currentTimeMillis()-c).doubleValue(random.nextDouble() * 100).create());
 
         }
+        sleep(5);
 
         List<Value> valueList1 = nimbits.getValues(point, c);
         for (Value vx : valueList1) {
-            System.out.println(vx.getDoubleValue() + vx.getTimestamp().toString());
+            log(vx.getDoubleValue() + vx.getLTimestamp().toString());
         }
         assertEquals(c, valueList1.size());
 

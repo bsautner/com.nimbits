@@ -16,8 +16,6 @@
 
 package com.nimbits.server.api.filter;
 
-import com.nimbits.server.transaction.settings.SettingsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.FilterChain;
@@ -29,8 +27,6 @@ import java.io.IOException;
 @Service
 public class AuthFilter extends FilterBase {
 
-    @Autowired
-    protected SettingsService settingsService;
 
 
     public void destroy() {

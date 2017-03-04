@@ -18,7 +18,6 @@ package com.nimbits.server.api.filter;
 
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.user.User;
-import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.user.service.UserService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -37,15 +36,10 @@ public class FilterBase implements Filter {
 
 
     @Autowired
-    protected SettingsService settingsService;
-
-    @Autowired
     private UserService userService;
 
 
     private Logger logger = LoggerFactory.getLogger(FilterBase.class.getName());
-
-    private User user;
 
     @Override
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws ServletException, IOException {
@@ -97,7 +91,7 @@ public class FilterBase implements Filter {
             String authHeader = ((HttpServletRequest)request).getHeader("Authorization");
 
 
-            user = userService.getUser(authHeader);
+            User user = userService.getUser(authHeader);
             request.setAttribute(Parameters.user.getText(), user);
             return user != null;
         } catch (Throwable ex) {

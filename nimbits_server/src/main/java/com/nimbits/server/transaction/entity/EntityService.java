@@ -47,15 +47,15 @@ public class EntityService {
 
     }
 
-    public void deleteEntity(final User user, Entity entity) {
+    public void deleteEntity(final User user, final Entity entity, boolean isAdmin) {
 
         List<Entity> children = entityDao.getChildren(user, entity);
 
 
         for (Entity c : children) {
-            deleteEntity(user, c);
+            deleteEntity(user, c, isAdmin);
         }
-        entityDao.deleteEntity(user, entity, entity.getEntityType());
+        entityDao.deleteEntity(user, entity, entity.getEntityType(), isAdmin);
 
 
     }

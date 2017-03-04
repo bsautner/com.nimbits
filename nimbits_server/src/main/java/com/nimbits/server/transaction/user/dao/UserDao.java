@@ -19,13 +19,13 @@ package com.nimbits.server.transaction.user.dao;
 
 import com.google.common.base.Optional;
 import com.nimbits.client.model.user.User;
+import com.nimbits.server.PMF;
 import com.nimbits.server.orm.UserEntity;
 import com.nimbits.server.transaction.entity.EntityHelper;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.PersistenceManagerFactory;
@@ -36,18 +36,13 @@ import java.util.List;
 
 @Repository
 public class UserDao {
-    private PersistenceManagerFactory persistenceManagerFactory;
-
-    public UserDao() {
-        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
-    }
+    private final PersistenceManagerFactory persistenceManagerFactory;
 
     @Autowired
-    public void setPersistenceManagerFactory(PersistenceManagerFactory persistenceManagerFactory) {
-        this.persistenceManagerFactory = persistenceManagerFactory;
+    public UserDao(PMF pmf) {
+       // SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+        this.persistenceManagerFactory = pmf.get();
     }
-
-
 
     public void setResetPasswordToken(User user, String token) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
@@ -177,6 +172,7 @@ public class UserDao {
             pm.close();
         }
     }
+
 
 
 }

@@ -34,9 +34,6 @@ public class UserModel extends EntityModel implements Serializable, User {
     @Expose
     private String emailAddress;
 
-    @Expose
-    private Boolean isAdmin;
-
     private String password;
 
     private String passwordSalt;
@@ -59,11 +56,10 @@ public class UserModel extends EntityModel implements Serializable, User {
 
 
     protected UserModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String emailAddress,
-                        Boolean isAdmin, String password, String passwordSalt, String source, String passwordResetToken,
+                        String password, String passwordSalt, String source, String passwordResetToken,
                         Long passwordResetTokenTimestamp) {
         super(id, name, description, entityType, parent, owner);
         this.emailAddress = emailAddress;
-        this.isAdmin = isAdmin;
         this.password = password;
         this.passwordSalt = passwordSalt;
         this.source = source;
@@ -85,17 +81,6 @@ public class UserModel extends EntityModel implements Serializable, User {
     @Override
     public UserSource getSource() {
         return source == null ? UserSource.google : UserSource.valueOf(source);
-    }
-
-
-    @Override
-    public boolean getIsAdmin() {
-        return isAdmin == null ? false : isAdmin;
-    }
-
-    @Override
-    public void setIsAdmin(final boolean userAdmin) {
-        this.isAdmin = userAdmin;
     }
 
     @Override
@@ -146,8 +131,6 @@ public class UserModel extends EntityModel implements Serializable, User {
 
         UserModel userModel = (UserModel) o;
 
-
-        if (isAdmin != userModel.isAdmin) return false;
         if (emailAddress != null ? !emailAddress.equals(userModel.emailAddress) : userModel.emailAddress != null)
             return false;
 
@@ -158,10 +141,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     @Override
     public int hashCode() {
         int result = super.hashCode();
-
         result = 31 * result + emailAddress.hashCode();
-
-        result = 31 * result + (isAdmin ? 1 : 0);
 
         return result;
     }
@@ -235,7 +215,7 @@ public class UserModel extends EntityModel implements Serializable, User {
 
 
             return new UserModel(id, name, description, type, parent, owner,
-                    emailAddress, isAdmin, password, passwordSalt, source,  passwordResetToken, passwordResetTimestamp);
+                    emailAddress, password, passwordSalt, source,  passwordResetToken, passwordResetTimestamp);
         }
 
         @Override
@@ -250,7 +230,6 @@ public class UserModel extends EntityModel implements Serializable, User {
             super.init(u);
             this.emailAddress = u.getEmail().getValue();
 
-            this.isAdmin = u.getIsAdmin();
             this.password = u.getPassword();
             this.passwordSalt = u.getPasswordSalt();
             this.source = u.getSource().name();

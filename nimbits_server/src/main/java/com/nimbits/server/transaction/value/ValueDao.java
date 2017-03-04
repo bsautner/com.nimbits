@@ -5,6 +5,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Range;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.server.PMF;
 import com.nimbits.server.orm.ValueStore;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,11 @@ import java.util.regex.PatternSyntaxException;
 public class ValueDao {
 
 
-    private PersistenceManagerFactory persistenceManagerFactory;
+    private final PersistenceManagerFactory persistenceManagerFactory;
 
     @Autowired
-    public void setPersistenceManagerFactory(PersistenceManagerFactory persistenceManagerFactory) {
-        this.persistenceManagerFactory = persistenceManagerFactory;
-
+    public ValueDao(PMF pmf) {
+        this.persistenceManagerFactory = pmf.get();
     }
 
     public Value getSnapshot(Entity entity) {

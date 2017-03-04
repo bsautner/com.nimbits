@@ -19,7 +19,6 @@ package com.nimbits.server.transaction.user.service;
 import com.google.common.base.Optional;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
-import com.nimbits.client.enums.ServerSetting;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
@@ -29,7 +28,6 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.user.UserSource;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.settings.SettingsService;
 import com.nimbits.server.transaction.user.dao.UserDao;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -38,7 +36,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.swing.text.html.Option;
 import java.util.StringTokenizer;
 
 @Service
@@ -46,15 +43,21 @@ public class UserService {
 
     private final UserDao userDao;
 
-    private final SettingsService settingsService;
-
     private final EntityDao entityDao;
 
+    private final User admin;
+
+    @org.springframework.beans.factory.annotation.Value("${admin.email}")
+    private String adminEmail;
+
+    @org.springframework.beans.factory.annotation.Value("${admin.password}")
+    private String adminPassword;
+
     @Autowired
-    public UserService(UserDao userDao, SettingsService settingsService,  EntityDao entityDao) {
+    public UserService(UserDao userDao, EntityDao entityDao) {
         this.userDao = userDao;
-        this.settingsService = settingsService;
         this.entityDao = entityDao;
+        this.admin = new UserModel.Builder().isAdmin(true).email(adminEmail).create();
     }
 
 
@@ -101,8 +104,6 @@ public class UserService {
         }
 
 
-        boolean isFirst = !userDao.usersExist();
-
         final User newUser = new UserModel.Builder()
                 .name(name)
                 .password(cryptPassword)
@@ -114,40 +115,21 @@ public class UserService {
                 .create();
 
 
-        newUser.setIsAdmin(isFirst);
-
-        if (isFirst) {
-            settingsService.updateSetting(ServerSetting.admin, internetAddress.getValue());
-        }
-
         return (User) entityDao.addUpdateEntity(newUser, newUser);
 
     }
 
-    private User getAdmin() {
-        final String adminStr = settingsService.getSetting(ServerSetting.admin);
-        if (StringUtils.isEmpty(adminStr)) {
-            throw new IllegalArgumentException("Server is missing admin setting!");
-        } else {
-            return new UserModel.Builder()
-                    .name(CommonFactory.createName(adminStr, EntityType.user))
-                    .id(adminStr)
-                    .email(adminStr)
 
-                    .parent(adminStr)
-                    .isAdmin(true).create();
-
-        }
-    }
 
     public Optional<User> getUserByKey(final String key) {
 
-        Optional<Entity> optional = entityDao.getEntity(getAdmin(), key, EntityType.user);
-        if (optional.isPresent()) {
-            return Optional.of((User) optional.get());
-        } else {
-            return Optional.absent();
-        }
+            Optional<Entity> optional = entityDao.getEntity(admin, key, EntityType.user);
+            if (optional.isPresent()) {
+                return Optional.of((User) optional.get());
+            } else {
+                return Optional.absent();
+            }
+
 
 
     }
@@ -184,6 +166,11 @@ public class UserService {
         }
 
 
+    }
+
+    public boolean isAdmin(String authString) {
+        Optional<Credentials> credentials = credentialsWithBasicAuthentication(authString);
+        return credentials.isPresent() && StringUtils.equals(credentials.get().getLogin(), adminEmail) && StringUtils.equals(credentials.get().getPassword(), adminPassword);
     }
 
     Optional<User> doLogin(String email, String token) {

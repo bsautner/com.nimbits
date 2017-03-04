@@ -42,28 +42,6 @@
     </bean>
 
 
-    <bean id="pmf" class="org.springframework.orm.jdo.LocalPersistenceManagerFactoryBean">
-        <property name="jdoProperties">
-            <props>
-                <prop key="javax.jdo.PersistenceManagerFactoryClass">
-                    org.datanucleus.api.jdo.JDOPersistenceManagerFactory
-                </prop>
-                <prop key="javax.jdo.option.ConnectionURL">
-                    jdbc:mysql://localhost:3306/nimbits
-                </prop>
-
-
-                <prop key="javax.jdo.option.ConnectionUserName">root</prop>
-                <prop key="javax.jdo.option.ConnectionPassword">password</prop>
-                <prop key="javax.jdo.option.ConnectionDriverName">com.mysql.jdbc.Driver</prop>
-                <prop key="org.jpox.autoCreateSchema">true</prop>
-                <prop key="datanucleus.query.sql.allowAll">true</prop>
-                <prop key="datanucleus.schema.autoCreateAll">true</prop>
-                <prop key="org.jpox.identifier.case">PreserveCase</prop>
-            </props>
-        </property>
-    </bean>
-
 
     <bean id="taskExecutor" class="org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor">
         <property name="corePoolSize" value="5" />

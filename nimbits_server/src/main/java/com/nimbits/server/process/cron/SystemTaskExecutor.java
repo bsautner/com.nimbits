@@ -25,6 +25,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.server.PMF;
 import com.nimbits.server.orm.PointEntity;
 import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.entity.EntityService;
@@ -82,12 +83,12 @@ public class SystemTaskExecutor {
     private String idleLimit;
 
     @Autowired
-    public SystemTaskExecutor(PersistenceManagerFactory persistenceManagerFactory, UserDao userDao,
+    public SystemTaskExecutor(PMF pmf, UserDao userDao,
                               SubscriptionService subscriptionService,
                               EntityDao entityDao, UserService userService, ValueService valueService,
                               ValueTask valueTask, EntityService entityService, ValueDao valueDao) {
 
-        this.persistenceManagerFactory = persistenceManagerFactory;
+        this.persistenceManagerFactory = pmf.get();
         this.subscriptionService = subscriptionService;
 
         this.entityDao = entityDao;

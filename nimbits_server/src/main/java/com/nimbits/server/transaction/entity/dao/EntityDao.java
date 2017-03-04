@@ -27,6 +27,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.schedule.Schedule;
 import com.nimbits.client.model.trigger.Trigger;
 import com.nimbits.client.model.user.User;
+import com.nimbits.server.PMF;
 import com.nimbits.server.orm.PointEntity;
 import com.nimbits.server.orm.ScheduleEntity;
 import com.nimbits.server.orm.SubscriptionEntity;
@@ -48,17 +49,12 @@ public class EntityDao {
     private final static Logger logger = LoggerFactory.getLogger(EntityDao.class.getName());
     private static final int MAX_RECURSION = 10;
     private static final int INT = 1024;
-    private PersistenceManagerFactory persistenceManagerFactory;
+    private final PersistenceManagerFactory persistenceManagerFactory;
 
-
-    public EntityDao() {
-
-    }
 
     @Autowired
-    public void setPersistenceManagerFactory(PersistenceManagerFactory persistenceManagerFactory) {
-        this.persistenceManagerFactory = persistenceManagerFactory;
-
+    public EntityDao(PMF pmf) {
+        this.persistenceManagerFactory = pmf.get();
     }
 
     public List<Entity> getSubscriptionsToEntity(final User user, final Entity subscribedEntity) {
@@ -293,38 +289,21 @@ public class EntityDao {
     public Optional<Entity> getEntityByName(final User user, final EntityName name, final EntityType type) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
-        if (!user.getIsAdmin()) {
-            try {
+        try {
+            final Query q1 = pm.newQuery(getEntityPersistentClass(type));
 
-                final Query q1 = pm.newQuery(getEntityPersistentClass(type));
+            final List<Entity> c;
 
-                final List<Entity> c;
+            q1.setFilter("name==b");
+            q1.declareParameters("String b");
+            q1.setRange(0, 1);
+            c = (List<Entity>) q1.execute(name.getValue());
 
-                q1.setFilter("name==b && owner==o");
-                q1.declareParameters("String b, String o");
-                q1.setRange(0, 1);
-                c = (List<Entity>) q1.execute(name.getValue(), user.getId());
-
-                return getEntityOptional(user, c);
-            } finally {
-                pm.close();
-            }
-        } else {
-            try {
-                final Query q1 = pm.newQuery(getEntityPersistentClass(type));
-
-                final List<Entity> c;
-
-                q1.setFilter("name==b");
-                q1.declareParameters("String b");
-                q1.setRange(0, 1);
-                c = (List<Entity>) q1.execute(name.getValue());
-
-                return getEntityOptional(user, c);
-            } finally {
-                pm.close();
-            }
+            return getEntityOptional(user, c);
+        } finally {
+            pm.close();
         }
+
     }
 
     public String getOwner(String point) {
@@ -374,10 +353,10 @@ public class EntityDao {
     }
 
 
-    public void deleteEntity(final User user, final Entity entity, final EntityType type) {
+    public void deleteEntity(final User user, final Entity entity, final EntityType type, boolean isAdmin) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         Class cls = getEntityPersistentClass(type);
-        if (user.getIsAdmin() || entity.isOwner(user)) {
+        if (isAdmin || entity.isOwner(user)) {
             try {
                 final Entity c = (Entity) pm.getObjectById(cls, entity.getId());
                 if (c != null) {

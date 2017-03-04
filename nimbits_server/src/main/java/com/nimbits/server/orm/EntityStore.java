@@ -212,9 +212,7 @@ public abstract class EntityStore implements Entity {
         if (StringUtils.isEmpty(this.owner)) {
             throw new IllegalArgumentException("Owner must not be null");
         }
-        if (!user.getIsAdmin() && !this.owner.equals(user.getId()) && !entityType.equals(EntityType.user.getCode())) {
-            throw new IllegalArgumentException("You can't create an entity with an owner other than yourself!");
-        }
+
 
 
     }

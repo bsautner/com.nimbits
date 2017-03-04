@@ -28,12 +28,15 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.common.Utils;
+import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
+
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.entity.Entity;
+import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.service.entity.EntityServiceRpc;
@@ -117,9 +120,9 @@ class NavigationPanel extends NavigationEventProvider {
     @Override
     protected void onAttach() {
         super.onAttach();
-//        updater = new RefreshTimer();
-//        updater.scheduleRepeating(Const.DEFAULT_TIMER_UPDATE_SPEED);
-//        updater.run();
+        updater = new RefreshTimer();
+        updater.scheduleRepeating(Const.DEFAULT_TIMER_UPDATE_SPEED);
+        updater.run();
 
     }
 
@@ -147,10 +150,31 @@ class NavigationPanel extends NavigationEventProvider {
         }
     }
 
+    private class SaveValueAsyncCallback implements AsyncCallback<Void> {
+        private final TreeModel model;
+        private final Value value;
+
+        SaveValueAsyncCallback(TreeModel model, Value value) {
+            this.model = model;
+            this.value = value;
+        }
+
+        @Override
+        public void onFailure(final Throwable throwable) {
+
+            GWT.log(throwable.getMessage(), throwable);
+        }
+
+        @Override
+        public void onSuccess(final Void object) {
+            updateModel(value, model);
+
+        }
+    }
 
     private class GetUserListAsyncCallback implements AsyncCallback<List<Entity>> {
-         GetUserListAsyncCallback() {
 
+        GetUserListAsyncCallback() {
         }
 
         @Override
@@ -164,7 +188,9 @@ class NavigationPanel extends NavigationEventProvider {
         public void onSuccess(List<Entity> result) {
 
 
-                reloadTree(result);
+
+            reloadTree(result);
+
 
 
         }
@@ -272,17 +298,17 @@ class NavigationPanel extends NavigationEventProvider {
             @Override
             public void onEntityDeleted(TreeModel model) {
 
-                        removeEntity(model);
+                removeEntity(model);
 
-                }
+            }
 
 
             @Override
             public void onEntityModifed(TreeModel model) {
 
-                        addUpdateTreeModel(model, false);
+                addUpdateTreeModel(model, false);
 
-                }
+            }
 
 
             private void removeEntity(TreeModel currentModel) {
@@ -397,7 +423,7 @@ class NavigationPanel extends NavigationEventProvider {
 
                     if (valueMap.containsKey(model.getId())) {
                         Value value = valueMap.get(model.getId());
-                       //  Point p = (Point) valueMap.get(model.getId());
+                        //  Point p = (Point) valueMap.get(model.getId());
                         if (value == null) {
                             model.setAlertType(AlertType.OK);
                             model.setValue(new Value.Builder().doubleValue(0.0).create());
@@ -517,7 +543,7 @@ class NavigationPanel extends NavigationEventProvider {
 
                     value = new Value.Builder().doubleWithData(valueAndNote).timestamp(timestamp).create();// Value.getInstance(SimpleValue.getInstance(valueAndNote), timestamp);
 
-                        valueService.recordValueRpc(user, entity, value, new RecordValueCallback(value, be, model));
+                    valueService.recordValueRpc(user, entity, value, new RecordValueCallback(value, be, model));
 
 
                 }
@@ -567,54 +593,54 @@ class NavigationPanel extends NavigationEventProvider {
         }
     }
 
-//    private class RefreshTimer extends Timer {
-//        RefreshTimer() {
-//        }
-//
-//        @Override
-//        public void run() {
-//
-//            if (tree != null) {
-//
-//                reloadCurrentValues(getVisiblePoints());
-//            }
-//
-//        }
-//
-////        private void reloadCurrentValues(final Map<String, Point> entityMap) {
-////            valueService.getCurrentValuesRpc(user, entityMap, new ReloadAsyncCallback());
-////        }
-//
-//        private Map<String, Point> getVisiblePoints() {
-//            final Map<String, Point> entityMap = new HashMap<String, Point>(tree.getTreeStore().getAllItems().size());
-//
-//            if (tree != null) {
-//                addExpandedValueToMap(entityMap);
-//            }
-//            return entityMap;
-//        }
-//
-//        private void addExpandedValueToMap(final Map<String, Point> entityMap) {
-//            for (final ModelData m : tree.getTreeStore().getAllItems()) {
-//                final TreeModel model = (TreeModel) m;
-//                try {
-//                    putModelInMap(entityMap, model);
-//                } catch (Exception ignored) { //null pointer when tree is completely collapsed.
-//
-//                }
-//            }
-//        }
-//
-//        private void putModelInMap(final Map<String, Point> entityMap, final TreeModel model) {
-//            if (model != null
-//                    && model.getParent() != null
-//                    && !model.isDirty()
-//                    && model.getEntityType().equals(EntityType.point)
-//                    ) {
-//                if (tree.isExpanded(model.getParent())) {
-//                    entityMap.put(model.getId(), (Point) model.getBaseEntity());
-//                }
-//            }
-//        }
-//    }
+    private class RefreshTimer extends Timer {
+        RefreshTimer() {
+        }
+
+        @Override
+        public void run() {
+
+            if (tree != null) {
+
+                reloadCurrentValues(getVisiblePoints());
+            }
+
+        }
+
+        private void reloadCurrentValues(final Map<String, Point> entityMap) {
+            valueService.getCurrentValuesRpc(user, entityMap, new ReloadAsyncCallback());
+        }
+
+        private Map<String, Point> getVisiblePoints() {
+            final Map<String, Point> entityMap = new HashMap<String, Point>(tree.getTreeStore().getAllItems().size());
+
+            if (tree != null) {
+                addExpandedValueToMap(entityMap);
+            }
+            return entityMap;
+        }
+
+        private void addExpandedValueToMap(final Map<String, Point> entityMap) {
+            for (final ModelData m : tree.getTreeStore().getAllItems()) {
+                final TreeModel model = (TreeModel) m;
+                try {
+                    putModelInMap(entityMap, model);
+                } catch (Exception ignored) { //null pointer when tree is completely collapsed.
+
+                }
+            }
+        }
+
+        private void putModelInMap(final Map<String, Point> entityMap, final TreeModel model) {
+            if (model != null
+                    && model.getParent() != null
+                    && !model.isDirty()
+                    && model.getEntityType().equals(EntityType.point)
+                    ) {
+                if (tree.isExpanded(model.getParent())) {
+                    entityMap.put(model.getId(), (Point) model.getBaseEntity());
+                }
+            }
+        }
+    }
 }

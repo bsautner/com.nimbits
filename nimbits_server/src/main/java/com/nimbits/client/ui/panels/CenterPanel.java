@@ -34,10 +34,6 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityServiceRpc;
 import com.nimbits.client.service.entity.EntityServiceRpcAsync;
-import com.nimbits.client.service.user.UserServiceRpc;
-import com.nimbits.client.service.user.UserServiceRpcAsync;
-import com.nimbits.client.ui.controls.Action;
-import com.nimbits.client.ui.controls.MainMenuBar;
 import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.panels.login.LoginListener;
 
@@ -88,8 +84,6 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
 
         final ContentPanel panel = new ContentPanel();
 
-        MainMenuBar toolBar = initToolbar(user);
-        panel.setTopComponent(toolBar);
         panel.setLayout(new RowLayout(Style.Orientation.VERTICAL));
         panel.setHeaderVisible(false);
 
@@ -112,13 +106,6 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
 
     }
 
-
-    private MainMenuBar initToolbar(final User loginInfo) {
-        MainMenuBar toolBar = new MainMenuBar(loginInfo);
-
-        toolBar.addActionListeners(new ActionListener(loginInfo, this));
-        return toolBar;
-    }
 
 
     public void addEntity(final TreeModel model) {
@@ -198,58 +185,8 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
 
     }
 
-    private class ActionListener implements MainMenuBar.ActionListener {
-        private final User user;
-        private BasePanel.PanelEvent listener;
 
-        public ActionListener(User user, BasePanel.PanelEvent panelEvent) {
-            this.user = user;
-            this.listener = panelEvent;
-        }
-
-        @Override
-        public void onAction(Action action)  {
-            switch (action) {
-
-                case rest:
-                    Window.Location.replace("/service/v3/rest/me");
-                    break;
-                case logout:
-
-                    UserServiceRpcAsync userService = GWT.create(UserServiceRpc.class);
-                    userService.logout(new AsyncCallback<Void>() {
-
-                        @Override
-                        public void onFailure(Throwable throwable) {
-                            FeedbackHelper.showError(throwable);
-                        }
-
-                        @Override
-                        public void onSuccess(Void aVoid) {
-
-                                loginListener.onLogout();
-
-
-                        }
-                    });
-
-                    break;
-
-
-                case admin:
-                    SettingPanel dp = new SettingPanel(user, listener);
-                    w = new com.extjs.gxt.ui.client.widget.Window();
-                    w.setWidth(BasePanel.WIDTH);
-                    w.setHeight(BasePanel.HEIGHT);
-                    w.setHeadingText("Edit Server Settings");
-                    w.add(dp);
-
-
-                    w.show();
-                    break;
-
-
-            }
-        }
     }
-}
+
+
+

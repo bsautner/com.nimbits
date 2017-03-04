@@ -48,11 +48,11 @@ import java.util.List;
 
 
 public class WebHookPanel extends BasePanel {
-    public static final String GET_RESULTS_POINT = "GET Results Point";
+    private static final String GET_RESULTS_POINT = "GET Results Point";
     private final Entity entity;
 
     public WebHookPanel(User user, PanelEvent listener, final Entity entity) {
-        super(user, listener, "<a href=\"http://www.nimbits.com/howto_webhooks.jsp\">Learn More: WebHook Help</a>");
+        super(user, listener, "<a href=\"https://github.com/bsautner/com.nimbits/wiki/Usage:Triggers:WebHooks\">Learn More: WebHook WIKI</a>");
         this.entity = entity;
 
         createForm();
@@ -212,9 +212,6 @@ public class WebHookPanel extends BasePanel {
     private static class HttpMethodOption extends BaseModelData {
         HttpMethod method;
 
-        HttpMethodOption() {
-
-        }
 
         HttpMethodOption(HttpMethod value) {
             this.method = value;
@@ -222,7 +219,11 @@ public class WebHookPanel extends BasePanel {
             set(Parameters.name.getText(), value.name());
         }
 
-        public HttpMethod getMethod() {
+        @SuppressWarnings("unused")
+        private HttpMethodOption() {
+        }
+
+        HttpMethod getMethod() {
             return method;
         }
     }
@@ -231,6 +232,7 @@ public class WebHookPanel extends BasePanel {
     private static class DataChannelOption extends BaseModelData {
         DataChannel method;
 
+        @SuppressWarnings("unused")
         DataChannelOption() {
 
         }
@@ -241,7 +243,7 @@ public class WebHookPanel extends BasePanel {
             set(Parameters.name.getText(), value.name());
         }
 
-        public DataChannel getMethod() {
+        DataChannel getMethod() {
             return method;
         }
     }
@@ -256,14 +258,14 @@ public class WebHookPanel extends BasePanel {
         private final CheckBox enabled;
         private final EntityCombo entityCombo;
 
-        public SubmitButtonEventSelectionListener(TextField<String> nameField,
+        SubmitButtonEventSelectionListener(TextField<String> nameField,
 
-                                                  ComboBox<HttpMethodOption> methodCombo,
-                                                  ComboBox<DataChannelOption> pathChannelComboBox,
-                                                  ComboBox<DataChannelOption> bodyChannelComboBox,
-                                                  TextField<String> urlField,
-                                                  CheckBox enabled,
-                                                  EntityCombo entityCombo) {
+                                           ComboBox<HttpMethodOption> methodCombo,
+                                           ComboBox<DataChannelOption> pathChannelComboBox,
+                                           ComboBox<DataChannelOption> bodyChannelComboBox,
+                                           TextField<String> urlField,
+                                           CheckBox enabled,
+                                           EntityCombo entityCombo) {
             this.nameField = nameField;
             this.methodCombo = methodCombo;
             this.pathChannelComboBox = pathChannelComboBox;

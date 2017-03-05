@@ -29,15 +29,17 @@ import com.google.gwt.user.client.Element;
 
 public class LoginMainPanel extends LayoutContainer {
 
-    protected static final int SIZE = 400;
+    private static final int SIZE = 400;
     private Window window;
+    private final boolean enableRegister;
 
 
     private final LoginListener loginListener;
 
 
-    public LoginMainPanel(LoginListener loginListener ) {
+    public LoginMainPanel(LoginListener loginListener, boolean enableRegister) {
 
+        this.enableRegister = enableRegister;
         this.loginListener = loginListener;
 
     }
@@ -79,7 +81,7 @@ public class LoginMainPanel extends LayoutContainer {
     }
 
     private void showLoginDialog() {
-        LoginPanel dp = new LoginPanel(loginListener);
+        LoginPanel dp = new LoginPanel(loginListener, enableRegister);
         window = new com.extjs.gxt.ui.client.widget.Window();
         window.setWidth(SIZE);
         window.setHeight(SIZE);

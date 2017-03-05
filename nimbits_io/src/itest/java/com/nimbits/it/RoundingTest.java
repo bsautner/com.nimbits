@@ -33,7 +33,7 @@ public class RoundingTest extends NimbitsTest {
         log(p);
 
         String pname = p.getName().getValue();
-        double[] sample = {1.1, 1.2, 1.3, 1.4, 1.5, 0.0001, 1122.0, -123.2345, 2222.001};
+        double[] sample = {1.1, 1.2, 1.3, 1.4, 1.5, 0.0001, 1122.0, -123.2345, 222.001};
 
         for (int i = 0; i < sample.length; i++) {
             nimbits.recordValueSync(pname, new Value.Builder()
@@ -43,7 +43,6 @@ public class RoundingTest extends NimbitsTest {
 
         }
 
-        sleep();
 
 
 

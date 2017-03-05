@@ -398,7 +398,7 @@ public class V3Sample1 extends NimbitsTest {
 
         c.add(Calendar.YEAR, -1);
         for (int i = 0; i < 10; i++) {  //add 10 values with increasing dates
-            Value testValue = new Value.Builder().data("Test Snapshot " + i).timestamp(c.getTime()).create();
+            Value testValue = new Value.Builder().data("Test Snapshot " + i).timestamp(c.getTimeInMillis()).create();
             c.add(Calendar.DAY_OF_YEAR, 1);
             seriesSnapshotTest.add(testValue);
         }

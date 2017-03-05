@@ -19,11 +19,6 @@ package com.nimbits.client.constants;
 
 public class Const {
 
-    public static final String VERSION = "4.0.11";
-
-
-
-    public static final int DEFAULT_TIMER_UPDATE_SPEED = 5000;
 
     public static final String FORMAT_DATE_TIME = "MM/dd/y HH:mm:ss";
     public static final String GSON_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss Z";

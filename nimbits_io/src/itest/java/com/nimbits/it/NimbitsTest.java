@@ -19,9 +19,9 @@ public abstract class NimbitsTest {
 
     static final String EMAIL_ADDRESS = "support@nimbits.com";
     // static final String INSTANCE_URL = "http://52.87.221.104:8080/nimbits";
-    static final String INSTANCE_URL = "http://ha:8080/nimbits";
+    //static final String INSTANCE_URL = "http://ha:8080/nimbits";
 
-    //static final String INSTANCE_URL = "http://localhost:8080";
+    static final String INSTANCE_URL = "http://localhost:8080";
     static final String PASSWORD = "password"; //just like my luggage!
     int errors = 0;
 

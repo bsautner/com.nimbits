@@ -24,15 +24,21 @@ import com.extjs.gxt.ui.client.widget.Viewport;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.Parameters;
 import com.nimbits.client.model.user.User;
+import com.nimbits.client.service.user.UserServiceRpc;
+import com.nimbits.client.service.user.UserServiceRpcAsync;
+import com.nimbits.client.ui.helper.FeedbackHelper;
 import com.nimbits.client.ui.panels.CenterPanel;
 import com.nimbits.client.ui.panels.NavigationEventProvider;
 import com.nimbits.client.ui.panels.login.LoginListener;
 import com.nimbits.client.ui.panels.login.LoginMainPanel;
+
+import java.util.Map;
 
 /**
  * Entry point classes define <code>onModuleLoad()</code>
@@ -45,20 +51,38 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
 
     private LoginMainPanel loginMainPanel;
 
+    private Map<String, String> systemProperties;
+
 
 
     @Override
     public void onModuleLoad() {
 
-        final String passwordResetToken = Window.Location.getParameter(Parameters.rToken.getText());
+        UserServiceRpcAsync userService = GWT.create(UserServiceRpc.class);
 
-        if (passwordResetToken == null) {
-            loadLoginView();
+        userService.getSystemInfo(new AsyncCallback<Map<String, String>>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+                FeedbackHelper.showError(throwable);
+            }
 
-        } else {
-            loadLoginView( );
-            loginMainPanel.showPasswordReset(passwordResetToken);
-        }
+            @Override
+            public void onSuccess(Map<String, String> stringStringMap) {
+
+                systemProperties = stringStringMap;
+                final String passwordResetToken = Window.Location.getParameter(Parameters.rToken.getText());
+
+                if (passwordResetToken == null) {
+                    loadLoginView();
+
+                } else {
+                    loadLoginView( );
+                    loginMainPanel.showPasswordReset(passwordResetToken);
+                }
+            }
+        });
+
+
     }
 
     private void loadLoginView() {
@@ -69,7 +93,8 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
         viewport.setLayout(new BorderLayout());
         viewport.setBorders(false);
 
-        loginMainPanel = new LoginMainPanel(this);
+        boolean enableRegister = Boolean.parseBoolean(systemProperties.get("registerEnabled"));
+        loginMainPanel = new LoginMainPanel(this, enableRegister);
 
 
         ContentPanel center = new ContentPanel();
@@ -140,13 +165,16 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
         viewport.setLayout(new BorderLayout());
         viewport.setBorders(false);
 
+        String r = systemProperties.get("refresh");
+        int refreshRate = r == null ? 5000 : Integer.valueOf(r);
 
-        CenterPanel centerPanel = new CenterPanel(user);
+        CenterPanel centerPanel = new CenterPanel(user, refreshRate);
 
 
         ContentPanel center = new ContentPanel();
 
-        center.setHeadingHtml("<a href=\"http://www.nimbits.com\">Nimbits</a>&nbsp;&nbsp;" + Const.VERSION);
+        center.setHeadingHtml(
+                "<a href=\"http://www.nimbits.com\">Nimbits</a>&nbsp;&nbsp;" + systemProperties.get("version"));
 
         center.setScrollMode(Style.Scroll.AUTOX);
 

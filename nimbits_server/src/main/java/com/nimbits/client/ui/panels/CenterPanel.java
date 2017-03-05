@@ -42,9 +42,11 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
     private NavigationPanel navigationPanel;
 
     private final User user;
+    private int refreshRate;
 
-    public CenterPanel(final User user ) {
+    public CenterPanel(final User user, int refreshRate ) {
         this.user = user;
+        this.refreshRate = refreshRate;
 
     }
 
@@ -55,7 +57,7 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
     }
 
     private NavigationPanel createNavigationPanel() {
-        final NavigationPanel navTree = new NavigationPanel(user);
+        final NavigationPanel navTree = new NavigationPanel(user, refreshRate);
 
 
         navTree.addEntityClickedListeners(new AddEntityEntityClickedListener());

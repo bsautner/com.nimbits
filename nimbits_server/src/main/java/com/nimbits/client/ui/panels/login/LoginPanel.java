@@ -27,7 +27,6 @@ import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.extjs.gxt.ui.client.widget.layout.BoxLayout;
 import com.extjs.gxt.ui.client.widget.layout.HBoxLayout;
 import com.extjs.gxt.ui.client.widget.layout.HBoxLayoutData;
-import com.google.common.base.Optional;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.model.user.User;
@@ -48,10 +47,12 @@ public class LoginPanel extends AbstractLoginPanel {
     private final LayoutContainer controlButtons = new LayoutContainer();
     private final Button register = new Button("Register");
     private final Button forgot = new Button("Forgot Password");
+    private final boolean enableRegister;
 
-    public LoginPanel(LoginListener loginListener ) {
+    public LoginPanel(LoginListener loginListener, boolean enableRegister ) {
         super(loginListener);
 
+        this.enableRegister = enableRegister;
         this.userService = GWT.create(UserServiceRpc.class);
 
         simple = new FormPanel();
@@ -131,6 +132,7 @@ public class LoginPanel extends AbstractLoginPanel {
             }
         });
 
+        register.setEnabled(enableRegister);
         register.addSelectionListener(new SelectionListener<ButtonEvent>() {
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {

@@ -28,8 +28,6 @@ import com.google.gwt.visualization.client.VisualizationUtils;
 import com.google.gwt.visualization.client.visualizations.AnnotatedTimeLine;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
-import com.nimbits.client.service.settings.SettingsServiceRpc;
-import com.nimbits.client.service.settings.SettingsServiceRpcAsync;
 import com.nimbits.client.service.value.ValueServiceRpc;
 import com.nimbits.client.service.value.ValueServiceRpcAsync;
 import com.nimbits.client.ui.helper.FeedbackHelper;
@@ -40,7 +38,6 @@ public class ChartPanel extends LayoutContainer {
     private final VerticalPanel vp;
 
 
-    SettingsServiceRpcAsync settingsService;
     private Entity entity;
     private User user;
     private final ValueServiceRpcAsync valueService;
@@ -50,7 +47,6 @@ public class ChartPanel extends LayoutContainer {
 
         this.user = user;
         this.entity = entity;
-        settingsService = GWT.create(SettingsServiceRpc.class);
         valueService = GWT.create(ValueServiceRpc.class);
         this.progressBar = createProgressBar("Loading...");
 

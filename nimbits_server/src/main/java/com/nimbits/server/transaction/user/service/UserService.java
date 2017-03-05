@@ -53,6 +53,7 @@ public class UserService {
     @org.springframework.beans.factory.annotation.Value("${admin.password}")
     private String adminPassword;
 
+
     @Autowired
     public UserService(UserDao userDao, EntityDao entityDao) {
         this.userDao = userDao;

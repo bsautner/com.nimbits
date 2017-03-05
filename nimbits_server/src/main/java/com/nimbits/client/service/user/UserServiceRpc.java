@@ -20,6 +20,8 @@ import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 import com.nimbits.client.model.user.User;
 
+import java.util.Map;
+
 @RemoteServiceRelativePath("rpc/userService")
 public interface UserServiceRpc extends RemoteService {
 
@@ -32,6 +34,8 @@ public interface UserServiceRpc extends RemoteService {
     void logout();
 
     void doForgotPassword(String value);
+
+    Map<String, String> getSystemInfo();
 
 
 

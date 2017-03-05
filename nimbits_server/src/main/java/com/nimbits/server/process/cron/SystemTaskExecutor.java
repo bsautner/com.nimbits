@@ -232,7 +232,6 @@ public class SystemTaskExecutor {
 
         Query q = pm.newQuery("javax.jdo.query.SQL",query);
 
-        logger.info(query);
 
         Transaction tx = pm.currentTransaction();
 

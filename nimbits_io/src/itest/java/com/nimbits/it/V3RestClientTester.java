@@ -109,7 +109,7 @@ public class V3RestClientTester extends NimbitsTest {
                 calendar.add(Calendar.SECOND, 1);
                 String metavalue = meta[(i & 1) == 0 ? 0 : 1]; //flip between meta values for testing search
                 values.add(new Value.Builder()
-                        .timestamp(calendar.getTime())
+                        .timestamp(calendar.getTimeInMillis())
                         .doubleValue(r.nextDouble() * 1000)
                         .lat(0.0)
                         .lng(0.0)

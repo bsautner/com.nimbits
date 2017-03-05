@@ -26,11 +26,14 @@ import com.nimbits.client.service.user.UserServiceRpc;
 import com.nimbits.server.communication.mail.EmailService;
 import com.nimbits.server.transaction.user.dao.UserDao;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
 import javax.servlet.ServletException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 @Service
@@ -44,6 +47,15 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
 
     @Autowired
     private EmailService emailService;
+
+    @Value("${ux.user.register_user_enabled}")
+    private String registerEnabled;
+
+    @Value("${version}")
+    private String version;
+
+    @org.springframework.beans.factory.annotation.Value("${ux.refresh_rate}")
+    private String refresh;
 
     @Override
     public void logout() {
@@ -142,6 +154,15 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
 
         }
 
+    }
+
+    @Override
+    public Map<String, String> getSystemInfo() {
+        Map<String, String> map = new HashMap<>();
+        map.put("version", version);
+        map.put("registerEnabled", registerEnabled);
+        map.put("refresh", refresh);
+        return map;
     }
 
 }

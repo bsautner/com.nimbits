@@ -28,11 +28,9 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.common.Utils;
-import com.nimbits.client.constants.Const;
 import com.nimbits.client.enums.AlertType;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.enums.Parameters;
-
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
 import com.nimbits.client.model.entity.Entity;
@@ -61,10 +59,12 @@ class NavigationPanel extends NavigationEventProvider {
     private final static int valueColumnIndex = 1;
     private final ValueServiceRpcAsync valueService;
     private final EntityServiceRpcAsync entityService;
+    private final int refreshrate;
 
-    NavigationPanel(final User user) {
+    NavigationPanel(final User user, int refreshRate) {
 
 
+        this.refreshrate = refreshRate;
         this.user = user;
         this.tree = new EntityTree<ModelData>();
         this.valueService = GWT.create(ValueServiceRpc.class);
@@ -121,7 +121,7 @@ class NavigationPanel extends NavigationEventProvider {
     protected void onAttach() {
         super.onAttach();
         updater = new RefreshTimer();
-        updater.scheduleRepeating(Const.DEFAULT_TIMER_UPDATE_SPEED);
+        updater.scheduleRepeating(refreshrate);
         updater.run();
 
     }

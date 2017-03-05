@@ -19,6 +19,8 @@ package com.nimbits.client.service.user;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.nimbits.client.model.user.User;
 
+import java.util.Map;
+
 public interface UserServiceRpcAsync {
 
     void doLogin(final String email, final String password, final AsyncCallback<User> async);
@@ -30,5 +32,8 @@ public interface UserServiceRpcAsync {
     void doForgotPassword(String value, AsyncCallback<Void> asyncCallback);
 
     void resetPassword(String email, String password, String recoveryToken, AsyncCallback<User> asyncCallback);
+
+
+    void getSystemInfo(AsyncCallback<Map<String, String>> async);
 
 }

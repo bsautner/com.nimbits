@@ -16,6 +16,7 @@
 
 package com.nimbits.server.transaction.entity.service;
 
+import com.google.common.base.Optional;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.entity.Entity;
@@ -122,6 +123,12 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
 
     @Override
     public Entity getEntityByKeyRpc(final User user, final String entityId, final EntityType type) {
-        return entityDao.getEntity(user, entityId, type).get();
+
+        Optional<Entity> entityOptional = entityDao.getEntity(user, entityId, type);
+        if (entityOptional.isPresent()) {
+            return entityOptional.get();
+        } else {
+            throw new RuntimeException(String.format("%s %s not found", type.name(), entityId));
+        }
     }
 }

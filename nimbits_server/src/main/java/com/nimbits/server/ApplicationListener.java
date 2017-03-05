@@ -16,8 +16,10 @@
 
 package com.nimbits.server;
 
+import com.nimbits.server.transaction.user.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 
@@ -34,11 +36,15 @@ public class ApplicationListener implements ServletContextListener {
 
     private final static Logger logger = LoggerFactory.getLogger(ApplicationListener.class);
 
+    @Autowired
+    private UserService userService;
+
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         logger.info("nimbits server started");
         SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
 
+        userService.verifyAdmin();
 
     }
 

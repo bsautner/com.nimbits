@@ -151,6 +151,9 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
 
         public Builder target(Entity target) {
             this.target = target.getId();
+            if (target.getEntityType().equals(EntityType.webhook)) {
+                this.notifyMethod(SubscriptionNotifyMethod.webhook);
+            }
             return this;
         }
 
@@ -202,6 +205,7 @@ public class SubscriptionModel extends EntityModel implements Serializable, Subs
             this.alertType = alertType;
             return this;
         }
+
 
         @Override
         public Builder owner(String owner) {

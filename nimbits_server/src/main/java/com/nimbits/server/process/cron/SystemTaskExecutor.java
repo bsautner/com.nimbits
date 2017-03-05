@@ -111,7 +111,7 @@ public class SystemTaskExecutor {
 
         if (idleEnabled) {
 
-            logger.info("Processing Idle Points");
+
             String batchID = UUID.randomUUID().toString();
             markIdleBatch(batchID);
 
@@ -132,20 +132,23 @@ public class SystemTaskExecutor {
 
 
                 final List<Point> result = (List<Point>) processQuery.execute(batchID);
-                logger.info("Idle Points Being Processed: " + result.size());
-                for (Point entity : result) {
 
-                    Optional<User> userOptional = userDao.getUserById(entity.getOwner());
-                    if (userOptional.isPresent()) {
-                        entityDao.setIdleAlarmSentFlag(entity.getId(), true, true);
+                if (! result.isEmpty()) {
+                    logger.info("Idle Points Being Processed: " + result.size());
+                    for (Point entity : result) {
 
-                        Value value = valueDao.getSnapshot(entity);
+                        Optional<User> userOptional = userDao.getUserById(entity.getOwner());
+                        if (userOptional.isPresent()) {
+                            entityDao.setIdleAlarmSentFlag(entity.getId(), true, true);
 
-                        subscriptionService.process(userOptional.get(), entity, new Value.Builder().initValue(value).alertType(AlertType.IdleAlert).create());
+                            Value value = valueDao.getSnapshot(entity);
+
+                            subscriptionService.process(userOptional.get(), pm.detachCopy(entity), new Value.Builder().initValue(value).alertType(AlertType.IdleAlert).create());
+
+                        }
+
 
                     }
-
-
                 }
 
 

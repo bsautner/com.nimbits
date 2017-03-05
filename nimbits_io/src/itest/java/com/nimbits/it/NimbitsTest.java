@@ -1,6 +1,7 @@
 package com.nimbits.it;
 
 import com.nimbits.client.io.Nimbits;
+import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -8,6 +9,7 @@ import org.junit.After;
 import org.junit.Before;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * A base class for running tests
@@ -26,7 +28,7 @@ public abstract class NimbitsTest {
     int errors = 0;
 
 
-    static final Nimbits nimbits = new Nimbits.Builder()
+    protected static final Nimbits nimbits = new Nimbits.Builder()
             .email(EMAIL_ADDRESS).token(PASSWORD).instance(INSTANCE_URL).create();
 
 
@@ -34,22 +36,23 @@ public abstract class NimbitsTest {
     @Before
     public void setUp() throws Exception {
         user = verifyAdminUser();
+        List<Entity> entityList = nimbits.getChildren(user);
+        for (Entity entity : entityList) {
+            log("teardown deleting child: " + entity.getName().getValue());
+            nimbits.deleteEntity(entity);
+        }
 
     }
 
     @After
     public void tearDown() throws Exception {
 
-//        List<Entity> entityList = nimbits.getChildren(user);
-//        for (Entity entity : entityList) {
-//            log("teardown deletinging child: " + entity.getName().getValue());
-//             nimbits.deleteEntity(entity);
-//        }
+
 
 
     }
 
-    static void log(Object... msg) {
+    protected static void log(Object... msg) {
         StringBuilder sb = new StringBuilder();
         for (Object o : msg) {
             sb.append("-> ").append(String.valueOf(o)).append("\n");
@@ -59,7 +62,7 @@ public abstract class NimbitsTest {
 
 
 
-    void sleep() {
+    protected void sleep() {
         try {
             log("sleeping...");
             Thread.sleep(5000);
@@ -68,7 +71,16 @@ public abstract class NimbitsTest {
         }
     }
 
-    void sleep(int i) {
+    protected void nap() {
+        try {
+            log("napping...");
+            Thread.sleep(500);
+        } catch (InterruptedException ignored) {
+
+        }
+    }
+
+    protected void sleep(int i) {
         log("big sleep " + i);
         for (int c = 0; c < i; c++) {
             sleep();
@@ -83,7 +95,7 @@ public abstract class NimbitsTest {
         try {
 
             log("Trying to get existing user");
-            user = nimbits.getMe(true);
+            user = nimbits.getMe(false);
         } catch (Throwable throwable) {
             //user not found, let's create on - the first user will be an admin of the server
             log("Server returned error - creating user instead " + throwable.getMessage());

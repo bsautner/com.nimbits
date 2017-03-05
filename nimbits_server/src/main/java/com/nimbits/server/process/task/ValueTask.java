@@ -37,10 +37,6 @@ import java.util.Collections;
 @Component
 public class ValueTask {
 
-    public enum ValueStatus {
-        stored, ignoredExpired, ignoredCompressed, ignoredExpiredAndCompression, unknownPointType
-    }
-
 
     private EntityDao entityDao;
 
@@ -85,7 +81,7 @@ public class ValueTask {
         }));
     }
 
-    public ValueStatus processSync(final User user, final Point point, Value value) {
+    public Value processSync(final User user, final Point point, Value value) {
 
         ValueRunner valueRunner = new ValueRunner(user, point, value, new ValueGeneratedListener() {
             @Override
@@ -118,7 +114,7 @@ public class ValueTask {
             processValue();
         }
 
-        ValueStatus processValue() {
+        Value processValue() {
 
 
             boolean ignoredByCompression = false;
@@ -136,13 +132,13 @@ public class ValueTask {
 
 
             if (ignoredByCompression && ignoredByDate) {
-                return ValueStatus.ignoredExpiredAndCompression;
+                return value;
             }
             if (ignoredByCompression) {
-                return ValueStatus.ignoredCompressed;
+                return value;
             }
             else if (ignoredByDate) {
-                return ValueStatus.ignoredExpired;
+                return value;
             }
             else {
 
@@ -191,7 +187,7 @@ public class ValueTask {
 
                         break;
                     default:
-                        return ValueStatus.unknownPointType;
+                        return value;
 
                 }
 
@@ -199,7 +195,7 @@ public class ValueTask {
                 final AlertType t = valueService.getAlertType(point, value);
                 final Value v = new Value.Builder().initValue(value).timestamp(System.currentTimeMillis()).alertType(t).create();
                 completeRequest(user, point, v);
-                return ValueStatus.stored;
+                return v;
 
 
             }

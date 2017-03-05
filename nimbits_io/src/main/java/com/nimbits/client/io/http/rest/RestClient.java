@@ -73,7 +73,8 @@ public interface RestClient {
     void recordData(@Path("uuid") String uuid, @Body List<Value> values, Callback<Void> callback);
 
     @POST(API + "/sync/{uuid}/snapshot")
-    Void recordSnapshotSync(@Path("uuid") String uuid, @Body Value value);
+    Value recordSnapshotSync(@Path("uuid") String uuid, @Body Value value);
+
 
 
     @GET(API + "/{uuid}/series")

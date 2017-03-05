@@ -109,7 +109,7 @@ public class RestAPI {
 
 
     @RequestMapping(value = "sync/{uuid}/snapshot", method = RequestMethod.POST)
-    public ResponseEntity postSnapshotSync(
+    public ResponseEntity<Value> postSnapshotSync(
             @RequestHeader(name = "Authorization") String authorization,
             @RequestBody Value value,
             @PathVariable String uuid) throws Exception {
@@ -119,13 +119,13 @@ public class RestAPI {
 
         if (entityOptional.isPresent()) {
             //Value value = gson.fromJson(json, Value.class);
-            ValueTask.ValueStatus status =  valueTask.processSync(user, (Point) entityOptional.get(), value);
+            Value rx = valueTask.processSync(user, (Point) entityOptional.get(), value);
 
 
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(rx, HttpStatus.OK);
         }
         else {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
 

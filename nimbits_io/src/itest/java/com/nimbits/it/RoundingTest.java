@@ -36,18 +36,21 @@ public class RoundingTest extends NimbitsTest {
         double[] sample = {1.1, 1.2, 1.3, 1.4, 1.5, 0.0001, 1122.0, -123.2345, 222.001};
 
         for (int i = 0; i < sample.length; i++) {
-            nimbits.recordValueSync(pname, new Value.Builder()
+             Value vx =  nimbits.recordValueSync(pname, new Value.Builder()
                     .doubleValue(sample[i])
                     .meta(String.valueOf(i))
                     .create());
+             log(vx);
+
 
         }
 
-
+sleep();
 
 
         List<Value> valueList = nimbits.getValues(p, 10);
         Collections.reverse(valueList);
+
         assertFalse(valueList.isEmpty());
         for (int i = 0; i < sample.length; i++) {
              assertEquals(sample[i], valueList.get(i).getDoubleValue(), 0.00001);

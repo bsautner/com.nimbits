@@ -353,10 +353,10 @@ public class EntityDao {
     }
 
 
-    public void deleteEntity(final User user, final Entity entity, final EntityType type, boolean isAdmin) {
+    public void deleteEntity(final User user, final Entity entity, final EntityType type) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         Class cls = getEntityPersistentClass(type);
-        if (isAdmin || entity.isOwner(user)) {
+        if (user.getIsAdmin() || entity.isOwner(user)) {
             try {
                 final Entity c = (Entity) pm.getObjectById(cls, entity.getId());
                 if (c != null) {
@@ -375,6 +375,7 @@ public class EntityDao {
             }
         }
     }
+
 
     public Entity addUpdateEntity(final User user, final Entity entity) {
 

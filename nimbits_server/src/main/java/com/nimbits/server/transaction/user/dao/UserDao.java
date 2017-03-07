@@ -174,5 +174,30 @@ public class UserDao {
     }
 
 
+    public User getAdmin() {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
+
+        try {
+
+            final Query q1 = pm.newQuery(UserEntity.class);
+            q1.setFilter("isAdmin==b");
+            q1.declareParameters("Boolean b");
+
+
+            q1.setRange(0, 1);
+            final List<UserEntity> c = (List<UserEntity>) q1.execute(true);
+            if (c.isEmpty()) {
+                throw new RuntimeException("Missing System Admin User");
+            }
+            else {
+                return pm.detachCopy(c.get(0));
+            }
+        } catch (Throwable throwable) {
+            throw new RuntimeException(throwable);
+
+        } finally {
+            pm.close();
+        }
+    }
 }

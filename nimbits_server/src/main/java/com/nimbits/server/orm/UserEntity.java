@@ -41,6 +41,9 @@ public class UserEntity extends EntityStore implements User {
     private String source;
 
     @Persistent
+    private Boolean isAdmin;
+
+    @Persistent
     private String passwordResetToken;
 
     @Persistent
@@ -97,6 +100,7 @@ public class UserEntity extends EntityStore implements User {
         this.passwordSalt = u.getPasswordSalt();
         this.password = u.getPassword();
         this.source = u.getSource().name();
+        this.isAdmin = u.getIsAdmin();
         this.passwordResetTimestamp = u.getPasswordResetTimestamp();
         this.passwordResetToken = u.getPasswordResetToken();
 
@@ -111,6 +115,16 @@ public class UserEntity extends EntityStore implements User {
     @Override
     public void init(Entity anEntity) {
 
+    }
+
+    @Override
+    public boolean getIsAdmin() {
+        return isAdmin == null ? false : isAdmin;
+    }
+
+    @Override
+    public void setIsAdmin(final boolean isAdmin) {
+        this.isAdmin = isAdmin;
     }
 
 

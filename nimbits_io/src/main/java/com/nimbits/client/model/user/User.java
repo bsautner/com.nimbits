@@ -33,6 +33,10 @@ public interface User extends Entity, Serializable {
 
     EmailAddress getEmail();
 
+    boolean getIsAdmin();
+
+    void setIsAdmin(boolean userAdmin);
+
     void setEmail(EmailAddress emailAddress);
 
     void setPasswordResetToken(String token);

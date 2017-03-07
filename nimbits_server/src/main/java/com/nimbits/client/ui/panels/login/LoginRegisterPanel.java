@@ -114,13 +114,7 @@ public class LoginRegisterPanel extends AbstractLoginPanel {
         simple.add(controlButtons);
 
         simple.add(tosHtml);
-//        if (loginInfo.getUserStatus().equals(UserStatus.newServer)) {
-//            Html helphtml = new Html("<br /><div><p><Strong>This appears to be a new Server Installation. " +
-//                    "The first user you register here will be configured as the " +
-//                    "system administrator. " +
-//                    "<Strong></p></div>");
-//            simple.add(helphtml);
-//        }
+
         cancel.addSelectionListener(new SelectionListener<ButtonEvent>() {
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {

@@ -1,9 +1,10 @@
-package com.nimbits.it;
+package com.nimbits.it.ha;
 
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.it.NimbitsTest;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

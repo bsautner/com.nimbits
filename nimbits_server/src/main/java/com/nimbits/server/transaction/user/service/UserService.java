@@ -45,20 +45,13 @@ public class UserService {
 
     private final EntityDao entityDao;
 
-    private final User admin;
-
-    @org.springframework.beans.factory.annotation.Value("${admin.email}")
-    private String adminEmail;
-
-    @org.springframework.beans.factory.annotation.Value("${admin.password}")
-    private String adminPassword;
 
 
     @Autowired
     public UserService(UserDao userDao, EntityDao entityDao) {
         this.userDao = userDao;
         this.entityDao = entityDao;
-        this.admin = new UserModel.Builder().isAdmin(true).email(adminEmail).create();
+
     }
 
 
@@ -105,6 +98,8 @@ public class UserService {
         }
 
 
+        boolean isFirst = !userDao.usersExist();
+
         final User newUser = new UserModel.Builder()
                 .name(name)
                 .password(cryptPassword)
@@ -116,6 +111,8 @@ public class UserService {
                 .create();
 
 
+        newUser.setIsAdmin(isFirst);
+
         return (User) entityDao.addUpdateEntity(newUser, newUser);
 
     }
@@ -123,7 +120,7 @@ public class UserService {
 
 
     public Optional<User> getUserByKey(final String key) {
-
+            User admin = userDao.getAdmin();
             Optional<Entity> optional = entityDao.getEntity(admin, key, EntityType.user);
             if (optional.isPresent()) {
                 return Optional.of((User) optional.get());
@@ -170,8 +167,16 @@ public class UserService {
     }
 
     public boolean isAdmin(String authString) {
+        User admin = userDao.getAdmin();
+
         Optional<Credentials> credentials = credentialsWithBasicAuthentication(authString);
-        return credentials.isPresent() && StringUtils.equals(credentials.get().getLogin(), adminEmail) && StringUtils.equals(credentials.get().getPassword(), adminPassword);
+        if (credentials.isPresent()) {
+            boolean valid = validatePassword(admin, credentials.get().getPassword());
+            return credentials.isPresent() && StringUtils.equals(credentials.get().getLogin(), admin.getName().getValue()) && valid;
+        }
+        else {
+            return false;
+        }
     }
 
     Optional<User> doLogin(String email, String token) {

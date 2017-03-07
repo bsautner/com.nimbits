@@ -64,12 +64,6 @@ public class RestAPI {
     private final Gson gson;
     private final ValueTask valueTask;
 
-    @org.springframework.beans.factory.annotation.Value("${admin.email}")
-    private String adminEmail;
-
-    @org.springframework.beans.factory.annotation.Value("${admin.password}")
-    private String adminPassword;
-
 
     @Autowired
     public RestAPI(EntityService entityService, ValueService valueService, UserService userService,
@@ -190,11 +184,15 @@ public class RestAPI {
     public ResponseEntity<String> postUser(@RequestHeader(name = "Authorization") String authorization,
                                            @RequestBody String json) throws IOException {
 
+        User user = userService.getUser(authorization);
 
-        User newUser = GsonFactory.getInstance(false).fromJson(json, UserModel.class);
-        User createdUser = userService.createUserRecord(newUser.getEmail(), newUser.getPassword(), UserSource.local);
-        return new ResponseEntity<>(gson.toJson(createdUser), HttpStatus.OK);
-
+        if (user.getIsAdmin()) {
+            User newUser = GsonFactory.getInstance(false).fromJson(json, UserModel.class);
+            User createdUser = userService.createUserRecord(newUser.getEmail(), newUser.getPassword(), UserSource.local);
+            return new ResponseEntity<>(gson.toJson(createdUser), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
 
 
     }
@@ -498,13 +496,11 @@ public class RestAPI {
                                    @PathVariable String uuid) throws IOException {
 
         User user = userService.getUser(authorization);
-        boolean isAdmin = userService.isAdmin(authorization);
-
         Optional<Entity> optional = entityDao.findEntity(user, uuid);
         if (optional.isPresent()) {
             Entity entity = optional.get();
-            if (entity.getEntityType() != EntityType.user && entity.getOwner().equals(user.getId())) {
-                entityService.deleteEntity(user, entity, isAdmin);
+            if (!user.getIsAdmin() && entity.getEntityType() != EntityType.user && entity.getOwner().equals(user.getId())) {
+                entityService.deleteEntity(user, entity);
                 if (entity.getEntityType().equals(EntityType.point)) {
                     Point point = (Point) entity;
 
@@ -514,8 +510,8 @@ public class RestAPI {
                     // taskService.startDeleteDataTask((Point) entity);
 
                 }
-            } else if (isAdmin) {
-                entityService.deleteEntity(user, entity, isAdmin);
+            } else if (user.getIsAdmin()) {
+                entityService.deleteEntity(user, entity);
                 if (entity.getEntityType().equals(EntityType.point)) {
                     Point point = (Point) entity;
 
@@ -533,7 +529,6 @@ public class RestAPI {
             return new ResponseEntity(HttpStatus.NOT_FOUND);
         }
     }
-
 
     //PUT
     @RequestMapping(value = "/{uuid}", method = RequestMethod.PUT)
@@ -557,9 +552,7 @@ public class RestAPI {
 
 
         User user = userService.getUser(authorization);
-        boolean isAdmin = userService.isAdmin(authorization);
-
-        if (isAdmin) {
+        if (user.getIsAdmin()) {
             if (!StringUtils.isEmpty(update.getPassword())) {
 
 
@@ -575,6 +568,7 @@ public class RestAPI {
         }
 
     }
+
 
     private void setHAL(User user, Entity entity, List<Entity> childList, String path, Integer index) {
 

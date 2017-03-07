@@ -23,8 +23,10 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
+import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.system.ServerInfo;
+import com.nimbits.server.transaction.user.dao.UserDao;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,9 +53,6 @@ public class EmailServiceImpl implements EmailService {
     private static final int INT = 128;
     private static final int SECONDS_IN_MINUTE = 60;
 
-    @org.springframework.beans.factory.annotation.Value("${admin.email}")
-    private String adminEmail;
-
     @org.springframework.beans.factory.annotation.Value("${system.email.smtp.host}")
     private String smtpServer;
 
@@ -63,20 +62,23 @@ public class EmailServiceImpl implements EmailService {
     @org.springframework.beans.factory.annotation.Value("${system.email.smtp.password}")
     private String smtpPassword;
 
+    private final UserDao userDao;
+
     @Autowired
-    public EmailServiceImpl(ServerInfo serverInfo) {
+    public EmailServiceImpl(ServerInfo serverInfo, UserDao userDao) {
 
         this.serverInfo = serverInfo;
+        this.userDao = userDao;
     }
 
     private void send(final Message msg) {
 
-
+        User admin = userDao.getAdmin();
           try {
             Transport transport = getMailTransport();
 
             if (transport != null) {
-                transport.connect(smtpServer, adminEmail, smtpPassword);
+                transport.connect(smtpServer, admin.getEmail().getValue(), smtpPassword);
                 transport.sendMessage(msg, msg.getAllRecipients());
                 transport.close();
             } else {
@@ -94,12 +96,12 @@ public class EmailServiceImpl implements EmailService {
     private Transport getMailTransport() {
 
 
-
+        User admin = userDao.getAdmin();
         Properties props = new Properties();
 
         props.put("mail.smtp.host", smtpServer);
         props.put("mail.smtp.port", smtpPort);
-        props.put("mail.smtp.user", adminEmail);
+        props.put("mail.smtp.user", admin.getEmail().getValue());
 
         String AUTH = "true";
         props.put("mail.smtp.auth", AUTH);
@@ -171,7 +173,8 @@ public class EmailServiceImpl implements EmailService {
 
     private InternetAddress getFromEmail() throws UnsupportedEncodingException {
 
-        return new InternetAddress(adminEmail, "nimbits.com");
+        User admin = userDao.getAdmin();
+        return new InternetAddress(admin.getEmail().getValue(), "nimbits.com");
 
 
     }

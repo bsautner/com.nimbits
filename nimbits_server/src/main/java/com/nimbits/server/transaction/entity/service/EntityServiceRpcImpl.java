@@ -71,7 +71,7 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
     @Override
     public void deleteEntityRpc(final User user, final Entity entity) {
 
-        entityService.deleteEntity(user, entity, false);
+        entityService.deleteEntity(user, entity);
         if (entity.getEntityType().equals(EntityType.point)) {
             Point point = (Point) entity;
 

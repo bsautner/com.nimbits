@@ -121,12 +121,13 @@ public class SubscriptionService  {
             this.v = v;
         }
 
-        public void run() {
+        public void run()  {
 
 
             final List<Entity> subscriptions = entityDao.getSubscriptionsToEntity(user, point);
             logger.info(String.format("subscription service processing point: %s count: %s",  point.getName(), subscriptions.size()));
             for (final Entity entity : subscriptions) {
+
 
                 Subscription subscription = (Subscription) entity;
 
@@ -144,43 +145,49 @@ public class SubscriptionService  {
                         final User subscriber = subscriberOptional.get();
                         final AlertType alert = v.getAlertState();
 
-                        switch (subscription.getSubscriptionType()) {
-                            case none:
-                                break;
-                            case anyAlert:
-                                if (!alert.equals(AlertType.OK) && (point.isHighAlarmOn() || point.isLowAlarmOn() || point.isIdleAlarmOn())) {
+                        try {
+                            switch (subscription.getSubscriptionType()) {
+                                case none:
+                                    break;
+                                case anyAlert:
+                                    if (!alert.equals(AlertType.OK) && (point.isHighAlarmOn() || point.isLowAlarmOn() || point.isIdleAlarmOn())) {
+                                        sendNotification(subscriber, subscription, point, v);
+                                    }
+                                    break;
+                                case high:
+                                    if (alert.equals(AlertType.HighAlert) && point.isHighAlarmOn()) {
+                                        sendNotification(subscriber, subscription, point, v);
+                                    }
+                                    break;
+                                case low:
+                                    if (alert.equals(AlertType.LowAlert) && point.isLowAlarmOn()) {
+                                        sendNotification(subscriber, subscription, point, v);
+                                    }
+                                    break;
+                                case idle:
+                                    if (alert.equals(AlertType.IdleAlert) && point.isIdleAlarmOn()) {
+                                        sendNotification(subscriber, subscription, point, v);
+                                    }
+                                    break;
+                                case newValue:
                                     sendNotification(subscriber, subscription, point, v);
-                                }
-                                break;
-                            case high:
-                                if (alert.equals(AlertType.HighAlert) && point.isHighAlarmOn()) {
-                                    sendNotification(subscriber, subscription, point, v);
-                                }
-                                break;
-                            case low:
-                                if (alert.equals(AlertType.LowAlert) && point.isLowAlarmOn()) {
-                                    sendNotification(subscriber, subscription, point, v);
-                                }
-                                break;
-                            case idle:
-                                if (alert.equals(AlertType.IdleAlert) && point.isIdleAlarmOn()) {
-                                    sendNotification(subscriber, subscription, point, v);
-                                }
-                                break;
-                            case newValue:
-                                sendNotification(subscriber, subscription, point, v);
-                                break;
+                                    break;
 
-                            case deltaAlert:
-                                if (calculateDelta(point) > point.getDeltaAlarm()) {
-                                    sendNotification(subscriber, subscription, point, v);
-                                }
-                                break;
-                            case increase:
-                            case decrease:
-                                processSubscriptionToIncreaseOrDecrease(point, v, subscription, subscriber);
-                                break;
+                                case deltaAlert:
+                                    if (calculateDelta(point) > point.getDeltaAlarm()) {
+                                        sendNotification(subscriber, subscription, point, v);
+                                    }
+                                    break;
+                                case increase:
+                                case decrease:
 
+                                    processSubscriptionToIncreaseOrDecrease(point, v, subscription, subscriber);
+
+                                    break;
+
+                            }
+                        } catch (Exception e) {
+                            logger.error("error processing subscription" , e);
                         }
                     }
                 }
@@ -197,7 +204,7 @@ public class SubscriptionService  {
                 final Value v,
                 final Subscription subscription,
                 final User subscriber
-        ) {
+        ) throws Exception {
             Value prevValue = valueDao.getSnapshot(point);
 
             if (subscription.getSubscriptionType().equals(SubscriptionType.decrease) && (prevValue.getDoubleValue() > v.getDoubleValue())) {
@@ -214,7 +221,7 @@ public class SubscriptionService  {
                 final User user,
                 final Subscription subscription,
                 final Point point,
-                final Value value) {
+                final Value value) throws Exception {
 
 
             switch (subscription.getNotifyMethod()) {
@@ -372,7 +379,7 @@ public class SubscriptionService  {
                         Value r = new Value.Builder().data(result).create();
                         Optional<Entity> targetOptional = entityDao.getEntity(user, webHook.getDownloadTarget(), EntityType.point);
                         if (targetOptional.isPresent()) {
-                           // valueTask.process(user, (Point) targetOptional.get(), r );
+                            // valueTask.process(user, (Point) targetOptional.get(), r );
                             Point target = (Point) targetOptional.get();
                             valueDao.storeValues(target, Collections.singletonList(r));
 

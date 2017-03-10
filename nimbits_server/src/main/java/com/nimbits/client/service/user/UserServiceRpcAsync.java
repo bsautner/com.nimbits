@@ -29,7 +29,7 @@ public interface UserServiceRpcAsync {
 
     void logout(AsyncCallback<Void> asyncCallback);
 
-    void doForgotPassword(String value, AsyncCallback<Void> asyncCallback);
+    void doForgotPassword(String value, AsyncCallback<Void> asyncCallback) throws Exception;
 
     void resetPassword(String email, String password, String recoveryToken, AsyncCallback<User> asyncCallback);
 

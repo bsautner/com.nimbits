@@ -142,7 +142,7 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
     }
 
     @Override
-    public void doForgotPassword(String value) {
+    public void doForgotPassword(String value) throws Exception {
         Optional<User> optional = userService.getUserByKey(value);
 
         if (optional.isPresent()) {

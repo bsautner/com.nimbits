@@ -125,6 +125,8 @@ public class RestAPI {
 
     }
 
+
+
     @RequestMapping(value = "/{uuid}/series", method = RequestMethod.POST)
     public ResponseEntity postSeries(
             @RequestHeader(name = "Authorization") String authorization,
@@ -651,5 +653,8 @@ public class RestAPI {
 
         entity.setLinks(links);
     }
+
+
+
 
 }

@@ -23,10 +23,8 @@ import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
-import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.server.system.ServerInfo;
-import com.nimbits.server.transaction.user.dao.UserDao;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,23 +60,27 @@ public class EmailServiceImpl implements EmailService {
     @org.springframework.beans.factory.annotation.Value("${system.email.smtp.password}")
     private String smtpPassword;
 
-    private final UserDao userDao;
+    @org.springframework.beans.factory.annotation.Value("${system.email.smtp.from}")
+    private String from;
+
+    @org.springframework.beans.factory.annotation.Value("${system.email.smtp.domain}")
+    private String domain;
 
     @Autowired
-    public EmailServiceImpl(ServerInfo serverInfo, UserDao userDao) {
+    public EmailServiceImpl(ServerInfo serverInfo) {
 
         this.serverInfo = serverInfo;
-        this.userDao = userDao;
+
     }
 
     private void send(final Message msg) {
 
-        User admin = userDao.getAdmin();
+
           try {
             Transport transport = getMailTransport();
 
             if (transport != null) {
-                transport.connect(smtpServer, admin.getEmail().getValue(), smtpPassword);
+                transport.connect(smtpServer, from, smtpPassword);
                 transport.sendMessage(msg, msg.getAllRecipients());
                 transport.close();
             } else {
@@ -96,12 +98,11 @@ public class EmailServiceImpl implements EmailService {
     private Transport getMailTransport() {
 
 
-        User admin = userDao.getAdmin();
         Properties props = new Properties();
 
         props.put("mail.smtp.host", smtpServer);
         props.put("mail.smtp.port", smtpPort);
-        props.put("mail.smtp.user", admin.getEmail().getValue());
+        props.put("mail.smtp.user", from);
 
         String AUTH = "true";
         props.put("mail.smtp.auth", AUTH);
@@ -132,12 +133,12 @@ public class EmailServiceImpl implements EmailService {
     }
 
 
-    private String createEmailFromTemplate(String message, String templateName) throws IOException {
+    private String createEmailFromTemplate(String message) throws IOException {
 
 
         ClassLoader classLoader = getClass().getClassLoader();
 
-        String html = IOUtils.toString(classLoader.getResourceAsStream(templateName));
+        String html = IOUtils.toString(classLoader.getResourceAsStream("mail.html"));
         html = html.replace("MESSAGE_BODY_INSERTED", message);
         html = html.replace("INSTANCE_URL", serverInfo.getFullServerURL(null));
         html = html.replace("INSTANCE_NAME", serverInfo.getFullServerURL(null));
@@ -153,7 +154,7 @@ public class EmailServiceImpl implements EmailService {
         final Session session = Session.getDefaultInstance(props, null);
         try {
 
-            final String content = createEmailFromTemplate(unformattedMessage, "mail.html");
+            final String content = createEmailFromTemplate(unformattedMessage);
             final InternetAddress internetAddress = new InternetAddress(emailAddress.getValue());
             final Message msg = new MimeMessage(session);
             msg.setFrom(getFromEmail());
@@ -173,8 +174,7 @@ public class EmailServiceImpl implements EmailService {
 
     private InternetAddress getFromEmail() throws UnsupportedEncodingException {
 
-        User admin = userDao.getAdmin();
-        return new InternetAddress(admin.getEmail().getValue(), "nimbits.com");
+        return new InternetAddress(from, "nimbits.com");
 
 
     }
@@ -241,9 +241,9 @@ public class EmailServiceImpl implements EmailService {
 
         StringBuilder sb = new StringBuilder();
         sb.append("<P>Password Reset</p>");
-        sb.append("<a href = \"" + serverInfo.getFullServerURL(null));
+        sb.append("<a href = \"").append(serverInfo.getFullServerURL(null));
         try {
-            sb.append("nimbits.html?" + Parameters.rToken.getText() + "=" + URLEncoder.encode(token, "UTF-8") + "\">Click here to reset your password</a>");
+            sb.append("nimbits.html?").append(Parameters.rToken.getText()).append("=").append(URLEncoder.encode(token, "UTF-8")).append("\">Click here to reset your password</a>");
 
 
             String subject = "Nimbits Password Reset";

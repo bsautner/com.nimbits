@@ -7,6 +7,8 @@ cp -fv /opt/tomcat/webapps/nimbits/WEB-INF/classes/application.properties ~/appl
 mvn -f ../pom.xml clean install
 cp ../nimbits_server/target/nimbits_server.war /opt/tomcat/webapps/nimbits.war
 service tomcat8 start
+echo "waiting for tomcat so explode the war"
+sleep 10s
 cp -fv  ~/application.properties.old /opt/tomcat/webapps/nimbits/WEB-INF/classes/application.properties
 rm -fv  ~/application.properties.old
 service tomcat8 restart

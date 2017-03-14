@@ -227,7 +227,7 @@ public class SubscriptionService  {
             switch (subscription.getNotifyMethod()) {
                 case none:
                     break;
-                case email:
+                case email: case emailJson:
                     EmailAddress emailAddress;
                     if (StringUtils.isEmpty(subscription.getTarget())) {
                         emailAddress = user.getEmail();

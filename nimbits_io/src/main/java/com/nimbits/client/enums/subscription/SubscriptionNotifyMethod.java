@@ -23,8 +23,10 @@ import java.util.Map;
 
 public enum SubscriptionNotifyMethod {
     none(-1, "None"),
-    email(0, "Email"),
-    webhook(7, "Web Hook");
+    email(0, "Email (formatted)"),
+    emailJson(8, "Email (json)"),
+    webhook(7, "Web Hook")
+    ;
 
     private static final Map<Integer, SubscriptionNotifyMethod> lookup = new HashMap<Integer, SubscriptionNotifyMethod>(5);
 

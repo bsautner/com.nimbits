@@ -19,13 +19,12 @@ public abstract class NimbitsTest {
 
     public User user;
 
-    static final String EMAIL_ADDRESS = "support@nimbits.com";
+    private static final String EMAIL_ADDRESS = "support@nimbits.com";
     // static final String INSTANCE_URL = "http://52.87.221.104:8080/nimbits";
     static final String INSTANCE_URL = "http://ha:8080/nimbits";
 
     //static final String INSTANCE_URL = "http://localhost:8080";
     static final String PASSWORD = "password"; //just like my luggage!
-    int errors = 0;
 
 
     protected static final Nimbits nimbits = new Nimbits.Builder()
@@ -131,7 +130,7 @@ public abstract class NimbitsTest {
 
     void error(String message) {
         log("Error: " + message);
-        errors++;
+
         throw new RuntimeException(message);
     }
 }

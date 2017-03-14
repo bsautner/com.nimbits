@@ -16,18 +16,70 @@
 
 package com.nimbits.client.model.value;
 
+import com.google.gson.annotations.Expose;
+
 import java.io.Serializable;
 
+public class ValueContainer implements Serializable {
 
-public interface ValueContainer extends Serializable {
-    String getAccessKey();
+    @Expose
+    private String owner;
 
-    String getOwner();
+    @Expose
+    private String id;
 
-    String getId();
+    @Expose
+    private Value value;
 
-    Value getValue();
+    @SuppressWarnings("unused")
+    public ValueContainer() {
+
+    }
+
+    public ValueContainer(String owner, String id, Value value) {
+        this.owner = owner;
+        this.id = id;
+        this.value = value;
+    }
+
+    
+    public String getOwner() {
+        return owner;
+    }
+
+    
+    public String getId() {
+        return id;
+    }
+
+    
+    public Value getValue() {
+        return value;
+    }
+
+    
+    public void setValue(Value value) {
+        this.value = value;
+    }
 
 
-    void setValue(Value value);
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof ValueContainer)) return false;
+
+        ValueContainer that = (ValueContainer) o;
+
+        if (!owner.equals(that.owner)) return false;
+        if (!id.equals(that.id)) return false;
+        return value.equals(that.value);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = owner.hashCode();
+        result = 31 * result + id.hashCode();
+        result = 31 * result + value.hashCode();
+        return result;
+    }
 }

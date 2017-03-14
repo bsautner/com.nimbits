@@ -18,12 +18,15 @@ package com.nimbits.server.communication.mail;
 
 
 import com.nimbits.client.enums.Parameters;
+import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.email.EmailAddress;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.client.model.value.ValueContainer;
+import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.system.ServerInfo;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -51,20 +54,23 @@ public class EmailService {
     private static final int INT = 128;
     private static final int SECONDS_IN_MINUTE = 60;
 
-    @org.springframework.beans.factory.annotation.Value("${system.email.smtp.host}")
+    @org.springframework.beans.factory.annotation.Value("${mail.smtp.host}")
     private String smtpServer;
 
-    @org.springframework.beans.factory.annotation.Value("${system.email.smtp.port}")
+    @org.springframework.beans.factory.annotation.Value("${mail.smtp.port}")
     private String smtpPort;
 
-    @org.springframework.beans.factory.annotation.Value("${system.email.smtp.password}")
+    @org.springframework.beans.factory.annotation.Value("${mail.smtp.password}")
     private String smtpPassword;
 
-    @org.springframework.beans.factory.annotation.Value("${system.email.smtp.from}")
+    @org.springframework.beans.factory.annotation.Value("${mail.smtp.from}")
     private String from;
 
-    @org.springframework.beans.factory.annotation.Value("${system.email.smtp.domain}")
+    @org.springframework.beans.factory.annotation.Value("${mail.smtp.domain}")
     private String domain;
+
+    @org.springframework.beans.factory.annotation.Value("${mail.smtp.subject}")
+    private String subject;
 
     @Autowired
     public EmailService(ServerInfo serverInfo) {
@@ -142,11 +148,13 @@ public class EmailService {
 
     private void sendEmail(final EmailAddress emailAddress,
                            final String unformattedMessage,
-                           final String subject) throws Exception {
+                           final String subject, boolean format) throws Exception {
         final Properties props = new Properties();
         final Session session = Session.getDefaultInstance(props, null);
 
-        final String content = createEmailFromTemplate(unformattedMessage);
+
+            final String content = format ? createEmailFromTemplate(unformattedMessage) : unformattedMessage;
+
         final InternetAddress internetAddress = new InternetAddress(emailAddress.getValue());
         final Message msg = new MimeMessage(session);
         msg.setFrom(getFromEmail());
@@ -172,8 +180,32 @@ public class EmailService {
                           final Point point,
                           final EmailAddress emailAddress,
                           final Value value, Subscription subscription) throws Exception {
+        if (subscription.getNotifyMethod().equals(SubscriptionNotifyMethod.email)) {
+            sendFormatedAlert(entity, point, emailAddress, value, subscription);
+        }
+        else {
+            sendJson(entity, point, emailAddress, value, subscription);
+        }
 
+    }
 
+    private void sendJson(final Entity entity,
+                                   final Point point,
+                                   final EmailAddress emailAddress,
+                                   final Value value, Subscription subscription) throws Exception {
+
+        ValueContainer valueContainer = new ValueContainer(
+                entity.getOwner(), point.getId(), value
+        );
+        String json = GsonFactory.getInstance(true).toJson(valueContainer);
+
+        sendEmail(emailAddress, json, subject, false);
+
+    }
+    private void sendFormatedAlert(final Entity entity,
+                                   final Point point,
+                                   final EmailAddress emailAddress,
+                                   final Value value, Subscription subscription) throws Exception {
         final StringBuilder message = new StringBuilder(INT);
 
         message.append("<p>Data Point: ").append(entity.getName().getValue()).append("</p>");
@@ -214,7 +246,7 @@ public class EmailService {
         message.append("<P>Subscription Name: ").append(subscription.getName().getValue()).append(" </P>");
         message.append("<P>Subscription Description: ").append(subscription.getDescription()).append(" </P>");
 
-        sendEmail(emailAddress, message.toString(), "Nimbits Subscription Event");
+        sendEmail(emailAddress, message.toString(), subject, true);
 
     }
 
@@ -231,7 +263,7 @@ public class EmailService {
 
 
         String subject = "Nimbits Password Reset";
-        sendEmail(to, sb, subject);
+        sendEmail(to, sb, subject, true);
 
 
     }

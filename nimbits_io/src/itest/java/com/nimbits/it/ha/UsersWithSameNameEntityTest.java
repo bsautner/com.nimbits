@@ -126,7 +126,7 @@ public class UsersWithSameNameEntityTest extends AbstractBaseNimbitsTest {
             assertTrue(optional.isPresent());
             Point foo = optional.get();
             assertEquals(user.getId(), foo.getParent());
-            assertEquals(commonPointName, user.getName().getValue());
+            assertEquals(commonPointName, foo.getName().getValue());
 
             Optional<WebHook> webHook = client.findWebHook(commonPointName);
             assertTrue(webHook.isPresent());

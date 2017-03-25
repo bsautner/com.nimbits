@@ -28,14 +28,11 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.server.math.MathEvaluator;
 import com.nimbits.server.math.MathEvaluatorImpl;
 import com.nimbits.server.process.task.ValueGeneratedListener;
-import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
 
 @Component
 public class CalculationService   {

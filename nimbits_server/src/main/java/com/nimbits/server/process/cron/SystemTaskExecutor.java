@@ -242,6 +242,7 @@ public class SystemTaskExecutor {
 
             tx.begin();
             q.execute();
+            tx.commit();
 
         }
         catch (Exception ex) {
@@ -250,9 +251,14 @@ public class SystemTaskExecutor {
             throw ex;
         }
         finally {
-            tx.commit();
-            pm.close();
+
+            if (tx.isActive())  {
+                tx.rollback();
+            }
+
+
         }
+        pm.close();
     }
 
 

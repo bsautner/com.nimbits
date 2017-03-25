@@ -46,8 +46,9 @@
         <repository>
             <id>com.nimbits</id>
             <name>nimbits</name>
-            <url>file:${project.basedir}/repo</url>
+            <url>file://repo</url>
         </repository>
+
     </repositories>
     <dependencies>
 

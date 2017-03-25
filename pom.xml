@@ -73,12 +73,6 @@
 
     <repositories>
 
-        <!--<repository>-->
-        <!--<id>local</id>-->
-        <!--<url>file://${user.home}/.m2/repository</url>-->
-
-        <!--</repository>-->
-
         <repository>
             <id>jline</id>
             <name>JLine Project Repository</name>
@@ -91,6 +85,11 @@
             <url>http://gwt-maven.googlecode.com/svn/trunk/mavenrepo/</url>
         </repository>
 
+        <repository>
+            <id>com.nimbits</id>
+            <name>nimbits</name>
+            <url>file:${project.basedir}/repo</url>
+        </repository>
 
     </repositories>
 

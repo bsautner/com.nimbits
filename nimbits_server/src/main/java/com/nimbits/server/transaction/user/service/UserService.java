@@ -222,10 +222,4 @@ public class UserService {
     }
 
 
-    public void verifyAdmin() {
-
-
-
-
-    }
 }

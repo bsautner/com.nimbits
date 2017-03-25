@@ -6,7 +6,8 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.subscription.SubscriptionModel;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.it.NimbitsTest;
+import com.nimbits.it.AbstractNimbitsTest;
+import org.junit.Ignore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,8 @@ import java.util.Random;
  * Scenario - create several idle points that email me if they go idle, but write to them so they go back to
  * being not idle, then let them fall back to being idle so i get repeated email alerts
  */
-public class IdleAlertSpamMe extends NimbitsTest {
+@Ignore
+public class IdleAlertSpamMe extends AbstractNimbitsTest {
 
 
 

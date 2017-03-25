@@ -1,4 +1,4 @@
-package com.nimbits.it;
+package com.nimbits.it.basic;
 
 import org.junit.Test;
 

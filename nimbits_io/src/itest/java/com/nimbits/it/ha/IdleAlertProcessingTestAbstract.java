@@ -10,7 +10,7 @@ import com.nimbits.client.model.webhook.DataChannel;
 import com.nimbits.client.model.webhook.HttpMethod;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
-import com.nimbits.it.NimbitsTest;
+import com.nimbits.it.AbstractNimbitsTest;
 import com.nimbits.server.gson.GsonFactory;
 import org.junit.Test;
 
@@ -32,7 +32,7 @@ import static org.junit.Assert.assertNotNull;
  [Expected]: Idle alert is not triggered, since the point was updated 30 sec ago.
  [Actual]: Idle alert is triggered (webhook is pushed).
  */
-public class IdleAlertProcessingTest extends NimbitsTest {
+public class IdleAlertProcessingTestAbstract extends AbstractNimbitsTest {
 
     @Override
     public void setUp() throws Exception {

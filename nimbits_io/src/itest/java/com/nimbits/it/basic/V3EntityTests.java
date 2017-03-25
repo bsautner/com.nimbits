@@ -1,4 +1,4 @@
-package com.nimbits.it;
+package com.nimbits.it.basic;
 
 import com.nimbits.client.enums.SummaryType;
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
@@ -23,6 +23,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.webhook.HttpMethod;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
+import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -38,7 +39,7 @@ import static org.junit.Assert.assertNotEquals;
 /**
  * Create each type of entity and verify it does what it should
  */
-public class V3EntityTests extends NimbitsTest {
+public class V3EntityTests extends AbstractNimbitsTest {
     private Category category;
     private Point outputPoint;
 
@@ -283,8 +284,8 @@ public class V3EntityTests extends NimbitsTest {
         Sync sync = nimbits.addSync(category, new SyncModel.Builder()
                 .trigger(inputPoint)
                 .target(outputPoint2)
-                .targetInstance(INSTANCE_URL)
-                .accessKey(PASSWORD)
+                .targetInstance(host)
+                .accessKey(password)
                 .create());
 
         log(sync.toString());

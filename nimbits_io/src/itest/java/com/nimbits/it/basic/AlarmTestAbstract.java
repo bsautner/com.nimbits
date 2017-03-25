@@ -1,11 +1,9 @@
-package com.nimbits.it;
+package com.nimbits.it.basic;
 
 import com.google.common.base.Optional;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
-import com.nimbits.client.model.user.User;
-import com.nimbits.client.model.value.Value;
-import com.sun.tools.javac.jvm.ClassWriter;
+import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.Before;
 import org.junit.Test;
 import retrofit.Callback;
@@ -16,7 +14,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.*;
 
-public class AlarmTest extends NimbitsTest {
+public class AlarmTestAbstract extends AbstractNimbitsTest {
 
     @Before
     public void setUp() throws Exception {

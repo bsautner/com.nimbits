@@ -4,7 +4,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.it.NimbitsTest;
+import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.Test;
 
 import java.util.Collections;
@@ -24,7 +24,7 @@ import static org.junit.Assert.assertFalse;
  [Expected]: Values should be stored as double.
  [Actual]: Values are rounded to integer.
  */
-public class RoundingTest extends NimbitsTest {
+public class RoundingTestAbstract extends AbstractNimbitsTest {
 
     @Test
     public void testScenario() {

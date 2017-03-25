@@ -1,10 +1,11 @@
-package com.nimbits.it;
+package com.nimbits.it.basic;
 
 import com.google.common.base.Optional;
 import com.google.gson.Gson;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.subscription.SubscriptionModel;
+import com.nimbits.it.AbstractNimbitsTest;
 import com.nimbits.server.gson.GsonFactory;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.*;
 
 
-public class V3UpdateEntityTest extends NimbitsTest {
+public class V3UpdateEntityTestAbstract extends AbstractNimbitsTest {
 
     private CountDownLatch lock = new CountDownLatch(1);
 

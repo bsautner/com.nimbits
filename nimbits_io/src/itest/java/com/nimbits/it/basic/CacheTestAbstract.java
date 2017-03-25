@@ -1,8 +1,9 @@
-package com.nimbits.it;
+package com.nimbits.it.basic;
 
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class CacheTest  extends NimbitsTest {
+public class CacheTestAbstract extends AbstractNimbitsTest {
 
         @Before
         public void setUp() throws Exception {

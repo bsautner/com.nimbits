@@ -1,4 +1,4 @@
-package com.nimbits.it;
+package com.nimbits.it.basic;
 
 import com.google.common.base.Optional;
 import com.nimbits.client.enums.FilterType;
@@ -17,6 +17,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.webhook.HttpMethod;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
+import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.Before;
 import org.junit.Test;
 import retrofit.RetrofitError;
@@ -26,13 +27,13 @@ import java.util.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class V3Sample1 extends NimbitsTest {
+public class V3Sample1 extends AbstractNimbitsTest {
 
     /**
      * This sample is meant to walk through some of the basic nimbits automation features and uses nimbits.io to:
      * <p>
      * <p>
-     * 1. Create an admin user on a new nimbits server (@see com.nimbits.it.NimbitsTest base class)
+     * 1. Create an admin user on a new nimbits server (@see com.nimbits.it.AbstractNimbitsTest base class)
      * 2. Create some regular users using the admin's credentials - then delete some of them
      * 3. Re-Connect to the server as a regular user
      * 4. Create A folder under the user's account
@@ -144,7 +145,7 @@ public class V3Sample1 extends NimbitsTest {
 
         log("Getting a client for: " + email);
         Nimbits client = new Nimbits.Builder()
-                .email(email).token(password).instance(INSTANCE_URL).create();
+                .email(email).token(password).instance(host).create();
 
         User me = client.getMe(true);
 

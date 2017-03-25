@@ -1,14 +1,15 @@
-package com.nimbits.it;
+package com.nimbits.it.basic;
 
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
+import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 
-public class RoundRobinTest extends NimbitsTest {
+public class RoundRobinTestAbstract extends AbstractNimbitsTest {
 
     @Before
     public void setUp() throws Exception {

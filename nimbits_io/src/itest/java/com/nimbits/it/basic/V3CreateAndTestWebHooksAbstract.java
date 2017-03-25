@@ -1,4 +1,4 @@
-package com.nimbits.it;
+package com.nimbits.it.basic;
 
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
@@ -12,14 +12,15 @@ import com.nimbits.client.model.webhook.DataChannel;
 import com.nimbits.client.model.webhook.HttpMethod;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
+import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.UUID;
 
-public class V3CreateAndTestWebHooks extends NimbitsTest {
+public class V3CreateAndTestWebHooksAbstract extends AbstractNimbitsTest {
 
-    private final static String TAG = V3CreateAndTestWebHooks.class.getName();
+    private final static String TAG = V3CreateAndTestWebHooksAbstract.class.getName();
 
     @Before
     public void setUp() throws Exception {

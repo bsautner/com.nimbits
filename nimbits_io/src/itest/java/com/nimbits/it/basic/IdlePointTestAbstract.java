@@ -1,10 +1,11 @@
-package com.nimbits.it;
+package com.nimbits.it.basic;
 
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,7 +17,7 @@ import java.util.UUID;
 import static junit.framework.TestCase.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class IdlePointTest extends NimbitsTest {
+public class IdlePointTestAbstract extends AbstractNimbitsTest {
 
 
     @Before

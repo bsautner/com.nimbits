@@ -1,4 +1,4 @@
-package com.nimbits.it;
+package com.nimbits.it.basic;
 
 import com.google.common.base.Optional;
 import com.nimbits.client.model.category.Category;
@@ -10,6 +10,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.webhook.HttpMethod;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.client.model.webhook.WebHookModel;
+import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.Before;
 import org.junit.Test;
 import retrofit.RetrofitError;
@@ -20,7 +21,7 @@ import java.util.UUID;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class V3FindThingsExamples extends NimbitsTest {
+public class V3FindThingsExamples extends AbstractNimbitsTest {
 
 
     @Before

@@ -1,4 +1,4 @@
-package com.nimbits.it;
+package com.nimbits.it.basic;
 
 import com.nimbits.client.io.Nimbits;
 import com.nimbits.client.model.entity.Entity;
@@ -6,6 +6,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.it.AbstractNimbitsTest;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
 import org.junit.Ignore;
@@ -19,7 +20,7 @@ import java.util.regex.PatternSyntaxException;
 /**
  * Exercises the V3 Rest API - designed to run continuously against a server as an integration test.
  */
-public class V3RestClientTester extends NimbitsTest {
+public class V3RestClientTester extends AbstractNimbitsTest {
 
     private List<Entity> pointList = new ArrayList<>();
     private Map<Entity, List<Value>> storedValues = new HashMap<Entity, List<Value>>();
@@ -61,7 +62,7 @@ public class V3RestClientTester extends NimbitsTest {
             Nimbits nonAdminClient = new Nimbits.Builder()
                     .email(regularUser.getEmail().getValue())
                     .token(password)
-                    .instance(INSTANCE_URL).create();
+                    .instance(host).create();
 
             User verify = nonAdminClient.getMe(true);
 

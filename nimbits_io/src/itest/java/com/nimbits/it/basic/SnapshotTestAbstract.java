@@ -1,7 +1,8 @@
-package com.nimbits.it;
+package com.nimbits.it.basic;
 
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.Before;
 import org.junit.Test;
 import retrofit.Callback;
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.*;
 
-public class SnapshotTest extends NimbitsTest {
+public class SnapshotTestAbstract extends AbstractNimbitsTest {
 
     @Before
     public void setUp() throws Exception {

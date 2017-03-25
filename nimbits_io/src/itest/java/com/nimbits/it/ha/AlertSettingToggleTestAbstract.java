@@ -4,7 +4,7 @@ package com.nimbits.it.ha;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
-import com.nimbits.it.NimbitsTest;
+import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,7 +26,7 @@ import static org.junit.Assert.assertTrue;
  [Expected]: Alert settings expected to be the same.
  [Actual]: settings on another nimbits are not changed.
  */
-public class AlertSettingToggleTest extends NimbitsTest {
+public class AlertSettingToggleTestAbstract extends AbstractNimbitsTest {
 
     @Override
     @Before

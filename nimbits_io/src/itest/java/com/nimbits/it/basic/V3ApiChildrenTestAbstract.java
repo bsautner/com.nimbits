@@ -1,8 +1,9 @@
-package com.nimbits.it;
+package com.nimbits.it.basic;
 
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
+import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -11,7 +12,7 @@ import java.util.UUID;
 /**
  * Create a points with children
  */
-public class V3ApiChildrenTest extends NimbitsTest {
+public class V3ApiChildrenTestAbstract extends AbstractNimbitsTest {
 
     @Before
     public void setUp() throws Exception {

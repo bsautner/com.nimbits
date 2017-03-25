@@ -4,7 +4,7 @@ import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
-import com.nimbits.it.NimbitsTest;
+import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -27,7 +27,7 @@ import static org.junit.Assert.assertTrue;
  It is observed, that Java API function getValues(..., 1) returns actual value.
 
  */
-public class GetSnapshotTest extends NimbitsTest {
+public class GetSnapshotTestAbstract extends AbstractNimbitsTest {
 
 
     @Test

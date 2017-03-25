@@ -1,9 +1,10 @@
-package com.nimbits.it;
+package com.nimbits.it.basic;
 
 import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,7 +13,7 @@ import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
 
-public class HighFrequencyRepeaterTest extends NimbitsTest {
+public class HighFrequencyRepeaterTestAbstract extends AbstractNimbitsTest {
 
     @Before
     public void setUp() throws Exception {

@@ -1,4 +1,4 @@
-package com.nimbits.it;/*
+package com.nimbits.it.basic;/*
  * NIMBITS INC CONFIDENTIAL
  * Copyrite (c) 2015 Nimbits Inc
  *  __________________
@@ -21,13 +21,14 @@ import com.nimbits.client.enums.FilterType;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.value.Value;
+import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Random;
 import java.util.UUID;
 
-public class V3FilterTest extends NimbitsTest {
+public class V3FilterTestAbstract extends AbstractNimbitsTest {
 
     @Before
     public void setUp() throws Exception {

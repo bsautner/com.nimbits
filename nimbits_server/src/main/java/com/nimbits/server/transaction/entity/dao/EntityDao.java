@@ -19,6 +19,7 @@ package com.nimbits.server.transaction.entity.dao;
 
 import com.google.common.base.Optional;
 import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Table;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.entity.Entity;
@@ -285,11 +286,9 @@ public class EntityDao {
         }
     }
 
-    //@Cacheable(cacheNames = "entity")
     public Optional<Entity> getEntityByName(final User user, final EntityName name, final EntityType type) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
-        if (!user.getIsAdmin()) {
             try {
 
                 final Query q1 = pm.newQuery(getEntityPersistentClass(type));
@@ -298,29 +297,16 @@ public class EntityDao {
 
                 q1.setFilter("name==b && owner==o");
                 q1.declareParameters("String b, String o");
-                q1.setRange(0, 1);
+               // q1.setRange(0, 1);
                 c = (List<Entity>) q1.execute(name.getValue(), user.getId());
+                logger.warn(String.format("getEntityByName %s %s", name.getValue(), c.size()));
 
-                return getEntityOptional(user, c);
+
+                return getEntityOptional(user, ImmutableList.copyOf(pm.detachCopyAll(c)));
             } finally {
                 pm.close();
             }
-        } else {
-            try {
-                final Query q1 = pm.newQuery(getEntityPersistentClass(type));
 
-                final List<Entity> c;
-
-                q1.setFilter("name==b");
-                q1.declareParameters("String b");
-                q1.setRange(0, 1);
-                c = (List<Entity>) q1.execute(name.getValue());
-
-                return getEntityOptional(user, c);
-            } finally {
-                pm.close();
-            }
-        }
     }
 
     public String getOwner(String point) {

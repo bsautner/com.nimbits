@@ -421,8 +421,14 @@ public class RestAPI {
 
             Optional<Entity> e = entityDao.getEntityByName(user, CommonFactory.createName(name, searchType), searchType);
             if (e.isPresent()) {
-                String json = gson.toJson(e.get());
-                return new ResponseEntity<>(json, HttpStatus.OK);
+                Entity entity = e.get();
+                if (! entity.getOwner().equals(user.getId())) {
+                    throw new RuntimeException("attempt to return an entity that did not belong to the user");
+                }
+                else {
+                    String json = gson.toJson(e.get());
+                    return new ResponseEntity<>(json, HttpStatus.OK);
+                }
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }

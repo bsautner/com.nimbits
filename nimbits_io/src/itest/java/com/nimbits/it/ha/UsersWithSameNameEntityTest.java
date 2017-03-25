@@ -63,7 +63,7 @@ public class UsersWithSameNameEntityTest extends AbstractBaseNimbitsTest {
 
     @Test
     public void testScenario() {
-        int count = 10;
+        int count = 2;
         String commonPointName = "FOO";
         String commonHost = "http://test.com";
 

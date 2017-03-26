@@ -112,12 +112,13 @@ public class V3Sample1 extends AbstractNimbitsTest {
         //veryify user exists
         sleep();
 
-        Optional<User> retrieved = nimbits.findUser(email2);
-        if (retrieved.isPresent()) {
-            log("Downloaded:   " + retrieved.get().toString());
+        Nimbits user2Client = new Nimbits.Builder().instance(host).email(email2).token(password).create();
+        User retrieved = user2Client.getMe();
+        if (retrieved != null) {
+            log("Downloaded:   " + retrieved.toString());
             Thread.sleep(1000);
 
-            nimbits.deleteEntity(retrieved.get());
+            nimbits.deleteEntity(retrieved);
             Thread.sleep(1000);
             //make sure it was deleted
 
@@ -130,8 +131,8 @@ public class V3Sample1 extends AbstractNimbitsTest {
 
 
         } else {
-            fail();
-            error("got expected result: user didn't exist after adding: " + email2);
+
+            fail("got expected result: user didn't exist after adding: " + email2);
         }
 
 

@@ -429,7 +429,6 @@ public class RestAPI {
         }
 
         if (StringUtils.isNotEmpty(searchName)) {
-            logger.warn(String.format("searching for %s owner: %s name: %s", searchType.name(), user.getId(), searchName));
 
             Optional<Entity> e = entityDao.getEntityByName(user, CommonFactory.createName(name, searchType), searchType);
             if (e.isPresent()) {
@@ -440,7 +439,6 @@ public class RestAPI {
                 }
                 else {
                     String json = gson.toJson(e.get());
-                    logger.warn("returning: " + json);
 
                     return new ResponseEntity<>(json, HttpStatus.OK);
                 }

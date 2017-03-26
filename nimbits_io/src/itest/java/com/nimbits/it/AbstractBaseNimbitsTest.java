@@ -50,7 +50,7 @@ public abstract class AbstractBaseNimbitsTest extends AbstractTest {
                 .email(admin).token(password).instance(host).create();
 
        adminUser = adminClient.getMe();
-       if (! adminUser.getIsAdmin()) {
+       if (! adminUser.isAdmin()) {
            fail("Admin User not set correctly for these tests to run");
        }
 

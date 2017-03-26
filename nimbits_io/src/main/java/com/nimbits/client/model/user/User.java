@@ -33,7 +33,7 @@ public interface User extends Entity, Serializable {
 
     EmailAddress getEmail();
 
-    boolean getIsAdmin();
+    boolean isAdmin();
 
     void setIsAdmin(boolean userAdmin);
 

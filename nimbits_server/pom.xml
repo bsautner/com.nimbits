@@ -46,13 +46,6 @@
     <dependencies>
 
 
-        <dependency>
-            <groupId>com.nimbits</groupId>
-            <artifactId>nimbits_core</artifactId>
-            <version>4.1.1</version>
-        </dependency>
-
-
         <!--nimbits io will use these if available-->
         <dependency>
             <groupId>com.squareup.okhttp</groupId>

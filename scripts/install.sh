@@ -23,7 +23,7 @@ echo "create database if not exists nimbits" | mysql -u root -p
 #if you want to install nimbits server on a device that may not have the ram to build from source, you can run these commands
 #on another machine - comment out the next two lines and run them manually to build and copy the resulting .war file. 
 cd ..
-mvn install:install-file -Dfile=./nimbits_server/src/main/resources/nimbits_core-${version}.out.jar -DgroupId=com.nimbits -DartifactId=nimbits_core -Dversion=${version} -Dpackaging=jar
+#mvn install:install-file -Dfile=./nimbits_server/src/main/resources/nimbits_core-${version}.out.jar -DgroupId=com.nimbits -DartifactId=nimbits_core -Dversion=${version} -Dpackaging=jar
 
 mvn clean install
 cp ./nimbits_server/target/nimbits_server.war /opt/tomcat/webapps/nimbits.war

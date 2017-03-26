@@ -90,7 +90,7 @@ public class V3Sample1 extends AbstractNimbitsTest {
         } catch (Throwable throwable) {
             //This will throw if the user already exists
 
-            log("error adding user 1: " + throwable.getMessage());
+            fail("error adding user 1: " + throwable.getMessage());
             fail();
         }
 
@@ -106,10 +106,11 @@ public class V3Sample1 extends AbstractNimbitsTest {
         } catch (Throwable throwable) {
             //This will throw if the user already exists
 
-            log("error adding user 2: " + throwable.getMessage());
+            fail("error adding user 2: " + throwable.getMessage());
         }
 
         //veryify user exists
+        sleep();
 
         Optional<User> retrieved = nimbits.findUser(email2);
         if (retrieved.isPresent()) {

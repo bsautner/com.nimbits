@@ -16,9 +16,18 @@
     <mvc:annotation-driven />
 
 
-    <bean id="api"  class="com.nimbits.server.api.v3.RestAPI">
+    <!--<bean id="api"  class="com.nimbits.server.api.v3.RestAPI">-->
 
-    </bean>
+    <!--</bean>-->
+
+    <bean id="entityController"  class="com.nimbits.server.api.v3.EntityController" />
+
+    <bean id="userController"  class="com.nimbits.server.api.v3.UserController" />
+
+    <bean id="snapshotController"  class="com.nimbits.server.api.v3.SnapshotController" />
+
+    <bean id="seriesController"  class="com.nimbits.server.api.v3.SeriesController" />
+
 
 
 </beans>

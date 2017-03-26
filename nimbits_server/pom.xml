@@ -50,8 +50,6 @@
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_core</artifactId>
             <version>0.0.3</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/src/main/resources/nimbits_core-0.0.3.out.jar</systemPath>
         </dependency>
 
 

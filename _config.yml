@@ -1,0 +1,8 @@
+title: nimbits platform
+description: "Nimbits Server is an IOT API (json+hal) server platform designed to store and process time and geo stamp data, filter incoming data and trigger events based on rules. It stores data in a way that makes it easy to retrieve chucks of data sets using date ranges or gps coordinates. "
+google_analytics: 
+show_downloads: true
+theme: jekyll-theme-cayman
+
+gems:
+  - jekyll-mentions

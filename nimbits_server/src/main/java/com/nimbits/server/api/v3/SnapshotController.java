@@ -31,7 +31,7 @@ public class SnapshotController extends RestAPI {
 
     @RequestMapping(value = "/{uuid}/snapshot", method = RequestMethod.POST)
     public ResponseEntity postSnapshot(
-            @RequestHeader(name = "Authorization") String authorization,
+            @RequestHeader(name = AUTH_HEADER) String authorization,
             @RequestBody Value value,
             @PathVariable String uuid) throws Exception {
 
@@ -53,7 +53,7 @@ public class SnapshotController extends RestAPI {
 
     @RequestMapping(value = "sync/{uuid}/snapshot", method = RequestMethod.POST)
     public ResponseEntity<Value> postSnapshotSync(
-            @RequestHeader(name = "Authorization") String authorization,
+            @RequestHeader(name = AUTH_HEADER) String authorization,
             @RequestBody Value value,
             @PathVariable String uuid) throws Exception {
 
@@ -76,7 +76,7 @@ public class SnapshotController extends RestAPI {
 
     @RequestMapping(value = "/{uuid}/snapshot", method = RequestMethod.GET)
     public ResponseEntity<String> getSnapshot(HttpServletRequest request,
-                                              @RequestHeader(name = "Authorization") String authorization,
+                                              @RequestHeader(name = AUTH_HEADER) String authorization,
                                               @RequestParam(name = "sd", required = false) Long sd,
                                               @RequestParam(name = "sd", required = false) Long ed,
                                               @PathVariable String uuid) {

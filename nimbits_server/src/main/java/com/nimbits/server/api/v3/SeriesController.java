@@ -33,7 +33,7 @@ public class SeriesController extends RestAPI {
 
     @RequestMapping(value = "/{uuid}/series", method = RequestMethod.POST)
     public ResponseEntity postSeries(
-            @RequestHeader(name = "Authorization") String authorization,
+            @RequestHeader(name = AUTH_HEADER) String authorization,
             @RequestBody String json,
             @PathVariable String uuid) throws IOException {
 
@@ -60,7 +60,7 @@ public class SeriesController extends RestAPI {
     }
 
     @RequestMapping(value = "/{uuid}/series", method = RequestMethod.GET)
-    public ResponseEntity<String> getSeries(@RequestHeader(name = "Authorization") String authorization,
+    public ResponseEntity<String> getSeries(@RequestHeader(name = AUTH_HEADER) String authorization,
                                             @PathVariable String uuid,
                                             @RequestParam(value = "start", required = false) String startParam,
                                             @RequestParam(value = "end", required = false) String endParam,
@@ -118,7 +118,7 @@ public class SeriesController extends RestAPI {
     }
 
     @RequestMapping(value = "/{uuid}/table", method = RequestMethod.GET)
-    public ResponseEntity<String> getTable(@RequestHeader(name = "Authorization") String authorization,
+    public ResponseEntity<String> getTable(@RequestHeader(name = AUTH_HEADER) String authorization,
                                            @PathVariable String uuid,
                                            @RequestParam(value = "start", required = false) String startParam,
                                            @RequestParam(value = "end", required = false) String endParam,

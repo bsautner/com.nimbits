@@ -31,6 +31,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.nimbits.server.api.v3.RestAPI.AUTH_HEADER;
+
 @Service
 public class FilterBase implements Filter {
 
@@ -88,7 +90,7 @@ public class FilterBase implements Filter {
         }
 
         try {
-            String authHeader = ((HttpServletRequest)request).getHeader("Authorization");
+            String authHeader = ((HttpServletRequest)request).getHeader(AUTH_HEADER);
 
 
             User user = userService.getUser(authHeader);

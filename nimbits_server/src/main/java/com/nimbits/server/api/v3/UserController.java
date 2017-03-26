@@ -26,7 +26,7 @@ public class UserController extends RestAPI {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ResponseEntity<String> postUser(@RequestHeader(name = "Authorization") String authorization,
+    public ResponseEntity<String> postUser(@RequestHeader(name = AUTH_HEADER) String authorization,
                                            @RequestBody String json) throws IOException {
 
         User user = userService.getUser(authorization);
@@ -43,7 +43,7 @@ public class UserController extends RestAPI {
     }
 
     @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public ResponseEntity putUser(@RequestHeader(name = "Authorization") String authorization, @RequestBody User update) {
+    public ResponseEntity putUser(@RequestHeader(name = AUTH_HEADER) String authorization, @RequestBody User update) {
 
 
         User user = userService.getUser(authorization);

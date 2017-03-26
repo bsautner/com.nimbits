@@ -45,6 +45,8 @@ import java.util.List;
 
 public abstract class RestAPI {
 
+    public final static String AUTH_HEADER = "Authorization";
+
     final static Logger logger = LoggerFactory.getLogger(RestAPI.class);
     final EntityService entityService;
     final ValueService valueService;

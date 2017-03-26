@@ -34,7 +34,7 @@ public class EntityController extends RestAPI {
 
 
     @RequestMapping(value = "/{uuid}", method = RequestMethod.POST)
-    public ResponseEntity<String> postEntity(@RequestHeader(name = "Authorization") String authorization,
+    public ResponseEntity<String> postEntity(@RequestHeader(name = AUTH_HEADER) String authorization,
                                              @RequestBody String json,
                                              @PathVariable String uuid) throws IOException {
 
@@ -61,7 +61,7 @@ public class EntityController extends RestAPI {
 
     @RequestMapping(value = "/{uuid}/children", method = RequestMethod.GET)
     public ResponseEntity<String> getChildren(HttpServletRequest request,
-                                              @RequestHeader(name = "Authorization") String authorization,
+                                              @RequestHeader(name = AUTH_HEADER) String authorization,
                                               @PathVariable String uuid) throws IOException {
 
         User user = userService.getUser(authorization);
@@ -84,7 +84,7 @@ public class EntityController extends RestAPI {
 
     @RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<String> getEntity(HttpServletRequest request,
-                                            @RequestHeader(name = "Authorization") String authorization,
+                                            @RequestHeader(name = AUTH_HEADER) String authorization,
                                             @PathVariable String uuid,
                                             @RequestParam(name = "children", required = false) boolean includeChildren,
                                             @RequestParam(name = "name", required = false) String name,
@@ -162,7 +162,7 @@ public class EntityController extends RestAPI {
 
 
     @RequestMapping(value = "/{uuid}", method = RequestMethod.DELETE)
-    public ResponseEntity doDelete(@RequestHeader(name = "Authorization") String authorization,
+    public ResponseEntity doDelete(@RequestHeader(name = AUTH_HEADER) String authorization,
                                    @PathVariable String uuid) throws IOException {
 
         User user = userService.getUser(authorization);
@@ -203,7 +203,7 @@ public class EntityController extends RestAPI {
     //PUT
     @RequestMapping(value = "/{uuid}", method = RequestMethod.PUT)
     public ResponseEntity putEntity(
-            @RequestHeader(name = "Authorization") String authorization,
+            @RequestHeader(name = AUTH_HEADER) String authorization,
             @RequestBody String json) {
 
 

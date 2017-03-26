@@ -18,7 +18,7 @@ import java.util.List;
  * A base class for running tests
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:applicationTestContext.xml"})
+@ContextConfiguration(locations = {"/applicationTestContext.xml"})
 public abstract class AbstractNimbitsTest extends AbstractTest {
 
     public User user;

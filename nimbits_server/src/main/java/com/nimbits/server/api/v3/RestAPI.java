@@ -21,7 +21,6 @@ import com.google.common.collect.Range;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.nimbits.client.enums.EntityType;
-
 import com.nimbits.client.model.common.impl.CommonFactory;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.hal.*;
@@ -37,6 +36,8 @@ import com.nimbits.server.transaction.entity.dao.EntityDao;
 import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -55,7 +56,7 @@ import java.util.*;
 @RestController
 public class RestAPI {
 
-
+    private final static Logger logger = LoggerFactory.getLogger(RestAPI.class);
 
     private final EntityService entityService;
     private final ValueService valueService;
@@ -188,7 +189,7 @@ public class RestAPI {
 
         User user = userService.getUser(authorization);
 
-        if (user.isAdmin()) {
+        if (user.getIsAdmin()) {
             User newUser = GsonFactory.getInstance(false).fromJson(json, UserModel.class);
             User createdUser = userService.createUserRecord(newUser.getEmail(), newUser.getPassword(), UserSource.local);
             return new ResponseEntity<>(gson.toJson(createdUser), HttpStatus.OK);
@@ -385,8 +386,18 @@ public class RestAPI {
     }
 
 
-
-    //Helper Methods
+    /**
+     *
+     * @param request
+     * @param authorization
+     * @param uuid
+     * @param includeChildren
+     * @param name
+     * @param point
+     * @param t
+     * @return
+     * @throws IOException
+     */
     @RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<String> getEntity(HttpServletRequest request,
                                             @RequestHeader(name = "Authorization") String authorization,
@@ -418,15 +429,19 @@ public class RestAPI {
         }
 
         if (StringUtils.isNotEmpty(searchName)) {
+            logger.warning(String.format("searching for %s owner: %s name: %s", searchType.name(), user.getId(), searchName));
 
             Optional<Entity> e = entityDao.getEntityByName(user, CommonFactory.createName(name, searchType), searchType);
             if (e.isPresent()) {
                 Entity entity = e.get();
                 if (! entity.getOwner().equals(user.getId())) {
-                    throw new RuntimeException("attempt to return an entity that did not belong to the user");
+                    logger.severe("attempt to return an entity that did not belong to the user");
+                    throw new RuntimeException();
                 }
                 else {
                     String json = gson.toJson(e.get());
+                    logger.warning("returning: " + json);
+
                     return new ResponseEntity<>(json, HttpStatus.OK);
                 }
             } else {
@@ -507,7 +522,7 @@ public class RestAPI {
         Optional<Entity> optional = entityDao.findEntity(user, uuid);
         if (optional.isPresent()) {
             Entity entity = optional.get();
-            if (!user.isAdmin() && entity.getEntityType() != EntityType.user && entity.getOwner().equals(user.getId())) {
+            if (!user.getIsAdmin() && entity.getEntityType() != EntityType.user && entity.getOwner().equals(user.getId())) {
                 entityService.deleteEntity(user, entity);
                 if (entity.getEntityType().equals(EntityType.point)) {
                     Point point = (Point) entity;
@@ -518,7 +533,7 @@ public class RestAPI {
                     // taskService.startDeleteDataTask((Point) entity);
 
                 }
-            } else if (user.isAdmin()) {
+            } else if (user.getIsAdmin()) {
                 entityService.deleteEntity(user, entity);
                 if (entity.getEntityType().equals(EntityType.point)) {
                     Point point = (Point) entity;
@@ -560,7 +575,7 @@ public class RestAPI {
 
 
         User user = userService.getUser(authorization);
-        if (user.isAdmin()) {
+        if (user.getIsAdmin()) {
             if (!StringUtils.isEmpty(update.getPassword())) {
 
 

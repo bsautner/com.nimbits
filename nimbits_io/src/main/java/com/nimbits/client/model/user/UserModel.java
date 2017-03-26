@@ -89,7 +89,7 @@ public class UserModel extends EntityModel implements Serializable, User {
 
 
     @Override
-    public boolean isAdmin() {
+    public boolean getIsAdmin() {
         return isAdmin == null ? false : isAdmin;
     }
 
@@ -250,7 +250,7 @@ public class UserModel extends EntityModel implements Serializable, User {
             super.init(u);
             this.emailAddress = u.getEmail().getValue();
 
-            this.isAdmin = u.isAdmin();
+            this.isAdmin = u.getIsAdmin();
             this.password = u.getPassword();
             this.passwordSalt = u.getPasswordSalt();
             this.source = u.getSource().name();

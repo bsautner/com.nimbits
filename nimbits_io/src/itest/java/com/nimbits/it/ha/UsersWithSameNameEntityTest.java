@@ -3,7 +3,6 @@ package com.nimbits.it.ha;
 
 import com.google.common.base.Optional;
 import com.nimbits.client.io.Nimbits;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.user.User;
@@ -43,20 +42,8 @@ public class UsersWithSameNameEntityTest extends AbstractBaseNimbitsTest {
     public void tearDown() throws Exception {
 
         super.tearDown();
-        for (Pair<User, Nimbits> pair : clients) {
-            List<Entity> tree = pair.getValue()
-                    .getChildren(pair.getKey());
 
-            for (Entity e : tree) {
-                log("Teardown", e);
-                adminClient.deleteEntity(e);
 
-            }
-            adminClient.deleteEntity(pair.getKey());
-            //TODO can't delete users
-//            Optional<User> deleted = adminClient.findUser(pair.getKey().getEmail().getValue());
-//            assertFalse(deleted.isPresent());
-        }
 
 
     }
@@ -111,6 +98,7 @@ public class UsersWithSameNameEntityTest extends AbstractBaseNimbitsTest {
 
 
             log(String.format("Added %s %s", sameNamePoint.getName(), uniquePoint.getName()) );
+            log(String.format("Added Hook: %s %s", webHook.getUrl(), user.getId()) );
 
 
             clients.add(Pair.of(user, userClient));

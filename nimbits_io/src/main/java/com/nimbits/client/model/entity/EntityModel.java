@@ -244,7 +244,7 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
 
     @Override
     public boolean isOwner(final User user) {
-        return user != null && (this.owner.equals(user.getId()) || user.isAdmin());
+        return user != null && (this.owner.equals(user.getId()) || user.getIsAdmin());
 
 
     }

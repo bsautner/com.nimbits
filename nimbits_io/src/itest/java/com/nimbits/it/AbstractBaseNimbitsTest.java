@@ -1,7 +1,6 @@
 package com.nimbits.it;
 
 import com.nimbits.client.io.Nimbits;
-import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.it.basic.AbstractTest;
 import org.junit.After;
@@ -12,7 +11,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.Date;
-import java.util.List;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
@@ -21,8 +19,7 @@ import static org.junit.Assert.fail;
  * A base class for running tests
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:applicationTestContext.xml"})
-
+@ContextConfiguration(locations = {"/applicationTestContext.xml"})
 public abstract class AbstractBaseNimbitsTest extends AbstractTest {
 
     private User adminUser;
@@ -50,7 +47,7 @@ public abstract class AbstractBaseNimbitsTest extends AbstractTest {
                 .email(admin).token(password).instance(host).create();
 
        adminUser = adminClient.getMe();
-       if (! adminUser.isAdmin()) {
+       if (! adminUser.getIsAdmin()) {
            fail("Admin User not set correctly for these tests to run");
        }
 
@@ -60,12 +57,12 @@ public abstract class AbstractBaseNimbitsTest extends AbstractTest {
     public void tearDown() throws Exception {
 
 
-        List<Entity> tree = adminClient.getChildren(adminUser);
-        for (Entity e : tree) {
-            log("Teardown", e);
-            adminClient.deleteEntity(e);
-
-        }
+//        List<Entity> tree = adminClient.getChildren(adminUser);
+//        for (Entity e : tree) {
+//            log("Teardown", e);
+//            adminClient.deleteEntity(e);
+//
+//        }
 
 
     }

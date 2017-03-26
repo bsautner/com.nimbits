@@ -429,18 +429,18 @@ public class RestAPI {
         }
 
         if (StringUtils.isNotEmpty(searchName)) {
-            logger.warning(String.format("searching for %s owner: %s name: %s", searchType.name(), user.getId(), searchName));
+            logger.warn(String.format("searching for %s owner: %s name: %s", searchType.name(), user.getId(), searchName));
 
             Optional<Entity> e = entityDao.getEntityByName(user, CommonFactory.createName(name, searchType), searchType);
             if (e.isPresent()) {
                 Entity entity = e.get();
                 if (! entity.getOwner().equals(user.getId())) {
-                    logger.severe("attempt to return an entity that did not belong to the user");
+                    logger.warn("attempt to return an entity that did not belong to the user");
                     throw new RuntimeException();
                 }
                 else {
                     String json = gson.toJson(e.get());
-                    logger.warning("returning: " + json);
+                    logger.warn("returning: " + json);
 
                     return new ResponseEntity<>(json, HttpStatus.OK);
                 }
@@ -504,9 +504,7 @@ public class RestAPI {
 
             URI uri = new URI(scheme, userInfo, host, port, path, query, null);
             return uri.toString() + "/service/v3/rest/";
-        } catch (MalformedURLException e) {
-            return e.getMessage();
-        } catch (URISyntaxException e) {
+        } catch (MalformedURLException | URISyntaxException e) {
             return e.getMessage();
         }
     }

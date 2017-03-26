@@ -188,7 +188,7 @@ public class RestAPI {
 
         User user = userService.getUser(authorization);
 
-        if (user.getIsAdmin()) {
+        if (user.isAdmin()) {
             User newUser = GsonFactory.getInstance(false).fromJson(json, UserModel.class);
             User createdUser = userService.createUserRecord(newUser.getEmail(), newUser.getPassword(), UserSource.local);
             return new ResponseEntity<>(gson.toJson(createdUser), HttpStatus.OK);
@@ -507,7 +507,7 @@ public class RestAPI {
         Optional<Entity> optional = entityDao.findEntity(user, uuid);
         if (optional.isPresent()) {
             Entity entity = optional.get();
-            if (!user.getIsAdmin() && entity.getEntityType() != EntityType.user && entity.getOwner().equals(user.getId())) {
+            if (!user.isAdmin() && entity.getEntityType() != EntityType.user && entity.getOwner().equals(user.getId())) {
                 entityService.deleteEntity(user, entity);
                 if (entity.getEntityType().equals(EntityType.point)) {
                     Point point = (Point) entity;
@@ -518,7 +518,7 @@ public class RestAPI {
                     // taskService.startDeleteDataTask((Point) entity);
 
                 }
-            } else if (user.getIsAdmin()) {
+            } else if (user.isAdmin()) {
                 entityService.deleteEntity(user, entity);
                 if (entity.getEntityType().equals(EntityType.point)) {
                     Point point = (Point) entity;
@@ -560,7 +560,7 @@ public class RestAPI {
 
 
         User user = userService.getUser(authorization);
-        if (user.getIsAdmin()) {
+        if (user.isAdmin()) {
             if (!StringUtils.isEmpty(update.getPassword())) {
 
 

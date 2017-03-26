@@ -100,7 +100,7 @@ public class UserEntity extends EntityStore implements User {
         this.passwordSalt = u.getPasswordSalt();
         this.password = u.getPassword();
         this.source = u.getSource().name();
-        this.isAdmin = u.getIsAdmin();
+        this.isAdmin = u.isAdmin();
         this.passwordResetTimestamp = u.getPasswordResetTimestamp();
         this.passwordResetToken = u.getPasswordResetToken();
 
@@ -118,7 +118,7 @@ public class UserEntity extends EntityStore implements User {
     }
 
     @Override
-    public boolean getIsAdmin() {
+    public boolean isAdmin() {
         return isAdmin == null ? false : isAdmin;
     }
 

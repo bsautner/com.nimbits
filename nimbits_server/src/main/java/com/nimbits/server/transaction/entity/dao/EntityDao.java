@@ -359,7 +359,7 @@ public class EntityDao {
     public void deleteEntity(final User user, final Entity entity, final EntityType type) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         Class cls = getEntityPersistentClass(type);
-        if (user.getIsAdmin() || entity.isOwner(user)) {
+        if (user.isAdmin() || entity.isOwner(user)) {
             try {
                 final Entity c = (Entity) pm.getObjectById(cls, entity.getId());
                 if (c != null) {

@@ -51,7 +51,7 @@ public class UsersWithSameNameEntityTest extends AbstractBaseNimbitsTest {
     @Test
     public void testScenario() {
         int count = 2;
-        String commonPointName = "FOO";
+        String commonPointName = UUID.randomUUID().toString();
         String commonHost = "http://test.com";
 
         for (int i = 0; i < count; i++) {

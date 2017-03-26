@@ -487,7 +487,8 @@ public class EntityDao {
             if (entity.getEntityType().isUniqueNameFlag()) {
                 Optional<Entity> existingEntity = checkDuplicateEntity(user, Collections.singletonList(entity));
                 if (existingEntity.isPresent()) {
-                    return existingEntity.get();
+                    throw new RuntimeException(
+                            String.format("An entity named %s already exists. %s must be unique per user", entity.getName(), entity.getEntityType().name()));
                 }
 
 

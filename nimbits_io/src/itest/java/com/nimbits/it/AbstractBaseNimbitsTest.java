@@ -22,7 +22,7 @@ import static org.junit.Assert.fail;
 @ContextConfiguration(locations = {"/applicationTestContext.xml"})
 public abstract class AbstractBaseNimbitsTest extends AbstractTest {
 
-    private User adminUser;
+    public User adminUser;
 
     @Value("${test.admin}")
     private String admin;

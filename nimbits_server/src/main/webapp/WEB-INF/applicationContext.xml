@@ -37,9 +37,6 @@
     <tx:annotation-driven/>
     <mvc:annotation-driven />
 
-    <bean class="com.nimbits.core.data.DataProcessor">
-
-    </bean>
 
     <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
         <property name="locations" value="classpath:application.properties"/>

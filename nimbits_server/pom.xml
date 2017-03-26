@@ -49,7 +49,7 @@
         <dependency>
             <groupId>com.nimbits</groupId>
             <artifactId>nimbits_core</artifactId>
-            <version>0.0.3</version>
+            <version>4.1.1</version>
         </dependency>
 
 

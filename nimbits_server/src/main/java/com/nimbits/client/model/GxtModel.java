@@ -35,7 +35,6 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
     private EntityName name;
     private AlertType alertType;
     private EntityType entityType;
-    private boolean isReadOnly;
     private boolean isDirty;
     private Entity baseEntity;
 
@@ -52,7 +51,6 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
         this.name = CommonFactory.createName(user.getEmail().getValue(), EntityType.user);
         this.alertType = AlertType.OK;
         this.entityType = EntityType.user;
-        this.isReadOnly = true;
         this.baseEntity = user;
         set(Parameters.id.getText(), this.id);
         set(Parameters.name.getText(), this.name.getValue());
@@ -91,12 +89,6 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
     public void setName(EntityName name) {
         this.name = name;
     }
-
-    @Override
-    public boolean isReadOnly() {
-        return isReadOnly;
-    }
-
 
     @Override
     public boolean isDirty() {
@@ -150,9 +142,6 @@ public class GxtModel extends BaseTreeModel implements TreeModel {
         this.name = entity.getName();
         this.alertType = entity.getAlertType();
         this.entityType = entity.getEntityType();
-        this.isReadOnly = entity.isReadOnly();
-
-
         this.baseEntity = entity;
         set(Parameters.id.getText(), this.id);
         set(Parameters.name.getText(), this.name.getValue());

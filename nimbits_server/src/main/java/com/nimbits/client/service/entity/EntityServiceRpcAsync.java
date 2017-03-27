@@ -20,7 +20,13 @@ import com.nimbits.client.model.user.User;
 
 public interface EntityServiceRpcAsync {
 
+    void updateEntityRpc(final User user, com.nimbits.client.model.entity.Entity entity, com.google.gwt.user.client.rpc.AsyncCallback<com.nimbits.client.model.entity.Entity> arg2);
+
+    void addEntityRpc(final User user, com.nimbits.client.model.entity.Entity entity, com.google.gwt.user.client.rpc.AsyncCallback<com.nimbits.client.model.entity.Entity> arg2);
+
+    @Deprecated
     void addUpdateEntityRpc(final User user, com.nimbits.client.model.entity.Entity entity, com.google.gwt.user.client.rpc.AsyncCallback<com.nimbits.client.model.entity.Entity> arg2);
+
 
     void copyEntity(final User user, com.nimbits.client.model.entity.Entity originalEntity, com.nimbits.client.model.entity.EntityName newName, com.google.gwt.user.client.rpc.AsyncCallback<com.nimbits.client.model.entity.Entity> arg3);
 
@@ -31,5 +37,4 @@ public interface EntityServiceRpcAsync {
     void getEntityByKeyRpc(com.nimbits.client.model.user.User u, java.lang.String key, com.nimbits.client.enums.EntityType type, com.google.gwt.user.client.rpc.AsyncCallback<com.nimbits.client.model.entity.Entity> arg4);
 
     void getEntityMapRpc(final User user, int type, int limit, com.google.gwt.user.client.rpc.AsyncCallback<java.util.Map<java.lang.String, com.nimbits.client.model.entity.Entity>> arg3);
-
 }

@@ -100,7 +100,7 @@ public class SummaryService {
 
                 valueGeneratedListener.newValue(user, target, value);
                 summary.setProcessedTimestamp(System.currentTimeMillis());
-                entityService.addUpdateEntity(user, summary);
+                entityDao.updateEntity(user, summary);
 
 
             }

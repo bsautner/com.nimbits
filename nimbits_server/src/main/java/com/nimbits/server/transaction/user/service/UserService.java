@@ -113,7 +113,7 @@ public class UserService {
 
         newUser.setIsAdmin(isFirst);
 
-        return (User) entityDao.addUpdateEntity(newUser, newUser);
+        return (User) entityDao.addEntity(newUser, newUser);
 
     }
 

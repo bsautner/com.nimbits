@@ -103,6 +103,7 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
 
         if (!userExists(email)) {
 
+
             user = userService.createUserRecord(emailAddress, password, UserSource.local);
 
             return user;

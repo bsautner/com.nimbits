@@ -353,16 +353,16 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
         super.showAt(x, y);
         final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
         currentModel = (TreeModel) selectedModel;
-        deleteContext.setEnabled(!currentModel.getEntityType().equals(EntityType.user) || !currentModel.isReadOnly());
+        deleteContext.setEnabled(!currentModel.getEntityType().equals(EntityType.user));
         subscribeContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.category));
 
         copyContext.setEnabled(currentModel.getEntityType().equals(EntityType.point));
         calcContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.calculation));
         summaryContext.setEnabled(currentModel.getEntityType().equals(EntityType.point) || currentModel.getEntityType().equals(EntityType.summary));
-        syncContext.setEnabled(!currentModel.getEntityType().equals(EntityType.point) || !currentModel.isReadOnly());
+        syncContext.setEnabled(!currentModel.getEntityType().equals(EntityType.point));
 
-        propertyContext.setEnabled(!currentModel.isReadOnly() && currentModel.getEntityType().equals(EntityType.point));
-        alertContext.setEnabled(!currentModel.isReadOnly() && currentModel.getEntityType().equals(EntityType.point));
+        propertyContext.setEnabled(currentModel.getEntityType().equals(EntityType.point));
+        alertContext.setEnabled(currentModel.getEntityType().equals(EntityType.point));
 
         syncContext.setEnabled(currentModel.getEntityType().equals(EntityType.point));
 
@@ -570,10 +570,10 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
         public void componentSelected(final MenuEvent ce) {
             final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
             currentModel = (TreeModel) selectedModel;
-            if (!currentModel.isReadOnly()) {
+
                 MessageBox.confirm("Confirm", "Are you sure you want delete this? Doing so will permanently delete it including all of it's children (points, documents data etc)"
                         , deleteEntityListener);
-            }
+
 
         }
     }
@@ -801,7 +801,7 @@ public class EntityContextMenu extends Menu implements BasePanel.PanelEvent {
             final ModelData selectedModel = tree.getSelectionModel().getSelectedItem();
             currentModel = (TreeModel) selectedModel;
             final MessageBox box;
-            if (currentModel.getEntityType().equals(EntityType.point) && !currentModel.isReadOnly()) {
+            if (currentModel.getEntityType().equals(EntityType.point)) {
                 box = MessageBox.prompt(
                         MESSAGE_NEW_POINT,
                         MESSAGE_NEW_POINT_PROMPT);

@@ -71,10 +71,10 @@ public class EntityService {
     }
 
 
-    public Entity addUpdateEntity(final User user, Entity entity) {
+    public Entity addEntity(final User user, Entity entity) {
 
 
-        Entity created = entityDao.addUpdateEntity(user, entity);
+        Entity created = entityDao.addEntity(user, entity);
 
         if (initPoints && EntityType.point.equals(entity.getEntityType())) {
 

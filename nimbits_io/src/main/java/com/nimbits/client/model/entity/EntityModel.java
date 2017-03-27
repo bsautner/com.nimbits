@@ -54,14 +54,8 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
     @Expose
     private String owner;
 
-    private boolean readOnly = false;
-
-
     @Expose
     private List<Entity> children;
-
-
-    private String action;
 
 
     //HAL
@@ -222,17 +216,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
         this.alertType = alertType.getCode();
     }
 
-    @Override
-    public boolean isReadOnly() {
-        return readOnly;
-    }
-
-    @Override
-    public void setReadOnly(final boolean readOnly) {
-        this.readOnly = readOnly;
-    }
-
-
     @SuppressWarnings("MethodWithMultipleReturnPoints")
     @Override
     public int compareTo(final Entity that) {
@@ -275,7 +258,6 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
 
         if (alertType != that.alertType) return false;
         if (entityType != that.entityType) return false;
-        if (readOnly != that.readOnly) return false;
         if (description != null ? !description.equals(that.description) : that.description != null) return false;
         if (id != null ? !id.equals(that.id) : that.id != null) return false;
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
@@ -295,14 +277,12 @@ public abstract class EntityModel implements Serializable, Comparable<Entity>, E
         result = 31 * result + alertType;
         result = 31 * result + (parent != null ? parent.hashCode() : 0);
         result = 31 * result + (owner != null ? owner.hashCode() : 0);
-        result = 31 * result + (readOnly ? 1 : 0);
         return result;
     }
 
     @Override()
     public String toString() {
         return "EntityModel{" +
-                ", readOnly=" + readOnly +
                 ", owner='" + owner + '\'' +
                 ", parent='" + parent + '\'' +
                 ", alertType=" + alertType +

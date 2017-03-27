@@ -27,8 +27,8 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityServiceRpc;
 import com.nimbits.server.transaction.entity.EntityService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
-import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
+import org.apache.http.util.TextUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
@@ -45,9 +45,6 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
     private EntityService entityService;
 
     @Autowired
-    private UserService userService;
-
-    @Autowired
     private EntityDao entityDao;
 
     @Autowired
@@ -61,9 +58,30 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
     }
 
     @Override
+    public Entity updateEntityRpc(final User user, final Entity entity) throws ClassNotFoundException {
+
+        entityDao.updateEntity(user, entity);
+        return entity;
+
+
+    }
+
+    @Override
+    public Entity addEntityRpc(final User user, final Entity entity) throws ClassNotFoundException {
+
+        return entityService.addEntity(user, entity);
+
+
+    }
+
+    @Override @Deprecated
     public Entity addUpdateEntityRpc(final User user, final Entity entity) throws ClassNotFoundException {
 
-        return entityDao.addUpdateEntity(user, entity);
+        if (TextUtils.isEmpty(entity.getId())) {
+            return addEntityRpc(user, entity);
+        } else {
+            return updateEntityRpc(user, entity);
+        }
 
 
     }
@@ -100,10 +118,7 @@ public class EntityServiceRpcImpl extends RemoteServiceServlet implements Entity
             case point:
                 Point p = new PointModel.Builder().init((Point) originalEntity).create();
                 p.setName(newName);
-                p.setId(null);
-
-                return entityDao.addUpdateEntity(user, p);
-            //return PointServiceFactory.getInstance().copyPoint(getUser(), originalEntity, newName);
+                return entityDao.addEntity(user, p);
 
             case category:
                 return null;

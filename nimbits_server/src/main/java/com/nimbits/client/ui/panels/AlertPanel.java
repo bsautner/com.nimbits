@@ -184,7 +184,7 @@ public class AlertPanel extends BasePanel {
 
             final EntityServiceRpcAsync service = GWT.create(EntityServiceRpc.class);
             // PointServiceAsync service = GWT.create(PointService.class);
-            service.addUpdateEntityRpc(user, point, new AsyncCallback<Entity>() {
+            service.updateEntityRpc(user, point, new AsyncCallback<Entity>() {
                 @Override
                 public void onFailure(final Throwable caught) {
                     box.close();

@@ -55,10 +55,6 @@ public interface Entity extends Serializable, Comparable<Entity> {
 
     void setAlertType(AlertType alertType);
 
-    boolean isReadOnly();
-
-    void setReadOnly(boolean readOnly);
-
     void setChildren(List<Entity> children);
 
     void update(Entity update);

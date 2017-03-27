@@ -165,17 +165,6 @@ public abstract class EntityStore implements Entity {
     }
 
     @Override
-    public boolean isReadOnly() {
-        return this.readOnly;
-    }
-
-    @Override
-    public void setReadOnly(final boolean readOnly) {
-        this.readOnly = readOnly;
-    }
-
-
-    @Override
     public void setChildren(final List<Entity> children) {
 
     }

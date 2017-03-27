@@ -193,7 +193,7 @@ public class SystemTaskExecutor {
 
                         schedule.setProcessedTimestamp(new Date().getTime());
 
-                        entityDao.addUpdateEntity(owner, schedule);
+                        entityDao.updateEntity(owner, schedule);
                         Optional<Entity> sourcePoint = entityDao.getEntity(owner, schedule.getSource(), EntityType.point);
                         Optional<Entity> targetPoint = entityDao.getEntity(owner, schedule.getTarget(), EntityType.point);
 
@@ -205,7 +205,7 @@ public class SystemTaskExecutor {
                             valueTask.process(owner, (Point) targetPoint.get(), newValue);
                         } else {
                             schedule.setEnabled(false);
-                            entityService.addUpdateEntity(owner, schedule);
+                            entityDao.updateEntity(owner, schedule);
                         }
                     }
 

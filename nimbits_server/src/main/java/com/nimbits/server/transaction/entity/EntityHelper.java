@@ -152,8 +152,6 @@ public class EntityHelper {
         }
 
 
-        final boolean isOwner = model.isOwner(user);
-        model.setReadOnly(!isOwner);
         return model;
 
     }

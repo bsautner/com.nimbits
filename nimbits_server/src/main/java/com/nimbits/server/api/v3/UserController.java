@@ -3,7 +3,6 @@ package com.nimbits.server.api.v3;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.user.UserSource;
-import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.entity.EntityService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
@@ -27,12 +26,12 @@ public class UserController extends RestAPI {
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
     public ResponseEntity<String> postUser(@RequestHeader(name = AUTH_HEADER) String authorization,
-                                           @RequestBody String json) throws IOException {
+                                           @RequestBody UserModel newUser) throws IOException {
 
         User user = userService.getUser(authorization);
 
         if (user.getIsAdmin()) {
-            User newUser = GsonFactory.getInstance(false).fromJson(json, UserModel.class);
+
             User createdUser = userService.createUserRecord(newUser.getEmail(), newUser.getPassword(), UserSource.local);
             return new ResponseEntity<>(gson.toJson(createdUser), HttpStatus.OK);
         } else {
@@ -55,7 +54,7 @@ public class UserController extends RestAPI {
 
             } else {
 
-                entityService.addUpdateEntity(user, update);
+                entityDao.updateEntity(user, update);
             }
             return new ResponseEntity(HttpStatus.OK);
         } else {

@@ -289,23 +289,23 @@ public class EntityDao {
     public Optional<Entity> getEntityByName(final User user, final EntityName name, final EntityType type) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
-            try {
+        try {
 
-                final Query q1 = pm.newQuery(getEntityPersistentClass(type));
+            final Query q1 = pm.newQuery(getEntityPersistentClass(type));
 
-                final List<Entity> c;
+            final List<Entity> c;
 
-                q1.setFilter("name==b && owner==o");
-                q1.declareParameters("String b, String o");
-               // q1.setRange(0, 1);
-                c = (List<Entity>) q1.execute(name.getValue(), user.getId());
-                logger.warn(String.format("getEntityByName %s %s", name.getValue(), c.size()));
+            q1.setFilter("name==b && owner==o");
+            q1.declareParameters("String b, String o");
+            // q1.setRange(0, 1);
+            c = (List<Entity>) q1.execute(name.getValue(), user.getId());
+            logger.warn(String.format("getEntityByName %s %s", name.getValue(), c.size()));
 
 
-                return getEntityOptional(user, ImmutableList.copyOf(pm.detachCopyAll(c)));
-            } finally {
-                pm.close();
-            }
+            return getEntityOptional(user, ImmutableList.copyOf(pm.detachCopyAll(c)));
+        } finally {
+            pm.close();
+        }
 
     }
 
@@ -380,49 +380,33 @@ public class EntityDao {
     }
 
 
-    public Entity addUpdateEntity(final User user, final Entity entity) {
+    public void updateEntity(final User user, final Entity entity) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
-
+        Transaction tx = null;
         try {
 
+            final Class cls = getEntityPersistentClass(entity.getEntityType());
+            final Entity result = (Entity) pm.getObjectById(cls, entity.getId());
 
-            if (StringUtils.isEmpty(entity.getId())) {
+            if (result != null) {
+                tx = pm.currentTransaction();
+                tx.begin();
 
-                return addEntity(user, entity);
-            } else {
-
-
-                final Class cls = getEntityPersistentClass(entity.getEntityType());
-                final Entity result = (Entity) pm.getObjectById(cls, entity.getId());
-
-                if (result != null) {
-                    final Transaction tx = pm.currentTransaction();
-                    tx.begin();
-
-                    result.update(entity);
-                    result.validate(user);
-
-                    tx.commit();
-                    logger.info("commited update: " + result.toString());
-                    return EntityHelper.createModel(user, result);
+                result.validate(user);
+                result.update(entity);
 
 
-                } else {
-                    throw new RuntimeException("entity not found 0004");
-                }
+                tx.commit();
 
             }
-
-
-        } catch (JDOObjectNotFoundException e) {
-
-            throw new RuntimeException("entity not found 0005");
-
         } finally {
-            pm.close();
+            if (tx != null && tx.isActive()) {
+                tx.rollback();
+            }
         }
 
+        pm.close();
 
     }
 
@@ -479,32 +463,26 @@ public class EntityDao {
 
     }
 
-    private Entity addEntity(final User user, final Entity entity) {
+    public boolean nameIsValid(final User user, final Entity entity) {
+        if (entity.getEntityType().isUniqueNameFlag()) {
+            Optional<Entity> existingEntity = checkDuplicateEntity(user, Collections.singletonList(entity));
+            return !existingEntity.isPresent();
+
+
+        }
+        else {
+            return true;
+        }
+    }
+
+    public Entity addEntity(final User user, final Entity entity) {
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
 
         try{
-            if (entity.getEntityType().isUniqueNameFlag()) {
-                Optional<Entity> existingEntity = checkDuplicateEntity(user, Collections.singletonList(entity));
-                if (existingEntity.isPresent()) {
-                    throw new RuntimeException(
-                            String.format("An entity named %s already exists. %s must be unique per user", entity.getName(), entity.getEntityType().name()));
-                }
 
-
-            }
             final Entity commit = EntityHelper.downcastEntity(entity);
-
-            if (StringUtils.isEmpty(commit.getId())) {
-                commit.setId(UUID.randomUUID().toString());
-
-            }
-
-            if (StringUtils.isEmpty(commit.getOwner())) {
-                commit.setOwner(user.getId());
-
-            }
-
+            commit.setId(UUID.randomUUID().toString());
 
 
             if (!commit.getEntityType().equals(EntityType.user)) {

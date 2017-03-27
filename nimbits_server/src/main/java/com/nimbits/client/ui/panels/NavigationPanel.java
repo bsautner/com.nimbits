@@ -441,8 +441,8 @@ class NavigationPanel extends NavigationEventProvider {
 
             selectedModel = tree.getSelectionModel().getSelectedItem();
             TreeModel treeModel = (TreeModel) selectedModel;
-            e.setCancelled(treeModel.isReadOnly());
-            e.getStatus().setStatus(!treeModel.isReadOnly());
+            e.setCancelled(false);
+            e.getStatus().setStatus(true);
 
         }
 
@@ -459,11 +459,11 @@ class NavigationPanel extends NavigationEventProvider {
                         selectedModel.set(Parameters.name.getText(), model.getName().getValue());
                         final Entity draggedEntity = model.getBaseEntity();
                         final Entity target = dropTargets.get(0);
-                        e.setCancelled(target.isReadOnly());
-                        e.getStatus().setStatus(!target.isReadOnly());
-                        if (!model.isReadOnly() && !target.isReadOnly()) {
-                            moveEntity(draggedEntity, target);
-                        }
+                        e.setCancelled(false);
+                        e.getStatus().setStatus(true);
+
+                        moveEntity(draggedEntity, target);
+
                     } else {
                         //fixes a bug where the dragged object vanishes - we can't seem to put it back right, we have to reload the tree
                         //  e.setCancelled(true);
@@ -498,7 +498,7 @@ class NavigationPanel extends NavigationEventProvider {
 
                 draggedEntity.setParent(target.getId());
 
-                entityService.addUpdateEntityRpc(user, draggedEntity, new MoveEntityAsyncCallback());
+                entityService.updateEntityRpc(user, draggedEntity, new MoveEntityAsyncCallback());
             }
         }
 
@@ -515,7 +515,7 @@ class NavigationPanel extends NavigationEventProvider {
 
             if (be.getColIndex() == valueColumnIndex) { //only save when the value is updated
 
-                if (!model.isReadOnly()) {
+
                     model.setDirty(true);
 
 
@@ -534,9 +534,7 @@ class NavigationPanel extends NavigationEventProvider {
 
 
                 }
-            } else {
-                model.setDirty(true);
-            }
+
         }
     }
 
@@ -573,7 +571,7 @@ class NavigationPanel extends NavigationEventProvider {
         @Override
         public void handleEvent(final GridEvent be) {
             final TreeModel model = (TreeModel) be.getModel();
-            if (!model.getEntityType().equals(EntityType.point) || model.isReadOnly()) {
+            if (!model.getEntityType().equals(EntityType.point)) {
                 be.setCancelled(true);
             }
 

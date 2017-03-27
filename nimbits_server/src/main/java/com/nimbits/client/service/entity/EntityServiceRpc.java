@@ -32,6 +32,10 @@ import java.util.Map;
 public interface EntityServiceRpc extends RemoteService {
 
 
+    Entity updateEntityRpc(final User user, final Entity entity) throws Exception;
+
+    Entity addEntityRpc(final User user, final Entity entity) throws Exception;
+
     Entity addUpdateEntityRpc(final User user, final Entity entity) throws Exception;
 
     void deleteEntityRpc(final User user, final Entity entity) throws Exception;

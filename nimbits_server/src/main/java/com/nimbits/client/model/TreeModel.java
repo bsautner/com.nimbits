@@ -39,8 +39,6 @@ public interface TreeModel extends com.extjs.gxt.ui.client.data.TreeModel, Seria
 
     void setName(EntityName name);
 
-    boolean isReadOnly();
-
     boolean isDirty();
 
     void setDirty(boolean dirty);

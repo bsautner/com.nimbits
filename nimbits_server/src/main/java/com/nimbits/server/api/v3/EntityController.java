@@ -44,13 +44,20 @@ public class EntityController extends RestAPI {
         Optional<Entity> parentOptional = entityDao.findEntity(user, uuid);
 
 
+
         if (parentOptional.isPresent()) {
             Entity parent = parentOptional.get();
             newEntity.setParent(parent.getId());
             newEntity.setOwner(user.getId());
-            Entity stored = entityService.addUpdateEntity(user, newEntity);
+            if (entityDao.nameIsValid(user, newEntity)) {
+                Entity stored = entityService.addEntity(user, newEntity);
 
-            return new ResponseEntity<>(gson.toJson(stored), HttpStatus.OK);
+
+                return new ResponseEntity<>(gson.toJson(stored), HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(HttpStatus.CONFLICT);
+            }
 
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -211,7 +218,7 @@ public class EntityController extends RestAPI {
         EntityType type = getEntityType(json);
         Entity entity = (Entity) gson.fromJson(json, type.getClz());
 
-        entityService.addUpdateEntity(user, entity);
+        entityDao.updateEntity(user, entity);
         return new ResponseEntity(HttpStatus.OK);
 
 

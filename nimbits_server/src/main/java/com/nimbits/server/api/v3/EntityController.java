@@ -221,8 +221,12 @@ public class EntityController extends RestAPI {
         EntityType type = getEntityType(json);
         Entity entity = (Entity) gson.fromJson(json, type.getClz());
 
-        entityDao.updateEntity(user, entity);
-        return new ResponseEntity(HttpStatus.OK);
+        boolean success = entityDao.updateEntity(user, entity);
+        if (success) {
+            return new ResponseEntity(HttpStatus.OK);
+        } else {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
 
 
     }

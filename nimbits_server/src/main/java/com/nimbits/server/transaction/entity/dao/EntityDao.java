@@ -380,10 +380,11 @@ public class EntityDao {
     }
 
 
-    public void updateEntity(final User user, final Entity entity) {
+    public boolean updateEntity(final User user, final Entity entity) {
 
         PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
         Transaction tx = null;
+        boolean success = false;
         try {
 
             final Class cls = getEntityPersistentClass(entity.getEntityType());
@@ -398,6 +399,8 @@ public class EntityDao {
 
 
                 tx.commit();
+                success = true;
+
 
             }
         } finally {
@@ -407,6 +410,7 @@ public class EntityDao {
         }
 
         pm.close();
+        return success;
 
     }
 

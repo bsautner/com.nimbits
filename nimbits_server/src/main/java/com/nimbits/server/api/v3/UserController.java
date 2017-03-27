@@ -47,16 +47,24 @@ public class UserController extends RestAPI {
 
         User user = userService.getUser(authorization);
         if (user.getIsAdmin()) {
+            boolean success;
             if (!StringUtils.isEmpty(update.getPassword())) {
 
 
                 userService.updatePassword(update, update.getPassword());
+                success = true;
 
             } else {
 
-                entityDao.updateEntity(user, update);
+               success = entityDao.updateEntity(user, update);
+
             }
-            return new ResponseEntity(HttpStatus.OK);
+            if (success) {
+                return new ResponseEntity(HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            }
         } else {
             return new ResponseEntity(HttpStatus.UNAUTHORIZED);
         }

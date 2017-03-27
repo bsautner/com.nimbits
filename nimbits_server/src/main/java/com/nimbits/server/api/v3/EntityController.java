@@ -15,6 +15,7 @@ import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,13 +28,15 @@ import java.util.Map;
 @RestController
 public class EntityController extends RestAPI {
 
+    private static final String ENTITY_TYPE = "entityType";
+
     @Autowired
     public EntityController(EntityService entityService, ValueService valueService, UserService userService, EntityDao entityDao, ValueTask valueTask) {
         super(entityService, valueService, userService, entityDao, valueTask);
     }
 
 
-    @RequestMapping(value = "/{uuid}", method = RequestMethod.POST)
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/{uuid}", method = RequestMethod.POST)
     public ResponseEntity<String> postEntity(@RequestHeader(name = AUTH_HEADER) String authorization,
                                              @RequestBody String json,
                                              @PathVariable String uuid) throws IOException {
@@ -66,7 +69,7 @@ public class EntityController extends RestAPI {
 
     }
 
-    @RequestMapping(value = "/{uuid}/children", method = RequestMethod.GET)
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/{uuid}/children", method = RequestMethod.GET)
     public ResponseEntity<String> getChildren(HttpServletRequest request,
                                               @RequestHeader(name = AUTH_HEADER) String authorization,
                                               @PathVariable String uuid) throws IOException {
@@ -89,7 +92,7 @@ public class EntityController extends RestAPI {
 
     }
 
-    @RequestMapping(value = "/{uuid}", method = RequestMethod.GET)
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/{uuid}", method = RequestMethod.GET)
     public ResponseEntity<String> getEntity(HttpServletRequest request,
                                             @RequestHeader(name = AUTH_HEADER) String authorization,
                                             @PathVariable String uuid,
@@ -168,7 +171,7 @@ public class EntityController extends RestAPI {
     }
 
 
-    @RequestMapping(value = "/{uuid}", method = RequestMethod.DELETE)
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/{uuid}", method = RequestMethod.DELETE)
     public ResponseEntity doDelete(@RequestHeader(name = AUTH_HEADER) String authorization,
                                    @PathVariable String uuid) throws IOException {
 
@@ -207,7 +210,7 @@ public class EntityController extends RestAPI {
         }
     }
 
-    //PUT
+
     @RequestMapping(value = "/{uuid}", method = RequestMethod.PUT)
     public ResponseEntity putEntity(
             @RequestHeader(name = AUTH_HEADER) String authorization,
@@ -228,7 +231,7 @@ public class EntityController extends RestAPI {
     private EntityType getEntityType(String json) {
 
         Map jsonMap = gson.fromJson(json, Map.class);
-        int t = Double.valueOf(String.valueOf(jsonMap.get("entityType"))).intValue();
+        int t = Double.valueOf(String.valueOf(jsonMap.get(ENTITY_TYPE))).intValue();
         return EntityType.get(t);
     }
 }

@@ -61,7 +61,7 @@ public class Nimbits {
             @Override
             public void intercept(RequestFacade request) {
 
-                request.addHeader("Accept", "application/hal+json");
+                request.addHeader("Accept", "application/json");
                 request.addHeader("Authorization", "Basic " + email + ":" + token);  //TODO BASE64 encode this
 
             }

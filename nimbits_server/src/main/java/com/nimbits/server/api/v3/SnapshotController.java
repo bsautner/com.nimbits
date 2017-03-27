@@ -14,6 +14,7 @@ import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -74,7 +75,7 @@ public class SnapshotController extends RestAPI {
 
     }
 
-    @RequestMapping(value = "/{uuid}/snapshot", method = RequestMethod.GET)
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/{uuid}/snapshot", method = RequestMethod.GET)
     public ResponseEntity<String> getSnapshot(HttpServletRequest request,
                                               @RequestHeader(name = AUTH_HEADER) String authorization,
                                               @RequestParam(name = "sd", required = false) Long sd,

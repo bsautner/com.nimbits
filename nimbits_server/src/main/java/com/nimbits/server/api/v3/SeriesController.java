@@ -16,6 +16,7 @@ import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,7 +60,7 @@ public class SeriesController extends RestAPI {
 
     }
 
-    @RequestMapping(value = "/{uuid}/series", method = RequestMethod.GET)
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/{uuid}/series", method = RequestMethod.GET)
     public ResponseEntity<String> getSeries(@RequestHeader(name = AUTH_HEADER) String authorization,
                                             @PathVariable String uuid,
                                             @RequestParam(value = "start", required = false) String startParam,
@@ -117,7 +118,7 @@ public class SeriesController extends RestAPI {
 
     }
 
-    @RequestMapping(value = "/{uuid}/table", method = RequestMethod.GET)
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/{uuid}/table", method = RequestMethod.GET)
     public ResponseEntity<String> getTable(@RequestHeader(name = AUTH_HEADER) String authorization,
                                            @PathVariable String uuid,
                                            @RequestParam(value = "start", required = false) String startParam,

@@ -9,13 +9,14 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.it.AbstractNimbitsTest;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
+
+import static org.junit.Assert.fail;
 
 /**
  * Exercises the V3 Rest API - designed to run continuously against a server as an integration test.
@@ -33,7 +34,6 @@ public class V3RestClientTester extends AbstractNimbitsTest {
     }
 
     @Test
-    @Ignore
     public void executeTest() throws InterruptedException {
 
         log("Starting up");
@@ -156,10 +156,11 @@ public class V3RestClientTester extends AbstractNimbitsTest {
             log("Downloaded " + downloadedValues.size() + " for " + entity.getName());
 
 
-            Thread.sleep(5000);
+            sleep();
             List<Value> stored = storedValues.get(entity);
             Collections.sort(stored);
             Collections.sort(downloadedValues);
+
 
 
             for (Value value : stored) {
@@ -170,7 +171,7 @@ public class V3RestClientTester extends AbstractNimbitsTest {
                         log("Q Range: " + calendar.getTime() + " to " + new Date());
 
 
-                        error(
+                        fail(
                                 "downloaded values did not contain expected posted value. " + value.toString());
 
 

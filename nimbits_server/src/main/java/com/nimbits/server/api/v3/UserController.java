@@ -1,16 +1,20 @@
 package com.nimbits.server.api.v3;
 
+import com.google.common.base.Optional;
+import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.client.model.user.UserSource;
 import com.nimbits.server.process.task.ValueTask;
 import com.nimbits.server.transaction.entity.EntityService;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
+import com.nimbits.server.transaction.user.dao.UserDao;
 import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.service.ValueService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,9 +23,13 @@ import java.io.IOException;
 @RestController
 public class UserController extends RestAPI {
 
+
+    private final UserDao userDao;
+
     @Autowired
-    public UserController(EntityService entityService, ValueService valueService, UserService userService, EntityDao entityDao, ValueTask valueTask) {
+    public UserController(UserDao userDao, EntityService entityService, ValueService valueService, UserService userService, EntityDao entityDao, ValueTask valueTask) {
         super(entityService, valueService, userService, entityDao, valueTask);
+        this.userDao = userDao;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
@@ -56,7 +64,7 @@ public class UserController extends RestAPI {
 
             } else {
 
-               success = entityDao.updateEntity(user, update);
+                success = entityDao.updateEntity(user, update);
 
             }
             if (success) {
@@ -71,6 +79,51 @@ public class UserController extends RestAPI {
 
     }
 
+
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/admin/user", method = RequestMethod.GET)
+    public ResponseEntity<String> getUser(@RequestHeader(name = AUTH_HEADER) String authorization,
+                                          @RequestParam String email) throws IOException {
+
+        User admin = userService.getUser(authorization);
+
+        if (admin.getIsAdmin()) {
+
+            Optional<User> client = userDao.getUserByEmail(email);
+            if (client.isPresent()) {
+                return new ResponseEntity<>(gson.toJson(client.get()), HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+
+    }
+
+    @RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/admin/user", method = RequestMethod.DELETE)
+    public ResponseEntity<String> deleteUser(@RequestHeader(name = AUTH_HEADER) String authorization,
+                                          @RequestParam String email) throws IOException {
+
+        User admin = userService.getUser(authorization);
+
+        if (admin.getIsAdmin()) {
+
+            Optional<User> client = userDao.getUserByEmail(email);
+            if (client.isPresent()) {
+                entityDao.deleteEntity(admin, client.get(), EntityType.user);
+                return new ResponseEntity<>(HttpStatus.OK);
+            }
+            else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+        } else {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+
+
+    }
 
 
 }

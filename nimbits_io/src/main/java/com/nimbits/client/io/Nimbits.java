@@ -447,6 +447,24 @@ public class Nimbits {
         }
     }
 
+    public User getUser(String email) {
+        return api.getUser(email);
+    }
+
+    public void deleteUser(String email) {
+        api.deleteUser(email, new Callback<Void>() {
+            @Override
+            public void success(Void aVoid, Response response) {
+                System.out.println("Delete User OK");
+            }
+
+            @Override
+            public void failure(RetrofitError retrofitError) {
+                retrofitError.printStackTrace();
+            }
+        });
+    }
+
     public static class Builder {
 
         private String email;

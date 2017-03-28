@@ -180,4 +180,10 @@ public interface RestClient {
     @POST(API + "/{uuid}/snapshot")
     void setSnapshot(@Path("uuid") String id, @Body Value value, Callback<Void> callback);
 
+    @GET(API + "/admin/user")
+    User getUser(@Query("email") String email);
+
+    @DELETE(API + "/admin/user")
+    void deleteUser(@Query(value = "email") String email, Callback<Void> callback);
+
 }

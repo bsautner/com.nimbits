@@ -319,11 +319,19 @@ public class Nimbits {
 
     public Optional<Point> findPointByName(String pointName) {
 
-        Point p = api.findPoint(pointName);
+        try {
+            Point p = api.findPoint(pointName);
 
-        return Optional.of(p);
+            return Optional.of(p);
+        } catch (RetrofitError retrofitError) {
+            if (retrofitError.getResponse().getStatus() == 404) {
+                return Optional.absent();
+            } else {
+                throw retrofitError;
+            }
 
 
+        }
     }
 
     public Optional<Category> findCategory(String name) {

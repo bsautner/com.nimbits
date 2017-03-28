@@ -21,7 +21,7 @@
     <artifactId>nimbits-parent</artifactId>
     <packaging>pom</packaging>
 
-    <version>4.1.2-SNAPSHOT</version>
+    <version>4.1.2</version>
     <properties>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -39,7 +39,7 @@
         <developerConnection>scm:git:git@github.com:bsautner/com.nimbits.git</developerConnection>
         <url>git@github.com:bsautner/com.nimbits.git</url>
 
-        <tag>HEAD</tag>
+        <tag>nimbits-parent-4.1.2</tag>
     </scm>
 
     <developers>

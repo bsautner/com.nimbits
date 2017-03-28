@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-export version=4.1.1
+export version=4.1.2
 apt-get update
 apt-get upgrade -y
 

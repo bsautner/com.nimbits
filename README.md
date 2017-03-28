@@ -1,6 +1,6 @@
 [Wiki](https://github.com/bsautner/com.nimbits/wiki) | [Community Forum](https://groups.google.com/forum/#!forum/nimbits) | [Bug Report](https://github.com/bsautner/com.nimbits/issues) |
-[Building a Nimbits Server](https://github.com/bsautner/com.nimbits/wiki/Install:-Build-from-source)
-
+[Building a Nimbits Server](https://github.com/bsautner/com.nimbits/wiki/Install:-Build-from-source) |
+[JAVA Client Library](https://github.com/bsautner/com.nimbits/wiki/Client:-nimbits.io-library-overview)
 ## About
 
 Please see our [WIKI](https://github.com/bsautner/com.nimbits/wiki) for everything you need to know about the care and feeding of a nimbits instance and client development.

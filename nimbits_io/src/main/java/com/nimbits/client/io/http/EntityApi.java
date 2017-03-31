@@ -27,10 +27,10 @@ import com.nimbits.client.model.subscription.Subscription;
 import com.nimbits.client.model.summary.Summary;
 import com.nimbits.client.model.sync.Sync;
 import com.nimbits.client.model.user.User;
-import retrofit.http.Body;
-import retrofit.http.GET;
-import retrofit.http.POST;
-import retrofit.http.Query;
+import retrofit2.http.Body;
+import retrofit2.http.GET;
+import retrofit2.http.POST;
+import retrofit2.http.Query;
 
 public interface EntityApi {
 

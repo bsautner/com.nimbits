@@ -39,7 +39,7 @@ public class AlertSettingToggleTestAbstract extends AbstractNimbitsTest {
 
         int count = 10;
         List<Point> pointList = new ArrayList<>(count);
-        User me = nimbits.getMe();
+        User me = nimbits.getMe().get();
 
         for (int c = 0; c < count; c++) {
 

@@ -9,9 +9,9 @@ import com.nimbits.it.AbstractNimbitsTest;
 import com.nimbits.server.gson.GsonFactory;
 import org.junit.Before;
 import org.junit.Test;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
@@ -62,15 +62,15 @@ public class V3UpdateEntityTestAbstract extends AbstractNimbitsTest {
         r1.setTarget("bar");
 
         nimbits.updateEntity(r1, new Callback<Void>() {
+
             @Override
-            public void success(Void aVoid, Response response) {
-                lock.countDown();
+            public void onResponse(Call<Void> call, Response<Void> response) {
 
             }
 
             @Override
-            public void failure(RetrofitError retrofitError) {
-                fail(retrofitError.getMessage());
+            public void onFailure(Call<Void> call, Throwable throwable) {
+fail();
             }
         });
 

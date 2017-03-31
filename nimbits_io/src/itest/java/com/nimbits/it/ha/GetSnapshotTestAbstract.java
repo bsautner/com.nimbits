@@ -33,7 +33,7 @@ public class GetSnapshotTestAbstract extends AbstractNimbitsTest {
     @Test
     public void testSnapshots() {
 
-        User me = nimbits.getMe();
+        User me = nimbits.getMe().get();
         Point p = nimbits.addPoint(me, new PointModel.Builder().create());
 
 

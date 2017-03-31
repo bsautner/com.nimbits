@@ -29,14 +29,17 @@ import com.nimbits.client.model.sync.Sync;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.webhook.WebHook;
-import retrofit.Callback;
-import retrofit.http.*;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.http.*;
 
 import java.util.List;
 
+
+
 public interface RestClient {
 
-    String API = "/service/v3/rest";
+    String API = "service/v3/rest";
 
     @POST(API)
     User login(@Query("email") String email, @Query("password") String key);
@@ -45,10 +48,10 @@ public interface RestClient {
     User login();
 
     @GET(API + "/me")
-    User getMe(@Query("children") boolean includeChildren);
+    Call<User> getMe(@Query("children") boolean includeChildren);
 
     @POST(API + "/")
-    User addUser(@Body User newUser);
+    Call<User> addUser(@Body User newUser);
 
     @POST(API + "/{uuid}")
     @Deprecated
@@ -181,7 +184,7 @@ public interface RestClient {
     void setSnapshot(@Path("uuid") String id, @Body Value value, Callback<Void> callback);
 
     @GET(API + "/admin/user")
-    User getUser(@Query("email") String email);
+    Call<User> getUser(@Query("email") String email);
 
     @DELETE(API + "/admin/user")
     void deleteUser(@Query(value = "email") String email, Callback<Void> callback);

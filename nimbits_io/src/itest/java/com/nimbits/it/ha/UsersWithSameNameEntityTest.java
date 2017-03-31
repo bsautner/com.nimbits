@@ -79,7 +79,7 @@ public class UsersWithSameNameEntityTest extends AbstractBaseNimbitsTest {
                     .instance(host)
                     .token(pair.getRight()).create();
 
-            User user = userClient.getMe();
+            User user = userClient.getMe().get();
 
             assertEquals(pair.getLeft(), user.getEmail().getValue());
             Point sameNamePoint = userClient.addPoint(user, new PointModel.Builder()

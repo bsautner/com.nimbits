@@ -13,12 +13,12 @@ import com.nimbits.client.model.webhook.WebHookModel;
 import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.Before;
 import org.junit.Test;
-import retrofit.RetrofitError;
 
 import java.util.Random;
 import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class V3FindThingsExamples extends AbstractNimbitsTest {
@@ -59,12 +59,10 @@ public class V3FindThingsExamples extends AbstractNimbitsTest {
         }
 
         //search for a point that was never created to test absent condition
-        try {
-            Optional<Point> shouldNotExist = nimbits.findPointByName(UUID.randomUUID().toString());
 
-        } catch (RetrofitError error) {
-            assertEquals(404, error.getResponse().getStatus());
-        }
+        Optional<Point> shouldNotExist = nimbits.findPointByName(UUID.randomUUID().toString());
+
+        assertFalse(shouldNotExist.isPresent());
 
 
         //Record some values with the name only
@@ -84,12 +82,10 @@ public class V3FindThingsExamples extends AbstractNimbitsTest {
     private void veryifyFindCategory() {
         String name = UUID.randomUUID().toString();
 
-        try {
-            Optional<Category> result = nimbits.findCategory("i dont exist");
 
-        } catch (RetrofitError error) {
-            assertEquals(404, error.getResponse().getStatus());
-        }
+        Optional<Category> result = nimbits.findCategory("i dont exist");
+        assertFalse(result.isPresent());
+
 
 
         Category category = new CategoryModel.Builder().name(name).create();
@@ -103,12 +99,9 @@ public class V3FindThingsExamples extends AbstractNimbitsTest {
         String name = UUID.randomUUID().toString();
 
 
-        try {
-         Optional<WebHook> result = nimbits.findWebHook("i dont exist");
+            Optional<WebHook> result = nimbits.findWebHook("i dont exist");
+            assertFalse(result.isPresent());
 
-        } catch (RetrofitError error) {
-            assertEquals(404, error.getResponse().getStatus());
-        }
 
         WebHook webHook = new WebHookModel.Builder()
                 .name(name)

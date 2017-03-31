@@ -486,6 +486,7 @@ public class EntityDao {
         try{
 
             final Entity commit = EntityHelper.downcastEntity(entity);
+            commit.setOwner(user.getId());
             commit.setId(UUID.randomUUID().toString());
 
 

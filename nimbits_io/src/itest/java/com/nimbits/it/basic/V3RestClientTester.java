@@ -64,7 +64,7 @@ public class V3RestClientTester extends AbstractNimbitsTest {
                     .token(password)
                     .instance(host).create();
 
-            User verify = nonAdminClient.getMe(true);
+            User verify = nonAdminClient.getMe(true).get();
 
             if (verify.equals(regularUser)) {
                 log("Verified Creating Regular " + i + " User can login ");

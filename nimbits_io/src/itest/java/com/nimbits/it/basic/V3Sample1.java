@@ -20,11 +20,10 @@ import com.nimbits.client.model.webhook.WebHookModel;
 import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.Before;
 import org.junit.Test;
-import retrofit.RetrofitError;
 
 import java.util.*;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.fail;
 
 public class V3Sample1 extends AbstractNimbitsTest {
@@ -113,7 +112,7 @@ public class V3Sample1 extends AbstractNimbitsTest {
         sleep();
 
         Nimbits user2Client = new Nimbits.Builder().instance(host).email(email2).token(password).create();
-        User retrieved = user2Client.getMe();
+        User retrieved = user2Client.getMe().get();
         if (retrieved != null) {
             log("Downloaded:   " + retrieved.toString());
             Thread.sleep(1000);
@@ -122,13 +121,11 @@ public class V3Sample1 extends AbstractNimbitsTest {
             Thread.sleep(1000);
             //make sure it was deleted
 
-            try {
+
                 Optional<User> retrieved2 = nimbits.findUser(email2);
-            } catch (RetrofitError error) {
-                assertEquals(404, error.getResponse().getStatus());
 
-            }
 
+                assertFalse(retrieved2.isPresent());
 
         } else {
 
@@ -149,7 +146,7 @@ public class V3Sample1 extends AbstractNimbitsTest {
         Nimbits client = new Nimbits.Builder()
                 .email(email).token(password).instance(host).create();
 
-        User me = client.getMe(true);
+        User me = client.getMe(true).get();
 
         log("Re-Downloaded basic user to verify: " + me.toString());
 

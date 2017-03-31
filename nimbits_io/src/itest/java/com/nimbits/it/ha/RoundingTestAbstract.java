@@ -29,7 +29,7 @@ public class RoundingTestAbstract extends AbstractNimbitsTest {
     @Test
     public void testScenario() {
 
-        User me = nimbits.getMe();
+        User me = nimbits.getMe().get();
         Point p = nimbits.addPoint(me, new PointModel.Builder().create());
         log(p);
 

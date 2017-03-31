@@ -19,7 +19,7 @@ public class RoundRobinTestAbstract extends AbstractNimbitsTest {
     @Test
     public void pointUpdateTest() {
 
-        User me = nimbits.getMe(false);
+        User me = nimbits.getMe(false).get();
         Point p1 = nimbits.addPoint(me, new PointModel.Builder()
                 .highAlarmOn(true)
                 .highAlarm(100.0)

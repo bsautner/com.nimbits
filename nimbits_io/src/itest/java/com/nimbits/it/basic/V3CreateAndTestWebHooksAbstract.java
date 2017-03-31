@@ -2,7 +2,7 @@ package com.nimbits.it.basic;
 
 import com.nimbits.client.enums.subscription.SubscriptionNotifyMethod;
 import com.nimbits.client.enums.subscription.SubscriptionType;
-import com.nimbits.client.io.http.NimbitsClientException;
+import com.nimbits.client.ex.NimbitsClientException;
 import com.nimbits.client.model.point.Point;
 import com.nimbits.client.model.point.PointModel;
 import com.nimbits.client.model.subscription.Subscription;

@@ -27,7 +27,7 @@ public class CacheTestAbstract extends AbstractNimbitsTest {
             double t = 54;
             String name = UUID.randomUUID().toString();
 
-            User me = nimbits.getMe(true);
+            User me = nimbits.getMe(true).get();
 
             log(me.toString());
 

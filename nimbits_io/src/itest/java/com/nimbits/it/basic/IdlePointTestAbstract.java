@@ -23,7 +23,7 @@ public class IdlePointTestAbstract extends AbstractNimbitsTest {
     @Before
     public void setup() {
 
-        List<Entity> entityList = nimbits.getChildren(nimbits.getMe());
+        List<Entity> entityList = nimbits.getChildren(nimbits.getMe().get());
         for (Entity e : entityList) {
             nimbits.deleteEntity(e);
         }
@@ -38,7 +38,7 @@ public class IdlePointTestAbstract extends AbstractNimbitsTest {
     @Test
     public void testGettingIdlePoints() {
 
-        User me = nimbits.getMe(false);
+        User me = nimbits.getMe(false).get();
         List<Point> idlePoints = new ArrayList<>();
 
         for (int i = 0; i < 100; i++) {

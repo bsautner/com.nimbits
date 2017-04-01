@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 export tomcat=8.5.13
+export url=http://www-us.apache.org/dist/tomcat/tomcat-8/v${version}/bin/apache-tomcat-${version}.tar.gz
 bash -c 'echo "CATALINA_HOME=/opt/tomcat"  >> /etc/environment'
 source /etc/environment
 
-wget wget http://apache.claz.org/tomcat/tomcat-8/v8.5.13/bin/apache-tomcat-${version}.tar.gz
+wget wget ${url}
 tar xvzf apache-tomcat-${version}.tar.gz
 mv -v apache-tomcat-${version} /opt/tomcat
+
+cp ./scripts/tomcat8 /etc/init.d/tomcat8
+chmod 755 /etc/init.d/tomcat8
+update-rc.d tomcat8 defaults

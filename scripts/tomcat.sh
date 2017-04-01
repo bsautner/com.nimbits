@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-export tomcat=8.5.13
+export version=8.5.13
 export url=http://www-us.apache.org/dist/tomcat/tomcat-8/v${version}/bin/apache-tomcat-${version}.tar.gz
 bash -c 'echo "CATALINA_HOME=/opt/tomcat"  >> /etc/environment'
 source /etc/environment

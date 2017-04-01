@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 export version=4.1.2
-export tomcat=8.5.12
+export tomcat=8.5.13
 
 apt-get update
 apt-get upgrade -y
@@ -14,8 +14,8 @@ bash -c 'echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment'
 bash -c 'echo "CATALINA_HOME=/opt/tomcat"  >> /etc/environment'
 source /etc/environment
 
-wget http://www-eu.apache.org/dist/tomcat/tomcat-8/v${tomcat}/bin/apache-tomcat-${tomcat}.tar.gz
-tar xvzf apache-tomcat-{tomcat}.tar.gz
+wget wget http://apache.claz.org/tomcat/tomcat-8/v8.5.13/bin/apache-tomcat-8.5.13.tar.gz
+tar xvzf apache-tomcat-8.5.13.tar.gz
 mv apache-tomcat-{tomcat} /opt/tomcat
 
 apt-get install mysql-server -y

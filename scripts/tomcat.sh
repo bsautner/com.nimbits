@@ -8,6 +8,6 @@ wget wget ${url}
 tar xvzf apache-tomcat-${version}.tar.gz
 mv -v apache-tomcat-${version} /opt/tomcat
 
-cp ./scripts/tomcat8 /etc/init.d/tomcat8
+cp -fv ./tomcat8 /etc/init.d/tomcat8
 chmod 755 /etc/init.d/tomcat8
 update-rc.d tomcat8 defaults

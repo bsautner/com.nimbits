@@ -14,9 +14,7 @@ bash -c 'echo "JAVA_HOME=/usr/lib/jvm/java-8-oracle" >> /etc/environment'
 bash -c 'echo "CATALINA_HOME=/opt/tomcat"  >> /etc/environment'
 source /etc/environment
 
-wget wget http://apache.claz.org/tomcat/tomcat-8/v8.5.13/bin/apache-tomcat-8.5.13.tar.gz
-tar xvzf apache-tomcat-8.5.13.tar.gz
-mv apache-tomcat-{tomcat} /opt/tomcat
+
 
 apt-get install mysql-server -y
 echo "create database if not exists nimbits" | mysql -u root -p
@@ -27,10 +25,9 @@ cd ..
 #mvn install:install-file -Dfile=./nimbits_server/src/main/resources/nimbits_core-${version}.out.jar -DgroupId=com.nimbits -DartifactId=nimbits_core -Dversion=${version} -Dpackaging=jar
 
 mvn clean install
+
+./tomcat.sh
 cp ./nimbits_server/target/nimbits_server.war /opt/tomcat/webapps/nimbits.war
-cp ./scripts/tomcat8 /etc/init.d/tomcat8
-chmod 755 /etc/init.d/tomcat8
-update-rc.d tomcat8 defaults
-reboot
+
 
 

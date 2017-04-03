@@ -128,7 +128,7 @@ public interface RestClient {
     List<Point> getNearbyPoints(@Path("uuid") String uuid, @Query("meters") double meters);
 
     @GET(API + "/me")
-    Point findPoint(@Query("name") String pointName);
+    Point findPoint(@Query("name") String pointName, @Query("type") int entityType);
 
 
     @DELETE(API + "/{uuid}")
@@ -185,5 +185,8 @@ public interface RestClient {
 
     @DELETE(API + "/admin/user")
     void deleteUser(@Query(value = "email") String email, Callback<Void> callback);
+
+    @GET(API + "/me")
+    Summary findSummary(@Query("name") String entityName, @Query("type") int entityType);
 
 }

@@ -25,10 +25,10 @@ public abstract class AbstractBaseNimbitsTest extends AbstractTest {
     public User adminUser;
 
     @Value("${test.admin}")
-    private String admin;
+    public String admin;
 
     @Value("${test.password}")
-    private String password;
+    public String password;
 
     @Value("${test.host}")
     public String host;

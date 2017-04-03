@@ -18,6 +18,7 @@ package com.nimbits.client.io;
 
 import com.google.common.base.Optional;
 import com.nimbits.client.enums.EntityType;
+import com.nimbits.client.io.http.NimbitsClientException;
 import com.nimbits.client.io.http.rest.RestClient;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.category.Category;
@@ -34,6 +35,7 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.server.gson.GsonFactory;
 import retrofit.Callback;
+import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -53,6 +55,8 @@ public class Nimbits {
 
 
     private final RestClient api;
+    private final int NOT_FOUND = 404;
+
 
     protected Nimbits(final String email, final String token, String instance) {
 
@@ -71,12 +75,18 @@ public class Nimbits {
                 .setEndpoint(instance)
                 .setRequestInterceptor(requestInterceptor)
                 .setConverter(new GsonConverter(GsonFactory.getInstance(false)))
-
+                .setErrorHandler(new ErrorHandler() {
+                    @Override
+                    public Throwable handleError(RetrofitError retrofitError) {
+                        throw new NimbitsClientException("Error in Rest Adapter", retrofitError);
+                    }
+                })
                 .build();
 
         api = restAdapter.create(RestClient.class);
     }
 
+    @Deprecated
     public void connect() {
 
     }
@@ -317,77 +327,153 @@ public class Nimbits {
         }
     }
 
+
+
+
     public Optional<Point> findPointByName(String pointName) {
 
         try {
-            Point p = api.findPoint(pointName);
+            Point p = api.findPoint(pointName, EntityType.point.getCode());
 
             return Optional.of(p);
-        } catch (RetrofitError retrofitError) {
-            if (retrofitError.getResponse().getStatus() == 404) {
+        } catch (NimbitsClientException ex) {
+            if (ex.getCause() instanceof RetrofitError && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
                 return Optional.absent();
-            } else {
-                throw retrofitError;
+            }
+            else {
+                throw ex;
             }
 
 
         }
     }
 
+
     public Optional<Category> findCategory(String name) {
 
 
-        return Optional.of(api.findCategory(name, EntityType.category.getCode()));
+        try {
+            Category p = api.findCategory(name, EntityType.category.getCode());
 
+            return Optional.of(p);
+        } catch (NimbitsClientException ex) {
+            if (ex.getCause() instanceof RetrofitError && NOT_FOUND == ((RetrofitError) ex.getCause()).getResponse().getStatus()) {
+                return Optional.absent();
+            } else {
+                throw ex;
+            }
 
+        }
     }
 
-    public Optional<WebHook> findWebHook(String name) {
+        public Optional<WebHook> findWebHook(String name) {
 
 
-        return Optional.of(api.findWebHook(name, EntityType.webhook.getCode()));
+            try {
+                WebHook p = api.findWebHook(name, EntityType.webhook.getCode());
+
+                return Optional.of(p);
+            } catch (NimbitsClientException ex) {
+                if (ex.getCause() instanceof RetrofitError && NOT_FOUND == ((RetrofitError) ex.getCause()).getResponse().getStatus()) {
+                    return Optional.absent();
+                } else {
+                    throw ex;
+                }
+
+            }
 
 
-    }
+        }
 
-    public Optional<Subscription> findSubscription(String name) {
-
-        return Optional.of(api.findSubscription(name, EntityType.subscription.getCode()));
+        public Optional<Subscription> findSubscription(String name) {
 
 
-    }
+            try {
+                Subscription p = api.findSubscription(name, EntityType.subscription.getCode());
 
-    public Optional<Sync> findSync(String name) {
+                return Optional.of(p);
+            } catch (NimbitsClientException ex) {
+                if (ex.getCause() instanceof RetrofitError && NOT_FOUND == ((RetrofitError) ex.getCause()).getResponse().getStatus()) {
+                    return Optional.absent();
+                } else {
+                    throw ex;
+                }
 
-
-        return Optional.of(api.findSync(name, EntityType.sync.getCode()));
-
-
-    }
-
-    public Optional<Calculation> findCalculation(String name) {
-
-
-            return Optional.of(api.findCalculation(name, EntityType.calculation.getCode()));
-
-    }
-
-    public Optional<Instance> findInstance(String name) {
+            }
 
 
-            return Optional.of(api.findInstance(name, EntityType.instance.getCode()));
+        }
 
-    }
+        public Optional<Sync> findSync(String name) {
+
+            try {
+                Sync p = api.findSync(name, EntityType.sync.getCode());
+
+                return Optional.of(p);
+            } catch (NimbitsClientException ex) {
+                if (ex.getCause() instanceof RetrofitError && NOT_FOUND == ((RetrofitError) ex.getCause()).getResponse().getStatus()) {
+                    return Optional.absent();
+                } else {
+                    throw ex;
+                }
+
+            }
+
+        }
+
+        public Optional<Calculation> findCalculation(String name) {
 
 
 
-    public Optional<Schedule> findSummary(String name) {
+            try {
+                return Optional.of(api.findCalculation(name, EntityType.calculation.getCode()));
+
+            } catch (NimbitsClientException ex) {
+                if (ex.getCause() instanceof RetrofitError && NOT_FOUND == ((RetrofitError) ex.getCause()).getResponse().getStatus()) {
+                    return Optional.absent();
+                } else {
+                    throw ex;
+                }
+
+            }
+
+        }
+
+        public Optional<Instance> findInstance(String name) {
+
+            try {
+                return Optional.of(api.findInstance(name, EntityType.instance.getCode()));
 
 
-            return Optional.of(api.findSchedule(name, EntityType.schedule.getCode()));
+            } catch (NimbitsClientException ex) {
+                if (ex.getCause() instanceof RetrofitError && NOT_FOUND == ((RetrofitError) ex.getCause()).getResponse().getStatus()) {
+                    return Optional.absent();
+                } else {
+                    throw ex;
+                }
+
+            }
+
+        }
+
+        public Optional<Summary> findSummary(String name) {
 
 
-    }
+            try {
+                return Optional.of(api.findSummary(name, EntityType.summary.getCode()));
+
+
+            } catch (NimbitsClientException ex) {
+                if (ex.getCause() instanceof RetrofitError && NOT_FOUND == ((RetrofitError) ex.getCause()).getResponse().getStatus()) {
+                    return Optional.absent();
+                } else {
+                    throw ex;
+                }
+
+            }
+
+
+        }
 
 
 
@@ -409,8 +495,18 @@ public class Nimbits {
 
     public Optional<User> findUser(String email) {
 
+        try {
             return Optional.of(api.findUser(email, EntityType.user.getCode()));
 
+
+        } catch (NimbitsClientException ex) {
+            if (ex.getCause() instanceof RetrofitError && NOT_FOUND == ((RetrofitError) ex.getCause()).getResponse().getStatus()) {
+                return Optional.absent();
+            } else {
+                throw ex;
+            }
+
+        }
 
     }
 
@@ -440,7 +536,7 @@ public class Nimbits {
     }
 
     public void setSnapshot(String pointName, Value value, Callback<Void> callback) {
-        Point p = api.findPoint(pointName);
+        Point p = api.findPoint(pointName, EntityType.point.getCode());
         api.setSnapshot(p.getId(), value, callback);
     }
 
@@ -449,7 +545,7 @@ public class Nimbits {
     public Value recordValueSync(String pointName, Value value) {
         Optional<Point> point = findPointByName(pointName);
         if (point.isPresent()) {
-             return recordValuesSync(point.get(), value);
+            return recordValuesSync(point.get(), value);
         } else {
             throw new RuntimeException("Point Not Found");
         }

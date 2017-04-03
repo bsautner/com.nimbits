@@ -1,6 +1,7 @@
 package com.nimbits.it.admin;
 
 
+import com.nimbits.client.io.http.NimbitsClientException;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.it.AbstractBaseNimbitsTest;
@@ -33,7 +34,7 @@ public class UserAdminCrud extends AbstractBaseNimbitsTest {
 
     }
 
-    @Test(expected = RetrofitError.class)
+    @Test(expected = NimbitsClientException.class)
     public void UserNotFoundTest() {
 
         String testEmail =  String.format(email_format, UUID.randomUUID().toString());
@@ -44,7 +45,7 @@ public class UserAdminCrud extends AbstractBaseNimbitsTest {
 
     }
 
-    @Test(expected = RetrofitError.class)
+    @Test(expected = NimbitsClientException.class)
     public void deleteUserTest() {
 
         String testEmail =  String.format(email_format, UUID.randomUUID().toString());

@@ -1,17 +1,16 @@
 package com.nimbits.it.admin;
 
 
-import com.google.common.base.Optional;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.user.UserModel;
 import com.nimbits.it.AbstractBaseNimbitsTest;
 import org.junit.Test;
+import retrofit.RetrofitError;
 
 import java.util.UUID;
 
 import static junit.framework.TestCase.assertFalse;
 import static junit.framework.TestCase.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 
 public class UserAdminCrud extends AbstractBaseNimbitsTest {
@@ -26,15 +25,15 @@ public class UserAdminCrud extends AbstractBaseNimbitsTest {
         adminClient.addUser(new UserModel.Builder().email(testEmail).password("password").create());
 
         nap();
-        Optional<User> userOptional = adminClient.getUser(testEmail);
+        User user = adminClient.getUser(testEmail);
 
-       assertTrue(userOptional.isPresent());
+        assertNotNull(user);
 
 
 
     }
 
-   // @Test(expected = RetrofitError.class)
+    @Test(expected = RetrofitError.class)
     public void UserNotFoundTest() {
 
         String testEmail =  String.format(email_format, UUID.randomUUID().toString());
@@ -45,7 +44,7 @@ public class UserAdminCrud extends AbstractBaseNimbitsTest {
 
     }
 
-   // @Test(expected = RetrofitError.class)
+    @Test(expected = RetrofitError.class)
     public void deleteUserTest() {
 
         String testEmail =  String.format(email_format, UUID.randomUUID().toString());
@@ -54,7 +53,7 @@ public class UserAdminCrud extends AbstractBaseNimbitsTest {
         adminClient.addUser(new UserModel.Builder().email(testEmail).password("password2").create());
 
 
-        User user = adminClient.getUser(testEmail).get();
+        User user = adminClient.getUser(testEmail);
 
         assertNotNull(user);
         assertNotNull(user.getId());

@@ -6,8 +6,9 @@ import com.nimbits.client.model.point.PointModel;
 import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.Before;
 import org.junit.Test;
-import retrofit2.Call;
-import retrofit2.Callback;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 import java.util.UUID;
 
@@ -46,15 +47,15 @@ public class AlarmTestAbstract extends AbstractNimbitsTest {
 
         Point point;
         Callback<Void> callback = new Callback<Void>() {
-
             @Override
-            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
-
+            public void success(Void aVoid, Response response) {
+                gotCallback[0] = true;
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable throwable) {
-
+            public void failure(RetrofitError retrofitError) {
+                fail();
+                retrofitError.printStackTrace();
             }
         };
 

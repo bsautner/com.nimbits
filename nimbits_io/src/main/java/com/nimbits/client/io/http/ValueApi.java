@@ -17,10 +17,10 @@
 package com.nimbits.client.io.http;
 
 import com.nimbits.client.model.value.Value;
-import retrofit2.http.Body;
-import retrofit2.http.GET;
-import retrofit2.http.POST;
-import retrofit2.http.Query;
+import retrofit.http.Body;
+import retrofit.http.GET;
+import retrofit.http.POST;
+import retrofit.http.Query;
 
 public interface ValueApi {
 

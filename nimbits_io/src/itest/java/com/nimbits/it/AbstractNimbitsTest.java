@@ -1,6 +1,5 @@
 package com.nimbits.it;
 
-import com.google.common.base.Optional;
 import com.nimbits.client.io.Nimbits;
 import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
@@ -14,8 +13,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.List;
-
-import static org.junit.Assert.fail;
 
 /**
  * A base class for running tests
@@ -45,16 +42,12 @@ public abstract class AbstractNimbitsTest extends AbstractTest {
     public void setUp() throws Exception {
          nimbits = new Nimbits.Builder()
                 .email(admin).token(password).instance(host).create();
-        Optional<User> userOptional = nimbits.getMe(false);
+        user = nimbits.getMe(false);
 
-        if (userOptional.isPresent()) {
-            List<Entity> entityList = nimbits.getChildren(user);
-            for (Entity entity : entityList) {
-                log("teardown deleting child: " + entity.getName().getValue());
-                nimbits.deleteEntity(entity);
-            }
-        } else {
-            fail("could not find admin user");
+        List<Entity> entityList = nimbits.getChildren(user);
+        for (Entity entity : entityList) {
+            log("teardown deleting child: " + entity.getName().getValue());
+            nimbits.deleteEntity(entity);
         }
 
     }

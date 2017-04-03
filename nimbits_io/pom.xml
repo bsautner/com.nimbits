@@ -73,7 +73,15 @@
                 </configuration>
             </plugin>
 
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.10.4</version>
+                <configuration>
+                    <failOnError>false</failOnError>
+                    <nohelp>true</nohelp>
+                </configuration>
+            </plugin>
 
 
         </plugins>
@@ -83,28 +91,12 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>com.squareup.okio</groupId>
-            <artifactId>okio</artifactId>
-            <version>1.11.0</version>
-        </dependency>
 
         <dependency>
-            <groupId>com.squareup.retrofit2</groupId>
+            <groupId>com.squareup.retrofit</groupId>
             <artifactId>retrofit</artifactId>
-            <version>2.2.0</version>
-        </dependency>
+            <version>1.9.0</version>
 
-        <dependency>
-            <groupId>com.squareup.retrofit2</groupId>
-            <artifactId>converter-gson</artifactId>
-            <version>2.2.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.squareup.okhttp</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>2.0.0</version>
         </dependency>
 
         <dependency>
@@ -157,7 +149,6 @@
             <version>4.2.4.RELEASE</version>
             <scope>test</scope>
         </dependency>
-
 
 
     </dependencies>

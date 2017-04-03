@@ -1,6 +1,5 @@
 package com.nimbits.it;
 
-import com.google.common.base.Optional;
 import com.nimbits.client.io.Nimbits;
 import com.nimbits.client.model.user.User;
 import com.nimbits.it.basic.AbstractTest;
@@ -14,7 +13,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.Date;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -48,13 +46,9 @@ public abstract class AbstractBaseNimbitsTest extends AbstractTest {
        adminClient = new Nimbits.Builder()
                 .email(admin).token(password).instance(host).create();
 
-       Optional<User> userOptional = adminClient.getMe();
-       assertTrue(userOptional.isPresent());
-       if (userOptional.isPresent()) {
-           adminUser = userOptional.get();
-           if (!adminUser.getIsAdmin()) {
-               fail("Admin User not set correctly for these tests to run");
-           }
+       adminUser = adminClient.getMe();
+       if (! adminUser.getIsAdmin()) {
+           fail("Admin User not set correctly for these tests to run");
        }
 
     }

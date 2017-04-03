@@ -17,7 +17,7 @@
 package com.nimbits.client.io.http;
 
 import com.nimbits.client.model.entity.Entity;
-import retrofit2.http.GET;
+import retrofit.http.GET;
 
 import java.util.List;
 

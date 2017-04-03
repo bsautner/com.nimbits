@@ -25,7 +25,7 @@ public class V3ApiChildrenTestAbstract extends AbstractNimbitsTest {
     public void executeTest() throws InterruptedException {
 
 
-        User me = nimbits.getMe(true).get();
+        User me = nimbits.getMe(true);
 
         log(me.toString());
 
@@ -36,7 +36,7 @@ public class V3ApiChildrenTestAbstract extends AbstractNimbitsTest {
 
         }
 
-        me = nimbits.getMe(true).get();
+        me = nimbits.getMe(true);
         log("Got Children: " + me.getChildren().size());
         log("Done " + getClass().getName());
 

@@ -5,9 +5,9 @@ import com.nimbits.client.model.value.Value;
 import com.nimbits.it.AbstractNimbitsTest;
 import org.junit.Before;
 import org.junit.Test;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 import java.util.UUID;
 
@@ -31,15 +31,14 @@ public class SnapshotTestAbstract extends AbstractNimbitsTest {
         nimbits.addPoint(user, new PointModel.Builder().name(pointName).create());
 
         nimbits.setSnapshot(pointName, new Value.Builder().doubleValue(11.0).create(), new Callback<Void>() {
-
             @Override
-            public void onResponse(Call<Void> call, Response<Void> response) {
+            public void success(Void aVoid, Response response) {
 
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable throwable) {
-
+            public void failure(RetrofitError retrofitError) {
+                fail();
             }
         });
 

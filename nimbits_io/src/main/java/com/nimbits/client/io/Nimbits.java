@@ -18,7 +18,6 @@ package com.nimbits.client.io;
 
 import com.google.common.base.Optional;
 import com.nimbits.client.enums.EntityType;
-import com.nimbits.client.ex.NimbitsClientException;
 import com.nimbits.client.io.http.rest.RestClient;
 import com.nimbits.client.model.calculation.Calculation;
 import com.nimbits.client.model.category.Category;
@@ -34,25 +33,16 @@ import com.nimbits.client.model.user.User;
 import com.nimbits.client.model.value.Value;
 import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.server.gson.GsonFactory;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit.Callback;
+import retrofit.RequestInterceptor;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+import retrofit.converter.GsonConverter;
 
-import javax.net.ssl.*;
-import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * A simpler java client for interacting with the V3 REST API using hal+json
@@ -64,80 +54,28 @@ public class Nimbits {
 
     private final RestClient api;
 
-    protected Nimbits(final String email, final String password, String host) throws KeyManagementException, NoSuchAlgorithmException {
+    protected Nimbits(final String email, final String token, String instance) {
 
 
-        OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder().readTimeout(15, TimeUnit.SECONDS);
-
-        boolean allowUntrusted = true;
-
-        if (allowUntrusted) {
-
-            final TrustManager[] trustAllCerts = new TrustManager[]{new X509TrustManager() {
-                @Override
-                public X509Certificate[] getAcceptedIssuers() {
-                    X509Certificate[] cArrr = new X509Certificate[0];
-                    return cArrr;
-                }
-
-                @Override
-                public void checkServerTrusted(final X509Certificate[] chain,
-                                               final String authType) throws CertificateException {
-                }
-
-                @Override
-                public void checkClientTrusted(final X509Certificate[] chain,
-                                               final String authType) throws CertificateException {
-                }
-            }};
-
-            SSLContext sslContext = SSLContext.getInstance("SSL");
-
-            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-            clientBuilder.sslSocketFactory(sslContext.getSocketFactory());
-
-            HostnameVerifier hostnameVerifier = new HostnameVerifier() {
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-
-                    return true;
-                }
-            };
-            clientBuilder.hostnameVerifier(hostnameVerifier);
-        }
-
-
-        clientBuilder.addInterceptor(new Interceptor() {
+        RequestInterceptor requestInterceptor = new RequestInterceptor() {
             @Override
-            public Response intercept(Interceptor.Chain chain) throws IOException {
-                Request original = chain.request();
+            public void intercept(RequestFacade request) {
 
-                // Request customization: add request headers
-                Request.Builder requestBuilder = original.newBuilder()
-                     //   .addHeader("user-agent", "nimbits.io")
-                        .addHeader("Authorization", "Basic " + email + ":" + password)
-                        .addHeader("Accept", "application/json");
+                request.addHeader("Accept", "application/json");
+                request.addHeader("Authorization", "Basic " + email + ":" + token);  //TODO BASE64 encode this
 
-                Request request = requestBuilder.build();
-                return chain.proceed(request);
             }
-        });
+        };
 
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint(instance)
+                .setRequestInterceptor(requestInterceptor)
+                .setConverter(new GsonConverter(GsonFactory.getInstance(false)))
 
-        OkHttpClient client = clientBuilder.build();
-
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(host)
-                .client(client)
-
-                .addConverterFactory(GsonConverterFactory.create(GsonFactory.getInstance(false)))
                 .build();
 
-        api = retrofit.create(RestClient.class);
-
+        api = restAdapter.create(RestClient.class);
     }
-
 
     public void connect() {
 
@@ -147,31 +85,17 @@ public class Nimbits {
      * @return the authentication user from /service/v3/me
      * @Param should the returned object contain a list of children one level down
      */
-    public Optional<User> getMe(boolean includeChildren) {
-        try {
-            retrofit2.Response<User> response = api.getMe(includeChildren).execute();
-            if (response.code() == 404) {
-                return  Optional.absent();
-            }
-            else if (response.isSuccessful()) {
-                return Optional.of(response.body());
-            }
-            else {
-                throw new NimbitsClientException(new Exception(response.errorBody().string()));
-            }
-        } catch (Exception e) {
-            throw new NimbitsClientException(e);
-        }
+    public User getMe(boolean includeChildren) {
+        return api.getMe(includeChildren);
     }
 
     /**
      * @return the authentication user from /service/v3/me
      * @Param should the returned object contain a list of children one level down
      */
-    public Optional<User> getMe() {
+    public User getMe() {
 
-        return getMe(false);
-
+        return api.getMe(true);
     }
 
 
@@ -183,18 +107,8 @@ public class Nimbits {
      */
     public User addUser(User newUser) {
 
-        try {
-            retrofit2.Response<User> response = api.addUser(newUser).execute();
-
-            return response.body();
-
-
-        } catch (IOException e) {
-            throw new NimbitsClientException(e);
-        }
-
+        return api.addUser(newUser);
     }
-
 
 
     //READ Data
@@ -265,15 +179,14 @@ public class Nimbits {
      */
     public void recordValues(Entity entity, List<Value> values) {
         api.recordData(entity.getId(), values, new Callback<Void>() {
-
             @Override
-            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+            public void success(Void aVoid, Response response) {
 
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable throwable) {
-
+            public void failure(RetrofitError retrofitError) {
+                throw new RuntimeException(retrofitError);
             }
         });
     }
@@ -299,15 +212,14 @@ public class Nimbits {
 
     public void deleteEntity(Entity entity) {
         api.deleteEntity(entity.getId(), new Callback<Void>() {
-
             @Override
-            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+            public void success(Void aVoid, Response response) {
 
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable throwable) {
-
+            public void failure(RetrofitError retrofitError) {
+                throw new RuntimeException(retrofitError);
             }
         });
     }
@@ -407,11 +319,19 @@ public class Nimbits {
 
     public Optional<Point> findPointByName(String pointName) {
 
+        try {
+            Point p = api.findPoint(pointName);
 
-        Point p = api.findPoint(pointName);
+            return Optional.of(p);
+        } catch (RetrofitError retrofitError) {
+            if (retrofitError.getResponse().getStatus() == 404) {
+                return Optional.absent();
+            } else {
+                throw retrofitError;
+            }
 
-        return Optional.of(p);
 
+        }
     }
 
     public Optional<Category> findCategory(String name) {
@@ -448,25 +368,27 @@ public class Nimbits {
     public Optional<Calculation> findCalculation(String name) {
 
 
-        return Optional.of(api.findCalculation(name, EntityType.calculation.getCode()));
+            return Optional.of(api.findCalculation(name, EntityType.calculation.getCode()));
 
     }
 
     public Optional<Instance> findInstance(String name) {
 
 
-        return Optional.of(api.findInstance(name, EntityType.instance.getCode()));
+            return Optional.of(api.findInstance(name, EntityType.instance.getCode()));
 
     }
+
 
 
     public Optional<Schedule> findSummary(String name) {
 
 
-        return Optional.of(api.findSchedule(name, EntityType.schedule.getCode()));
+            return Optional.of(api.findSchedule(name, EntityType.schedule.getCode()));
 
 
     }
+
 
 
     public Point getPoint(String uuid) {
@@ -487,7 +409,7 @@ public class Nimbits {
 
     public Optional<User> findUser(String email) {
 
-        return Optional.of(api.findUser(email, EntityType.user.getCode()));
+            return Optional.of(api.findUser(email, EntityType.user.getCode()));
 
 
     }
@@ -495,18 +417,18 @@ public class Nimbits {
 
     public void updateEntity(Entity entity) {
         api.updateEntity(entity.getId(), entity, new Callback<Void>() {
-
             @Override
-            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+            public void success(Void aVoid, Response response) {
 
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable throwable) {
+            public void failure(RetrofitError retrofitError) {
 
             }
         });
     }
+
 
 
     /**
@@ -523,45 +445,30 @@ public class Nimbits {
     }
 
 
+
     public Value recordValueSync(String pointName, Value value) {
         Optional<Point> point = findPointByName(pointName);
         if (point.isPresent()) {
-            return recordValuesSync(point.get(), value);
+             return recordValuesSync(point.get(), value);
         } else {
             throw new RuntimeException("Point Not Found");
         }
     }
 
-    public Optional<User> getUser(String email) {
-
-        try {
-            retrofit2.Response<User> response = api.getUser(email).execute();
-            if (response.code() == 404) {
-                return Optional.absent();
-            }
-            else if (response.isSuccessful()) {
-                return Optional.of(response.body());
-            }
-            else {
-                throw new NimbitsClientException(new Exception(response.errorBody().string()));
-            }
-        } catch (IOException e) {
-            throw new NimbitsClientException(e);
-        }
-
+    public User getUser(String email) {
+        return api.getUser(email);
     }
 
     public void deleteUser(String email) {
         api.deleteUser(email, new Callback<Void>() {
-
             @Override
-            public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
-
+            public void success(Void aVoid, Response response) {
+                System.out.println("Delete User OK");
             }
 
             @Override
-            public void onFailure(Call<Void> call, Throwable throwable) {
-
+            public void failure(RetrofitError retrofitError) {
+                retrofitError.printStackTrace();
             }
         });
     }
@@ -589,47 +496,37 @@ public class Nimbits {
         }
 
         public Nimbits create() {
-            try {
-                return new Nimbits(email, token, instance);
-            } catch (Exception e) {
-                throw new NimbitsClientException(e);
-            }
-
-        }
-
-        @Deprecated //user Builder()
-        private static class NimbitsBuilder {
-
-            private String email;
-            private String token;
-            private String instance;
-
-
-            public NimbitsBuilder email(String email) {
-                this.email = email;
-                return this;
-            }
-
-            public NimbitsBuilder token(String token) {
-                this.token = token;
-                return this;
-            }
-
-            public NimbitsBuilder instance(String instance) {
-                this.instance = instance;
-                return this;
-            }
-
-            public Nimbits create() {
-                try {
-                    return new Nimbits(email, token, instance);
-                } catch (Exception e) {
-                    throw new NimbitsClientException(e);
-                }
-            }
+            return new Nimbits(email, token, instance);
         }
     }
+
+    @Deprecated //user Builder()
+    private static class NimbitsBuilder {
+
+        private String email;
+        private String token;
+        private String instance;
+
+
+        public NimbitsBuilder email(String email) {
+            this.email = email;
+            return this;
+        }
+
+        public NimbitsBuilder token(String token) {
+            this.token = token;
+            return this;
+        }
+
+        public NimbitsBuilder instance(String instance) {
+            this.instance = instance;
+            return this;
+        }
+
+        public Nimbits create() {
+            return new Nimbits(email, token, instance);
+        }
+    }
+
+
 }
-
-
-

@@ -26,4 +26,9 @@ public class NimbitsClientException extends RuntimeException {
     public NimbitsClientException(String message) {
         super(message);
     }
+
+    @Override
+    public synchronized Throwable getCause() {
+        return super.getCause() == null ? new RuntimeException("Unknown Cause") : super.getCause();
+    }
 }

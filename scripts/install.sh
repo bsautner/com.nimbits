@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-export version=4.1.4
+export version=4.1.5
 export tomcat=8.5.13
 
 apt-get update

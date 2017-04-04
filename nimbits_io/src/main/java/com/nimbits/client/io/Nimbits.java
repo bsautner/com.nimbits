@@ -337,7 +337,7 @@ public class Nimbits {
 
             return Optional.of(p);
         } catch (NimbitsClientException ex) {
-            if (ex.getCause() instanceof RetrofitError && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
+            if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
                 return Optional.absent();
             }
             else {
@@ -357,7 +357,7 @@ public class Nimbits {
 
             return Optional.of(p);
         } catch (NimbitsClientException ex) {
-            if (ex.getCause() instanceof RetrofitError && NOT_FOUND == ((RetrofitError) ex.getCause()).getResponse().getStatus()) {
+            if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
                 return Optional.absent();
             } else {
                 throw ex;
@@ -374,7 +374,7 @@ public class Nimbits {
 
                 return Optional.of(p);
             } catch (NimbitsClientException ex) {
-                if (ex.getCause() instanceof RetrofitError && NOT_FOUND == ((RetrofitError) ex.getCause()).getResponse().getStatus()) {
+                if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
                     return Optional.absent();
                 } else {
                     throw ex;
@@ -393,7 +393,7 @@ public class Nimbits {
 
                 return Optional.of(p);
             } catch (NimbitsClientException ex) {
-                if (ex.getCause() instanceof RetrofitError && NOT_FOUND == ((RetrofitError) ex.getCause()).getResponse().getStatus()) {
+                if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
                     return Optional.absent();
                 } else {
                     throw ex;
@@ -411,7 +411,7 @@ public class Nimbits {
 
                 return Optional.of(p);
             } catch (NimbitsClientException ex) {
-                if (ex.getCause() instanceof RetrofitError && NOT_FOUND == ((RetrofitError) ex.getCause()).getResponse().getStatus()) {
+                if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
                     return Optional.absent();
                 } else {
                     throw ex;
@@ -429,7 +429,7 @@ public class Nimbits {
                 return Optional.of(api.findCalculation(name, EntityType.calculation.getCode()));
 
             } catch (NimbitsClientException ex) {
-                if (ex.getCause() instanceof RetrofitError && NOT_FOUND == ((RetrofitError) ex.getCause()).getResponse().getStatus()) {
+                if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
                     return Optional.absent();
                 } else {
                     throw ex;
@@ -446,7 +446,7 @@ public class Nimbits {
 
 
             } catch (NimbitsClientException ex) {
-                if (ex.getCause() instanceof RetrofitError && NOT_FOUND == ((RetrofitError) ex.getCause()).getResponse().getStatus()) {
+                if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
                     return Optional.absent();
                 } else {
                     throw ex;
@@ -464,7 +464,7 @@ public class Nimbits {
 
 
             } catch (NimbitsClientException ex) {
-                if (ex.getCause() instanceof RetrofitError && NOT_FOUND == ((RetrofitError) ex.getCause()).getResponse().getStatus()) {
+                if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
                     return Optional.absent();
                 } else {
                     throw ex;
@@ -500,7 +500,7 @@ public class Nimbits {
 
 
         } catch (NimbitsClientException ex) {
-            if (ex.getCause() instanceof RetrofitError && NOT_FOUND == ((RetrofitError) ex.getCause()).getResponse().getStatus()) {
+            if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
                 return Optional.absent();
             } else {
                 throw ex;

@@ -162,5 +162,13 @@ public class UserEntity extends EntityStore implements User {
         this.password = cryptPassword;
     }
 
+    @Override
+    public String getSessionId() {
+        return "";
+    }
+
+    @Override
+    public void setSessionId(String sessionId) {  }
+
 
 }

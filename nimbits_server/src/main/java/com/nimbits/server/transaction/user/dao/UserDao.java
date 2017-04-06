@@ -20,6 +20,7 @@ package com.nimbits.server.transaction.user.dao;
 import com.google.common.base.Optional;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.PMF;
+import com.nimbits.server.orm.Session;
 import com.nimbits.server.orm.UserEntity;
 import com.nimbits.server.transaction.entity.EntityHelper;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -199,5 +200,43 @@ public class UserDao {
         } finally {
             pm.close();
         }
+    }
+
+    public String startSession(User user) {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+        try {
+            Session session = new Session(user);
+            pm.makePersistent(session);
+            return session.getSessionId();
+        }
+        finally {
+            pm.close();
+        }
+
+    }
+
+    public boolean validSession(User user, String sessionId) {
+
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+
+        try {
+
+            final Query q1 = pm.newQuery(Session.class);
+            q1.setFilter("userId==i && sessionId==s");
+            q1.declareParameters("String i, String s");
+
+
+            q1.setRange(0, 1);
+            final List<Session> c = (List<Session>) q1.execute(user.getId(), sessionId);
+            return ! c.isEmpty();
+        } catch (Throwable throwable) {
+            throw new RuntimeException(throwable);
+
+        } finally {
+            pm.close();
+        }
+
     }
 }

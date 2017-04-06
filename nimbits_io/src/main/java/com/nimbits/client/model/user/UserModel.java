@@ -44,6 +44,9 @@ public class UserModel extends EntityModel implements Serializable, User {
     @Expose
     private String source;
 
+    @Expose
+    private String sessionId;
+
     private String passwordResetToken;
 
     private Long passwordResetTimestamp;
@@ -135,6 +138,16 @@ public class UserModel extends EntityModel implements Serializable, User {
     @Override
     public void setPassword(String cryptPassword) {
         this.password = cryptPassword;
+    }
+
+    @Override
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    @Override
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
 

@@ -105,7 +105,8 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
 
 
             user = userService.createUserRecord(emailAddress, password, UserSource.local);
-
+            String session = userDao.startSession(user);
+            user.setSessionId(session);
             return user;
 
         } else {

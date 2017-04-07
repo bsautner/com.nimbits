@@ -173,14 +173,14 @@ public class UserService {
 
 
 
-    Optional<User> doLogin(String email, String password) {
+    Optional<User> doLogin(String email, String password, boolean rm) {
 
         Optional<User> optional = userDao.getUserByEmail(email);
 
         if (optional.isPresent()) {
             User user = optional.get();
             if (validatePassword(user, password)) {
-                String session = userDao.startSession(user);
+                String session = userDao.startSession(user, rm);
                 user.setSessionId(session);
                 return Optional.of(user);
             } else {

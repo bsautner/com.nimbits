@@ -61,7 +61,7 @@ public class UserModel extends EntityModel implements Serializable, User {
     }
 
 
-    protected UserModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String emailAddress,
+    public UserModel(String id, CommonIdentifier name, String description, EntityType entityType, String parent, String owner, String emailAddress,
                         Boolean isAdmin, String password, String passwordSalt, String source, String passwordResetToken,
                         Long passwordResetTokenTimestamp) {
         super(id, name, description, entityType, parent, owner);
@@ -73,6 +73,7 @@ public class UserModel extends EntityModel implements Serializable, User {
 
         this.passwordResetToken = passwordResetToken;
         this.passwordResetTimestamp = passwordResetTokenTimestamp;
+        this.sessionId = "";
     }
 
     @Override
@@ -142,7 +143,7 @@ public class UserModel extends EntityModel implements Serializable, User {
 
     @Override
     public String getSessionId() {
-        return sessionId;
+        return sessionId == null ? "" : sessionId;
     }
 
     @Override

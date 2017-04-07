@@ -25,6 +25,7 @@ import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -58,7 +59,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
     @Override
     public void onModuleLoad() {
 
-        UserServiceRpcAsync userService = GWT.create(UserServiceRpc.class);
+        final UserServiceRpcAsync userService = GWT.create(UserServiceRpc.class);
 
         userService.getSystemInfo(new AsyncCallback<Map<String, String>>() {
             @Override
@@ -72,12 +73,32 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
                 systemProperties = stringStringMap;
                 final String passwordResetToken = Window.Location.getParameter(Parameters.rToken.getText());
 
-                if (passwordResetToken == null) {
-                    loadLoginView();
+                String session = Cookies.getCookie("session");
+                String email = Cookies.getCookie("email");
 
+                if (session != null && session.length() > 0) {
+                    userService.getSession(email, session, new AsyncCallback<User>() {
+                        @Override
+                        public void onFailure(Throwable throwable) {
+                            Cookies.removeCookie("session");
+                            Cookies.removeCookie("email");
+                            loadLoginView();
+                        }
+
+                        @Override
+                        public void onSuccess(User user) {
+                            loginSuccess(user);
+                        }
+                    });
                 } else {
-                    loadLoginView( );
-                    loginMainPanel.showPasswordReset(passwordResetToken);
+
+                    if (passwordResetToken == null) {
+                        loadLoginView();
+
+                    } else {
+                        loadLoginView();
+                        loginMainPanel.showPasswordReset(passwordResetToken);
+                    }
                 }
             }
         });
@@ -87,6 +108,8 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
 
     private void loadLoginView() {
 
+        Cookies.removeCookie("session");
+        Cookies.removeCookie("email");
 
         Viewport viewport = new Viewport();
 
@@ -138,6 +161,15 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
     @Override
     public void loginSuccess(User user) {
 
+
+        if (user.getSessionId() != null && user.getSessionId().length() > 0) {
+            Cookies.setCookie("session", user.getSessionId());
+            Cookies.setCookie("email", user.getEmail().getValue());
+
+
+        }
+        FeedbackHelper.showInfo("ok!");
+
         loadPortalView(user);
 
     }
@@ -158,6 +190,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
     }
 
     private void loadPortalView(final User user) {
+
         closeLoginWindows();
 
         Viewport viewport = new Viewport();

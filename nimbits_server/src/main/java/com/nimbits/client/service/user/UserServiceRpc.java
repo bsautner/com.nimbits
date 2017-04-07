@@ -25,9 +25,11 @@ import java.util.Map;
 @RemoteServiceRelativePath("rpc/userService")
 public interface UserServiceRpc extends RemoteService {
 
-    User doLogin(final String email, final String password);
+    User doLogin(final String email, final String password, final boolean rm);
 
-    User register(final String email, final String password);
+    User getSession(final String email, final String sessionId);
+
+    User register(final String email, final String password, final boolean rm);
 
     User resetPassword(String email, String password, String recoveryToken);
 

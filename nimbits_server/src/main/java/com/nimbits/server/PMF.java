@@ -40,7 +40,7 @@ public class PMF {
             properties.setProperty("org.jpox.identifier.case", "PreserveCase");
             properties.setProperty("datanucleus.schema.autoCreateAll", "true");
             properties.setProperty("datanucleus.query.sql.allowAll", "true");
-            properties.setProperty("org.jpox.autoCreateSchema", "true");
+            properties.setProperty("datanucleus.schema.autoCreateTables", "true");
             pmf =JDOHelper.getPersistenceManagerFactory(properties);
 
         }

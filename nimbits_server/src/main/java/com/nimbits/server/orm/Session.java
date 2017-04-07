@@ -21,11 +21,16 @@ public class Session {
     @Persistent
     private String sessionId;
 
+    @Persistent
+    private Boolean rememberMe;
 
-    public Session(User user) {
+
+    public Session(User user, boolean rememberMe) {
         this.userId = user.getId();
         this.timestamp = System.currentTimeMillis();
         this.sessionId = UUID.randomUUID().toString();
+        this.rememberMe = rememberMe;
+
     }
 
 
@@ -39,5 +44,9 @@ public class Session {
 
     public String getSessionId() {
         return sessionId;
+    }
+
+    public Boolean getRememberMe() {
+        return rememberMe;
     }
 }

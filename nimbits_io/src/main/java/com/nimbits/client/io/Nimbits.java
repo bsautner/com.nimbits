@@ -264,7 +264,6 @@ public class Nimbits {
 
     }
 
-
     public Sync addSync(Entity parent, Sync e) {
         return api.addSync(parent.getId(), e);
 
@@ -274,7 +273,6 @@ public class Nimbits {
         return api.addCalc(parent.getId(), e);
 
     }
-
 
     public Summary addSummary(Entity parent, Summary e) {
         return api.addSummary(parent.getId(), e);
@@ -366,116 +364,115 @@ public class Nimbits {
         }
     }
 
-        public Optional<WebHook> findWebHook(String name) {
+
+    public Optional<WebHook> findWebHook(String name) {
 
 
-            try {
-                WebHook p = api.findWebHook(name, EntityType.webhook.getCode());
+        try {
+            WebHook p = api.findWebHook(name, EntityType.webhook.getCode());
 
-                return Optional.of(p);
-            } catch (NimbitsClientException ex) {
-                if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
-                    return Optional.absent();
-                } else {
-                    throw ex;
-                }
-
-            }
-
-
-        }
-
-        public Optional<Subscription> findSubscription(String name) {
-
-
-            try {
-                Subscription p = api.findSubscription(name, EntityType.subscription.getCode());
-
-                return Optional.of(p);
-            } catch (NimbitsClientException ex) {
-                if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
-                    return Optional.absent();
-                } else {
-                    throw ex;
-                }
-
-            }
-
-
-        }
-
-        public Optional<Sync> findSync(String name) {
-
-            try {
-                Sync p = api.findSync(name, EntityType.sync.getCode());
-
-                return Optional.of(p);
-            } catch (NimbitsClientException ex) {
-                if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
-                    return Optional.absent();
-                } else {
-                    throw ex;
-                }
-
+            return Optional.of(p);
+        } catch (NimbitsClientException ex) {
+            if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
+                return Optional.absent();
+            } else {
+                throw ex;
             }
 
         }
 
-        public Optional<Calculation> findCalculation(String name) {
+
+    }
+
+    public Optional<Subscription> findSubscription(String name) {
 
 
+        try {
+            Subscription p = api.findSubscription(name, EntityType.subscription.getCode());
 
-            try {
-                return Optional.of(api.findCalculation(name, EntityType.calculation.getCode()));
-
-            } catch (NimbitsClientException ex) {
-                if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
-                    return Optional.absent();
-                } else {
-                    throw ex;
-                }
-
+            return Optional.of(p);
+        } catch (NimbitsClientException ex) {
+            if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
+                return Optional.absent();
+            } else {
+                throw ex;
             }
 
         }
 
-        public Optional<Instance> findInstance(String name) {
 
-            try {
-                return Optional.of(api.findInstance(name, EntityType.instance.getCode()));
+    }
 
+    public Optional<Sync> findSync(String name) {
 
-            } catch (NimbitsClientException ex) {
-                if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
-                    return Optional.absent();
-                } else {
-                    throw ex;
-                }
+        try {
+            Sync p = api.findSync(name, EntityType.sync.getCode());
 
+            return Optional.of(p);
+        } catch (NimbitsClientException ex) {
+            if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
+                return Optional.absent();
+            } else {
+                throw ex;
             }
 
         }
 
-        public Optional<Summary> findSummary(String name) {
+    }
+
+    public Optional<Calculation> findCalculation(String name) {
 
 
-            try {
-                return Optional.of(api.findSummary(name, EntityType.summary.getCode()));
 
+        try {
+            return Optional.of(api.findCalculation(name, EntityType.calculation.getCode()));
 
-            } catch (NimbitsClientException ex) {
-                if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
-                    return Optional.absent();
-                } else {
-                    throw ex;
-                }
-
+        } catch (NimbitsClientException ex) {
+            if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
+                return Optional.absent();
+            } else {
+                throw ex;
             }
 
+        }
+
+    }
+
+    public Optional<Instance> findInstance(String name) {
+
+        try {
+            return Optional.of(api.findInstance(name, EntityType.instance.getCode()));
+
+
+        } catch (NimbitsClientException ex) {
+            if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
+                return Optional.absent();
+            } else {
+                throw ex;
+            }
+
+        }
+
+    }
+
+    public Optional<Summary> findSummary(String name) {
+
+
+        try {
+            return Optional.of(api.findSummary(name, EntityType.summary.getCode()));
+
+
+        } catch (NimbitsClientException ex) {
+            if (ex.getCause() instanceof RetrofitError && ((RetrofitError)ex.getCause()).getResponse() != null && NOT_FOUND == ((RetrofitError)ex.getCause()).getResponse().getStatus()) {
+                return Optional.absent();
+            } else {
+                throw ex;
+            }
 
         }
 
 
+    }
 
     public Point getPoint(String uuid) {
         return api.getPoint(uuid);
@@ -510,6 +507,9 @@ public class Nimbits {
 
     }
 
+    public Entity updateEntitySync(Entity entity) {
+        return api.updateEntitySync(entity);
+    }
 
     public void updateEntity(Entity entity) {
         api.updateEntity(entity.getId(), entity, new Callback<Void>() {

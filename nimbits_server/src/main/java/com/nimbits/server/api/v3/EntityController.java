@@ -232,6 +232,31 @@ public class EntityController extends RestAPI {
     }
 
 
+    @RequestMapping(value = "/sync/{uuid}", method = RequestMethod.PUT)
+    public ResponseEntity<String> putEntitySync(
+            @RequestHeader(name = AUTH_HEADER) String authorization,
+            @RequestBody String json) {
+
+
+        User user = userService.getUser(authorization);
+        EntityType type = getEntityType(json);
+        Entity entity = (Entity) gson.fromJson(json, type.getClz());
+
+        boolean success = entityDao.updateEntity(user, entity);
+        if (success) {
+            Optional<Entity> o = entityDao.getEntity(user, entity.getId(), type);
+            if (o.isPresent()) {
+                String r = gson.toJson(o.get());
+                return new ResponseEntity<>(r, HttpStatus.OK);
+            }
+        }
+
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+
+    }
+
+
     private EntityType getEntityType(String json) {
 
         Map jsonMap = gson.fromJson(json, Map.class);

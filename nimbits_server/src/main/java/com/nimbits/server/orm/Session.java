@@ -13,13 +13,15 @@ import java.util.UUID;
 public class Session {
 
     @Persistent
+    private String sessionId;
+
+    @Persistent
     private String userId;
 
     @Persistent
     private Long timestamp;
 
-    @Persistent
-    private String sessionId;
+
 
     @Persistent
     private Boolean rememberMe;

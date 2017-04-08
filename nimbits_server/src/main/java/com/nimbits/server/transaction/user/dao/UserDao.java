@@ -271,4 +271,33 @@ public class UserDao {
 
 
     }
+
+    public void deleteSession(String session) {
+        final PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+        String query = "DELETE FROM nimbits.SESSION where SESSIONID=\"" + session + "\";";
+
+        Query q = pm.newQuery("javax.jdo.query.SQL",query);
+
+
+        Transaction tx = pm.currentTransaction();
+
+        try {
+
+            tx.begin();
+            q.execute();
+            tx.commit();
+
+        }
+
+        finally {
+
+            if (tx.isActive())  {
+                tx.rollback();
+            }
+
+
+        }
+        pm.close();
+    }
 }

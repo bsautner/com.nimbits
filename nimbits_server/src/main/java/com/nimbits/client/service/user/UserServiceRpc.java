@@ -33,7 +33,7 @@ public interface UserServiceRpc extends RemoteService {
 
     User resetPassword(String email, String password, String recoveryToken);
 
-    void logout();
+    void logout(String session);
 
     void doForgotPassword(String value) throws Exception;
 

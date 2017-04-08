@@ -58,7 +58,8 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
     private String refresh;
 
     @Override
-    public void logout() {
+    public void logout(String session) {
+        userDao.deleteSession(session);
         if (getThreadLocalRequest().getSession() != null) {
             getThreadLocalRequest().getSession().invalidate();
         }

@@ -27,7 +27,7 @@ public interface UserServiceRpcAsync {
 
     void register(final String email, final String password, final boolean rm, final AsyncCallback<User> async);
 
-    void logout(AsyncCallback<Void> asyncCallback);
+    void logout(String sesssion, AsyncCallback<Void> asyncCallback);
 
     void doForgotPassword(String value, AsyncCallback<Void> asyncCallback) throws Exception;
 

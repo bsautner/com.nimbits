@@ -47,8 +47,10 @@ import java.util.Map;
 public class NimbitsEntryPoint extends NavigationEventProvider implements EntryPoint, LoginListener {
 
     private static final String MAIN = "main";
+    private static final String SESSION = "session";
+    private static final String EMAIL = "email";
 
-    private static final String HEIGHT = "100%";
+    //private static final String HEIGHT = "100%";
 
     private LoginMainPanel loginMainPanel;
 
@@ -73,15 +75,15 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
                 systemProperties = stringStringMap;
                 final String passwordResetToken = Window.Location.getParameter(Parameters.rToken.getText());
 
-                String session = Cookies.getCookie("session");
-                String email = Cookies.getCookie("email");
+                String session = Cookies.getCookie(SESSION);
+                String email = Cookies.getCookie(EMAIL);
 
                 if (session != null && session.length() > 0) {
                     userService.getSession(email, session, new AsyncCallback<User>() {
                         @Override
                         public void onFailure(Throwable throwable) {
-                            Cookies.removeCookie("session");
-                            Cookies.removeCookie("email");
+                            Cookies.removeCookie(SESSION);
+                            Cookies.removeCookie(EMAIL);
                             loadLoginView();
                         }
 
@@ -108,8 +110,8 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
 
     private void loadLoginView() {
 
-        Cookies.removeCookie("session");
-        Cookies.removeCookie("email");
+        Cookies.removeCookie(SESSION);
+        Cookies.removeCookie(EMAIL);
 
         Viewport viewport = new Viewport();
 
@@ -121,15 +123,15 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
 
 
         ContentPanel center = new ContentPanel();
-        center.setHeadingHtml("<a href=\"http://www.nimbits.com\">Nimbits</a> Console Login");
+      //  center.setHeadingHtml("<a href=\"http://www.nimbits.com\">Nimbits</a> Console Login");
         center.setScrollMode(Style.Scroll.AUTOX);
 
         final BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
-        centerData.setMargins(new Margins(0, 0, 5, 0));
+        centerData.setMargins(new Margins(0, 0, 0, 0));
 
         center.add(loginMainPanel);
         viewport.add(center, centerData);
-        viewport.setHeight(HEIGHT);
+        //viewport.setHeight(HEIGHT);
         RootPanel.get(MAIN).clear();
         RootPanel.get(MAIN).add(viewport);
         doLayout();
@@ -163,12 +165,11 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
 
 
         if (user.getSessionId() != null && user.getSessionId().length() > 0) {
-            Cookies.setCookie("session", user.getSessionId());
-            Cookies.setCookie("email", user.getEmail().getValue());
+            Cookies.setCookie(SESSION, user.getSessionId());
+            Cookies.setCookie(EMAIL, user.getEmail().getValue());
 
 
         }
-        FeedbackHelper.showInfo("ok!");
 
         loadPortalView(user);
 
@@ -201,18 +202,19 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
         String r = systemProperties.get("refresh");
         int refreshRate = r == null ? 5000 : Integer.valueOf(r);
 
-        CenterPanel centerPanel = new CenterPanel(user, refreshRate);
+        CenterPanel centerPanel = new CenterPanel(this, user, refreshRate);
 
 
         ContentPanel center = new ContentPanel();
+        center.setHeaderVisible(false);
 
-        center.setHeadingHtml(
-                "<a href=\"http://www.nimbits.com\">Nimbits</a>&nbsp;&nbsp;" + systemProperties.get("version"));
+//        center.setHeadingHtml(
+//                "<a href=\"http://www.nimbits.com\">Nimbits</a>&nbsp;&nbsp;" + systemProperties.get("version"));
 
         center.setScrollMode(Style.Scroll.AUTOX);
 
         final BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
-        centerData.setMargins(new Margins(0, 0, 5, 0));
+        centerData.setMargins(new Margins(0, 0, 0, 0));
 
 
         center.add(centerPanel);
@@ -221,7 +223,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
         viewport.add(center, centerData);
 
 
-        viewport.setHeight(HEIGHT);
+       // viewport.setHeight(HEIGHT);
         RootPanel.get(MAIN).clear();
         RootPanel.get(MAIN).add(viewport);
         doLayout();

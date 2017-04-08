@@ -22,6 +22,7 @@ import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.util.Padding;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.form.CheckBox;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.extjs.gxt.ui.client.widget.layout.BoxLayout;
@@ -68,7 +69,7 @@ public class LoginRegisterPanel extends AbstractLoginPanel {
     }
 
 
-    public void setRecoveryToken(String recoveryToken) {
+    void setRecoveryToken(String recoveryToken) {
         this.recoveryToken = recoveryToken;
         emailField.setFieldLabel("Verify Email");
     }
@@ -107,10 +108,12 @@ public class LoginRegisterPanel extends AbstractLoginPanel {
         controlButtons.add(cancel, layoutData);
         controlButtons.add(register, layoutData);
 
+        final CheckBox rm = rmCheckbox();
 
         simple.add(emailField);
         simple.add(password);
         simple.add(password2);
+        simple.add(rm);
         simple.add(controlButtons);
 
         simple.add(tosHtml);
@@ -136,7 +139,7 @@ public class LoginRegisterPanel extends AbstractLoginPanel {
                 } else {
                     try {
                         if (recoveryToken == null) {
-                            userService.register(e, p1, new AsyncCallback<User>() {
+                            userService.register(e, p1, rm.getValue(), new AsyncCallback<User>() {
                                 @Override
                                 public void onFailure(Throwable throwable) {
                                     FeedbackHelper.showError(throwable);

@@ -20,6 +20,7 @@ package com.nimbits.server.transaction.user.dao;
 import com.google.common.base.Optional;
 import com.nimbits.client.model.user.User;
 import com.nimbits.server.PMF;
+import com.nimbits.server.orm.Session;
 import com.nimbits.server.orm.UserEntity;
 import com.nimbits.server.transaction.entity.EntityHelper;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -40,7 +41,6 @@ public class UserDao {
 
     @Autowired
     public UserDao(PMF pmf) {
-       // SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
         this.persistenceManagerFactory = pmf.get();
     }
 
@@ -189,8 +189,7 @@ public class UserDao {
             final List<UserEntity> c = (List<UserEntity>) q1.execute(true);
             if (c.isEmpty()) {
                 throw new RuntimeException("Missing System Admin User");
-            }
-            else {
+            } else {
                 return pm.detachCopy(c.get(0));
             }
         } catch (Throwable throwable) {
@@ -199,5 +198,106 @@ public class UserDao {
         } finally {
             pm.close();
         }
+    }
+
+    public String startSession(User user, boolean rm) {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+        try {
+            Session session = new Session(user, rm);
+            pm.makePersistent(session);
+            return session.getSessionId();
+        } finally {
+            pm.close();
+        }
+
+    }
+
+    public boolean validSession(User user, String sessionId) {
+
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+
+        try {
+
+            final Query q1 = pm.newQuery(Session.class);
+            q1.setFilter("userId==i && sessionId==s");
+            q1.declareParameters("String i, String s");
+
+
+            q1.setRange(0, 1);
+            final List<Session> c = (List<Session>) q1.execute(user.getId(), sessionId);
+            return !c.isEmpty();
+        } catch (Throwable throwable) {
+            throw new RuntimeException(throwable);
+
+        } finally {
+            pm.close();
+        }
+
+    }
+
+    public Optional<User> getUserBySession(String email, String sessionId) {
+        PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+        Optional<User> userOptional = getUserByEmail(email);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            try {
+
+                final Query q1 = pm.newQuery(Session.class);
+                q1.setFilter("userId==i && sessionId==s");
+                q1.declareParameters("String i, String s");
+                q1.setRange(0, 1);
+                final List<Session> sessionList = (List<Session>) q1.execute(user.getId(), sessionId);
+                if (sessionList.isEmpty()) {
+                    return Optional.absent();
+                } else {
+                    Session session = sessionList.get(0);
+                    user.setSessionId(session.getSessionId());
+                    return Optional.of(user);
+                }
+            } catch (Throwable throwable) {
+                throw new RuntimeException(throwable);
+
+            } finally {
+                pm.close();
+            }
+        } else {
+            return Optional.absent();
+        }
+
+
+
+    }
+
+    public void deleteSession(String session) {
+        final PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+        String query = "DELETE FROM nimbits.SESSION where SESSIONID=\"" + session + "\";";
+
+        Query q = pm.newQuery("javax.jdo.query.SQL",query);
+
+
+        Transaction tx = pm.currentTransaction();
+
+        try {
+
+            tx.begin();
+            q.execute();
+            tx.commit();
+
+        }
+
+        finally {
+
+            if (tx.isActive())  {
+                tx.rollback();
+            }
+
+
+        }
+        pm.close();
     }
 }

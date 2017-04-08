@@ -19,6 +19,7 @@ package com.nimbits.client.ui.panels;
 import com.extjs.gxt.ui.client.widget.Html;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.VerticalPanel;
+import com.extjs.gxt.ui.client.widget.form.CheckBox;
 import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.nimbits.client.ui.panels.login.LoginListener;
 
@@ -46,5 +47,13 @@ public abstract class AbstractLoginPanel extends LayoutContainer {
     public void setEmail(String email) {
         emailField.setValue(email);
         emailField.setFieldLabel("Email");
+    }
+
+    protected CheckBox rmCheckbox() {
+        CheckBox rm = new CheckBox();
+        rm.setBoxLabel("Remember me on this device");
+        rm.setLabelSeparator("");
+        rm.setValue(true);
+        return rm;
     }
 }

@@ -24,9 +24,12 @@ import com.extjs.gxt.ui.client.widget.layout.FlowData;
 import com.extjs.gxt.ui.client.widget.layout.HBoxLayout;
 import com.extjs.gxt.ui.client.widget.layout.RowLayout;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Element;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
+import com.google.gwt.user.client.ui.MenuBar;
 import com.nimbits.client.enums.EntityType;
 import com.nimbits.client.model.GxtModel;
 import com.nimbits.client.model.TreeModel;
@@ -34,19 +37,24 @@ import com.nimbits.client.model.entity.Entity;
 import com.nimbits.client.model.user.User;
 import com.nimbits.client.service.entity.EntityServiceRpc;
 import com.nimbits.client.service.entity.EntityServiceRpcAsync;
+import com.nimbits.client.service.user.UserServiceRpc;
+import com.nimbits.client.service.user.UserServiceRpcAsync;
 import com.nimbits.client.ui.helper.FeedbackHelper;
+import com.nimbits.client.ui.panels.login.LoginListener;
 
 
 public class CenterPanel extends NavigationEventProvider implements BasePanel.PanelEvent {
 
-    private NavigationPanel navigationPanel;
-
     private final User user;
     private int refreshRate;
+    private static final String SESSION = "session";
+    private static final String EMAIL = "email";
+    private final LoginListener loginListener;
 
-    public CenterPanel(final User user, int refreshRate ) {
+    public CenterPanel(LoginListener loginListener, final User user, int refreshRate ) {
         this.user = user;
         this.refreshRate = refreshRate;
+        this.loginListener = loginListener;
 
     }
 
@@ -85,10 +93,70 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
         panel.setHeaderVisible(false);
 
         panel.setFrame(false);
-        panel.setBodyBorder(true);
-        panel.setCollapsible(true);
+        panel.setBodyBorder(false);
+        panel.setCollapsible(false);
 
-        navigationPanel = createNavigationPanel();
+
+        Command cmd = new Command() {
+            public void execute() {
+                Window.alert("You selected a menu item!");
+            }
+        };
+
+        Command logoutCommand = new Command() {
+            public void execute() {
+
+
+                UserServiceRpcAsync service = GWT.create(UserServiceRpc.class);
+                service.logout(Cookies.getCookie(SESSION), new AsyncCallback<Void>() {
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        FeedbackHelper.showError(throwable);
+                    }
+
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Cookies.removeCookie(SESSION);
+                        Cookies.removeCookie(EMAIL);
+                        loginListener.onLogout();
+
+                    }
+                });
+
+            }
+        };
+
+        // Make some sub-menus that we will cascade from the top menu.
+        MenuBar optionsMenu = new MenuBar(true);
+
+        optionsMenu.addItem("Logout", logoutCommand);
+      //  fooMenu.addItem("foo", cmd);
+      //  fooMenu.addItem("menu", cmd);
+
+        MenuBar barMenu = new MenuBar(true);
+        barMenu.addItem("the", cmd);
+        barMenu.addItem("bar", cmd);
+        barMenu.addItem("menu", cmd);
+
+        MenuBar bazMenu = new MenuBar(true);
+        bazMenu.addItem("the", cmd);
+        bazMenu.addItem("baz", cmd);
+        bazMenu.addItem("menu", cmd);
+
+        // Make a new menu bar, adding a few cascading menus to it.
+        MenuBar menu = new MenuBar();
+        menu.addItem("Options", optionsMenu);
+      //  menu.addItem("bar", barMenu);
+        //menu.addItem("baz", bazMenu);
+
+        // Add it to the root panel.
+       // RootPanel.get().add(menu);
+
+
+        panel.add(menu);
+
+
+        NavigationPanel navigationPanel = createNavigationPanel();
         navigationPanel.setLayout(new FillLayout());
         navigationPanel.setHeight(Window.getClientHeight());
         panel.add(navigationPanel);

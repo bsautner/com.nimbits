@@ -22,6 +22,7 @@ import com.extjs.gxt.ui.client.util.Margins;
 import com.extjs.gxt.ui.client.util.Padding;
 import com.extjs.gxt.ui.client.widget.LayoutContainer;
 import com.extjs.gxt.ui.client.widget.button.Button;
+import com.extjs.gxt.ui.client.widget.form.CheckBox;
 import com.extjs.gxt.ui.client.widget.form.FormPanel;
 import com.extjs.gxt.ui.client.widget.form.TextField;
 import com.extjs.gxt.ui.client.widget.layout.BoxLayout;
@@ -97,8 +98,10 @@ public class LoginPanel extends AbstractLoginPanel {
         controlButtons.add(register, layoutData);
 
 
+        final CheckBox rm = rmCheckbox();
         simple.add(email);
         simple.add(password);
+        simple.add(rm);
         simple.add(controlButtons);
 
         simple.add(tosHtml);
@@ -108,7 +111,7 @@ public class LoginPanel extends AbstractLoginPanel {
             @Override
             public void componentSelected(ButtonEvent buttonEvent) {
                 try {
-                    userService.doLogin(email.getValue(), password.getValue(), new AsyncCallback<User>() {
+                    userService.doLogin(email.getValue(), password.getValue(), rm.getValue(), new AsyncCallback<User>() {
                         @Override
                         public void onFailure(Throwable throwable) {
                             FeedbackHelper.showError(throwable);

@@ -58,7 +58,8 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
     private String refresh;
 
     @Override
-    public void logout() {
+    public void logout(String session) {
+        userDao.deleteSession(session);
         if (getThreadLocalRequest().getSession() != null) {
             getThreadLocalRequest().getSession().invalidate();
         }
@@ -73,9 +74,9 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
     }
 
     @Override
-    public User doLogin(String email, String password) {
+    public User doLogin(String email, String password, boolean rm) {
 
-        Optional<User> userOptional =  userService.doLogin(email, password);
+        Optional<User> userOptional =  userService.doLogin(email, password, rm);
         if (userOptional.isPresent()) {
             return userOptional.get();
         }
@@ -83,6 +84,12 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
             return null;
         }
 
+    }
+
+    @Override
+    public User getSession(String email, String sessionId) {
+        Optional<User> userOptional = userDao.getUserBySession(email, sessionId);
+        return userOptional.isPresent() ? userOptional.get() : null;
     }
 
     private boolean userExists(String email) {
@@ -97,7 +104,7 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
     }
 
     @Override
-    public User register(String email, String password) {
+    public User register(String email, String password, boolean rm) {
         EmailAddress emailAddress = CommonFactory.createEmailAddress(email);
         User user;
 
@@ -105,7 +112,8 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
 
 
             user = userService.createUserRecord(emailAddress, password, UserSource.local);
-
+            String session = userDao.startSession(user, rm);
+            user.setSessionId(session);
             return user;
 
         } else {

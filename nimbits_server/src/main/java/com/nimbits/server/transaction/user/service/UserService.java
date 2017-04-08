@@ -138,8 +138,13 @@ public class UserService {
         String salt = user.getPasswordSalt();
         String challenge = DigestUtils.sha512Hex(password + salt);
 
-        return !StringUtils.isEmpty(password) && storedEncodedPassword.equals(challenge);
+        boolean validPassword =  !StringUtils.isEmpty(password) && storedEncodedPassword.equals(challenge);
+        boolean validSession = false;
+        if (! validPassword) {
+            validSession = userDao.validSession(user, password);
+        }
 
+        return validPassword || validSession;
 
     }
 
@@ -166,25 +171,17 @@ public class UserService {
 
     }
 
-    public boolean isAdmin(String authString) {
-        User admin = userDao.getAdmin();
 
-        Optional<Credentials> credentials = credentialsWithBasicAuthentication(authString);
-        if (credentials.isPresent()) {
-            boolean valid = validatePassword(admin, credentials.get().getPassword());
-            return credentials.isPresent() && StringUtils.equals(credentials.get().getLogin(), admin.getName().getValue()) && valid;
-        }
-        else {
-            return false;
-        }
-    }
 
-    Optional<User> doLogin(String email, String token) {
+    Optional<User> doLogin(String email, String password, boolean rm) {
 
         Optional<User> optional = userDao.getUserByEmail(email);
+
         if (optional.isPresent()) {
             User user = optional.get();
-            if (validatePassword(user, token)) {
+            if (validatePassword(user, password)) {
+                String session = userDao.startSession(user, rm);
+                user.setSessionId(session);
                 return Optional.of(user);
             } else {
                 return Optional.absent();

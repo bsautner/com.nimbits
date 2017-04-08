@@ -23,11 +23,11 @@ import java.util.Map;
 
 public interface UserServiceRpcAsync {
 
-    void doLogin(final String email, final String password, final AsyncCallback<User> async);
+    void doLogin(final String email, final String password, final boolean rm, final AsyncCallback<User> async);
 
-    void register(final String email, final String password, final AsyncCallback<User> async);
+    void register(final String email, final String password, final boolean rm, final AsyncCallback<User> async);
 
-    void logout(AsyncCallback<Void> asyncCallback);
+    void logout(String sesssion, AsyncCallback<Void> asyncCallback);
 
     void doForgotPassword(String value, AsyncCallback<Void> asyncCallback) throws Exception;
 
@@ -36,4 +36,6 @@ public interface UserServiceRpcAsync {
 
     void getSystemInfo(AsyncCallback<Map<String, String>> async);
 
+
+    void getSession(final String email, final String sessionId, AsyncCallback<User> async);
 }

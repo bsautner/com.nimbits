@@ -25,6 +25,7 @@ import com.extjs.gxt.ui.client.widget.layout.BorderLayout;
 import com.extjs.gxt.ui.client.widget.layout.BorderLayoutData;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
+import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -46,8 +47,10 @@ import java.util.Map;
 public class NimbitsEntryPoint extends NavigationEventProvider implements EntryPoint, LoginListener {
 
     private static final String MAIN = "main";
+    private static final String SESSION = "session";
+    private static final String EMAIL = "email";
 
-    private static final String HEIGHT = "100%";
+    //private static final String HEIGHT = "100%";
 
     private LoginMainPanel loginMainPanel;
 
@@ -58,7 +61,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
     @Override
     public void onModuleLoad() {
 
-        UserServiceRpcAsync userService = GWT.create(UserServiceRpc.class);
+        final UserServiceRpcAsync userService = GWT.create(UserServiceRpc.class);
 
         userService.getSystemInfo(new AsyncCallback<Map<String, String>>() {
             @Override
@@ -72,12 +75,32 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
                 systemProperties = stringStringMap;
                 final String passwordResetToken = Window.Location.getParameter(Parameters.rToken.getText());
 
-                if (passwordResetToken == null) {
-                    loadLoginView();
+                String session = Cookies.getCookie(SESSION);
+                String email = Cookies.getCookie(EMAIL);
 
+                if (session != null && session.length() > 0) {
+                    userService.getSession(email, session, new AsyncCallback<User>() {
+                        @Override
+                        public void onFailure(Throwable throwable) {
+                            Cookies.removeCookie(SESSION);
+                            Cookies.removeCookie(EMAIL);
+                            loadLoginView();
+                        }
+
+                        @Override
+                        public void onSuccess(User user) {
+                            loginSuccess(user);
+                        }
+                    });
                 } else {
-                    loadLoginView( );
-                    loginMainPanel.showPasswordReset(passwordResetToken);
+
+                    if (passwordResetToken == null) {
+                        loadLoginView();
+
+                    } else {
+                        loadLoginView();
+                        loginMainPanel.showPasswordReset(passwordResetToken);
+                    }
                 }
             }
         });
@@ -87,6 +110,8 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
 
     private void loadLoginView() {
 
+        Cookies.removeCookie(SESSION);
+        Cookies.removeCookie(EMAIL);
 
         Viewport viewport = new Viewport();
 
@@ -98,15 +123,15 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
 
 
         ContentPanel center = new ContentPanel();
-        center.setHeadingHtml("<a href=\"http://www.nimbits.com\">Nimbits</a> Console Login");
+      //  center.setHeadingHtml("<a href=\"http://www.nimbits.com\">Nimbits</a> Console Login");
         center.setScrollMode(Style.Scroll.AUTOX);
 
         final BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
-        centerData.setMargins(new Margins(0, 0, 5, 0));
+        centerData.setMargins(new Margins(0, 0, 0, 0));
 
         center.add(loginMainPanel);
         viewport.add(center, centerData);
-        viewport.setHeight(HEIGHT);
+        //viewport.setHeight(HEIGHT);
         RootPanel.get(MAIN).clear();
         RootPanel.get(MAIN).add(viewport);
         doLayout();
@@ -138,6 +163,14 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
     @Override
     public void loginSuccess(User user) {
 
+
+        if (user.getSessionId() != null && user.getSessionId().length() > 0) {
+            Cookies.setCookie(SESSION, user.getSessionId());
+            Cookies.setCookie(EMAIL, user.getEmail().getValue());
+
+
+        }
+
         loadPortalView(user);
 
     }
@@ -158,6 +191,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
     }
 
     private void loadPortalView(final User user) {
+
         closeLoginWindows();
 
         Viewport viewport = new Viewport();
@@ -168,18 +202,19 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
         String r = systemProperties.get("refresh");
         int refreshRate = r == null ? 5000 : Integer.valueOf(r);
 
-        CenterPanel centerPanel = new CenterPanel(user, refreshRate);
+        CenterPanel centerPanel = new CenterPanel(this, user, refreshRate);
 
 
         ContentPanel center = new ContentPanel();
+        center.setHeaderVisible(false);
 
-        center.setHeadingHtml(
-                "<a href=\"http://www.nimbits.com\">Nimbits</a>&nbsp;&nbsp;" + systemProperties.get("version"));
+//        center.setHeadingHtml(
+//                "<a href=\"http://www.nimbits.com\">Nimbits</a>&nbsp;&nbsp;" + systemProperties.get("version"));
 
         center.setScrollMode(Style.Scroll.AUTOX);
 
         final BorderLayoutData centerData = new BorderLayoutData(LayoutRegion.CENTER);
-        centerData.setMargins(new Margins(0, 0, 5, 0));
+        centerData.setMargins(new Margins(0, 0, 0, 0));
 
 
         center.add(centerPanel);
@@ -188,7 +223,7 @@ public class NimbitsEntryPoint extends NavigationEventProvider implements EntryP
         viewport.add(center, centerData);
 
 
-        viewport.setHeight(HEIGHT);
+       // viewport.setHeight(HEIGHT);
         RootPanel.get(MAIN).clear();
         RootPanel.get(MAIN).add(viewport);
         doLayout();

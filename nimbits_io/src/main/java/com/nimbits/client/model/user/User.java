@@ -51,4 +51,10 @@ public interface User extends Entity, Serializable {
 
     void setPassword(String cryptPassword);
 
+    String getSessionId();
+
+    void setSessionId(String sessionId);
+
+
+
 }

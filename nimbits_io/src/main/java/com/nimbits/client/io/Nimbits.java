@@ -508,7 +508,7 @@ public class Nimbits {
     }
 
     public Entity updateEntitySync(Entity entity) {
-        return api.updateEntitySync(entity);
+        return api.updateEntitySync(entity.getId(), entity);
     }
 
     public void updateEntity(Entity entity) {

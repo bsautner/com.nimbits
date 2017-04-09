@@ -2,11 +2,11 @@ package com.nimbits.server.orm;
 
 
 import com.nimbits.client.model.user.User;
+import org.apache.commons.lang3.RandomStringUtils;
 
 import javax.jdo.annotations.Cacheable;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
-import java.util.UUID;
 
 @Cacheable("false")
 @PersistenceCapable
@@ -30,7 +30,7 @@ public class Session {
     public Session(User user, boolean rememberMe) {
         this.userId = user.getId();
         this.timestamp = System.currentTimeMillis();
-        this.sessionId = UUID.randomUUID().toString();
+        this.sessionId = RandomStringUtils.randomAscii(255);
         this.rememberMe = rememberMe;
 
     }

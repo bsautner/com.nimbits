@@ -275,9 +275,10 @@ public class UserDao {
     public void deleteSession(String session) {
         final PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
 
-        String query = "DELETE FROM nimbits.SESSION where SESSIONID=\"" + session + "\";";
+        String query = "DELETE FROM nimbits.SESSION where SESSIONID=?";
 
         Query q = pm.newQuery("javax.jdo.query.SQL",query);
+
 
 
         Transaction tx = pm.currentTransaction();
@@ -285,7 +286,7 @@ public class UserDao {
         try {
 
             tx.begin();
-            q.execute();
+            q.execute(session);
             tx.commit();
 
         }

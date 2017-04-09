@@ -190,5 +190,5 @@ public interface RestClient {
     Summary findSummary(@Query("name") String entityName, @Query("type") int entityType);
 
     @PUT(API + "/sync/{uuid}")
-    Entity updateEntitySync(@Body Entity entity);
+    Entity updateEntitySync(@Path("uuid") String uuid, @Body Entity entity);
 }

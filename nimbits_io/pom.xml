@@ -19,7 +19,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>nimbits_io</artifactId>
-    <version>4.1.7-SNAPSHOT</version>
+    <version>4.1.7</version>
 
     <name>Nimbits IO</name>
     <description>Nimbits Client Input Output Library</description>
@@ -28,7 +28,7 @@
     <parent>
         <groupId>com.nimbits</groupId>
         <artifactId>nimbits-parent</artifactId>
-        <version>4.1.7-SNAPSHOT</version>
+        <version>4.1.7</version>
     </parent>
 
 

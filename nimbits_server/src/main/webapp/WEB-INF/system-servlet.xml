@@ -9,20 +9,14 @@
 
 
 
-    <context:component-scan base-package="com.nimbits.server.api.v3.*" />
+    <context:component-scan base-package="com.nimbits.server.api.system.*" />
 
     <context:annotation-config/>
     <tx:annotation-driven/>
     <mvc:annotation-driven />
 
 
-    <bean id="entityController"  class="com.nimbits.server.api.v3.EntityController" />
-
-    <bean id="userController"  class="com.nimbits.server.api.v3.UserController" />
-
-    <bean id="snapshotController"  class="com.nimbits.server.api.v3.SnapshotController" />
-
-    <bean id="seriesController"  class="com.nimbits.server.api.v3.SeriesController" />
+    <bean id="statusController" class="com.nimbits.server.api.system.StatusController"/>
 
 
 </beans>

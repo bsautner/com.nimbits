@@ -45,18 +45,16 @@
         <url-pattern>/service/v3/rest/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>system</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <servlet-mapping>
 
-
-    <filter>
-        <filter-name>socketFilter</filter-name>
-        <filter-class>com.nimbits.server.api.filter.SocketFilter</filter-class>
-    </filter>
-    <filter-mapping>
-        <filter-name>socketFilter</filter-name>
-        <url-pattern>/socket/*</url-pattern>
-
-    </filter-mapping>
-
+        <servlet-name>system</servlet-name>
+        <url-pattern>/system/*</url-pattern>
+    </servlet-mapping>
 
     <servlet>
         <servlet-name>timeApi</servlet-name>

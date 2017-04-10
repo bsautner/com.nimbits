@@ -88,8 +88,13 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
 
     @Override
     public User getSession(String email, String sessionId) {
-        Optional<User> userOptional = userDao.getUserBySession(email, sessionId);
-        return userOptional.isPresent() ? userOptional.get() : null;
+        if (userService.sessionsEnabled()) {
+            Optional<User> userOptional = userDao.getUserBySession(email, sessionId);
+            return userOptional.isPresent() ? userOptional.get() : null;
+        }
+        else {
+            return null;
+        }
     }
 
     private boolean userExists(String email) {
@@ -112,8 +117,10 @@ public class UserServiceRpcImpl extends RemoteServiceServlet implements UserServ
 
 
             user = userService.createUserRecord(emailAddress, password, UserSource.local);
-            String session = userDao.startSession(user, rm);
-            user.setSessionId(session);
+            if (userService.sessionsEnabled()) {
+                String session = userDao.startSession(user, rm);
+                user.setSessionId(session);
+            }
             return user;
 
         } else {

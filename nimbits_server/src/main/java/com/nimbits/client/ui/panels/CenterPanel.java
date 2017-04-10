@@ -145,7 +145,7 @@ public class CenterPanel extends NavigationEventProvider implements BasePanel.Pa
 
         // Make a new menu bar, adding a few cascading menus to it.
         MenuBar menu = new MenuBar();
-        menu.addItem("Options", optionsMenu);
+       // menu.addItem("Options", optionsMenu);
       //  menu.addItem("bar", barMenu);
         //menu.addItem("baz", bazMenu);
 

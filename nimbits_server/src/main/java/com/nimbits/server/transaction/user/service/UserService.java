@@ -45,6 +45,9 @@ public class UserService {
 
     private final EntityDao entityDao;
 
+//    @Value("${sessions.enabled")
+    //private String sessionsEnabled;
+
 
 
     @Autowired
@@ -140,7 +143,7 @@ public class UserService {
 
         boolean validPassword =  !StringUtils.isEmpty(password) && storedEncodedPassword.equals(challenge);
         boolean validSession = false;
-        if (! validPassword) {
+        if (! validPassword && sessionsEnabled()) {
             validSession = userDao.validSession(user, password);
         }
 
@@ -180,8 +183,10 @@ public class UserService {
         if (optional.isPresent()) {
             User user = optional.get();
             if (validatePassword(user, password)) {
-                String session = userDao.startSession(user, rm);
-                user.setSessionId(session);
+                if (sessionsEnabled()) {
+                    String session = userDao.startSession(user, rm);
+                    user.setSessionId(session);
+                }
                 return Optional.of(user);
             } else {
                 return Optional.absent();
@@ -216,6 +221,16 @@ public class UserService {
             entityType = EntityType.point;
         }
         return entityType;
+    }
+
+    public boolean sessionsEnabled() {
+//        if (! StringUtils.isEmpty(sessionsEnabled) ) {
+//            return Boolean.valueOf(sessionsEnabled);
+//        }
+//        else {
+//            return false;
+//        }
+        return false;
     }
 
 

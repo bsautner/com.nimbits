@@ -301,4 +301,36 @@ public class UserDao {
         }
         pm.close();
     }
+
+
+    public void deleteExpiredSessions() {
+        final PersistenceManager pm = persistenceManagerFactory.getPersistenceManager();
+
+        String query = "DELETE from nimbits.SESSION where" +
+                "\n(REMEMBERME = 0 AND TIMESTAMP < ((UNIX_TIMESTAMP()-1800) * 1000))" +
+                "\nOR" +
+                "\n(REMEMBERME = 1 AND TIMESTAMP < ((UNIX_TIMESTAMP()-(2.592e+6)) * 1000));";
+
+        Query q = pm.newQuery("javax.jdo.query.SQL",query);
+
+
+        Transaction tx = pm.currentTransaction();
+
+        try {
+
+            tx.begin();
+            q.execute();
+            tx.commit();
+
+        }
+        finally {
+
+            if (tx.isActive())  {
+                tx.rollback();
+            }
+
+
+        }
+        pm.close();
+    }
 }

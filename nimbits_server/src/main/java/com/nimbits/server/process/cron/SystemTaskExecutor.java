@@ -67,8 +67,6 @@ public class SystemTaskExecutor {
 
     private ValueTask valueTask;
 
-    private EntityService entityService;
-
     private PersistenceManagerFactory persistenceManagerFactory;
 
     private SubscriptionService subscriptionService;
@@ -86,7 +84,7 @@ public class SystemTaskExecutor {
     public SystemTaskExecutor(PMF pmf, UserDao userDao,
                               SubscriptionService subscriptionService,
                               EntityDao entityDao, UserService userService, ValueService valueService,
-                              ValueTask valueTask, EntityService entityService, ValueDao valueDao) {
+                              ValueTask valueTask, ValueDao valueDao) {
 
         this.persistenceManagerFactory = pmf.get();
         this.subscriptionService = subscriptionService;
@@ -95,7 +93,6 @@ public class SystemTaskExecutor {
         this.userService = userService;
         this.valueService = valueService;
         this.valueTask = valueTask;
-        this.entityService = entityService;
         this.userDao = userDao;
         this.valueDao = valueDao;
     }
@@ -262,6 +259,17 @@ public class SystemTaskExecutor {
     }
 
 
+    @Scheduled(cron="0 0 * * * *")
+    private void deleteSessions() throws IOException {
+
+        logger.info("Flushing Expired Sessions");
+        userDao.deleteExpiredSessions();
+
+
+
+
+
+    }
 
 
 }

@@ -21,8 +21,6 @@ public class Session {
     @Persistent
     private Long timestamp;
 
-
-
     @Persistent
     private Boolean rememberMe;
 

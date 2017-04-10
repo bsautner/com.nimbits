@@ -45,10 +45,6 @@ public class UserService {
 
     private final EntityDao entityDao;
 
-//    @Value("${sessions.enabled")
-    //private String sessionsEnabled;
-
-
 
     @Autowired
     public UserService(UserDao userDao, EntityDao entityDao) {
@@ -123,13 +119,13 @@ public class UserService {
 
 
     public Optional<User> getUserByKey(final String key) {
-            User admin = userDao.getAdmin();
-            Optional<Entity> optional = entityDao.getEntity(admin, key, EntityType.user);
-            if (optional.isPresent()) {
-                return Optional.of((User) optional.get());
-            } else {
-                return Optional.absent();
-            }
+        User admin = userDao.getAdmin();
+        Optional<Entity> optional = entityDao.getEntity(admin, key, EntityType.user);
+        if (optional.isPresent()) {
+            return Optional.of((User) optional.get());
+        } else {
+            return Optional.absent();
+        }
 
 
 
@@ -143,7 +139,7 @@ public class UserService {
 
         boolean validPassword =  !StringUtils.isEmpty(password) && storedEncodedPassword.equals(challenge);
         boolean validSession = false;
-        if (! validPassword && sessionsEnabled()) {
+        if (! validPassword) {
             validSession = userDao.validSession(user, password);
         }
 
@@ -183,10 +179,10 @@ public class UserService {
         if (optional.isPresent()) {
             User user = optional.get();
             if (validatePassword(user, password)) {
-                if (sessionsEnabled()) {
-                    String session = userDao.startSession(user, rm);
-                    user.setSessionId(session);
-                }
+
+                String session = userDao.startSession(user, rm);
+                user.setSessionId(session);
+
                 return Optional.of(user);
             } else {
                 return Optional.absent();
@@ -223,15 +219,6 @@ public class UserService {
         return entityType;
     }
 
-    public boolean sessionsEnabled() {
-//        if (! StringUtils.isEmpty(sessionsEnabled) ) {
-//            return Boolean.valueOf(sessionsEnabled);
-//        }
-//        else {
-//            return false;
-//        }
-        return false;
-    }
 
 
 }

@@ -51,7 +51,7 @@ public abstract class AbstractLoginPanel extends LayoutContainer {
 
     protected CheckBox rmCheckbox() {
         CheckBox rm = new CheckBox();
-        rm.setBoxLabel("Remember me on this device");
+        rm.setBoxLabel("Remember me on this device for 30 days.");
         rm.setLabelSeparator("");
         rm.setValue(true);
         return rm;

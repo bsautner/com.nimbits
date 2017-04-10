@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-export version=4.1.5
+
 apt-get update
 apt-get upgrade -y
 
 service tomcat8 stop
-cp -fv /opt/tomcat/webapps/nimbits/WEB-INF/classes/application.properties ~/application.properties.old
+cp -fv /opt/tomcat/webapps/root/WEB-INF/classes/application.properties ~/application.properties.old
 
 mvn -f ../pom.xml clean package
 cp ../nimbits_server/target/nimbits_server.war /opt/tomcat/webapps/nimbits.war

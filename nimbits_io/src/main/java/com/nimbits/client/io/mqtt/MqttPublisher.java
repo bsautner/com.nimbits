@@ -1,67 +1,62 @@
 package com.nimbits.client.io.mqtt;
 
+import com.google.gson.Gson;
+import com.nimbits.client.model.point.Point;
+import com.nimbits.client.model.value.Value;
+import com.nimbits.server.gson.GsonFactory;
 import org.eclipse.paho.client.mqttv3.*;
 
 public class MqttPublisher {
 
 
-    private MqttClient myClient;
-    private MqttConnectOptions connOpt;
+    private final String session;
+    private final MqttClient myClient;
 
-    private static final String BROKER_URL = "tcp://54.205.203.60:1883";
-    private static final String M2MIO_DOMAIN = "com.nimbits";
-    private static final String M2MIO_STUFF = "things";
-    private static final String M2MIO_THING = "124A-AAA";
 
-    public static void main(String[] args) throws MqttException {
-        MqttPublisher smc = new MqttPublisher();
-        smc.runClient();
+    public MqttPublisher(String session, String host) throws Exception {
+        String path = "tcp://" + host + ":1883";
+
+        this.session = session;
+        this.myClient = new MqttClient(path, session);
+
     }
 
-    private void runClient() throws MqttException {
-        // setup MQTT Client
-        String clientID = "server";
-        connOpt = new MqttConnectOptions();
+
+    public static MqttPublisher create(String session, String host) throws Exception {
+        return new MqttPublisher(session, host);
+    }
+
+    public void publish(Point point, Value value) throws MqttException {
+
+        MqttConnectOptions connOpt = new MqttConnectOptions();
 
         connOpt.setCleanSession(true);
         connOpt.setKeepAliveInterval(30);
 
-        // Connect to Broker
+        myClient.connect(connOpt);
 
-            myClient = new MqttClient(BROKER_URL, clientID);
-
-            myClient.connect(connOpt);
-
-
-        System.out.println("Connected to " + BROKER_URL);
 
         // setup topic
         // topics on m2m.io are in the form <domain>/<stuff>/<thing>
-        String myTopic = M2MIO_DOMAIN + "/" + M2MIO_STUFF + "/" + M2MIO_THING;
+        String root = "com.nimbits";
+        String myTopic = root + "/" + session + "/" + point.getId();
+        System.out.println(myTopic);
         MqttTopic topic = myClient.getTopic(myTopic);
 
 
-            for (int i=1; i<=10; i++) {
-                String pubMsg = "{\"pubmsg\":" + i + "}";
-                int pubQoS = 0;
-                MqttMessage message = new MqttMessage(pubMsg.getBytes());
-                message.setQos(pubQoS);
-                message.setRetained(false);
-
-                // Publish the message
-                System.out.println("Publishing to topic \"" + topic + "\" qos " + pubQoS);
-                MqttDeliveryToken token = null;
-                try {
-                    // publish message to broker
-                    token = topic.publish(message);
-                    // Wait until the message has been delivered to the broker
-                    token.waitForCompletion();
-                    Thread.sleep(100);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
+        int pubQoS = 0;
+        Gson gson = GsonFactory.getInstance(true);
+        MqttMessage message = new MqttMessage(gson.toJson(value).getBytes());
+        message.setQos(pubQoS);
+        message.setRetained(false);
 
 
+        MqttDeliveryToken token = topic.publish(message);
+        // Wait until the message has been delivered to the broker
+        token.waitForCompletion();
+
+
+    }
 }
+
+

@@ -1,8 +1,8 @@
-package com.nimbits.it.console;
+package com.nimbits.client.io.mqtt;
 
 import org.eclipse.paho.client.mqttv3.*;
 
-public class SimpleMqttClient implements MqttCallback {
+public class NimbitsMqttClient implements MqttCallback {
 
     MqttClient myClient;
     MqttConnectOptions connOpt;
@@ -51,7 +51,7 @@ public class SimpleMqttClient implements MqttCallback {
      *
      */
     public static void main(String[] args) {
-        SimpleMqttClient smc = new SimpleMqttClient();
+        NimbitsMqttClient smc = new NimbitsMqttClient();
         smc.runClient();
     }
 

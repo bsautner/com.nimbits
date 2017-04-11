@@ -1,8 +1,9 @@
-package com.nimbits.it.console;
+package com.nimbits.client.io.mqtt;
 
 import org.eclipse.paho.client.mqttv3.*;
 
-public class SimpleMqttPublisher   {
+public class MqttPublisher {
+
 
     private MqttClient myClient;
     private MqttConnectOptions connOpt;
@@ -13,7 +14,7 @@ public class SimpleMqttPublisher   {
     private static final String M2MIO_THING = "124A-AAA";
 
     public static void main(String[] args) throws MqttException {
-        SimpleMqttPublisher smc = new SimpleMqttPublisher();
+        MqttPublisher smc = new MqttPublisher();
         smc.runClient();
     }
 

@@ -12,6 +12,9 @@ public class NimbitsMqttClient implements MqttCallback {
     static final String M2MIO_STUFF = "things";
     static final String M2MIO_THING = "124A-AAA";
 
+   // public static NimbitsMqttClient builder(
+
+//TODO use session id
 
     // the following two flags control whether this example is a publisher, a subscriber or both
     static final Boolean subscriber = true;

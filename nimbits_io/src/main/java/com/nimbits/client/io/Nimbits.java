@@ -91,7 +91,7 @@ public class Nimbits {
 
     }
 
-    /**
+      /**
      * @return the authentication user from /service/v3/me
      * @Param should the returned object contain a list of children one level down
      */
@@ -107,6 +107,8 @@ public class Nimbits {
 
         return api.getMe(true);
     }
+
+
 
 
     /**

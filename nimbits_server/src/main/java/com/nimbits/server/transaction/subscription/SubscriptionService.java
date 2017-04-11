@@ -33,10 +33,12 @@ import com.nimbits.client.model.webhook.WebHook;
 import com.nimbits.server.communication.mail.EmailService;
 import com.nimbits.server.gson.GsonFactory;
 import com.nimbits.server.transaction.entity.dao.EntityDao;
+import com.nimbits.server.transaction.mqtt.MQTT;
 import com.nimbits.server.transaction.user.service.UserService;
 import com.nimbits.server.transaction.value.ValueDao;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,14 +77,17 @@ public class SubscriptionService  {
 
     private final TaskExecutor taskExecutor;
 
+    private final MQTT mqtt;
+
     @Autowired
-    public SubscriptionService(EmailService emailService, EntityDao entityDao,
+    public SubscriptionService(MQTT mqtt, EmailService emailService, EntityDao entityDao,
                                UserService userService, ValueDao valueDao, TaskExecutor taskExecutor) {
         this.emailService = emailService;
         this.entityDao = entityDao;
         this.userService = userService;
         this.valueDao = valueDao;
         this.taskExecutor = taskExecutor;
+        this.mqtt = mqtt;
 
 
     }
@@ -247,8 +252,19 @@ public class SubscriptionService  {
                     }
                     break;
 
+                case mqtt:
+                    doMQTT(user, point, value, subscription);
+                    break;
+
 
             }
+        }
+
+        private void doMQTT(User user, Point point, Value value, Subscription subscription) throws MqttException {
+
+            mqtt.publish(user, point, value);
+
+
         }
 
 

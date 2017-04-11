@@ -25,7 +25,8 @@ public enum SubscriptionNotifyMethod {
     none(-1, "None"),
     email(0, "Email (formatted)"),
     emailJson(8, "Email (json)"),
-    webhook(7, "Web Hook")
+    webhook(7, "Web Hook"),
+    mqtt(9, "Publish to MQTT Topic")
     ;
 
     private static final Map<Integer, SubscriptionNotifyMethod> lookup = new HashMap<Integer, SubscriptionNotifyMethod>(5);

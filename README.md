@@ -1,5 +1,8 @@
 [![Dependency Status](https://www.versioneye.com/user/projects/5943e5da6725bd00475ca1f3/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/5943e5da6725bd00475ca1f3)
 
+The Nimbits Platform is a flexible, free form api and rule engine for connecting systems together. Learn more at
+[nimbits.com](http://www.nimbits.com)
+
 # nimbits.io
 
 ## The Nimbits Platform Client Library for Android and Java

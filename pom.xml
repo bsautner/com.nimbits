@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~    Copyright 2017 Nimbits Inc  
+  ~    Licensed under the Apache License, Version 2.0 (the "License");
+  ~    you may not use this file except in compliance with the License.
+  ~    You may obtain a copy of the License at
+  ~
+  ~        http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~    Unless required by applicable law or agreed to in writing, software
+  ~    distributed under the License is distributed on an "AS IS" BASIS,
+  ~    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~    See the License for the specific language governing permissions and
+  ~    limitations under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.nimbits</groupId>
+    <artifactId>nimbits_io</artifactId>
+    <version>5.0.19-SNAPSHOT</version>
+
+    <name>Nimbits IO</name>
+    <description>Nimbits Client Input Output Library</description>
+    <url>http://nimbits.com</url>
+
+
+    <properties>
+        <datanucleus.version>5.0.9</datanucleus.version>
+        <retrofit.version>2.3.0</retrofit.version>
+        <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+        <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
+        <datanucleus-maven-plugin.version>5.0.2</datanucleus-maven-plugin.version>
+        <guava.version>22.0</guava.version>
+        <springframework.version>4.3.9.RELEASE</springframework.version>
+    </properties>
+    <distributionManagement>
+        <repository>
+            <id>bintray-nimbits-admin-nimbits.io</id>
+            <name>nimbits-admin-nimbits.io</name>
+            <url>https://api.bintray.com/maven/nimbits-admin/nimbits.io/nimbits-io/;publish=1</url>
+        </repository>
+    </distributionManagement>
+
+    <scm>
+        <connection>scm:git:git@github.com:nimbits-admin/nimbits-io.git</connection>
+        <developerConnection>scm:git:git@github.com:nimbits-admin/nimbits-io.git</developerConnection>
+        <url>git@github.com:nimbits-admin/nimbits-io.git</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <id>nimbits-admin</id>
+            <name>Nimbits Inc</name>
+            <email>admin@nimbits.com</email>
+        </developer>
+    </developers>
+
+    <licenses>
+        <license>
+            <name>The Apache Software License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <repositories>
+
+
+        <repository>
+            <id>jline</id>
+            <name>JLine Project Repository</name>
+            <url>http://jline.sourceforge.net/m2repo</url>
+        </repository>
+
+
+    </repositories>
+
+
+
+    <build>
+
+
+            <plugins>
+                <plugin>
+                    <groupId>org.datanucleus</groupId>
+                    <artifactId>datanucleus-maven-plugin</artifactId>
+                    <version>${datanucleus-maven-plugin.version}</version>
+                    <configuration>
+
+
+                        <api>JDO</api>
+                        <verbose>true</verbose>
+
+
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>enhancer</id>
+                            <phase>compile</phase>
+                            <goals>
+                                <goal>enhance</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.6.1</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <configuration>
+                        <archive>
+                            <manifest>
+                                <mainClass>
+                                    com.nimbits.Program
+                                </mainClass>
+                            </manifest>
+                        </archive>
+                        <descriptorRefs>
+                            <descriptorRef>jar-with-dependencies</descriptorRef>
+                        </descriptorRefs>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>2.10.4</version>
+                    <configuration>
+                        <failOnError>false</failOnError>
+                        <nohelp>true</nohelp>
+                    </configuration>
+                </plugin>
+
+
+
+
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven-source-plugin.version}</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${maven-release-plugin.version}</version>
+
+                </plugin>
+
+            </plugins>
+
+
+    </build>
+
+
+    <dependencies>
+
+
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>converter-jackson</artifactId>
+            <version>${retrofit.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.squareup.retrofit2</groupId>
+            <artifactId>retrofit</artifactId>
+            <version>${retrofit.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-core</artifactId>
+            <version>${datanucleus.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-api-jdo</artifactId>
+            <version>${datanucleus.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>datanucleus-rdbms</artifactId>
+            <version>${datanucleus.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.reactivex.rxjava2</groupId>
+            <artifactId>rxjava</artifactId>
+            <version>2.1.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.datanucleus</groupId>
+            <artifactId>javax.jdo</artifactId>
+            <version>3.2.0-m7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.5</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${springframework.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${springframework.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${springframework.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
+
+    </dependencies>
+
+</project>

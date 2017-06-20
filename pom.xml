@@ -18,7 +18,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.nimbits</groupId>
     <artifactId>nimbits_io</artifactId>
-    <version>5.0.19-SNAPSHOT</version>
+    <version>5.0.20-SNAPSHOT</version>
 
     <name>Nimbits IO</name>
     <description>Nimbits Client Input Output Library</description>

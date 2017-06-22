@@ -35,19 +35,32 @@ public enum EventType {
     equals(10, "Equals");
 
 
-    private static final Map<Integer, EventType> lookup = new HashMap<Integer, EventType>(7);
+    private static final Map<Integer, EventType> lookup = new HashMap<>();
+    private static final Map<String, EventType> lookupName = new HashMap<>();
 
     static {
-        for (EventType s : EnumSet.allOf(EventType.class))
+        for (EventType s : EnumSet.allOf(EventType.class)) {
             lookup.put(s.code, s);
+        }
+        for (EventType s : EnumSet.allOf(EventType.class)) {
+            lookupName.put(s.name(), s);
+        }
     }
 
     private final int code;
     private final String text;
 
-    private EventType(int code, String text) {
+    EventType(int code, String text) {
         this.code = code;
         this.text = text;
+    }
+
+    public static EventType getName(String name) {
+        if (lookupName.containsKey(name)) {
+            return lookupName.get(name);
+        } else {
+            return null;
+        }
     }
 
     public int getCode() {

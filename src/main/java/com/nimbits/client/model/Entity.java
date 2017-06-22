@@ -199,10 +199,10 @@ public abstract class Entity  {
     }
 
 
+
     public void setParent(final String parent) {
         this.parent = parent;
     }
-
 
     public String getOwner() {
         return owner;
@@ -305,13 +305,13 @@ public abstract class Entity  {
 
         public abstract T owner(String owner);
 
-
         public void init(Entity anEntity) {
 
             this.name = anEntity.getName();
             this.description = anEntity.getDescription();
             this.parent = anEntity.getParent();
             this.owner = anEntity.getOwner();
+
 
         }
 

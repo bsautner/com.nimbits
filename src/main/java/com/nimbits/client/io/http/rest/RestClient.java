@@ -48,7 +48,7 @@ import java.util.List;
 
 public interface RestClient {
 
-    String API = "/service/v3/rest";
+    String API = "/v5/api/rest";
 
     @GET(API + "/me")
     Call<User> getMe(@Query("children") boolean includeChildren);

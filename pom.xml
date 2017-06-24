@@ -199,6 +199,7 @@
             <groupId>org.datanucleus</groupId>
             <artifactId>datanucleus-api-jdo</artifactId>
             <version>${datanucleus.version}</version>
+
         </dependency>
 
         <dependency>

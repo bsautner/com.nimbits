@@ -111,7 +111,7 @@ public class Nimbits {
 
 
     /**
-     * @return the authentication user from /service/v3/me
+     * @return the authentication user from /v5/api/me
      * @Param should the returned object contain a list of children one level down
      */
     public User getMe(boolean includeChildren) {
@@ -123,7 +123,7 @@ public class Nimbits {
     }
 
     /**
-     * @return the authentication user from /service/v3/me
+     * @return the authentication user from /v5/api/me
      * @Param should the returned object contain a list of children one level down
      */
     public User getMe() {

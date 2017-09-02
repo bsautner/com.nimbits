@@ -1,4 +1,9 @@
-We're preparing for a release of nimbits 5.0 which represents a major change to the platform. We expect to release our public cloud to the world again in August 2017
+### Client Libraries
+
+* [Java and Android](https://github.com/nimbits-admin/nimbits-io/tree/master/nimbits-java-client)
+* [JavaScript](https://github.com/nimbits-admin/nimbits-io/tree/master/nimbits-javascript-client)
+
+
 
 
 
